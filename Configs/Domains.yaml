@@ -1,0 +1,5 @@
+Domains:
+    sandbox.loc:
+        all: Local
+    api.sandbox.loc:
+        all: Local

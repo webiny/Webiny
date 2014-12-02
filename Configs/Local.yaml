@@ -1,0 +1,63 @@
+App:
+    WebPath: http://sandbox.loc
+    ApiPath: http://api.sandbox.loc
+    AbsPath: /var/www/projects/platform-sandbox
+    UploadsAbsPath: /var/www/platform-sandbox/Public/Uploads
+    UploadsWebPath: http://sandbox.loc/Uploads
+    ModulesPath: /var/www/projects/platform-sandbox/Modules
+    Error:
+        Reporting: true
+
+Database:
+    Host: 127.0.0.1:27017
+    Name: webiny-platform
+
+Mongo:
+    Services:
+        Kompare:
+            Class: \Webiny\Component\Mongo\Mongo
+            Arguments:
+                Host: 127.0.0.1:27017
+                Database: webiny-platform
+    Driver: \Webiny\Component\Mongo\Driver\Mongo
+    ResultClass: \Webiny\Component\Mongo\MongoResult
+
+Rest:
+    Api:
+        CompilePath: /var/www/projects/platform-sandbox/Cache/Rest
+        Environment: development
+        Router:
+            Class: \Modules\{module}\Services\{service}
+            Path: /{module}/{service}
+
+Services:
+    Smarty:
+        Factory: \Platform\Tools\TemplateEngine
+        Method: getInstance
+
+TemplateEngine:
+    Engines:
+        Smarty:
+            ForceCompile: true
+            CacheDir: /var/www/projects/platform-sandbox/Cache/Smarty/Cache
+            CompileDir: /var/www/projects/platform-sandbox/Cache/Smarty/Compile
+            TemplateDir: /var/www/projects/platform-sandbox/Public
+            AutoEscapeOutput: false
+            MergeCompiledIncludes: false
+
+Storage:
+    Services:
+        Root:
+            Class: \Webiny\Component\Storage\Storage
+            Arguments:
+                Driver:
+                    Object: \Webiny\Component\Storage\Driver\Local\Local
+                    ObjectArguments:
+                        - /var/www/projects/platform-sandbox
+        Modules:
+            Class: \Webiny\Component\Storage\Storage
+            Arguments:
+                Driver:
+                    Object: \Webiny\Component\Storage\Driver\Local\Local
+                    ObjectArguments:
+                        - /var/www/projects/platform-sandbox/Modules

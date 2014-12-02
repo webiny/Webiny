@@ -1,0 +1,17 @@
+Module:
+    Active: true
+    Name: Core
+    Css:
+        RootVar: coreRoot
+        WebRootVar: coreWebRoot
+
+Events:
+    App.RenderOutput:
+       - {Handler: \Modules\Core\Handlers\HtmlCleanup, Priority: 101}
+    App.HandleRequest:
+       - {Handler: \Modules\Core\Handlers\RenderApp}
+
+# These are sitewide constants returned by SiteWideConstants service
+Constants:
+    DateFormat: Y-m-d
+    DateTimeFormat: Y-m-d H:i:s
