@@ -18,16 +18,12 @@
     <script src="Assets/Lib/history.js/native.history.js"></script>
     <script src="Assets/Lib/Router.js" type="text/javascript"></script>
     <script src="Assets/Lib/Md5.js" type="text/javascript"></script>
-    {*<script src="Scripts/App.js" type="module"></script>*}
     <script src="https://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
+    <!-- Bootstrap the entire platform -->
+    <script src="Assets/App.js" type="module"></script>
 </head>
 
 <body class="container">
-<br>
-<button onclick="router.navigate('/')">Dashboard</button>
-<button onclick="router.navigate('/posts')">Posts</button>
-<hr/>
-<div id="app"></div>
+    <div id="app"></div>
 </body>
-
 </html>

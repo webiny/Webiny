@@ -1,12 +1,17 @@
-App:
+Platform:
     WebPath: http://sandbox.loc
     ApiPath: http://api.sandbox.loc
     AbsPath: /var/www/projects/platform-sandbox
     UploadsAbsPath: /var/www/platform-sandbox/Public/Uploads
     UploadsWebPath: http://sandbox.loc/Uploads
-    ModulesPath: /var/www/projects/platform-sandbox/Modules
+    AppsPath: /var/www/projects/platform-sandbox/Apps
+    AppsWebPath: http://sandbox.loc/Apps
     Error:
         Reporting: true
+    Bootstrap:
+        App: Core
+        Module: View
+        Component: Layout
 
 Database:
     Host: 127.0.0.1:27017
@@ -27,12 +32,12 @@ Rest:
         CompilePath: /var/www/projects/platform-sandbox/Cache/Rest
         Environment: development
         Router:
-            Class: \Modules\{module}\Services\{service}
-            Path: /{module}/{service}
+            Class: \Apps\{app}\{module}\Services\{service}
+            Path: /{app}/{module}/{service}
 
 Services:
     Smarty:
-        Factory: \Platform\Tools\TemplateEngine
+        Factory: \Webiny\Platform\Tools\TemplateEngine
         Method: getInstance
 
 TemplateEngine:
@@ -54,10 +59,10 @@ Storage:
                     Object: \Webiny\Component\Storage\Driver\Local\Local
                     ObjectArguments:
                         - /var/www/projects/platform-sandbox
-        Modules:
+        Apps:
             Class: \Webiny\Component\Storage\Storage
             Arguments:
                 Driver:
                     Object: \Webiny\Component\Storage\Driver\Local\Local
                     ObjectArguments:
-                        - /var/www/projects/platform-sandbox/Modules
+                        - /var/www/projects/platform-sandbox/Apps

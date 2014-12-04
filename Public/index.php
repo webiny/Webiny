@@ -1,7 +1,6 @@
 <?php
 
 error_reporting(E_ALL);
-
+ini_set('display_errors', 1);
 require_once realpath(__DIR__.'/../Vendors/Platform/Autoload.php');
-
-\Platform\App\App::getInstance()->prepare()->runApp();
+\Webiny\Platform\Bootstrap\Platform::getInstance()->prepare()->runApp();

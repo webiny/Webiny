@@ -1,7 +1,7 @@
 <?php
-namespace Platform\Traits;
+namespace Webiny\Platform\Traits;
 
-use Platform\Tools\TemplateEngine;
+use Webiny\Platform\Tools\TemplateEngine;
 use Webiny\Component\ServiceManager\ServiceManager;
 
 trait TemplateEngineTrait

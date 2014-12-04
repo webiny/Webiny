@@ -1,0 +1,85 @@
+<?php
+namespace Webiny\Platform\Bootstrap;
+
+use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
+use Webiny\Component\Storage\Directory\LocalDirectory;
+use Webiny\Component\Storage\StorageTrait;
+use Webiny\Platform\Traits\PlatformTrait;
+use Webiny\Component\Config\ConfigObject;
+use Webiny\Component\Config\ConfigTrait;
+use Webiny\Component\StdLib\StdLibTrait;
+
+class App
+{
+    use PlatformTrait, StdLibTrait, ConfigTrait, StorageTrait;
+
+    /**
+     * @var ConfigObject
+     */
+    protected $_config;
+    protected $_appPath;
+    protected $_modules;
+
+    public function __construct(ConfigObject $config, $modulePath)
+    {
+        $this->_config = $config;
+        $this->_appPath = $modulePath;
+
+    }
+
+    public function getName()
+    {
+        return $this->_config->get('App.Name');
+    }
+
+    public function isActive()
+    {
+        return $this->_config->get('App.Active', false);
+    }
+
+    public function getAbsolutePath()
+    {
+        return $this->_appPath;
+    }
+
+    /**
+     * Get all active App modules
+     */
+    public function loadModules()
+    {
+        $this->_modules = $this->arr();
+
+        $moduleFile = '*Module.yaml';
+        $moduleConfigs = new LocalDirectory('Apps/'.$this->getName(), $this->storage('Root'), 1, $moduleFile);
+        foreach ($moduleConfigs as $moduleConfig) {
+            $moduleYamlPath = $moduleConfig->getAbsolutePath();
+            $moduleConfig = $this->config()->yaml($moduleYamlPath);
+            $module = new Module($moduleConfig, $this->_getModuleDirectory($moduleYamlPath));
+            if($module->isActive()) {
+                $this->_modules->key($module->getName(), $module);
+                $this->_config->mergeWith($moduleConfig);
+            }
+        }
+    }
+
+    /**
+     * Get modules or module specified by $name
+     *
+     * @param null|string $name
+     *
+     * @return bool|Module|ArrayObject
+     */
+    public function getModules($name = null)
+    {
+        if(!$name) {
+            return $this->_modules;
+        }
+
+        return $this->_modules->key($name, false, true);
+    }
+
+    private function _getModuleDirectory($moduleYamlPath)
+    {
+        return $this->str($moduleYamlPath)->explode('/')->removeLast()->implode('/')->val();
+    }
+}

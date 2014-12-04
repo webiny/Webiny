@@ -1,5 +1,5 @@
 <?php
-namespace Platform\Events;
+namespace Webiny\Platform\Events;
 
 use Webiny\Component\EventManager\Event;
 

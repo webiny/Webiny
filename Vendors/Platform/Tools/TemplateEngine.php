@@ -1,18 +1,18 @@
 <?php
-namespace Platform\Tools;
+namespace Webiny\Platform\Tools;
 
-use Platform\Tools\Views\SmartyApp;
-use Platform\Traits\AppTrait;
+use Webiny\Platform\Tools\Views\SmartyApp;
+use Webiny\Platform\Traits\PlatformTrait;
 use Webiny\Component\StdLib\SingletonTrait;
 use Webiny\Component\TemplateEngine\TemplateEngineTrait;
 
 class TemplateEngine
 {
-    use SingletonTrait, TemplateEngineTrait, AppTrait;
+    use SingletonTrait, TemplateEngineTrait, PlatformTrait;
 
     protected function init()
     {
-        $config = $this->getApp()->getConfig('TemplateEngine');
+        $config = $this->getPlatform()->getConfig('TemplateEngine');
         \Webiny\Component\TemplateEngine\TemplateEngine::setConfig($config);
     }
 

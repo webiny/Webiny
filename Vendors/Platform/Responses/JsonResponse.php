@@ -1,5 +1,5 @@
 <?php
-namespace Platform\Responses;
+namespace Webiny\Platform\Responses;
 
 /**
  * Class JsonResponse

@@ -1,4 +1,4 @@
-Module:
+App:
     Active: true
     Name: Core
     Css:
@@ -6,10 +6,10 @@ Module:
         WebRootVar: coreWebRoot
 
 Events:
-    App.RenderOutput:
-       - {Handler: \Modules\Core\Handlers\HtmlCleanup, Priority: 101}
-    App.HandleRequest:
-       - {Handler: \Modules\Core\Handlers\RenderApp}
+    Platform.RenderOutput:
+       - {Handler: \Apps\Core\View\Handlers\HtmlCleanup, Priority: 101}
+    Platform.HandleRequest:
+       - {Handler: \Apps\Core\View\Handlers\RenderApp}
 
 # These are sitewide constants returned by SiteWideConstants service
 Constants:

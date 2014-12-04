@@ -2,4 +2,4 @@
 
 require_once realpath(__DIR__.'/../Vendors/Platform/Autoload.php');
 
-$app = \Platform\App\App::getInstance()->prepare()->runApi();
+$app = \Webiny\Platform\Bootstrap\Platform::getInstance()->prepare()->runApi();

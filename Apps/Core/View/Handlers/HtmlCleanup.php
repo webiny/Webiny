@@ -1,13 +1,13 @@
 <?php
-namespace Modules\Core\Handlers;
+namespace Apps\Core\View\Handlers;
 
-use Platform\Events\OutputEvent;
-use Platform\Traits\AppTrait;
+use Webiny\Platform\Events\OutputEvent;
+use Webiny\Platform\Traits\PlatformTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 
 class HtmlCleanup
 {
-    use StdLibTrait, AppTrait;
+    use StdLibTrait, PlatformTrait;
 
     public function handle(OutputEvent $event)
     {

@@ -1,21 +1,21 @@
 <?php
-namespace Platform\Tools\Views;
+namespace Webiny\Platform\Tools\Views;
 
-use Platform\Traits\AppTrait;
+use Webiny\Platform\Traits\PlatformTrait;
 use Webiny\Component\StdLib\SingletonTrait;
 
 class SmartyApp
 {
-    use SingletonTrait, AppTrait;
+    use SingletonTrait, PlatformTrait;
 
     public function getPath($path)
     {
-        return $this->getApp()->getModulesPath() . '/' . $path;
+        return $this->getPlatform()->getAppsPath() . '/' . $path;
     }
 
     public function getWebPath($path)
     {
-        return $this->getApp()->getModulesWebPath() . '/' . $path;
+        return $this->getPlatform()->getAppsWebPath() . '/' . $path;
     }
 
     public function isLocal()
@@ -25,7 +25,7 @@ class SmartyApp
 
     public function getConfig($key)
     {
-        return $this->getApp($key);
+        return $this->getPlatform($key);
     }
 }
 
