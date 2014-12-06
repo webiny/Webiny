@@ -16,7 +16,7 @@ class Layout extends BaseComponent {
 						<w-placeholder name="WebMongoSidebar"/>\
 					</div>\
 					<div className="col-sm-8">\
-						<WebMongoContent title="Content title passed through props">\
+						<WebMongoContent title={this.props.title} count={this.props.count}>\
 							A database grid should be displayed here!\
 						</WebMongoContent> \
 					</div>\

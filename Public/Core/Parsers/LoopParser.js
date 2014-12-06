@@ -1,4 +1,6 @@
-class LoopParser {
+import BaseParser from '/Core/Base/BaseParser';
+
+class LoopParser extends BaseParser{
 
 	parse(tpl) {
 		// 0 = contains the entire loop HTML

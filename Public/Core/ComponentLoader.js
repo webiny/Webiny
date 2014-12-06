@@ -39,8 +39,7 @@ class ComponentLoader extends BaseClass {
 		if (globalComponents) {
 			globalComponents.map(x => components.push(x));
 		}
-
-
+		
 		var elements = [];
 		if (components) {
 			components.forEach(function (items) {

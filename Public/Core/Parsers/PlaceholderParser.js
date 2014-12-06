@@ -1,4 +1,6 @@
-class PlaceholderParser {
+import BaseParser from '/Core/Base/BaseParser';
+
+class PlaceholderParser extends BaseParser {
 
 	parse(tpl) {
 
@@ -46,12 +48,6 @@ class PlaceholderParser {
 		return '{function(){\
 				return ComponentLoader.getInstance().getComponents("' + attrs.name + '");\
 			}.bind(this)()}';
-	}
-
-	_objectToArray(obj) {
-		return [].map.call(obj, function (element) {
-			return element;
-		})
 	}
 }
 
