@@ -4,6 +4,6 @@ import PlaceholderParser from '/Core/Parsers/PlaceholderParser';
 
 export default {
 	'w-loop': LoopParser,
-	//'w-if': IfParser,
+	'w-if': IfParser,
 	'w-placeholder': PlaceholderParser
 };

@@ -22,6 +22,10 @@ class BaseComponent extends BaseClass {
 		}();
 	}
 
+	static createInstance(){
+		return (new this).getComponent();
+	}
+
 	getInstanceId() {
 		return this.__instanceId;
 	}
@@ -114,7 +118,7 @@ class BaseComponent extends BaseClass {
 			/**
 			 * @see http://facebook.github.io/react/docs/component-specs.html#getdefaultprops
 			 */
-			getDefaultProperties: this.getDefaultProperties,
+			getDefaultProps: this.getDefaultProperties,
 
 			/**
 			 * Get dynamic properties object
@@ -192,6 +196,22 @@ class BaseComponent extends BaseClass {
 				console.log(ReactComponentSource);
 				console.groupEnd();
 
+				/** This is required for inline usage of components */
+				var components = _this.getComponents();
+				console.info("Components", components);
+				var keys = [];
+				var values = [];
+
+				Object.keys(components).forEach(function (key) {
+					keys.push(key);
+					values.push(components[key]);
+				});
+
+				for (let [i, element] of keys.entries()) {
+					window[element] = values[i];
+				}
+
+				/** Store local reference to compiled react component */
 				_this.__reactComponent = ReactComponentSource;
 			}
 

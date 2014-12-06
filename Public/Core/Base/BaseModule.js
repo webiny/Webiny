@@ -10,11 +10,15 @@ class BaseModule extends BaseClass {
 			Object.keys(placeholders).forEach(function (placeholder) {
 				var component = placeholders[placeholder];
 				var eventHash = md5(route + placeholder);
-				EventManager.getInstance().addListener(eventHash, () => {
+				EventManager.addListener(eventHash, () => {
 					return component;
 				})
 			});
 		});
+	}
+
+	getComponent(component){
+		return (new component).getComponent();
 	}
 }
 

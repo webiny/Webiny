@@ -1,12 +1,16 @@
 import EventManager from '/Core/EventManager';
+import BaseClass from '/Core/Base/BaseClass';
+import Router from '/Core/Router/Router';
 
 let singleton = Symbol();
 let singletonEnforcer = Symbol();
 
-class ComponentLoader {
+class ComponentLoader extends BaseClass {
 
 	constructor(enforcer) {
-		if (enforcer != singletonEnforcer) throw "Cannot construct singleton";
+		if (enforcer != singletonEnforcer) {
+			throw "Cannot construct singleton";
+		}
 		this.listeners = [];
 	}
 
@@ -18,9 +22,25 @@ class ComponentLoader {
 	}
 
 	getComponents(placeholder) {
-		console.log("LOADING PLACEHOLDER", placeholder);
-		var eventHash = md5(activeRoute.url + placeholder);
-		var components = EventManager.getInstance().emit(eventHash);
+		console.log("LOADING COMPONENTS", placeholder + ' ' + Router.getActiveRoute().getUrl());
+		// Get URL specific components
+		var eventHash = md5(Router.getActiveRoute().getUrl() + placeholder);
+		var routeComponents = EventManager.emit(eventHash);
+
+		// Get global components
+		eventHash = md5('*' + placeholder);
+		var globalComponents = EventManager.emit(eventHash);
+
+		var components = [];
+		if (routeComponents) {
+			routeComponents.map(x => components.push(x));
+		}
+
+		if (globalComponents) {
+			globalComponents.map(x => components.push(x));
+		}
+
+
 		var elements = [];
 		if (components) {
 			components.forEach(function (items) {

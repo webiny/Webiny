@@ -16,14 +16,13 @@
     <!--<script src="https://code.angularjs.org/1.2.25/angular.js"></script>-->
     <!-- The demo -->
     <script src="Assets/Lib/history.js/native.history.js"></script>
-    <script src="Assets/Lib/Router.js" type="text/javascript"></script>
     <script src="Assets/Lib/Md5.js" type="text/javascript"></script>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
     <!-- Bootstrap the entire platform -->
     <script src="Assets/App.js" type="module"></script>
 </head>
 
-<body class="container">
+<body>
     <div id="app"></div>
 </body>
 </html>

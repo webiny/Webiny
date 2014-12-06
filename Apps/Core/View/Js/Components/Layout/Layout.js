@@ -1,4 +1,5 @@
 import BaseComponent from '/Core/Base/BaseComponent';
+import EventManager from '/Core/EventManager';
 
 /**
  * Class Layout is the main container that will hold all other components.
@@ -6,9 +7,17 @@ import BaseComponent from '/Core/Base/BaseComponent';
  */
 class Layout extends BaseComponent {
 
+	componentDidMount() {
+		EventManager.addListener('renderRoute', () => {
+			this.setState({
+				time: new Date().getTime()
+			});
+		});
+	}
+
 	getTemplate() {
-		return '<div className="component">\
-					<br/>\
+		return '<div className="component container">\
+					<h4>Core-View-Layout</h4>\
 					<button onClick={this.goTo} data-url="/">Dashboard</button>\
 					<button onClick={this.goTo} data-url="/posts">Posts</button>\
 					<hr/>\
@@ -18,10 +27,8 @@ class Layout extends BaseComponent {
 
 	goTo(e) {
 		var url = e.target.attributes['data-url'].value;
-		console.log("Going to:", url);
 		router.navigate(url);
 	}
 }
 
-var widget = new Layout();
-export default widget.getComponent();
+export default Layout;

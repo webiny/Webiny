@@ -8,7 +8,7 @@ class Master extends BaseComponent {
 	}
 
 	componentDidMount() {
-		EventManager.getInstance().addListener('renderRoute', () => {
+		EventManager.addListener('renderRoute', () => {
 			this.setState({
 				time: new Date().getTime()
 			});

@@ -44,4 +44,4 @@ class EventManager {
 	}
 }
 
-export default EventManager;
+export default EventManager.getInstance();
