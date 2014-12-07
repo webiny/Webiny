@@ -42,19 +42,19 @@ class LoopParser extends BaseParser{
 		};
 
 		// Parse tag to extract attributes
-		var items = /items={([\w._$]+)}/.exec(tag)[1];
+		var items = /items={([\w._$]+)}/.exec(tag);
 		if (items) {
-			attrs.items = items;
+			attrs.items = items[1];
 		}
 
-		var item = /as="?([\w_$]+)"?/.exec(tag)[1];
+		var item = /as="?([\w_$]+)"?/.exec(tag);
 		if (item) {
-			attrs.item = item;
+			attrs.item = item[1];
 		}
 
-		var index = /index="?([\w_$]+)"?/.exec(tag)[1];
+		var index = /index="?([\w_$]+)"?/.exec(tag);
 		if (index) {
-			attrs.index = index;
+			attrs.index = index[1];
 		}
 
 		return attrs;

@@ -39,15 +39,19 @@ class ComponentLoader extends BaseClass {
 		if (globalComponents) {
 			globalComponents.map(x => components.push(x));
 		}
-		
+
+
 		var elements = [];
 		if (components) {
 			components.forEach(function (items) {
 				if (Object.prototype.toString.call(items) === "[object Object]") {
 					items = [items];
 				}
-				items.forEach(function (item) {
-					elements.push(React.createElement(item.component, item.params));
+				items.forEach(function (item, index) {
+					var params = item.params || {};
+					// Need to add 'key' to each component in the array so React does not complain about it
+					params['key'] = index;
+					elements.push(React.createElement(item.component, params));
 				});
 			});
 		}
