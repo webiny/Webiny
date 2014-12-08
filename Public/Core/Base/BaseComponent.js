@@ -185,12 +185,13 @@ class BaseComponent extends BaseClass {
 				/**
 				 * Parse template for built-in tags
 				 */
-				var parsedTemplate = TemplateParser.parse(_this.getTemplate());
-
-				/**
-				 * Generate React JS code from string template
-				 */
-				var ReactComponentSource = JSXTransformer.transform(parsedTemplate).code;
+				var ReactComponentSource = _this.getTemplate();
+				if(!ReactComponentSource.indexOf('React') == 0){
+					/**
+					 * Generate React JS code from string template
+					 */
+					ReactComponentSource = JSXTransformer.transform(TemplateParser.parse(ReactComponentSource)).code;
+				}
 
 				console.groupCollapsed("Compiled component - " + _this.getClassName() + ' ' + _this.getInstanceId());
 				console.log(ReactComponentSource);

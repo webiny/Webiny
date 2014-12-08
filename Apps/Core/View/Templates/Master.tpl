@@ -10,8 +10,31 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <!-- App style -->
     <link rel="stylesheet" href="Assets/style.css">
-    <script>
+    <script type="module">
+        {literal}
         traceur.options.experimental = true;
+
+        import {TraceurLoader} from 'traceur@0.0/src/runtime/TraceurLoader';
+        import {webLoader} from 'traceur@0.0/src/runtime/webLoader';
+
+        var traceurSystem = System;
+        class SystemLoader extends TraceurLoader {
+            constructor() {
+                super(webLoader, window.location.href);
+            }
+
+            normalize(name, referrerName, referrerAddress) {
+                console.log(name);
+
+                if (name == 'Foo/Bar'){
+                    return 'App/Foo/Module/Bar';
+                }
+
+                return super.normalize(name, referrerName, referrerAddress);
+            }
+        }
+        System = new SystemLoader();
+        {/literal}
     </script>
     <!--<script src="https://code.angularjs.org/1.2.25/angular.js"></script>-->
     <!-- The demo -->
