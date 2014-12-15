@@ -1,9 +1,14 @@
 <?php
 namespace Webiny\Platform\Bootstrap;
 
+use Webiny\Component\Router\Router;
+use Webiny\Component\Router\RouterTrait;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
+use Webiny\Component\StdLib\StdObject\UrlObject\UrlObject;
 use Webiny\Component\Storage\Directory\LocalDirectory;
+use Webiny\Component\Storage\File\LocalFile;
 use Webiny\Component\Storage\StorageTrait;
+use Webiny\Platform\Responses\ResponseAbstract;
 use Webiny\Platform\Traits\PlatformTrait;
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\Config\ConfigTrait;
@@ -11,7 +16,7 @@ use Webiny\Component\StdLib\StdLibTrait;
 
 class App
 {
-    use PlatformTrait, StdLibTrait, ConfigTrait, StorageTrait;
+    use PlatformTrait, StdLibTrait, ConfigTrait, StorageTrait, RouterTrait;
 
     /**
      * @var ConfigObject
@@ -19,6 +24,7 @@ class App
     protected $_config;
     protected $_appPath;
     protected $_modules;
+    private $_matchedRoute;
 
     public function __construct(ConfigObject $config, $modulePath)
     {
@@ -51,6 +57,7 @@ class App
 
         $moduleFile = '*Module.yaml';
         $moduleConfigs = new LocalDirectory('Apps/'.$this->getName(), $this->storage('Root'), 1, $moduleFile);
+        /* @var LocalFile $moduleConfig */
         foreach ($moduleConfigs as $moduleConfig) {
             $moduleYamlPath = $moduleConfig->getAbsolutePath();
             $moduleConfig = $this->config()->yaml($moduleYamlPath);
@@ -60,6 +67,30 @@ class App
                 $this->_config->mergeWith($moduleConfig);
             }
         }
+    }
+
+    public function canRoute(UrlObject $request)
+    {
+        Router::getInstance()->appendRoutes($this->_config->get('Routes', new ConfigObject([])));
+
+        $this->_matchedRoute = $this->router()->match($request);
+
+        if($this->_matchedRoute) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Run matched route (PHP)
+     *
+     * @throws \Webiny\Component\Router\RouterException
+     * @return ResponseAbstract
+     */
+    public function run()
+    {
+        return $this->router()->execute($this->_matchedRoute);
     }
 
     /**

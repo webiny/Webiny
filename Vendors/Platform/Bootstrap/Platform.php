@@ -135,6 +135,13 @@ final class Platform
 
     public function runApp()
     {
+        /* @var $app App */
+        foreach ($this->_apps as $app) {
+            if($app->canRoute($this->_requestUrl)) {
+                $this->processResponse($app->run());
+            }
+        }
+
         $response = $this->eventManager()->fire('Platform.HandleRequest', null, '\Webiny\Platform\Responses\ResponseAbstract');
 
         // If any event listener processed the request - send response to browser

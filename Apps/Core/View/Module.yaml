@@ -4,3 +4,10 @@ Module:
     Css:
         RootVar: coreViewRoot
         WebRootVar: coreViewWebRoot
+
+Routes:
+    HtplParser:
+        Path: /parser/
+        Callback:
+            Class: \Apps\Core\View\Handlers\Parser
+            Method: parse
