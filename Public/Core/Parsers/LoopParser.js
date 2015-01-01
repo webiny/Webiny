@@ -31,7 +31,7 @@ class LoopParser extends BaseParser{
 	_createReactJs() {
 		var lDelim = '{';
 		var rDelim = '}';
-		return "\n" + lDelim + this.attrs.items + '.map(function(' + this.attrs.item + ', ' + this.attrs.index + '){return ' + this.itemTpl + '})' + rDelim;
+		return "\n" + lDelim + this.attrs.items + '.map(function(' + this.attrs.item + ', ' + this.attrs.index + '){return ' + this.itemTpl + '}.bind(this))' + rDelim;
 	}
 
 	_parseAttributes(tag) {

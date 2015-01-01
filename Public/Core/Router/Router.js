@@ -39,6 +39,7 @@ class Router {
 	checkRoutes(state) {
 		this.activeRoute = new Route(state);
 		EventManager.emit('renderRoute', this.activeRoute);
+		//console.log(EventManager.getListeners())
 	}
 
 	navigate(url, replace) {

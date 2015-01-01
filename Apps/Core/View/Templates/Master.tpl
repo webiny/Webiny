@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <!-- App style -->
     <link rel="stylesheet" href="Assets/style.css">
+    <!-- Apps assets -->
     <script>
         traceur.options.experimental = true;
     </script>
@@ -36,7 +37,7 @@
                 return super.normalize(name, referrerName, referrerAddress);
             }
         }
-        System = new SystemLoader();
+        //System = new SystemLoader();
         {/literal}
     </script>
     <!--<script src="https://code.angularjs.org/1.2.25/angular.js"></script>-->

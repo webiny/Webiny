@@ -7,14 +7,13 @@ class Layout extends BaseModule {
 
 	registerRoutes() {
 		var layoutComponent = LayoutComponent.createInstance();
+		var sidebar = SidebarComponent.createInstance();
 
 		return {
 			'*': {
 				'WebMongoSidebar': {
-					component: SidebarComponent.createInstance()
-				}
-			},
-			'/': {
+					component: sidebar
+				},
 				MainContent: {
 					component: layoutComponent
 				}
@@ -23,7 +22,7 @@ class Layout extends BaseModule {
 				MainContent: {
 					component: layoutComponent,
 					params: {
-						title: 'Pavel',
+						title: 'Sven',
 						count: 3
 					}
 				}

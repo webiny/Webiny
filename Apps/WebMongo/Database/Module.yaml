@@ -1,0 +1,13 @@
+Module:
+    Active: true
+    Name: Database
+
+#Assets:
+#    Css:
+#        Css/Variables.less
+#        Css/Buttons.css
+#        Css/Misc.less
+#
+#    Js:
+#        Js/jquery-cookie.js
+#        Js/prettyCheckable.js

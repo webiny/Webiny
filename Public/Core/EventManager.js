@@ -16,7 +16,7 @@ class EventManager {
 	}
 
 	emit(event, data) {
-		//console.info("[EVENT MANAGER] (Emit): "+event, data);
+		console.info("[EVENT MANAGER] (Emit): "+event, data);
 		if (!this.listeners.hasOwnProperty(event)) {
 			return null;
 		}
@@ -37,6 +37,13 @@ class EventManager {
 			this.listeners[event] = [];
 		}
 		this.listeners[event].push(listener);
+
+		var _this = this;
+
+		return function(){
+			var index = _this.listeners[event].indexOf(listener);
+			_this.listeners[event].splice(index);
+		}
 	}
 
 	getListeners() {

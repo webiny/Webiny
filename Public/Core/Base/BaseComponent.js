@@ -22,7 +22,7 @@ class BaseComponent extends BaseClass {
 		}();
 	}
 
-	static createInstance(){
+	static createInstance() {
 		return (new this).getComponent();
 	}
 
@@ -129,6 +129,7 @@ class BaseComponent extends BaseClass {
 			 * @see http://facebook.github.io/react/docs/component-specs.html#mounting-componentwillmount
 			 */
 			componentWillMount: function () {
+				// TODO: call super(), no need for extra method (test)
 				var state = StateStore.getInstance().getState(_this.getInstanceId());
 				if (state) {
 					this.state = state;
@@ -172,6 +173,14 @@ class BaseComponent extends BaseClass {
 			componentWillUnmount: function () {
 				StateStore.getInstance().saveState(_this.getInstanceId(), this.state);
 				_this.wComponentWillUnmount();
+			},
+
+			trigger: function (action, data) {
+				EventManager.emit(action, data);
+			},
+
+			on: function (store, callback) {
+				return EventManager.addListener(store, callback);
 			}
 		};
 
@@ -186,7 +195,7 @@ class BaseComponent extends BaseClass {
 				 * Parse template for built-in tags
 				 */
 				var ReactComponentSource = _this.getTemplate();
-				if(!ReactComponentSource.indexOf('React') == 0){
+				if (!ReactComponentSource.indexOf('React') == 0) {
 					/**
 					 * Generate React JS code from string template
 					 */

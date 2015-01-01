@@ -14,7 +14,7 @@ window.components = [];
  * Instantiate modules
  */
 {foreach from=$WP.Modules item=module}
-new {$module.alias}();
+var {$module.alias|lcfirst} = new {$module.alias}();
 {/foreach}
 
 var mainComponent = React.createElement({$WP.MainComponentAlias}.createInstance());

@@ -20,6 +20,10 @@ class BaseModule extends BaseClass {
 	getComponent(component){
 		return (new component).getComponent();
 	}
+
+	registerRoutes(){
+		return {};
+	}
 }
 
 export default BaseModule;
