@@ -2,9 +2,6 @@ import BaseStore from '/Core/Base/BaseStore';
 
 class DatabaseStore extends BaseStore {
 
-	// @TODO: component unmount should remove listeners
-	// @TODO: store INIT() should be called when store is first used...
-
 	getFQN(){
 		return 'WebMongo.Database.DatabaseStore';
 	}
@@ -34,8 +31,10 @@ class DatabaseStore extends BaseStore {
 			// Do something with CollectionStore data
 		});
 	}
+
+	getDatabases() {
+		return this.data;
+	}
 }
 
-var store = new DatabaseStore;
-store.init();
-export default store;
+export default DatabaseStore.createInstance();

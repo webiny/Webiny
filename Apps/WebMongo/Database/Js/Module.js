@@ -5,10 +5,18 @@ import DatabaseStore from '/Apps/WebMongo/Database/Js/Stores/DatabaseStore'
 class Database extends BaseModule {
 
 	registerRoutes() {
+
+		var databaseList = ListComponent.createInstance();
 		return {
-			'*': {
+			'/': {
 				'SidebarPlaceholder': {
-					component: ListComponent.createInstance()
+					component: databaseList
+				}
+			},
+
+			'/posts': {
+				'ContentPlaceholder': {
+					component: databaseList
 				}
 			}
 		}

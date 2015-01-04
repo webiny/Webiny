@@ -11,6 +11,7 @@ import StateStore from '/Core/StateStore';
 class BaseComponent extends BaseClass {
 
 	constructor() {
+		this.__listeners = [];
 		this.__instanceId = function () {
 			var delim = '-';
 
@@ -54,10 +55,6 @@ class BaseComponent extends BaseClass {
 		return {};
 	}
 
-	wComponentWillMount() {
-
-	}
-
 	componentDidMount() {
 
 	}
@@ -78,7 +75,7 @@ class BaseComponent extends BaseClass {
 
 	}
 
-	wComponentWillUnmount() {
+	componentWillUnmount() {
 
 	}
 
@@ -129,12 +126,10 @@ class BaseComponent extends BaseClass {
 			 * @see http://facebook.github.io/react/docs/component-specs.html#mounting-componentwillmount
 			 */
 			componentWillMount: function () {
-				// TODO: call super(), no need for extra method (test)
 				var state = StateStore.getInstance().getState(_this.getInstanceId());
 				if (state) {
 					this.state = state;
 				}
-				_this.wComponentWillMount();
 			},
 
 			/**
@@ -172,30 +167,70 @@ class BaseComponent extends BaseClass {
 			 */
 			componentWillUnmount: function () {
 				StateStore.getInstance().saveState(_this.getInstanceId(), this.state);
-				_this.wComponentWillUnmount();
+				this.__listeners.forEach((unsubscribe) => {
+					unsubscribe();
+				});
+				this.__listeners = [];
 			},
 
 			trigger: function (action, data) {
-				EventManager.emit(action, data);
+				EventManager.emit(action, data || {});
 			},
 
+			/**
+			 * Listen to data store change
+			 * @param string store
+			 * @param string|callable callback
+			 * @returns {classObject}
+			 */
 			on: function (store, callback) {
-				return EventManager.addListener(store, callback);
+				var callbackType = typeof callback;
+				var reactThis = this;
+				if (callbackType != 'function') {
+
+					// State key is passed to assign new store value to
+					if (callbackType == 'string') {
+						var property = callback;
+						callback = function (store) {
+							var state = {};
+							state[property] = store.getData();
+							reactThis.setState(state);
+						}
+					}
+
+					// New store value will overwrite the entire component state
+					if (callbackType == 'undefined') {
+						callback = function (store) {
+							reactThis.setState(store.getData());
+						}
+					}
+				}
+
+				var stopListening = EventManager.addListener(store, callback);
+				reactThis.__listeners.push(stopListening);
+				return reactThis;
+			},
+
+			/**
+			 * Get DOM Node by React reference
+			 * @param string key
+			 * @returns {DOMElement}
+			 */
+			node(key){
+				return this.refs[key].getDOMNode();
 			}
 		};
 
 		/**
 		 * Create `render` method
 		 */
-		var _this = this;
-
 		classObject.render = function () {
 			if (!_this.__reactComponent) {
 				/**
 				 * Parse template for built-in tags
 				 */
 				var ReactComponentSource = _this.getTemplate();
-				if (!ReactComponentSource.indexOf('React') == 0) {
+				if (ReactComponentSource.indexOf('React') != 0) {
 					/**
 					 * Generate React JS code from string template
 					 */
@@ -243,6 +278,7 @@ class BaseComponent extends BaseClass {
 
 		classObject['getInstanceId'] = _this.getInstanceId;
 		classObject['__instanceId'] = _this.getInstanceId();
+		classObject['__listeners'] = _this.__listeners;
 
 		return React.createClass(classObject);
 	}

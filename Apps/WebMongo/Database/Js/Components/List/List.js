@@ -1,22 +1,22 @@
 import BaseComponent from '/Core/Base/BaseComponent';
+import EventManager from '/Core/EventManager';
 import DatabaseStore from '/Apps/WebMongo/Database/Js/Stores/DatabaseStore'
 
 class List extends BaseComponent {
 
 	componentDidMount() {
+		super();
 
-		/**
-		 * Listen for data store updates
-		 */
-		this.on('WebMongo.Database.DatabaseStore', (data) => {
-			this.setState({databases: data});
+		// This...
+		this.on('WebMongo.Database.DatabaseStore', 'databases');
+
+		// ... is same as ...
+		this.on('WebMongo.Database.DatabaseStore', (store) => {
+			this.setState({databases: store.getData()});
 		});
 
-
-		/**
-		 * Disable form submission
-		 */
-		var form = this.refs.form.getDOMNode();
+		// Disable form submission
+		var form = this.node('form');
 		$(form).submit(function (e) {
 			e.preventDefault();
 		});
@@ -24,13 +24,12 @@ class List extends BaseComponent {
 
 	getInitialState() {
 		return {
-			databases: DatabaseStore.data
+			databases: DatabaseStore.getDatabases()
 		}
-
 	}
 
 	addDatabase() {
-		var databaseInput = this.refs.databaseName.getDOMNode();
+		var databaseInput = this.node('databaseName');
 		this.trigger('WebMongo.Database.addDatabaseAction', {name: databaseInput.value});
 		databaseInput.value = '';
 	}

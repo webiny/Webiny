@@ -19,6 +19,7 @@ class Layout extends BaseComponent {
 						<WebMongoContent title={this.props.title} count={this.props.count}>\
 							A database grid should be displayed here!\
 						</WebMongoContent> \
+						<w-placeholder name="ContentPlaceholder"/>\
 					</div>\
 				</div>';
 	}
