@@ -15,6 +15,15 @@ class BaseModule extends BaseClass {
 				})
 			});
 		});
+
+		var _this = this;
+		var stores = this.registerStores();
+		Object.keys(stores).forEach(function(fqn) {
+			var storeInstance = new stores[fqn]();
+			storeInstance.__fqn = fqn;
+			storeInstance.init();
+			_this.getRegistry().addStore(storeInstance);
+		});
 	}
 
 	getComponent(component){
@@ -22,6 +31,10 @@ class BaseModule extends BaseClass {
 	}
 
 	registerRoutes(){
+		return {};
+	}
+
+	registerStores(){
 		return {};
 	}
 }

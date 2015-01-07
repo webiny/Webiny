@@ -14,7 +14,7 @@ class BaseStore extends BaseClass {
 	}
 
 	emitChange() {
-		EventManager.emit(this.getFQN(), this);
+		EventManager.emit(this.__fqn, this);
 	}
 
 	on(action, callback) {
@@ -23,10 +23,6 @@ class BaseStore extends BaseClass {
 
 	init() {
 		// Override to implement initial setup code
-	}
-
-	getFQN() {
-		// Override to return fully qualified store name
 	}
 
 	getData() {

@@ -21,6 +21,12 @@ class Database extends BaseModule {
 			}
 		}
 	}
+
+	registerStores(){
+		return {
+			'WebMongo.Database.DatabaseStore': DatabaseStore
+		}
+	}
 }
 
 export default Database;

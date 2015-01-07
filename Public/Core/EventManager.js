@@ -16,7 +16,7 @@ class EventManager {
 	}
 
 	emit(event, data) {
-		console.info("[EVENT MANAGER] (Emit): "+event, data);
+		//console.info("[EVENT MANAGER] (Emit): "+event, data);
 		if (!this.listeners.hasOwnProperty(event)) {
 			return null;
 		}

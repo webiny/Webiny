@@ -22,7 +22,7 @@ class ComponentLoader extends BaseClass {
 	}
 
 	getComponents(placeholder) {
-		console.log("LOADING COMPONENTS", placeholder + ' ' + Router.getActiveRoute().getUrl());
+		//console.log("LOADING COMPONENTS", placeholder + ' ' + Router.getActiveRoute().getUrl());
 		// Get URL specific components
 		var eventHash = md5(Router.getActiveRoute().getUrl() + placeholder);
 		var routeComponents = EventManager.emit(eventHash);

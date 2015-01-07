@@ -3,6 +3,7 @@ import TemplateParser from '/Core/TemplateParser';
 import EventManager from '/Core/EventManager';
 import ComponentLoader from '/Core/ComponentLoader';
 import StateStore from '/Core/StateStore';
+import AppStores from '/Core/StateStore';
 
 /**
  * BaseComponent class is the main class all React components should inherit from.
@@ -216,8 +217,12 @@ class BaseComponent extends BaseClass {
 			 * @param string key
 			 * @returns {DOMElement}
 			 */
-			node(key){
+			getNode(key) {
 				return this.refs[key].getDOMNode();
+			},
+
+			getStore(name){
+				return _this.getRegistry().getStore(name);
 			}
 		};
 

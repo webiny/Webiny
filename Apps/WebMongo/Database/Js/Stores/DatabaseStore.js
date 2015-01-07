@@ -2,10 +2,6 @@ import BaseStore from '/Core/Base/BaseStore';
 
 class DatabaseStore extends BaseStore {
 
-	getFQN(){
-		return 'WebMongo.Database.DatabaseStore';
-	}
-
 	init() {
 		this.data = [
 			{name: 'Webiny Sandbox'},
@@ -37,4 +33,4 @@ class DatabaseStore extends BaseStore {
 	}
 }
 
-export default DatabaseStore.createInstance();
+export default DatabaseStore;
