@@ -22,10 +22,10 @@ class Database extends BaseModule {
 		}
 	}
 
-	registerStores(){
-		return {
-			'WebMongo.Database.DatabaseStore': DatabaseStore
-		}
+	registerStores() {
+		return [
+			DatabaseStore
+		];
 	}
 }
 

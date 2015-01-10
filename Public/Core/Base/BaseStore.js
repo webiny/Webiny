@@ -14,11 +14,15 @@ class BaseStore extends BaseClass {
 	}
 
 	emitChange() {
-		EventManager.emit(this.__fqn, this);
+		EventManager.emit(this.getFqn(), this);
 	}
 
 	on(action, callback) {
-		EventManager.addListener(action, callback);
+		var meta = {
+			type: 'store',
+			name: this.getFqn()
+		};
+		EventManager.addListener(action, callback, meta);
 	}
 
 	init() {

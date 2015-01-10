@@ -1,18 +1,7 @@
-let singleton = Symbol();
-let singletonEnforcer = Symbol();
-
 class EventManager {
 
-	constructor(enforcer) {
-		if (enforcer != singletonEnforcer) throw "Cannot construct singleton";
-		this.listeners = [];
-	}
-
-	static getInstance() {
-		if (!this[singleton]) {
-			this[singleton] = new EventManager(singletonEnforcer);
-		}
-		return this[singleton];
+	constructor() {
+		this.listeners = {};
 	}
 
 	emit(event, data) {
@@ -23,32 +12,51 @@ class EventManager {
 
 		var results = [];
 		this.listeners[event].forEach((listener) => {
-			if (typeof listener == 'function') {
-				results.push(listener(data));
-			} else {
-				results.push(listener[0][listener[1]](data));
+			if (typeof listener.listener == 'function') {
+				results.push(listener.listener(data));
 			}
 		});
 		return results;
 	}
 
-	addListener(event, listener) {
+	addListener(event, listener, meta) {
 		if (!this.listeners.hasOwnProperty(event)) {
 			this.listeners[event] = [];
 		}
-		this.listeners[event].push(listener);
+		var itemIndex = this.listeners[event].push({
+			listener: listener,
+			meta: meta
+		}) - 1;
 
 		var _this = this;
 
 		return function(){
-			var index = _this.listeners[event].indexOf(listener);
-			_this.listeners[event].splice(index);
+			_this.listeners[event].splice(itemIndex);
 		}
 	}
 
 	getListeners() {
 		return this.listeners;
 	}
-}
 
-export default EventManager.getInstance();
+	getListenerTree(){
+		var tree = [];
+		var listeners = this.listeners;
+		Object.keys(listeners).forEach(function (event) {
+			var eventListeners = listeners[event];
+			eventListeners.forEach((el) => {
+				if(el.meta == undefined || el.meta.type == 'route'){
+					return;
+				}
+				tree.push({
+					source: el.meta.name,
+					target: event,
+					sourceType: types[el.meta.type],
+					targetType: el.meta.type
+				});
+			});
+		});
+		return tree;
+	}
+}
+export default new EventManager();

@@ -22,3 +22,4 @@ React.render(mainComponent, document.getElementById('app'));
 
 /* For development purposes */
 window.router = Router;
+window.EventManager = EventManager;

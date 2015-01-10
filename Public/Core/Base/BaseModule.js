@@ -10,19 +10,21 @@ class BaseModule extends BaseClass {
 			Object.keys(placeholders).forEach(function (placeholder) {
 				var component = placeholders[placeholder];
 				var eventHash = md5(route + placeholder);
+				var meta = {
+					type: 'route',
+					placeholder: placeholder,
+					route: route
+				};
 				EventManager.addListener(eventHash, () => {
 					return component;
-				})
+				}, meta)
 			});
 		});
 
-		var _this = this;
-		var stores = this.registerStores();
-		Object.keys(stores).forEach(function(fqn) {
-			var storeInstance = new stores[fqn]();
-			storeInstance.__fqn = fqn;
+		this.registerStores().forEach((store) => {
+			var storeInstance = new store;
 			storeInstance.init();
-			_this.getRegistry().addStore(storeInstance);
+			this.getRegistry().addStore(storeInstance);
 		});
 	}
 
@@ -35,7 +37,7 @@ class BaseModule extends BaseClass {
 	}
 
 	registerStores(){
-		return {};
+		return [];
 	}
 }
 

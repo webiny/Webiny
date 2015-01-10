@@ -3,7 +3,6 @@ import TemplateParser from '/Core/TemplateParser';
 import EventManager from '/Core/EventManager';
 import ComponentLoader from '/Core/ComponentLoader';
 import StateStore from '/Core/StateStore';
-import AppStores from '/Core/StateStore';
 
 /**
  * BaseComponent class is the main class all React components should inherit from.
@@ -30,6 +29,10 @@ class BaseComponent extends BaseClass {
 
 	getInstanceId() {
 		return this.__instanceId;
+	}
+
+	getFqn(){
+		return this.getClassName();
 	}
 
 	getPropertyTypes() {
@@ -127,7 +130,7 @@ class BaseComponent extends BaseClass {
 			 * @see http://facebook.github.io/react/docs/component-specs.html#mounting-componentwillmount
 			 */
 			componentWillMount: function () {
-				var state = StateStore.getInstance().getState(_this.getInstanceId());
+				var state = StateStore.getState(_this.getInstanceId());
 				if (state) {
 					this.state = state;
 				}
@@ -167,7 +170,7 @@ class BaseComponent extends BaseClass {
 			 * @see http://facebook.github.io/react/docs/component-specs.html#unmounting-componentwillunmount
 			 */
 			componentWillUnmount: function () {
-				StateStore.getInstance().saveState(_this.getInstanceId(), this.state);
+				StateStore.saveState(_this.getInstanceId(), this.state);
 				this.__listeners.forEach((unsubscribe) => {
 					unsubscribe();
 				});
@@ -187,6 +190,11 @@ class BaseComponent extends BaseClass {
 			on: function (store, callback) {
 				var callbackType = typeof callback;
 				var reactThis = this;
+
+				if (typeof store != 'string') {
+					store = store.getFqn();
+				}
+
 				if (callbackType != 'function') {
 
 					// State key is passed to assign new store value to
@@ -207,7 +215,11 @@ class BaseComponent extends BaseClass {
 					}
 				}
 
-				var stopListening = EventManager.addListener(store, callback);
+				var meta = {
+					type: 'component',
+					name: reactThis.getFqn()
+				};
+				var stopListening = EventManager.addListener(store, callback, meta);
 				reactThis.__listeners.push(stopListening);
 				return reactThis;
 			},
@@ -221,7 +233,7 @@ class BaseComponent extends BaseClass {
 				return this.refs[key].getDOMNode();
 			},
 
-			getStore(name){
+			getStore(name) {
 				return _this.getRegistry().getStore(name);
 			}
 		};
@@ -281,7 +293,6 @@ class BaseComponent extends BaseClass {
 			}
 		});
 
-		classObject['getInstanceId'] = _this.getInstanceId;
 		classObject['__instanceId'] = _this.getInstanceId();
 		classObject['__listeners'] = _this.__listeners;
 

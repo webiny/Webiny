@@ -6,7 +6,7 @@ class Registry {
 
 	addStore(store){
 		// TODO: check if it's an existing instance
-		this.stores[store.__fqn] = store;
+		this.stores[store.getFqn()] = store;
 	}
 
 	getStore(name){

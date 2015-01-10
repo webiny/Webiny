@@ -3,10 +3,14 @@ import EventManager from '/Core/EventManager';
 
 class List extends BaseComponent {
 
+	getFqn(){
+		return 'WebMongo.Database.ListComponent';
+	}
+
 	componentDidMount() {
 		super();
 
-		// TODO: Listen to instance, like this...
+		// Listening to store instance like this ...
 		//this.on(this.dbStore, 'databases');
 
 		// ... is same as ...
