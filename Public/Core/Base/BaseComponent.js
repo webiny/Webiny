@@ -187,7 +187,7 @@ class BaseComponent extends BaseClass {
 			 * @param string|callable callback
 			 * @returns {classObject}
 			 */
-			on: function (store, callback) {
+			onStore: function (store, callback) {
 				var callbackType = typeof callback;
 				var reactThis = this;
 
@@ -216,8 +216,9 @@ class BaseComponent extends BaseClass {
 				}
 
 				var meta = {
-					type: 'component',
-					name: reactThis.getFqn()
+					listenerType: 'component',
+					listeningTo: 'store',
+					listenerName: reactThis.getFqn()
 				};
 				var stopListening = EventManager.addListener(store, callback, meta);
 				reactThis.__listeners.push(stopListening);

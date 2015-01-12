@@ -17,12 +17,22 @@ class BaseStore extends BaseClass {
 		EventManager.emit(this.getFqn(), this);
 	}
 
-	on(action, callback) {
+	onAction(action, callback) {
 		var meta = {
-			type: 'store',
-			name: this.getFqn()
+			listenerType: 'store',
+			listeningTo: 'action',
+			listenerName: this.getFqn()
 		};
 		EventManager.addListener(action, callback, meta);
+	}
+
+	onStore(store, callback) {
+		var meta = {
+			listenerType: 'store',
+			listeningTo: 'store',
+			listenerName: this.getFqn()
+		};
+		EventManager.addListener(store, callback, meta);
 	}
 
 	init() {

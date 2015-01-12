@@ -45,14 +45,14 @@ class EventManager {
 		Object.keys(listeners).forEach(function (event) {
 			var eventListeners = listeners[event];
 			eventListeners.forEach((el) => {
-				if(el.meta == undefined || el.meta.type == 'route'){
+				if(el.meta == undefined || el.meta.listenerType == 'route'){
 					return;
 				}
 				tree.push({
-					source: el.meta.name,
+					source: el.meta.listenerName,
 					target: event,
-					sourceType: types[el.meta.type],
-					targetType: el.meta.type
+					sourceType: el.meta.listenerType,
+					targetType: el.meta.listeningTo
 				});
 			});
 		});

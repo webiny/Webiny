@@ -11,10 +11,10 @@ class List extends BaseComponent {
 		super();
 
 		// Listening to store instance like this ...
-		//this.on(this.dbStore, 'databases');
+		//this.onStore(this.dbStore, 'databases');
 
 		// ... is same as ...
-		this.on('WebMongo.Database.DatabaseStore', (store) => {
+		this.onStore('WebMongo.Database.DatabaseStore', (store) => {
 			this.setState({databases: store.getData()});
 		});
 

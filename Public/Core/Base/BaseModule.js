@@ -11,7 +11,7 @@ class BaseModule extends BaseClass {
 				var component = placeholders[placeholder];
 				var eventHash = md5(route + placeholder);
 				var meta = {
-					type: 'route',
+					listenerType: 'route',
 					placeholder: placeholder,
 					route: route
 				};
