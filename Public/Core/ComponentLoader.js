@@ -2,23 +2,10 @@ import EventManager from '/Core/EventManager';
 import BaseClass from '/Core/Base/BaseClass';
 import Router from '/Core/Router/Router';
 
-let singleton = Symbol();
-let singletonEnforcer = Symbol();
-
 class ComponentLoader extends BaseClass {
 
-	constructor(enforcer) {
-		if (enforcer != singletonEnforcer) {
-			throw "Cannot construct singleton";
-		}
+	constructor() {
 		this.listeners = [];
-	}
-
-	static getInstance() {
-		if (!this[singleton]) {
-			this[singleton] = new ComponentLoader(singletonEnforcer);
-		}
-		return this[singleton];
 	}
 
 	getComponents(placeholder) {
@@ -59,4 +46,4 @@ class ComponentLoader extends BaseClass {
 	}
 }
 
-export default ComponentLoader;
+export default new ComponentLoader;

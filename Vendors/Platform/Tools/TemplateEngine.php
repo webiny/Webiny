@@ -19,7 +19,7 @@ class TemplateEngine
     public function fetch($template, $data = [])
     {
         $data['App'] = SmartyApp::getInstance();
-
+        
         return $this->templateEngine()->fetch($template, $data);
     }
 

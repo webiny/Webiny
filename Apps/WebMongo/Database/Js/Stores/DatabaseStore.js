@@ -6,6 +6,10 @@ class DatabaseStore extends BaseStore {
 		return 'WebMongo.Database.DatabaseStore';
 	}
 
+	getSource(){
+		return '/WebMongo/Database/Database';
+	}
+
 	init() {
 		this.data = [
 			{name: 'Webiny Sandbox'},
@@ -22,10 +26,6 @@ class DatabaseStore extends BaseStore {
 			this.data.splice(index, 1);
 			this.emitChange();
 		});
-	}
-
-	getDatabases() {
-		return this.data;
 	}
 }
 

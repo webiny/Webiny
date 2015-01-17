@@ -220,6 +220,10 @@ class BaseComponent extends BaseClass {
 					listeningTo: 'store',
 					listenerName: reactThis.getFqn()
 				};
+
+				// Get store from registry to trigger its init() method if it has not yet been initialized
+				_this.getRegistry().getStore(store);
+
 				var stopListening = EventManager.addListener(store, callback, meta);
 				reactThis.__listeners.push(stopListening);
 				return reactThis;

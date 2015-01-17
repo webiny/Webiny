@@ -23,8 +23,7 @@ class BaseModule extends BaseClass {
 
 		this.registerStores().forEach((store) => {
 			var storeInstance = new store;
-			storeInstance.init();
-			this.getRegistry().addStore(storeInstance);
+			this.getRegistry().addStore(storeInstance, {initialized: false});
 		});
 	}
 

@@ -1,34 +1,20 @@
 import EventManager from '/Core/EventManager'
 import Route from '/Core/Router/Route'
 
-let singleton = Symbol();
-let singletonEnforcer = Symbol();
-
 class Router {
 
-	constructor(enforcer) {
-		if (enforcer != singletonEnforcer) {
-			throw "Cannot construct singleton";
-		}
-
+	constructor() {
 		this.namedParam = /:\w+/g;
 
 		this.splatParam = /\*\w+/g;
 
 		this.routes = {};
 
-		this.activeRoute = new Route({data: {url: '/'}});
+		this.activeRoute = new Route(History.getState());
 
 		History.Adapter.bind(window, 'statechange', () => {
 			return this.checkRoutes(History.getState());
 		});
-	}
-
-	static getInstance() {
-		if (!this[singleton]) {
-			this[singleton] = new Router(singletonEnforcer);
-		}
-		return this[singleton];
 	}
 
 	route(route, callback) {
@@ -81,4 +67,4 @@ class Router {
 	}
 }
 
-export default Router.getInstance();
+export default new Router;

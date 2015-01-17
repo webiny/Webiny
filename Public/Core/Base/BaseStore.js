@@ -13,6 +13,11 @@ class BaseStore extends BaseClass {
 		this.data = {};
 	}
 
+	setInitialData(data){
+		this.data = data;
+		this.emitChange();
+	}
+
 	emitChange() {
 		EventManager.emit(this.getFqn(), this);
 	}
@@ -23,7 +28,7 @@ class BaseStore extends BaseClass {
 			listeningTo: 'action',
 			listenerName: this.getFqn()
 		};
-		EventManager.addListener(action, callback, meta);
+		EventManager.addListener(action, callback.bind(this), meta);
 	}
 
 	onStore(store, callback) {

@@ -46,7 +46,7 @@ class PlaceholderParser extends BaseParser {
 
 	_createReactJs(attrs) {
 		return '{function(){\
-				return ComponentLoader.getInstance().getComponents("' + attrs.name + '");\
+				return ComponentLoader.getComponents("' + attrs.name + '");\
 			}.bind(this)()}';
 	}
 }

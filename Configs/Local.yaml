@@ -19,20 +19,22 @@ Database:
 
 Mongo:
     Services:
-        Kompare:
+        Webiny:
             Class: \Webiny\Component\Mongo\Mongo
             Arguments:
                 Host: 127.0.0.1:27017
                 Database: webiny-platform
-    Driver: \Webiny\Component\Mongo\Driver\Mongo
     ResultClass: \Webiny\Component\Mongo\MongoResult
+
+Entity:
+    Database: Webiny
 
 Rest:
     Api:
         CompilePath: /var/www/projects/platform-sandbox/Cache/Rest
         Environment: development
         Router:
-            Class: \Apps\{app}\{module}\Services\{service}
+            Class: \Apps\{app}\{module}\Php\Services\{service}
             Path: /{app}/{module}/{service}
 
 Services:

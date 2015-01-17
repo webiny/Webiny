@@ -4,7 +4,7 @@
  */
 use Webiny\Component\ClassLoader\ClassLoader;
 
-require_once realpath(__DIR__ . '/../Webiny/vendor/autoload.php');
+require_once realpath(__DIR__ . '/../Webiny/autoload.php');
 
 $classLoaderMap = [
     'Webiny\Platform' => realpath(__DIR__),

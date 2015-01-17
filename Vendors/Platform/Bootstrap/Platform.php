@@ -1,8 +1,10 @@
 <?php
 namespace Webiny\Platform\Bootstrap;
 
+use Webiny\Component\Entity\Entity;
 use Webiny\Platform\Events;
 use Webiny\Platform\Responses\HtmlResponse;
+use Webiny\Platform\Responses\JsonErrorResponse;
 use Webiny\Platform\Responses\JsonResponse;
 use Webiny\Platform\Responses\ResponseAbstract;
 use Webiny\Component\Config\ConfigException;
@@ -171,7 +173,13 @@ final class Platform
         if(!$serviceClass) {
             // If no custom map was detected - use default routing
             $rest = Rest::initRest('Api');
-            $response = $rest->processRequest()->getData();
+            $response = $rest->processRequest();
+            if(!$response->getError()){
+                $response = $response->getData();
+            } else {
+                $response = new JsonErrorResponse($response->getError());
+                $response->output();
+            }
         } else {
             // Route using custom service map
             $rest = new Rest('Api', $serviceClass);
@@ -221,6 +229,7 @@ final class Platform
          */
         $errorReporting = $this->getConfig('Platform.Error.Reporting', true) ? E_ALL : 0;
         error_reporting($errorReporting);
+        ini_set('display_errors', $errorReporting);
 
         /**
          * Register services
@@ -232,6 +241,7 @@ final class Platform
         Storage::setConfig($this->getConfig()->get('Storage', []));
 
         Mongo::setConfig($this->getConfig('Mongo'));
+        Entity::setConfig($this->getConfig('Entity'));
 
         /**
          * Load Apps

@@ -28,7 +28,7 @@ class List extends BaseComponent {
 	getInitialState() {
 		this.dbStore = this.getStore('WebMongo.Database.DatabaseStore');
 		return {
-			databases: this.dbStore.getDatabases()
+			databases: this.dbStore.getData()
 		}
 	}
 

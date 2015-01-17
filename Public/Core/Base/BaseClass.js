@@ -1,24 +1,4 @@
-class Registry {
-
-	constructor() {
-		this.stores = {};
-	}
-
-	addStore(store){
-		// TODO: check if it's an existing instance
-		this.stores[store.getFqn()] = store;
-	}
-
-	getStore(name){
-		return this.stores[name];
-	}
-
-	getStores(){
-		return this.stores;
-	}
-}
-
-var registry = new Registry();
+import Registry from '/Core/Registry';
 
 class BaseClass {
 
@@ -27,7 +7,7 @@ class BaseClass {
 	}
 
 	getRegistry(){
-		return registry;
+		return Registry;
 	}
 }
 

@@ -1,5 +1,5 @@
 App:
-    Active: true
+    Active: false
     Name: WebMongo
     Css:
         RootVar: webMongoRoot
