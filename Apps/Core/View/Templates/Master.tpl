@@ -26,12 +26,12 @@
         class SystemLoader extends TraceurLoader {
             constructor() {
                 super(webLoader, window.location.href);
-                this.componentsRegex = /(.*?\/Components)\/([\w+]*)\/([\w+]*)/;
+                this.componentsRegex = /Apps\/([\w+]*)\/([\w+]*)\/Js\/Components\/([\w+]*)\/([\w+]*)/;
             }
 
             normalize(name, referrerName, referrerAddress) {
                 if (this.componentsRegex.exec(name)){
-                    var newPath = name.replace(this.componentsRegex, '$1/$2/dist/$2');
+                    var newPath = name.replace(this.componentsRegex, 'Apps/$1/Build/Development/$2/$3/$3');
                     console.log(name+" => ", newPath);
                     return newPath;
                 }
@@ -39,7 +39,7 @@
                 return super.normalize(name, referrerName, referrerAddress);
             }
         }
-        //System = new SystemLoader();
+        System = new SystemLoader();
         {/literal}
     </script>
     <!--<script src="https://code.angularjs.org/1.2.25/angular.js"></script>-->

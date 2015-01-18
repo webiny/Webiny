@@ -7,22 +7,16 @@ import EventManager from '/Core/EventManager';
  */
 class Layout extends BaseComponent {
 
+	getFqn(){
+		return 'Core.View.LayoutComponent';
+	}
+
 	componentDidMount() {
 		EventManager.addListener('renderRoute', () => {
 			this.setState({
 				time: new Date().getTime()
 			});
 		});
-	}
-
-	getTemplate() {
-		return '<div className="component container">\
-					<h4>Core-View-Layout</h4>\
-					<button onClick={this.goTo} data-url="/">Dashboard</button>\
-					<button onClick={this.goTo} data-url="/posts">Posts</button>\
-					<hr/>\
-					<w-placeholder name="MainContent"/>\
-				</div>';
 	}
 
 	goTo(e) {

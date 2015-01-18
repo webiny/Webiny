@@ -256,7 +256,7 @@ class BaseComponent extends BaseClass {
 					/**
 					 * Generate React JS code from string template
 					 */
-					ReactComponentSource = JSXTransformer.transform(TemplateParser.parse(ReactComponentSource)).code;
+					ReactComponentSource = JSXTransformer.transform(ReactComponentSource).code;
 				}
 
 				console.groupCollapsed("Compiled component - " + _this.getClassName() + ' ' + _this.getInstanceId());

@@ -73,7 +73,7 @@ class Selector
         $item = $results->item(0);*/
 
         $result = self::select($source, $query);
-
+        
         /*if ($query == "//w-layout[@template='layouts/2col.htpl']") {
             die(print_r($result[0]['outerHtml']));
         }*/

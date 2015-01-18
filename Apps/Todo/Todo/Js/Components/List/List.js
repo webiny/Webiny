@@ -36,23 +36,6 @@ class List extends BaseComponent {
 	removeTodo(index) {
 		this.trigger('Todo.Todo.removeTodoAction', index);
 	}
-
-	getTemplate() {
-
-		return '<div className="col-sm-12"> \
-					<form ref="form" className="form-inline">\
-						<div className="form-group">\
-							<input ref="todoTask" type="text" className="form-control" placeholder="New todo" />\
-							<button type="submit" onClick={this.addTodo}>Add</button>\
-						</div>\
-					</form>\
-					<ul className="col-sm-11 col-sm-offset-1">\
-						<w-loop items={this.state.todos} as="item" index="i">\
-							<li>({item.id}) {item.task} <span onClick={this.removeTodo.bind(this, i)}>[x]</span></li>\
-						</w-loop>\
-					</ul>\
-				</div>';
-	}
 }
 
 export default List;

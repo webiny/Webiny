@@ -20,6 +20,8 @@ class IfParser extends BaseParser {
 
 		// Extract first level <w-if> tags
 		var elements = div.querySelectorAll('div > w-if');
+		
+		console.log(elements)
 
 		if (elements.length > 0) {
 			this._objectToArray(elements).forEach((element) => {
