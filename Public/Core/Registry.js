@@ -4,12 +4,9 @@ function initializeStore(store){
 	store.instance.init();
 	store.initialized = true;
 
-	var source = store.instance.getSource();
-	return Http.get(_apiUrl + source).then((res) => {
-		if (!res.error) {
-			store.instance.setInitialData(res.data);
-		}
-		return res.data;
+	return store.instance.crudList().then((response) => {
+		store.instance.setInitialData(response.data);
+		return response.data;
 	});
 }
 

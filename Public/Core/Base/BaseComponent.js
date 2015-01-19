@@ -1,5 +1,4 @@
 import BaseClass from '/Core/Base/BaseClass';
-import TemplateParser from '/Core/TemplateParser';
 import EventManager from '/Core/EventManager';
 import ComponentLoader from '/Core/ComponentLoader';
 import StateStore from '/Core/StateStore';

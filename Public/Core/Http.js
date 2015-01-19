@@ -54,12 +54,12 @@ function execute(url, method, data = null, config = {}) {
 					resolve(request.response);
 				}
 			} else {
-				reject(Error(request.statusText));
+				reject(new Error(request.statusText));
 			}
 		};
 
 		request.onerror = function () {
-			reject(Error('Unknown error occurred, probably a network error.'));
+			reject(new Error('Unknown error occurred, probably a network error.'));
 		};
 
 		request.send(body);

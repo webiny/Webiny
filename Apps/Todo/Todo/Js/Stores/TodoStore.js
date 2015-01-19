@@ -1,5 +1,4 @@
 import BaseStore from '/Core/Base/BaseStore';
-import Http from '/Core/Http';
 
 class TodoStore extends BaseStore {
 
@@ -7,7 +6,7 @@ class TodoStore extends BaseStore {
 		return 'Todo.Todo.TodoStore';
 	}
 
-	getSource() {
+	getService() {
 		return '/Todo/Todo/Item';
 	}
 
@@ -18,22 +17,11 @@ class TodoStore extends BaseStore {
 	}
 
 	_onAddTask(task) {
-		this.data.push(task);
-
-		Http.post(_apiUrl + this.getSource(), task).then((res) => {
-			if (!res.error) {
-				task.id = res.data.id;
-				this.emitChange();
-			}
-		});
-		this.emitChange();
+		this.crudCreate(task);
 	}
 
 	_onRemoveTask(index) {
-		var task = this.data[index];
-		this.data.splice(index, 1);
-		this.emitChange();
-		Http.delete(_apiUrl + this.getSource()+'/'+task.id);
+		this.crudDelete(index);
 	}
 }
 
