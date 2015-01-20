@@ -10,7 +10,7 @@
             <li>
                 <w-if cond="item.id">({item.id})</w-if> {item.task}
                 <w-if cond="item.id">
-                    <span onClick={this.removeTodo.bind(this, i)}>[x]</span>
+                    <span onClick={this.removeTodo.bind(this, item)}>[x]</span>
                 <w-else/>
                     [Saving...]
                 </w-if>

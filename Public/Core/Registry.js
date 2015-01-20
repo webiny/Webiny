@@ -4,10 +4,7 @@ function initializeStore(store){
 	store.instance.init();
 	store.initialized = true;
 
-	return store.instance.crudList().then((response) => {
-		store.instance.setInitialData(response.data);
-		return response.data;
-	});
+	return store.instance.getInitialData();
 }
 
 class Registry {

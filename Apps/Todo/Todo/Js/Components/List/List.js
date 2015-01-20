@@ -33,8 +33,8 @@ class List extends BaseComponent {
 		todoInput.value = '';
 	}
 
-	removeTodo(index) {
-		this.trigger('Todo.Todo.removeTodoAction', index);
+	removeTodo(item) {
+		this.trigger('Todo.Todo.removeTodoAction', item);
 	}
 }
 
