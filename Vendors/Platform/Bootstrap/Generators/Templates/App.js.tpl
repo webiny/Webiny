@@ -3,9 +3,15 @@ import Router from '/Core/Router/Router';
 import Http from '/Core/Http';
 import Q from '/Core/Queue';
 
+/* Global classes */
+import BaseComponent from '/Core/Base/BaseComponent';
+import Link from '/Apps/Core/View/Js/Components/Link/Link';
+
 /* For development purposes */
-window.router = Router;
+window.Router = Router;
 window.EventManager = EventManager;
+window.Link = Link.createInstance();
+window.BaseComponent = BaseComponent;
 
 /* Expose these often used components so we don't need to import them all the time */
 window.Http = Http;
@@ -17,17 +23,18 @@ import {$module.alias} from '{$module.path}';
 {/foreach}
 
 /**
- * Instantiate the router
- */
-window.components = [];
-
-/**
  * Instantiate modules
  */
 {foreach from=$WP.Modules item=module}
 var {$module.alias|lcfirst} = new {$module.alias}();
 {/foreach}
 
+Router.setActiveRoute(window.location.pathname);
 var mainComponent = React.createElement({$WP.MainComponentAlias}.createInstance());
 React.render(mainComponent, document.getElementById('app'));
-Router.start();
+Router.start(window.location.pathname);
+
+$(document).on('click', 'a', function(e){
+    e.preventDefault();
+    Router.goTo(e.target.href);
+});

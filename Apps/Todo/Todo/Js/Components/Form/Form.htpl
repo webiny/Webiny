@@ -1,0 +1,9 @@
+<div class="col-sm-12">
+    <form ref="form" class="form-inline">
+        <div class="form-group">
+            <input disabled type="text" class="form-control" valueLink={this.linkState("id")} placeholder="ID" />
+            <input ref="todoTask" type="text" class="form-control" valueLink={this.linkState("task")} placeholder="New task" />
+            <button type="submit" onClick={this.saveTodo}>Save</button>
+        </div>
+    </form>
+</div>

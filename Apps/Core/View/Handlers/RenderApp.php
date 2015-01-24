@@ -46,9 +46,9 @@ class RenderApp
                 }
 
                 // Parse HTPL and build component in App/Build folder
-                $parser = new Parser();
                 foreach ($components as $cmp) {
                     // Parse HTPL and store JSX
+                    $parser = new Parser();
                     $jsx = $parser->parse(file_get_contents($cmp['tplPath']));
                     @mkdir($cmp['buildDir'], 0755, true);
                     $jsxPath = $cmp['buildDir'] . '/' . $cmp['name'] . '.js';

@@ -4,7 +4,9 @@ function initializeStore(store){
 	store.instance.init();
 	store.initialized = true;
 
-	return store.instance.getInitialData();
+	return store.instance.getInitialData().then((data) => {
+		store.instance.setInitialData(data);
+	});
 }
 
 class Registry {

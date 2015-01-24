@@ -1,11 +1,13 @@
 import EventManager from '/Core/EventManager'
 import BaseClass from '/Core/Base/BaseClass'
+import Route from '/Core/Router/Route'
 
 class BaseModule extends BaseClass {
 
 	constructor(){
 		var routes = this.registerRoutes();
 		Object.keys(routes).forEach(function (route) {
+			Router.addRoute(new Route(route));
 			var placeholders = routes[route];
 			Object.keys(placeholders).forEach(function (placeholder) {
 				var component = placeholders[placeholder];

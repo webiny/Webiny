@@ -15,6 +15,7 @@
     <script>
         traceur.options.experimental = true;
         var _apiUrl = '{$App->getConfig('Platform.ApiPath')}';
+        var _appUrl = '{$App->getConfig('Platform.WebPath')}';
     </script>
     <script type="module">
         {literal}

@@ -9,7 +9,7 @@ class ApiService {
 	}
 
 	crudCreate(data) {
-		return Http.post(_apiUrl + this.action, data);
+		return Http.post(_apiUrl + this.url, data);
 	}
 
 	crudDelete(id) {
@@ -20,8 +20,8 @@ class ApiService {
 
 	}
 
-	crudGet() {
-
+	crudGet(id) {
+		return Http.get(_apiUrl + this.url + '/' + id);
 	}
 
 	crudUpdate() {

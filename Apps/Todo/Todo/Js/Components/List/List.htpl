@@ -5,11 +5,13 @@
             <button type="submit" onClick={this.addTodo}>Add</button>
         </div>
     </form>
+    <w-if cond="this.state.todos.length == 0">No items available yet...</w-if>
     <ul class="col-sm-11 col-sm-offset-1">
         <w-loop items=this.state.todos as="item" index="i">
             <li>
                 <w-if cond="item.id">({item.id})</w-if> {item.task}
                 <w-if cond="item.id">
+                    <Link href="/Todo/Todo/:id" params={{id: item.id}}>Edit</Link>
                     <span onClick={this.removeTodo.bind(this, item)}>[x]</span>
                 <w-else/>
                     [Saving...]

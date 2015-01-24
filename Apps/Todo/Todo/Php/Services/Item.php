@@ -50,6 +50,7 @@ class Item implements CrudInterface
      */
     public function crudList()
     {
+        sleep(1);
         $tasks = TodoTask::find();
         return new JsonResponse($tasks->toArray());
     }

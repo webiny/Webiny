@@ -4,31 +4,35 @@ import Route from '/Core/Router/Route'
 class Router {
 
 	constructor() {
-		this.namedParam = /:\w+/g;
-
-		this.splatParam = /\*\w+/g;
-
-		this.routes = {};
-
-		this.activeRoute = new Route(History.getState());
+		this.routes = [];
+		this.activeRoute = null;
 
 		History.Adapter.bind(window, 'statechange', () => {
-			return this.checkRoutes(History.getState());
+			return this.checkRoutes(History.getState().data.url);
 		});
 	}
 
-	route(route, callback) {
-		route = route.replace(this.namedParam, '([^\/]+)').replace(this.splatParam, '(.*?)');
-		return this.routes["^" + route + "$"] = callback;
+	addRoute(route) {
+		if(route instanceof Route){
+			this.routes.push(route);
+		}
 	}
 
-	checkRoutes(state) {
-		this.activeRoute = new Route(state);
-		EventManager.emit('renderRoute', this.activeRoute);
-		//console.log(EventManager.getListeners())
+	getParam(param){
+		return this.activeRoute.getParams(param);
 	}
 
-	navigate(url, replace) {
+	checkRoutes(url) {
+		url = this._sanitizeUrl(url);
+		this.routes.forEach((route) => {
+			if (route.match(url)) {
+				this.activeRoute = route;
+				EventManager.emit('renderRoute', this.activeRoute);
+			}
+		});
+	}
+
+	goTo(url, replace) {
 		if (replace == null) {
 			replace = false;
 		}
@@ -45,25 +49,29 @@ class Router {
 	}
 
 	start(url) {
-		var stateObj = {};
-		if (url != null) {
-			stateObj = {data: {url: url}};
-		} else {
-			stateObj = History.getState();
-		}
-		return this.checkRoutes(stateObj);
+		url = url || History.getState().data.url;
+		return this.checkRoutes(url);
 	}
 
-	go(num) {
-		return History.go(num);
-	}
-
-	back() {
+	goBack() {
 		return History.back();
 	}
 
 	getActiveRoute() {
 		return this.activeRoute;
+	}
+
+	setActiveRoute(url) {
+		url = this._sanitizeUrl(url);
+		this.routes.forEach((route) => {
+			if (route.match(url)) {
+				this.activeRoute = route;
+			}
+		});
+	}
+
+	_sanitizeUrl(url) {
+		return url.replace(_appUrl, '');
 	}
 }
 

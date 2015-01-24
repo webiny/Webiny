@@ -25,7 +25,7 @@ class IfParser extends AbstractParser
         }
         $rootHtml = $ifsParent['outerHtml'];
         $rootTag = $ifsParent['tag'];
-        $ifBlocks = $selector->select($rootHtml, '/' . $rootTag . '/w-if');
+        $ifBlocks = $selector->select($rootHtml, '/' . $rootTag . '//w-if');
 
         if (count($ifBlocks)) {
             foreach ($ifBlocks as $ifBlock) {

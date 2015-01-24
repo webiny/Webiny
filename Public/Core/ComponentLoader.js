@@ -9,9 +9,9 @@ class ComponentLoader extends BaseClass {
 	}
 
 	getComponents(placeholder) {
-		//console.log("LOADING COMPONENTS", placeholder + ' ' + Router.getActiveRoute().getUrl());
+		//console.log("LOADING COMPONENTS", placeholder + ' ' + Router.getActiveRoute().getPattern());
 		// Get URL specific components
-		var eventHash = md5(Router.getActiveRoute().getUrl() + placeholder);
+		var eventHash = md5(Router.getActiveRoute().getPattern() + placeholder);
 		var routeComponents = EventManager.emit(eventHash);
 
 		// Get global components
@@ -35,10 +35,10 @@ class ComponentLoader extends BaseClass {
 					items = [items];
 				}
 				items.forEach(function (item, index) {
-					var params = item.params || {};
+					var props = item.props || {};
 					// Need to add 'key' to each component in the array so React does not complain about it
-					params['key'] = index;
-					elements.push(React.createElement(item.component, params));
+					props['key'] = index;
+					elements.push(React.createElement(item.component, props));
 				});
 			});
 		}

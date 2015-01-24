@@ -9,8 +9,10 @@ class List extends BaseComponent {
 	componentDidMount() {
 		super();
 
-		this.onStore('Todo.Todo.TodoStore', (store) => {
-			this.setState({todos: store.getData()});
+		this.onStore('Todo.Todo.TasksStore', (store) => {
+			store.getData().then((data) => {
+				this.setState({todos: data});
+			});
 		});
 
 		// Disable form submission
@@ -21,9 +23,8 @@ class List extends BaseComponent {
 	}
 
 	getInitialState() {
-		this.todoStore = this.getStore('Todo.Todo.TodoStore');
 		return {
-			todos: this.todoStore.getData()
+			todos: []
 		}
 	}
 
@@ -33,8 +34,12 @@ class List extends BaseComponent {
 		todoInput.value = '';
 	}
 
-	removeTodo(item) {
-		this.trigger('Todo.Todo.removeTodoAction', item);
+	removeTodo(id) {
+		this.trigger('Todo.Todo.removeTodoAction', id);
+	}
+
+	editTask(item) {
+		Router.goTo('/Todo/Todo/'+item)
 	}
 }
 

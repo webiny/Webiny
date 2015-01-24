@@ -14,9 +14,12 @@ class Parser
     use StdLibTrait, PlatformTrait, TemplateEngineTrait;
 
     private $_quotedReplacements = [];
+    private $_tagReplacements = [];
     private $_unquotedReplacements = [];
     private $_onEvents = [
         ' class='         => ' className=',
+        ' valuelink='     => ' valueLink=',
+        ' savestate='     => ' saveState=',
         ' oncopy='        => ' onCopy=',
         ' oncut='         => ' onCut=',
         ' onpaste='       => ' onPaste=',
@@ -66,6 +69,28 @@ class Parser
     {
         $workHtpl = $tpl;
 
+        // Replace component tags that begin with capital letters
+        preg_match_all('/<\/[A-Z]+[a-z]+>|<[A-Z]+[a-z]+/', $workHtpl, $tags);
+
+        if (count($tags[0]) > 0) {
+            $tags = array_unique($tags[0]);
+            foreach ($tags as $tag) {
+                $uid = 'wby-parser-' . $this->str($tag)->caseLower()->trim('</>');
+                if ($this->str($tag)->startsWith('</')) {
+                    $uid = '</' . $uid . '>';
+                } else {
+                    $uid = '<' . $uid;
+                }
+                $this->_tagReplacements[$uid] = $tag;
+            }
+        }
+
+
+        if (count($this->_tagReplacements) > 0) {
+            $workHtpl = str_replace(array_values($this->_tagReplacements), array_keys($this->_tagReplacements),
+                                    $workHtpl);
+        }
+
         // Replace JSX with placeholders
         preg_match_all('/"{.*?}"/', $workHtpl, $matches);
 
@@ -76,7 +101,7 @@ class Parser
         $workHtpl = str_replace(array_values($this->_quotedReplacements), array_keys($this->_quotedReplacements),
                                 $workHtpl);
 
-        preg_match_all('/{.*?}/', $workHtpl, $matches);
+        preg_match_all('/({{.*?}}|{.*?})/', $workHtpl, $matches);
         foreach ($matches[0] as $match) {
             $uid = uniqid('webiny-', true);
             $this->_unquotedReplacements[$uid] = $match;
@@ -106,6 +131,12 @@ class Parser
 
         // Replace CSS class attribute with native JS className attribute
         $workHtpl = str_replace(array_keys($this->_onEvents), array_values($this->_onEvents), $workHtpl);
+
+        // Replace tags
+        if (count($this->_tagReplacements) > 0) {
+            $workHtpl = str_replace(array_keys($this->_tagReplacements), array_values($this->_tagReplacements),
+                                    $workHtpl);
+        }
 
         return $workHtpl;
     }

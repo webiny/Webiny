@@ -1,0 +1,1 @@
+<a href={this.dynamic.link}>{this.props.children}</a>

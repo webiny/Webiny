@@ -1,7 +1,10 @@
 import BaseClass from '/Core/Base/BaseClass';
+import Router from '/Core/Router/Router';
 import EventManager from '/Core/EventManager';
 import ComponentLoader from '/Core/ComponentLoader';
 import StateStore from '/Core/StateStore';
+import Tools from '/Core/Tools';
+
 
 /**
  * BaseComponent class is the main class all React components should inherit from.
@@ -11,15 +14,7 @@ class BaseComponent extends BaseClass {
 
 	constructor() {
 		this.__listeners = [];
-		this.__instanceId = function () {
-			var delim = '-';
-
-			function S4() {
-				return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-			}
-
-			return S4() + S4() + delim + S4() + delim + S4() + delim + S4() + delim + S4() + S4() + S4();
-		}();
+		this.__instanceId = Tools.createUID();
 	}
 
 	static createInstance() {
@@ -82,6 +77,10 @@ class BaseComponent extends BaseClass {
 
 	}
 
+	shouldSaveState(){
+		return true;
+	}
+
 	getComponents() {
 		return {};
 	}
@@ -90,6 +89,15 @@ class BaseComponent extends BaseClass {
 
 		var _this = this;
 
+		/**
+		 * Fetch mixins
+		 */
+		var mixins = this.getMixins();
+		mixins.push(React.addons.LinkedStateMixin);
+
+		/**
+		 * React class object
+		 */
 		var classObject = {
 			/**
 			 * This property is used for storing dynamically calculated properties that will be used in template
@@ -103,7 +111,7 @@ class BaseComponent extends BaseClass {
 			/**
 			 * @see http://facebook.github.io/react/docs/component-specs.html#mixins
 			 */
-			mixins: this.getMixins(),
+			mixins: mixins,
 
 			/**
 			 * @see http://facebook.github.io/react/docs/component-specs.html#statics
@@ -129,9 +137,12 @@ class BaseComponent extends BaseClass {
 			 * @see http://facebook.github.io/react/docs/component-specs.html#mounting-componentwillmount
 			 */
 			componentWillMount: function () {
-				var state = StateStore.getState(_this.getInstanceId());
-				if (state) {
-					this.state = state;
+				var saveState = this.props.saveState || false;
+				if(saveState){
+					var state = StateStore.getState(_this.getInstanceId());
+					if (state) {
+						this.state = state;
+					}
 				}
 			},
 
@@ -169,7 +180,11 @@ class BaseComponent extends BaseClass {
 			 * @see http://facebook.github.io/react/docs/component-specs.html#unmounting-componentwillunmount
 			 */
 			componentWillUnmount: function () {
-				StateStore.saveState(_this.getInstanceId(), this.state);
+				var saveState = this.props.saveState || false;
+				if(saveState){
+					StateStore.saveState(_this.getInstanceId(), this.state);
+				}
+
 				this.__listeners.forEach((unsubscribe) => {
 					unsubscribe();
 				});
@@ -239,6 +254,10 @@ class BaseComponent extends BaseClass {
 
 			getStore(name) {
 				return _this.getRegistry().getStore(name);
+			},
+
+			getParam(name){
+				return Router.getParam(name);
 			}
 		};
 
@@ -264,7 +283,7 @@ class BaseComponent extends BaseClass {
 
 				/** This is required for inline usage of components */
 				var components = _this.getComponents();
-				console.info("Components", components);
+				//console.info("Components", components);
 				var keys = [];
 				var values = [];
 

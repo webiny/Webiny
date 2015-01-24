@@ -3,9 +3,15 @@ import Router from '/Core/Router/Router';
 import Http from '/Core/Http';
 import Q from '/Core/Queue';
 
+/* Global classes */
+import BaseComponent from '/Core/Base/BaseComponent';
+import Link from '/Apps/Core/View/Js/Components/Link/Link';
+
 /* For development purposes */
-window.router = Router;
+window.Router = Router;
 window.EventManager = EventManager;
+window.Link = Link.createInstance();
+window.BaseComponent = BaseComponent;
 
 /* Expose these often used components so we don't need to import them all the time */
 window.Http = Http;
@@ -16,16 +22,17 @@ import CoreViewModule from '/Apps/Core/View/Js/Module';
 import TodoTodoModule from '/Apps/Todo/Todo/Js/Module';
 
 /**
- * Instantiate the router
- */
-window.components = [];
-
-/**
  * Instantiate modules
  */
 var coreViewModule = new CoreViewModule();
 var todoTodoModule = new TodoTodoModule();
 
+Router.setActiveRoute(window.location.pathname);
 var mainComponent = React.createElement(MainComponent.createInstance());
 React.render(mainComponent, document.getElementById('app'));
-Router.start();
+Router.start(window.location.pathname);
+
+$(document).on('click', 'a', function(e){
+    e.preventDefault();
+    Router.goTo(e.target.href);
+});

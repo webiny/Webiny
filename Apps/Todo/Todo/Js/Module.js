@@ -1,16 +1,25 @@
 import BaseModule from '/Core/Base/BaseModule'
 import ListComponent from '/Apps/Todo/Todo/Js/Components/List/List'
-import TodoStore from '/Apps/Todo/Todo/Js/Stores/TodoStore'
+import FormComponent from '/Apps/Todo/Todo/Js/Components/Form/Form'
+import TaskStore from '/Apps/Todo/Todo/Js/Stores/TaskStore'
+import TasksStore from '/Apps/Todo/Todo/Js/Stores/TasksStore'
 
 class Todo extends BaseModule {
 
 	registerRoutes() {
 
-		var todoList = ListComponent.createInstance();
 		return {
-			'/': {
+			'/Todo/Todo': {
 				MainContent: {
-					component: todoList
+					component: ListComponent.createInstance(),
+					props: {
+						saveState: true
+					}
+				}
+			},
+			'/Todo/Todo/:id': {
+				MainContent: {
+					component: FormComponent.createInstance()
 				}
 			}
 		}
@@ -18,7 +27,8 @@ class Todo extends BaseModule {
 
 	registerStores() {
 		return [
-			TodoStore
+			TaskStore,
+			TasksStore
 		];
 	}
 }
