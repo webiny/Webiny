@@ -2,13 +2,24 @@ import BaseComponent from '/Core/Base/BaseComponent';
 
 class List extends BaseComponent {
 
-	getFqn(){
+	getFqn() {
 		return 'Todo.Todo.ListComponent';
 	}
 
 	componentDidMount() {
 		super();
 
+		this.fullListOfTasks = [];
+
+		this.tasksStore = this.getStore('Todo.Todo.TasksStore');
+
+		// Get initial data
+		this.tasksStore.getData().then((data) => {
+			this.fullListOfTasks = data;
+			this.setState({todos: data});
+		});
+
+		// Listen to store changes
 		this.onStore('Todo.Todo.TasksStore', (store) => {
 			store.getData().then((data) => {
 				this.setState({todos: data});
@@ -23,9 +34,7 @@ class List extends BaseComponent {
 	}
 
 	getInitialState() {
-		return {
-			todos: []
-		}
+		return {todos: []};
 	}
 
 	addTodo() {
@@ -39,7 +48,18 @@ class List extends BaseComponent {
 	}
 
 	editTask(item) {
-		Router.goTo('/Todo/Todo/'+item)
+		Router.goTo('/Todo/Todo/' + item)
+	}
+
+	filterTasks() {
+		var filter = this.getNode('todoTaskSearch').value.toLowerCase();
+		var results = [];
+		this.fullListOfTasks.forEach((task) => {
+			if(task.task.toLowerCase().indexOf(filter) > -1){
+				results.push(task);
+			}
+		});
+		this.setState({todos: results});
 	}
 }
 

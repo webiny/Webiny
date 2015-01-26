@@ -19,6 +19,9 @@ class TodoTask extends EntityAbstract
              ->attr('completed')
              ->boolean()
              ->setDefaultValue(false)
+            ->attr('important')
+            ->boolean()
+            ->setDefaultValue(false)
              ->attr('created')
              ->datetime()
              ->setDefaultValue('now');

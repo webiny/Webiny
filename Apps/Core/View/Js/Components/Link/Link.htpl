@@ -1,1 +1,1 @@
-<a href={this.dynamic.link}>{this.props.children}</a>
+<a href={this.dynamic.link} class={this.dynamic.classes}>{this.props.children}</a>

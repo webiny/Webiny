@@ -50,7 +50,6 @@ class Item implements CrudInterface
      */
     public function crudList()
     {
-        sleep(1);
         $tasks = TodoTask::find();
         return new JsonResponse($tasks->toArray());
     }
@@ -65,12 +64,11 @@ class Item implements CrudInterface
      */
     public function crudCreate()
     {
-        sleep(1);
         $task = new TodoTask();
         $task->task = $this->httpRequest()->post('task');
         $task->save();
 
-        return new JsonResponse($task->toArray('id,task,created'));
+        return new JsonResponse($task->toArray(''));
     }
 
     /**

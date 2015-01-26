@@ -8,12 +8,26 @@ class Link extends BaseComponent {
 	
 	getDynamicProperties(){
 		var link = this.props.href;
+		var classes = this.props.className;
+
+		if(typeof classes == 'string'){
+			classes = classes.split(' ');
+			classes.push('w-link');
+			classes = classes.join(' ');
+		} else if(classes instanceof Object) {
+			var cx = React.addons.classSet;
+			classes['w-link'] = true;
+			classes = cx(classes);
+		}
+		
+		// Build URL
 		Object.keys(this.props.params).forEach((param) => {
 			link = link.replace(':'+param, this.props.params[param]);
 		});
 		
 		return {
-			link: link
+			link: link,
+			classes: classes
 		}
 	}
 }

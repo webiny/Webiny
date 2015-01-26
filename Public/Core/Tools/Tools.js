@@ -9,6 +9,12 @@ class Tools {
 
 		return S4() + S4() + delim + S4() + delim + S4() + delim + S4() + delim + S4() + S4() + S4();
 	}
+
+	createPromise(data){
+		return Q.when(data).then((data) => {
+			return data;
+		});
+	}
 }
 
 export default new Tools;

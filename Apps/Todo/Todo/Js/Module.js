@@ -1,7 +1,6 @@
 import BaseModule from '/Core/Base/BaseModule'
 import ListComponent from '/Apps/Todo/Todo/Js/Components/List/List'
 import FormComponent from '/Apps/Todo/Todo/Js/Components/Form/Form'
-import TaskStore from '/Apps/Todo/Todo/Js/Stores/TaskStore'
 import TasksStore from '/Apps/Todo/Todo/Js/Stores/TasksStore'
 
 class Todo extends BaseModule {
@@ -27,7 +26,6 @@ class Todo extends BaseModule {
 
 	registerStores() {
 		return [
-			TaskStore,
 			TasksStore
 		];
 	}

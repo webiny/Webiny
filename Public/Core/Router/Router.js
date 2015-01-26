@@ -8,7 +8,7 @@ class Router {
 		this.activeRoute = null;
 
 		History.Adapter.bind(window, 'statechange', () => {
-			return this.checkRoutes(History.getState().data.url);
+			return this.checkRoutes(History.getState().data.url || History.getState().url);
 		});
 	}
 

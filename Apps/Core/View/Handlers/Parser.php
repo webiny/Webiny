@@ -13,6 +13,10 @@ class Parser
 {
     use StdLibTrait, PlatformTrait, TemplateEngineTrait;
 
+    const DOUBLE_BRACES = '/(?=({{((?:[^{}]+|{(?2)})+)}}))/';
+    const SINGLE_BRACES = '/(?=({((?:[^{}]+|{(?2)})+)}))/';
+    const QUOTED = '/(?=("{((?:[^{}]+|{(?2)})+)}"))/';
+
     private $_quotedReplacements = [];
     private $_tagReplacements = [];
     private $_unquotedReplacements = [];
@@ -92,17 +96,25 @@ class Parser
         }
 
         // Replace JSX with placeholders
-        preg_match_all('/"{.*?}"/', $workHtpl, $matches);
+        preg_match_all(self::QUOTED, $workHtpl, $matches);
 
-        foreach ($matches[0] as $match) {
+        foreach ($matches[1] as $match) {
             $uid = uniqid('webiny-', true);
             $this->_quotedReplacements[$uid] = $match;
         }
         $workHtpl = str_replace(array_values($this->_quotedReplacements), array_keys($this->_quotedReplacements),
                                 $workHtpl);
 
-        preg_match_all('/({{.*?}}|{.*?})/', $workHtpl, $matches);
-        foreach ($matches[0] as $match) {
+        preg_match_all(self::DOUBLE_BRACES, $workHtpl, $matches);
+        foreach ($matches[1] as $match) {
+            $uid = uniqid('webiny-', true);
+            $this->_unquotedReplacements[$uid] = $match;
+        }
+        $workHtpl = str_replace(array_values($this->_unquotedReplacements), array_keys($this->_unquotedReplacements),
+                                $workHtpl);
+
+        preg_match_all(self::SINGLE_BRACES, $workHtpl, $matches);
+        foreach ($matches[1] as $match) {
             $uid = uniqid('webiny-', true);
             $this->_unquotedReplacements[$uid] = $match;
         }
@@ -151,3 +163,18 @@ class Parser
         $this->_unquotedReplacements[$key] = $value;
     }
 }
+/*
+Sven: ("|=)({.*?})( |>|")
+Stack: (?=\{((?:[^{}]+|\{(?1)\})+)\})
+WORKS: (?=(\{((?:[^{}]+|\{(?2)\})+)\}))
+
+
+DOUBLE BRACES:
+(?=({{((?:[^{}]+|{(?2)})+)}}))
+
+SINGLE BRACES:
+(?=({((?:[^{}]+|{(?2)})+)}))
+
+QUOTED:
+(?=("{((?:[^{}]+|{(?2)})+)}"))
+*/

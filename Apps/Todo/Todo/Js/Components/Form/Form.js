@@ -9,19 +9,15 @@ class Form extends BaseComponent {
 	componentDidMount() {
 		super();
 
+		this.tasksStore = this.getStore('Todo.Todo.TasksStore');
+		this.tasksStore.crudGet(this.getParam('id')).then((response) => {
+			this.setState(response.data);
+		});
+
 		// Disable form submission
 		var form = this.getNode('form');
 		$(form).submit(function (e) {
 			e.preventDefault();
-		});
-	}
-
-	getInitialState() {
-		this.taskStore = this.getStore('Todo.Todo.TaskStore');
-		return {};
-		return this.taskStore.getData().then((data) => {
-			console.log(data)
-			this.setState(data || {});
 		});
 	}
 

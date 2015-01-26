@@ -3,7 +3,7 @@ import Router from '/Core/Router/Router';
 import EventManager from '/Core/EventManager';
 import ComponentLoader from '/Core/ComponentLoader';
 import StateStore from '/Core/StateStore';
-import Tools from '/Core/Tools';
+import Tools from '/Core/Tools/Tools';
 
 
 /**
@@ -258,6 +258,12 @@ class BaseComponent extends BaseClass {
 
 			getParam(name){
 				return Router.getParam(name);
+			},
+
+			css(rules){
+				console.log(rules)
+				var cx = React.addons.classSet;
+				return cx(rules);
 			}
 		};
 
