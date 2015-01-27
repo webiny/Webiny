@@ -13,18 +13,22 @@ class List extends BaseComponent {
             <input ref="todoTaskSearch" onChange={this.filterTasks} type="text" className="form-control" placeholder="Filter..."/></div>\
     </form>\
     {function(){if(this.state.todos.length == 0){return <wdiv>No items available yet...</wdiv>}}.bind(this)()}<table className="table"><thead><tr><th>#</th>\
-                <th>ID</th>\
-                <th>Task</th>\
-                <th>Created On</th>\
-                <th>Actions</th>\
-            </tr></thead><tbody>\
-{this.state.todos.map(function(item, i){return (<tr key={i} className={this.css({danger: item.important})}><td>{i+1}</td>\
-                    <td>{function(){if(item.id){return <wdiv>{item.id}</wdiv>}}.bind(this)()}</td>\
-                    <td>{item.task}</td>\
-                    <td>{item.created}</td>\
-                    <td>\
-                        {function(){if(item.id){return <wdiv><Link className="btn btn-primary" href="/Todo/Todo/:id" params={{id: item.id}}>Edit</Link><button className="btn btn-danger" onClick={this.removeTodo.bind(this, item)}>Delete</button></wdiv>} else { return <wdiv>Saving...</wdiv>;}}.bind(this)()}</td>\
-                </tr>)}.bind(this))}</tbody></table></div>';
+            <th>ID</th>\
+            <th>Task</th>\
+            <th>Created On</th>\
+            <th>Actions</th>\
+        </tr></thead><tbody>\
+{this.state.todos.map(function(item, i){return (<tr key={i} className={this.classSet({danger: item.important})}><td>{i+1}</td>\
+                <td>\
+                    {function(){if(item.id){return <wdiv>{item.id}</wdiv>}}.bind(this)()}</td>\
+                <td>{item.task}</td>\
+                <td>{item.created}</td>\
+                <td>\
+                    {function(){if(item.id){return <wdiv><Link className="btn btn-primary" href="/Todo/Todo/:id" params={{id: item.id}}>\
+                        Edit</Link>\
+                        Â \
+                        <button className="btn btn-danger" onClick={this.removeTodo.bind(this, item)}>Delete</button></wdiv>} else { return <wdiv>Saving...</wdiv>;}}.bind(this)()}</td>\
+            </tr>)}.bind(this))}</tbody></table></div>';
 	}
 
 	getFqn() {

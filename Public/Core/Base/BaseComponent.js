@@ -260,10 +260,8 @@ class BaseComponent extends BaseClass {
 				return Router.getParam(name);
 			},
 
-			css(rules){
-				console.log(rules)
-				var cx = React.addons.classSet;
-				return cx(rules);
+			classSet(rules){
+				return React.addons.classSet(rules);
 			}
 		};
 

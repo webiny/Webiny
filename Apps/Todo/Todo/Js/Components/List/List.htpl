@@ -14,31 +14,35 @@
     <w-if cond="this.state.todos.length == 0">No items available yet...</w-if>
     <table class="table">
         <thead>
-            <tr>
-                <th>#</th>
-                <th>ID</th>
-                <th>Task</th>
-                <th>Created On</th>
-                <th>Actions</th>
-            </tr>
+        <tr>
+            <th>#</th>
+            <th>ID</th>
+            <th>Task</th>
+            <th>Created On</th>
+            <th>Actions</th>
+        </tr>
         </thead>
         <tbody>
-            <w-loop items=this.state.todos as="item" index="i">
-                <tr class={this.css({danger: item.important})}>
-                    <td>{i+1}</td>
-                    <td><w-if cond="item.id">{item.id}</w-if></td>
-                    <td>{item.task}</td>
-                    <td>{item.created}</td>
-                    <td>
-                        <w-if cond="item.id">
-                            <Link class="btn btn-primary" href="/Todo/Todo/:id" params={{id: item.id}}>Edit</Link>
-                            <button class="btn btn-danger" onClick={this.removeTodo.bind(this, item)}>Delete</button>
+        <w-loop items=this.state.todos as="item" index="i">
+            <tr class={this.classSet({danger: item.important})}>
+                <td>{i+1}</td>
+                <td>
+                    <w-if cond="item.id">{item.id}</w-if>
+                </td>
+                <td>{item.task}</td>
+                <td>{item.created}</td>
+                <td>
+                    <w-if cond="item.id">
+                        <Link class="btn btn-primary" href="/Todo/Todo/:id" params={{id: item.id}}>
+                        Edit</Link>
+                        &nbsp;
+                        <button class="btn btn-danger" onClick={this.removeTodo.bind(this, item)}>Delete</button>
                         <w-else/>
-                            Saving...
-                        </w-if>
-                    </td>
-                </tr>
-            </w-loop>
+                        Saving...
+                    </w-if>
+                </td>
+            </tr>
+        </w-loop>
         </tbody>
     </table>
     </ul>

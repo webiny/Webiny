@@ -15,9 +15,8 @@ class Link extends BaseComponent {
 			classes.push('w-link');
 			classes = classes.join(' ');
 		} else if(classes instanceof Object) {
-			var cx = React.addons.classSet;
 			classes['w-link'] = true;
-			classes = cx(classes);
+			classes = this.classSet(classes);
 		}
 		
 		// Build URL
