@@ -5,7 +5,7 @@ class Route {
 	constructor(pattern) {
 		this.pattern = pattern;
 		this.regex = null;
-		this.paramNames = {};
+		this.paramNames = [];
 		this.paramValues = {};
 		this.namedParam = /:\w+/g;
 		this.splatParam = /\*\w+/g;
@@ -14,7 +14,7 @@ class Route {
 		var params = pattern.match(this.namedParam);
 		if (params) {
 			params.forEach((item, i) => {
-				this.paramNames[i] = item.replace(':', '');
+				this.paramNames.push(item.replace(':', ''));
 			});
 		}
 
@@ -28,6 +28,7 @@ class Route {
 			return false;
 		}
 
+		// Url params
 		if (this.paramNames) {
 			var matchedParams = url.match(this.regex);
 			if (matchedParams) {
@@ -37,7 +38,30 @@ class Route {
 				});
 			}
 		}
+
+		// Parse query string params
+		window.location.search.substring(1).split('&').forEach(el => {
+			if(el != '') {
+				el = el.split('=');
+				this.paramValues[decodeURIComponent(el[0])] = decodeURIComponent(el[1]);
+			}
+		});
 		return true;
+	}
+
+	getHref(params = {}) {
+		var url = this.pattern;
+		var newParams = Object.assign(this.paramValues, params);
+
+		// Build main URL
+		this.paramNames.forEach(param => {
+			url = url.replace(':' + param, newParams[param]);
+			delete newParams[param];
+		});
+
+		// Build query string from the remaining params
+		url += '?'+jQuery.param(newParams);
+		return url;
 	}
 
 	getPattern() {

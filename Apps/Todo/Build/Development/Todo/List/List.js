@@ -24,9 +24,7 @@ class List extends BaseComponent {
                 <td>{item.task}</td>\
                 <td>{item.created}</td>\
                 <td>\
-                    {function(){if(item.id){return <wdiv><Link className="btn btn-primary" href="/Todo/Todo/:id" params={{id: item.id}}>\
-                        Edit</Link>\
-                        Â \
+                    {function(){if(item.id){return <wdiv><Link className="btn btn-primary" href="/Todo/Todo/:id?important=:important" params={item}>Edit</Link>&nbsp;\
                         <button className="btn btn-danger" onClick={this.removeTodo.bind(this, item)}>Delete</button></wdiv>} else { return <wdiv>Saving...</wdiv>;}}.bind(this)()}</td>\
             </tr>)}.bind(this))}</tbody></table></div>';
 	}

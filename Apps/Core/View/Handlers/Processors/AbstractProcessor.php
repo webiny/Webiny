@@ -21,7 +21,8 @@ abstract class AbstractProcessor
     protected function _extractValues($html, $regex){
         preg_match_all($regex, $html, $matches);
 
-        foreach ($matches[1] as $match) {
+        $matches = isset($matches[1]) ? $matches[1] : $matches[0];
+        foreach ($matches as $match) {
             $uid = uniqid('webiny-', true);
             $this->_values[$uid] = $match;
         }

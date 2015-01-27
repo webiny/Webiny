@@ -22,6 +22,20 @@ class Router {
 		return this.activeRoute.getParams(param);
 	}
 
+	getHref(pattern = null, params = {}){
+		if(pattern instanceof Object){
+			return this.getActiveRoute().getHref(pattern);
+		}
+
+		var url = null;
+		this.routes.forEach(route => {
+			if(route.getPattern() == pattern){
+				url = route.getHref(params);
+			}
+		})
+		return url;
+	}
+
 	checkRoutes(url) {
 		url = this._sanitizeUrl(url);
 		this.routes.forEach((route) => {
@@ -71,7 +85,7 @@ class Router {
 	}
 
 	_sanitizeUrl(url) {
-		return url.replace(_appUrl, '');
+		return url.replace(_appUrl, '').split('?').shift();
 	}
 }
 

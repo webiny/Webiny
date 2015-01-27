@@ -7,6 +7,7 @@ use Apps\Core\View\Handlers\Parsers\LoopParser;
 use Apps\Core\View\Handlers\Parsers\PlaceholderParser;
 use Apps\Core\View\Handlers\Processors\AbstractProcessor;
 use Apps\Core\View\Handlers\Processors\AttributesProcessor;
+use Apps\Core\View\Handlers\Processors\EntitiesProcessor;
 use Apps\Core\View\Handlers\Processors\QuotedJSXProcessor;
 use Apps\Core\View\Handlers\Processors\TagsProcessor;
 use Apps\Core\View\Handlers\Processors\UnquotedJSXProcessor;
@@ -30,7 +31,8 @@ class Parser
             'tags'       => new TagsProcessor(),
             'quoted'     => new QuotedJSXProcessor(),
             'unquoted'   => new UnquotedJSXProcessor(),
-            'attributes' => new AttributesProcessor()
+            'attributes' => new AttributesProcessor(),
+            'entities'  => new EntitiesProcessor()
         ];
     }
 

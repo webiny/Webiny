@@ -33,11 +33,10 @@
                 <td>{item.created}</td>
                 <td>
                     <w-if cond="item.id">
-                        <Link class="btn btn-primary" href="/Todo/Todo/:id" params={{id: item.id}}>
-                        Edit</Link>
-                        &nbsp;
+                        <Link class="btn btn-primary" href="/Todo/Todo/:id?important=:important"
+                              params={item}>Edit</Link>&nbsp;
                         <button class="btn btn-danger" onClick={this.removeTodo.bind(this, item)}>Delete</button>
-                        <w-else/>
+                    <w-else/>
                         Saving...
                     </w-if>
                 </td>
