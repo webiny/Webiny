@@ -7,6 +7,7 @@ use Apps\Core\View\Handlers\Parsers\LoopParser;
 use Apps\Core\View\Handlers\Parsers\PlaceholderParser;
 use Apps\Core\View\Handlers\Processors\AbstractProcessor;
 use Apps\Core\View\Handlers\Processors\AttributesProcessor;
+use Apps\Core\View\Handlers\Processors\BindAttributeProcessor;
 use Apps\Core\View\Handlers\Processors\EntitiesProcessor;
 use Apps\Core\View\Handlers\Processors\QuotedJSXProcessor;
 use Apps\Core\View\Handlers\Processors\TagsProcessor;
@@ -32,7 +33,8 @@ class Parser
             'quoted'     => new QuotedJSXProcessor(),
             'unquoted'   => new UnquotedJSXProcessor(),
             'attributes' => new AttributesProcessor(),
-            'entities'  => new EntitiesProcessor()
+            'entities'  => new EntitiesProcessor(),
+            'bindAttribute'  => new BindAttributeProcessor()
         ];
     }
 
@@ -44,6 +46,10 @@ class Parser
         /* @var $processor AbstractProcessor */
         foreach ($this->_processors as $processor) {
             $workHtpl = $processor->extract($workHtpl);
+        }
+
+        if($this->str($tpl)->contains('bind=')){
+            //die($workHtpl);
         }
 
         /** Run parsers */

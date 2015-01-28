@@ -4,13 +4,23 @@ import Http from '/Core/Http';
 import Q from '/Core/Queue';
 
 /* Global classes */
+import Tools from '/Core/Tools/Tools';
 import BaseComponent from '/Core/Base/BaseComponent';
 import Link from '/Apps/Core/View/Js/Components/Link/Link';
+import Input from '/Apps/Core/View/Js/Components/Input/Input';
+import Checkbox from '/Apps/Core/View/Js/Components/Checkbox/Checkbox';
+import Form from '/Apps/Core/View/Js/Components/Form/Form';
+
+
+window.Tools = Tools;
+window.Link = Link.createInstance();
+window.Input = Input.createInstance();
+window.Checkbox = Checkbox.createInstance();
+window.Form = Form.createInstance();
 
 /* For development purposes */
 window.Router = Router;
 window.EventManager = EventManager;
-window.Link = Link.createInstance();
 window.BaseComponent = BaseComponent;
 
 /* Expose these often used components so we don't need to import them all the time */

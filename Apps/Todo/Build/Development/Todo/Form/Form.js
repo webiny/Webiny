@@ -3,12 +3,12 @@ import BaseComponent from '/Core/Base/BaseComponent';
 class Form extends BaseComponent {
 
 	getTemplate(){ return '<div className="col-sm-12">\
-    <form ref="form" className="form-inline">\
-        <div className="form-group">\
-            <input disabled="disabled" type="text" className="form-control" valueLink={this.linkState("id")} placeholder="ID"/><input ref="todoTask" type="text" className="form-control" valueLink={this.linkState("task")} placeholder="New task"/><button type="submit" onClick={this.saveTodo}>Save</button>\
+    <Form name="form"><Input label="ID" valueLink={this.linkState("id")} placeholder="ID" disabled="disabled"/><Input label="Created" valueLink={this.linkState("created")} placeholder="Created" disabled="disabled"/><Input label="Task" valueLink={this.linkState("task")} placeholder="Task"/><Checkbox label="Important" valueLink={this.linkState("important")}/><Checkbox label="Completed" valueLink={this.linkState("completed")} disabled="disabled"/><div className="form-group">\
+            <div className="col-sm-offset-2 col-sm-10">\
+                <button className="btn btn-success" type="submit" onClick={this.saveTodo}>Save</button>\
+            </div>\
         </div>\
-    </form>\
-</div>';
+    </Form></div>';
 	}
 
 	getFqn(){
@@ -20,13 +20,10 @@ class Form extends BaseComponent {
 
 		this.tasksStore = this.getStore('Todo.Todo.TasksStore');
 		this.tasksStore.crudGet(this.getParam('id')).then((response) => {
+			response.data.settings = {
+				dev: true
+			};
 			this.setState(response.data);
-		});
-
-		// Disable form submission
-		var form = this.getNode('form');
-		$(form).submit(function (e) {
-			e.preventDefault();
 		});
 	}
 

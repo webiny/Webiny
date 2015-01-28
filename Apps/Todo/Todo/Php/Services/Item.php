@@ -106,7 +106,7 @@ class Item implements CrudInterface
     public function crudGet($id)
     {
         $task = TodoTask::findById($id);
-        return new JsonResponse($task->toArray('id,task,created'));
+        return new JsonResponse($task->toArray());
     }
 
     /**

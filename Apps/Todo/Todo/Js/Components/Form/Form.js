@@ -11,13 +11,10 @@ class Form extends BaseComponent {
 
 		this.tasksStore = this.getStore('Todo.Todo.TasksStore');
 		this.tasksStore.crudGet(this.getParam('id')).then((response) => {
+			response.data.settings = {
+				dev: true
+			};
 			this.setState(response.data);
-		});
-
-		// Disable form submission
-		var form = this.getNode('form');
-		$(form).submit(function (e) {
-			e.preventDefault();
 		});
 	}
 

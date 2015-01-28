@@ -1,9 +1,14 @@
 <div class="col-sm-12">
-    <form ref="form" class="form-inline">
+    <Form name="form">
+        <Input label="ID" bind="id" placeholder="ID" disabled />
+        <Input label="Created" bind="created" placeholder="Created" disabled/>
+        <Input label="Task" bind="task" placeholder="Task" />
+        <Checkbox label="Important" bind="important" />
+        <Checkbox label="Completed" bind="completed" disabled />
         <div class="form-group">
-            <input disabled type="text" class="form-control" valueLink={this.linkState("id")} placeholder="ID" />
-            <input ref="todoTask" type="text" class="form-control" valueLink={this.linkState("task")} placeholder="New task" />
-            <button type="submit" onClick={this.saveTodo}>Save</button>
+            <div class="col-sm-offset-2 col-sm-10">
+                <button class="btn btn-success" type="submit" onClick={this.saveTodo}>Save</button>
+            </div>
         </div>
-    </form>
+    </Form>
 </div>

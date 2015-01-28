@@ -3,7 +3,17 @@ import Router from '/Core/Router/Router';
 import EventManager from '/Core/EventManager';
 import ComponentLoader from '/Core/ComponentLoader';
 import StateStore from '/Core/StateStore';
-import Tools from '/Core/Tools/Tools';
+
+function createStateKeySetter(component, key) {
+	// Partial state is allocated outside of the function closure so it can be
+	// reused with every call, avoiding memory allocation when this function
+	// is called.
+	var partialState = {};
+	return function stateKeySetter(value) {
+		partialState[key] = value;
+		component.setState(partialState);
+	};
+}
 
 
 /**
@@ -90,12 +100,6 @@ class BaseComponent extends BaseClass {
 		var _this = this;
 
 		/**
-		 * Fetch mixins
-		 */
-		var mixins = this.getMixins();
-		mixins.push(React.addons.LinkedStateMixin);
-
-		/**
 		 * React class object
 		 */
 		var classObject = {
@@ -111,7 +115,7 @@ class BaseComponent extends BaseClass {
 			/**
 			 * @see http://facebook.github.io/react/docs/component-specs.html#mixins
 			 */
-			mixins: mixins,
+			mixins: this.getMixins(),
 
 			/**
 			 * @see http://facebook.github.io/react/docs/component-specs.html#statics
@@ -262,6 +266,19 @@ class BaseComponent extends BaseClass {
 
 			classSet(rules){
 				return React.addons.classSet(rules);
+			},
+
+			/**
+			 * TODO: refactor to LinkValue class which will have all the methods and support for nested keys
+			 *
+			 * @param key
+			 * @returns {{value: *, requestChange: *}}
+			 */
+			linkState(key){
+				return {
+					value: this.state[key],
+					requestChange: createStateKeySetter(this, key)
+				}
 			}
 		};
 
