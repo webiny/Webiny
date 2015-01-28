@@ -6,6 +6,7 @@
 // offsetEnd = count
 
 TODO: class=parsanje probati izvesti da developer ne mora pisati {this.classSet({})}
+TODO: valueLink=parsanje probati izvesti da developer ne mora pisati {this.linkState('name')}
 
 <w-list-pagination items="pages">
     <div class="left">

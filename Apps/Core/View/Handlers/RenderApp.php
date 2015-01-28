@@ -34,6 +34,9 @@ class RenderApp
                         if ($item->isDirectory()) {
                             $componentPath = $storage->getAbsolutePath($item->getKey());
                             $componentName = $this->str($item->getKey())->explode('/')->last()->val();
+                            if(!file_exists($componentPath . '/' . $componentName . '.js')){
+                                continue;
+                            }
                             $buildPath = $app->getName() . '/Build/Development/' . $module->getName() . '/' . $componentName;
                             $components[] = [
                                 'name'     => $componentName,
