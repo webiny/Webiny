@@ -13,17 +13,22 @@ class TasksStore extends BaseStore {
 	init() {
 		this.data = [];
 		this.onAction('Todo.Todo.addTodoAction', this._onAddTask);
+		this.onAction('Todo.Todo.saveTaskAction', this._onSaveTask);
 		this.onAction('Todo.Todo.removeTodoAction', this._onRemoveTask);
 	}
 
 	getInitialData(){
-		return this.crudList().then((response) => {
+		return this.crudList().then(response => {
 			return response.data;
 		});
 	}
 
 	_onAddTask(task) {
 		this.crudCreate(task);
+	}
+
+	_onSaveTask(task) {
+		this.crudUpdate(task);
 	}
 
 	_onRemoveTask(item) {

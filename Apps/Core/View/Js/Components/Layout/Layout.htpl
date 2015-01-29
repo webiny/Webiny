@@ -1,7 +1,5 @@
 <div class="component container">
     <h4>Core-View-Layout</h4>
-    <button onClick={this.goTo} data-url="/">Dashboard</button>
-    <button onClick={this.goTo} data-url="/posts">Posts</button>
     <hr/>
     <w-placeholder name="MainContent"/>
 </div>

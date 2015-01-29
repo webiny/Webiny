@@ -24,8 +24,8 @@ class ApiService {
 		return Http.get(_apiUrl + this.url + '/' + id);
 	}
 
-	crudUpdate() {
-
+	crudUpdate(action, data, config = {}) {
+		return Http.patch(_apiUrl + this.url + '/' + action, data, config);
 	}
 
 	get(action, data, config = {}) {

@@ -3,7 +3,7 @@ namespace Apps\Core\View\Handlers\Processors;
 
 class TagsProcessor extends AbstractProcessor
 {
-    protected $_regex = '/<\/[A-Z]+[a-z]+>|<[A-Z]+[a-z]+/';
+    protected $_regex = '/<\/[A-Z]+[\w+]+>|<[A-Z]+[\w+]+/';
 
     public function extract($html)
     {
@@ -23,15 +23,24 @@ class TagsProcessor extends AbstractProcessor
         }
 
         if (count($this->_values) > 0) {
+            uasort($this->_values, function ($a,$b){
+                return strlen($b)-strlen($a);
+            });
+            
+            //die(print_r($this->_values));
             $html = str_replace(array_values($this->_values), array_keys($this->_values), $html);
+
+            if($this->str($html)->contains('grid')){
+                //die($html);
+            }
         }
         return $html;
     }
 
     public function inject($html)
     {
-        foreach ($this->_values as $key => $value) {
-            $html = str_replace('"' . $key . '"', $value, $html);
+        if($this->str($html)->contains('formgroup')){
+            //die(print_r($this->_values));
         }
 
         return $this->_injectValues($html, $this->_values);

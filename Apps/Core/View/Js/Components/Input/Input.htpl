@@ -1,9 +1,10 @@
-<div class="form-group">
-    <label class="col-sm-2 control-label">{this.props.label}</label>
-    <div class="col-sm-10">
+<wdiv>
+    <label class={this.classSet(this.state.labelCss)}>{this.props.label}</label>
+
+    <div class={this.classSet(this.state.inputCss)}>
         <input disabled={this.props.disabled} type="text"
                class="form-control"
                valueLink={this.props.valueLink}
-               placeholder={this.props.placeholder} />
+               placeholder={this.props.placeholder}/>
     </div>
-</div>
+</wdiv>

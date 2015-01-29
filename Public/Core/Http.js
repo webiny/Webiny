@@ -28,7 +28,7 @@ class Http {
 			}
 
 			if(method != 'GET' && method != 'HEAD' && data){
-				body = params;
+				body = JSON.stringify(data);
 			}
 
 			// Open request
@@ -84,7 +84,7 @@ class Http {
 	post(url, data = {}, options = {}) {
 		var postConfig = {
 			headers: {
-				"Content-type": "application/x-www-form-urlencoded"
+				"Content-type": "application/json;charset=UTF-8"
 			}
 		};
 
@@ -98,7 +98,14 @@ class Http {
 	}
 
 	patch(url, data = {}, options = {}) {
-		return this.execute(url, 'PATCH', data, options);
+		var defaultOptions = {
+			headers: {
+				"Content-type": "application/json;charset=UTF-8"
+			}
+		};
+		var config = {};
+		Object.assign(config, defaultOptions, options);
+		return this.execute(url, 'PATCH', data, config);
 	}
 }
 

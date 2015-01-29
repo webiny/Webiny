@@ -229,8 +229,25 @@ class BaseStore extends BaseClass {
 
 	}
 
-	crudUpdate() {
+	crudUpdate(id, data) {
+		if (id instanceof Object) {
+			data = id;
+			id = id.id;
+		}
 
+		return this.api.crudUpdate(id, data).then(response => {
+			if (!response.error) {
+				this.getData().then(storeData => {
+					storeData.forEach((item, index) => {
+						if (item.id == id) {
+							Object.assign(this.data[index], data);
+							this.emitChange();
+						}
+					});
+				});
+				return response;
+			}
+		});
 	}
 }
 

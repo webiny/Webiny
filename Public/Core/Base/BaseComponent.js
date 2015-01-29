@@ -9,9 +9,19 @@ function createStateKeySetter(component, key) {
 	// reused with every call, avoiding memory allocation when this function
 	// is called.
 	var partialState = {};
-	return function stateKeySetter(value) {
+	return function stateKeySetter(value, callback) {
+		value = value || '';
 		partialState[key] = value;
 		component.setState(partialState);
+		// Execute callback if defined
+		var keyName = key.charAt(0).toUpperCase() + key.slice(1);
+		var oldValue = component.state[key];
+
+		if(callback && component.hasOwnProperty(callback)){
+			component[callback](value, oldValue);
+		} else if(component.hasOwnProperty('onChange'+keyName)){
+			component['onChange'+keyName].call(component, value, oldValue);
+		}
 	};
 }
 
@@ -270,6 +280,9 @@ class BaseComponent extends BaseClass {
 
 			/**
 			 * TODO: refactor to LinkValue class which will have all the methods and support for nested keys
+			 * TODO: if using linkState, add support for onChange callbacks for each state property
+			 * Ex: onChangeImportant(newValue, oldValue){...}
+			 * Ex: onChangeName(newValue, oldValue){...}
 			 *
 			 * @param key
 			 * @returns {{value: *, requestChange: *}}

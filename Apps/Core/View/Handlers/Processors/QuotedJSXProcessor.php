@@ -5,7 +5,8 @@ class QuotedJSXProcessor extends AbstractProcessor
 {
     protected $_regex = '/(?=("{((?:[^{}]+|{(?2)})+)}"))/';
 
-    public function extract($html){
+    public function extract($html)
+    {
         return $this->_extractValues($html, $this->_regex);
     }
 

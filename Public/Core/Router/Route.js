@@ -60,7 +60,10 @@ class Route {
 		});
 
 		// Build query string from the remaining params
-		url += '?'+jQuery.param(newParams);
+		if(Object.keys(newParams).length > 0){
+			url += '?'+jQuery.param(newParams);
+		}
+
 		return url;
 	}
 

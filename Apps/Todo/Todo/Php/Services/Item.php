@@ -3,6 +3,7 @@
 namespace Apps\Todo\Todo\Php\Services;
 
 use Apps\Todo\Todo\Php\Entities\TodoTask;
+use Webiny\Component\Entity\EntityException;
 use Webiny\Component\Http\HttpTrait;
 use Webiny\Component\Rest\Interfaces\CrudInterface;
 use Webiny\Component\Rest\RestErrorException;
@@ -65,7 +66,7 @@ class Item implements CrudInterface
     public function crudCreate()
     {
         $task = new TodoTask();
-        $task->task = $this->httpRequest()->post('task');
+        $task->task = $this->httpRequest()->payload('task');
         $task->save();
 
         return new JsonResponse($task->toArray(''));
@@ -118,8 +119,8 @@ class Item implements CrudInterface
      *
      * @link http://tools.ietf.org/html/rfc5789
      *
-     * @rest .default
-     * @rest .method put
+     * @rest.default
+     * @rest.method put
      *
      * @param string $id Id of the record that should be replaced.
      *
@@ -139,8 +140,8 @@ class Item implements CrudInterface
      *
      * @link http://tools.ietf.org/html/rfc5789
      *
-     * @rest .default
-     * @rest .method patch
+     * @rest.default
+     * @rest.method patch
      *
      * @param string $id Id of the record that should be replaced.
      *
@@ -148,6 +149,21 @@ class Item implements CrudInterface
      */
     public function crudUpdate($id)
     {
-        // TODO: Implement crudUpdate() method.
+        $data = $this->httpRequest()->payload();
+        $task = TodoTask::findById($id);
+        if ($task) {
+            try{
+                $task->populate($data);
+                $task->save();
+            } catch(EntityException $e){
+                $attrs = $e->getInvalidAttributes();
+                die(print_r($attrs));
+            }
+
+
+            return new JsonResponse([]);
+        }
+
+        return new JsonErrorResponse([], 'Task with id `'.$id.'` was not found!');
     }
 }

@@ -9,9 +9,9 @@ class Layout extends BaseComponent {
 
 	getTemplate(){ return '<div className="component container">\
     <h4>Core-View-Layout</h4>\
-    <button onClick={this.goTo} data-url="/">Dashboard</button>\
-    <button onClick={this.goTo} data-url="/posts">Posts</button>\
-    <hr/>{function(){return ComponentLoader.getComponents("MainContent");}.bind(this)()}</div>';
+    <hr/>\
+    {function(){return ComponentLoader.getComponents("MainContent");}.bind(this)()}\
+</div>';
 	}
 
 	getFqn(){

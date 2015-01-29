@@ -23,7 +23,7 @@
         </tr>
         </thead>
         <tbody>
-        <w-loop items=this.state.todos as="item" index="i">
+        <w-loop items=this.state.todos as="item" index="i" filter="this.state.filter">
             <tr class={this.classSet({danger: item.important})}>
                 <td>{i+1}</td>
                 <td>

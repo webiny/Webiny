@@ -2,6 +2,13 @@ import BaseComponent from '/Core/Base/BaseComponent';
 
 class Input extends BaseComponent {
 
+	getTemplate(){ return '<wdiv><label className={this.classSet(this.state.labelCss)}>{this.props.label}</label>\
+\
+    <div className={this.classSet(this.state.inputCss)}>\
+        <input disabled={this.props.disabled} type="text" className="form-control" valueLink={this.props.valueLink} placeholder="{this.props.placeholder}/"/></div>\
+</wdiv>';
+	}
+
 	getFqn(){
 		return 'Core.View.Input';
 	}

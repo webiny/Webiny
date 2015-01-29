@@ -1,6 +1,6 @@
 import BaseComponent from '/Core/Base/BaseComponent';
 
-class Form extends BaseComponent {
+class TaskForm extends BaseComponent {
 
 	getFqn(){
 		return 'Todo.Todo.FormComponent';
@@ -18,10 +18,18 @@ class Form extends BaseComponent {
 		});
 	}
 
+	/*onChangeImportant(newValue, oldValue) {
+		console.log("Important __magic__ checkbox changed: ", newValue);
+	}
+
+	changeImportant(newValue, oldValue) {
+		console.log("Important __manual__ checkbox changed: ", newValue);
+	}*/
+
 	saveTodo(){
-		console.log(this.state)
-		this.trigger('Todo.Todo.saveTask', this.state)
+		this.trigger('Todo.Todo.saveTaskAction', this.state);
+		Router.goTo('/Todo/Todo');
 	}
 }
 
-export default Form;
+export default TaskForm;
