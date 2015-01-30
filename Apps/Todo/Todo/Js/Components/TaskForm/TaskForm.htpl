@@ -1,20 +1,29 @@
 <div class="col-sm-12">
     <Form name="form">
         <FormGroup>
-            <Input grid="6" label="ID" bind="id" placeholder="ID" disabled/>
-            <Input grid="6" label="Created" bind="created" placeholder="Created" disabled/>
+            <Label>ID</Label>
+            <Input grid="4" bind="id" placeholder="ID" disabled/>
+            <Label>Created</Label>
+            <Input grid="4" bind="created" placeholder="Created" disabled/>
         </FormGroup>
 
         <FormGroup>
-            <Input grid="12" label="Task" bind="task" placeholder="Task"/>
+            <Label>Task</Label>
+            <Input name="task" grid="10" bind="task" placeholder="Task"/>
         </FormGroup>
 
         <FormGroup>
             <Checkbox label="Important" bind="important" />
         </FormGroup>
+
         <FormGroup>
-            <Checkbox label="Completed" bind="completed" disabled/>
+            <Checkbox label="Settings dev" bind="settings.dev" bind-change="onSettingsDev"/>
         </FormGroup>
+
+        <FormGroup>
+            <Checkbox label="Completed" bind="completed" />
+        </FormGroup>
+
         <FormGroup>
             <div class="col-sm-offset-2 col-sm-10">
                 <button class="btn btn-success" type="submit" onClick={this.saveTodo}>Save</button>

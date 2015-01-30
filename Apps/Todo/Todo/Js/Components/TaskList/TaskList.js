@@ -1,6 +1,6 @@
 import BaseComponent from '/Core/Base/BaseComponent';
 
-class List extends BaseComponent {
+class TaskList extends BaseComponent {
 
 	getFqn() {
 		return 'Todo.Todo.ListComponent';
@@ -25,22 +25,19 @@ class List extends BaseComponent {
 				this.setState({todos: data});
 			});
 		});
-
-		// Disable form submission
-		var form = this.getNode('form');
-		$(form).submit(function (e) {
-			e.preventDefault();
-		});
 	}
 
 	getInitialState() {
-		return {todos: []};
+		return {
+			todos: [],
+			task: '',
+			filter: ''
+		};
 	}
 
 	addTodo() {
-		var todoInput = this.getNode('todoTask');
-		this.trigger('Todo.Todo.addTodoAction', {task: todoInput.value});
-		todoInput.value = '';
+		this.trigger('Todo.Todo.addTodoAction', {task: this.state.task});
+		this.setState({task: ''});
 	}
 
 	removeTodo(id) {
@@ -51,11 +48,14 @@ class List extends BaseComponent {
 		Router.goTo('/Todo/Todo/' + item)
 	}
 
-	filterTasks() {
-		var filter = this.getNode('todoTaskSearch').value.toLowerCase();
+	onChangeFilter(newValue, oldValue) {
+		if(!newValue){
+			return this.setState({todos: this.fullListOfTasks});
+		}
+		var filter = newValue.toLowerCase();
 		var results = [];
 		this.fullListOfTasks.forEach((task) => {
-			if(task.task.toLowerCase().indexOf(filter) > -1){
+			if (task.task.toLowerCase().indexOf(filter) > -1) {
 				results.push(task);
 			}
 		});
@@ -63,4 +63,4 @@ class List extends BaseComponent {
 	}
 }
 
-export default List;
+export default TaskList;

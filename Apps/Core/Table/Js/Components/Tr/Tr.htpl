@@ -1,0 +1,1 @@
+<tr class={this.props.className}>{this.props.children}</tr>

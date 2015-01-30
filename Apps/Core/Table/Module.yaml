@@ -1,0 +1,6 @@
+Module:
+    Active: true
+    Name: Table
+    Css:
+        RootVar: coreTableRoot
+        WebRootVar: coreTableWebRoot

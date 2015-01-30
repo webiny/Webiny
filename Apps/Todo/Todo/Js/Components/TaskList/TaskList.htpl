@@ -1,0 +1,45 @@
+<div class="col-sm-12">
+    <Form name="form">
+        <FormGroup>
+            <Label>Create new item</Label>
+            <Input grid="2" bind="task" placeholder="New todo" />
+            <button class="btn btn-primary col-sm-2" type="submit" onClick={this.addTodo}>Add</button>
+            <Label>Filter items</Label>
+            <Input grid="4" bind="filter" placeholder="Filter..."/>
+        </FormGroup>
+    </Form>
+    <w-if cond="this.state.todos.length == 0">No items available yet...</w-if>
+    <Table>
+        <Thead>
+        <Tr>
+            <Th>#</Th>
+            <Th>ID</Th>
+            <Th>Task</Th>
+            <Th>Created On</Th>
+            <Th>Actions</Th>
+        </Tr>
+        </Thead>
+        <Tbody>
+        <w-loop items="this.state.todos" as="item" index="i" filter="this.state.filter">
+            <Tr class={this.classSet({danger: item.important, success: item.completed})}>
+                <Td>{i+1}</Td>
+                <Td>
+                    <w-if cond="item.id">{item.id}</w-if>
+                </Td>
+                <Td>{item.task}</Td>
+                <Td>{item.created}</Td>
+                <Td>
+                    <w-if cond="item.id && !item.completed">
+                        <Link class="btn btn-primary" href="/Todo/Todo/:id" params={item}>Edit</Link>
+                    </w-if>
+                    <w-if cond="item.id">
+                        <button class="btn btn-danger" onClick={this.removeTodo.bind(this, item)}>Delete</button>
+                    <w-else/>
+                        Saving...
+                    </w-if>
+                </Td>
+            </Tr>
+        </w-loop>
+        </Tbody>
+    </Table>
+</div>

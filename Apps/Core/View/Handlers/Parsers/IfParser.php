@@ -18,7 +18,7 @@ class IfParser extends AbstractParser
 
         $selector = new Selector();
         $ifsParent = $selector->select($tpl, '//div[@id="' . $uniqueId . '"]//w-if[1]/..');
-        if(count($ifsParent)){
+        if (count($ifsParent)) {
             $ifsParent = $ifsParent[0];
         } else {
             return $originalTpl;
@@ -56,12 +56,32 @@ class IfParser extends AbstractParser
 
     private function _createReactJs($attrs, $templates)
     {
-        $ifTpl = "if(" . $attrs['cond'] . '){return <wdiv>' . trim($templates[0]) . '</wdiv>}';
+        // Check if template[0] needs wdiv wrapper
+        list($lwdiv, $rwdiv) = $this->_templateWrapper($templates[0]);
+        $ifTpl = "if(" . $attrs['cond'] . '){return ' . $lwdiv . trim($templates[0]) . $rwdiv . '}';
 
         if ($templates[1]) {
-            $ifTpl .= ' else { return <wdiv>' . trim($templates[1]) . '</wdiv>;}';
+            list($lwdiv, $rwdiv) = $this->_templateWrapper($templates[1]);
+            $ifTpl .= ' else { return ' . $lwdiv . trim($templates[1]) . $rwdiv . ';}';
         }
 
         return "{function(){" . $ifTpl . "}.bind(this)()}";
+    }
+
+    private function _templateWrapper($tpl)
+    {
+        $tpl = '<div id="wby-if-parser-wrapper-tester">'.$tpl.'</div>';
+        $matches = $this->_selector->select(trim($tpl), '//div[@id="wby-if-parser-wrapper-tester"]/*');
+        if (count($matches) == 1) {
+            return [
+                '',
+                ''
+            ];
+        }
+
+        return [
+            '<wdiv>',
+            '</wdiv>'
+        ];
     }
 }

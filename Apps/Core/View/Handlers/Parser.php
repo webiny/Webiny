@@ -38,7 +38,7 @@ class Parser
         ];
     }
 
-    public function parse($tpl)
+    public function parse($tpl = '')
     {
         $workHtpl = $tpl;
 
@@ -46,10 +46,6 @@ class Parser
         /* @var $processor AbstractProcessor */
         foreach ($this->_processors as $processor) {
             $workHtpl = $processor->extract($workHtpl);
-        }
-
-        if($this->str($tpl)->contains('bind=')){
-            //die($workHtpl);
         }
 
         /** Run parsers */
@@ -67,6 +63,10 @@ class Parser
         foreach ($this->_processors as $processor) {
             $workHtpl = $processor->inject($workHtpl);
         }
+
+        /*if($this->str($tpl)->contains('bind=')){
+            die($workHtpl);
+        }*/
 
         return $workHtpl;
     }

@@ -1,5 +1,5 @@
 import BaseModule from '/Core/Base/BaseModule'
-import ListComponent from '/Apps/Todo/Todo/Js/Components/List/List'
+import ListComponent from '/Apps/Todo/Todo/Js/Components/TaskList/TaskList'
 import FormComponent from '/Apps/Todo/Todo/Js/Components/TaskForm/TaskForm'
 import TasksStore from '/Apps/Todo/Todo/Js/Stores/TasksStore'
 

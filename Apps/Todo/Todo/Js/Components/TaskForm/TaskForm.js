@@ -26,6 +26,10 @@ class TaskForm extends BaseComponent {
 		console.log("Important __manual__ checkbox changed: ", newValue);
 	}*/
 
+	onSettingsDev(newValue, oldValue) {
+		console.log("Settings dev changed: ", newValue);
+	}
+
 	saveTodo(){
 		this.trigger('Todo.Todo.saveTaskAction', this.state);
 		Router.goTo('/Todo/Todo');

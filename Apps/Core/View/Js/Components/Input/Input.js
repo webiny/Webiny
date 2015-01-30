@@ -5,18 +5,14 @@ class Input extends BaseComponent {
 	getFqn(){
 		return 'Core.View.Input';
 	}
-
+	
 	getInitialState(){
+		var css = "col-sm-"+this.props.grid;
+		
 		var state = {
-			labelCss: {
-				"control-label": true,
-				"col-sm-2": true
-			},
-			inputCss: {
-				"col-sm-10": this.props.grid == 12,
-				"col-sm-4": this.props.grid == 6
-			}
-		}
+			css: {}
+		};
+		state.css[css] = true;
 		return state;
 	}
 
@@ -24,8 +20,8 @@ class Input extends BaseComponent {
 		return {
 			disabled: false,
 			placeholder: '',
-			label: '',
-			grid: 12
+			grid: 12,
+			name: null
 		}
 	}
 

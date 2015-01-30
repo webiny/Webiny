@@ -1,10 +1,6 @@
-<wdiv>
-    <label class={this.classSet(this.state.labelCss)}>{this.props.label}</label>
-
-    <div class={this.classSet(this.state.inputCss)}>
-        <input disabled={this.props.disabled} type="text"
-               class="form-control"
-               valueLink={this.props.valueLink}
-               placeholder={this.props.placeholder}/>
-    </div>
-</wdiv>
+<div class={this.classSet(this.state.css)}>
+    <input disabled={this.props.disabled} type="text"
+           class="form-control"
+           valueLink={this.props.valueLink}
+           placeholder={this.props.placeholder} />
+</div>

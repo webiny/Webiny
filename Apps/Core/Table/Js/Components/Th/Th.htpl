@@ -1,0 +1,1 @@
+<th>{this.props.children}</th>

@@ -4,7 +4,7 @@ namespace Apps\Core\View\Handlers\Processors;
 class EntitiesProcessor extends AbstractProcessor
 {
     protected $_values = [];
-    protected $_regex = '/&[a-z]+;/';
+    protected $_regex = '/(?:&[a-z]+;|&&)/';
 
     public function extract($html)
     {
