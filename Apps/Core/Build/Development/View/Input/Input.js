@@ -6,13 +6,13 @@ class Input extends BaseComponent {
     <input disabled={this.props.disabled} type="text" className="form-control" valueLink={this.props.valueLink} placeholder={this.props.placeholder}/></div>';
 	}
 
-	getFqn(){
+	getFqn() {
 		return 'Core.View.Input';
 	}
-	
-	getInitialState(){
-		var css = "col-sm-"+this.props.grid;
-		
+
+	getInitialState() {
+		var css = 'col-sm-' + this.props.grid;
+
 		var state = {
 			css: {}
 		};
@@ -20,7 +20,7 @@ class Input extends BaseComponent {
 		return state;
 	}
 
-	getDefaultProperties(){
+	getDefaultProperties() {
 		return {
 			disabled: false,
 			placeholder: '',
@@ -29,7 +29,9 @@ class Input extends BaseComponent {
 		}
 	}
 
-
+	getNode() {
+		return this.getDOMNode().querySelector('input');
+	}
 }
 
 export default Input;

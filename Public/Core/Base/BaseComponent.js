@@ -263,6 +263,7 @@ class BaseComponent extends BaseClass {
 			 * @returns {DOMElement}
 			 */
 			getNode(key) {
+				//console.log(this.refs[key])
 				return this.refs[key].getDOMNode();
 			},
 

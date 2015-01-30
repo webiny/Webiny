@@ -17,9 +17,11 @@ class LoopParser extends AbstractParser
     ];
     private $_attrs;
     private $_itemTpl;
+    private $_html;
 
     public function parse($tpl)
     {
+        $this->_html = $tpl;
         $originalTpl = $tpl;
         // Parse templates
         $uniqueId = uniqid('webiny-', true);
@@ -50,8 +52,15 @@ class LoopParser extends AbstractParser
                     element.innerHTML = element.innerHTML.replace(nIf.outerHTML, parser.parse(nIfHtml));
                 });*/
 
-                // Create ReactJs
                 $this->_itemTpl = $this->_injectKey($this->_itemTpl);
+
+                // If item template is wrapped in {}, we need to remove the braces
+                // If not removed, the following syntax occurs: return {function(){...}} -> JSX breaks!
+                if($this->str($this->_itemTpl)->startsWith('{')){
+                    $this->_itemTpl = trim($this->_itemTpl, '{}');
+                }
+
+                // Create ReactJs
                 $reactJs = $this->_createReactJs();
                 $tpl = str_replace($originalHtml, $reactJs, $tpl);
             }
@@ -77,7 +86,7 @@ class LoopParser extends AbstractParser
         $lDelim = '{';
         $rDelim = '}';
 
-        return "\n" . $lDelim . $this->_attrs['items'] . '.map(function(' . $this->_attrs['as'] . ', ' . $this->_attrs['index'] . '){return (' . $this->_itemTpl . ')}.bind(this))' . $rDelim;
+        return "\n" . $lDelim . $this->_attrs['items'] . '.map(function(' . $this->_attrs['as'] . ', ' . $this->_attrs['index'] . '){return ' . $this->_itemTpl . '}.bind(this))' . $rDelim;
     }
 
     private function _parseItemTemplate($html)

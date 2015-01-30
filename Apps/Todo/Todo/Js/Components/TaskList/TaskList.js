@@ -20,6 +20,7 @@ class TaskList extends BaseComponent {
 		});
 
 		// Listen to store changes
+		// TODO: mozda da se iz callbacka vraca data a ne store
 		this.onStore('Todo.Todo.TasksStore', (store) => {
 			store.getData().then((data) => {
 				this.setState({todos: data});
@@ -35,17 +36,14 @@ class TaskList extends BaseComponent {
 		};
 	}
 
-	addTodo() {
+	addTask(e) {
 		this.trigger('Todo.Todo.addTodoAction', {task: this.state.task});
 		this.setState({task: ''});
 	}
 
-	removeTodo(id) {
+	removeTask(id) {
+		//var id = $(e.target).attr('data-id');
 		this.trigger('Todo.Todo.removeTodoAction', id);
-	}
-
-	editTask(item) {
-		Router.goTo('/Todo/Todo/' + item)
 	}
 
 	onChangeFilter(newValue, oldValue) {

@@ -2,13 +2,13 @@ import BaseComponent from '/Core/Base/BaseComponent';
 
 class Input extends BaseComponent {
 
-	getFqn(){
+	getFqn() {
 		return 'Core.View.Input';
 	}
-	
-	getInitialState(){
-		var css = "col-sm-"+this.props.grid;
-		
+
+	getInitialState() {
+		var css = 'col-sm-' + this.props.grid;
+
 		var state = {
 			css: {}
 		};
@@ -16,7 +16,7 @@ class Input extends BaseComponent {
 		return state;
 	}
 
-	getDefaultProperties(){
+	getDefaultProperties() {
 		return {
 			disabled: false,
 			placeholder: '',
@@ -25,7 +25,9 @@ class Input extends BaseComponent {
 		}
 	}
 
-
+	getNode() {
+		return this.getDOMNode().querySelector('input');
+	}
 }
 
 export default Input;

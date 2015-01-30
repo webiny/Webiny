@@ -18,23 +18,8 @@ class TaskForm extends BaseComponent {
 
 		this.tasksStore = this.getStore('Todo.Todo.TasksStore');
 		this.tasksStore.crudGet(this.getParam('id')).then((response) => {
-			response.data.settings = {
-				dev: true
-			};
 			this.setState(response.data);
 		});
-	}
-
-	/*onChangeImportant(newValue, oldValue) {
-		console.log("Important __magic__ checkbox changed: ", newValue);
-	}
-
-	changeImportant(newValue, oldValue) {
-		console.log("Important __manual__ checkbox changed: ", newValue);
-	}*/
-
-	onSettingsDev(newValue, oldValue) {
-		console.log("Settings dev changed: ", newValue);
 	}
 
 	saveTodo(){

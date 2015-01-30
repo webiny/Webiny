@@ -9,8 +9,11 @@ class IfParser extends AbstractParser
 {
     use StdLibTrait, PlatformTrait;
 
+    private $_html;
+
     public function parse($tpl)
     {
+        $this->_html = $tpl;
         $originalTpl = $tpl;
         // Parse templates
         $uniqueId = uniqid('webiny-', true);

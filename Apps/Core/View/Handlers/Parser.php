@@ -29,12 +29,12 @@ class Parser
         ];
 
         $this->_processors = [
-            'tags'       => new TagsProcessor(),
-            'quoted'     => new QuotedJSXProcessor(),
-            'unquoted'   => new UnquotedJSXProcessor(),
-            'attributes' => new AttributesProcessor(),
-            'entities'  => new EntitiesProcessor(),
-            'bindAttribute'  => new BindAttributeProcessor()
+            'tags'          => new TagsProcessor(),
+            'quoted'        => new QuotedJSXProcessor(),
+            'unquoted'      => new UnquotedJSXProcessor(),
+            'attributes'    => new AttributesProcessor(),
+            'entities'      => new EntitiesProcessor(),
+            'bindAttribute' => new BindAttributeProcessor()
         ];
     }
 

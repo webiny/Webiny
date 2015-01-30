@@ -6,6 +6,7 @@ class AttributesProcessor extends AbstractProcessor
     protected $_values = [
         ' class='         => ' className=',
         ' valuelink='     => ' valueLink=',
+        ' colspan='       => ' colSpan=',
         ' savestate='     => ' saveState=',
         ' oncopy='        => ' onCopy=',
         ' oncut='         => ' onCut=',

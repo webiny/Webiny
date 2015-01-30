@@ -189,7 +189,8 @@ class BaseStore extends BaseClass {
 	}
 
 	/**
-	 * Delete record by given record object or record index in this.data
+	 * TODO: delete by ID, not index
+	 * Delete record by given record object or ID
 	 * @param Object|number item Object or index to delete
 	 * @returns Promise
 	 */
