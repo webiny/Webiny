@@ -276,6 +276,13 @@ class BaseComponent extends BaseClass {
 			},
 
 			classSet(rules){
+				var obj = rules;
+				if(typeof rules == 'string'){
+					obj = {};
+					rules.split(' ').forEach(item => {
+						obj[item] = true;
+					});
+				}
 				return React.addons.classSet(rules);
 			},
 

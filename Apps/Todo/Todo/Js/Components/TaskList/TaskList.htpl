@@ -8,7 +8,7 @@
             <Input grid="4" bind="filter" placeholder="Filter..."/>
         </FormGroup>
     </Form>
-    <w-if cond="this.state.todos.length == 0">No items available yet...</w-if>
+    <W:If cond="this.state.todos.length == 0">No items available yet...</W:If>
     <Table>
         <Thead>
         <Tr>
@@ -20,25 +20,25 @@
         </Tr>
         </Thead>
         <Tbody>
-        <w-loop items="this.state.todos" as="item" index="i">
-            <Tr class={this.classSet({danger: item.important, success: item.completed})}>
-                <Td>{i+1}</Td>
-                <Td>
-                    <w-if cond="item.id">{item.id}</w-if>
-                </Td>
-                <Td>{item.task}</Td>
-                <Td>{item.created}</Td>
-                <Td>
-                    <w-if cond="item.id">
-                        <Link class="btn btn-primary" href="/Todo/Todo/:id" params={item}>Edit</Link>
-                        &nbsp;
-                        <button class="btn btn-danger" onClick={this.removeTask.bind(this, item)}>Delete</button>
-                    <w-else/>
-                        Saving...
-                    </w-if>
-                </Td>
-            </Tr>
-        </w-loop>
+            <W:Loop items="this.state.todos" as="item" index="i">
+                <Tr class={{danger: item.important, success: item.completed}}>
+                    <Td>{i+1}</Td>
+                    <Td>
+                        <W:If cond="item.id">{item.id}</W:If>
+                    </Td>
+                    <Td>{item.task}</Td>
+                    <Td>{item.created}</Td>
+                    <Td>
+                        <W:If cond="item.id">
+                            <Link class="btn btn-primary" href="/Todo/Todo/:id" params={item}>Edit</Link>
+                            &nbsp;
+                            <button class="btn btn-danger" onClick={this.removeTask.bind(this, item)}>Delete</button>
+                        <W:Else/>
+                            Saving...
+                        </W:If>
+                    </Td>
+                </Tr>
+            </W:Loop>
         </Tbody>
     </Table>
 </div>

@@ -1,4 +1,4 @@
-<div class={this.classSet(this.state.css)}>
+<div class={this.state.css}>
     <input disabled={this.props.disabled} type="text"
            class="form-control"
            valueLink={this.props.valueLink}

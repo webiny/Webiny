@@ -9,7 +9,7 @@ class JSXProcessor extends AbstractProcessor
         '/(?=("{((?:[^{}]+|{(?2)})+)}"))/'
     ];
 
-    public function extract($html)
+    public function preProcess($html)
     {
         $html = $this->_extractValues($html, $this->_regex[0], true);
         $html = $this->_extractValues($html, $this->_regex[1], true);
@@ -17,8 +17,9 @@ class JSXProcessor extends AbstractProcessor
         return $this->_extractValues($html, $this->_regex[2]);
     }
 
-    public function inject($html)
+    public function postProcess($html)
     {
-        return $this->_injectValues($html, $this->_values);
+        $html = $this->_injectValues($html, $this->_values);
+        return $html;
     }
 }

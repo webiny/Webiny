@@ -44,12 +44,12 @@ class AttributesProcessor extends AbstractProcessor
         ' onwheel='       => ' onWheel='
     ];
 
-    public function extract($html)
+    public function preProcess($html)
     {
         return $html;
     }
 
-    public function inject($html)
+    public function postProcess($html)
     {
         return $this->_injectValues($html, $this->_values);
     }

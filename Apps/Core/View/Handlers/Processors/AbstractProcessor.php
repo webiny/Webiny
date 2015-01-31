@@ -10,9 +10,9 @@ abstract class AbstractProcessor
     protected $_values = [];
     protected $_regex = '';
 
-    abstract public function extract($html);
+    abstract public function preProcess($html);
 
-    abstract public function inject($html);
+    abstract public function postProcess($html);
 
     public function addValue($key, $value){
         $this->_values[$key] = $value;

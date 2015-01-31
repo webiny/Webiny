@@ -59,6 +59,8 @@ class RenderApp
 
                     // Transform JSX to React
                     exec('jsx ' . $cmp['buildDir'] . ' ' . $cmp['buildDir']);
+
+                    // Optimize JSX
                     $jsx = file_get_contents($jsxPath);
                     $jsx = str_replace("\n", "", $jsx);
                     $jsx = preg_replace("/>\s+</", "><", $jsx);

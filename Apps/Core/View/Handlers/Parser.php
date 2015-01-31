@@ -8,9 +8,11 @@ use Apps\Core\View\Handlers\Parsers\PlaceholderParser;
 use Apps\Core\View\Handlers\Processors\AbstractProcessor;
 use Apps\Core\View\Handlers\Processors\AttributesProcessor;
 use Apps\Core\View\Handlers\Processors\BindAttributeProcessor;
+use Apps\Core\View\Handlers\Processors\CssAttributeProcessor;
 use Apps\Core\View\Handlers\Processors\EntitiesProcessor;
 use Apps\Core\View\Handlers\Processors\JSXProcessor;
 use Apps\Core\View\Handlers\Processors\TagsProcessor;
+use Apps\Core\View\Handlers\Processors\WebinyTagsProcessor;
 use Webiny\Platform\Traits\PlatformTrait;
 use Webiny\Platform\Traits\TemplateEngineTrait;
 use Webiny\Component\StdLib\StdLibTrait;
@@ -28,11 +30,32 @@ class Parser
         ];
 
         $this->_processors = [
+            'webinyTags'    => new WebinyTagsProcessor(),
             'tags'          => new TagsProcessor(),
+            'cssAttribute'  => new CssAttributeProcessor(),
             'jsx'           => new JSXProcessor(),
-            'attributes'    => new AttributesProcessor(),
             'entities'      => new EntitiesProcessor(),
-            'bindAttribute' => new BindAttributeProcessor()
+            'bindAttribute' => new BindAttributeProcessor(),
+            'attributes'    => new AttributesProcessor()
+        ];
+
+        $this->_preProcessors = [
+            $this->_processors['webinyTags'],
+            $this->_processors['tags'],
+            $this->_processors['jsx'],
+            $this->_processors['entities'],
+            $this->_processors['bindAttribute'],
+            $this->_processors['attributes']
+        ];
+
+        $this->_postProcessors = [
+            $this->_processors['webinyTags'],
+            $this->_processors['tags'],
+            $this->_processors['jsx'],
+            $this->_processors['cssAttribute'],
+            $this->_processors['entities'],
+            $this->_processors['bindAttribute'],
+            $this->_processors['attributes']
         ];
     }
 
@@ -40,10 +63,10 @@ class Parser
     {
         $workHtpl = $tpl;
 
-        /** Run processors (extract values for later replacement) */
+        /** Run processors */
         /* @var $processor AbstractProcessor */
-        foreach ($this->_processors as $processor) {
-            $workHtpl = $processor->extract($workHtpl);
+        foreach ($this->_preProcessors as $processor) {
+            $workHtpl = $processor->preProcess($workHtpl);
         }
 
         /** Run parsers */
@@ -57,9 +80,9 @@ class Parser
             $workHtpl = $parser->parse($workHtpl);
         }
 
-        /** Run processors (inject values extracted at the beginning of the process) */
-        foreach ($this->_processors as $processor) {
-            $workHtpl = $processor->inject($workHtpl);
+        /** Run processors */
+        foreach ($this->_postProcessors as $processor) {
+            $workHtpl = $processor->postProcess($workHtpl);
         }
 
         return $workHtpl;

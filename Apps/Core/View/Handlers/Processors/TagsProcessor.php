@@ -5,8 +5,9 @@ class TagsProcessor extends AbstractProcessor
 {
     protected $_regex = '/<\/[A-Z]+[\w+]+>|<[A-Z]+[\w+]+/';
 
-    public function extract($html)
+    public function preProcess($html)
     {
+        // Replace JSX components with valid html tag names
         preg_match_all($this->_regex, $html, $tags);
 
         if (count($tags[0]) > 0) {
@@ -27,22 +28,13 @@ class TagsProcessor extends AbstractProcessor
                 return strlen($b)-strlen($a);
             });
             
-            //die(print_r($this->_values));
             $html = str_replace(array_values($this->_values), array_keys($this->_values), $html);
-
-            if($this->str($html)->contains('grid')){
-                //die($html);
-            }
         }
         return $html;
     }
 
-    public function inject($html)
+    public function postProcess($html)
     {
-        if($this->str($html)->contains('formgroup')){
-            //die(print_r($this->_values));
-        }
-
         return $this->_injectValues($html, $this->_values);
     }
 }
