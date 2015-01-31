@@ -77,7 +77,8 @@ class LoopParser extends AbstractParser
         $key = uniqid('webiny-', true);
         $value = '{' . $this->_attrs['index'] . '}';
 
-        $this->_parent->addUnquotedReplacement($key, $value);
+        // Add attribute replacement to JSX processor
+        $this->_parent->addReplacement('"'. $key. '"', $value);
         return preg_replace($firstTagRegex, '$1 key='.$key, trim($item), 1);
     }
 

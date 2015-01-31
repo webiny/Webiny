@@ -2,8 +2,7 @@ import BaseComponent from '/Core/Base/BaseComponent';
 
 class Input extends BaseComponent {
 
-	getTemplate(){ return '<div className={this.classSet(this.state.css)}>\
-    <input disabled={this.props.disabled} type="text" className="form-control" valueLink={this.props.valueLink} placeholder={this.props.placeholder}/></div>';
+	getTemplate(){ return '<div className={this.classSet(this.state.css)}><input disabled={this.props.disabled} type="text" className="form-control" valueLink={this.props.valueLink} placeholder={this.props.placeholder}/></div>';
 	}
 
 	getFqn() {

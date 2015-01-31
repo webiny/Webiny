@@ -2,5 +2,5 @@
     <input disabled={this.props.disabled} type="text"
            class="form-control"
            valueLink={this.props.valueLink}
-           placeholder={this.props.placeholder} />
+           placeholder={this.props.placeholder}/>
 </div>

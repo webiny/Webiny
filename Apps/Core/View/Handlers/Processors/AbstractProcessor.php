@@ -18,12 +18,15 @@ abstract class AbstractProcessor
         $this->_values[$key] = $value;
     }
 
-    protected function _extractValues($html, $regex){
+    protected function _extractValues($html, $regex, $quoteReplacements = false){
         preg_match_all($regex, $html, $matches);
 
         $matches = isset($matches[1]) ? $matches[1] : $matches[0];
         foreach ($matches as $match) {
             $uid = uniqid('webiny-', true);
+            if($quoteReplacements){
+                $uid = '"'.$uid.'"';
+            }
             $this->_values[$uid] = $match;
         }
         return str_replace(array_values($this->_values), array_keys($this->_values), $html);

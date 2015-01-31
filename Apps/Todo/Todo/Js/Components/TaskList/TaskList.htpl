@@ -29,11 +29,9 @@
                 <Td>{item.task}</Td>
                 <Td>{item.created}</Td>
                 <Td>
-                    <w-if cond="item.id && !item.completed">
-                        <Link class="btn btn-primary" href="/Todo/Todo/:id" params={item}>Edit</Link>
-                    </w-if>
-                    &nbsp;
                     <w-if cond="item.id">
+                        <Link class="btn btn-primary" href="/Todo/Todo/:id" params={item}>Edit</Link>
+                        &nbsp;
                         <button class="btn btn-danger" onClick={this.removeTask.bind(this, item)}>Delete</button>
                     <w-else/>
                         Saving...

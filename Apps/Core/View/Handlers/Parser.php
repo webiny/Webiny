@@ -9,9 +9,8 @@ use Apps\Core\View\Handlers\Processors\AbstractProcessor;
 use Apps\Core\View\Handlers\Processors\AttributesProcessor;
 use Apps\Core\View\Handlers\Processors\BindAttributeProcessor;
 use Apps\Core\View\Handlers\Processors\EntitiesProcessor;
-use Apps\Core\View\Handlers\Processors\QuotedJSXProcessor;
+use Apps\Core\View\Handlers\Processors\JSXProcessor;
 use Apps\Core\View\Handlers\Processors\TagsProcessor;
-use Apps\Core\View\Handlers\Processors\UnquotedJSXProcessor;
 use Webiny\Platform\Traits\PlatformTrait;
 use Webiny\Platform\Traits\TemplateEngineTrait;
 use Webiny\Component\StdLib\StdLibTrait;
@@ -30,8 +29,7 @@ class Parser
 
         $this->_processors = [
             'tags'          => new TagsProcessor(),
-            'quoted'        => new QuotedJSXProcessor(),
-            'unquoted'      => new UnquotedJSXProcessor(),
+            'jsx'           => new JSXProcessor(),
             'attributes'    => new AttributesProcessor(),
             'entities'      => new EntitiesProcessor(),
             'bindAttribute' => new BindAttributeProcessor()
@@ -64,20 +62,11 @@ class Parser
             $workHtpl = $processor->inject($workHtpl);
         }
 
-        /*if($this->str($tpl)->contains('bind=')){
-            die($workHtpl);
-        }*/
-
         return $workHtpl;
     }
 
-    public function addQuotedReplacement($key, $value)
+    public function addReplacement($key, $value)
     {
-        $this->_processors['quoted']->addValue($key, $value);
-    }
-
-    public function addUnquotedReplacement($key, $value)
-    {
-        $this->_processors['unquoted']->addValue($key, $value);
+        $this->_processors['jsx']->addValue($key, $value);
     }
 }

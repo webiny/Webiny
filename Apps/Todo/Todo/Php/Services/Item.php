@@ -65,7 +65,6 @@ class Item implements CrudInterface
      */
     public function crudCreate()
     {
-        sleep(25);
         $task = new TodoTask();
         $task->task = $this->httpRequest()->payload('task');
         $task->save();
