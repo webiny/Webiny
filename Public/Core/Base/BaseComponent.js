@@ -2,29 +2,8 @@ import BaseClass from '/Core/Base/BaseClass';
 import Router from '/Core/Router/Router';
 import EventManager from '/Core/EventManager';
 import ComponentLoader from '/Core/ComponentLoader';
-import StateStore from '/Core/StateStore';
-
-function createStateKeySetter(component, key) {
-	// Partial state is allocated outside of the function closure so it can be
-	// reused with every call, avoiding memory allocation when this function
-	// is called.
-	var partialState = {};
-	return function stateKeySetter(value, callback) {
-		value = value || '';
-		partialState[key] = value;
-		component.setState(partialState);
-		// Execute callback if defined
-		var keyName = key.charAt(0).toUpperCase() + key.slice(1);
-		var oldValue = component.state[key];
-
-		if(callback && component.hasOwnProperty(callback)){
-			component[callback](value, oldValue);
-		} else if(component.hasOwnProperty('onChange'+keyName)){
-			component['onChange'+keyName].call(component, value, oldValue);
-		}
-	};
-}
-
+import StateStore from '/Core/Tools/StateStore';
+import LinkState from '/Core/Tools/LinkState';
 
 /**
  * BaseComponent class is the main class all React components should inherit from.
@@ -298,10 +277,8 @@ class BaseComponent extends BaseClass {
 			 * @returns {{value: *, requestChange: *}}
 			 */
 			linkState(key){
-				return {
-					value: this.state[key],
-					requestChange: createStateKeySetter(this, key)
-				}
+				var ls = new LinkState(this, key);
+				return ls.create();
 			}
 		};
 

@@ -17,7 +17,7 @@
         </FormGroup>
 
         <FormGroup>
-            <Checkbox label="Settings dev" bind="settings.dev" bind-change="onSettingsDev"/>
+            <Checkbox label="Settings dev" bind="settings.dev" bind-change="onChangeDev"/>
         </FormGroup>
 
         <FormGroup>

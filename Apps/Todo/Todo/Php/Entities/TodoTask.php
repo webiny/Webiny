@@ -24,6 +24,8 @@ class TodoTask extends EntityAbstract
             ->setDefaultValue(false)
              ->attr('created')
              ->datetime()
-             ->setDefaultValue('now');
+             ->setDefaultValue('now')
+            ->attr('settings')
+             ->arr()->setDefaultValue([]);
     }
 }

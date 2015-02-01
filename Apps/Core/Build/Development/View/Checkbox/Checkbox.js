@@ -23,7 +23,7 @@ class Checkbox extends BaseComponent {
 
 	getDynamicProperties() {
 		return {
-			checked: this.props.valueLink.value
+			checked: this.props.valueLink.value === true
 		}
 	}
 
