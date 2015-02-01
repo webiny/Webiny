@@ -1,1 +1,1 @@
-<tfoot>{this.props.children}</tfoot>
+<tfoot className={this.props.className}>{this.props.children}</tfoot>

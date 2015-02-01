@@ -2,8 +2,7 @@ import BaseComponent from '/Core/Base/BaseComponent';
 
 class Tfoot extends BaseComponent {
 
-	getTemplate(){ return '<tfoot>{this.props.children}</tfoot>';
-	}
+	getTemplate(){ return "<tfoot className={this.props.className}>{this.props.children}<\/tfoot>";}
 
 	getFqn(){
 		return 'Core.Table.Tfoot';

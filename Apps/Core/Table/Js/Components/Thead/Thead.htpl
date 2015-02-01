@@ -1,1 +1,1 @@
-<thead>{this.props.children}</thead>
+<thead className={this.props.className}>{this.props.children}</thead>

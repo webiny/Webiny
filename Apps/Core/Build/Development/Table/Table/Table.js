@@ -2,11 +2,26 @@ import BaseComponent from '/Core/Base/BaseComponent';
 
 class Table extends BaseComponent {
 
-	getTemplate(){ return '<table className="table">{this.props.children}</table>';
+	getTemplate(){ return "<table className={this.classSet(this.dynamic.css)}>{this.props.children}<\/table>";}
+
+	getFqn() {
+		return 'Core.Table.Table';
 	}
 
-	getFqn(){
-		return 'Core.Table.Table';
+	/**
+	 * Construct CSS classes object to pass to this.classSet
+	 * @returns {}
+	 */
+	getDynamicProperties() {
+		var css = {
+			'table': true
+		};
+
+		Object.assign(css, this.props['class-obj'] || {});
+
+		return {
+			css: css
+		};
 	}
 }
 

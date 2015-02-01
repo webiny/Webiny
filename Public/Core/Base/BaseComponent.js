@@ -263,7 +263,9 @@ class BaseComponent extends BaseClass {
 			 * @returns {DOMElement}
 			 */
 			getNode(key) {
-				//console.log(this.refs[key])
+				if(typeof this.refs[key]['getDOMElement'] != 'undefined' ){
+					return this.refs[key].getDOMElement();
+				}
 				return this.refs[key].getDOMNode();
 			},
 
@@ -276,12 +278,12 @@ class BaseComponent extends BaseClass {
 			},
 
 			classSet(rules){
-				var obj = rules;
+				if(!rules){
+					return '';
+				}
+
 				if(typeof rules == 'string'){
-					obj = {};
-					rules.split(' ').forEach(item => {
-						obj[item] = true;
-					});
+					return rules;
 				}
 				return React.addons.classSet(rules);
 			},

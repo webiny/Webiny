@@ -3,10 +3,7 @@ namespace Apps\Core\View\Handlers\Processors;
 
 class CssAttributeProcessor extends AbstractProcessor
 {
-    protected $_regex = [
-        '/ class={{(.*?)}}/',
-        '/ class={(.*?)}/'
-    ];
+    protected $_regex = '/(?=\sclass={((?:[^{}]+|{(?1)})+)})/';
 
     public function preProcess($html)
     {
@@ -15,17 +12,13 @@ class CssAttributeProcessor extends AbstractProcessor
 
     public function postProcess($html)
     {
+        preg_match_all($this->_regex, $html, $matches);
 
-        $html = preg_replace($this->_regex[0], ' class={this.classSet({$1})}', $html);
-
-        // TODO: Ovaj ovdje regex replace-a internu grupu i zato dupli classSet dobijem van
-        //$html = preg_replace($this->_regex[1], ' class={this.classSet($1)}', $html);
-
-        if($this->str($html)->contains('danger')){
-            die($html);
+        $replacements = [];
+        foreach ($matches[1] as $match) {
+            $replacements[' class={' . $match . '}'] = ' class={this.classSet(' . $match . ')} class-obj={' . $match . '}';
         }
 
-        return $html;
-
+        return str_replace(array_keys($replacements), array_values($replacements), $html);
     }
 }

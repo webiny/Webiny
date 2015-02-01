@@ -25,7 +25,18 @@ class Input extends BaseComponent {
 		}
 	}
 
-	getNode() {
+	/**
+	 * This method is called when getNode() method is called on an Input/Checkbox/etc component
+	 * to get the actual input element that component represents and not the component DOM representation.
+	 *
+	 * Ex: <Input ref="firstName"/>
+	 * Calling this.getNode('firstName') from parent component will return the actual <input> element inside the component
+	 *
+	 * If getDOMElement() is not implemented, the actual component DOM will be returned by default.
+	 *
+	 * @returns {HTMLElement}
+	 */
+	getDOMElement() {
 		return this.getDOMNode().querySelector('input');
 	}
 }

@@ -10,7 +10,6 @@ class TaskList extends BaseComponent {
 		super();
 
 		this.fullListOfTasks = [];
-
 		this.tasksStore = this.getStore('Todo.Todo.TasksStore');
 
 		// Get initial data
@@ -20,25 +19,22 @@ class TaskList extends BaseComponent {
 		});
 
 		// Listen to store changes
-		// TODO: mozda da se iz callbacka vraca data a ne store
-		this.onStore('Todo.Todo.TasksStore', (store) => {
-			store.getData().then((data) => {
-				this.setState({todos: data});
-			});
+		this.onStore(this.tasksStore, (data) => {
+			this.setState({todos: data});
 		});
 	}
 
 	getInitialState() {
 		return {
 			todos: [],
-			task: '',
 			filter: ''
 		};
 	}
 
-	addTask(e) {
-		this.trigger('Todo.Todo.addTodoAction', {task: this.state.task});
-		this.setState({task: ''});
+	addTask() {
+		var input = this.getNode('newTask');
+		this.trigger('Todo.Todo.addTodoAction', {task: input.value});
+		input.value = '';
 	}
 
 	removeTask(id) {
@@ -47,7 +43,7 @@ class TaskList extends BaseComponent {
 	}
 
 	onChangeFilter(newValue, oldValue) {
-		if(!newValue){
+		if (!newValue) {
 			return this.setState({todos: this.fullListOfTasks});
 		}
 		var filter = newValue.toLowerCase();

@@ -2,8 +2,7 @@ import BaseComponent from '/Core/Base/BaseComponent';
 
 class Label extends BaseComponent {
 
-	getTemplate(){ return '<label className={this.classSet(this.state.css)}>{this.props.children}</label>';
-	}
+	getTemplate(){ return "<label className={this.classSet(this.state.css)} class-obj={this.state.css}>{this.props.children}<\/label>";}
 
 	getFqn() {
 		return 'Core.View.Label';

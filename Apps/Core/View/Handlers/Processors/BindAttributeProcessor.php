@@ -12,7 +12,6 @@ class BindAttributeProcessor extends AbstractProcessor
 
     public function postProcess($html)
     {
-        $html = preg_replace('/\sbind="([A-Za-z-_\.]+)"/', ' valueLink={this.linkState("$1")}', $html);
-        return $html;
+        return preg_replace('/\sbind="([A-Za-z-_\.]+)"/', ' valueLink={this.linkState("$1")}', $html);
     }
 }

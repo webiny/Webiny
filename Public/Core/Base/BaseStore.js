@@ -27,7 +27,9 @@ class BaseStore extends BaseClass {
 
 	emitChange(delay = false) {
 		setTimeout(() => {
-			EventManager.emit(this.getFqn(), this);
+			this.getData().then(data => {
+				EventManager.emit(this.getFqn(), data);
+			});
 		}, delay);
 	}
 

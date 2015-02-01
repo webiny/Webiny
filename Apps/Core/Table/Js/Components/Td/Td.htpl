@@ -1,1 +1,1 @@
-<td>{this.props.children}</td>
+<td className={this.props.className}>{this.props.children}</td>

@@ -53,6 +53,7 @@ class RenderApp
                     // Parse HTPL and store JSX
                     $parser = new Parser();
                     $jsx = $parser->parse(file_get_contents($cmp['tplPath']));
+
                     @mkdir($cmp['buildDir'], 0755, true);
                     $jsxPath = $cmp['buildDir'] . '/' . $cmp['name'] . '.js';
                     file_put_contents($jsxPath, $jsx);
@@ -68,6 +69,8 @@ class RenderApp
                     $jsx = preg_replace("/}\s+</", "}<", $jsx);
                     $jsx = preg_replace("/>\s+&/", ">&", $jsx);
                     $jsx = preg_replace("/;\s+</", ";<", $jsx);
+                    $jsx = json_encode($jsx);
+
 
                     // Build component
                     $js = file_get_contents($cmp['jsPath']);
@@ -75,7 +78,7 @@ class RenderApp
                     $partOne = substr($js, 0, $getFqnPos);
                     $partTwo = substr($js, $getFqnPos);
 
-                    $getTemplateFn = "getTemplate(){ return '".$jsx. "';\n\t}\n\n\t";
+                    $getTemplateFn = "getTemplate(){ return ".$jsx. ";}\n\n\t";
 
                     $buildComponent = $partOne . $getTemplateFn . $partTwo;
                     file_put_contents($jsxPath, $buildComponent);

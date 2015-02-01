@@ -21,6 +21,9 @@ class Parser
 {
     use StdLibTrait, PlatformTrait, TemplateEngineTrait;
 
+    private $_parsers = [];
+    private $_processors = [];
+
     function __construct()
     {
         $this->_parsers = [
@@ -29,33 +32,31 @@ class Parser
             new PlaceholderParser($this)
         ];
 
-        $this->_processors = [
-            'webinyTags'    => new WebinyTagsProcessor(),
-            'tags'          => new TagsProcessor(),
-            'cssAttribute'  => new CssAttributeProcessor(),
-            'jsx'           => new JSXProcessor(),
-            'entities'      => new EntitiesProcessor(),
-            'bindAttribute' => new BindAttributeProcessor(),
-            'attributes'    => new AttributesProcessor()
-        ];
+        // Instantiate all available processors
+        $this->_WebinyTagsProcessor = new WebinyTagsProcessor();
+        $this->_TagsProcessor = new TagsProcessor();
+        $this->_CssAttributeProcessor = new CssAttributeProcessor();
+        $this->_JSXProcessor = new JSXProcessor();
+        $this->_EntitiesProcessor = new EntitiesProcessor();
+        $this->_BindAttributeProcessor = new BindAttributeProcessor();
+        $this->_AttributesProcessor = new AttributesProcessor();
 
+        // Assign processors that perform pre-processing
         $this->_preProcessors = [
-            $this->_processors['webinyTags'],
-            $this->_processors['tags'],
-            $this->_processors['jsx'],
-            $this->_processors['entities'],
-            $this->_processors['bindAttribute'],
-            $this->_processors['attributes']
+            $this->_WebinyTagsProcessor,
+            $this->_TagsProcessor,
+            $this->_JSXProcessor,
+            $this->_EntitiesProcessor
         ];
 
+        // Assign processors that perform post-processing
         $this->_postProcessors = [
-            $this->_processors['webinyTags'],
-            $this->_processors['tags'],
-            $this->_processors['jsx'],
-            $this->_processors['cssAttribute'],
-            $this->_processors['entities'],
-            $this->_processors['bindAttribute'],
-            $this->_processors['attributes']
+            $this->_TagsProcessor,
+            $this->_JSXProcessor,
+            $this->_CssAttributeProcessor,
+            $this->_EntitiesProcessor,
+            $this->_BindAttributeProcessor,
+            $this->_AttributesProcessor
         ];
     }
 
@@ -90,6 +91,6 @@ class Parser
 
     public function addReplacement($key, $value)
     {
-        $this->_processors['jsx']->addValue($key, $value);
+        $this->_JSXProcessor->addValue($key, $value);
     }
 }
