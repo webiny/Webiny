@@ -35,15 +35,18 @@ class LinkState {
 		var partialState = {};
 		var _this = this;
 		return function stateKeySetter(value, callback) {
-			if(typeof value == 'undefined'){
+			if (typeof value == 'undefined') {
 				value = '';
 			}
-			var oldValue = _this._getValue(key);
+			var oldValue = _this.__getValue(key);
 			_this.__buildPartialState(partialState, value);
 			component.setState(partialState);
 
 			// Execute callback if defined
-			var keyFnName = key.charAt(0).toUpperCase() + key.slice(1);
+			var keyFnName = _this.key.split('.').map((key) => {
+				return key.charAt(0).toUpperCase() + key.slice(1);
+			}).join('');
+
 			if (callback && component.hasOwnProperty(callback)) {
 				component[callback](value, oldValue);
 			} else if (component.hasOwnProperty('onChange' + keyFnName)) {

@@ -268,8 +268,6 @@ class BaseComponent extends BaseClass {
 			},
 
 			/**
-			 * TODO: refactor to LinkValue class which will have all the methods and support for nested keys
-			 * TODO: if using linkState, add support for onChange callbacks for each state property
 			 * Ex: onChangeImportant(newValue, oldValue){...}
 			 * Ex: onChangeName(newValue, oldValue){...}
 			 *

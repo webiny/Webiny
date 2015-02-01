@@ -17,6 +17,10 @@ class TaskForm extends BaseComponent {
 		});
 	}
 
+	onChangeSettingsDev(newValue){
+		console.log("DEV", newValue)
+	}
+
 	saveTodo(){
 		this.trigger('Todo.Todo.saveTaskAction', this.state);
 		Router.goTo('/Todo/Todo');
