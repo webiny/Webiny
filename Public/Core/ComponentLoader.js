@@ -9,7 +9,9 @@ class ComponentLoader extends BaseClass {
 	}
 
 	getComponents(placeholder) {
-		//console.log("LOADING COMPONENTS", placeholder + ' ' + Router.getActiveRoute().getPattern());
+		if(!Router.getActiveRoute()){
+			return React.createElement.apply(undefined, ["div", null, elements]);
+		}
 		// Get URL specific components
 		var eventHash = md5(Router.getActiveRoute().getPattern() + placeholder);
 		var routeComponents = EventManager.emit(eventHash);

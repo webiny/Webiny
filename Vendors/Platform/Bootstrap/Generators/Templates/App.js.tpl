@@ -32,7 +32,7 @@ var {$module.alias|lcfirst} = new {$module.alias}();
 {/foreach}
 
 Router.setActiveRoute(window.location.pathname);
-var mainComponent = React.createElement({$WP.MainComponentAlias}.createInstance());
+var mainComponent = React.createElement({$WP.MainComponentAlias});
 React.render(mainComponent, document.getElementById('app'));
 Router.start(window.location.pathname);
 

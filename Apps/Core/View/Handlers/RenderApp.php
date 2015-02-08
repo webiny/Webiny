@@ -97,7 +97,7 @@ class RenderApp
                         "/;\s+</" => ";<"
                     ];
                     $react = preg_replace(array_keys($replacements), array_values($replacements), $react);
-                    $react = json_encode($react);
+                    //$react = json_encode($react);
 
 
                     // Build component

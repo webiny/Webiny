@@ -1,5 +1,5 @@
 import BaseModule from '/Core/Base/BaseModule'
-import Link from '/Apps/Core/View/Js/Components/Link/Link';
+/*import Link from '/Apps/Core/View/Js/Components/Link/Link';
 import Label from '/Apps/Core/View/Js/Components/Label/Label';
 import Input from '/Apps/Core/View/Js/Components/Input/Input';
 import Checkbox from '/Apps/Core/View/Js/Components/Checkbox/Checkbox';
@@ -21,6 +21,6 @@ window.FormGroup = FormGroup.createInstance();
 window.GridRow = GridRow.createInstance();
 window.GridContainer = GridContainer.createInstance();
 window.Grid12 = Grid12.createInstance();
-window.Grid6 = Grid6.createInstance();
+window.Grid6 = Grid6.createInstance();*/
 
 export default class View extends BaseModule {}

@@ -1,5 +1,5 @@
 <div class="component container">
     <h4>Core-View-Layout</h4>
     <hr/>
-    <w-placeholder name="MainContent"/>
+    <W:Placeholder name="MainContent"/>
 </div>

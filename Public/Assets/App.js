@@ -20,19 +20,15 @@ window.Http = Http;
 window.Q = Q;
 
 import MainComponent from '/Apps/Core/View/Js/Components/Layout/Layout';
-import CoreTableModule from '/Apps/Core/Table/Js/Module';
 import CoreViewModule from '/Apps/Core/View/Js/Module';
-import TodoTodoModule from '/Apps/Todo/Todo/Js/Module';
 
 /**
  * Instantiate modules
  */
-var coreTableModule = new CoreTableModule();
 var coreViewModule = new CoreViewModule();
-var todoTodoModule = new TodoTodoModule();
 
 Router.setActiveRoute(window.location.pathname);
-var mainComponent = React.createElement(MainComponent.createInstance());
+var mainComponent = React.createElement(MainComponent);
 React.render(mainComponent, document.getElementById('app'));
 Router.start(window.location.pathname);
 
