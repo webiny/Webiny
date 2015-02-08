@@ -2,7 +2,7 @@ import BaseComponent from '/Core/Base/BaseComponent';
 
 class Table extends BaseComponent {
 
-	getTemplate(){ return "<table className={this.classSet(this.dynamic.css)}>{this.props.children}<\/table>";}
+	getTemplate(){ return "React.createElement(\"table\", {className: this.classSet(this.dynamic.css)}, this.props.children)";}
 
 	getFqn() {
 		return 'Core.Table.Table';

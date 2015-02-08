@@ -1,6 +1,7 @@
 #Platform
 Cache/*
 Public/Uploads/
+*/Build
 Vendors/Webiny
 
 #PHPStorm

@@ -2,7 +2,7 @@ import BaseComponent from '/Core/Base/BaseComponent';
 
 class GridContainer extends BaseComponent {
 
-	getTemplate(){ return "<div className=\"container\">{this.props.children}<\/div>";}
+	getTemplate(){ return "React.createElement(\"div\", {className: \"container\"}, this.props.children)";}
 
 	getFqn(){
 		return 'Core.View.GridContainer';

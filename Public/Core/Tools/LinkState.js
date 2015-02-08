@@ -13,7 +13,7 @@ class LinkState {
 	}
 
 	__getValue(key) {
-		var value = this.component.state;
+		var value = this.component.state || {};
 		if (Object.keys(value).length == 0) {
 			return null;
 		}

@@ -2,7 +2,7 @@ import BaseComponent from '/Core/Base/BaseComponent';
 
 class Link extends BaseComponent {
 
-	getTemplate(){ return "<a href={this.dynamic.link} className={this.classSet(this.dynamic.classes)} class-obj={this.dynamic.classes}>{this.props.children}<\/a>";}
+	getTemplate(){ return "React.createElement(\"a\", {href: this.dynamic.link, className: this.classSet(this.dynamic.classes), \"class-obj\": this.dynamic.classes}, this.props.children)";}
 
 	getFqn(){
 		return 'Core.View.Link';

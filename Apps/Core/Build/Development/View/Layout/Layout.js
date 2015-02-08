@@ -7,7 +7,7 @@ import EventManager from '/Core/EventManager';
  */
 class Layout extends BaseComponent {
 
-	getTemplate(){ return "<div className=\"component container\"><h4>Core-View-Layout<\/h4><hr\/>{function(){return ComponentLoader.getComponents(\"MainContent\");}.bind(this)()}<\/div>";}
+	getTemplate(){ return "React.createElement(\"div\", {className: \"component container\"},     React.createElement(\"h4\", null, \"Core-View-Layout\"),     React.createElement(\"hr\", null),     function(){return ComponentLoader.getComponents(\"MainContent\");}.bind(this)())";}
 
 	getFqn(){
 		return 'Core.View.LayoutComponent';

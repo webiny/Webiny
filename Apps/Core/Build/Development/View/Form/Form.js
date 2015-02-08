@@ -2,7 +2,7 @@ import BaseComponent from '/Core/Base/BaseComponent';
 
 class Form extends BaseComponent {
 
-	getTemplate(){ return "<form name={this.props.name} ref={this.props.name} className=\"form-horizontal\">{this.props.children}<\/form>";}
+	getTemplate(){ return "React.createElement(\"form\", {name: this.props.name, ref: this.props.name, className: \"form-horizontal\"},     this.props.children)";}
 
 	getFqn(){
 		return 'Core.View.Form';

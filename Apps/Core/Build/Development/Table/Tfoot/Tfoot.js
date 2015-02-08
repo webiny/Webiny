@@ -2,7 +2,7 @@ import BaseComponent from '/Core/Base/BaseComponent';
 
 class Tfoot extends BaseComponent {
 
-	getTemplate(){ return "<tfoot className={this.props.className}>{this.props.children}<\/tfoot>";}
+	getTemplate(){ return "React.createElement(\"tfoot\", {className: this.props.className}, this.props.children)";}
 
 	getFqn(){
 		return 'Core.Table.Tfoot';

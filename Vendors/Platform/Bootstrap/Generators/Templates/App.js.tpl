@@ -6,7 +6,9 @@ import Q from '/Core/Queue';
 /* Global classes */
 import Tools from '/Core/Tools/Tools';
 import BaseComponent from '/Core/Base/BaseComponent';
+import ComponentLoader from '/Core/ComponentLoader';
 window.Tools = Tools;
+window.ComponentLoader = ComponentLoader;
 
 /* For development purposes */
 window.Router = Router;

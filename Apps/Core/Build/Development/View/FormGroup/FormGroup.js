@@ -2,7 +2,7 @@ import BaseComponent from '/Core/Base/BaseComponent';
 
 class FormGroup extends BaseComponent {
 
-	getTemplate(){ return "<div className=\"form-group\">{this.props.children}<\/div>";}
+	getTemplate(){ return "React.createElement(\"div\", {className: \"form-group\"}, this.props.children)";}
 
 	getFqn(){
 		return 'Core.View.FormGroup';

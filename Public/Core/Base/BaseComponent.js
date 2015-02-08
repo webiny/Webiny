@@ -285,24 +285,8 @@ class BaseComponent extends BaseClass {
 		 */
 		classObject.render = function () {
 			if (!_this.__reactComponent) {
-				/**
-				 * Parse template for built-in tags
-				 */
-				var ReactComponentSource = _this.getTemplate();
-				if (ReactComponentSource.indexOf('React') != 0) {
-					/**
-					 * Generate React JS code from string template
-					 */
-					ReactComponentSource = JSXTransformer.transform(ReactComponentSource).code;
-				}
-
-				console.groupCollapsed("Compiled component - " + _this.getClassName() + ' ' + _this.getInstanceId());
-				console.log(ReactComponentSource);
-				console.groupEnd();
-
 				/** This is required for inline usage of components */
 				var components = _this.getComponents();
-				//console.info("Components", components);
 				var keys = [];
 				var values = [];
 
@@ -314,9 +298,10 @@ class BaseComponent extends BaseClass {
 				for (let [i, element] of keys.entries()) {
 					window[element] = values[i];
 				}
+				/** /Inline usage */
 
 				/** Store local reference to compiled react component */
-				_this.__reactComponent = ReactComponentSource;
+				_this.__reactComponent = _this.getTemplate();
 			}
 
 			this.dynamic = this.getDynamicProperties();
