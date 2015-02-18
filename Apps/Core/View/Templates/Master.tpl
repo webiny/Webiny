@@ -27,5 +27,6 @@
 
 <body>
     <div id="app"></div>
+    <div id="tmp" style="display:none"></div>
 </body>
 </html>

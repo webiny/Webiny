@@ -9,7 +9,8 @@ class ComponentLoader extends BaseClass {
 	}
 
 	getComponents(placeholder) {
-		if(!Router.getActiveRoute()){
+		var elements = [];
+		if (!Router.getActiveRoute()) {
 			return React.createElement.apply(undefined, ["div", null, elements]);
 		}
 		// Get URL specific components
@@ -29,8 +30,6 @@ class ComponentLoader extends BaseClass {
 			globalComponents.map(x => components.push(x));
 		}
 
-
-		var elements = [];
 		if (components) {
 			components.forEach(function (items) {
 				if (Object.prototype.toString.call(items) === "[object Object]") {
@@ -40,7 +39,12 @@ class ComponentLoader extends BaseClass {
 					var props = item.props || {};
 					// Need to add 'key' to each component in the array so React does not complain about it
 					props['key'] = index;
-					elements.push(React.createElement(item.component, props));
+					if (!item.newInstance) {
+						elements.push(React.createElement(item.component, props));
+					} else {
+						console.log("Using same instance");
+						elements.push(item.component, props);
+					}
 				});
 			});
 		}

@@ -1,5 +1,16 @@
 <div class="component container">
     <h4>Core-View-Layout</h4>
+    <Link class="btn btn-primary" href="/">Left</Link>
+    &nbsp;
+    <Link class="btn btn-primary" href="/box">Right</Link>
     <hr/>
     <W:Placeholder name="MainContent"/>
+    <div class="col-sm-6">
+        <hr/>
+        <W:Placeholder name="LeftContent"/>
+    </div>
+    <div class="col-sm-6">
+        <hr/>
+        <W:Placeholder name="RightContent"/>
+    </div>
 </div>

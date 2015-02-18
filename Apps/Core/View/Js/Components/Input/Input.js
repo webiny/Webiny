@@ -6,23 +6,14 @@ class Input extends BaseComponent {
 		return 'Core.View.Input';
 	}
 
-	getInitialState() {
+	getInitialState(){
 		var css = 'col-sm-' + this.props.grid;
 
 		var state = {
 			css: {}
 		};
 		state.css[css] = true;
-		return state;
-	}
-
-	getDefaultProperties() {
-		return {
-			disabled: false,
-			placeholder: '',
-			grid: 12,
-			name: null
-		}
+		this.state = state;
 	}
 
 	/**
@@ -37,8 +28,15 @@ class Input extends BaseComponent {
 	 * @returns {HTMLElement}
 	 */
 	getDOMElement() {
-		return this.getDOMNode().querySelector('input');
+		return React.findDOMNode(this).querySelector('input');
 	}
 }
+
+Input.defaultProps = {
+	disabled: false,
+	placeholder: '',
+	grid: 12,
+	name: null
+};
 
 export default Input;

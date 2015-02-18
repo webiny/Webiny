@@ -28,7 +28,7 @@ import CoreViewModule from '/Apps/Core/View/Js/Module';
 var coreViewModule = new CoreViewModule();
 
 Router.setActiveRoute(window.location.pathname);
-var mainComponent = React.createElement(MainComponent);
+var mainComponent = React.createElement(MainComponent.createInstance());
 React.render(mainComponent, document.getElementById('app'));
 Router.start(window.location.pathname);
 

@@ -1,4 +1,5 @@
 import BaseClass from '/Core/Base/BaseClass';
+import BaseReactComponent from '/Core/Base/BaseReactComponent';
 import Router from '/Core/Router/Router';
 import EventManager from '/Core/EventManager';
 import StateStore from '/Core/Tools/StateStore';
@@ -9,36 +10,43 @@ import Registry from '/Core/Registry';
  * BaseComponent class is the main class all React components should inherit from.
  * It handles construction of a valid React class
  */
-class BaseComponent extends React.Component {
+class BaseComponent extends BaseClass {
 
 	constructor() {
 		this.dynamic = {};
 		this.__listeners = [];
+		this.__reactComponent = null;
 		this.__instanceId = Tools.createUID();
-
-		// Auto-bind user defined methods
-		Object.keys(this.__proto__).forEach(property => {
-			if(typeof this[property] == 'function'){
-				this[property] = this[property].bind(this);
-			}
-		});
 	}
 
-	render(){
-		this.dynamic = this.getDynamicProperties();
-		return this.getTemplate();
+	getComponent(){
+		var classObject = Object.create(BaseReactComponent);
+
+		var prototype = this.__proto__;
+		Object.keys(prototype).forEach(function (key) {
+			if (!classObject.hasOwnProperty(key)) {
+				classObject[key] = prototype[key];
+			}
+		});
+
+		var _this = this;
+		classObject['__instanceId'] = this.getInstanceId();
+		classObject['__listeners'] = this.__listeners;
+		classObject['render'] = function(){
+			this.dynamic = _this.getDynamicProperties();
+			if(!this.__reactComponent){
+				this.__reactComponent = this.getTemplate();
+			}
+			console.log(this.__reactComponent)
+			return this.__reactComponent;
+		};
+
+		var reactClass = React.createClass(classObject);
+		return reactClass;
 	}
 
 	static createInstance() {
-		return this;
-	}
-
-	getClassName() {
-		return this.__proto__.constructor.name;
-	}
-
-	getRegistry() {
-		return Registry;
+		return (new this).getComponent();
 	}
 
 	getInstanceId() {
@@ -47,10 +55,6 @@ class BaseComponent extends React.Component {
 
 	getFqn() {
 		return this.getClassName();
-	}
-
-	getPropertyTypes() {
-		return {};
 	}
 
 	getDynamicProperties() {
@@ -68,7 +72,7 @@ class BaseComponent extends React.Component {
 	}
 
 	componentDidMount() {
-		console.log(this.__instanceId);
+		console.log(this.getClassName(), this.__instanceId);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -90,7 +94,7 @@ class BaseComponent extends React.Component {
 	componentWillUnmount() {
 		var saveState = this.props.saveState || false;
 		if (saveState) {
-			StateStore.saveState(_this.getInstanceId(), this.state);
+			StateStore.saveState(this.getInstanceId(), this.state);
 		}
 
 		this.__listeners.forEach((unsubscribe) => {
@@ -165,10 +169,14 @@ class BaseComponent extends React.Component {
 	 * @returns {DOMElement}
 	 */
 	getNode(key) {
-		if (typeof this.refs[key]['getDOMElement'] != 'undefined') {
-			return this.refs[key].getDOMElement();
+		var ref = this.refs[key] || false;
+		if (!ref) {
+			return false;
 		}
-		return this.refs[key].getDOMNode();
+		if (typeof ref['getDOMElement'] != 'undefined') {
+			return ref.getDOMElement();
+		}
+		return ref.getDOMNode();
 	}
 
 	getStore(name) {
