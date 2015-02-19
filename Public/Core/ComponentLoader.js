@@ -37,13 +37,13 @@ class ComponentLoader extends BaseClass {
 				}
 				items.forEach(function (item, index) {
 					var props = item.props || {};
-					// Need to add 'key' to each component in the array so React does not complain about it
-					props['key'] = index;
-					if (!item.newInstance) {
+					var newInstance = item.hasOwnProperty('newInstance') ? item.newInstance : true;
+					if (newInstance) {
+						// Need to add 'key' to each component in the array so React does not complain about it
+						props['key'] = index;
 						elements.push(React.createElement(item.component, props));
 					} else {
-						console.log("Using same instance");
-						elements.push(item.component, props);
+						elements.push(item.component);
 					}
 				});
 			});

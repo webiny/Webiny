@@ -13,7 +13,7 @@ class Input extends BaseComponent {
 			css: {}
 		};
 		state.css[css] = true;
-		this.state = state;
+		return state;
 	}
 
 	/**

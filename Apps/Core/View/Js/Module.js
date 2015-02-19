@@ -14,40 +14,44 @@ import ChatBox from '/Apps/Core/View/Js/Components/ChatBox/ChatBox';
  import Grid12 from '/Apps/Core/View/Js/Components/Grid12/Grid12';
  import Grid6 from '/Apps/Core/View/Js/Components/Grid6/Grid6';
 
-window.Input = Input.createInstance();
- window.Label = Label.createInstance();*/
-window.Link = Link.createInstance();
+ window.Label = Label.createComponent();*/
 
-/*window.Form = Form.createInstance();
-window.FormGroup = FormGroup.createInstance();
-window.FormInline = FormInline.createInstance();*/
+//window.Form = Form.createComponent();
 /*
-window.ChatBox = ChatBox.createInstance();
- window.Checkbox = Checkbox.createInstance();
- window.GridRow = GridRow.createInstance();
- window.GridContainer = GridContainer.createInstance();
- window.Grid12 = Grid12.createInstance();
- window.Grid6 = Grid6.createInstance();*/
+ window.Checkbox = Checkbox.createComponent();
+ window.GridRow = GridRow.createComponent();
+ window.GridContainer = GridContainer.createComponent();
+ window.Grid12 = Grid12.createComponent();
+ window.Grid6 = Grid6.createComponent();*/
 
 class View extends BaseModule {
 
+	registerComponents() {
+		return {
+			Input: Input,
+			Link: Link,
+			FormInline: FormInline,
+			FormGroup: FormGroup,
+			MyChatBox: ChatBox
+		};
+	}
+
 	registerRoutes() {
 
-		return {};
-
-		var chatBox = ChatBox;
-
-		console.log(React.createElement(chatBox))
+		var chatBox1 = ChatBox.createElement({saveState: true});
+		var chatBox2 = ChatBox.createElement({saveState: true});
 
 		return {
 			'/': {
 				LeftContent: {
-					component: chatBox
+					component: chatBox1,
+					newInstance: false
 				}
 			},
 			'/box': {
 				RightContent: {
-					component: chatBox
+					component: chatBox2,
+					newInstance: false
 				}
 			}
 		};

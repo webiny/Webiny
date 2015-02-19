@@ -7,7 +7,6 @@ class Link extends BaseComponent {
 	}
 	
 	getDynamicProperties(){
-		console.log(this)
 		var link = this.props.href;
 		var classes = this.props.className;
 

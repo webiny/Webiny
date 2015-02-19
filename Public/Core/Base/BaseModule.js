@@ -5,6 +5,15 @@ import Route from '/Core/Router/Route'
 class BaseModule extends BaseClass {
 
 	constructor(){
+		var components = this.registerComponents();
+		Object.keys(components).forEach(function (name) {
+			var component = components[name];
+			if(window.hasOwnProperty(name)){
+				throw Error('Component with name `'+name+'` is already registered!');
+			}
+			window[name] = component.createComponent();
+		});
+
 		var routes = this.registerRoutes();
 		Object.keys(routes).forEach(function (route) {
 			Router.addRoute(new Route(route));
@@ -31,6 +40,10 @@ class BaseModule extends BaseClass {
 
 	getComponent(component){
 		return (new component).getComponent();
+	}
+
+	registerComponents(){
+		return {};
 	}
 
 	registerRoutes(){

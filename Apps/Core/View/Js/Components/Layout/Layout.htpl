@@ -4,6 +4,7 @@
     &nbsp;
     <Link class="btn btn-primary" href="/box">Right</Link>
     <hr/>
+    <MyChatBox/>
     <W:Placeholder name="MainContent"/>
     <div class="col-sm-6">
         <hr/>
