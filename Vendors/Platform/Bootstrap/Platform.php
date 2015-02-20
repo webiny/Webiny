@@ -2,6 +2,7 @@
 namespace Webiny\Platform\Bootstrap;
 
 use Webiny\Component\Entity\Entity;
+use Webiny\Component\Router\Router;
 use Webiny\Platform\Events;
 use Webiny\Platform\Responses\HtmlResponse;
 use Webiny\Platform\Responses\JsonErrorResponse;
@@ -239,9 +240,9 @@ final class Platform
         }
 
         Storage::setConfig($this->getConfig()->get('Storage', []));
-
         Mongo::setConfig($this->getConfig('Mongo'));
         Entity::setConfig($this->getConfig('Entity'));
+        Router::setConfig(new ConfigObject([]));
 
         /**
          * Load Apps

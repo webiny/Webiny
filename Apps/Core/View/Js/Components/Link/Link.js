@@ -20,10 +20,12 @@ class Link extends BaseComponent {
 		}
 		
 		// Build URL
-		Object.keys(this.props.params).forEach((param) => {
-			link = link.replace(':'+param, this.props.params[param]);
-		});
-		
+		if(this.props.params){
+			Object.keys(this.props.params).forEach((param) => {
+				link = link.replace(':'+param, this.props.params[param]);
+			});
+		}
+
 		return {
 			link: link,
 			classes: classes

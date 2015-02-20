@@ -8,7 +8,7 @@ class FormInline extends BaseComponent {
 
 	componentDidMount(){
 		// Disable form submission
-		var form = this.getDOMNode();
+		var form = this.getNode(this.props.name);
 		$(form).submit(function (e) {
 			e.preventDefault();
 		});

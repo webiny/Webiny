@@ -6,7 +6,9 @@ import Q from '/Core/Queue';
 /* Global classes */
 import Tools from '/Core/Tools/Tools';
 import BaseComponent from '/Core/Base/BaseComponent';
+import ComponentLoader from '/Core/ComponentLoader';
 window.Tools = Tools;
+window.ComponentLoader = ComponentLoader;
 
 /* For development purposes */
 window.Router = Router;
@@ -30,7 +32,7 @@ var {$module.alias|lcfirst} = new {$module.alias}();
 {/foreach}
 
 Router.setActiveRoute(window.location.pathname);
-var mainComponent = React.createElement({$WP.MainComponentAlias}.createInstance());
+var mainComponent = {$WP.MainComponentAlias}.createElement();
 React.render(mainComponent, document.getElementById('app'));
 Router.start(window.location.pathname);
 

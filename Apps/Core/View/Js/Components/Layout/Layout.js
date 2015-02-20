@@ -7,7 +7,7 @@ import EventManager from '/Core/EventManager';
  */
 class Layout extends BaseComponent {
 
-	getFqn(){
+	getFqn() {
 		return 'Core.View.LayoutComponent';
 	}
 

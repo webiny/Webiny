@@ -6,7 +6,9 @@ import Q from '/Core/Queue';
 /* Global classes */
 import Tools from '/Core/Tools/Tools';
 import BaseComponent from '/Core/Base/BaseComponent';
+import ComponentLoader from '/Core/ComponentLoader';
 window.Tools = Tools;
+window.ComponentLoader = ComponentLoader;
 
 /* For development purposes */
 window.Router = Router;
@@ -30,7 +32,7 @@ var coreViewModule = new CoreViewModule();
 var todoTodoModule = new TodoTodoModule();
 
 Router.setActiveRoute(window.location.pathname);
-var mainComponent = React.createElement(MainComponent.createInstance());
+var mainComponent = MainComponent.createElement();
 React.render(mainComponent, document.getElementById('app'));
 Router.start(window.location.pathname);
 

@@ -7,8 +7,6 @@ class TaskList extends BaseComponent {
 	}
 
 	componentDidMount() {
-		super();
-
 		this.fullListOfTasks = [];
 		this.tasksStore = this.getStore('Todo.Todo.TasksStore');
 

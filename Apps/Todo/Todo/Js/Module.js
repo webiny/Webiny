@@ -10,7 +10,7 @@ class Todo extends BaseModule {
 		return {
 			'/Todo/Todo': {
 				MainContent: {
-					component: ListComponent.createInstance(),
+					component: ListComponent.createComponent(),
 					props: {
 						saveState: true
 					}
@@ -18,7 +18,7 @@ class Todo extends BaseModule {
 			},
 			'/Todo/Todo/:id': {
 				MainContent: {
-					component: FormComponent.createInstance()
+					component: FormComponent.createComponent()
 				}
 			}
 		}

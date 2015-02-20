@@ -9,7 +9,10 @@ class ComponentLoader extends BaseClass {
 	}
 
 	getComponents(placeholder) {
-		//console.log("LOADING COMPONENTS", placeholder + ' ' + Router.getActiveRoute().getPattern());
+		var elements = [];
+		if (!Router.getActiveRoute()) {
+			return React.createElement.apply(undefined, ["div", null, elements]);
+		}
 		// Get URL specific components
 		var eventHash = md5(Router.getActiveRoute().getPattern() + placeholder);
 		var routeComponents = EventManager.emit(eventHash);
@@ -27,8 +30,6 @@ class ComponentLoader extends BaseClass {
 			globalComponents.map(x => components.push(x));
 		}
 
-
-		var elements = [];
 		if (components) {
 			components.forEach(function (items) {
 				if (Object.prototype.toString.call(items) === "[object Object]") {
@@ -36,9 +37,14 @@ class ComponentLoader extends BaseClass {
 				}
 				items.forEach(function (item, index) {
 					var props = item.props || {};
-					// Need to add 'key' to each component in the array so React does not complain about it
-					props['key'] = index;
-					elements.push(React.createElement(item.component, props));
+					var newInstance = item.hasOwnProperty('newInstance') ? item.newInstance : true;
+					if (newInstance) {
+						// Need to add 'key' to each component in the array so React does not complain about it
+						props['key'] = index;
+						elements.push(React.createElement(item.component, props));
+					} else {
+						elements.push(item.component);
+					}
 				});
 			});
 		}
