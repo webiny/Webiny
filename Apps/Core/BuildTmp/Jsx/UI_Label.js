@@ -1,0 +1,1 @@
+<label className={this.classSet(this.state.css)} class-obj={this.state.css}>{this.props.children}</label>

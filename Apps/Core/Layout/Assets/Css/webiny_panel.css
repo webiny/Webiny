@@ -1,0 +1,35 @@
+.panel {
+	background-color: white;
+	position: relative;
+	border-radius: 0px;
+	color: #393939;
+	border: 1px solid #E8E8E8;
+	box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.04);
+	margin-bottom: 35px;
+}
+
+.panel .panel-header {
+	background: #F0F0F0;
+	padding: 20px;
+	font-size: 24px;
+	border-top: 1px solid #E8E8E8;
+	border-left: 1px solid #E8E8E8;
+}
+
+.panel .panel-body {
+	border-top: 4px solid #FA5723;
+	margin-left: -1px;
+	margin-right: -1px
+}
+
+.panel .panel-footer {
+	box-shadow: 0px -2px 4px 0px rgba(50, 50, 50, 0.1);
+	border: 1px solid #E8E8E8;
+	border-top: none;
+	border-radius: 0px;
+	background: #F0F0F0;
+}
+
+.panel-group .panel .panel-body {
+	border: none;
+}

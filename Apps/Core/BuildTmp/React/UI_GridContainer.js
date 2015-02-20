@@ -1,0 +1,1 @@
+React.createElement("div", {className: "container"}, this.props.children)

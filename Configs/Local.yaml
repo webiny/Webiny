@@ -10,7 +10,7 @@ Platform:
         Reporting: true
     Bootstrap:
         App: Core
-        Module: View
+        Module: Layout
         Component: Layout
 
 Database:

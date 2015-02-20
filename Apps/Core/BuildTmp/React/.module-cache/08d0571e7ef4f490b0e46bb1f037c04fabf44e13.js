@@ -1,0 +1,1 @@
+React.createElement("td", {className: this.props.className}, this.props.children)

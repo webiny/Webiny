@@ -1,0 +1,1 @@
+<table className={this.classSet(this.dynamic.css)}>{this.props.children}</table>

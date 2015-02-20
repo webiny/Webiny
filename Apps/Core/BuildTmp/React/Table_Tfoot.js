@@ -1,0 +1,1 @@
+React.createElement("tfoot", {className: this.props.className}, this.props.children)

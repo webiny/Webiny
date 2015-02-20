@@ -8,8 +8,8 @@ class Todo extends BaseModule {
 	registerRoutes() {
 
 		return {
-			'/Todo/Todo': {
-				MainContent: {
+			'/': {
+				MasterContent: {
 					component: ListComponent.createComponent(),
 					props: {
 						saveState: true
@@ -17,7 +17,7 @@ class Todo extends BaseModule {
 				}
 			},
 			'/Todo/Todo/:id': {
-				MainContent: {
+				MasterContent: {
 					component: FormComponent.createComponent()
 				}
 			}

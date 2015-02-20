@@ -1,0 +1,34 @@
+.icheckbox_minimal, .iradio_minimal {
+	background: #fff;
+	display: block;
+	width: 21px;
+	height: 21px;
+	cursor: pointer;
+	float: left;
+	margin: 10px 10px 0px 0px;
+	border: 1px solid #ccc;
+}
+
+.icheckbox_minimal.checked {
+	background: #fff url(../img/icons.png) no-repeat -74px -51px;
+	border: 1px solid #ccc;
+}
+
+.iradio_minimal {
+	border-radius: 50px;
+}
+
+.iradio_minimal.checked {
+	background: url("../img/icons.png") no-repeat scroll -98px -52px #fff;
+	border: 1px solid #ccc;
+}
+
+.dropdown-menu li .show-rec {
+	/* used in dropdown with checkboxes */
+	clear: both;
+}
+
+.dropdown-menu li .iradio_minimal,
+.dropdown-menu li .icheckbox_minimal{
+	margin: 0px 10px 0px 0px;
+}

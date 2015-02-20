@@ -1,0 +1,125 @@
+@media (min-width: 768px) {
+	/*
+	 * Fieldset
+	 */
+	.dashboard-content fieldset legend {
+		padding: 20px;
+	}
+
+	.dashboard-content .fieldset_inner, .dashboard-content .fieldset_header {
+		padding: 0px 15px;
+	}
+
+	.dashboard-content fieldset .fieldset_footer {
+		padding: 10px;
+	}
+
+	.dashboard-content fieldset .fieldset_footer .btn-primary {
+		padding: 5px;
+		font-size: 16px;
+	}
+
+	.dashboard-content fieldset .fieldset_footer .btn-primary span {
+		margin: 5px 8px 0px 10px;
+	}
+
+	.pull-right-lg {
+		float: right;
+	}
+
+	.text-right-lg {
+		text-align: right;
+	}
+
+	.no-padding {
+		padding: 0px !important;
+	}
+
+	.vertical-align {
+		position: relative;
+		top: 50%;
+		-webkit-transform: translateY(-50%);
+		-ms-transform: translateY(-50%);
+		transform: translateY(-50%);
+	}
+}
+
+@media (min-width: 1200px) {
+	/* new menu -> applied only on general template */
+	.master-navigation #left-sidebar.navbar-collapse {
+		position: fixed;
+	}
+
+	.master-navigation #left-sidebar.navbar-collapse .left-menu ul li a {
+		text-align: left;
+		padding-left: 5px;
+		height: 75px;
+		width: 200px;
+		overflow: hidden;
+	}
+	.master-navigation #left-sidebar.navbar-collapse .left-menu ul li a span.app-title{
+		height: 35px;
+		width: 135px;
+		line-height: 120%;
+		padding: 12px 0 0 5px;
+	}
+
+	.master-navigation #left-sidebar.navbar-collapse .left-menu ul li a span.app-icon,
+	.master-navigation #left-sidebar.navbar-collapse .left-menu ul li a span.app-title{
+		float: left;
+		display: block;
+		-webkit-font-smoothing: subpixel-antialiased;
+	}
+
+	.master-navigation #left-sidebar.navbar-collapse,
+	.master-navigation #left-sidebar.navbar-collapse .shield,
+	.master-navigation #left-sidebar.navbar-collapse .left-menu {
+		width: 60px;
+		-webkit-transition: width ease-in-out 0.28s;
+		-moz-transition: width ease-in-out 0.28s;
+		-o-transition: width ease-in-out 0.28s;
+		transition: width ease-in-out 0.28s;
+	}
+
+
+	.master-navigation #left-sidebar.navbar-collapse .left-menu ul li a span.app-title{
+		opacity: 0;
+		-webkit-transition: opacity ease-in-out 0.28s;
+		-moz-transition: opacity ease-in-out 0.28s;
+		-o-transition: opacity ease-in-out 0.28s;
+		transition: opacity ease-in-out 0.28s;
+	}
+
+	.master-navigation #left-sidebar.navbar-collapse:hover .shield,
+	.master-navigation #left-sidebar.navbar-collapse:hover .left-menu,
+	.master-navigation #left-sidebar.navbar-collapse:hover .left-menu ul li a {
+		width: 200px;
+	}
+
+	.master-navigation #left-sidebar.navbar-collapse:hover .left-menu ul li a span.app-title {
+		opacity: 1;
+		-webkit-transition: opacity ease-in-out 0.28s;
+		-moz-transition: opacity ease-in-out 0.28s;
+		-o-transition: opacity ease-in-out 0.28s;
+		transition: opacity ease-in-out 0.28s;
+	}
+
+	.master-navigation #left-sidebar.navbar-collapse:hover .left-menu-submenu {
+		opacity: 1;
+		left: 145px;
+
+	}
+}
+
+/* dropdown animation */
+.dropdown-menu{
+	display: block;
+	opacity: 0;
+	visibility: hidden;
+	-webkit-transition: opacity linear 0.1s;
+}
+
+.open>.dropdown-menu{
+	opacity: 1;
+	visibility: visible;
+}

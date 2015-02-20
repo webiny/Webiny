@@ -1,0 +1,1 @@
+React.createElement("tbody", {className: this.props.className}, this.props.children)

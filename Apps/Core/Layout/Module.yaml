@@ -1,0 +1,34 @@
+Module:
+    Active: true
+    Name: Layout
+
+Assets:
+    Css:
+        - Css/fontello.css
+        - Css/bootstrap.min.css
+        - Css/bootstrap-switch.css
+        - Css/perfect-scrollbar.css
+        - Css/jquery-ui.css
+        - Css/animation.css
+        - Css/webiny_style.css
+        - Css/webiny_general.css
+        - Css/webiny_modal.css
+        - Css/webiny_buttons.css
+        - Css/webiny_datepicker.css
+        - Css/webiny_selectize.css
+        - Css/webiny_switch.css
+        - Css/webiny_inputs.css
+        - Css/webiny_icheck.css
+        - Css/webiny_panel.css
+        - Css/webiny_dropdown.css
+        - Css/webiny_table.css
+        - Css/webiny_tooltip.css
+        - Css/webiny_tabs_accordion.css
+        - Css/webiny_elements.css
+        - Css/webiny_wizard.css
+        - Css/webiny_sortable.css
+        - Css/cms.css
+        - Css/overwrites.css
+    Js:
+        - Js/jquery-cookie.js
+        - Js/prettyCheckable.js

@@ -10,7 +10,7 @@ class SystemLoader extends TraceurLoader {
 
 	normalize(name, referrerName, referrerAddress) {
 		if (this.componentsRegex.exec(name)){
-			var newPath = name.replace(this.componentsRegex, 'Apps/$1/Build/Development/$2/$3/$3');
+			var newPath = name.replace(this.componentsRegex, 'Apps/$1/Build/Development/Components/$2/$3/$3');
 			//console.log(name+" => ", newPath);
 			return newPath;
 		}

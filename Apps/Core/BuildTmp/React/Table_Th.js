@@ -1,0 +1,1 @@
+React.createElement("th", {className: this.props.className}, this.props.children)
