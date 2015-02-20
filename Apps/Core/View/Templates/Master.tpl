@@ -8,6 +8,7 @@
     <script src="/Assets/jquery-2.1.1.min.js" type="text/javascript"></script>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="shortcut icon" href="/Assets/favicon.png" type="image/x-icon"/>
     <!-- App style -->
     <link rel="stylesheet" href="/Assets/style.css">
     <!-- Apps assets -->

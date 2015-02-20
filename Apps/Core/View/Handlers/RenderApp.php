@@ -69,8 +69,8 @@ class RenderApp
                 $storage->setContents($appName . '/Build/Log.json', $this->config()->php($buildLog)->getAsJson());
 
                 // Parse HTPL and store component in App/BuildTmp folder
-                $buildReactDir = $appName . '/BuildTmp/React';
-                $buildJsxDir = $appName . '/BuildTmp/Jsx';
+                $buildReactDir = $this->getPlatform('AppsPath') . '/' . $appName . '/BuildTmp/React';
+                $buildJsxDir = $this->getPlatform('AppsPath') . '/' . $appName . '/BuildTmp/Jsx';
                 @mkdir($buildReactDir, 0755, true);
                 @mkdir($buildJsxDir, 0755, true);
                 foreach ($components as $moduleName => $cmp) {
@@ -109,7 +109,7 @@ class RenderApp
                     $getTemplateFn = "getTemplate(){ return " . $react . ";}\n\n\t";
 
                     $buildComponent = $partOne . $getTemplateFn . $partTwo;
-                    $componentKey = $appName . '/Build/Development/' . $cmp['module'] . '/' . $cmp['name'] . '/'. $cmp['name'] . '.js';
+                    $componentKey = $appName . '/Build/Development/' . $cmp['module'] . '/' . $cmp['name'] . '/' . $cmp['name'] . '.js';
                     $storage->setContents($componentKey, $buildComponent);
                 }
             }

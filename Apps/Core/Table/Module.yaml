@@ -1,5 +1,5 @@
 Module:
-    Active: false
+    Active: true
     Name: Table
     Css:
         RootVar: coreTableRoot

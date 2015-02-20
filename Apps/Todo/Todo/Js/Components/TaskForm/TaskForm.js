@@ -7,8 +7,6 @@ class TaskForm extends BaseComponent {
 	}
 
 	componentDidMount() {
-		super();
-
 		this.tasksStore = this.getStore('Todo.Todo.TasksStore');
 		this.tasksStore.crudGet(this.getParam('id')).then((response) => {
 			this.setState(response.data);
