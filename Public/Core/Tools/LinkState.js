@@ -3,6 +3,9 @@ class LinkState {
 	constructor(component, key) {
 		this.component = component;
 		this.key = key;
+		this.validValues = [
+			1, "1", "true", "TRUE", "on", "yes"
+		];
 	}
 
 	create() {
@@ -22,6 +25,10 @@ class LinkState {
 				value = value[key];
 			}
 		});
+
+		if (this.validValues.indexOf(value) > -1) {
+			value = true;
+		}
 		return value;
 	}
 
@@ -36,7 +43,7 @@ class LinkState {
 		var _this = this;
 		return function stateKeySetter(value, callback) {
 			if (typeof value == 'undefined') {
-				value = '';
+				value = false;
 			}
 			var oldValue = _this.__getValue(key);
 			_this.__buildPartialState(partialState, value);

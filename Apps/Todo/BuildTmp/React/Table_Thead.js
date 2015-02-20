@@ -1,1 +1,0 @@
-React.createElement("thead", {className: this.props.className}, this.props.children)

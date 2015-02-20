@@ -1,1 +1,0 @@
-<td className={this.props.className}>{this.props.children}</td>

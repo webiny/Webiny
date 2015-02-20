@@ -2,6 +2,7 @@
 Cache/*
 Public/Uploads/
 Apps/*/Build
+Apps/*/BuildTmp
 Vendors/Webiny
 
 #PHPStorm

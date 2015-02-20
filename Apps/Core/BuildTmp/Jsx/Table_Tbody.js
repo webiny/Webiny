@@ -1,1 +1,0 @@
-<tbody className={this.props.className}>{this.props.children}</tbody>

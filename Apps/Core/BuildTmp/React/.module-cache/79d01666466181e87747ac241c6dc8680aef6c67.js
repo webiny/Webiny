@@ -1,1 +1,0 @@
-React.createElement("div", {className: "form-group"}, this.props.children)

@@ -1,1 +1,0 @@
-<div className="col-xs-12 col-sm-6">{this.props.children}</div>

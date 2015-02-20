@@ -1,1 +1,0 @@
-React.createElement("div", {className: "row"}, this.props.children)
