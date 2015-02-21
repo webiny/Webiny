@@ -1,0 +1,31 @@
+Services:
+    Smarty:
+        Factory: \Webiny\Platform\Tools\TemplateEngine
+        Method: getInstance
+
+TemplateEngine:
+    Engines:
+        Smarty:
+            ForceCompile: true
+            CacheDir: __DIR__/../Cache/Smarty/Cache
+            CompileDir: __DIR__/../Cache/Smarty/Compile
+            TemplateDir: __DIR__/../Public
+            AutoEscapeOutput: false
+            MergeCompiledIncludes: false
+
+Storage:
+    Services:
+        Root:
+            Class: \Webiny\Component\Storage\Storage
+            Arguments:
+                Driver:
+                    Object: \Webiny\Component\Storage\Driver\Local\Local
+                    ObjectArguments:
+                        - __DIR__/../
+        Apps:
+            Class: \Webiny\Component\Storage\Storage
+            Arguments:
+                Driver:
+                    Object: \Webiny\Component\Storage\Driver\Local\Local
+                    ObjectArguments:
+                        - __DIR__/../Apps

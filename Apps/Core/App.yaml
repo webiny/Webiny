@@ -7,9 +7,9 @@ App:
 
 Events:
     Platform.RenderOutput:
-       - {Handler: \Apps\Core\Layout\Handlers\HtmlCleanup, Priority: 101}
+       - {Handler: \Apps\Core\Layout\Php\Handlers\HtmlCleanup, Priority: 101}
     Platform.HandleRequest:
-       - {Handler: \Apps\Core\Layout\Handlers\RenderApp}
+       - {Handler: \Apps\Core\Layout\Php\Handlers\RenderApp}
 
 # These are sitewide constants returned by SiteWideConstants service
 Constants:

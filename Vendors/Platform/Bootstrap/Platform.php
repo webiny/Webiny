@@ -247,9 +247,12 @@ final class Platform
         /**
          * Load Apps
          */
-        $appLoader = new AppLoader();
-        $appLoader->loadApps();
-        $this->_apps = $appLoader->getLoadedApps();
+        $appLoader = new AppLoader($this->getConfig());
+        $this->_apps = $appLoader->loadApps();
+
+        foreach($this->_apps as $app){
+            $this->_config->mergeWith($app->getConfig());
+        }
 
         /**
          * Register services, events, storage services, etc.

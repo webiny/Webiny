@@ -30,12 +30,16 @@ class App
     {
         $this->_config = $config;
         $this->_appPath = $modulePath;
-
     }
 
     public function getName()
     {
         return $this->_config->get('App.Name');
+    }
+
+    public function getConfig()
+    {
+        return $this->_config;
     }
 
     public function isActive()

@@ -1,7 +1,6 @@
 <?php
 namespace Webiny\Platform\Bootstrap;
 
-use Webiny\Platform\Traits\PlatformTrait;
 use Webiny\Component\Config\ConfigTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Storage\Directory\LocalDirectory;
@@ -9,7 +8,7 @@ use Webiny\Component\Storage\StorageTrait;
 
 class AppLoader
 {
-    use PlatformTrait, StorageTrait, StdLibTrait, ConfigTrait;
+    use StorageTrait, StdLibTrait, ConfigTrait;
 
     private $_loadedApps;
 
@@ -26,15 +25,17 @@ class AppLoader
             $appYamlPath = $appConfig->getAbsolutePath();
             $appConfig = $this->config()->yaml($appYamlPath);
             $app = new App($appConfig, $this->_getModuleDirectory($appYamlPath));
-            if($app->isActive()) {
+            if ($app->isActive()) {
                 $app->loadModules();
                 $this->_loadedApps->key($app->getName(), $app);
-                $this->getPlatform()->getConfig()->mergeWith($appConfig);
             }
         }
+
+        return $this->_loadedApps;
     }
 
-    public function getLoadedApps(){
+    public function getLoadedApps()
+    {
         return $this->_loadedApps;
     }
 
