@@ -10,16 +10,16 @@
 }
 
 .icheckbox_minimal.checked {
-	background: #fff url("${Core_Layout}/Images/icons.png") no-repeat -74px -51px;
+	background: #fff url("@{Core_Layout}/Images/icons.png") no-repeat -74px -51px;
 	border: 1px solid #ccc;
 }
 
 .iradio_minimal {
 	border-radius: 50px;
-}""
+}
 
 .iradio_minimal.checked {
-	background: url("${Core_Layout}/Images/icons.png") no-repeat scroll -98px -52px #fff;
+	background: url("@{Core_Layout}/Images/icons.png") no-repeat scroll -98px -52px #fff;
 	border: 1px solid #ccc;
 }
 

@@ -16,24 +16,38 @@ class Module
     protected $_config;
     protected $_modulePath;
 
-    public function __construct(ConfigObject $config, $modulePath){
+    public function __construct(ConfigObject $config, $modulePath)
+    {
         $this->_config = $config;
         $this->_modulePath = $modulePath;
     }
 
-    public function getName(){
+    public function getName()
+    {
         return $this->_config->get('Module.Name');
     }
 
-    public function isActive(){
+    public function getConfig($key = null)
+    {
+        if ($key) {
+            return $this->_config->get($key);
+        }
+
+        return $this->_config;
+    }
+
+    public function isActive()
+    {
         return $this->_config->get('Module.Active', false);
     }
 
-    public function getAbsolutePath(){
+    public function getAbsolutePath()
+    {
         return $this->_modulePath;
     }
 
-    public function getTemplate($tpl){
-        return $this->getAbsolutePath().'/Templates/'.$this->str($tpl)->trimLeft('/');
+    public function getTemplate($tpl)
+    {
+        return $this->getAbsolutePath() . '/Templates/' . $this->str($tpl)->trimLeft('/');
     }
 }

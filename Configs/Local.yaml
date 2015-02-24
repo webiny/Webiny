@@ -1,10 +1,10 @@
 Platform:
     WebPath: http://sandbox.loc
     ApiPath: http://api.sandbox.loc
-    AbsPath: /var/www/projects/platform-sandbox
-    UploadsAbsPath: /var/www/platform-sandbox/Public/Uploads
+    AbsPath: __DIR__/../
+    UploadsAbsPath: __DIR__/../Public/Uploads
     UploadsWebPath: http://sandbox.loc/Uploads
-    AppsPath: /var/www/projects/platform-sandbox/Apps
+    AppsPath: __DIR__/../Apps
     AppsWebPath: http://sandbox.loc/Apps
     Error:
         Reporting: true
@@ -31,7 +31,7 @@ Entity:
 
 Rest:
     Api:
-        CompilePath: /var/www/projects/platform-sandbox/Cache/Rest
+        CompilePath: __DIR__/../Cache/Rest
         Environment: development
         Router:
             Class: \Apps\{app}\{module}\Php\Services\{service}
@@ -46,9 +46,9 @@ TemplateEngine:
     Engines:
         Smarty:
             ForceCompile: true
-            CacheDir: /var/www/projects/platform-sandbox/Cache/Smarty/Cache
-            CompileDir: /var/www/projects/platform-sandbox/Cache/Smarty/Compile
-            TemplateDir: /var/www/projects/platform-sandbox/Public
+            CacheDir: __DIR__/../Cache/Smarty/Cache
+            CompileDir: __DIR__/../Smarty/Compile
+            TemplateDir: __DIR__/../Public
             AutoEscapeOutput: false
             MergeCompiledIncludes: false
 
@@ -60,11 +60,11 @@ Storage:
                 Driver:
                     Object: \Webiny\Component\Storage\Driver\Local\Local
                     ObjectArguments:
-                        - /var/www/projects/platform-sandbox
+                        - __DIR__/../
         Apps:
             Class: \Webiny\Component\Storage\Storage
             Arguments:
                 Driver:
                     Object: \Webiny\Component\Storage\Driver\Local\Local
                     ObjectArguments:
-                        - /var/www/projects/platform-sandbox/Apps
+                        - __DIR__/../Apps

@@ -30,5 +30,12 @@ Assets:
         - Css/cms.css
         - Css/overwrites.css
     Js:
-        - Js/jquery-cookie.js
-        - Js/prettyCheckable.js
+        - Js/jquery.min.js
+        - Js/jquery-ui.min.js
+        - Js/bootstrap.min.js
+        - Js/icheck.js
+        - Js/selectize.js
+        - Js/bootstrap-switch.js
+        - Js/jquery.mousewheel.js
+        - Js/perfect-scrollbar.js
+        - Js/onload.js

@@ -81,7 +81,7 @@ body.opened-mobile-nav {
 }
 
 .sign-in {
-	background: #FA5A28 url("${Core_Layout}/Images/bg-login.png") repeat;
+	background: #FA5A28 url("@{Core_Layout}/Images/bg-login.png") repeat;
 	padding: 20px;
 	text-align: center;
 }
@@ -124,7 +124,7 @@ body.opened-mobile-nav {
 
 .sign-in h2 span {
 	display: inline-block;
-	background: url("${Core_Layout}/Images/icons.png") no-repeat -46px -3px;
+	background: url("@{Core_Layout}/Images/icons.png") no-repeat -46px -3px;
 	width: 20px;
 	height: 26px;
 	margin-right: 5px;
@@ -149,7 +149,7 @@ body.opened-mobile-nav {
 	position: absolute;
 	top: 25%;
 	left: 10px;
-	background: url("${Core_Layout}/Images/icons.png") no-repeat -46px -65px;
+	background: url("@{Core_Layout}/Images/icons.png") no-repeat -46px -65px;
 	display: block;
 	z-index: 2;
 	width: 23px;
@@ -175,7 +175,7 @@ body.opened-mobile-nav {
 }
 
 .sign-in .input-holder.success span.not {
-	background: url("${Core_Layout}/Images/icons.png") no-repeat 1px 2px;
+	background: url("@{Core_Layout}/Images/icons.png") no-repeat 1px 2px;
 	width: 42px;
 	height: 39px;
 	display: block;
@@ -186,7 +186,7 @@ body.opened-mobile-nav {
 }
 
 .sign-in .input-holder.error span.not {
-	background: url("${Core_Layout}/Images/icons.png") no-repeat 1px -41px;
+	background: url("@{Core_Layout}/Images/icons.png") no-repeat 1px -41px;
 	width: 42px;
 	height: 39px;
 	display: block;
@@ -204,12 +204,12 @@ body.opened-mobile-nav {
 }
 
 .sign-in .input-holder label.chk .icheckbox_minimal {
-	background: url("${Core_Layout}/Images/icons.png") no-repeat scroll -97px -6px rgba(0, 0, 0, 0);
+	background: url("@{Core_Layout}/Images/icons.png") no-repeat scroll -97px -6px rgba(0, 0, 0, 0);
 	border: 1px solid #DB840F;
 }
 
 .sign-in .input-holder label.chk .icheckbox_minimal.checked {
-	background: url("${Core_Layout}/Images/icons.png") no-repeat scroll -97px -30px rgba(0, 0, 0, 0);
+	background: url("@{Core_Layout}/Images/icons.png") no-repeat scroll -97px -30px rgba(0, 0, 0, 0);
 	border: 1px solid #DB840F;
 }
 
@@ -264,7 +264,7 @@ body.opened-mobile-nav {
 }
 
 .sign-in .icheckbox_minimal {
-	background: url("${Core_Layout}/Images/icons.png") no-repeat -72px -6px;
+	background: url("@{Core_Layout}/Images/icons.png") no-repeat -72px -6px;
 	display: block;
 	width: 24px;
 	height: 24px;
@@ -275,7 +275,7 @@ body.opened-mobile-nav {
 }
 
 .sign-in .icheckbox_minimal.checked {
-	background: url("${Core_Layout}/Images/icons.png") no-repeat -73px -30px;
+	background: url("@{Core_Layout}/Images/icons.png") no-repeat -73px -30px;
 	display: block;
 	width: 24px;
 	height: 24px;
@@ -295,7 +295,7 @@ body.opened-mobile-nav {
 }
 
 .sign-in a.info {
-	background: url("${Core_Layout}/Images/icons.png") no-repeat -46px -40px;
+	background: url("@{Core_Layout}/Images/icons.png") no-repeat -46px -40px;
 	width: 18px;
 	height: 18px;
 	float: left;
@@ -356,7 +356,7 @@ body.opened-mobile-nav {
 }
 
 .sign-in .btn-primary span {
-	background: url("${Core_Layout}/Images/icons.png") no-repeat -126px -5px;
+	background: url("@{Core_Layout}/Images/icons.png") no-repeat -126px -5px;
 	width: 30px;
 	height: 30px;
 	position: absolute;
@@ -366,19 +366,19 @@ body.opened-mobile-nav {
 }
 
 .sign-in .btn-primary.reset span {
-	background: url("${Core_Layout}/Images/icons.png") no-repeat -162px -5px;
+	background: url("@{Core_Layout}/Images/icons.png") no-repeat -162px -5px;
 }
 
 .sign-in .btn-primary.reset:hover span {
-	background: url("${Core_Layout}/Images/icons.png") no-repeat -162px -35px;
+	background: url("@{Core_Layout}/Images/icons.png") no-repeat -162px -35px;
 }
 
 .sign-in .btn-primary.save span {
-	background: url("${Core_Layout}/Images/icons.png") no-repeat -196px -5px;
+	background: url("@{Core_Layout}/Images/icons.png") no-repeat -196px -5px;
 }
 
 .sign-in .btn-primary.save:hover span {
-	background: url("${Core_Layout}/Images/icons.png") no-repeat -196px -35px;
+	background: url("@{Core_Layout}/Images/icons.png") no-repeat -196px -35px;
 }
 
 .sign-in .btn-primary.preloading {
@@ -419,7 +419,7 @@ body.opened-mobile-nav {
 }
 
 .sign-in .btn-primary:hover span {
-	background: url("${Core_Layout}/Images/icons.png") no-repeat -126px -35px;
+	background: url("@{Core_Layout}/Images/icons.png") no-repeat -126px -35px;
 }
 
 .sign-in p.copyright {
@@ -451,7 +451,7 @@ body.opened-mobile-nav {
 
 /* -------------- loader3 -------------- */
 .preloader-wrap .box {
-	background: #FA5A28 url("${Core_Layout}/Images/bg-login".png) repeat;
+	background: #FA5A28 url("@{Core_Layout}/Images/bg-login.png") repeat;
 	top: 0px;
 	left: 0px;
 	z-index: 499;
@@ -467,7 +467,7 @@ body.opened-mobile-nav {
 	height: 80px;
 	top: 49%;
 	left: 49%;
-	background: url("${Core_Layout}/Images/preloader_2.png") no-repeat top left;
+	background: url("@{Core_Layout}/Images/preloader_2.png") no-repeat top left;
 	background-size: 45px 45px;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
 	filter: alpha(opacity=50);
@@ -480,7 +480,7 @@ body.opened-mobile-nav {
 	content: "";
 	position: absolute;
 	background-color: #fff;
-	background: url("${Core_Layout}/Images/preloader_2.png") no-repeat top left;
+	background: url("@{Core_Layout}/Images/preloader_2.png") no-repeat top left;
 	top: 49%;
 	left: 49%;
 	width: 150px;
@@ -533,7 +533,7 @@ body.opened-mobile-nav {
 
 @media (min-width: 768px) {
 	.sign-in {
-		background: #FA5A28 url("${Core_Layout}/Images/bg-login".png) repeat;
+		background: #FA5A28 url("@{Core_Layout}/Images/bg-login.png") repeat;
 		padding: 0px;
 	}
 
@@ -603,7 +603,7 @@ body.opened-mobile-nav {
 
 @media (min-width: 992px) {
 	.sign-in {
-		background: #FA5A28 url("${Core_Layout}/Images/bg-login".png) repeat;
+		background: #FA5A28 url("@{Core_Layout}/Images/bg-login.png") repeat;
 		padding: 0px;
 	}
 
@@ -669,11 +669,11 @@ body.opened-mobile-nav {
 
 @media (min-width: 1200px) {
 	.sign-in .input-holder.success span.not {
-		background: url(""${Core_Layout}/Images/icons.png"") no-repeat scroll 1px 2px rgba(0, 0, 0, 0);
+		background: url("@{Core_Layout}/Images/icons.png") no-repeat scroll 1px 2px rgba(0, 0, 0, 0);
 	}
 
 	.sign-in {
-		background: #FA5A28 url("${Core_Layout}/Images/bg-login".png) repeat;
+		background: #FA5A28 url("@{Core_Layout}/Images/bg-login.png") repeat;
 		padding: 0px;
 	}
 
@@ -745,22 +745,22 @@ body.opened-mobile-nav {
 
 @media only screen and (-webkit-min-device-pixel-ratio: 1.3), only screen and (-o-min-device-pixel-ratio: 13/10) , only screen and (min-resolution: 120dpi) {
 	.sign-in h2 span {
-		background: url("${Core_Layout}/Images/icons_retina.png") no-repeat -51px -1px;
+		background: url("@{Core_Layout}/Images/icons_retina.png") no-repeat -51px -1px;
 		background-size: 180px 82px;
 	}
 
 	.sign-in .alert-danger span {
-		background: url("${Core_Layout}/Images/icons_retina.png") no-repeat -49px -59px;
+		background: url("@{Core_Layout}/Images/icons_retina.png") no-repeat -49px -59px;
 		background-size: 180px 82px;
 	}
 
 	.sign-in .input-holder.success span.not {
-		background: url("${Core_Layout}/Images/icons_retina.png") no-repeat 1px 1px;
+		background: url("@{Core_Layout}/Images/icons_retina.png") no-repeat 1px 1px;
 		background-size: 180px 82px;
 	}
 
 	.sign-in a.info {
-		background: url("${Core_Layout}/Images/icons_retina.png") no-repeat -49px -33px;
+		background: url("@{Core_Layout}/Images/icons_retina.png") no-repeat -49px -33px;
 		background-size: 180px 82px;
 		width: 24px;
 		height: 24px;
@@ -768,57 +768,57 @@ body.opened-mobile-nav {
 	}
 
 	.sign-in .btn-primary span {
-		background: url("${Core_Layout}/Images/icons_retina.png") no-repeat -79px -3px;
+		background: url("@{Core_Layout}/Images/icons_retina.png") no-repeat -79px -3px;
 		background-size: 180px 82px;
 	}
 
 	.sign-in .btn-primary:active span,
 	.sign-in .btn-primary:hover span {
-		background: url("${Core_Layout}/Images/icons_retina.png") no-repeat -79px -33px;
+		background: url("@{Core_Layout}/Images/icons_retina.png") no-repeat -79px -33px;
 		background-size: 180px 82px;
 	}
 
 	.sign-in .input-holder.error span.not {
-		background: url("${Core_Layout}/Images/icons_retina.png") no-repeat 1px -44px;
+		background: url("@{Core_Layout}/Images/icons_retina.png") no-repeat 1px -44px;
 		background-size: 180px 82px;
 	}
 
 	.sign-in .btn-primary.reset span {
-		background: url("${Core_Layout}/Images/icons_retina.png") no-repeat -113px -3px;
+		background: url("@{Core_Layout}/Images/icons_retina.png") no-repeat -113px -3px;
 		background-size: 180px 82px;
 	}
 
 	.sign-in .btn-primary.reset:active span,
 	.sign-in .btn-primary.reset:hover span {
-		background: url("${Core_Layout}/Images/icons_retina.png") no-repeat -113px -3px;
+		background: url("@{Core_Layout}/Images/icons_retina.png") no-repeat -113px -3px;
 		background-size: 180px 82px;
 	}
 
 	.sign-in .btn-primary.save span {
-		background: url("${Core_Layout}/Images/icons_retina.png") no-repeat -148px -3px;
+		background: url("@{Core_Layout}/Images/icons_retina.png") no-repeat -148px -3px;
 		background-size: 180px 82px;
 	}
 
 	.sign-in .btn-primary.save:active span,
 	.sign-in .btn-primary.save:hover span {
-		background: url("${Core_Layout}/Images/icons_retina.png") no-repeat -148px -3px;
+		background: url("@{Core_Layout}/Images/icons_retina.png") no-repeat -148px -3px;
 		background-size: 180px 82px;
 	}
 
 	.sign-in .input-holder label.chk .icheckbox_minimal.checked {
-		background: url("${Core_Layout}/Images/icons_retina.png") no-repeat -111px -63px;
+		background: url("@{Core_Layout}/Images/icons_retina.png") no-repeat -111px -63px;
 		background-size: 180px 82px;
 	}
 
 	.sign-in .icheckbox_minimal.checked {
-		background: url("${Core_Layout}/Images/icons_retina.png") no-repeat -81px -63px;
+		background: url("@{Core_Layout}/Images/icons_retina.png") no-repeat -81px -63px;
 		background-size: 180px 82px;
 	}
 }
 
 /*DASHBOARD*/
 .master-navigation .navbar-header {
-	background: url("${Core_Layout}/Images/header_bg.jpg") repeat top left;
+	background: url("@{Core_Layout}/Images/header_bg.jpg") repeat top left;
 	text-align: center;
 	padding: 16px;
 }
@@ -1187,7 +1187,7 @@ footer span {
 }
 
 footer .swich {
-	background: url("${Core_Layout}/Images/swich.png");
+	background: url("@{Core_Layout}/Images/swich.png");
 	width: 70px;
 	height: 24px;
 	float: left;
@@ -1660,7 +1660,7 @@ body.opened-mobile-nav .left-menu-submenu {
 	}
 
 	.master-navigation .navbar-header .notification-holder .drop span.top-arr {
-		background: url("${Core_Layout}/Images/arr.png") no-repeat top left;
+		background: url("@{Core_Layout}/Images/arr.png") no-repeat top left;
 		width: 18px;
 		height: 11px;
 		position: absolute;
@@ -1719,7 +1719,7 @@ body.opened-mobile-nav .left-menu-submenu {
 	}
 
 	.master-navigation .navbar-header .profile-holder .drop span.top-arr {
-		background: url("${Core_Layout}/Images/arr.png") no-repeat top left;
+		background: url("@{Core_Layout}/Images/arr.png") no-repeat top left;
 		width: 18px;
 		height: 11px;
 		position: absolute;
@@ -2462,7 +2462,7 @@ body.opened-mobile-nav .left-menu-submenu {
 	}
 
 	.master-navigation .subheader .dropdown.add-new span.top-arr {
-		background: url("${Core_Layout}/Images/arr.png") no-repeat top left;
+		background: url("@{Core_Layout}/Images/arr.png") no-repeat top left;
 		width: 18px;
 		height: 11px;
 		position: absolute;
@@ -2504,7 +2504,7 @@ body.opened-mobile-nav .left-menu-submenu {
 	}
 
 	.master-navigation .dropdown.add-new .show-rec .checked {
-		background: #fff url("${Core_Layout}/Images/icons.png") no-repeat -74px -51px;
+		background: #fff url("@{Core_Layout}/Images/icons.png") no-repeat -74px -51px;
 		border: 1px solid #333;
 	}
 

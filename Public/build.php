@@ -10,6 +10,7 @@ require_once realpath(__DIR__ . '/../Vendors/Platform/Autoload.php');
 
 class Build
 {
+    private $_config;
     private $_storage;
     private $_developmentBuild = false;
 
@@ -26,11 +27,11 @@ class Build
          * Setup autoloader and load build config.
          * Register Services and Storage from config.
          */
-        $config = Config::getInstance()->yaml(__DIR__ . '/../Configs/Build.yaml');
-        foreach ($config->get('Services') as $sName => $sConfig) {
+        $this->_config = Config::getInstance()->yaml(__DIR__ . '/../Configs/Build.yaml');
+        foreach ($this->_config->get('Services') as $sName => $sConfig) {
             ServiceManager::getInstance()->registerService($sName, $sConfig);
         }
-        Storage::setConfig($config->get('Storage', []));
+        Storage::setConfig($this->_config->get('Storage', []));
 
         $this->_storage = ServiceManager::getInstance()->getService('Storage.Apps');
 
@@ -52,10 +53,10 @@ class Build
         }
 
         if ($this->_developmentBuild) {
-            $builder = new DevelopmentBuilder();
+            $builder = new DevelopmentBuilder($this->_config);
             $builder->setAppsStorage($this->_storage)->buildApp($app);
         } else {
-            $builder = new ProductionBuilder();
+            $builder = new ProductionBuilder($this->_config);
             $builder->setAppsStorage($this->_storage)->buildApp($app);
         }
     }
