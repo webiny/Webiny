@@ -19,10 +19,6 @@ final class DevelopmentBuilder
 
     protected $_config;
 
-    public function __construct(ConfigObject $config){
-        $this->_config = $config;
-    }
-
     /**
      * @var Storage
      */
@@ -43,17 +39,17 @@ final class DevelopmentBuilder
 
         // Build components
         $this->_log("\n1. Building JS Components...");
-        $componentBuilder = new ComponentBuilder($app, $this->_storage, $buildLog, $this->_config);
+        $componentBuilder = new ComponentBuilder($app, $this->_storage, $buildLog);
         $componentBuilder->setDevelopmentMode()->build();
 
         // Build CSS
         $this->_log("\n2. Building CSS...");
-        $cssBuilder = new CssBuilder($app, $this->_storage, $buildLog, $this->_config);
+        $cssBuilder = new CssBuilder($app, $this->_storage, $buildLog);
         $cssBuilder->setDevelopmentMode()->build();
 
         // Build App.js
         $this->_log("\n3. Building App.js...");
-        $appBuilder = new AppBuilder($app, $this->_storage, $buildLog, $this->_config);
+        $appBuilder = new AppBuilder($app, $this->_storage, $buildLog);
         $appBuilder->build();
 
         // Save new build log

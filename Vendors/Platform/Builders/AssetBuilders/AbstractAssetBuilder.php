@@ -31,21 +31,15 @@ abstract class AbstractAssetBuilder
      */
     protected $_log;
 
-    /**
-     * @var ConfigObject
-     */
-    protected $_config;
-
     protected $_mode = self::DEVELOPMENT;
 
     abstract public function build();
 
-    public function __construct(App $app, Storage $storage, ArrayObject $log, ConfigObject $config)
+    public function __construct(App $app, Storage $storage, ArrayObject $log)
     {
         $this->_app = $app;
         $this->_storage = $storage;
         $this->_log = $log;
-        $this->_config = $config;
     }
 
     public function setDevelopmentMode()

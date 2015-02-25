@@ -26,6 +26,7 @@ class AppBuilder extends AbstractAssetBuilder
         $appModified = $this->_log->key('App');
         if ($this->_storage->keyExists($buildDirKey . '/App.js') && $appModified == $modulesHash) {
             $this->_log("No changes detected, skipping creation of new App.js.");
+
             return;
         }
 
@@ -49,6 +50,6 @@ class AppBuilder extends AbstractAssetBuilder
         }
         $appJsFile = new LocalFile($buildDirKey . '/App.js', $this->_storage);
         $appJsFile->setContents(join("\n", $appJs));
-        $this->_log("Created new App.js in `/Apps/".$appJsFile->getKey()."`");
+        $this->_log("Created new App.js in `/Apps/" . $appJsFile->getKey() . "`");
     }
 }

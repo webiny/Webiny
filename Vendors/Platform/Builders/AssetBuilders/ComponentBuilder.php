@@ -12,9 +12,9 @@ use Webiny\Platform\Builders\Parser;
 class ComponentBuilder extends AbstractAssetBuilder
 {
 
-    public function __construct(App $app, Storage $storage, ArrayObject $log, ConfigObject $config)
+    public function __construct(App $app, Storage $storage, ArrayObject $log)
     {
-        parent::__construct($app, $storage, $log, $config);
+        parent::__construct($app, $storage, $log);
 
         if (!$log->keyExists('Components')) {
             $this->_log['Components'] = [];
