@@ -6,10 +6,8 @@ namespace Webiny\Platform\Builders;
  */
 trait CliLoggerTrait
 {
-    protected function _log($msg)
+    protected function _log($msg, $foreground = null, $background = null)
     {
-        if (php_sapi_name() == 'cli') {
-            echo $msg . "\n";
-        }
+        CliLogger::getInstance()->log($msg, $foreground, $background);
     }
 }

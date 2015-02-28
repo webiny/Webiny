@@ -66,7 +66,7 @@ final class Platform
      */
     public function getConfig($key = null, $default = null)
     {
-        if($this->isNull($key)) {
+        if ($this->isNull($key)) {
             return $this->_config;
         }
 
@@ -92,7 +92,7 @@ final class Platform
      */
     public function getApps($alias = null)
     {
-        if(!$alias) {
+        if (!$alias) {
             return $this->_apps;
         }
 
@@ -131,6 +131,13 @@ final class Platform
         return rtrim($this->getConfig('Platform.ApiPath') . '/' . $url, '/');
     }
 
+    public function isBackend()
+    {
+        $key = 'Platform.Backend.Prefix';
+
+        return $this->httpRequest()->getCurrentUrl(true)->getPath(true)->startsWith('/' . $this->_config->get($key));
+    }
+
     public function getAppsPath()
     {
         return $this->getConfig('Platform.AppsPath');
@@ -140,15 +147,16 @@ final class Platform
     {
         /* @var $app App */
         foreach ($this->_apps as $app) {
-            if($app->canRoute($this->_requestUrl)) {
+            if ($app->canRoute($this->_requestUrl)) {
                 $this->processResponse($app->run());
             }
         }
 
-        $response = $this->eventManager()->fire('Platform.HandleRequest', null, '\Webiny\Platform\Responses\ResponseAbstract');
+        $response = $this->eventManager()
+                         ->fire('Platform.HandleRequest', null, '\Webiny\Platform\Responses\ResponseAbstract');
 
         // If any event listener processed the request - send response to browser
-        if(isset($response[0])) {
+        if (isset($response[0])) {
             $this->processResponse($response[0]);
         }
 
@@ -171,11 +179,11 @@ final class Platform
 
         Rest::setConfig($this->getConfig('Rest'));
 
-        if(!$serviceClass) {
+        if (!$serviceClass) {
             // If no custom map was detected - use default routing
             $rest = Rest::initRest('Api');
             $response = $rest->processRequest();
-            if(!$response->getError()){
+            if (!$response->getError()) {
                 $response = $response->getData();
             } else {
                 $response = new JsonErrorResponse($response->getError());
@@ -188,7 +196,7 @@ final class Platform
         }
 
         /* @var $result ResponseAbstract */
-        if($response instanceof JsonResponse) {
+        if ($response instanceof JsonResponse) {
             $response->output();
         } else {
             $this->processResponse($response);
@@ -202,7 +210,7 @@ final class Platform
         $this->_apps = $this->arr();
         $this->_config = new ConfigObject([]);
         $this->_requestUrl = $this->httpRequest()->getCurrentUrl(true);
-        
+
         /**
          * Load config files
          */
@@ -213,7 +221,7 @@ final class Platform
          * Determine environment
          */
         $this->_environment = new Environment();
-        
+
         $config = new LocalFile($this->_environment->getName() . '.yaml', $storage);
 
         /**
@@ -222,7 +230,8 @@ final class Platform
         try {
             $this->_config->mergeWith($this->config()->yaml($config->getAbsolutePath()));
         } catch (ConfigException $e) {
-            die($e->getMessage() . ' Trying to load: <strong>' . $config->getAbsolutePath() . '</strong> in ' . __CLASS__ . ' on line ' . __LINE__);
+            die($e->getMessage() . ' Trying to load: <strong>' . $config->getAbsolutePath(
+                ) . '</strong> in ' . __CLASS__ . ' on line ' . __LINE__);
         }
 
         /**
@@ -248,9 +257,9 @@ final class Platform
          * Load Apps
          */
         $appLoader = new AppLoader($this->getConfig());
-        $this->_apps = $appLoader->loadApps();
+        $this->_apps = $appLoader->loadApps($this->isBackend());
 
-        foreach($this->_apps as $app){
+        foreach ($this->_apps as $app) {
             $this->_config->mergeWith($app->getConfig());
         }
 

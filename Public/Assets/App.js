@@ -19,19 +19,16 @@ window.BaseComponent = BaseComponent;
 window.Http = Http;
 window.Q = Q;
 
-import MainComponent from '/Apps/Core/Layout/Js/Components/Layout/Layout';
-import CoreLayoutModule from '/Apps/Core/Layout/Js/Module';
-import CoreTableModule from '/Apps/Core/Table/Js/Module';
-import CoreUIModule from '/Apps/Core/UI/Js/Module';
-import TodoTodoModule from '/Apps/Todo/Todo/Js/Module';
+import CoreApp from '/Apps/Core/Build/Development/Backend/App.js';
+import TodoApp from '/Apps/Todo/Build/Development/Backend/App.js';
+
+import MainComponent from '/Apps/Core/Backend/Development/Layout/Js/Components//Layout';
 
 /**
  * Instantiate modules
  */
-var coreLayoutModule = new CoreLayoutModule();
-var coreTableModule = new CoreTableModule();
-var coreUIModule = new CoreUIModule();
-var todoTodoModule = new TodoTodoModule();
+var coreApp = new CoreApp();
+var todoApp = new TodoApp();
 
 Router.setActiveRoute(window.location.pathname);
 var mainComponent = MainComponent.createElement();

@@ -1,7 +1,0 @@
-<div class="master minimized">
-    <Navigation/>
-    <div class="master-content container-fluid">
-        <W:Placeholder name="MasterContent"/>
-    </div>
-    <Footer/>
-</div>

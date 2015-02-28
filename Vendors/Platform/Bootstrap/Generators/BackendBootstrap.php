@@ -15,33 +15,33 @@ class BackendBootstrap
 
     public function generateBootstrapFile()
     {
-        $modules = [];
+        $apps = [];
         /* @var App $app */
+        $mode = $this->getPlatform()->getEnvironment()->isDevelopment() ? 'Development' : 'Production';
         foreach ($this->getPlatform()->getApps() as $app) {
-            /* @var Module $module */
-            foreach ($app->getModules() as $module) {
-                $modules[] = [
-                    'name'  => $module->getName(),
-                    'alias' => $app->getName() . $module->getName() . 'Module',
-                    'path'  => '/Apps/' . $app->getName() . '/' . $module->getName() . '/Js/Module'
-                ];
-            }
+            $apps[$app->getName()] = [
+                'name' => $app->getName(),
+                'path' => '/Apps/' . $app->getName() . '/Build/' . $mode . '/Backend/App.js',
+                'css' =>  '/Apps/' . $app->getName() . '/Build/' . $mode . '/Backend/Css/'.$app->getName().'.min.css',
+                'js' =>  '/Apps/' . $app->getName() . '/Build/' . $mode . '/Backend/Js/'.$app->getName().'.min.js',
+            ];
         }
 
         // Main component
         $mc = $this->getPlatform('Platform.Bootstrap');
 
         $data['WP'] = [
-            'Modules'            => $modules,
-            'MainComponentAlias' => 'MainComponent',
-            'MainComponentPath'  => '/Apps/' . $mc['App'] . '/' . $mc['Module'] . '/Js/Components/' . $mc['Component'] . '/' . $mc['Component']
+            'Apps'              => $apps,
+            'MainComponent'     => 'MainComponent',
+            'MainComponentPath' => '/Apps/' . $mc['App'] . '/Backend/' . $mode . '/' . $mc['Module'] . '/Js/Components/' . '/' . $mc['Component']
         ];
 
-        $bootstrapFileTemplate = __DIR__.'/Templates/App.js.tpl';
+        $bootstrapFileTemplate = __DIR__ . '/Templates/App.js.tpl';
         $bootstrapSource = $this->templateEngine()->fetch($bootstrapFileTemplate, $data);
-        $bootstrapFilePath = $this->getPlatform()->getAbsPath().'/Public/Assets/App.js';
+        $bootstrapFilePath = $this->getPlatform()->getAbsPath() . '/Public/Assets/App.js';
         @unlink($bootstrapFilePath);
         file_put_contents($bootstrapFilePath, $bootstrapSource);
+        return $data;
     }
 
 }

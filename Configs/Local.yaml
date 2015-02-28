@@ -6,6 +6,8 @@ Platform:
     UploadsWebPath: http://sandbox.loc/Uploads
     AppsPath: __DIR__/../Apps
     AppsWebPath: http://sandbox.loc/Apps
+    Backend:
+        Prefix: admin
     Error:
         Reporting: true
     Bootstrap:
