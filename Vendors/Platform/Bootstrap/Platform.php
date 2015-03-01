@@ -36,6 +36,8 @@ final class Platform
 {
     use SingletonTrait, ConfigTrait, HttpTrait, StorageTrait, StdLibTrait, EventManagerTrait, ServiceManagerTrait;
 
+    private $_isBackend = false;
+
     /**
      * App environment: Local|Development|Staging|Production
      * @var Environment
@@ -133,9 +135,7 @@ final class Platform
 
     public function isBackend()
     {
-        $key = 'Platform.Backend.Prefix';
-
-        return $this->httpRequest()->getCurrentUrl(true)->getPath(true)->startsWith('/' . $this->_config->get($key));
+        return $this->_isBackend;
     }
 
     public function getAppsPath()
@@ -143,6 +143,10 @@ final class Platform
         return $this->getConfig('Platform.AppsPath');
     }
 
+    /**
+     * Loop through available Apps and check if any of them can route the requested route.
+     * If not, trigger 'Platform.HandleRequest' event to see if some custom handling exists.
+     */
     public function runApp()
     {
         /* @var $app App */
@@ -174,25 +178,15 @@ final class Platform
          */
         $parts = $this->_requestUrl->getPath(true)->explode('/')->filter()->values()->val();
 
-        // Check if custom mapping exists
-        $serviceClass = $this->getConfig('RestServices.' . $parts[0], false);
-
         Rest::setConfig($this->getConfig('Rest'));
 
-        if (!$serviceClass) {
-            // If no custom map was detected - use default routing
-            $rest = Rest::initRest('Api');
-            $response = $rest->processRequest();
-            if (!$response->getError()) {
-                $response = $response->getData();
-            } else {
-                $response = new JsonErrorResponse($response->getError());
-                $response->output();
-            }
+        $rest = Rest::initRest('Api');
+        $response = $rest->processRequest();
+        if (!$response->getError()) {
+            $response = $response->getData();
         } else {
-            // Route using custom service map
-            $rest = new Rest('Api', $serviceClass);
-            $response = $rest->processRequest()->getData();
+            $response = new JsonErrorResponse($response->getError());
+            $response->output();
         }
 
         /* @var $result ResponseAbstract */
@@ -205,7 +199,17 @@ final class Platform
         $response->output();
     }
 
-    public function prepare()
+    /**
+     * Load platform config and active Apps
+     *
+     * @param bool $api
+     *
+     * @return $this
+     * @throws ConfigException
+     * @throws \Webiny\Component\ServiceManager\ServiceManagerException
+     * @throws \Webiny\Component\StdLib\Exception\Exception
+     */
+    public function prepare($api = false)
     {
         $this->_apps = $this->arr();
         $this->_config = new ConfigObject([]);
@@ -253,9 +257,12 @@ final class Platform
         Entity::setConfig($this->getConfig('Entity'));
         Router::setConfig(new ConfigObject([]));
 
-        /**
-         * Load Apps
-         */
+        $this->_determineBackend($api);
+
+        return $this;
+    }
+
+    public function loadApps(){
         $appLoader = new AppLoader($this->getConfig());
         $this->_apps = $appLoader->loadApps($this->isBackend());
 
@@ -267,8 +274,6 @@ final class Platform
          * Register services, events, storage services, etc.
          */
         $this->_registerServices();
-
-        return $this;
     }
 
     /**
@@ -279,6 +284,8 @@ final class Platform
         $event = new Events\OutputEvent();
         $event->setOutput($response->output());
         $this->eventManager()->fire('Platform.RenderOutput', $event);
+
+        $this->eventManager()->fire('Platform.BeforeSendOutput', $event);
 
         // Build response body
         $responseBody = $event->getOutput();
@@ -315,6 +322,17 @@ final class Platform
 
         foreach ($this->getConfig('Services') as $sName => $sConfig) {
             ServiceManager::getInstance()->registerService($sName, $sConfig, true);
+        }
+    }
+
+    private function _determineBackend($isApi)
+    {
+        $path = $this->_requestUrl->getPath(true);
+        if (!$isApi) {
+            $this->_isBackend = $path->startsWith('/' . $this->getConfig('Platform.Backend.Prefix'));
+        } else {
+            $parts = $path->explode('/')->filter()->values()->val();
+            $this->_isBackend = lcfirst($parts[2]) == 'backend';
         }
     }
 }

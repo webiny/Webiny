@@ -1,6 +1,7 @@
 <?php
 namespace Webiny\Platform\Builders\Backend;
 
+use Webiny\Platform\Builders\Backend\Processors\LessVarProcessor;
 use Webiny\Platform\Builders\Dom\Selector;
 use Webiny\Platform\Builders\Backend\Parsers\IfParser;
 use Webiny\Platform\Builders\Backend\Parsers\LoopParser;
@@ -23,7 +24,7 @@ class Parser
 
     private $_parsers = [];
 
-    function __construct()
+    function __construct($isDevelopment)
     {
         $this->_parsers = [
             new IfParser($this),
@@ -39,9 +40,11 @@ class Parser
         $this->_EntitiesProcessor = new EntitiesProcessor();
         $this->_BindAttributeProcessor = new BindAttributeProcessor();
         $this->_AttributesProcessor = new AttributesProcessor();
+        $this->_LessVarProcessor = new LessVarProcessor($isDevelopment);
 
         // Assign processors that perform pre-processing
         $this->_preProcessors = [
+            $this->_LessVarProcessor,
             $this->_WebinyTagsProcessor,
             $this->_TagsProcessor,
             $this->_JSXProcessor,

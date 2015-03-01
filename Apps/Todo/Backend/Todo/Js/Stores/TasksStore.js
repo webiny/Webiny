@@ -7,7 +7,7 @@ class TasksStore extends BaseStore {
 	}
 
 	getService() {
-		return '/Todo/Todo/Item';
+		return '/todo/backend/todo/item';
 	}
 
 	init() {

@@ -8,6 +8,7 @@ class Link extends BaseComponent {
 	
 	getDynamicProperties(){
 		var link = this.props.href;
+		var route = this.props.route;
 		var classes = this.props.className;
 
 		if(typeof classes == 'string'){
@@ -20,6 +21,9 @@ class Link extends BaseComponent {
 		}
 		
 		// Build URL
+		if(route){
+			link = Router.getRoutePath(route);
+		}
 		if(this.props.params){
 			Object.keys(this.props.params).forEach((param) => {
 				link = link.replace(':'+param, this.props.params[param]);

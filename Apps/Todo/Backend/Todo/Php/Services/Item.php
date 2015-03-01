@@ -1,14 +1,11 @@
 <?php
 
-namespace Apps\Todo\Todo\Php\Services;
+namespace Apps\Todo\Backend\Todo\Php\Services;
 
-use Apps\Todo\Todo\Php\Entities\TodoTask;
+use Apps\Todo\Common\Php\Entities\TodoTask;
 use Webiny\Component\Entity\EntityException;
 use Webiny\Component\Http\HttpTrait;
 use Webiny\Component\Rest\Interfaces\CrudInterface;
-use Webiny\Component\Rest\RestErrorException;
-use Webiny\Component\Rest\RestException;
-use Webiny\Platform\Responses\HtmlResponse;
 use Webiny\Platform\Responses\JsonErrorResponse;
 use Webiny\Platform\Responses\JsonResponse;
 
@@ -27,14 +24,14 @@ class Item implements CrudInterface
     {
         $task = TodoTask::findById($id);
         if ($task) {
-            if ($task->completed->getValue()) {
+            if ($task->completed) {
                 $task->completed = false;
             } else {
                 $task->completed = true;
             }
             $task->save();
 
-            return new JsonResponse(['completed' => $task->completed->getValue()]);
+            return new JsonResponse(['completed' => $task->completed]);
         }
 
         return new JsonErrorResponse([], 'Task with id `'.$id.'` was not found!');

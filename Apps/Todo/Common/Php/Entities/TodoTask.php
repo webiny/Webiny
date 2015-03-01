@@ -1,5 +1,5 @@
 <?php
-namespace Apps\Todo\Todo\Php\Entities;
+namespace Apps\Todo\Common\Php\Entities;
 
 use Webiny\Component\Entity\EntityAbstract;
 

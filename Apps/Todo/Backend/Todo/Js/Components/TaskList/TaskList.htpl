@@ -30,7 +30,7 @@
                     <Td>{item.created}</Td>
                     <Td>
                         <W:If cond="item.id">
-                            <Link class="btn btn-primary" href="/Todo/Todo/:id" params={item}>Edit</Link>
+                            <Link class="btn btn-primary" route="TodoItemEdit" params={item}>Edit</Link>
                             &nbsp;
                             <button class="btn btn-danger" onClick={this.removeTask.bind(this, item)}>Delete</button>
                         <W:Else/>

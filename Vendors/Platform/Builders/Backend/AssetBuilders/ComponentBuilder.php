@@ -89,7 +89,7 @@ class ComponentBuilder extends AbstractAssetBuilder
         $this->_log("Running parsers to create valid JSX...");
         foreach ($components as $moduleName => $cmp) {
             // Parse HTPL and store JSX
-            $parser = new Parser();
+            $parser = new Parser($this->isDevelopment());
             $jsx = $parser->parse(file_get_contents($cmp['tplPath']));
 
             $jsxTmpPath = $buildJsxDir . '/' . $cmp['module'] . '_' . $cmp['name'] . '.js';

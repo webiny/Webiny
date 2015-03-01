@@ -29,7 +29,7 @@ class ComponentLoader extends BaseClass {
 		if (globalComponents) {
 			globalComponents.map(x => components.push(x));
 		}
-
+		
 		if (components) {
 			components.forEach(function (items) {
 				if (Object.prototype.toString.call(items) === "[object Object]") {
@@ -41,9 +41,9 @@ class ComponentLoader extends BaseClass {
 					if (newInstance) {
 						// Need to add 'key' to each component in the array so React does not complain about it
 						props['key'] = index;
-						elements.push(React.createElement(item.component, props));
+						elements.push(React.createElement(item.Component, props));
 					} else {
-						elements.push(item.component);
+						elements.push(item.Component);
 					}
 				});
 			});

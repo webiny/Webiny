@@ -6,22 +6,27 @@ import TasksStore from '/Apps/Todo/Todo/Js/Stores/TasksStore'
 class Todo extends BaseModule {
 
 	registerRoutes() {
-
 		return {
-			'/': {
-				MasterContent: {
-					component: ListComponent.createComponent(),
-					props: {
-						saveState: true
+			TodoItemList: {
+				Path: '/',
+				Content: {
+					MasterContent: {
+						Component: ListComponent.createComponent(),
+						Props: {
+							saveState: true
+						}
 					}
 				}
 			},
-			'/Todo/Todo/:id': {
-				MasterContent: {
-					component: FormComponent.createComponent()
+			TodoItemEdit: {
+				Path: '/todo/item/:id',
+				Content: {
+					MasterContent: {
+						Component: FormComponent.createComponent()
+					}
 				}
 			}
-		}
+		};
 	}
 
 	registerStores() {

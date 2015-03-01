@@ -4,7 +4,7 @@ import Route from '/Core/Router/Route'
 class Router {
 
 	constructor() {
-		this.routes = [];
+		this.routes = {};
 		this.activeRoute = null;
 
 		History.Adapter.bind(window, 'statechange', () => {
@@ -12,33 +12,43 @@ class Router {
 		});
 	}
 
-	addRoute(route) {
-		if(route instanceof Route){
-			this.routes.push(route);
+	addRoute(name, route) {
+		if (route instanceof Route) {
+			this.routes[name] = route;
 		}
 	}
 
-	getParam(param){
+	getParam(param) {
 		return this.activeRoute.getParams(param);
 	}
 
-	getHref(pattern = null, params = {}){
-		if(pattern instanceof Object){
+	getHref(pattern = null, params = {}) {
+		if (pattern instanceof Object) {
 			return this.getActiveRoute().getHref(pattern);
 		}
 
 		var url = null;
-		this.routes.forEach(route => {
-			if(route.getPattern() == pattern){
+		Object.keys(this.routes).forEach(name => {
+			var route = this.routes[name];
+			if (route.getPattern() == pattern) {
 				url = route.getHref(params);
 			}
 		})
 		return url;
 	}
 
+	getRoutePath(route){
+		if(!this.routes[route]){
+			return null;
+		}
+
+		return this.routes[route].getPattern();
+	}
+
 	checkRoutes(url) {
 		url = this._sanitizeUrl(url);
-		this.routes.forEach((route) => {
+		Object.keys(this.routes).forEach(name => {
+			var route = this.routes[name];
 			if (route.match(url)) {
 				this.activeRoute = route;
 				EventManager.emit('renderRoute', this.activeRoute);
@@ -47,6 +57,8 @@ class Router {
 	}
 
 	goTo(url, replace) {
+		url = this.getRoutePath(url) || url;
+
 		if (replace == null) {
 			replace = false;
 		}
@@ -77,7 +89,8 @@ class Router {
 
 	setActiveRoute(url) {
 		url = this._sanitizeUrl(url);
-		this.routes.forEach((route) => {
+		Object.keys(this.routes).forEach(name => {
+			var route = this.routes[name];
 			if (route.match(url)) {
 				this.activeRoute = route;
 			}

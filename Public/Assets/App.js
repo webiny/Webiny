@@ -22,7 +22,7 @@ window.Q = Q;
 import CoreApp from '/Apps/Core/Build/Development/Backend/App.js';
 import TodoApp from '/Apps/Todo/Build/Development/Backend/App.js';
 
-import MainComponent from '/Apps/Core/Backend/Development/Layout/Js/Components//Layout';
+import MainComponent from '/Apps/Core/Layout/Js/Components/Layout/Layout';
 
 /**
  * Instantiate modules

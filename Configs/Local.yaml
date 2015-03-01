@@ -1,6 +1,6 @@
 Platform:
     WebPath: http://sandbox.loc
-    ApiPath: http://api.sandbox.loc
+    ApiPath: http://sandbox.loc/api
     AbsPath: __DIR__/../
     UploadsAbsPath: __DIR__/../Public/Uploads
     UploadsWebPath: http://sandbox.loc/Uploads
@@ -36,8 +36,9 @@ Rest:
         CompilePath: __DIR__/../Cache/Rest
         Environment: development
         Router:
-            Class: \Apps\{app}\{module}\Php\Services\{service}
-            Path: /{app}/{module}/{service}
+            Class: \Apps\{app}\{area}\{module}\Php\Services\{service}
+            Path: /api/{app}/{area}/{module}/{service}
+            Normalize: true
 
 Services:
     Smarty:

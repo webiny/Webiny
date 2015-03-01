@@ -4,27 +4,30 @@ import Route from '/Core/Router/Route'
 
 class BaseModule extends BaseClass {
 
-	constructor(){
+	constructor() {
 		var components = this.registerComponents();
 		Object.keys(components).forEach(function (name) {
 			var component = components[name];
-			if(window.hasOwnProperty(name)){
-				throw Error('Component with name `'+name+'` is already registered!');
+			if (window.hasOwnProperty(name)) {
+				throw Error('Component with name `' + name + '` is already registered!');
 			}
 			window[name] = component.createComponent();
 		});
 
 		var routes = this.registerRoutes();
-		Object.keys(routes).forEach(function (route) {
-			Router.addRoute(new Route(route));
-			var placeholders = routes[route];
+		Object.keys(routes).forEach(function (routeName) {
+			var routeData = routes[routeName];
+			var placeholders = routeData['Content'];
+			var path = '/' + _backendPrefix + routeData['Path'];
+			routeData['Path'] = path;
+			Router.addRoute(routeName, new Route(path));
 			Object.keys(placeholders).forEach(function (placeholder) {
 				var component = placeholders[placeholder];
-				var eventHash = md5(route + placeholder);
+				var eventHash = md5(path + placeholder);
 				var meta = {
 					listenerType: 'route',
 					placeholder: placeholder,
-					route: route
+					route: path
 				};
 				EventManager.addListener(eventHash, () => {
 					return component;
@@ -38,19 +41,19 @@ class BaseModule extends BaseClass {
 		});
 	}
 
-	getComponent(component){
+	getComponent(component) {
 		return (new component).getComponent();
 	}
 
-	registerComponents(){
+	registerComponents() {
 		return {};
 	}
 
-	registerRoutes(){
+	registerRoutes() {
 		return {};
 	}
 
-	registerStores(){
+	registerStores() {
 		return [];
 	}
 }

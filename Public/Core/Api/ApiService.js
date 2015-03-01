@@ -1,7 +1,7 @@
 class ApiService {
 
 	constructor(url) {
-		this.url = url;
+		this.url = url.toLowerCase();
 	}
 
 	crudList(filters, sorters, limit, page) {
