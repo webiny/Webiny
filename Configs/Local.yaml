@@ -50,7 +50,7 @@ TemplateEngine:
         Smarty:
             ForceCompile: true
             CacheDir: __DIR__/../Cache/Smarty/Cache
-            CompileDir: __DIR__/../Smarty/Compile
+            CompileDir: __DIR__/../Cache/Smarty/Compile
             TemplateDir: __DIR__/../Public
             AutoEscapeOutput: false
             MergeCompiledIncludes: false

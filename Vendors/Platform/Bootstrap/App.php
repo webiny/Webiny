@@ -68,6 +68,9 @@ class App
 
         $moduleFile = '*Module.yaml';
         $modulesDir = 'Apps/' . $this->getName() . '/' . $area;
+        if(!$this->storage('Root')->keyExists($modulesDir)){
+            return;
+        }
         $moduleConfigs = new LocalDirectory($modulesDir, $this->storage('Root'), 1, $moduleFile);
         /* @var LocalFile $moduleConfig */
         foreach ($moduleConfigs as $moduleConfig) {
