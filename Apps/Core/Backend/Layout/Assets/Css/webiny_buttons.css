@@ -1,0 +1,153 @@
+.btn {
+	padding: 8px 10px 8px 10px;
+	text-align: center;
+	font-size: 12px;
+	text-transform: uppercase;
+	border-radius: 50px;
+	margin-right: 8px;
+	display: inline-block;
+}
+
+.btn.btn-lg, .btn-group.btn-group-lg .btn {
+	font-size: 18px;
+	font-weight: 300;
+	padding: 11px 15px 11px 15px;
+	line-height: 150%;
+}
+
+.btn.btn-default.btn-lg, .btn-group.btn-group-lg .btn.btn-default{
+	font-weight: 400;
+}
+
+.btn-group .btn {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.btn.btn-lg span, .btn-group.btn-group-lg .btn span {
+	float: left;
+	margin: 2px 0px;
+}
+
+.btn.btn-lg span.icon, .btn-group.btn-group-lg .btn span.icon {
+	font-size: 32px;
+	height: 20px;
+	margin: 0px -8px 1px 0px;
+}
+
+.btn.btn-lg span.icon.right, .btn-group.btn-group-lg .btn span.icon.right {
+	margin: 0px -7px 0px 0px;
+}
+
+.btn.btn-lg span.icon.left, .btn-group.btn-group-lg .btn span.icon.left {
+	margin: 0px 0px 0px -7px;
+}
+
+.btn:active, .btn.active {
+	-webkit-box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.3);
+	-moz-box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.3);
+	box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.3);
+}
+
+.btn.btn-default:active, .btn.btn-default.active {
+	background: #F2F2F2;
+}
+
+.btn.btn-primary,
+.btn.btn-primary.preloading:hover,
+.btn.btn-primary.preloading:active,
+.btn.btn-primary.preloading:focus{
+	background-color: #FA5723;
+	border-color: #ED4005;
+}
+
+.btn.btn-primary:hover {
+	background: #ED4005;
+}
+
+.btn.btn-primary:active, .btn.btn-primary.active {
+	-webkit-box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.5);
+	-moz-box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.5);
+	box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.5);
+}
+
+.btn.btn-success,
+.btn.btn-success.preloading:hover,
+.btn.btn-success.preloading:active,
+.btn.btn-success.preloading:focus{
+	background: #3FBFB0;
+	border: 1px solid #2E8B80;
+}
+
+.btn.btn-success:hover {
+	background: #32988B;
+}
+
+.btn.btn-success:active, .btn.btn-success.active {
+	background: #32988B;
+	-webkit-box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.9);
+	-moz-box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.9);
+	box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.9);
+}
+
+.btn.preloading {
+	opacity: 0.9;
+	cursor: default;
+}
+
+.btn.preloading span.icon{
+	float: right;
+	margin-left: 5px;
+	margin-right: 0;
+}
+
+.btn.preloading span.icon.left{
+	float: left;
+	margin-left: 0;
+	margin-right: 5px;
+}
+
+.btn.btn-lg.preloading span.icon.left{
+	margin-right: 10px;
+	margin-left: 0px;
+	float: left;
+}
+
+.btn.btn-lg.preloading span.icon{
+	margin-left: 10px;
+	margin-right: 0px;
+}
+
+.btn.preloading span.icon {
+	height: 15px !important;
+	width: 15px !important;
+	position: relative;
+	border-radius: 80px;
+	border: 2px solid #fff;
+	-webkit-transform-origin: 50% 50%;
+	transform-origin: 50% 50%;
+	-webkit-animation: spin 3s linear infinite;
+	animation: spin 3s linear infinite;
+	background: transparent;
+	display: inline-block;
+}
+.btn.btn-lg.preloading span.icon {
+	height: 30px !important;
+	width: 30px !important;
+	border-width: 4px;
+}
+
+.btn.preloading span.icon:before{
+	content: "";
+}
+
+.btn.preloading span.icon:after {
+	content: "";
+	border-radius: 100%;
+	position: absolute;
+	top: -3px;
+	left: 3px;
+	width: 4px;
+	height: 4px;
+	background-color: #FA5A28;
+}

@@ -1,0 +1,107 @@
+.modal.modal-wizard .modal-dialog {
+	width: 95%;
+}
+
+.modal.modal-wizard .modal-header {
+	border-bottom: 2px solid #ccc;
+}
+
+.modal.modal-wizard .modal-footer a {
+	font-size: 1.2em;
+	display: inline-block;
+	padding: 15px 20px;
+}
+
+.modal-wizard-steps {
+	margin-top: -15px;
+	position: relative;
+	height: 55px;
+	border-bottom: 2px solid #ccc;
+}
+
+.modal-wizard-steps > ul {
+	position: absolute;
+	top: -1px;
+	padding: 0px;
+	margin: 0px;
+	margin-left: 0px;
+	margin-right: 3px;
+	display: table;
+	table-layout: fixed;
+	width: 100%;
+}
+
+.modal-wizard-steps > ul > li {
+	list-style: none;
+	display: table-cell;
+	position: relative;
+	color: #393939;
+	cursor: default;
+	height: 55px;
+	padding-left: 35px;
+	vertical-align: middle;
+	background: #d6d6d6;
+	margin-left: -3px;
+	font-weight: 300;
+}
+
+.modal-wizard-steps > ul > li.complete {
+	color: #fff;
+	background: #3FBFB0;
+	cursor: pointer;
+}
+
+.modal-wizard-steps > ul > li.complete:hover {
+	background: #2E8B80;
+}
+
+.modal-wizard-steps > ul > li.active {
+	background: #FFF;
+	color: #393939;
+}
+
+.modal-wizard-steps > ul > li > span.chevron {
+	position: absolute;
+	top: 0;
+	right: -14px;
+	z-index: 1;
+	display: block;
+	border: 27px solid transparent;
+	border-right: 0;
+	border-left: 14px solid #aaa;
+}
+
+.modal-wizard-steps > ul > li.complete > span.chevron {
+	border-left-color: #2E8B80;
+}
+
+.modal-wizard-steps > ul > li.active > span.chevron {
+	border-left-color: #ccc;
+}
+
+.modal-wizard-steps > ul > li > span.chevron:after {
+	position: absolute;
+	top: -28px;
+	right: 1px;
+	display: block;
+	border: 28px solid transparent;
+	border-right: 0;
+	border-left: 14px solid #d6d6d6;
+	content: "";
+}
+
+.modal-wizard-steps > ul > li.complete > span.chevron:after {
+	border-left: 14px solid #3FBFB0;
+}
+
+.modal-wizard-steps > ul > li.complete:hover > span.chevron:after {
+	border-left: 14px solid #2E8B80;
+}
+
+.modal-wizard-steps > ul > li.active > span.chevron:after {
+	border-left: 14px solid #fff;
+}
+
+.modal-wizard-steps > ul > li:last-child span.chevron {
+	display: none;
+}
