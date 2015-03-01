@@ -79,7 +79,7 @@ trait PlatformTrait
         if($class->startsWith('Apps')){
             $parts = $class->explode('\\');
             $appName = $parts[1];
-            $moduleName = $parts[2];
+            $moduleName = $parts[3];
             return self::getPlatform()->getApps($appName)->getModules($moduleName);
         }
         return false;

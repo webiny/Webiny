@@ -1,0 +1,6 @@
+Module:
+    Active: true
+    Name: UI
+    Css:
+        RootVar: coreUIRoot
+        WebRootVar: coreUIWebRoot

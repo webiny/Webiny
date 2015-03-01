@@ -26,16 +26,20 @@ class App
     protected $_modules;
     private $_matchedRoute;
 
-    public function __construct(ConfigObject $config, $modulePath)
+    public function __construct(ConfigObject $config, $appPath)
     {
         $this->_config = $config;
-        $this->_appPath = $modulePath;
-
+        $this->_appPath = $appPath;
     }
 
     public function getName()
     {
         return $this->_config->get('App.Name');
+    }
+
+    public function getConfig()
+    {
+        return $this->_config;
     }
 
     public function isActive()
@@ -49,20 +53,28 @@ class App
     }
 
     /**
-     * Get all active App modules
+     * Get all active App modules for given area
+     *
+     * @param bool $backend
+     *
+     * @throws \Exception
+     * @throws \Webiny\Component\Config\ConfigException
+     * @throws \Webiny\Component\ServiceManager\ServiceManagerException
      */
-    public function loadModules()
+    public function loadModules($backend = false)
     {
         $this->_modules = $this->arr();
+        $area = $backend ? 'Backend' : 'Frontend';
 
         $moduleFile = '*Module.yaml';
-        $moduleConfigs = new LocalDirectory('Apps/'.$this->getName(), $this->storage('Root'), 1, $moduleFile);
+        $modulesDir = 'Apps/' . $this->getName() . '/' . $area;
+        $moduleConfigs = new LocalDirectory($modulesDir, $this->storage('Root'), 1, $moduleFile);
         /* @var LocalFile $moduleConfig */
         foreach ($moduleConfigs as $moduleConfig) {
             $moduleYamlPath = $moduleConfig->getAbsolutePath();
             $moduleConfig = $this->config()->yaml($moduleYamlPath);
             $module = new Module($moduleConfig, $this->_getModuleDirectory($moduleYamlPath));
-            if($module->isActive()) {
+            if ($module->isActive()) {
                 $this->_modules->key($module->getName(), $module);
                 $this->_config->mergeWith($moduleConfig);
             }
@@ -75,7 +87,7 @@ class App
 
         $this->_matchedRoute = $this->router()->match($request);
 
-        if($this->_matchedRoute) {
+        if ($this->_matchedRoute) {
             return true;
         }
 
@@ -102,7 +114,7 @@ class App
      */
     public function getModules($name = null)
     {
-        if(!$name) {
+        if (!$name) {
             return $this->_modules;
         }
 

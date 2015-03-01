@@ -1,6 +1,0 @@
-App:
-    Active: false
-    Name: WebMongo
-    Css:
-        RootVar: webMongoRoot
-        WebRootVar: webMongoWebRoot

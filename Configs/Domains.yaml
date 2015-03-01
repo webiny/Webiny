@@ -1,4 +1,5 @@
 Domains:
+    Default: sandbox.loc
     sandbox.loc:
         all: Local
     api.sandbox.loc:

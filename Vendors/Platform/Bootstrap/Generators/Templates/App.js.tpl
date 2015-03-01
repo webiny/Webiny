@@ -19,20 +19,21 @@ window.BaseComponent = BaseComponent;
 window.Http = Http;
 window.Q = Q;
 
-import {$WP.MainComponentAlias} from '{$WP.MainComponentPath}';
-{foreach from=$WP.Modules item=module}
-import {$module.alias} from '{$module.path}';
+{foreach from=$WP.Apps item=app}
+import {$app.name}App from '{$app.path}';
 {/foreach}
+
+import {$WP.MainComponent} from '{$WP.MainComponentPath}';
 
 /**
  * Instantiate modules
  */
-{foreach from=$WP.Modules item=module}
-var {$module.alias|lcfirst} = new {$module.alias}();
+{foreach from=$WP.Apps item=app}
+var {$app.name|lcfirst}App = new {$app.name}App();
 {/foreach}
 
 Router.setActiveRoute(window.location.pathname);
-var mainComponent = {$WP.MainComponentAlias}.createElement();
+var mainComponent = {$WP.MainComponent}.createElement();
 React.render(mainComponent, document.getElementById('app'));
 Router.start(window.location.pathname);
 

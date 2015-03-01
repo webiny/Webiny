@@ -1,6 +1,0 @@
-Module:
-    Active: true
-    Name: Layout
-    Css:
-        RootVar: webMongoLayoutRoot
-        WebRootVar: webMongoLayoutRoot

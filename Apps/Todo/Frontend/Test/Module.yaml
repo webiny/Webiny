@@ -1,0 +1,11 @@
+Module:
+    Active: true
+    Name: Test
+
+
+Routes:
+    TestRoute:
+        Path: /custom-route/
+        Callback:
+            Class: \Apps\Todo\Frontend\Test\Php\Handlers\CustomRoute
+            Method: index

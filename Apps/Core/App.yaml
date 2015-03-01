@@ -1,17 +1,3 @@
 App:
     Active: true
     Name: Core
-    Css:
-        RootVar: coreRoot
-        WebRootVar: coreWebRoot
-
-Events:
-    Platform.RenderOutput:
-       - {Handler: \Apps\Core\View\Handlers\HtmlCleanup, Priority: 101}
-    Platform.HandleRequest:
-       - {Handler: \Apps\Core\View\Handlers\RenderApp}
-
-# These are sitewide constants returned by SiteWideConstants service
-Constants:
-    DateFormat: Y-m-d
-    DateTimeFormat: Y-m-d H:i:s

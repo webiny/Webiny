@@ -196,7 +196,7 @@ export default function ComponentSkeleton(self) {
 	 * Create `render` method
 	 */
 	classObject.render = function () {
-		console.log("RENDERING " + self.getClassName(), self.__instanceId);
+		//console.log("RENDERING " + self.getClassName(), self.__instanceId);
 		this.dynamic = this.getDynamicProperties();
 		return this.getTemplate();
 	}
