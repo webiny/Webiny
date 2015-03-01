@@ -1,8 +1,8 @@
 /*__IMPORTS__*/
 
-class /*__APP__*/{
+class /*__APP__*/ {
 
-	constructor(){
+	constructor() {
 		/*__MODULES__*/
 	}
 }

@@ -46,7 +46,7 @@ class AppBuilder extends AbstractAssetBuilder
                 $impModuleName = $appName . $module->getName() . 'Module';
                 $from = '/Apps/' . $appName . '/Backend/' . $module->getName() . '/Js/Module';
                 $appImportJs[] = 'import ' . $impModuleName . ' from \'' . $from . '\';';
-                $appModuleJs[] = 'new  ' . $impModuleName . '();';
+                $appModuleJs[] = 'new ' . $impModuleName . '();';
             }
         }
 
