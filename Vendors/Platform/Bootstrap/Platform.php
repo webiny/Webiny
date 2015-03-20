@@ -265,11 +265,11 @@ final class Platform
     public function loadApps(){
         $appLoader = new AppLoader($this->getConfig());
         $this->_apps = $appLoader->loadApps($this->isBackend());
-
+        
         foreach ($this->_apps as $app) {
             $this->_config->mergeWith($app->getConfig());
         }
-
+        
         /**
          * Register services, events, storage services, etc.
          */

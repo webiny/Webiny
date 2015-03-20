@@ -1,11 +1,11 @@
 Platform:
-    WebPath: http://sandbox.loc
-    ApiPath: http://sandbox.loc/api
+    WebPath: http://platform.app:8000
+    ApiPath: http://platform.app:8000/api
     AbsPath: __DIR__/../
     UploadsAbsPath: __DIR__/../Public/Uploads
-    UploadsWebPath: http://sandbox.loc/Uploads
+    UploadsWebPath: http://platform.app/Uploads
     AppsPath: __DIR__/../Apps
-    AppsWebPath: http://sandbox.loc/Apps
+    AppsWebPath: http://platform.app:8000/Apps
     Backend:
         Prefix: admin
     Error:

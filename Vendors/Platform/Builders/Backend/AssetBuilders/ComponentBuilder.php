@@ -26,7 +26,7 @@ class ComponentBuilder extends AbstractAssetBuilder
         // Get a list of components that need to be built
         $components = [];
         $appName = $this->_app->getName();
-
+        
         $this->_log("Checking for component modifications:");
         /* @var $module Module */
         foreach ($this->_app->getModules() as $module) {
@@ -73,7 +73,7 @@ class ComponentBuilder extends AbstractAssetBuilder
                 ];
             }
         }
-
+        
         // Parse HTPL and store component in App/BuildTmp folder
         $modeDir = $this->isDevelopment() ? 'Development' : 'Production';
         $buildReactDir = $this->_storage->getAbsolutePath($appName . '/Build/' . $modeDir . '/Backend/Tmp/React');

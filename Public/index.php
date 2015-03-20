@@ -1,10 +1,16 @@
 <?php
+use Webiny\Component\ClassLoader\ClassLoader;
 use Webiny\Component\Http\Request;
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require_once realpath(__DIR__ . '/../Vendors/Platform/Autoload.php');
+require_once realpath(__DIR__ . '/../vendor/autoload.php');
+$classLoaderMap = [
+    'Webiny\Platform' => realpath(__DIR__.'/../').'/Vendors/Platform',
+    'Apps' => realpath(__DIR__ . '/../').'/Apps'
+];
+ClassLoader::getInstance()->registerMap($classLoaderMap);
 
 // Check if it's an API request
 $api = Request::getInstance()->getCurrentUrl(true)->getPath(true)->startsWith('/api');

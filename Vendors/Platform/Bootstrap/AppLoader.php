@@ -28,7 +28,7 @@ class AppLoader
         foreach ($appConfigs as $appConfig) {
             $appYamlPath = $appConfig->getAbsolutePath();
             $appConfig = $this->config()->yaml($appYamlPath);
-
+            
             $areaConfigDir = $backend ? 'Backend' : 'Frontend';
             $areaConfigPath = $this->str($appYamlPath)->explode('/')->removeLast()->implode('/');
             $areaConfigPath .= '/'.$areaConfigDir.'/App.yaml';
@@ -43,7 +43,7 @@ class AppLoader
                 $loadedApps->key($app->getName(), $app);
             }
         }
-
+        
         return $loadedApps;
     }
 
