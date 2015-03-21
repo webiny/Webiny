@@ -58,6 +58,6 @@ class JsBuilder extends AbstractAssetBuilder
         $jsPath->setContents('');
 
         $this->_log('Minifying JS assets to `/Apps/'.$jsPath->getKey().'`');
-        exec(__DIR__ . '/../../External/uglify-js/bin/uglifyjs ' . join(' ', $jsPaths) . ' -o ' . $jsPath->getAbsolutePath());
+        exec(__DIR__ . '/../../External/node_modules/uglify-js/bin/uglifyjs ' . join(' ', $jsPaths) . ' -o ' . $jsPath->getAbsolutePath());
     }
 }

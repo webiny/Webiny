@@ -97,7 +97,7 @@ export default function ComponentSkeleton(self) {
 		},
 
 		trigger: function (action, data) {
-			EventManager.emit(action, data || {});
+			return EventManager.emit(action, data || {}, true);
 		},
 
 		/**

@@ -1,0 +1,5 @@
+{
+    "require": {
+        "webiny/framework": "dev-master"
+    }
+}

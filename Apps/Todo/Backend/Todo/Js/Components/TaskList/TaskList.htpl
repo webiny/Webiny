@@ -27,7 +27,7 @@
                         <W:If cond="item.id">{item.id}</W:If>
                     </Td>
                     <Td>{item.task}</Td>
-                    <Td>{item.created}</Td>
+                    <Td>{item.createdOn}</Td>
                     <Td>
                         <W:If cond="item.id">
                             <Link class="btn btn-primary" route="TodoItemEdit" params={item}>Edit</Link>

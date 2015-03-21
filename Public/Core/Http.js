@@ -1,84 +1,24 @@
-function createQueryString(data) {
-	if (!data) {
-		return '';
+function responseHandler(response) {
+	if (response.status == 200) {
+		return response;
+	} else {
+		throw new Error(response.statusText);
 	}
-	return jQuery.param(data);
 }
 
 class Http {
 
-	execute(url, method, data = null, options = {}) {
-
-		var defaultConfig = {
-			type: 'text'
-		};
-
-		var config = {};
-		Object.assign(config, defaultConfig, options);
-
-		return new Promise(function (resolve, reject) {
-			// Create request object
-			var request = new XMLHttpRequest();
-
-			// Handle body/parameters
-			var body = null;
-			var params = createQueryString(data);
-			if (method == 'GET' && data != null) {
-				url += url.indexOf('?') > 0 ? '&' + params : '?' + params;
-			}
-
-			if(method != 'GET' && method != 'HEAD' && data){
-				body = JSON.stringify(data);
-			}
-
-			// Open request
-			request.open(method, url, true);
-
-			// Add headers if any...
-			if (config.hasOwnProperty('headers')) {
-				Object.keys(config.headers).forEach(function (header) {
-					request.setRequestHeader(header, config.headers[header]);
-				});
-			}
-
-			// Set the appropriate response type
-			if (config.type == 'blob') {
-				request.responseType = 'blob';
-			} else {
-				request.responseType = '';
-			}
-
-			// Handle response
-			request.onload = function () {
-				if (request.status == 200) {
-					if (request.getResponseHeader("Content-Type") == 'application/json') {
-						resolve(JSON.parse(request.response));
-					} else {
-						resolve(request.response);
-					}
-				} else {
-					reject(new Error(request.statusText));
-				}
-			};
-
-			request.onerror = function () {
-				reject(new Error('Unknown error occurred, probably a network error.'));
-			};
-
-			request.send(body);
-		});
-	}
-
 	get(url, data, options = {}) {
-		return this.execute(url, 'GET', data, options);
+		options.params = data;
+		return axios.get(url, options).then(responseHandler);
 	}
 
 	delete(url, options = {}) {
-		return this.execute(url, 'DELETE', null, options);
+		return axios.delete(url, options).then(responseHandler);
 	}
 
 	head(url, options = {}) {
-		return this.execute(url, 'HEAD', null, options);
+		return axios.head(url, options).then(responseHandler);
 	}
 
 	post(url, data = {}, options = {}) {
@@ -90,11 +30,11 @@ class Http {
 
 		var config = {};
 		Object.assign(config, postConfig, options);
-		return this.execute(url, 'POST', data, config);
+		return axios.post(url, data, config).then(responseHandler);
 	}
 
 	put(url, data = {}, options = {}) {
-		return this.execute(url, 'PUT', data, options);
+		return axios.put(url, data, options).then(responseHandler);
 	}
 
 	patch(url, data = {}, options = {}) {
@@ -105,7 +45,7 @@ class Http {
 		};
 		var config = {};
 		Object.assign(config, defaultOptions, options);
-		return this.execute(url, 'PATCH', data, config);
+		return axios.patch(url, data, config).then(responseHandler);
 	}
 }
 

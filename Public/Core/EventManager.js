@@ -4,7 +4,7 @@ class EventManager {
 		this.listeners = {};
 	}
 
-	emit(event, data) {
+	emit(event, data, asPromise = false) {
 		//console.info("[EVENT MANAGER] (Emit): "+event, data);
 		if (!this.listeners.hasOwnProperty(event)) {
 			return null;
@@ -16,7 +16,11 @@ class EventManager {
 				results.push(listener.listener(data));
 			}
 		});
+		if (asPromise) {
+			return Q.all(results);
+		}
 		return results;
+
 	}
 
 	addListener(event, listener, meta) {
@@ -24,13 +28,13 @@ class EventManager {
 			this.listeners[event] = [];
 		}
 		var itemIndex = this.listeners[event].push({
-			listener: listener,
-			meta: meta
-		}) - 1;
+				listener: listener,
+				meta: meta
+			}) - 1;
 
 		var _this = this;
 
-		return function(){
+		return function () {
 			_this.listeners[event].splice(itemIndex);
 		}
 	}
@@ -39,13 +43,13 @@ class EventManager {
 		return this.listeners;
 	}
 
-	getListenerTree(){
+	getListenerTree() {
 		var tree = [];
 		var listeners = this.listeners;
 		Object.keys(listeners).forEach(function (event) {
 			var eventListeners = listeners[event];
 			eventListeners.forEach((el) => {
-				if(el.meta == undefined || el.meta.listenerType == 'route'){
+				if (el.meta == undefined || el.meta.listenerType == 'route') {
 					return;
 				}
 				tree.push({

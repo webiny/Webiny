@@ -29,8 +29,7 @@ class JsonResponse extends ResponseAbstract
             'data' => $this->_data,
             'tag' => $this->_tag
         ];
-        header("Content-type: application/json");
-        die(json_encode($data));
+        return $data;
     }
 
     private function _adaptId(){

@@ -5,36 +5,28 @@ namespace Apps\Todo\Backend\Todo\Php\Services;
 use Apps\Todo\Common\Php\Entities\TodoTask;
 use Webiny\Component\Entity\EntityException;
 use Webiny\Component\Http\HttpTrait;
+use Webiny\Component\Http\Request;
+use Webiny\Component\Mongo\MongoException;
 use Webiny\Component\Rest\Interfaces\CrudInterface;
+use Webiny\Component\Rest\RestErrorException;
+use Webiny\Component\Rest\RestTrait;
 use Webiny\Platform\Responses\JsonErrorResponse;
 use Webiny\Platform\Responses\JsonResponse;
 
 class Item implements CrudInterface
 {
-    use HttpTrait;
+    use HttpTrait, RestTrait;
 
     /**
-     * @rest.method get
+     * Restore a record by given ID
      *
-     * @param $id
+     * @rest.method post
      *
-     * @return bool
+     * @return array|mixed Array containing the restored record.
      */
-    public function toggleStatus($id)
-    {
-        $task = TodoTask::findById($id);
-        if ($task) {
-            if ($task->completed) {
-                $task->completed = false;
-            } else {
-                $task->completed = true;
-            }
-            $task->save();
-
-            return new JsonResponse(['completed' => $task->completed]);
-        }
-
-        return new JsonErrorResponse([], 'Task with id `'.$id.'` was not found!');
+    public function restore($id){
+        $task = TodoTask::restore($id);
+        return $task->toArray();
     }
 
     /**
@@ -48,8 +40,9 @@ class Item implements CrudInterface
      */
     public function crudList()
     {
-        $tasks = TodoTask::find();
-        return new JsonResponse($tasks->toArray());
+        $tasks = TodoTask::find([], [], $this->restGetPerPage(), $this->restGetPage());
+
+        return $tasks->toArray();
     }
 
     /**
@@ -66,7 +59,7 @@ class Item implements CrudInterface
         $task->task = $this->httpRequest()->payload('task');
         $task->save();
 
-        return new JsonResponse($task->toArray(''));
+        return $task->toArray();
     }
 
     /**
@@ -78,6 +71,9 @@ class Item implements CrudInterface
      * @param string $id Id of the record to be deleted.
      *
      * @return bool True if delete was successful or false.
+     *
+     * @throws EntityException
+     * @throws RestErrorException
      */
     public function crudDelete($id)
     {
@@ -85,10 +81,10 @@ class Item implements CrudInterface
         if ($task) {
             $task->delete();
 
-            return new JsonResponse([]);
+            return true;
         }
 
-        return new JsonErrorResponse([], 'Task with id `'.$id.'` was not found!');
+        throw new RestErrorException('Not found', 'Task with id `' . $id . '` was not found!', 404);
     }
 
     /**
@@ -100,11 +96,19 @@ class Item implements CrudInterface
      * @param string $id Id of the record that should be retrieved.
      *
      * @return array|mixed The requested record.
+     * @throws RestErrorException
      */
     public function crudGet($id)
     {
-        $task = TodoTask::findById($id);
-        return new JsonResponse($task->toArray());
+        try {
+            $task = TodoTask::findById($id);
+            if ($task) {
+                return $task->toArray();
+            }
+        } catch (\MongoException $e) {
+
+        }
+        throw new RestErrorException('Not found', 'Task with id `' . $id . '` was not found!', 404);
     }
 
     /**
@@ -116,8 +120,8 @@ class Item implements CrudInterface
      *
      * @link http://tools.ietf.org/html/rfc5789
      *
-     * @rest.default
-     * @rest.method put
+     * @rest .default
+     * @rest .method put
      *
      * @param string $id Id of the record that should be replaced.
      *
@@ -143,24 +147,25 @@ class Item implements CrudInterface
      * @param string $id Id of the record that should be replaced.
      *
      * @return array|mixed The updated, or created, record.
+     * @throws RestErrorException
      */
     public function crudUpdate($id)
     {
         $data = $this->httpRequest()->payload();
         $task = TodoTask::findById($id);
         if ($task) {
-            try{
+            try {
                 $task->populate($data);
                 $task->save();
-            } catch(EntityException $e){
-                $attrs = $e->getInvalidAttributes();
-                die(print_r($attrs));
+
+                return $task->toArray();
+            } catch (EntityException $e) {
+                $error = new RestErrorException('Entity error', 'Entity attribute validation failed', 422);
+                $error->addError($e->getInvalidAttributes());
+                throw $error;
             }
-
-
-            return new JsonResponse([]);
         }
 
-        return new JsonErrorResponse([], 'Task with id `'.$id.'` was not found!');
+        throw new RestErrorException('Not found', 'Task with id `' . $id . '` was not found!', 404);
     }
 }

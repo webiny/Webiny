@@ -98,7 +98,7 @@ class ComponentBuilder extends AbstractAssetBuilder
 
         // Transform JSX to React
         $this->_log("Running JSX -> React transformer...\n");
-        exec(__DIR__ . '/../../External/react-tools/bin/jsx --no-cache-dir ' . $buildJsxDir . ' ' . $buildReactDir);
+        exec(__DIR__ . '/../../External/node_modules/react-tools/bin/jsx --no-cache-dir ' . $buildJsxDir . ' ' . $buildReactDir);
 
         foreach ($components as $cmp) {
             // Optimize JSX

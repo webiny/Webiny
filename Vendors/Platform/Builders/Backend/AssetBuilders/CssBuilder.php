@@ -77,6 +77,6 @@ class CssBuilder extends AbstractAssetBuilder
         $cssKey = $this->str($lessKey)->replace('.less', '.min.css')->val();
 
         $this->_log('Compiling LESS/CSS assets to CSS `/Apps/'.$cssKey.'`');
-        exec(__DIR__.'/../../External/less/bin/lessc --include-path=' . $this->_storage->getAbsolutePath() . ' ' . $lessPath . ' > ' . $cssPath);
+        exec(__DIR__.'/../../External/node_modules/less/bin/lessc --include-path=' . $this->_storage->getAbsolutePath() . ' ' . $lessPath . ' > ' . $cssPath);
     }
 }

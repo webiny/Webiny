@@ -3,6 +3,7 @@ import Router from '/Core/Router/Router';
 import BaseClass from '/Core/Base/BaseClass';
 import Tools from '/Core/Tools/Tools';
 import ApiService from '/Core/Api/ApiService';
+import ApiResponse from '/Core/Api/ApiResponse';
 
 /**
  * Base class for all data stores
@@ -123,7 +124,7 @@ class BaseStore extends BaseClass {
 		Object.assign(config, defaultOptions, options);
 
 		return this.api.crudList(config).then((response) => {
-			if (!response.error) {
+			if (!response.isError()) {
 				if (config.push) {
 					// Unset all object properties but keep an object reference
 					Object.keys(this.data).map((key) => {
@@ -131,7 +132,7 @@ class BaseStore extends BaseClass {
 					});
 
 					// Assign response data to the original object reference
-					Object.assign(this.data, response.data);
+					Object.assign(this.data, response.getData());
 				}
 
 				if (config.emit) {
@@ -177,7 +178,7 @@ class BaseStore extends BaseClass {
 			});
 
 			// Assign response data to the original object reference
-			Object.assign(data, response.data);
+			Object.assign(data, response.getData());
 
 			if (config.postPush) {
 				this.data.push(data);
@@ -239,7 +240,7 @@ class BaseStore extends BaseClass {
 		}
 
 		return this.api.crudUpdate(id, data).then(response => {
-			if (!response.error) {
+			if (!response.isError()) {
 				this.getData().then(storeData => {
 					storeData.forEach((item, index) => {
 						if (item.id == id) {

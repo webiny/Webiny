@@ -19,7 +19,7 @@ class TasksStore extends BaseStore {
 
 	getInitialData(){
 		return this.crudList().then(response => {
-			return response.data;
+			return response.getData();
 		});
 	}
 
@@ -28,7 +28,7 @@ class TasksStore extends BaseStore {
 	}
 
 	_onSaveTask(task) {
-		this.crudUpdate(task);
+		return this.crudUpdate(task);
 	}
 
 	_onRemoveTask(item) {

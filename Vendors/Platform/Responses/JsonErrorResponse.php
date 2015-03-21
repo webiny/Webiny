@@ -7,10 +7,7 @@ namespace Webiny\Platform\Responses;
  */
 class JsonErrorResponse extends JsonResponse
 {
-    protected $_data;
     protected $_error = true;
-    protected $_msg;
-    protected $_tag;
 
     public function __construct($data, $msg = '', $tag = '')
     {

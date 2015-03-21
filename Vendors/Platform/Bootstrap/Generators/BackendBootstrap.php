@@ -51,8 +51,8 @@ class BackendBootstrap
             'MainComponent'     => 'MainComponent',
             'MainComponentPath' => '/Apps/' . $mc['App'] . '/' . $mc['Module'] . '/Js/Components/' . $mc['Component'] . '/' . $mc['Component']
         ];
-
-        $bootstrapFileTemplate = __DIR__ . '/Templates/App.js.tpl';
+        
+        $bootstrapFileTemplate = __DIR__ . '/Templates/App.js.php';
         $bootstrapSource = $this->templateEngine()->fetch($bootstrapFileTemplate, $data);
         $bootstrapFilePath = $this->getPlatform()->getAbsPath() . '/Public/Assets/App.js';
         @unlink($bootstrapFilePath);

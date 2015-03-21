@@ -152,21 +152,21 @@ final class Platform
         /* @var $app App */
         foreach ($this->_apps as $app) {
             if ($app->canRoute($this->_requestUrl)) {
-                $this->processResponse($app->run());
+                $responseBody = $this->processResponse($app->run());
+                Response::create($responseBody)->send();
             }
         }
 
-        $response = $this->eventManager()
-                         ->fire('Platform.HandleRequest', null, '\Webiny\Platform\Responses\ResponseAbstract');
+        $response = $this->eventManager()->fire('Platform.HandleRequest');
 
         // If any event listener processed the request - send response to browser
         if (isset($response[0])) {
-            $this->processResponse($response[0]);
+            $responseBody = $this->processResponse($response[0]);
+            Response::create($responseBody)->send();
         }
 
         // If none of the above happened - respond with empty output
-        $response = new HtmlResponse('Sheesh...didn\'t get to render anything :(');
-        $this->processResponse($response);
+        Response::create('Sheesh...didn\'t get to render anything :(')->send();
     }
 
     public function runApi()
@@ -176,27 +176,21 @@ final class Platform
         /**
          * REST routing
          */
-        $parts = $this->_requestUrl->getPath(true)->explode('/')->filter()->values()->val();
-
         Rest::setConfig($this->getConfig('Rest'));
 
         $rest = Rest::initRest('Api');
-        $response = $rest->processRequest();
-        if (!$response->getError()) {
-            $response = $response->getData();
-        } else {
-            $response = new JsonErrorResponse($response->getError());
-            $response->output();
+        $restResponse = $rest->processRequest();
+
+        if ($restResponse->getError()) {
+            $restResponse->sendOutput();
         }
 
-        /* @var $result ResponseAbstract */
-        if ($response instanceof JsonResponse) {
-            $response->output();
-        } else {
-            $this->processResponse($response);
+        $serviceResponse = $restResponse->getData();
+        if($this->isString($serviceResponse)){
+            $restResponse->setData($this->processResponse($serviceResponse));
         }
-        $response = new JsonResponse([], true, 'Invalid response from service!', 'invalid-response');
-        $response->output();
+
+        $restResponse->sendOutput();
     }
 
     /**
@@ -262,14 +256,15 @@ final class Platform
         return $this;
     }
 
-    public function loadApps(){
+    public function loadApps()
+    {
         $appLoader = new AppLoader($this->getConfig());
         $this->_apps = $appLoader->loadApps($this->isBackend());
-        
+
         foreach ($this->_apps as $app) {
             $this->_config->mergeWith($app->getConfig());
         }
-        
+
         /**
          * Register services, events, storage services, etc.
          */
@@ -277,20 +272,19 @@ final class Platform
     }
 
     /**
-     * @param ResponseAbstract $response
+     * @param mixed $response
+     *
+     * @return mixed
      */
-    public function processResponse(ResponseAbstract $response)
+    public function processResponse($response)
     {
         $event = new Events\OutputEvent();
-        $event->setOutput($response->output());
+        $event->setOutput($response);
         $this->eventManager()->fire('Platform.RenderOutput', $event);
 
         $this->eventManager()->fire('Platform.BeforeSendOutput', $event);
 
-        // Build response body
-        $responseBody = $event->getOutput();
-        Response::create($responseBody)->send();
-        die();
+        return $event->getOutput();
     }
 
     /**

@@ -30,8 +30,8 @@ class RenderApp
         $assets = $bootstrapGenerator->generateBootstrapFile();
 
         $data['assets'] = $assets;
-        $html = $this->templateEngine()->fetch($this->getModule()->getTemplate('Master.tpl'), $data);
+        $html = $this->templateEngine()->fetch($this->getModule()->getTemplate('Master.php'), $data);
 
-        return new HtmlResponse($html);
+        return $html;
     }
 }

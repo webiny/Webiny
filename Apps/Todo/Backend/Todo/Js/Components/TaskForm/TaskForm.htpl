@@ -4,7 +4,7 @@
             <Label>ID</Label>
             <Input grid="4" bind="id" placeholder="ID" disabled/>
             <Label>Created</Label>
-            <Input grid="4" bind="created" placeholder="Created" disabled/>
+            <Input grid="4" bind="createdOn" placeholder="Created" disabled/>
         </FormGroup>
 
         <FormGroup>

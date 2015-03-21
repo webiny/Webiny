@@ -8,8 +8,8 @@ class TaskForm extends BaseComponent {
 
 	componentDidMount() {
 		this.tasksStore = this.getStore('Todo.Todo.TasksStore');
-		this.tasksStore.crudGet(this.getParam('id')).then((response) => {
-			this.setState(response.data);
+		this.tasksStore.crudGet(this.getParam('id')).then(response => {
+			this.setState(response.getData());
 		});
 	}
 
