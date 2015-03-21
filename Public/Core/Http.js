@@ -1,5 +1,5 @@
 function responseHandler(response) {
-	if (response.status == 200) {
+	if ([200, 201].indexOf(response.status) > -1) {
 		return response;
 	} else {
 		throw new Error(response.statusText);
