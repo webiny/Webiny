@@ -1,7 +1,8 @@
 {
+    "name": "Webiny Core",
     "scripts": {
         "post-package-install": [
-            "MyVendor\\MyClass::postPackageInstall"
+            "php install.php"
         ]
     }
 }
