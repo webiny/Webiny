@@ -1,11 +1,8 @@
 {
     "name": "webiny/core",
-    "scripts": {
-        "post-package-install": [
-            "Webiny\\Core\\Install::postPackageInstall"
-        ],
-        "post-install-cmd": [
-            "php cmdInstall.php"
-        ]
+    "autoload": {
+        "psr-4": {
+            "Webiny\\Core\\": "/"
+        }
     }
 }
