@@ -4,8 +4,12 @@ $pDir = getcwd();
 require_once $pDir . '/vendor/autoload.php';
 
 \cli\line('Installing Webiny Platform :)');
-\cli\line('Creating necessary folder structure in %C%5' . $pDir . '%n');
+\cli\line('Creating necessary folder structure in %g' . $pDir . '%n');
 exec('cp -R ./install/structure/* ' . $pDir);
+mkdir($pDir . '/Apps');
+mkdir($pDir . '/Configs');
+mkdir($pDir . '/Cache');
+mkdir($pDir . '/Temp');
 
-\cli\line('Tweaking your config might be a good idea!');
+\cli\line('That\'s it! Happy developing!');
 
