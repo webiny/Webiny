@@ -1,1 +1,0 @@
-<label class={this.state.css}>{this.props.children}</label>

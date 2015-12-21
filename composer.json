@@ -1,5 +1,7 @@
 {
-    "require": {
-        "webiny/framework": "dev-master"
+    "scripts": {
+        "post-package-install": [
+            "MyVendor\\MyClass::postPackageInstall"
+        ]
     }
 }

@@ -1,1 +1,0 @@
-<div class="container">{this.props.children}</div>

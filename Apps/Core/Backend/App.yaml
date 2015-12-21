@@ -1,5 +1,0 @@
-Events:
-    Platform.RenderOutput:
-       - {Handler: \Apps\Core\Backend\Layout\Php\Handlers\HtmlCleanup, Priority: 101}
-    Platform.HandleRequest:
-       - {Handler: \Apps\Core\Backend\Layout\Php\Handlers\RenderApp}
