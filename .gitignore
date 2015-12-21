@@ -1,6 +1,5 @@
-#Platform
+#Webiny/Core
 Cache/*
-Public/Uploads/
 Apps/*/Build
 Apps/*/BuildTmp
 vendor/

@@ -1,14 +1,11 @@
 <?php
+$pDir = getcwd();
 
-namespace Webiny\Core;
+require_once $pDir . '/vendor/autoload.php';
 
-use Composer\Script\Event;
+\cli\line('Installing Webiny Platform :)');
+\cli\line('Creating necessary folder structure in %C%5' . $pDir . '%n');
+exec('cp -R ./install/structure/* ' . $pDir);
 
-class Install
-{
+\cli\line('Tweaking your config might be a good idea!');
 
-    public static function postInstall(Event $event)
-    {
-        echo "\nWEBINY: POST INSTALL \n\n";
-    }
-}
