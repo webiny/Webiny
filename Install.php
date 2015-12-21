@@ -10,6 +10,6 @@ class Install
 
     public static function postInstall(Event $event)
     {
-        print_r($event);
+        echo "POST INSTALL CALLED";
     }
 }
