@@ -1,5 +1,5 @@
 {
-    "name": "Webiny Core",
+    "name": "webiny/platform-sandbox",
     "scripts": {
         "post-package-install": [
             "php install.php"
