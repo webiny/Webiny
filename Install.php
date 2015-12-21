@@ -8,10 +8,8 @@ use Composer\Installer\PackageEvent;
 class Install
 {
 
-    public static function postPackageInstall(PackageEvent $event)
+    public static function postInstall(Event $event)
     {
-        $installedPackage = $event->getOperation()->getPackage();
-        // do stuff
         print_r($event);
     }
 }
