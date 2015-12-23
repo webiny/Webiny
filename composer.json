@@ -1,10 +1,5 @@
 {
     "name": "webiny/core",
-    "autoload": {
-        "psr-4": {
-            "Webiny\\Core\\": "src/"
-        }
-    },
     "require": {
         "webiny/framework": "dev-master",
         "wp-cli/php-cli-tools": "dev-master"

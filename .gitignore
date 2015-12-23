@@ -1,7 +1,4 @@
 #Webiny/Core
-Cache/*
-Apps/*/Build
-Apps/*/BuildTmp
 vendor/
 
 #PHPStorm
