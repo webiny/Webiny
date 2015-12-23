@@ -11,5 +11,7 @@ mkdir($pDir . '/Configs');
 mkdir($pDir . '/Cache');
 mkdir($pDir . '/Temp');
 
+// TODO: create wizard for config setup
+
 \cli\line('That\'s it! Happy developing!');
 
