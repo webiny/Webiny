@@ -1,9 +1,3 @@
 {
-    "name": "webiny/core",
-    "require": {
-        "webiny/framework": "dev-master",
-        "wp-cli/php-cli-tools": "dev-master"
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    "name": "webiny/core"
 }

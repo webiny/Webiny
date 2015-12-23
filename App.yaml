@@ -1,0 +1,15 @@
+Name: Core
+Version: 0.1.0
+Link: http://www.webiny.com/store/webiny/core/
+Description: The Core app provides the essential functions for Webiny platform.
+
+AuthorName: Webiny LTD
+AuthorLink: http://www.webiny.com
+AuthorEmail: info@webiny.com
+
+Events:
+    Core:
+        Bootstrap:
+            HandleRequest:
+                - {Handler: Php/RequestHandlers/Api, Priority: 400}
+                - {Handler: Php/RequestHandlers/Backend, Priority: 380}
