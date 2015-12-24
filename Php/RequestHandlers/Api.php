@@ -9,15 +9,25 @@
 namespace Apps\Core\Php\RequestHandlers;
 
 use Apps\Core\Php\Bootstrap\BootstrapEvent;
+use Apps\Core\Php\DevTools\DevToolsTrait;
 
 class Api
 {
+    use DevToolsTrait;
+
     public function handle(BootstrapEvent $event)
     {
         if(!$event->getUrlObject()->getPath(true)->startsWith('/api')){
             return false;
         }
 
-        die("API!");
+        $apiEvent = new ApiEvent($event->getUrlObject());
+        $results = $this->wEvents()->fire('Api.Before', $apiEvent);
+
+        if(count($results) && $results[0]){
+            return $results[0];
+        }
+
+        die("RUN API...");
     }
 }

@@ -44,7 +44,8 @@ class Bootstrap
 
     public function run(UrlObject $request)
     {
-        $this->wEvents()->fire('Core.Bootstrap.HandleRequest', new BootstrapEvent($request));
+        $response = $this->wEvents()->fire('Core.Bootstrap.HandleRequest', new BootstrapEvent($request));
+        // TODO: Output response
     }
 
     private function buildConfiguration($configSet)
