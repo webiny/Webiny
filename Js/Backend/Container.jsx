@@ -1,4 +1,4 @@
-class Container extends Rad.View {
+class Container extends Webiny.View {
 
 	constructor() {
 		super();
@@ -9,7 +9,7 @@ class Container extends Rad.View {
 	}
 
 	componentWillMount() {
-		Rad.Router.start(window.location.pathname).then(routerEvent => {
+		Webiny.Router.start(window.location.pathname).then(routerEvent => {
 			this.setState({loading: false});
 		}, (e) => {
 			console.error(e);
@@ -17,7 +17,7 @@ class Container extends Rad.View {
 	}
 
 	componentDidMount() {
-		this.unsubscribe = Rad.EventManager.listen('RenderRoute', (route) => {
+		this.unsubscribe = Webiny.EventManager.listen('RenderRoute', (route) => {
 			return this.setState({
 				time: new Date().getTime()
 			});
@@ -27,7 +27,7 @@ class Container extends Rad.View {
 	onDidUpdate() {
 		window.scrollTo(0, 0);
 		// Since this is a top level component, it will emit RouteChanged event after everything has finished rendering
-		Rad.EventManager.emit('RouteChanged', Rad.Router.getActiveRoute());
+		Webiny.EventManager.emit('RouteChanged', Webiny.Router.getActiveRoute());
 	}
 
 	render() {
@@ -42,7 +42,7 @@ class Container extends Rad.View {
 		);
 
 		if (!this.state.loading) {
-			return <Rad.Components.Router.Placeholder onDidUpdate={this.onDidUpdate} name="Layout"/>;
+			return <Webiny.Components.Router.Placeholder onDidUpdate={this.onDidUpdate} name="Layout"/>;
 		}
 		return content;
 	}

@@ -22,7 +22,7 @@ class App {
 	}
 
 	run(mountPoint){
-		Rad.Console.groupCollapsed('App bootstrap');
+		Webiny.Console.groupCollapsed('App bootstrap');
 		var promises = this.modules.map(x => System.import('Modules/' + x + '/Module'));
 		this.modules = [];
         Promise.all(promises).then(modules => {
@@ -31,7 +31,7 @@ class App {
 				module.run();
                 this.modules.push(module);
 			});
-            Rad.Console.groupEnd();
+            Webiny.Console.groupEnd();
 
 			ReactDOM.render(this.element, mountPoint);
         });

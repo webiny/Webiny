@@ -20,7 +20,8 @@ import List from './Lib/Store/List';
 import Service from './Lib/Api/Service';
 import EntityService from './Lib/Api/EntityService';
 
-let Rad = {
+let Webiny = {
+	Apps: {},
 	App,
 	Module,
 	Component,
@@ -52,10 +53,11 @@ let Rad = {
 		if (appElement) {
 			let appName = appElement.attributes.name.nodeValue;
 			let baseUrl = appElement.attributes['base-url'].nodeValue;
-			Rad.Router.setBaseUrl(baseUrl);
-			System.import(appName).then(app => {
-				window.Webiny.Apps[appName] = app.default;
-				window.Webiny.Apps[appName].run(appElement);
+			Webiny.Router.setBaseUrl(baseUrl);
+			WebinyBootstrap.includeApp(appName).then(app => {
+				let [webinyApp, jsApp] = appName.split('/');
+				window.Webiny.Apps[webinyApp] = app.default;
+				app.default.run(appElement);
 			});
 		}
 
@@ -80,6 +82,4 @@ let Rad = {
 	}
 };
 
-window.Webiny = Rad;
-
-export default Rad;
+export default Webiny;
