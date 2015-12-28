@@ -10,24 +10,27 @@ namespace Apps\Core\Php\RequestHandlers;
 
 use Apps\Core\Php\Bootstrap\BootstrapEvent;
 use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\Response\ApiResponse;
 
 class Api
 {
     use DevToolsTrait;
 
+    private $apiResponse = '\Apps\Core\Php\DevTools\Response\ApiResponse';
+
     public function handle(BootstrapEvent $event)
     {
-        if(!$event->getUrlObject()->getPath(true)->startsWith('/api')){
+        if (!$event->getRequest()->getCurrentUrl(true)->getPath(true)->startsWith('/api')) {
             return false;
         }
 
-        $apiEvent = new ApiEvent($event->getUrlObject());
-        $results = $this->wEvents()->fire('Api.Before', $apiEvent);
+        $apiEvent = new ApiEvent($event->getRequest());
+        $response = $this->wEvents()->fire('Api.Before', $apiEvent, $this->apiResponse, 1);
 
-        if(count($results) && $results[0]){
-            return $results[0];
+        if ($response) {
+            return $response;
         }
 
-        die("RUN API...");
+        return new ApiResponse(['data' => [], 'meta' => []]);
     }
 }

@@ -10,6 +10,7 @@ namespace Apps\Core\Php\RequestHandlers;
 
 use Apps\Core\Php\Bootstrap\BootstrapEvent;
 use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\Response\HtmlResponse;
 
 class Backend
 {
@@ -17,10 +18,14 @@ class Backend
 
     public function handle(BootstrapEvent $event)
     {
-        if(!$event->getUrlObject()->getPath(true)->startsWith('/backend')){
+        if (!$event->getRequest()->getCurrentUrl(true)->getPath(true)->startsWith('/backend')) {
             return false;
         }
 
-        die("BACKEND!");
+        $event->stopPropagation();
+        $tpl = $this->wConfig()->get('Application.AbsolutePath') . 'Apps/Core/Templates/Webiny.tpl';
+        $html = $this->wTemplateEngine()->fetch($tpl);
+
+        return new HtmlResponse($html);
     }
 }

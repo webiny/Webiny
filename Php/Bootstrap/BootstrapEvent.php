@@ -9,7 +9,7 @@
 namespace Apps\Core\Php\Bootstrap;
 
 use Webiny\Component\EventManager\Event;
-use Webiny\Component\StdLib\StdObject\UrlObject\UrlObject;
+use Webiny\Component\Http\Request;
 
 /**
  * This class is included in the index.php and it responsible to bootstrap the application.
@@ -17,20 +17,20 @@ use Webiny\Component\StdLib\StdObject\UrlObject\UrlObject;
 class BootstrapEvent extends Event
 {
     /**
-     * @var UrlObject
+     * @var Request
      */
     protected $request;
 
-    public function __construct(UrlObject $request)
+    public function __construct(Request $request)
     {
         parent::__construct();
         $this->request = $request;
     }
 
     /**
-     * @return UrlObject
+     * @return Request
      */
-    public function getUrlObject()
+    public function getRequest()
     {
         return $this->request;
     }

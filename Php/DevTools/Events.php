@@ -83,13 +83,14 @@ class Events
      * @param string $event Event name.
      * @param array  $eventData
      * @param null   $resultType If specified, the event results will be filtered using given class/interface name
+     * @param null|int   $limit Limit to a number of valid results
      *
      * @return array Returns array of event results
      */
-    public function fire($event, $eventData = [], $resultType = null)
+    public function fire($event, $eventData = [], $resultType = null, $limit = null)
     {
         if ($this->registerListeners($event)) {
-            return $this->eventManager->fire($event, $eventData, $resultType);
+            return $this->eventManager->fire($event, $eventData, $resultType, $limit);
         }
     }
 

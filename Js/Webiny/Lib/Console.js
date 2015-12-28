@@ -26,6 +26,7 @@ function execute(method, params) {
 class Console {
 
     init() {
+		this.devDomains = [];
 
         History.Adapter.bind(window, 'statechange', () => {
             if (getConfig('enabled') === 'false') {

@@ -1,0 +1,32 @@
+{
+    "name": "webiny/core",
+    "version": "0.1.0",
+    "authors": "Webiny",
+    "private": true,
+    "dependencies": {
+        "accounting": "~0.3.2",
+        "blueimp-md5": "~1.1.1",
+        "bootstrap": "~3.3.5",
+        "cropper": "~0.11.1",
+        "history.js": "~1.8.0",
+        "lodash": "~3.10.0",
+        "moment": "~2.10.6",
+        "q": "1.0.1",
+        "summernote": "git://github.com/Pavel910/summernote.git#develop",
+        "system.js": "~0.18.4",
+        "jquery-ui": "~1.11.4",
+        "lodash-mixins": "*",
+        "js-cookie": "~2.0.4"
+    },
+    "overrides": {
+        "system.js": {
+            "main": "dist/system.js"
+        },
+        "history.js": {
+            "main": "scripts/bundled-uncompressed/html5/native.history.js"
+        },
+        "filesize": {
+            "main": "lib/filesize.js"
+        }
+    }
+}

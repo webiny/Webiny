@@ -8,7 +8,12 @@
 
 namespace Apps\Core\Php\Bootstrap;
 
+use Apps\Core\Php\DevTools\Response\ApiResponse;
+use Apps\Core\Php\DevTools\Response\HtmlResponse;
+use Apps\Core\Php\DevTools\Response\ResponseAbstract;
+use Apps\Core\Php\DevTools\Response\ResponseEvent;
 use Webiny\Component\Http\Request;
+use Webiny\Component\Http\Response;
 use Webiny\Component\StdLib\StdObject\UrlObject\UrlObject;
 use Webiny\Component\StdLib\StdObjectTrait;
 use Webiny\Component\StdLib\SingletonTrait;
@@ -22,8 +27,15 @@ class Bootstrap
 {
     use SingletonTrait, DevToolsTrait, StdObjectTrait;
 
+    /**
+     * @var ErrorHandler
+     */
+    private $errorHandler;
+
     protected function init()
     {
+        $this->errorHandler = new ErrorHandler();
+
         // read production configs
         $this->buildConfiguration("Production");
 
@@ -42,10 +54,21 @@ class Bootstrap
         $this->wEvents()->fire('Core.Bootstrap.End');
     }
 
-    public function run(UrlObject $request)
+    public function run(Request $request)
     {
-        $response = $this->wEvents()->fire('Core.Bootstrap.HandleRequest', new BootstrapEvent($request));
-        // TODO: Output response
+        $responseClass = '\Apps\Core\Php\DevTools\Response\ResponseAbstract';
+        /* @var $response ResponseAbstract */
+        $response = $this->wEvents()->fire('Core.Bootstrap.HandleRequest', new BootstrapEvent($request), $responseClass, 1);
+        if ($response) {
+            if($response instanceof ApiResponse){
+                $response->setErrors($this->errorHandler->getErrors());
+            }
+            $this->processResponse($response);
+        }
+
+        // Output 404
+        $response = new HtmlResponse('Add 404 handler!', 404);
+        $this->processResponse($response);
     }
 
     private function buildConfiguration($configSet)
@@ -70,8 +93,7 @@ class Bootstrap
     {
         $configSets = $this->wConfig()->get("ConfigSets", []);
         $url = $this->wRequest()->getCurrentUrl(true)->getDomain();
-        $currentDomain = $this->str($url)->caseLower()->trimRight('/')
-                              ->val();
+        $currentDomain = $this->str($url)->caseLower()->trimRight('/')->val();
 
         $configSet = false;
         foreach ($configSets as $name => $domain) {
@@ -85,13 +107,27 @@ class Bootstrap
 
     private function setEnvironment($environment)
     {
-        if ($environment == "development") {
+        if ($environment == 'development') {
             error_reporting(E_ALL);
-            ini_set('display_errors', '1');
+            ini_set('display_errors', 1);
         } else {
             error_reporting(0);
-            ini_set('display_errors', '0');
+            ini_set('display_errors', 0);
         }
+    }
+
+    /**
+     * @param ResponseAbstract $response
+     */
+    private function processResponse(ResponseAbstract $response)
+    {
+        $event = new ResponseEvent();
+        $event->setOutput($response->output());
+        $this->wEvents()->fire('Core.Bootstrap.Response', $event);
+
+        // Build response body
+        $responseBody = $event->getOutput();
+        Response::create($responseBody, $response->getStatusCode())->send();
     }
 
 }
