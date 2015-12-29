@@ -10,6 +10,7 @@ namespace Apps\Core\Php\RequestHandlers;
 
 use Apps\Core\Php\Bootstrap\BootstrapEvent;
 use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
 use Apps\Core\Php\DevTools\Response\ApiResponse;
 
 class Api
@@ -17,6 +18,7 @@ class Api
     use DevToolsTrait;
 
     private $apiResponse = '\Apps\Core\Php\DevTools\Response\ApiResponse';
+    private $apiEvent;
 
     public function handle(BootstrapEvent $event)
     {
@@ -24,13 +26,21 @@ class Api
             return false;
         }
 
-        $apiEvent = new ApiEvent($event->getRequest());
-        $response = $this->wEvents()->fire('Api.Before', $apiEvent, $this->apiResponse, 1);
+        $this->apiEvent = new ApiEvent($event->getRequest());
 
-        if ($response) {
-            return $response;
+        $events = [
+            'Core.Api.Before', // TODO: Authentication layer will handle this event
+            'Core.Api.HandleRequest', // TODO: Add Dispatcher that will handle this event, work with ACL and Entities
+            'Core.Api.After'
+        ];
+
+        foreach ($events as $event) {
+            $response = $this->wEvents()->fire($event, $this->apiEvent, $this->apiResponse, 1);
+            if ($response) {
+                return $response;
+            }
         }
 
-        return new ApiResponse(['data' => [], 'meta' => []]);
+        return new ApiErrorResponse([], 'Request was not handled properly!');
     }
 }

@@ -9,6 +9,7 @@
 namespace Apps\Core\Php\DevTools;
 
 use Webiny\Component\Config\ConfigObject;
+use Webiny\Component\Router\Matcher\MatchedRoute;
 use Webiny\Component\StdLib\SingletonTrait;
 
 /**
@@ -94,6 +95,19 @@ class Router
     public function match($url)
     {
         return $this->router->match($url);
+    }
+
+    /**
+     * Execute a route
+     *
+     * @param MatchedRoute $route
+     *
+     * @return mixed
+     * @throws \Webiny\Component\Router\RouterException
+     */
+    public function execute(MatchedRoute $route)
+    {
+        return $this->router->execute($route);
     }
 
     /**

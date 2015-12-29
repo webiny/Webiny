@@ -7,9 +7,43 @@ AuthorName: Webiny LTD
 AuthorLink: http://www.webiny.com
 AuthorEmail: info@webiny.com
 
+Storage:
+    Services:
+        Root:
+            Class: \Webiny\Component\Storage\Storage
+            Arguments:
+                Driver:
+                    Object: \Webiny\Component\Storage\Driver\Local\LocalStorageDriver
+                    ObjectArguments:
+                        - __DIR__/../..
+        Apps:
+            Class: \Webiny\Component\Storage\Storage
+            Arguments:
+                Driver:
+                    Object: \Webiny\Component\Storage\Driver\Local\LocalStorageDriver
+                    ObjectArguments:
+                        - __DIR__/..
+        Temp:
+            Class: \Webiny\Component\Storage\Storage
+            Arguments:
+                Driver:
+                    Object: \Webiny\Component\Storage\Driver\Local\LocalStorageDriver
+                    ObjectArguments:
+                        - __DIR__/../../Temp
+        DevBuild:
+            Class: \Webiny\Component\Storage\Storage
+            Arguments:
+                Driver:
+                    Object: \Webiny\Component\Storage\Driver\Local\LocalStorageDriver
+                    ObjectArguments:
+                        - __DIR__/../../public_html/build/dev
+
 Events:
     Core:
         Bootstrap:
             HandleRequest:
                 - {Handler: Php/RequestHandlers/Api, Priority: 400}
                 - {Handler: Php/RequestHandlers/Backend, Priority: 380}
+        Api:
+            Before:
+                - {Handler: Php/RequestHandlers/AppsMeta}

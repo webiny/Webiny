@@ -12,13 +12,14 @@ use Webiny\Component\StdLib\SingletonTrait;
 use Webiny\Component\Storage\Directory\Directory;
 use Webiny\Component\Storage\Driver\Local\LocalStorageDriver;
 use Webiny\Component\Storage\Storage as StorageProvider;
+use Webiny\Component\Storage\StorageTrait;
 
 /**
  * Storage class provides us with access to the storage.
  */
 class Storage
 {
-    use SingletonTrait;
+    use SingletonTrait, StorageTrait;
 
     /**
      * @var StorageProvider
@@ -59,5 +60,10 @@ class Storage
     public function getPath($path)
     {
         return self::$appRootStorage->getAbsolutePath($path);
+    }
+
+    public function getStorage($name)
+    {
+        return $this->storage($name);
     }
 }

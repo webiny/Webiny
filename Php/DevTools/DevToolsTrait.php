@@ -11,6 +11,7 @@ namespace Apps\Core\Php\DevTools;
 use Webiny\Component\Cache\CacheStorage;
 use Webiny\Component\Mongo\Mongo;
 use Webiny\Component\ServiceManager\ServiceManager;
+use Webiny\Component\Storage\Storage as WebinyStorage;
 
 /**
  * This trait provides you with access to all core components.
@@ -32,11 +33,17 @@ trait DevToolsTrait
     /**
      * Get access to storage.
      *
-     * @return Storage
+     * @param null $name
+     *
+     * @return Storage|WebinyStorage
      */
-    static protected function wStorage()
+    static protected function wStorage($name = null)
     {
-        return Storage::getInstance();
+        if(!$name){
+            return Storage::getInstance();
+        }
+
+        return Storage::getInstance()->getStorage($name);
     }
 
     /**

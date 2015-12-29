@@ -18,11 +18,10 @@ class Backend
 
     public function handle(BootstrapEvent $event)
     {
-        if (!$event->getRequest()->getCurrentUrl(true)->getPath(true)->startsWith('/backend')) {
+        if (!$event->getRequest()->getCurrentUrl(true)->getPath(true)->startsWith('/'.$this->wConfig()->get('Application.Backend'))) {
             return false;
         }
 
-        $event->stopPropagation();
         $tpl = $this->wConfig()->get('Application.AbsolutePath') . 'Apps/Core/Templates/Webiny.tpl';
         $html = $this->wTemplateEngine()->fetch($tpl);
 

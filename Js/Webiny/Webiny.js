@@ -49,7 +49,7 @@ let Webiny = {
 	run: function () {
 		console.log("Running Webiny!!! :)");
 		// Run app
-		let appElement = document.querySelector('rad-app');
+		let appElement = document.querySelector('webiny-app');
 		if (appElement) {
 			let appName = appElement.attributes.name.nodeValue;
 			let baseUrl = appElement.attributes['base-url'].nodeValue;
@@ -62,7 +62,7 @@ let Webiny = {
 		}
 
 		// Mount components
-		let componentElements = document.querySelectorAll('rad-component');
+		let componentElements = document.querySelectorAll('webiny-component');
 		if (componentElements) {
 			_.each(componentElements, el => {
 				let props = {};
