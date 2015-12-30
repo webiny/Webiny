@@ -108,7 +108,7 @@ formValidator.addValidator('eq', (value, equalTo) => {
 
 formValidator.addValidator('minLength', (value, length) => {
     if (_.isObject(value)) {
-        value = Rad.Tools.keys(value);
+        value = Webiny.Tools.keys(value);
     }
     if (value.length && value.length >= length) {
         return true;
@@ -118,7 +118,7 @@ formValidator.addValidator('minLength', (value, length) => {
 
 formValidator.addValidator('maxLength', (value, length) => {
     if (_.isObject(value)) {
-        value = Rad.Tools.keys(value);
+        value = Webiny.Tools.keys(value);
     }
 
     if (value.length && value.length <= length) {

@@ -28,7 +28,7 @@ class Cancel extends Component {
 
 		if(this.props.route){
 			props.onClick = () => {
-				Rad.Router.goToRoute(this.props.route);
+				Webiny.Router.goToRoute(this.props.route);
 			};
 		}
 

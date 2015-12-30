@@ -6,7 +6,7 @@ class Pagination extends Action {
 		var urlParams = this.props.context.props.context.urlParams;
 
         var props = {
-            perPageInitial: urlParams ? Rad.Router.getActiveRoute().getParams('perPage') : this.props.context.props.context.state.meta.perPage,
+            perPageInitial: urlParams ? Webiny.Router.getActiveRoute().getParams('perPage') : this.props.context.props.context.state.meta.perPage,
             data: this.props.data,
             className: this.props.className,
             onChangePerPage: newVal => this.props.context.props.context.listChangePerPage(newVal),
@@ -17,7 +17,7 @@ class Pagination extends Action {
 
         return (
             <div className="pagination-wrapper">
-                <Rad.Components.Pagination {...props}/>
+                <Webiny.Components.Pagination {...props}/>
             </div>
         );
     }

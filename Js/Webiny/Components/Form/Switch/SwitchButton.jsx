@@ -8,7 +8,7 @@ class SwitchButton extends Component {
 	}
 
 	componentWillMount() {
-		this.id = Rad.Tools.createUID();
+		this.id = Webiny.Tools.createUID();
 	}
 
 	render() {

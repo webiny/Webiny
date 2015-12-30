@@ -17,9 +17,9 @@ class FieldHeader {
 		this.field = field;
 		this.context = context;
 
-		this.sortDescIcon = Rad.Components.Icon.Type.SORT_DESC;
-		this.sortAscIcon = Rad.Components.Icon.Type.SORT_ASC;
-		this.sortNoneIcon = Rad.Components.Icon.Type.SORT_NONE;
+		this.sortDescIcon = Webiny.Components.Icon.Type.SORT_DESC;
+		this.sortAscIcon = Webiny.Components.Icon.Type.SORT_ASC;
+		this.sortNoneIcon = Webiny.Components.Icon.Type.SORT_NONE;
 	}
 
 	render() {
@@ -49,26 +49,26 @@ class FieldHeader {
 		}
 
 		var linkProps = {
-			route: Rad.Router.getActiveRoute().getName(),
+			route: Webiny.Router.getActiveRoute().getName(),
 			params: {sort: fieldProps.sort}
 		};
 
 		if (this.context.props.context.urlParams) {
 			return (
 				<th {...getThProps(this.field)}>
-					<Rad.Components.Router.Link {...linkProps}>{fieldProps.label}</Rad.Components.Router.Link>
+					<Webiny.Components.Router.Link {...linkProps}>{fieldProps.label}</Webiny.Components.Router.Link>
 					&nbsp;
-					<Rad.Components.Icon type={icon}/>
+					<Webiny.Components.Icon type={icon}/>
 				</th>
 			);
 		}
 
 		return (
 			<th {...getThProps(this.field)}>
-				<Rad.Components.Router.Link
-					onClick={this.context.props.context.listChangeSort.bind(null, {sort: fieldProps.sort})}>{fieldProps.label}</Rad.Components.Router.Link>
+				<Webiny.Components.Router.Link
+					onClick={this.context.props.context.listChangeSort.bind(null, {sort: fieldProps.sort})}>{fieldProps.label}</Webiny.Components.Router.Link>
 				&nbsp;
-				<Rad.Components.Icon type={icon}/>
+				<Webiny.Components.Icon type={icon}/>
 			</th>
 		);
 	}

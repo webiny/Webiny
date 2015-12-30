@@ -24,7 +24,7 @@ class BaseCheckboxGroup extends InputComponent {
 		var isComplex = _.isArray(newValue) || _.isPlainObject(newValue);
 
 		// If empty array or empty object - convert it to boolean
-		if (isComplex && Rad.Tools.keys(newValue).length == 0) {
+		if (isComplex && Webiny.Tools.keys(newValue).length == 0) {
 			newValue = true;
 		}
 
@@ -146,7 +146,7 @@ class BaseCheckboxGroup extends InputComponent {
 		var data = {};
 		if (value) {
 			if (_.isArray(value)) {
-				Rad.Tools.keys(value).forEach(key => {
+				Webiny.Tools.keys(value).forEach(key => {
 					data[value[key]] = true;
 				});
 			} else {

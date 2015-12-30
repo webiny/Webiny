@@ -5,7 +5,7 @@ import VerticalList from './VerticalList';
 class List extends FormComponent {
 
     componentWillMount() {
-        this.inputRef = Rad.Tools.createUID();
+        this.inputRef = Webiny.Tools.createUID();
     }
 
     render() {

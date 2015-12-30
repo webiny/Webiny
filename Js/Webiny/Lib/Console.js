@@ -1,9 +1,9 @@
 function getConfig(param) {
-    return localStorage.getItem('Rad.Components.Console.' + param);
+    return localStorage.getItem('Webiny.Components.Console.' + param);
 }
 
 function setConfig(param, value) {
-    return localStorage.setItem('Rad.Components.Console.' + param, value);
+    return localStorage.setItem('Webiny.Components.Console.' + param, value);
 }
 
 function execute(method, params) {

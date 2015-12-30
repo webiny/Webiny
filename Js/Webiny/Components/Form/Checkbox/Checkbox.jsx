@@ -9,7 +9,7 @@ class Checkbox extends InputComponent {
 
 	componentWillMount() {
 		super.componentWillMount();
-		this.id = Rad.Tools.createUID();
+		this.id = Webiny.Tools.createUID();
 	}
 
 	/**

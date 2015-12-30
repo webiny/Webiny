@@ -31,7 +31,7 @@ class Delete extends Action {
 		var confirmation = null;
 		if (this.state.showModal) {
 			confirmation = (
-				<Rad.Components.Modal.Confirmation
+				<Webiny.Components.Modal.Confirmation
 					message="Are you sure you want to delete this record?"
 					onHidden={this.hideConfirmation.bind(this)}
 					confirm={this.emitAction.bind(this, this.props.data)}
@@ -40,9 +40,9 @@ class Delete extends Action {
 		}
 		return (
 			<span className="ml2 mr2">
-                <Rad.Components.Form.Button size="small" onClick={this.showModal.bind(this)} type="default" {...this.props}>
+                <Webiny.Components.Form.Button size="small" onClick={this.showModal.bind(this)} type="default" {...this.props}>
 					{this.props.label ? this.props.label : 'Delete'}
-				</Rad.Components.Form.Button>
+				</Webiny.Components.Form.Button>
 				{confirmation}
             </span>
 		);

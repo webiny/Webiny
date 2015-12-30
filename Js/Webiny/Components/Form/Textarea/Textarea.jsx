@@ -5,7 +5,7 @@ import VerticalTextarea from './VerticalTextarea';
 class Textarea extends FormComponent {
 	
 	componentWillMount() {
-		this.textareaRef = Rad.Tools.createUID();
+		this.textareaRef = Webiny.Tools.createUID();
 	}
 
 	render() {

@@ -48,7 +48,7 @@ class SearchComponent extends InputComponent {
 
 	componentWillMount() {
 		super.componentWillMount();
-		this.api = this.props.store ? this.getStore(this.props.store).getApi() : new Rad.Api.EntityService(this.props.api);
+		this.api = this.props.store ? this.getStore(this.props.store).getApi() : new Webiny.Api.EntityService(this.props.api);
 		this.setInitialData(this.props)
 	}
 

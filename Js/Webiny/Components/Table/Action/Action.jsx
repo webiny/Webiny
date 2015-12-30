@@ -3,7 +3,7 @@ import Component from './../../../Lib/Component';
 class Action extends Component {
 
     getActionEventName() {
-        var event = 'Rad.Components.Table';
+        var event = 'Webiny.Components.Table';
 
         if (this.props.context.props.name) {
             event += '.' + this.props.context.props.name;
@@ -13,7 +13,7 @@ class Action extends Component {
     }
 
     emitAction(data = this.props.data) {
-        Rad.EventManager.emit(this.getActionEventName(), data);
+        Webiny.EventManager.emit(this.getActionEventName(), data);
     }
 }
 

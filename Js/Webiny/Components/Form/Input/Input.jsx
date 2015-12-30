@@ -5,7 +5,7 @@ import VerticalInput from './VerticalInput';
 class Input extends FormComponent {
 
     componentWillMount() {
-        this.inputRef = Rad.Tools.createUID();
+        this.inputRef = Webiny.Tools.createUID();
     }
 
     render() {

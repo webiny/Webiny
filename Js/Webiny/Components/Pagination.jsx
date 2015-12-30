@@ -31,7 +31,7 @@ class Pagination extends Component {
 	}
 
 	renderPage(page) {
-		var pageHref = Rad.Router.getActiveRoute().getHref({page: page});
+		var pageHref = Webiny.Router.getActiveRoute().getHref({page: page});
 		return (
 			<li key={'table-page-' + page} className={this.props.data.currentPage == page ? 'active' : ''}>
 				{this.props.urlParams ? <a href={pageHref}>{page}</a> :
@@ -45,21 +45,21 @@ class Pagination extends Component {
 		var disabled = this.props.data.currentPage == 1;
 
 		if (this.props.urlParams) {
-			var route = Rad.Router.getActiveRoute().name;
+			var route = Webiny.Router.getActiveRoute().name;
 			return (
 				<li className={disabled ? 'disabled' : ''}>
-					<Rad.Components.Router.Link route={route} params={params} disabled={disabled}>
+					<Webiny.Components.Router.Link route={route} params={params} disabled={disabled}>
 						<span aria-hidden="true">Prev</span>
-					</Rad.Components.Router.Link>
+					</Webiny.Components.Router.Link>
 				</li>
 			);
 		}
 
 		return (
 			<li className={disabled ? 'disabled' : ''}>
-				<Rad.Components.Router.Link onClick={disabled ? _.noop : this.props.onChangePage.bind(this, params)}>
+				<Webiny.Components.Router.Link onClick={disabled ? _.noop : this.props.onChangePage.bind(this, params)}>
 					<span aria-hidden="true">Prev</span>
-				</Rad.Components.Router.Link>
+				</Webiny.Components.Router.Link>
 			</li>
 		);
 	}
@@ -70,21 +70,21 @@ class Pagination extends Component {
 		var disabled = this.props.data.currentPage == this.props.data.totalPages;
 
 		if (this.props.urlParams) {
-			var route = Rad.Router.getActiveRoute().name;
+			var route = Webiny.Router.getActiveRoute().name;
 			return (
 				<li className={disabled ? 'disabled' : ''}>
-					<Rad.Components.Router.Link route={route} params={params} disabled={disabled}>
+					<Webiny.Components.Router.Link route={route} params={params} disabled={disabled}>
 						<span aria-hidden="true">Next</span>
-					</Rad.Components.Router.Link>
+					</Webiny.Components.Router.Link>
 				</li>
 			);
 		}
 
 		return (
 			<li className={disabled ? 'disabled' : ''}>
-				<Rad.Components.Router.Link onClick={disabled ? _.noop : this.props.onChangePage.bind(this, params)}>
+				<Webiny.Components.Router.Link onClick={disabled ? _.noop : this.props.onChangePage.bind(this, params)}>
 					<span aria-hidden="true">Next</span>
-				</Rad.Components.Router.Link>
+				</Webiny.Components.Router.Link>
 			</li>
 		);
 
@@ -102,11 +102,11 @@ class Pagination extends Component {
 
 
 		return (
-			<Rad.Components.Form.Select2 valueLink={this.linkState('perPage')}>
+			<Webiny.Components.Form.Select2 valueLink={this.linkState('perPage')}>
 				{this.props.perPageOptions.split(',').map(page => {
 					return <option value={page} key={'pagination-perPage-' + page}>{page}</option>;
 				})}
-			</Rad.Components.Form.Select2>
+			</Webiny.Components.Form.Select2>
 		);
 
 	}

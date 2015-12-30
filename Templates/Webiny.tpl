@@ -10,7 +10,7 @@
     <script src="/build/dev/Core/Webiny/scripts/vendors.min.js" type="text/javascript"></script>
 </head>
 <body>
-<webiny-app id="app" name="Core.Backend" base-url="/backend"></webiny-app>
+<webiny-app id="app" name="Core.Backend" rootComponent="Container" base-url="/admin"></webiny-app>
 <script>
     WebinyBootstrap.run();
 </script>

@@ -158,7 +158,7 @@ class FormVertical extends Component {
 	render() {
 		this.parseForm(this.props.children);
 		var [Panel,Grid] = this.inject('Panel,Grid');
-		var loader = this.props.context.state.showLoader ? <Rad.Components.Loader/> : null;
+		var loader = this.props.context.state.showLoader ? <Webiny.Components.Loader/> : null;
 		var css = this.getFormClass();
 
 		if (this.layout) {
@@ -189,7 +189,7 @@ class FormVertical extends Component {
 
 	componentWillMount() {
 		this.inputs = {};
-		this.listen('Rad.Components.Form.Validate.' + this.props.name, () => {
+		this.listen('Webiny.Components.Form.Validate.' + this.props.name, () => {
 			return this.validateForm();
 		})
 	}
@@ -231,7 +231,7 @@ class FormVertical extends Component {
 
 	validateInput(component) {
 		var validators = this.inputs[component.props.name].validators;
-		var hasValidators = Rad.Tools.keys(validators).length;
+		var hasValidators = Webiny.Tools.keys(validators).length;
 		var messages = this.inputs[component.props.name].messages;
 		// Validate input
 		return Q(FormValidator.validate(component.getValue(), validators, this.inputs)).then(result => {

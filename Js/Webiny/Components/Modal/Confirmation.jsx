@@ -3,8 +3,8 @@ import Component from './../../Lib/Component';
 class Confirmation extends Component {
 
     render() {
-        var Button = Rad.Components.Form.Button;
-        var Modal = Rad.Components.Modal;
+        var Button = Webiny.Components.Form.Button;
+        var Modal = Webiny.Components.Modal;
 
         return (
             <Modal.Dialog {...this.props}>

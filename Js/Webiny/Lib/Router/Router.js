@@ -103,7 +103,7 @@ class Router {
 	}
 
 	addRoute(route) {
-		Rad.Console.log("%c[Route]: " + route.getName() + " %c" + route.getPattern(), 'color: #666; font-weight: bold', 'color: blue; font-weight: bold');
+		Webiny.Console.log("%c[Route]: " + route.getName() + " %c" + route.getPattern(), 'color: #666; font-weight: bold', 'color: blue; font-weight: bold');
 		this.routes.push(route);
 		return this;
 	}
@@ -111,7 +111,7 @@ class Router {
 	getRoute(name) {
 		let route = _.find(this.routes, 'name', name);
 		if (!route) {
-			Rad.Console.error('Route by name: ' + name + ' does not exist.');
+			Webiny.Console.error('Route by name: ' + name + ' does not exist.');
 			return false;
 		}
 		return route;
@@ -137,7 +137,7 @@ class Router {
 		}
 
 		if (route == this.activeRoute && _.isEqual(params, this.activeRoute.getParams())) {
-			Rad.Console.warn('Route will not change!');
+			Webiny.Console.warn('Route will not change!');
 			return null;
 		}
 		return this.goToUrl(route.getHref(params, null, merge));

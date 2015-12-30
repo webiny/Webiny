@@ -4,7 +4,7 @@ class Month extends Component {
 
     render() {
         return (
-            <Rad.Components.Form.Select2 {...this.props}>
+            <Webiny.Components.Form.Select2 {...this.props}>
                 <option value="1">01 - Jan</option>
                 <option value="2">02 - Feb</option>
                 <option value="3">03 - Mar</option>
@@ -17,7 +17,7 @@ class Month extends Component {
                 <option value="10">10 - Oct</option>
                 <option value="11">11 - Nov</option>
                 <option value="12">12 - Dec</option>
-            </Rad.Components.Form.Select2>
+            </Webiny.Components.Form.Select2>
         );
     }
 }

@@ -8,12 +8,12 @@ class Country extends Component {
             label: this.props.label,
             valueLink: this.props.valueLink,
             form: this.props.form,
-            options: Rad.Components.Countries,
+            options: Webiny.Components.Countries,
             className: this.props.className,
             componentWrapperClass: this.props.componentWrapperClass
         };
 
-        return <Rad.Components.Form.Select2 {...props}/>
+        return <Webiny.Components.Form.Select2 {...props}/>
     }
 }
 

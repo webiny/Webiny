@@ -11,7 +11,7 @@ function outputDefault(row, field) {
     }
 
     if (field.props.filter) {
-        output = Rad.Components.Filter.apply(output, field.props.filter);
+        output = Webiny.Components.Filter.apply(output, field.props.filter);
     }
 
     return <td {...getTdProps(field)}>{output}</td>;
@@ -53,7 +53,7 @@ class Field  {
         if (this.context[renderMethodName]) {
             var element = this.context[renderMethodName](this.row, this);
             if (_.isString(element)) {
-                Rad.Console.warn(`Custom render method '${renderMethodName}' returned a string, it needs to return JSX.`);
+                Webiny.Console.warn(`Custom render method '${renderMethodName}' returned a string, it needs to return JSX.`);
             }
             return (
                 <td {...getTdProps(this.field)}>
@@ -62,7 +62,7 @@ class Field  {
             );
         }
 
-        var Field = Rad.Components.Table.Field[_.capitalize(this.field.props.name)];
+        var Field = Webiny.Components.Table.Field[_.capitalize(this.field.props.name)];
         if (Field) {
             return (
                 <td {...getTdProps(this.field)}>

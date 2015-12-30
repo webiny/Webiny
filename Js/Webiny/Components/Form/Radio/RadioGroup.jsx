@@ -5,7 +5,7 @@ import HorizontalRadioGroup from './HorizontalRadioGroup';
 class RadioGroup extends FormComponent {
 
 	componentWillMount(){
-		this.radioRef = Rad.Tools.createUID();
+		this.radioRef = Webiny.Tools.createUID();
 	}
 
 	render(){

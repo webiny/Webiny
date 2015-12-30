@@ -74,7 +74,7 @@ BaseAvatar.defaultProps = {
 		var cropper = null;
 		if (this.props.cropper && this.state.showCrop) {
 			cropper = (
-				<Rad.Components.Form.Files.FileCropper
+				<Webiny.Components.Form.Files.FileCropper
 					title={this.props.cropper.title}
 					action={this.props.cropper.action}
 					onHidden={this.onCropperHidden}
@@ -110,7 +110,7 @@ BaseAvatar.defaultProps = {
 					</div>
 					{imageAction}
 				</div>
-				<Rad.Components.Form.Files.FileReader accept={this.props.accept} ref="reader" onChange={this.fileChanged}/>
+				<Webiny.Components.Form.Files.FileReader accept={this.props.accept} ref="reader" onChange={this.fileChanged}/>
 				{cropper}
 			</div>
 		);

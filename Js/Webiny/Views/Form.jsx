@@ -35,7 +35,7 @@ class Form extends Basic {
 	}
 
     getHeaderIcon() {
-        return Rad.Components.Icon.Type.PENCIL;
+        return Webiny.Components.Icon.Type.PENCIL;
     }
 
     getParams() {
@@ -77,7 +77,7 @@ class Form extends Basic {
     }
 
     getSaveRedirectRoute() {
-        return Rad.Router.getActiveRoute().getModule().getNamespace('List');
+        return Webiny.Router.getActiveRoute().getModule().getNamespace('List');
     }
 
     /** ------------ Functionality in separate methods for easier overriding of submit() method ------------*/
@@ -88,9 +88,9 @@ class Form extends Basic {
 
     formHandleSubmitSuccess(apiResponse) {
         this.setState({model: apiResponse.getData()});
-        Rad.EventManager.emit('Alert.Success.Create', this.formSaveSuccessMessage(apiResponse));
+        Webiny.EventManager.emit('Alert.Success.Create', this.formSaveSuccessMessage(apiResponse));
         if (_.isString(this.getSaveRedirectRoute())) {
-            Rad.Router.goToRoute(this.getSaveRedirectRoute());
+            Webiny.Router.goToRoute(this.getSaveRedirectRoute());
         }
     }
 

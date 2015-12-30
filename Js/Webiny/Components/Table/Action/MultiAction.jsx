@@ -7,7 +7,7 @@ class MultiAction extends Action {
             data.value = data.action;
             data.action = this.props.callback;
         }
-        Rad.EventManager.emit(this.getActionEventName(), data);
+        Webiny.EventManager.emit(this.getActionEventName(), data);
     }
 
     render() {

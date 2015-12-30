@@ -17,7 +17,7 @@ class Select extends Component {
             props.options[i] = i;
         }
 
-        return <Rad.Components.Form.Select2 {...props}/>;
+        return <Webiny.Components.Form.Select2 {...props}/>;
     }
 }
 

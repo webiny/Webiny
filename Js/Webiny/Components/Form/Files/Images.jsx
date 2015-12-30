@@ -57,7 +57,7 @@ class Images extends Component {
 		this.uploader = new FileUploader(this.api);
 		if (props.valueLink.value) {
 			let images = props.valueLink.value.map(img => {
-				img.key = Rad.Tools.createUID();
+				img.key = Webiny.Tools.createUID();
 				return img;
 			});
 			this.setState({images});
@@ -117,13 +117,13 @@ class Images extends Component {
 
 		if (files.length == 1) {
 			let file = files[0];
-			file.key = Rad.Tools.createUID();
+			file.key = Webiny.Tools.createUID();
 			this.setState({showCrop: true, cropImage: file});
 			return;
 		}
 
 		files.map(img => {
-			img.key = Rad.Tools.createUID();
+			img.key = Webiny.Tools.createUID();
 			this.saveImage(img);
 		});
 	}
@@ -204,7 +204,7 @@ class Images extends Component {
 				</div>
 			);
 		} else {
-			progress = <Rad.Components.Progress progress={image.progress} style={progressStyle}/>;
+			progress = <Webiny.Components.Progress progress={image.progress} style={progressStyle}/>;
 		}
 
 		let removeAction = null;
@@ -313,13 +313,13 @@ class Images extends Component {
 	}
 
 	getCropper() {
-		let Form = Rad.Components.Form;
+		let Form = Webiny.Components.Form;
 		let cropper = this.props.newCropper;
 		if (this.state.cropImage && this.state.cropImage.id) {
 			cropper = this.props.editCropper;
 		}
 		return (
-			<Rad.Components.Form.Files.FileCropper
+			<Webiny.Components.Form.Files.FileCropper
 				title={cropper.title}
 				action={cropper.action}
 				onHidden={this.onCropperHidden}
@@ -328,12 +328,12 @@ class Images extends Component {
 				image={this.state.cropImage}>
 				<Form.Input context="vertical" label="Title" placeholder="Type in an image title"
 							valueLink={this.linkState('cropImage.title')} componentWrapperClass="col-xs-12"/>
-			</Rad.Components.Form.Files.FileCropper>
+			</Webiny.Components.Form.Files.FileCropper>
 		);
 	}
 
 	render() {
-		let Alert = Rad.Components.Alert;
+		let Alert = Webiny.Components.Alert;
 		let model = this.state.images;
 
 		let images = model.map(this.renderImage);
@@ -378,7 +378,7 @@ class Images extends Component {
 				<div {...props}>
 					{message}
 					{images}
-					<Rad.Components.Form.Files.FileReader
+					<Webiny.Components.Form.Files.FileReader
 						accept={this.props.accept}
 						multiple={true}
 						ref="fileReader"

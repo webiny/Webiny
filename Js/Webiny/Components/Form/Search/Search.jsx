@@ -5,7 +5,7 @@ import HorizontalSearch from './HorizontalSearch';
 class Search extends FormComponent {
 
 	componentWillMount() {
-		this.inputRef = Rad.Tools.createUID();
+		this.inputRef = Webiny.Tools.createUID();
 	}
 
 	render() {

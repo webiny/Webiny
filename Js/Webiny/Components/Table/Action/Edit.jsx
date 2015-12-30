@@ -14,10 +14,10 @@ class Edit extends Action {
 
     render() {
         return (
-            <Rad.Components.Router.Link onClick={this.onClick.bind(this)}
+            <Webiny.Components.Router.Link onClick={this.onClick.bind(this)}
                                         className="btn btn-blue ml2 mr2 btn-sm" {...this.props}>
 				{this.props.label || 'Edit'}
-            </Rad.Components.Router.Link>
+            </Webiny.Components.Router.Link>
         );
     }
 }

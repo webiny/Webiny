@@ -5,7 +5,7 @@ import VerticalDateTime from './VerticalDateTime';
 class DateTime extends FormComponent {
 	
 	componentWillMount() {
-		this.inputRef = Rad.Tools.createUID();
+		this.inputRef = Webiny.Tools.createUID();
 	}
 
 	render() {

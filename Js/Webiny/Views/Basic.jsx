@@ -26,7 +26,7 @@ class Basic extends View {
     }
 
     getHeaderTitle() {
-        return Rad.Router.getActiveRoute().getModule().name + 's';
+        return Webiny.Router.getActiveRoute().getModule().name + 's';
     }
 
     getHeaderIcon() {
@@ -38,7 +38,7 @@ class Basic extends View {
     }
 
     getId() {
-        return Rad.Router.getActiveRoute().getParams('id');
+        return Webiny.Router.getActiveRoute().getParams('id');
     }
 
     renderAlerts(classes = null) {
@@ -51,7 +51,7 @@ class Basic extends View {
                 children: alerts,
 				addClassName: classes
             };
-            output.push(<Rad.Components.Alert {...props}/>);
+            output.push(<Webiny.Components.Alert {...props}/>);
         });
 
         return <div>{output}</div>;
@@ -101,7 +101,7 @@ class Basic extends View {
     }
 
     renderLoader() {
-        return this.state.showLoader ? <Rad.Components.Loader/> : null;
+        return this.state.showLoader ? <Webiny.Components.Loader/> : null;
     }
 }
 

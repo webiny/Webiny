@@ -15,7 +15,7 @@ class Module {
      */
     setComponents(components) {
         _.forEach(components, (value, key) => {
-            _.set(App, `${this.name}.Components.` + key, value);
+            _.set(this.app, `${this.name}.Components.` + key, value);
         });
         return this;
     }
@@ -26,7 +26,7 @@ class Module {
      */
     setViews(views) {
         _.forEach(views, (value, key) => {
-            _.set(App, `${this.name}.Views.` + key, value);
+            _.set(this.app, `${this.name}.Views.` + key, value);
         });
         return this;
     }
@@ -35,7 +35,7 @@ class Module {
      * @param stores
      */
     setStores(stores) {
-        _.forEach(stores, store => Rad.Registry.addStore(store));
+        _.forEach(stores, store => Webiny.Registry.addStore(store));
     }
 
     /**
@@ -44,7 +44,7 @@ class Module {
     setRoutes(...routes) {
         _.each(routes, route => {
 			route.setModule(this);
-			Rad.Router.addRoute(route);
+			Webiny.Router.addRoute(route);
 		});
         return this;
     }
@@ -62,7 +62,7 @@ class Module {
      * @returns {Module}
      */
     addDefaultComponents(content) {
-        Rad.Router.addDefaultComponents(content);
+        Webiny.Router.addDefaultComponents(content);
         return this;
     }
 

@@ -28,7 +28,7 @@ class Dialog extends Component {
             </div>
         );
 
-        this.trigger('Rad.Components.Modal.Create', dialog);
+        this.trigger('Webiny.Components.Modal.Create', dialog);
 
         return null;
     }

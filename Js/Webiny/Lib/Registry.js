@@ -31,7 +31,7 @@ class Registry {
 
 	getStore(name) {
 		if (!_.has(this.stores, name)) {
-			Rad.Console.error('Store `' + name + '` does not exist!');
+			Webiny.Console.error('Store `' + name + '` does not exist!');
 			return false;
 		}
 		return this.stores[name].instance;

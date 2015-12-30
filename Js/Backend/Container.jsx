@@ -31,7 +31,6 @@ class Container extends Webiny.View {
 	}
 
 	render() {
-
 		var content = (
 			<div className="preloader" style={{display: 'block'}}>
 				<span className="loader">

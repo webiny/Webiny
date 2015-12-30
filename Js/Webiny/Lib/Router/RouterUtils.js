@@ -29,7 +29,7 @@ class RouterUtils {
 		_.each(_this.routes, route => {
 			if (route.match(url) && !matchedRoute) {
 				matchedRoute = route;
-				Rad.Console.log("%c[Router]: " + url, 'color: #139C09; font-weight: bold');
+				Webiny.Console.log("%c[Router]: " + url, 'color: #139C09; font-weight: bold');
 			}
 		});
 
@@ -66,7 +66,7 @@ class RouterUtils {
 					return callback(routerEvent);
 				} else {
 					if (routerEvent.goTo != null) {
-						Rad.Router.goToRoute(routerEvent.goTo, routerEvent.goToParams);
+						Webiny.Router.goToRoute(routerEvent.goTo, routerEvent.goToParams);
 					}
 				}
 				return routerEvent;

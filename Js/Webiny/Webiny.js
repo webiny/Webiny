@@ -44,41 +44,6 @@ let Webiny = {
 		Base,
 		Entity,
 		List
-	},
-
-	run: function () {
-		console.log("Running Webiny!!! :)");
-		// Run app
-		let appElement = document.querySelector('webiny-app');
-		if (appElement) {
-			let appName = appElement.attributes.name.nodeValue;
-			let baseUrl = appElement.attributes['base-url'].nodeValue;
-			Webiny.Router.setBaseUrl(baseUrl);
-			WebinyBootstrap.includeApp(appName).then(app => {
-				let [webinyApp, jsApp] = appName.split('/');
-				window.Webiny.Apps[webinyApp] = app.default;
-				app.default.run(appElement);
-			});
-		}
-
-		// Mount components
-		let componentElements = document.querySelectorAll('webiny-component');
-		if (componentElements) {
-			_.each(componentElements, el => {
-				let props = {};
-				_.each(el.attributes, attr => {
-					props[attr.nodeName] = attr.nodeValue;
-				});
-
-				let component = _.get(window, props.name);
-				if (component) {
-					let element = React.createElement(component, props, el.innerHTML);
-					ReactDOM.render(element, el);
-				} else {
-					el.remove();
-				}
-			});
-		}
 	}
 };
 

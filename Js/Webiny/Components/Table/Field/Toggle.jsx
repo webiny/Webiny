@@ -17,7 +17,7 @@ class Toggle extends Field {
 		};
 
 		return (
-			<Rad.Components.Form.Switch {...props}/>
+			<Webiny.Components.Form.Switch {...props}/>
 		);
 	}
 }

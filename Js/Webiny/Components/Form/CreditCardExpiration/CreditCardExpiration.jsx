@@ -5,7 +5,7 @@ import VerticalCreditCardExpiration from './VerticalCreditCardExpiration';
 class CreditCardExpiration extends FormComponent {
 
     componentWillMount() {
-        this.inputRef = Rad.Tools.createUID();
+        this.inputRef = Webiny.Tools.createUID();
     }
 
     render() {

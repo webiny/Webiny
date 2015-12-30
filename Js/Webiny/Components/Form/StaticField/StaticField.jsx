@@ -5,7 +5,7 @@ import VerticalStaticField from './VerticalStaticField';
 class StaticField extends FormComponent {
 	
 	componentWillMount() {
-		this.inputRef = Rad.Tools.createUID();
+		this.inputRef = Webiny.Tools.createUID();
 	}
 
 	render() {

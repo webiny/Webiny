@@ -5,7 +5,7 @@ class EventManager {
 	}
 
 	emit(event, data) {
-        Rad.Console.info("%c[Emit]: " + event, 'color: #1918DE; font-weight: bold', data);
+        Webiny.Console.info("%c[Emit]: " + event, 'color: #1918DE; font-weight: bold', data);
 		if (!this.listeners.hasOwnProperty(event)) {
             return Q(null);
 		}

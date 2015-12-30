@@ -35,7 +35,7 @@ class List extends Basic {
     }
 
     getHeaderIcon() {
-        return Rad.Components.Icon.Type.BARS;
+        return Webiny.Components.Icon.Type.BARS;
     }
 
     getFields() {
@@ -47,10 +47,10 @@ class List extends Basic {
 	 * @param route
 	 * @param params
 	 */
-    getData(route = Rad.Router.getActiveRoute(), nonUrlParams = {}) {
+    getData(route = Webiny.Router.getActiveRoute(), nonUrlParams = {}) {
 
         if (!_.has(route, 'name')) {
-            route = Rad.Router.getActiveRoute();
+            route = Webiny.Router.getActiveRoute();
         }
 
         this.showLoader();
@@ -80,21 +80,21 @@ class List extends Basic {
         var bodyInjects = this.getInjectedRadComponents(this.renderBody);
         var footerInjects = this.getInjectedRadComponents(this.renderFooter);
         var headerInjects = this.getInjectedRadComponents(this.renderHeader);
-        var loader = this.state.showLoader ? <Rad.Components.Loader/> : null;
+        var loader = this.state.showLoader ? <Webiny.Components.Loader/> : null;
 
         return (
             <div>
                 {this.renderAlerts()}
-                <Rad.Components.Panel.Panel>
+                <Webiny.Components.Panel.Panel>
                     {loader}
                     {this.renderHeader(...headerInjects)}
-                    <Rad.Components.Panel.Body style={{overflow: 'visible'}}>
+                    <Webiny.Components.Panel.Body style={{overflow: 'visible'}}>
                         {this.renderBody(...bodyInjects)}
-                    </Rad.Components.Panel.Body>
-                    <Rad.Components.Panel.Footer style={{padding: '0px 25px 25px'}}>
+                    </Webiny.Components.Panel.Body>
+                    <Webiny.Components.Panel.Footer style={{padding: '0px 25px 25px'}}>
                         {this.renderFooter(...footerInjects)}
-                    </Rad.Components.Panel.Footer>
-                </Rad.Components.Panel.Panel>
+                    </Webiny.Components.Panel.Footer>
+                </Webiny.Components.Panel.Panel>
             </div>
         );
     }
@@ -108,9 +108,9 @@ class List extends Basic {
     }
 
     renderHeader() {
-        var Link = Rad.Components.Router.Link;
+        var Link = Webiny.Components.Router.Link;
         return (
-            <Rad.Components.Panel.Header title={this.getHeaderTitle()} icon={this.getHeaderIcon()} style={{overflow: 'visible'}}>
+            <Webiny.Components.Panel.Header title={this.getHeaderTitle()} icon={this.getHeaderIcon()} style={{overflow: 'visible'}}>
                 {this.getHeaderActions().map((action, index) => {
                     return (
                     <Link key={'panel-header-action-' + index}
@@ -120,44 +120,44 @@ class List extends Basic {
                     </Link>
                         );
                     })}
-            </Rad.Components.Panel.Header>
+            </Webiny.Components.Panel.Header>
         );
     }
 
     /** ------------ Functionality in separate methods for easier overriding of submit() method ------------*/
 
     listEvents() {
-        this.listen('Rad.Components.Table.Action.Edit', data => {
+        this.listen('Webiny.Components.Table.Action.Edit', data => {
             this.listEventEdit(data)
         });
 
-        this.listen('Rad.Components.Table.Action.Delete', data => {
+        this.listen('Webiny.Components.Table.Action.Delete', data => {
             this.listEventDelete(data)
         });
 
-        this.listen('Rad.Components.Table.Field.Toggle', data => {
+        this.listen('Webiny.Components.Table.Field.Toggle', data => {
             this.listEventToggleStatus(data.data, data.field)
         });
 
-        this.listen('Rad.Components.Table.Action.MultiAction', data => {
+        this.listen('Webiny.Components.Table.Action.MultiAction', data => {
             var methodName = 'multiAction' + _.capitalize(data.action);
             if (!_.isFunction(this[methodName])) {
-                return Rad.Console.warn('MultiAction method \'' + methodName + '\' not defined.');
+                return Webiny.Console.warn('MultiAction method \'' + methodName + '\' not defined.');
             }
             return this[methodName](data.selected, data.value);
         });
 
-        this.listen('Rad.Components.Table.Action.Menu', data => {
+        this.listen('Webiny.Components.Table.Action.Menu', data => {
             var methodName = 'menuAction' + _.capitalize(data.action);
             if (!_.isFunction(this[methodName])) {
-                return Rad.Console.warn('MenuAction method \'' + methodName + '\' not defined.');
+                return Webiny.Console.warn('MenuAction method \'' + methodName + '\' not defined.');
             }
             return this[methodName](data.data);
         });
     }
 
     listChangePerPage(page) {
-		this.urlParams ? Rad.Router.goToRoute('current', {perPage: page}) : this.getData(null, {perPage: page});
+		this.urlParams ? Webiny.Router.goToRoute('current', {perPage: page}) : this.getData(null, {perPage: page});
     }
 
 
@@ -170,13 +170,13 @@ class List extends Basic {
 	}
 
     listEventEdit(data) {
-        Rad.Router.goToUrl(Rad.Router.getCurrentPathName('/' + data.id))
+        Webiny.Router.goToUrl(Webiny.Router.getCurrentPathName('/' + data.id))
     }
 
     listEventDelete(data) {
         this.store.getApi().delete(_.isString(data) ? data : data.id).then(apiResponse => {
             if (!apiResponse.isError()) {
-                this.getData(Rad.Router.getActiveRoute());
+                this.getData(Webiny.Router.getActiveRoute());
                 this.setAlert(this.listDeleteSuccessMessage(apiResponse, data), 'success');
             } else {
                 this.setAlert(apiResponse.getErrorReport('errors'), 'danger');
@@ -189,7 +189,7 @@ class List extends Basic {
         var post = {};
         post[field] = !data[field];
         this.store.getApi().crudUpdate(data.id, post, {_fields: 'id'}).then(() => {
-            this.getData(Rad.Router.getActiveRoute());
+            this.getData(Webiny.Router.getActiveRoute());
         })
     }
 

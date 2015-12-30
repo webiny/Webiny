@@ -5,7 +5,7 @@ import HorizontalCheckboxGroup from './HorizontalCheckboxGroup';
 class CheckboxGroup extends FormComponent {
 
 	componentWillMount(){
-		this.checkboxRef = Rad.Tools.createUID();
+		this.checkboxRef = Webiny.Tools.createUID();
 	}
 
 	/**

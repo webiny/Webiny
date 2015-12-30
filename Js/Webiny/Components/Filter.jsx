@@ -63,11 +63,11 @@ filter.addFilter('datetime', (value, format = 'DD/MMM/YY HH:mm') => {
 });
 
 filter.addFilter('country', (value) => {
-    return Rad.Components.Countries[value];
+    return Webiny.Components.Countries[value];
 });
 
 filter.addFilter('fullAddress', value => {
-    return `${value.address}, ${value.city}, ${Rad.Components.Countries[value.country]}`;
+    return `${value.address}, ${value.city}, ${Webiny.Components.Countries[value.country]}`;
 });
 
 filter.addFilter('number', (value, decimals = 2, separator = null) => {

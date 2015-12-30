@@ -188,7 +188,7 @@ class Component extends React.Component {
         var injectables = [];
 		components.forEach(commaSeparatedComponents => {
             commaSeparatedComponents.replace(/\s+/g, '').split(',').forEach(cmp => {
-                injectables.push(_.get(Rad.Components, cmp));
+                injectables.push(_.get(Webiny.Components, cmp));
             })
 		});
 
@@ -208,8 +208,8 @@ class Component extends React.Component {
 	getInjectedRadComponents(method) {
 		var injects = [];
 		this.getParamNames(method).forEach(param => {
-			if (_.get(Rad.Components, param)) {
-				injects.push(_.get(Rad.Components, param));
+			if (_.get(Webiny.Components, param)) {
+				injects.push(_.get(Webiny.Components, param));
 			}
 		});
 		return injects;

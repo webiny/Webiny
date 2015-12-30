@@ -24,7 +24,7 @@ class Action {
 			}, element.props.children);
 		}
 
-		var Action = Rad.Components.Table.Action[_.capitalize(this.action.props.name)];
+		var Action = Webiny.Components.Table.Action[_.capitalize(this.action.props.name)];
 
 		if (Action) {
 			var props = {
