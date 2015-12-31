@@ -1,1 +1,1 @@
-export default Baobab;
+export default new Baobab;

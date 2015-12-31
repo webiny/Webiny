@@ -5,6 +5,7 @@ import Injector from './Lib/Injector';
 import DataTree from './Lib/DataTree';
 import View from './Lib/View';
 import Dispatcher from './Lib/Dispatcher';
+import UiDispatcher from './Lib/UiDispatcher';
 import Router from './Lib/Router/Router';
 import Route from './Lib/Router/Route';
 import Components from './Components/Components';
@@ -21,11 +22,12 @@ let Webiny = {
 	Module,
 	Component,
 	Injector,
-	DataTree: new DataTree,
+	DataTree,
 	View,
 	Router,
 	Route,
 	Dispatcher,
+	UiDispatcher,
 	Components,
 	Views,
 	Tools,
