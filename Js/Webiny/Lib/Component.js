@@ -1,40 +1,80 @@
 import LinkState from './LinkState';
-import EventManager from './EventManager';
-import Registry from './Registry';
+import Dispatcher from './Dispatcher';
 
 class Component extends React.Component {
 
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 
 		this.__listeners = [];
-		this.bindMethods('linkState');
+		this.bindMethods('bindTo');
 	}
 
-	setState(key, value = null, callback = null){
-		if(_.isObject(key)){
+	componentWillMount() {
+		// Reserved for future system-wide functionality
+	}
+
+	componentDidMount() {
+		// Reserved for future system-wide functionality
+		console.log("BASE COMPONENT MOUNT");
+	}
+
+	componentWillReceiveProps(nextProps) {
+		// Reserved for future system-wide functionality
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		// Reserved for future system-wide functionality
+		return true;
+	}
+
+	componentWillUpdate(nextProps, nextState) {
+		// Reserved for future system-wide functionality
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		// Reserved for future system-wide functionality
+	}
+
+	componentWillUnmount() {
+		// Release event listeners
+		_.forEach(this.__listeners, unsubscribe => {
+			unsubscribe();
+		});
+		this.__listeners = [];
+
+		// Release data cursors
+		_.forEach(this.__cursors, cursor => {
+			cursor.release();
+		});
+		this.__cursors = [];
+	}
+
+	watch(key, func) {
+		let cursor = Webiny.DataTree.select(key);
+		cursor.on('update', e => {
+			func(e.data.currentData, e.data.previousData, e);
+		});
+		this.__cursors.push(cursor);
+	}
+
+	setState(key, value = null, callback = null) {
+		if (_.isObject(key)) {
 			return super.setState(key, value);
 		}
 
-		if(_.isString(key)){
+		if (_.isString(key)) {
 			var state = this.state;
 			_.set(state, key, value);
 			return super.setState(state, callback);
 		}
 	}
 
-	componentWillUnmount() {
-		_.forEach(this.__listeners, unsubscribe => {
-			unsubscribe();
-		});
-		this.__listeners = [];
-	}
-
 	bindMethods() {
-        var args = arguments;
-        if (arguments.length == 1 && _.isString(arguments[0])) {
-            args = arguments[0].split(',').map(x => x.trim());
-        }
+		var args = arguments;
+		if (arguments.length == 1 && _.isString(arguments[0])) {
+			args = arguments[0].split(',').map(x => x.trim());
+		}
 
 		_.forEach(args, (name) => {
 			if (name in this) {
@@ -52,22 +92,22 @@ class Component extends React.Component {
 	 * @param key
 	 * @returns {{value: *, requestChange: *}}
 	 */
-	linkState(key) {
-        var ls = new LinkState(this, key);
+	bindTo(key) {
+		var ls = new LinkState(this, key);
 		return ls.create();
 	}
 
-    /**
-     * The same as React.render() except this one also checks if this.renderComponent(...) method
-     * was defined - which can be used to have injects of RAD components automatically
-     */
-    render() {
-        if (_.isFunction(this.renderComponent)) {
-            var injects = this.getInjectedRadComponents(this.renderComponent);
-            return this.renderComponent(...injects);
-        }
+	/**
+	 * The same as React.render() except this one also checks if this.renderComponent(...) method
+	 * was defined - which can be used to have Webiny components automatically injected
+	 */
+	render() {
+		if (_.isFunction(this.renderComponent)) {
+			var injects = this.getInjectedRadComponents(this.renderComponent);
+			return this.renderComponent(...injects);
+		}
 
-    }
+	}
 
 	classSet() {
 		var classes = [];
@@ -98,101 +138,42 @@ class Component extends React.Component {
 		return classes.join(' ');
 	}
 
-	isMobile(){
+	isMobile() {
 		return isMobile.any;
 	}
 
 	addKeys(elements) {
 		return elements.map((el, index) => {
-			if(!el){
+			if (!el) {
 				return null;
 			}
-			var props = {key: index};
-			return React.cloneElement(el, props, el.props.children);
+			return React.cloneElement(el, {key: index}, el.props.children);
 		});
 	}
 
 	trigger(action, data) {
-		return EventManager.emit(action, data);
+		return Dispatcher.emit(action, data);
 	}
 
-	/**
-	 * Listen to data store change
-	 * @returns {classObject}
-	 * @param store
-	 * @param callback
-	 * @param meta
-	 */
-	onStoreChanged(store, callback = null, meta = null) {
-
-		if (typeof store != 'string') {
-			store = store.getFqn();
-		}
-
-		if (!_.isFunction(callback)) {
-
-			// State key name is passed to assign new data store value to that state key
-			if (_.isString(callback)) {
-				var property = callback;
-				callback = (data) => {
-					var state = _.set({}, property, data);
-					this.setState(state);
-				}
-			}
-
-			// New store value will overwrite the entire component state
-			if (_.isNull(callback)) {
-				callback = (data) => {
-					this.setState(data);
-				}
-			}
-		}
-
-		var stopListening = EventManager.listen(store, callback, meta);
+	listen(event, callback, meta) {
+		var stopListening = Dispatcher.listen(event, callback, meta);
 		this.__listeners.push(stopListening);
-
-		// Get store from registry to trigger its init() method if it has not yet been initialized
-		return Registry.getStore(store);
 	}
-
-    listen(event, callback, meta) {
-        var stopListening = EventManager.listen(event, callback, meta);
-        this.__listeners.push(stopListening);
-    }
 
 	onRouteChanged(callback) {
-		var stopListening = EventManager.listen('RouteChanged', callback);
+		var stopListening = Dispatcher.listen('RouteChanged', callback);
 		this.__listeners.push(stopListening);
 	}
 
-	getStore(name) {
-		return Registry.getStore(name);
-	}
-
-	/**
-	 * Get DOM element of current component or of any child element/component referenced by ref
-	 * @param ref Reference name (string) or null for current component
-	 * @returns {*}
-	 */
-	getDOM(ref = null) {
-		if (ref !== null) {
-			if (this.refs[ref].getDOM) {
-				return this.refs[ref].getDOM();
-			}
-			return ReactDOM.findDOMNode(this.refs[ref]);
-		}
-		return ReactDOM.findDOMNode(this);
-	}
-
-	inject(...components){
-        var injectables = [];
+	inject(...components) {
+		var injectables = [];
 		components.forEach(commaSeparatedComponents => {
-            commaSeparatedComponents.replace(/\s+/g, '').split(',').forEach(cmp => {
-                injectables.push(_.get(Webiny.Components, cmp));
-            })
+			commaSeparatedComponents.replace(/\s+/g, '').split(',').forEach(cmp => {
+				injectables.push(_.get(Webiny.Components, cmp));
+			})
 		});
 
-        return injectables;
+		return injectables;
 	}
 
 	getParamNames(func) {

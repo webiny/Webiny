@@ -25,10 +25,6 @@ class Textarea extends FormComponent {
 		// Native textarea field
 		return React.createElement('textarea', _.assign({}, props, {className: 'form-control'}));
 	}
-
-	getDOM() {
-		return super.getDOM(this.textareaRef);
-	}
 }
 
 Textarea.defaultProps = {

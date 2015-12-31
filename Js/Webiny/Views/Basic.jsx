@@ -1,6 +1,5 @@
 import View from './../Lib/View'
 import AlertStore from './Stores/Alert'
-import Registry from './../Lib/Registry'
 
 class Basic extends View {
 
@@ -104,7 +103,5 @@ class Basic extends View {
         return this.state.showLoader ? <Webiny.Components.Loader/> : null;
     }
 }
-
-Registry.addStore(new AlertStore());
 
 export default Basic;

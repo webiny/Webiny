@@ -135,19 +135,6 @@ class InputComponent extends Component {
 
         return {validationError, validationIcon, validationClass};
     }
-
-    /**
-     * This method is called when getDOM() method is called on an Input/Checkbox/etc component
-     * to get the actual input element that component represents and not the component DOM representation.
-     *
-     * Ex: <Input ref="firstName"/>
-     * Calling this.getDOM('firstName') from parent component will return the actual <input> element inside the component
-     *
-     * @returns {HTMLElement}
-     */
-    getDOM() {
-        return super.getDOM().querySelector('input');
-    }
 }
 
 export default InputComponent;

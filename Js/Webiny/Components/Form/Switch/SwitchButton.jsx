@@ -32,7 +32,7 @@ class SwitchButton extends Component {
 	}
 
 	switch() {
-		var el = this.getDOM().querySelector('input');
+		var el = ReactDOM.findDOMNode(this).querySelector('input');
 		var checked = !el.checked;
 		if (this.props.valueLink) {
 			this.props.valueLink.requestChange(checked, this.props.bindChange || null);

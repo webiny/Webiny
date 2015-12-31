@@ -1,4 +1,4 @@
-import EventManager from './../EventManager';
+import Dispatcher from './../Dispatcher';
 import RouterEvent from './RouterEvent';
 
 class RouterUtils {
@@ -41,7 +41,7 @@ class RouterUtils {
 	 * @param route
 	 */
 	renderRoute(route) {
-		return EventManager.emit('RenderRoute', route);
+		return Dispatcher.emit('RenderRoute', route);
 	}
 
 	sanitizeUrl(url) {

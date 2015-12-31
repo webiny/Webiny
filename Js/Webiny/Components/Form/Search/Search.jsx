@@ -24,10 +24,6 @@ class Search extends FormComponent {
 
 		return null;
 	}
-
-	getDOM() {
-		return super.getDOM(this.inputRef);
-	}
 }
 
 Search.defaultProps = {

@@ -1,4 +1,4 @@
-import EventManager from './../EventManager';
+import Dispatcher from './../Dispatcher';
 import Router from './../Router/Router';
 import Tools from './../Tools';
 import ApiService from './../Api/Service';
@@ -45,7 +45,7 @@ class BaseStore {
     emitChange(delay = null) {
         setTimeout(() => {
             this.getState().then(data => {
-                EventManager.emit(this.getFqn(), data);
+                Dispatcher.emit(this.getFqn(), data);
             });
         }, delay);
     }
@@ -59,7 +59,7 @@ class BaseStore {
 
     onAction(action, callback) {
         var callbackFn = typeof callback == 'string' ? this[callback] : callback;
-        EventManager.listen(action, callbackFn.bind(this), this.getFqn());
+        Dispatcher.listen(action, callbackFn.bind(this), this.getFqn());
     }
 
     getState() {

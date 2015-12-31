@@ -1,5 +1,4 @@
 import ApiResponse from './Response';
-import Registry from './../Registry';
 import Http from './../Http/Http';
 
 function handleResponse(response) {

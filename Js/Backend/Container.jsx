@@ -17,7 +17,7 @@ class Container extends Webiny.View {
 	}
 
 	componentDidMount() {
-		this.unsubscribe = Webiny.EventManager.listen('RenderRoute', (route) => {
+		this.unsubscribe = Webiny.Dispatcher.listen('RenderRoute', (route) => {
 			return this.setState({
 				time: new Date().getTime()
 			});
@@ -27,7 +27,7 @@ class Container extends Webiny.View {
 	onDidUpdate() {
 		window.scrollTo(0, 0);
 		// Since this is a top level component, it will emit RouteChanged event after everything has finished rendering
-		Webiny.EventManager.emit('RouteChanged', Webiny.Router.getActiveRoute());
+		Webiny.Dispatcher.emit('RouteChanged', Webiny.Router.getActiveRoute());
 	}
 
 	render() {

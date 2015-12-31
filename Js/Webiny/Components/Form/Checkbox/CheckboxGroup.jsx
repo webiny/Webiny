@@ -28,10 +28,6 @@ class CheckboxGroup extends FormComponent {
 		
 		return null;
 	}
-
-	getDOM() {
-		return super.getDOM(this.checkboxRef);
-	}
 }
 
 export default CheckboxGroup;

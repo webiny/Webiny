@@ -1,4 +1,4 @@
-class EventManager {
+class Dispatcher {
 
 	constructor() {
 		this.listeners = {};
@@ -50,4 +50,4 @@ class EventManager {
 		return this.listeners;
 	}
 }
-export default new EventManager();
+export default new Dispatcher();

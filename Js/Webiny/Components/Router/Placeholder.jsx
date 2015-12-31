@@ -1,4 +1,4 @@
-import EventManager from './../../Lib/EventManager';
+import Dispatcher from './../../Lib/Dispatcher';
 import Router from './../../Lib/Router/Router';
 import Component from './../../Lib/Component';
 

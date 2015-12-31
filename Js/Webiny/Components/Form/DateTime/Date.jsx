@@ -25,10 +25,6 @@ class Date extends FormComponent {
 		// Native input field
 		return React.createElement('input', _.assign({}, props, {className: 'form-control'}));
 	}
-
-	getDOM() {
-		return super.getDOM(this.inputRef);
-	}
 }
 
 Date.defaultProps = {

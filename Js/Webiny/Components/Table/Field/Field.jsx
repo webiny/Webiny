@@ -16,7 +16,7 @@ class Field extends Component {
         }
         event += '.Field.' + this.getClassName();
 
-        Webiny.EventManager.emit(event, {data: this.props.data, field: this.props.field});
+        Webiny.Dispatcher.emit(event, {data: this.props.data, field: this.props.field});
     }
 }
 

@@ -24,10 +24,6 @@ class CreditCardExpiration extends FormComponent {
 
         return null;
     }
-
-    getDOM() {
-        return super.getDOM(this.inputRef);
-    }
 }
 
 CreditCardExpiration.defaultProps = {

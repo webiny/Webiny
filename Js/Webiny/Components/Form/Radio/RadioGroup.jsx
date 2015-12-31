@@ -25,10 +25,6 @@ class RadioGroup extends FormComponent {
 		
 		return null;
 	}
-
-	getDOM() {
-		return super.getDOM(this.radioRef);
-	}
 }
 
 export default RadioGroup;

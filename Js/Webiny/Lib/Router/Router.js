@@ -1,4 +1,4 @@
-import EventManager from './../EventManager';
+import Dispatcher from './../Dispatcher';
 import RouterEvent from './RouterEvent';
 import Utils from './RouterUtils';
 

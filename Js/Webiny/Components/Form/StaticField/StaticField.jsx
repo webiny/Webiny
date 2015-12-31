@@ -24,10 +24,6 @@ class StaticField extends FormComponent {
 
         return null;
 	}
-
-	getDOM() {
-		return super.getDOM(this.inputRef);
-	}
 }
 
 StaticField.defaultProps = {

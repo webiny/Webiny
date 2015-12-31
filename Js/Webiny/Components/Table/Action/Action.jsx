@@ -13,7 +13,7 @@ class Action extends Component {
     }
 
     emitAction(data = this.props.data) {
-        Webiny.EventManager.emit(this.getActionEventName(), data);
+        Webiny.Dispatcher.emit(this.getActionEventName(), data);
     }
 }
 

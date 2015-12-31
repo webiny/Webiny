@@ -88,7 +88,7 @@ class Form extends Basic {
 
     formHandleSubmitSuccess(apiResponse) {
         this.setState({model: apiResponse.getData()});
-        Webiny.EventManager.emit('Alert.Success.Create', this.formSaveSuccessMessage(apiResponse));
+        Webiny.Dispatcher.emit('Alert.Success.Create', this.formSaveSuccessMessage(apiResponse));
         if (_.isString(this.getSaveRedirectRoute())) {
             Webiny.Router.goToRoute(this.getSaveRedirectRoute());
         }
