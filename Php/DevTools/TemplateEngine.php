@@ -8,6 +8,7 @@
 
 namespace Apps\Core\Php\DevTools;
 
+use Apps\Core\Php\View\View;
 use Webiny\Component\StdLib\SingletonTrait;
 use Webiny\Component\TemplateEngine\TemplateEngineTrait;
 
@@ -35,6 +36,8 @@ class TemplateEngine
          * Get TemplateEngine instance
          */
         self::$templateEngine = $this->templateEngine('Smarty');
+
+        self::$templateEngine->assign('Webiny', new View());
 
         /**
          * @TODO: Add registration of template engine plugins from apps and plugins

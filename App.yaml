@@ -36,7 +36,14 @@ Storage:
                 Driver:
                     Object: \Webiny\Component\Storage\Driver\Local\LocalStorageDriver
                     ObjectArguments:
-                        - __DIR__/../../public_html/build/dev
+                        - __DIR__/../../public_html/build/development
+        ProductionBuild:
+            Class: \Webiny\Component\Storage\Storage
+            Arguments:
+                Driver:
+                    Object: \Webiny\Component\Storage\Driver\Local\LocalStorageDriver
+                    ObjectArguments:
+                        - __DIR__/../../public_html/build/production
 
 Events:
     Core:

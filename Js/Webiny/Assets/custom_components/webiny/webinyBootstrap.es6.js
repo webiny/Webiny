@@ -35,15 +35,15 @@ function runWebiny() {
 class WebinyBootstrapClass {
 
 	import(path) {
-		// TODO: add environment detection
 		let parts = path.split('.');
 		if (parts.length == 2 && !_.startsWith(path, './')) {
-			path = '/build/dev/' + parts.join('/') + '/scripts/app.min.js';
+			path = '/build/' + this.env + '/' + parts.join('/') + '/scripts/app.min.js';
 		}
 		return System.import(path);
 	}
 
-	run() {
+	run(env = 'development') {
+		this.env = env;
 		window._apiUrl = '/api';
 		console.log("Bootstrapping WEBINY...");
 		// First we need to import Core/Webiny
@@ -62,10 +62,13 @@ class WebinyBootstrapClass {
 		return api.get(appName).then(res => {
 			let assets = [];
 			_.each(_.get(res.data.data.assets, 'js', []), item => {
-				assets.push(this.import('/build/dev/' + item));
+				assets.push(this.import('/build/' + this.env + '/' + item));
 			});
 			_.each(_.get(res.data.data.assets, 'css', []), item => {
-				includeCss('/build/dev/' + item);
+				includeCss('/build/' + this.env + '/' + item);
+			});
+			_.each(_.get(res.data.data, 'modules', []), item => {
+				assets.push(this.import('/build/' + this.env + '/' + item));
 			});
 
 			return Q.all(assets).then(() => {

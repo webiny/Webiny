@@ -18,8 +18,8 @@ class Example extends Webiny.Ui.View {
 
         return (
             <div>
-                <h2>Example view</h2>
-				My name is {this.state.name}
+                <h2>First Webiny view</h2>
+				My name is "{this.state.name || 'Unknown'}"
             </div>
         );
     }

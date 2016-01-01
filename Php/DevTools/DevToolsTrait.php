@@ -8,6 +8,7 @@
 
 namespace Apps\Core\Php\DevTools;
 
+use Apps\Core\Php\View\View;
 use Webiny\Component\Cache\CacheStorage;
 use Webiny\Component\Mongo\Mongo;
 use Webiny\Component\ServiceManager\ServiceManager;

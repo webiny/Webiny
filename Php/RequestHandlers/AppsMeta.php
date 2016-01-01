@@ -63,6 +63,7 @@ class AppsMeta
 
     private function getAppsMeta()
     {
+        // TODO: switch storage based on environment
         $storage = $this->wStorage('DevBuild');
         $files = new Directory('', $storage, true);
 
