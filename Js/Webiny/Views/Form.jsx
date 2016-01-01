@@ -35,7 +35,7 @@ class Form extends Basic {
 	}
 
     getHeaderIcon() {
-        return Webiny.Components.Icon.Type.PENCIL;
+        return Webiny.Ui.Components.Icon.Type.PENCIL;
     }
 
     getParams() {
@@ -88,7 +88,7 @@ class Form extends Basic {
 
     formHandleSubmitSuccess(apiResponse) {
         this.setState({model: apiResponse.getData()});
-        Webiny.Dispatcher.emit('Alert.Success.Create', this.formSaveSuccessMessage(apiResponse));
+        Webiny.Dispatcher.dispatch('Alert.Success.Create', this.formSaveSuccessMessage(apiResponse));
         if (_.isString(this.getSaveRedirectRoute())) {
             Webiny.Router.goToRoute(this.getSaveRedirectRoute());
         }

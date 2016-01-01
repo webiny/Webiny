@@ -17,7 +17,7 @@ class Pagination extends Action {
 
         return (
             <div className="pagination-wrapper">
-                <Webiny.Components.Pagination {...props}/>
+                <Webiny.Ui.Components.Pagination {...props}/>
             </div>
         );
     }

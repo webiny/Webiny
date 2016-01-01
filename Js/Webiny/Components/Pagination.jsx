@@ -48,18 +48,18 @@ class Pagination extends Component {
 			var route = Webiny.Router.getActiveRoute().name;
 			return (
 				<li className={disabled ? 'disabled' : ''}>
-					<Webiny.Components.Router.Link route={route} params={params} disabled={disabled}>
+					<Webiny.Ui.Components.Router.Link route={route} params={params} disabled={disabled}>
 						<span aria-hidden="true">Prev</span>
-					</Webiny.Components.Router.Link>
+					</Webiny.Ui.Components.Router.Link>
 				</li>
 			);
 		}
 
 		return (
 			<li className={disabled ? 'disabled' : ''}>
-				<Webiny.Components.Router.Link onClick={disabled ? _.noop : this.props.onChangePage.bind(this, params)}>
+				<Webiny.Ui.Components.Router.Link onClick={disabled ? _.noop : this.props.onChangePage.bind(this, params)}>
 					<span aria-hidden="true">Prev</span>
-				</Webiny.Components.Router.Link>
+				</Webiny.Ui.Components.Router.Link>
 			</li>
 		);
 	}
@@ -73,18 +73,18 @@ class Pagination extends Component {
 			var route = Webiny.Router.getActiveRoute().name;
 			return (
 				<li className={disabled ? 'disabled' : ''}>
-					<Webiny.Components.Router.Link route={route} params={params} disabled={disabled}>
+					<Webiny.Ui.Components.Router.Link route={route} params={params} disabled={disabled}>
 						<span aria-hidden="true">Next</span>
-					</Webiny.Components.Router.Link>
+					</Webiny.Ui.Components.Router.Link>
 				</li>
 			);
 		}
 
 		return (
 			<li className={disabled ? 'disabled' : ''}>
-				<Webiny.Components.Router.Link onClick={disabled ? _.noop : this.props.onChangePage.bind(this, params)}>
+				<Webiny.Ui.Components.Router.Link onClick={disabled ? _.noop : this.props.onChangePage.bind(this, params)}>
 					<span aria-hidden="true">Next</span>
-				</Webiny.Components.Router.Link>
+				</Webiny.Ui.Components.Router.Link>
 			</li>
 		);
 
@@ -102,11 +102,11 @@ class Pagination extends Component {
 
 
 		return (
-			<Webiny.Components.Form.Select2 valueLink={this.linkState('perPage')}>
+			<Webiny.Ui.Components.Form.Select2 valueLink={this.linkState('perPage')}>
 				{this.props.perPageOptions.split(',').map(page => {
 					return <option value={page} key={'pagination-perPage-' + page}>{page}</option>;
 				})}
-			</Webiny.Components.Form.Select2>
+			</Webiny.Ui.Components.Form.Select2>
 		);
 
 	}

@@ -11,7 +11,7 @@ function outputDefault(row, field) {
     }
 
     if (field.props.filter) {
-        output = Webiny.Components.Filter.apply(output, field.props.filter);
+        output = Webiny.Ui.Components.Filter.apply(output, field.props.filter);
     }
 
     return <td {...getTdProps(field)}>{output}</td>;
@@ -62,7 +62,7 @@ class Field  {
             );
         }
 
-        var Field = Webiny.Components.Table.Field[_.capitalize(this.field.props.name)];
+        var Field = Webiny.Ui.Components.Table.Field[_.capitalize(this.field.props.name)];
         if (Field) {
             return (
                 <td {...getTdProps(this.field)}>

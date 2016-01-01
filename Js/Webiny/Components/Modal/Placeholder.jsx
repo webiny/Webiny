@@ -18,7 +18,7 @@ class Placeholder extends Component {
 	}
 
 	componentDidMount() {
-		this.listen('Webiny.Components.Modal.Create', state => {
+		this.listen('Webiny.Ui.Components.Modal.Create', state => {
 			var newState = {
 				modal: state,
 				onShown: state.props.onShown || _.noop,
@@ -27,7 +27,7 @@ class Placeholder extends Component {
 			this.setState(newState);
 		});
 
-		this.listen('Webiny.Components.Modal.Destroy', () => {
+		this.listen('Webiny.Ui.Components.Modal.Destroy', () => {
 			this.removeModal();
 		})
 	}

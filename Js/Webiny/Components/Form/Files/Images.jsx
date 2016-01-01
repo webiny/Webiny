@@ -204,7 +204,7 @@ class Images extends Component {
 				</div>
 			);
 		} else {
-			progress = <Webiny.Components.Progress progress={image.progress} style={progressStyle}/>;
+			progress = <Webiny.Ui.Components.Progress progress={image.progress} style={progressStyle}/>;
 		}
 
 		let removeAction = null;
@@ -313,13 +313,13 @@ class Images extends Component {
 	}
 
 	getCropper() {
-		let Form = Webiny.Components.Form;
+		let Form = Webiny.Ui.Components.Form;
 		let cropper = this.props.newCropper;
 		if (this.state.cropImage && this.state.cropImage.id) {
 			cropper = this.props.editCropper;
 		}
 		return (
-			<Webiny.Components.Form.Files.FileCropper
+			<Webiny.Ui.Components.Form.Files.FileCropper
 				title={cropper.title}
 				action={cropper.action}
 				onHidden={this.onCropperHidden}
@@ -328,12 +328,12 @@ class Images extends Component {
 				image={this.state.cropImage}>
 				<Form.Input context="vertical" label="Title" placeholder="Type in an image title"
 							valueLink={this.linkState('cropImage.title')} componentWrapperClass="col-xs-12"/>
-			</Webiny.Components.Form.Files.FileCropper>
+			</Webiny.Ui.Components.Form.Files.FileCropper>
 		);
 	}
 
 	render() {
-		let Alert = Webiny.Components.Alert;
+		let Alert = Webiny.Ui.Components.Alert;
 		let model = this.state.images;
 
 		let images = model.map(this.renderImage);
@@ -378,7 +378,7 @@ class Images extends Component {
 				<div {...props}>
 					{message}
 					{images}
-					<Webiny.Components.Form.Files.FileReader
+					<Webiny.Ui.Components.Form.Files.FileReader
 						accept={this.props.accept}
 						multiple={true}
 						ref="fileReader"

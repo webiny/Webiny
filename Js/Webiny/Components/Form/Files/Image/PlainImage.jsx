@@ -89,7 +89,7 @@ class PlainImage extends ImageComponent {
 		let cropper = null;
 		if (this.props.cropper && this.state.showCrop) {
 			cropper = (
-				<Webiny.Components.Form.Files.FileCropper
+				<Webiny.Ui.Components.Form.Files.FileCropper
 					title={this.props.cropper.title}
 					action={this.props.cropper.action}
 					onHidden={this.onCropperHidden}
@@ -130,7 +130,7 @@ class PlainImage extends ImageComponent {
 					{message || <img style={imageStyle} src={model.src} onLoad={this.readActualImageSize}/>}
 					{actions}
 				</div>
-				<Webiny.Components.Form.Files.FileReader accept={this.props.accept} ref="reader" onChange={this.fileChanged}/>
+				<Webiny.Ui.Components.Form.Files.FileReader accept={this.props.accept} ref="reader" onChange={this.fileChanged}/>
 				{cropper}
 			</div>
 		);

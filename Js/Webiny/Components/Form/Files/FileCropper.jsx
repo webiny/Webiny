@@ -28,8 +28,8 @@ class FileCropper extends Component {
 			return null;
 		}
 
-		var Modal = Webiny.Components.Modal;
-		var Button = Webiny.Components.Form.Button;
+		var Modal = Webiny.Ui.Components.Modal;
+		var Button = Webiny.Ui.Components.Form.Button;
 
 		var modalProps = {
 			onShown: (e) => {

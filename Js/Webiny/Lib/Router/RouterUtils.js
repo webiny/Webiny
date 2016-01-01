@@ -41,7 +41,7 @@ class RouterUtils {
 	 * @param route
 	 */
 	renderRoute(route) {
-		return Dispatcher.emit('RenderRoute', route);
+		return Dispatcher.dispatch('RenderRoute', route);
 	}
 
 	sanitizeUrl(url) {

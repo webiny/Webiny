@@ -17,9 +17,9 @@ class FieldHeader {
 		this.field = field;
 		this.context = context;
 
-		this.sortDescIcon = Webiny.Components.Icon.Type.SORT_DESC;
-		this.sortAscIcon = Webiny.Components.Icon.Type.SORT_ASC;
-		this.sortNoneIcon = Webiny.Components.Icon.Type.SORT_NONE;
+		this.sortDescIcon = Webiny.Ui.Components.Icon.Type.SORT_DESC;
+		this.sortAscIcon = Webiny.Ui.Components.Icon.Type.SORT_ASC;
+		this.sortNoneIcon = Webiny.Ui.Components.Icon.Type.SORT_NONE;
 	}
 
 	render() {
@@ -56,19 +56,19 @@ class FieldHeader {
 		if (this.context.props.context.urlParams) {
 			return (
 				<th {...getThProps(this.field)}>
-					<Webiny.Components.Router.Link {...linkProps}>{fieldProps.label}</Webiny.Components.Router.Link>
+					<Webiny.Ui.Components.Router.Link {...linkProps}>{fieldProps.label}</Webiny.Ui.Components.Router.Link>
 					&nbsp;
-					<Webiny.Components.Icon type={icon}/>
+					<Webiny.Ui.Components.Icon type={icon}/>
 				</th>
 			);
 		}
 
 		return (
 			<th {...getThProps(this.field)}>
-				<Webiny.Components.Router.Link
-					onClick={this.context.props.context.listChangeSort.bind(null, {sort: fieldProps.sort})}>{fieldProps.label}</Webiny.Components.Router.Link>
+				<Webiny.Ui.Components.Router.Link
+					onClick={this.context.props.context.listChangeSort.bind(null, {sort: fieldProps.sort})}>{fieldProps.label}</Webiny.Ui.Components.Router.Link>
 				&nbsp;
-				<Webiny.Components.Icon type={icon}/>
+				<Webiny.Ui.Components.Icon type={icon}/>
 			</th>
 		);
 	}

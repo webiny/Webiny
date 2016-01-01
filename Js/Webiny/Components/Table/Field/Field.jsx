@@ -9,14 +9,14 @@ class Field extends Component {
 	}
 
     emitField() {
-        var event = 'Webiny.Components.Table';
+        var event = 'Webiny.Ui.Components.Table';
 		
         if (this.props.context.props.name) {
             event += '.' + this.props.context.props.name;
         }
         event += '.Field.' + this.getClassName();
 
-        Webiny.Dispatcher.emit(event, {data: this.props.data, field: this.props.field});
+        Webiny.Dispatcher.dispatch(event, {data: this.props.data, field: this.props.field});
     }
 }
 

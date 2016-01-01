@@ -1,4 +1,4 @@
-class Container extends Webiny.View {
+class Container extends Webiny.Ui.View {
 
 	constructor() {
 		super();
@@ -17,7 +17,7 @@ class Container extends Webiny.View {
 	}
 
 	componentDidMount() {
-		this.unsubscribe = Webiny.Dispatcher.listen('RenderRoute', (route) => {
+		this.unsubscribe = Webiny.Dispatcher.on('RenderRoute', (route) => {
 			return this.setState({
 				time: new Date().getTime()
 			});
@@ -26,8 +26,8 @@ class Container extends Webiny.View {
 
 	onDidUpdate() {
 		window.scrollTo(0, 0);
-		// Since this is a top level component, it will emit RouteChanged event after everything has finished rendering
-		Webiny.Dispatcher.emit('RouteChanged', Webiny.Router.getActiveRoute());
+		// Since this is a top level component, it will dispatch RouteChanged event after everything has finished rendering
+		Webiny.Dispatcher.dispatch('RouteChanged', Webiny.Router.getActiveRoute());
 	}
 
 	render() {
@@ -41,7 +41,7 @@ class Container extends Webiny.View {
 		);
 
 		if (!this.state.loading) {
-			return <Webiny.Components.Router.Placeholder onDidUpdate={this.onDidUpdate} name="Layout"/>;
+			return <Webiny.Ui.Components.Router.Placeholder onDidUpdate={this.onDidUpdate} name="Layout"/>;
 		}
 		return content;
 	}

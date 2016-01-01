@@ -4,25 +4,24 @@ class Dispatcher {
 		this.listeners = {};
 	}
 
-	emit(event, data) {
-        Webiny.Console.info("%c[Emit]: " + event, 'color: #1918DE; font-weight: bold', data);
+	dispatch(event, data) {
+		Webiny.Console.info("%c[Dispatch]: " + event, 'color: #1918DE; font-weight: bold', data);
 		if (!this.listeners.hasOwnProperty(event)) {
-            return Q(null);
+			return Q(null);
 		}
 
-        // Execute before change callbacks in a chain
-        var callbacksChain = Q(data);
+		// Execute before change callbacks in a chain
+		var callbacksChain = Q(data);
 
-        this.listeners[event].forEach(listener => {
-            callbacksChain = callbacksChain.then(listener.listener);
-        });
+		this.listeners[event].forEach(listener => {
+			callbacksChain = callbacksChain.then(listener.listener);
+		});
 
-        return callbacksChain;
+		return callbacksChain;
 	}
 
-	listen(event, listener, meta = false) {
-
-        if (!this.listeners.hasOwnProperty(event)) {
+	on(event, listener, meta = false) {
+		if (!this.listeners.hasOwnProperty(event)) {
 			this.listeners[event] = [];
 		}
 		var itemIndex = this.listeners[event].push({
@@ -37,14 +36,14 @@ class Dispatcher {
 		}
 	}
 
-    stopListening(event) {
-        var index = this.listeners.indexOf(event);
-        if (index > -1) {
-            this.listeners.splice(index);
-            return true;
-        }
-        return false;
-    }
+	off(event) {
+		var index = this.listeners.indexOf(event);
+		if (index > -1) {
+			this.listeners.splice(index);
+			return true;
+		}
+		return false;
+	}
 
 	getListeners() {
 		return this.listeners;

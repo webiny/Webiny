@@ -223,7 +223,7 @@ class Wizard extends Component {
 
 		return (
 			<div className="wizard steps-bg steps-justified steps-left solo clearfix">
-				{this.state.showLoader ? <Webiny.Components.Loader/> : null}
+				{this.state.showLoader ? <Webiny.Ui.Components.Loader/> : null}
 				<Hide if={this.props.noHeader}>
 					<div className="steps clearfix">
 						<ul>{stepsHeader}</ul>
@@ -235,11 +235,11 @@ class Wizard extends Component {
 				</div>
 				<Hide if={this.props.noFooter}>
 					<div className="actions clearfix">
-						<Webiny.Components.Hide if={this.state.activeIndex == 0 || !this.props.goBack || !activeStep.props.goBack}>
+						<Webiny.Ui.Components.Hide if={this.state.activeIndex == 0 || !this.props.goBack || !activeStep.props.goBack}>
 							<button onClick={this.prevStep} type="button" className="btn btn-prev">
 								<i className="demo-icon icon-prev_icon"></i> Previous
 							</button>
-						</Webiny.Components.Hide>
+						</Webiny.Ui.Components.Hide>
 						{actions}
 					</div>
 				</Hide>

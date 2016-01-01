@@ -2,7 +2,7 @@ import App from './Lib/App';
 import Module from './Lib/Module';
 import Component from './Lib/Component';
 import Injector from './Lib/Injector';
-import DataTree from './Lib/DataTree';
+import Model from './Lib/Model';
 import View from './Lib/View';
 import Dispatcher from './Lib/Dispatcher';
 import UiDispatcher from './Lib/UiDispatcher';
@@ -20,16 +20,18 @@ let Webiny = {
 	Apps: {},
 	App,
 	Module,
-	Component,
+	Ui: {
+		Component,
+		Components,
+		Dispatcher: UiDispatcher,
+		View,
+		Views
+	},
 	Injector,
-	DataTree,
-	View,
+	Model,
 	Router,
 	Route,
 	Dispatcher,
-	UiDispatcher,
-	Components,
-	Views,
 	Tools,
 	Console: Console.init(),
 	Http,

@@ -35,7 +35,7 @@ class List extends Basic {
     }
 
     getHeaderIcon() {
-        return Webiny.Components.Icon.Type.BARS;
+        return Webiny.Ui.Components.Icon.Type.BARS;
     }
 
     getFields() {
@@ -80,21 +80,21 @@ class List extends Basic {
         var bodyInjects = this.getInjectedRadComponents(this.renderBody);
         var footerInjects = this.getInjectedRadComponents(this.renderFooter);
         var headerInjects = this.getInjectedRadComponents(this.renderHeader);
-        var loader = this.state.showLoader ? <Webiny.Components.Loader/> : null;
+        var loader = this.state.showLoader ? <Webiny.Ui.Components.Loader/> : null;
 
         return (
             <div>
                 {this.renderAlerts()}
-                <Webiny.Components.Panel.Panel>
+                <Webiny.Ui.Components.Panel.Panel>
                     {loader}
                     {this.renderHeader(...headerInjects)}
-                    <Webiny.Components.Panel.Body style={{overflow: 'visible'}}>
+                    <Webiny.Ui.Components.Panel.Body style={{overflow: 'visible'}}>
                         {this.renderBody(...bodyInjects)}
-                    </Webiny.Components.Panel.Body>
-                    <Webiny.Components.Panel.Footer style={{padding: '0px 25px 25px'}}>
+                    </Webiny.Ui.Components.Panel.Body>
+                    <Webiny.Ui.Components.Panel.Footer style={{padding: '0px 25px 25px'}}>
                         {this.renderFooter(...footerInjects)}
-                    </Webiny.Components.Panel.Footer>
-                </Webiny.Components.Panel.Panel>
+                    </Webiny.Ui.Components.Panel.Footer>
+                </Webiny.Ui.Components.Panel.Panel>
             </div>
         );
     }
@@ -108,9 +108,9 @@ class List extends Basic {
     }
 
     renderHeader() {
-        var Link = Webiny.Components.Router.Link;
+        var Link = Webiny.Ui.Components.Router.Link;
         return (
-            <Webiny.Components.Panel.Header title={this.getHeaderTitle()} icon={this.getHeaderIcon()} style={{overflow: 'visible'}}>
+            <Webiny.Ui.Components.Panel.Header title={this.getHeaderTitle()} icon={this.getHeaderIcon()} style={{overflow: 'visible'}}>
                 {this.getHeaderActions().map((action, index) => {
                     return (
                     <Link key={'panel-header-action-' + index}
@@ -120,26 +120,26 @@ class List extends Basic {
                     </Link>
                         );
                     })}
-            </Webiny.Components.Panel.Header>
+            </Webiny.Ui.Components.Panel.Header>
         );
     }
 
     /** ------------ Functionality in separate methods for easier overriding of submit() method ------------*/
 
     listEvents() {
-        this.listen('Webiny.Components.Table.Action.Edit', data => {
+        this.listen('Webiny.Ui.Components.Table.Action.Edit', data => {
             this.listEventEdit(data)
         });
 
-        this.listen('Webiny.Components.Table.Action.Delete', data => {
+        this.listen('Webiny.Ui.Components.Table.Action.Delete', data => {
             this.listEventDelete(data)
         });
 
-        this.listen('Webiny.Components.Table.Field.Toggle', data => {
+        this.listen('Webiny.Ui.Components.Table.Field.Toggle', data => {
             this.listEventToggleStatus(data.data, data.field)
         });
 
-        this.listen('Webiny.Components.Table.Action.MultiAction', data => {
+        this.listen('Webiny.Ui.Components.Table.Action.MultiAction', data => {
             var methodName = 'multiAction' + _.capitalize(data.action);
             if (!_.isFunction(this[methodName])) {
                 return Webiny.Console.warn('MultiAction method \'' + methodName + '\' not defined.');
@@ -147,7 +147,7 @@ class List extends Basic {
             return this[methodName](data.selected, data.value);
         });
 
-        this.listen('Webiny.Components.Table.Action.Menu', data => {
+        this.listen('Webiny.Ui.Components.Table.Action.Menu', data => {
             var methodName = 'menuAction' + _.capitalize(data.action);
             if (!_.isFunction(this[methodName])) {
                 return Webiny.Console.warn('MenuAction method \'' + methodName + '\' not defined.');

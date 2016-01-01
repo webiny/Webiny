@@ -7,6 +7,7 @@ class Component extends React.Component {
 		super(props);
 
 		this.__listeners = [];
+		this.__cursors = [];
 		this.bindMethods('bindTo');
 	}
 
@@ -51,7 +52,7 @@ class Component extends React.Component {
 	}
 
 	watch(key, func) {
-		let cursor = Webiny.DataTree.select(key);
+		let cursor = Webiny.Model.select(key);
 		cursor.on('update', e => {
 			func(e.data.currentData, e.data.previousData, e);
 		});
@@ -152,16 +153,16 @@ class Component extends React.Component {
 	}
 
 	trigger(action, data) {
-		return Dispatcher.emit(action, data);
+		return Dispatcher.dispatch(action, data);
 	}
 
 	listen(event, callback, meta) {
-		var stopListening = Dispatcher.listen(event, callback, meta);
+		var stopListening = Dispatcher.on(event, callback, meta);
 		this.__listeners.push(stopListening);
 	}
 
 	onRouteChanged(callback) {
-		var stopListening = Dispatcher.listen('RouteChanged', callback);
+		var stopListening = Dispatcher.on('RouteChanged', callback);
 		this.__listeners.push(stopListening);
 	}
 
@@ -169,7 +170,7 @@ class Component extends React.Component {
 		var injectables = [];
 		components.forEach(commaSeparatedComponents => {
 			commaSeparatedComponents.replace(/\s+/g, '').split(',').forEach(cmp => {
-				injectables.push(_.get(Webiny.Components, cmp));
+				injectables.push(_.get(Webiny.Ui.Components, cmp));
 			})
 		});
 
@@ -189,8 +190,8 @@ class Component extends React.Component {
 	getInjectedRadComponents(method) {
 		var injects = [];
 		this.getParamNames(method).forEach(param => {
-			if (_.get(Webiny.Components, param)) {
-				injects.push(_.get(Webiny.Components, param));
+			if (_.get(Webiny.Ui.Components, param)) {
+				injects.push(_.get(Webiny.Ui.Components, param));
 			}
 		});
 		return injects;

@@ -101,7 +101,7 @@ class Editor extends InputComponent {
 			uploader = (
 				<div>
 					<strong>Your image is being uploaded...</strong>
-					<Webiny.Components.Progress progress={this.state.uploadPercentage}/>
+					<Webiny.Ui.Components.Progress progress={this.state.uploadPercentage}/>
 				</div>
 			);
 		}
@@ -123,7 +123,7 @@ class Editor extends InputComponent {
 						{uploader}
 						<div className="editor"></div>
 						<div className="tooltip-cont"></div>
-						<Webiny.Components.Form.Files.FileCropper
+						<Webiny.Ui.Components.Form.Files.FileCropper
 							onHidden={this.onCropperHidden}
 							onCrop={this.applyCropping}
 							config={{

@@ -29,7 +29,7 @@ class VerticalFile extends BaseFile {
 
 				<div className="fileUpload btn btn-primary" onClick={this.getFiles}>
 					<span>{this.props.actionLabel}</span>
-					<Webiny.Components.Form.Files.FileReader sizeLimit={10000000} accept={this.props.accept} ref="reader" onChange={this.fileChanged}/>
+					<Webiny.Ui.Components.Form.Files.FileReader sizeLimit={10000000} accept={this.props.accept} ref="reader" onChange={this.fileChanged}/>
 				</div>
 			</div>
 		);

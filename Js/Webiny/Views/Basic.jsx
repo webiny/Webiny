@@ -50,7 +50,7 @@ class Basic extends View {
                 children: alerts,
 				addClassName: classes
             };
-            output.push(<Webiny.Components.Alert {...props}/>);
+            output.push(<Webiny.Ui.Components.Alert {...props}/>);
         });
 
         return <div>{output}</div>;
@@ -100,7 +100,7 @@ class Basic extends View {
     }
 
     renderLoader() {
-        return this.state.showLoader ? <Webiny.Components.Loader/> : null;
+        return this.state.showLoader ? <Webiny.Ui.Components.Loader/> : null;
     }
 }
 

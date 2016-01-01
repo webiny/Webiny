@@ -45,7 +45,7 @@ class BaseStore {
     emitChange(delay = null) {
         setTimeout(() => {
             this.getState().then(data => {
-                Dispatcher.emit(this.getFqn(), data);
+                Dispatcher.dispatch(this.getFqn(), data);
             });
         }, delay);
     }
@@ -59,7 +59,7 @@ class BaseStore {
 
     onAction(action, callback) {
         var callbackFn = typeof callback == 'string' ? this[callback] : callback;
-        Dispatcher.listen(action, callbackFn.bind(this), this.getFqn());
+        Dispatcher.on(action, callbackFn.bind(this), this.getFqn());
     }
 
     getState() {

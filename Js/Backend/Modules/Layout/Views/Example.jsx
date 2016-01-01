@@ -1,4 +1,4 @@
-class Example extends Webiny.View {
+class Example extends Webiny.Ui.View {
 
 	constructor(props){
 		super(props);
@@ -9,7 +9,7 @@ class Example extends Webiny.View {
 	}
 
 	componentDidMount(){
-		Webiny.DataTree.watch('name', (data, prevData, e) => {
+		this.watch('name', (data, prevData, e) => {
 			this.setState({name: e.data.currentData});
 		});
 	}
@@ -19,7 +19,7 @@ class Example extends Webiny.View {
         return (
             <div>
                 <h2>Example view</h2>
-				{this.state.name}
+				My name is {this.state.name}
             </div>
         );
     }

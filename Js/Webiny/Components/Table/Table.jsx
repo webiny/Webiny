@@ -63,7 +63,7 @@ class Table extends Component {
 			<tr>
 				{params['multi-actions'] ? (
 					<th className="multi-select pln prn">
-						<Webiny.Components.Form.Checkbox valueLink={this.linkState('multiActions.all')}/>
+						<Webiny.Ui.Components.Form.Checkbox valueLink={this.linkState('multiActions.all')}/>
 					</th>
 				) : null}
 
@@ -160,7 +160,7 @@ class Table extends Component {
 
 				{params['multi-actions'] ? (
 					<td className="multi-select pln prn">
-						<Webiny.Components.Form.Checkbox valueLink={this.linkState('multiActions.selected.' + row.id)}/>
+						<Webiny.Ui.Components.Form.Checkbox valueLink={this.linkState('multiActions.selected.' + row.id)}/>
 					</td>
 				) : null}
 
@@ -200,7 +200,7 @@ class Table extends Component {
 		return (
 			<tr>
 				<td className="text-center" colSpan={this.props.context.props.fields.length + 1}>
-					<Webiny.Components.Icon type={Webiny.Components.Icon.Type.INFO_CIRCLE}/>&nbsp;
+					<Webiny.Ui.Components.Icon type={Webiny.Ui.Components.Icon.Type.INFO_CIRCLE}/>&nbsp;
 					{this.noResultsMessage}
 				</td>
 			</tr>

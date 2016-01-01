@@ -8,12 +8,12 @@ class Country extends Component {
             label: this.props.label,
             valueLink: this.props.valueLink,
             form: this.props.form,
-            options: Webiny.Components.Countries,
+            options: Webiny.Ui.Components.Countries,
             className: this.props.className,
             componentWrapperClass: this.props.componentWrapperClass
         };
 
-        return <Webiny.Components.Form.Select2 {...props}/>
+        return <Webiny.Ui.Components.Form.Select2 {...props}/>
     }
 }
 
