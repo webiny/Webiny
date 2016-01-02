@@ -78,7 +78,14 @@ class AppsMeta
             list($app, $jsApp, $asset) = $f->explode('/', 3);
             $appName = $app . '.' . $jsApp;
 
-            $ext = $this->str($asset)->explode('.')->last()->val();
+            $assetFileParts = $this->str($asset)->explode('/')->last()->explode('.');
+            $ext = $assetFileParts->last()->val();
+            $assetParts = $this->str($asset)->explode('/');
+
+            if ($ext == 'js' && $assetParts->last() != 'app.min.js' && $assetParts->last() != 'vendors.min.js') {
+                $assets[$appName]['modules'][] = $assetFileParts->first()->val();
+            }
+
             $assets[$appName]['assets'][$ext][] = $file->getKey();
         }
 

@@ -22,7 +22,6 @@ function execute(method, params) {
     }
 }
 
-
 class Console {
 
     init() {

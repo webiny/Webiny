@@ -1,4 +1,4 @@
-import Dispatcher from './../Dispatcher';
+import Dispatcher from './../Core/Dispatcher';
 import RouterEvent from './RouterEvent';
 import Utils from './RouterUtils';
 

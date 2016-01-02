@@ -1,5 +1,5 @@
 // Find Webiny app or components and run them
-function runWebiny() {
+function runWebiny(meta) {
 	// Run app
 	let appElement = document.querySelector('webiny-app');
 	if (appElement) {
@@ -7,8 +7,9 @@ function runWebiny() {
 		let baseUrl = appElement.attributes['base-url'].nodeValue;
 		Webiny.Router.setBaseUrl(baseUrl);
 		WebinyBootstrap.includeApp(appName).then(app => {
-			_.set(window.Webiny.Apps, appName, app.default);
-			app.default.run(appElement);
+			app.addModules(meta[appName].modules);
+			_.set(window.Webiny.Apps, appName, app);
+			app.run(appElement);
 		});
 	}
 
@@ -34,6 +35,10 @@ function runWebiny() {
 
 class WebinyBootstrapClass {
 
+	constructor() {
+		this.meta = {};
+	}
+
 	import(path) {
 		let parts = path.split('.');
 		if (parts.length == 2 && !_.startsWith(path, './')) {
@@ -47,33 +52,31 @@ class WebinyBootstrapClass {
 		window._apiUrl = '/api';
 		console.log("Bootstrapping WEBINY...");
 		// First we need to import Core/Webiny
-		this.import('Core.Webiny').then(() => {
-			this.import('Webiny').then(m => {
-				window.Webiny = m.default;
-				runWebiny();
-			});
+		this.includeApp('Core.Webiny').then(app => {
+			app.addModules(this.meta['Core.Webiny'].modules).run();
+			runWebiny(this.meta);
 		});
 	}
 
 
 	includeApp(appName) {
-		let api = new Webiny.Api.Service('/apps');
-
-		return api.get(appName).then(res => {
+		return axios({url: _apiUrl + '/apps/' + appName}).then(res => {
+			let meta = this.meta[appName] = res.data.data;
 			let assets = [];
-			_.each(_.get(res.data.data.assets, 'js', []), item => {
+			_.each(_.get(meta.assets, 'js', []), item => {
+				if(appName == 'Core.Webiny' && _.endsWith(item, 'vendors.min.js')){
+					return;
+				}
+
 				assets.push(this.import('/build/' + this.env + '/' + item));
 			});
-			_.each(_.get(res.data.data.assets, 'css', []), item => {
-				includeCss('/build/' + this.env + '/' + item);
-			});
-			_.each(_.get(res.data.data, 'modules', []), item => {
-				assets.push(this.import('/build/' + this.env + '/' + item));
+			_.each(_.get(meta.assets, 'css', []), item => {
+				this.includeCss('/build/' + this.env + '/' + item);
 			});
 
 			return Q.all(assets).then(() => {
 				let parts = appName.split('.');
-				return this.import(parts[1]);
+				return this.import(parts[1]).then(m => m.default);
 			});
 		});
 	}
