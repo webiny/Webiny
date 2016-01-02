@@ -40,7 +40,7 @@ trait DevToolsTrait
      */
     static protected function wStorage($name = null)
     {
-        if(!$name){
+        if (!$name) {
             return Storage::getInstance();
         }
 
@@ -127,5 +127,10 @@ trait DevToolsTrait
     static protected function wTemplateEngine()
     {
         return TemplateEngine::getInstance()->getTemplateEngine();
+    }
+
+    static protected function wIsProduction()
+    {
+        return self::wConfig()->get('Application.Environment', 'production') == 'production';
     }
 }
