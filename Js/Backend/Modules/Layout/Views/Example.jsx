@@ -4,13 +4,27 @@ class Example extends Webiny.Ui.View {
 		super(props);
 
 		this.state = {
-			name: ''
+			name: '',
+			domains: []
 		};
+
+		Webiny.Model.set({
+			Core: {
+				Layout: {
+					name: 'Unknown',
+					domains: [
+						'selecto.app',
+						'huckletree.app',
+						'webiny.app'
+					]
+				}
+			}
+		});
 	}
 
 	componentDidMount(){
-		this.watch('name', (data, prevData, e) => {
-			this.setState({name: e.data.currentData});
+		this.watch('Core.Layout', (data) => {
+			this.setState(data);
 		});
 	}
 
@@ -20,6 +34,9 @@ class Example extends Webiny.Ui.View {
             <div>
                 <h2>First Webiny view</h2>
 				My name is "{this.state.name || 'Unknown'}"
+				<ul>
+					{this.state.domains.map((item, i) => <li key={i}>{item}</li>)}
+				</ul>
             </div>
         );
     }

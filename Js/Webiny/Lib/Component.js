@@ -17,7 +17,6 @@ class Component extends React.Component {
 
 	componentDidMount() {
 		// Reserved for future system-wide functionality
-		console.log("BASE COMPONENT MOUNT");
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -52,11 +51,13 @@ class Component extends React.Component {
 	}
 
 	watch(key, func) {
-		let cursor = Webiny.Model.select(key);
+
+		let cursor = Webiny.Model.select(key.split('.'));
 		cursor.on('update', e => {
 			func(e.data.currentData, e.data.previousData, e);
 		});
 		this.__cursors.push(cursor);
+		return cursor;
 	}
 
 	setState(key, value = null, callback = null) {
@@ -152,11 +153,11 @@ class Component extends React.Component {
 		});
 	}
 
-	trigger(action, data) {
+	dispatch(action, data) {
 		return Dispatcher.dispatch(action, data);
 	}
 
-	listen(event, callback, meta) {
+	on(event, callback, meta) {
 		var stopListening = Dispatcher.on(event, callback, meta);
 		this.__listeners.push(stopListening);
 	}
