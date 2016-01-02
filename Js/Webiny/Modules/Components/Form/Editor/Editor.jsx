@@ -1,5 +1,5 @@
 import InputComponent from './../Base/InputComponent';
-import ApiService from './../../../../Lib/Api/Service';
+import ApiService from './../../../Core/Api/Service';
 import FileUploader from './../Files/FileUploader';
 
 class Editor extends InputComponent {

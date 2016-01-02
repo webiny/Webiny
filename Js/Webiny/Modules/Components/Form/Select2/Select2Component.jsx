@@ -1,4 +1,4 @@
-import Component from './../../../../Lib/Core/Component';
+import Component from './../../../Core/Core/Component';
 
 class Select2Component extends Component {
 

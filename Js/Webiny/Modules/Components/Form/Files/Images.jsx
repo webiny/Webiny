@@ -1,5 +1,5 @@
-import Component from './../../../../Lib/Core/Component';
-import ApiService from './../../../../Lib/Api/Service';
+import Component from './../../../Core/Core/Component';
+import ApiService from './../../../Core/Api/Service';
 import FileUploader from './FileUploader';
 
 let placeholder = document.createElement('div');

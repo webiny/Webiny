@@ -50,11 +50,11 @@ class WebinyBootstrapClass {
 	run(env = 'development') {
 		this.env = env;
 		window._apiUrl = '/api';
-		console.log("Bootstrapping WEBINY...");
 		// First we need to import Core/Webiny
 		this.includeApp('Core.Webiny').then(app => {
-			app.addModules(this.meta['Core.Webiny'].modules).run();
-			runWebiny(this.meta);
+			app.addModules(this.meta['Core.Webiny'].modules).run().then(() => {
+				runWebiny(this.meta);
+			});
 		});
 	}
 

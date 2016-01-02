@@ -1,4 +1,4 @@
-import Component from './../../../Lib/Core/Component';
+import Component from './../../Core/Core/Component';
 import Field from './Field';
 import FieldHeader from './FieldHeader';
 import Action from './Action';

@@ -1,6 +1,6 @@
-import Dispatcher from './../../../Lib/Core/Dispatcher';
-import Router from './../../../Lib/Router/Router';
-import Component from './../../../Lib/Core/Component';
+import Dispatcher from './../../Core/Core/Dispatcher';
+import Router from './../../Core/Router/Router';
+import Component from './../../Core/Core/Component';
 
 class Placeholder extends Component {
 

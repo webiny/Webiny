@@ -1,5 +1,5 @@
-import Component from './../../../Lib/Core/Component';
-import Router from './../../../Lib/Router/Router';
+import Component from './../../Core/Core/Component';
+import Router from './../../Core/Router/Router';
 
 class Link extends Component {
 

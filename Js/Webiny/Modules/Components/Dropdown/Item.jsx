@@ -1,4 +1,4 @@
-import Component from './../../../Lib/Core/Component';
+import Component from './../../Core/Core/Component';
 
 class Item extends Component {
 

@@ -1,4 +1,4 @@
-import View from './../../Lib/Core/View'
+import View from './../Core/Core/View'
 
 class Basic extends View {
 

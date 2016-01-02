@@ -5,7 +5,7 @@ class ViewsModule extends Webiny.Module {
 	constructor(app) {
 		super(app);
 
-		this.name = 'ViewsModule';
+		this.name = 'Views';
 
 		window.Webiny.Ui.Views = Views;
 	}
