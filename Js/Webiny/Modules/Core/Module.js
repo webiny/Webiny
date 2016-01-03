@@ -1,5 +1,4 @@
 import WebinyModule from './Core/Module';
-
 import App from './Core/App';
 import Component from './Core/Component';
 import Injector from './Core/Injector';

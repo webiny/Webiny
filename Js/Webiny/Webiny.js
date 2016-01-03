@@ -11,30 +11,27 @@ class WebinyApp {
 	}
 
 	addModules(modules) {
-		modules.map(name => {
-			this.modules.push(name);
-		});
+		this.modules = modules;
 		return this;
 	}
 
 	run() {
 		this.modules.splice(this.modules.indexOf("Core"), 1);
 		this.modules.unshift("Core");
-		let imported = [];
+		const imported = [];
 		let queue = Q();
-
+        
 		this.modules.map(name => {
 			queue = queue.then(() => {
 				return WebinyBootstrap.import('Modules/' + name + '/Module').then(m => {
-					imported.push(m.default);
-					let module = new m.default(this);
-					module.run();
+                    const module = new m.default();
+					imported.push(module);
+                    module.run();
 				});
 			});
 		});
 
 		this.modules = imported;
-
 		return queue;
 	}
 }

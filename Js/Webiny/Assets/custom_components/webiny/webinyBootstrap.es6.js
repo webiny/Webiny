@@ -44,7 +44,9 @@ class WebinyBootstrapClass {
 		if (parts.length == 2 && !_.startsWith(path, './')) {
 			path = '/build/' + this.env + '/' + parts.join('/') + '/scripts/app.min.js';
 		}
-		return System.import(path);
+		return System.import(path).catch(
+            console.error.bind(console)
+        );
 	}
 
 	run(env = 'development') {
