@@ -69,28 +69,13 @@ class AppsMeta
             $storage = $this->wStorage('DevBuild');
         }
 
-        $files = new Directory('', $storage, true);
+        $files = new Directory('', $storage, true, '*meta.json');
 
         $assets = [];
         /* @var $file File */
         foreach ($files as $file) {
-            $f = $this->str($file->getKey());
-            if ($f->endsWith('.map')) {
-                continue;
-            }
-
-            list($app, $jsApp, $asset) = $f->explode('/', 3);
-            $appName = $app . '.' . $jsApp;
-
-            $assetFileParts = $this->str($asset)->explode('/')->last()->explode('.');
-            $ext = $assetFileParts->last()->val();
-            $assetParts = $this->str($asset)->explode('/');
-
-            if ($ext == 'js' && $assetParts->last() != 'app.min.js' && $assetParts->last() != 'vendors.min.js') {
-                $assets[$appName]['modules'][] = $assetFileParts->first()->val();
-            }
-
-            $assets[$appName]['assets'][$ext][] = $file->getKey();
+            $data = json_decode($file->getContents(), true);
+            $assets[$data['name']] = $data;
         }
 
         return $assets;
