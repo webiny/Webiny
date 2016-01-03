@@ -1,13 +1,13 @@
 class Tools {
 
     createUID() {
-        var delim = '-';
+        const delim = '-';
 
-        function S4() {
+        function s4() {
             return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
         }
 
-        return S4() + S4() + delim + S4() + delim + S4() + delim + S4() + delim + S4() + S4() + S4();
+        return s4() + s4() + delim + s4() + delim + s4() + delim + s4() + delim + s4() + s4() + s4();
     }
 
     keys(obj) {
@@ -18,8 +18,8 @@ class Tools {
     }
 
     toSlug(str) {
-        var trimmed = _.trim(str);
-        var url = trimmed.replace(/[^a-z0-9-\/]/gi, '-').replace(/-+/g, '-').replace(/^-|-$/g, '').toLowerCase();
+        const trimmed = _.trim(str);
+        const url = trimmed.replace(/[^a-z0-9-\/]/gi, '-').replace(/-+/g, '-').replace(/^-|-$/g, '').toLowerCase();
         if (url.length) {
             return ('/' + url).replace(/\/{2,}/g, '/');
         }

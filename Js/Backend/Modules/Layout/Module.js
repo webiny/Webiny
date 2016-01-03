@@ -11,8 +11,7 @@ class LayoutModule extends Webiny.Module {
 			Layout: Views.Main
 		});
 
-		let defaultRoute = new Webiny.Route('Dashboard', '/', {MasterContent: Views.Example});
-		Webiny.Router.setDefaultRoute(defaultRoute);
+		Webiny.Router.setDefaultRoute(new Webiny.Route('Dashboard', '/', { MasterContent: Views.Example }));
 	}
 }
 

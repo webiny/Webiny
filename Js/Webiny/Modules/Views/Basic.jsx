@@ -1,4 +1,4 @@
-import View from './../Core/Core/View'
+import View from './../Core/Core/View';
 
 class Basic extends View {
 
@@ -10,7 +10,7 @@ class Basic extends View {
                 success: [],
                 danger: []
             }
-        }
+        };
     }
 
     /**
@@ -40,14 +40,14 @@ class Basic extends View {
     }
 
     renderAlerts(classes = null) {
-        var output = [];
+        const output = [];
         _.forEach(this.state.alerts, (alerts, type) => {
-            var props = {
+            const props = {
                 key: 'rad-' + type + '-alerts',
                 onClose: this.unsetAlert.bind(this, type),
-                type: type,
+                type,
                 children: alerts,
-				addClassName: classes
+                addClassName: classes
             };
             output.push(<Webiny.Ui.Components.Alert {...props}/>);
         });
@@ -65,11 +65,15 @@ class Basic extends View {
             this.unsetAlert(type);
         }
 
-        var stateAlerts = _.clone(this.state.alerts);
+        let stateAlerts = _.clone(this.state.alerts);
         if (!type) {
             stateAlerts = alert;
         } else {
-            _.isArray(alert) ? stateAlerts[type] = stateAlerts[type].concat(alert) : stateAlerts[type].push(alert);
+            if (_.isArray(alert)) {
+                stateAlerts[type] = stateAlerts[type].concat(alert);
+            } else {
+                stateAlerts[type].push(alert);
+            }
         }
 
         this.setState({alerts: stateAlerts});
@@ -82,12 +86,12 @@ class Basic extends View {
                     success: [],
                     danger: []
                 }
-            })
+            });
         }
 
-        var stateAlerts = _.clone(this.state.alerts);
+        const stateAlerts = _.clone(this.state.alerts);
         stateAlerts[type].length = 0;
-        this.setState({alerts: stateAlerts})
+        this.setState({alerts: stateAlerts});
     }
 
     showLoader() {

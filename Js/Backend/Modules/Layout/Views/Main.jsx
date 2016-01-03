@@ -5,7 +5,6 @@
 class Main extends Webiny.Ui.View {
 
 	render() {
-
 		return (
 			<div id="main">
 				<section id="content_wrapper">

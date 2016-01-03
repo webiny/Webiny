@@ -1,8 +1,7 @@
 import ApiService from './Service';
 
 function prepareParams(params) {
-
-    var paramsMap = {
+    const paramsMap = {
         page: '_page',
         perPage: '_perPage',
         fields: '_fields',

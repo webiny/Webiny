@@ -43,9 +43,9 @@ class Module {
      */
     setRoutes(...routes) {
         _.each(routes, route => {
-			route.setModule(this);
-			Webiny.Router.addRoute(route);
-		});
+            route.setModule(this);
+            Webiny.Router.addRoute(route);
+        });
         return this;
     }
 

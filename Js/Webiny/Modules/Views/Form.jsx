@@ -2,7 +2,7 @@ import Basic from './Basic';
 
 /**
  * This is a form view which handles most often-needed actions
- * It automatically sets state variables, stores, validation functionality, submit, alerts, redirecting
+ * It automatically sets state letiables, stores, validation functionality, submit, alerts, redirecting
  */
 class Form extends Basic {
 
@@ -27,12 +27,12 @@ class Form extends Basic {
         super.componentWillMount();
     }
 
-	componentWillUnmount(){
-		super.componentWillUnmount();
-		if(this.getStoreFqn){
-			this.trigger(this.getStoreFqn() + '.Reset');
-		}
-	}
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        if (this.getStoreFqn) {
+            this.trigger(this.getStoreFqn() + '.Reset');
+        }
+    }
 
     getHeaderIcon() {
         return Webiny.Ui.Components.Icon.Type.PENCIL;
@@ -51,27 +51,26 @@ class Form extends Basic {
                     return res;
                 });
             }
-			return this.store.getState().then(state => {
-				var newModel = this.state.model;
-				_.assign(newModel, state);
-				this.setState({model: newModel});
-			});
+            return this.store.getState().then(state => {
+                const newModel = this.state.model;
+                _.assign(newModel, state);
+                this.setState({model: newModel});
+            });
         });
     }
 
-	submit(form, data = false) {
-        var event = this.formGetSaveEvent();
-		this.showLoader();
+    submit(form, data = false) {
+        const event = this.formGetSaveEvent();
+        this.showLoader();
 
-        var payload = data ? data : this.state.model;
+        const payload = data ? data : this.state.model;
         return this.trigger(event, payload).then(apiResponse => {
-
             if (apiResponse.isSuccess()) {
                 this.formHandleSubmitSuccess(apiResponse);
             } else {
-				this.formHandleSubmitErrors(apiResponse);
-			}
-			this.hideLoader();
+                this.formHandleSubmitErrors(apiResponse);
+            }
+            this.hideLoader();
             return apiResponse;
         });
     }
@@ -94,21 +93,21 @@ class Form extends Basic {
         }
     }
 
-    formSaveSuccessMessage(apiResponse) {
-        return 'Saved successfully.'
+    formSaveSuccessMessage() {
+        return 'Saved successfully.';
     }
 
     formHandleSubmitErrors(apiResponse) {
-        var messages = [];
+        let messages = [];
         apiResponse.getErrorReport('errors').forEach(error => {
             messages = messages.concat(_.values(error));
         });
         this.setAlert(messages, 'danger');
     }
 
-	formReset(){
-		this.setState({model: {}});
-	}
+    formReset() {
+        this.setState({model: {}});
+    }
 }
 
 export default Form;

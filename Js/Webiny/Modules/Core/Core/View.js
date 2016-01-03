@@ -20,15 +20,15 @@ class View extends Component {
 			store = [];
 		}
 
-		var data = null;
+		let data = null;
 		if (_.isArray(store)) {
 			data = Q({data: store});
 		} else {
 			data = this.getStore(store).getState();
 		}
-		return data.then(data => {
-			var items = {};
-			_.each(data.data, item => {
+		return data.then(response => {
+			const items = {};
+			_.each(response.data, item => {
 				let option = _.isFunction(value) ? value(item) : item[value];
 				if (!_.isString(option)) {
 					option = ReactDOMServer.renderToStaticMarkup(option);
@@ -36,10 +36,10 @@ class View extends Component {
 				items[item[key]] = option;
 			});
 
-			var partialState = this.state;
+			const partialState = this.state;
 			_.set(partialState, stateKey, items);
 			this.setState(partialState);
-			return data.data;
+			return response.data;
 		});
 	}
 }

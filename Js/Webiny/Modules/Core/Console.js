@@ -25,7 +25,7 @@ function execute(method, params) {
 class Console {
 
     init() {
-		this.devDomains = [];
+        this.devDomains = [];
 
         History.Adapter.bind(window, 'statechange', () => {
             if (getConfig('enabled') === 'false') {
@@ -42,9 +42,9 @@ class Console {
         }
 
         ['log', 'info', 'error', 'warn', 'groupCollapsed', 'groupEnd'].forEach(method => {
-            this[method] = function () {
-                execute(method, arguments)
-            }
+            this[method] = () => {
+                execute(method, arguments);
+            };
         });
         return this;
     }
@@ -58,7 +58,7 @@ class Console {
     }
 
     setClearOnStateChange(flag = true) {
-        setConfig('clearOnStateChange', flag)
+        setConfig('clearOnStateChange', flag);
     }
 
     setDevelopmentDomains(domains) {
@@ -70,11 +70,11 @@ class Console {
         return this.devDomains.indexOf(location.hostname) > -1;
     }
 
-    html(data) {
-        var self = this;
-        for (var i = 0; i < arguments.length; i++) {
-            var wrapper = document.createElement('wrapper');
-            wrapper.innerHTML = arguments[i];
+    html(...args) {
+        const self = this;
+        for (let i = 0; i < args.length; i++) {
+            const wrapper = document.createElement('wrapper');
+            wrapper.innerHTML = args[i];
             self.log(wrapper);
         }
     }

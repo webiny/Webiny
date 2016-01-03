@@ -19,11 +19,11 @@ class App {
 
 	run(mountPoint) {
 		Webiny.Console.groupCollapsed('App bootstrap');
-		let promises = this.modules.map(x => WebinyBootstrap.import('Modules/' + x + '/Module'));
+		const promises = this.modules.map(x => WebinyBootstrap.import('Modules/' + x + '/Module'));
 		this.modules = [];
 		Promise.all(promises).then(modules => {
 			modules.forEach(m => {
-				var module = new m.default(this);
+				const module = new m.default(this);
 				module.run();
 				this.modules.push(module);
 			});

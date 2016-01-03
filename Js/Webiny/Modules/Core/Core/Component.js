@@ -3,204 +3,206 @@ import Dispatcher from './Dispatcher';
 
 class Component extends React.Component {
 
-	constructor(props) {
-		super(props);
+    constructor(props) {
+        super(props);
 
-		this.__listeners = [];
-		this.__cursors = [];
-		this.bindMethods('bindTo');
-	}
+        this.__listeners = [];
+        this.__cursors = [];
+        this.bindMethods('bindTo');
+    }
 
-	componentWillMount() {
-		// Reserved for future system-wide functionality
-	}
+    componentWillMount() {
+        // Reserved for future system-wide functionality
+    }
 
-	componentDidMount() {
-		// Reserved for future system-wide functionality
-	}
+    componentDidMount() {
+        // Reserved for future system-wide functionality
+    }
 
-	componentWillReceiveProps(nextProps) {
-		// Reserved for future system-wide functionality
-	}
+    /*eslint-disable */
+    componentWillReceiveProps(nextProps) {
+        // Reserved for future system-wide functionality
+    }
 
-	shouldComponentUpdate(nextProps, nextState) {
-		// Reserved for future system-wide functionality
-		return true;
-	}
+    shouldComponentUpdate(nextProps, nextState) {
+        // Reserved for future system-wide functionality
+        return true;
+    }
 
-	componentWillUpdate(nextProps, nextState) {
-		// Reserved for future system-wide functionality
-	}
+    componentWillUpdate(nextProps, nextState) {
+        // Reserved for future system-wide functionality
+    }
 
-	componentDidUpdate(prevProps, prevState) {
-		// Reserved for future system-wide functionality
-	}
+    componentDidUpdate(prevProps, prevState) {
+        // Reserved for future system-wide functionality
+    }
 
-	componentWillUnmount() {
-		// Release event listeners
-		_.forEach(this.__listeners, unsubscribe => {
-			unsubscribe();
-		});
-		this.__listeners = [];
+    /*eslint-enable */
 
-		// Release data cursors
-		_.forEach(this.__cursors, cursor => {
-			cursor.release();
-		});
-		this.__cursors = [];
-	}
+    componentWillUnmount() {
+        // Release event listeners
+        _.forEach(this.__listeners, unsubscribe => {
+            unsubscribe();
+        });
+        this.__listeners = [];
 
-	watch(key, func) {
+        // Release data cursors
+        _.forEach(this.__cursors, cursor => {
+            cursor.release();
+        });
+        this.__cursors = [];
+    }
 
-		let cursor = Webiny.Model.select(key.split('.'));
-		cursor.on('update', e => {
-			func(e.data.currentData, e.data.previousData, e);
-		});
-		this.__cursors.push(cursor);
-		return cursor;
-	}
+    setState(key, value = null, callback = null) {
+        if (_.isObject(key)) {
+            return super.setState(key, value);
+        }
 
-	setState(key, value = null, callback = null) {
-		if (_.isObject(key)) {
-			return super.setState(key, value);
-		}
+        if (_.isString(key)) {
+            const state = this.state;
+            _.set(state, key, value);
+            return super.setState(state, callback);
+        }
+    }
 
-		if (_.isString(key)) {
-			var state = this.state;
-			_.set(state, key, value);
-			return super.setState(state, callback);
-		}
-	}
+    getInjectedRadComponents(method) {
+        const injects = [];
+        this.getParamNames(method).forEach(param => {
+            if (_.get(Webiny.Ui.Components, param)) {
+                injects.push(_.get(Webiny.Ui.Components, param));
+            }
+        });
+        return injects;
+    }
 
-	bindMethods() {
-		var args = arguments;
-		if (arguments.length == 1 && _.isString(arguments[0])) {
-			args = arguments[0].split(',').map(x => x.trim());
-		}
+    onRouteChanged(callback) {
+        const stopListening = Dispatcher.on('RouteChanged', callback);
+        this.__listeners.push(stopListening);
+    }
 
-		_.forEach(args, (name) => {
-			if (name in this) {
-				this[name] = this[name].bind(this);
-			} else {
-				console.info('Missing method [' + name + ']', this)
-			}
-		});
-	}
+    getClassName() {
+        return Object.getPrototypeOf(this).constructor.name;
+    }
 
-	/**
-	 * Ex: onChangeImportant(newValue, oldValue){...}
-	 * Ex: onChangeName(newValue, oldValue){...}
-	 *
-	 * @param key
-	 * @returns {{value: *, requestChange: *}}
-	 */
-	bindTo(key) {
-		var ls = new LinkState(this, key);
-		return ls.create();
-	}
+    getParamNames(func) {
+        const STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
+        const ARGUMENT_NAMES = /([^\s,]+)/g;
+        const fnStr = func.toString().replace(STRIP_COMMENTS, '');
+        let result = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
+        if (result === null) {
+            result = [];
+        }
+        return result;
+    }
 
-	/**
-	 * The same as React.render() except this one also checks if this.renderComponent(...) method
-	 * was defined - which can be used to have Webiny components automatically injected
-	 */
-	render() {
-		if (_.isFunction(this.renderComponent)) {
-			var injects = this.getInjectedRadComponents(this.renderComponent);
-			return this.renderComponent(...injects);
-		}
+    isMobile() {
+        return isMobile.any;
+    }
 
-	}
+    addKeys(elements) {
+        return elements.map((el, index) => {
+            if (!el) {
+                return null;
+            }
+            return React.cloneElement(el, {key: index}, el.props.children);
+        });
+    }
 
-	classSet() {
-		var classes = [];
+    dispatch(action, data) {
+        return Dispatcher.dispatch(action, data);
+    }
 
-		_.forIn(arguments, classObject => {
-			if (!classObject) {
-				return;
-			}
+    on(event, callback, meta) {
+        const stopListening = Dispatcher.on(event, callback, meta);
+        this.__listeners.push(stopListening);
+    }
 
-			if (typeof classObject === 'string') {
-				classes = classes.concat(classObject.split(' '));
-				return;
-			}
+    inject(...components) {
+        const injectables = [];
+        components.forEach(commaSeparatedComponents => {
+            commaSeparatedComponents.replace(/\s+/g, '').split(',').forEach(cmp => {
+                injectables.push(_.get(Webiny.Ui.Components, cmp));
+            });
+        });
 
-			if (classObject instanceof Array) {
-				classes = classes.concat(classObject);
-				return;
-			}
+        return injectables;
+    }
 
-			_.forIn(classObject, (value, className) => {
-				if (!value) {
-					return;
-				}
-				classes.push(className);
-			});
-		});
+    classSet() {
+        let classes = [];
 
-		return classes.join(' ');
-	}
+        _.forIn(arguments, classObject => {
+            if (!classObject) {
+                return;
+            }
 
-	isMobile() {
-		return isMobile.any;
-	}
+            if (typeof classObject === 'string') {
+                classes = classes.concat(classObject.split(' '));
+                return;
+            }
 
-	addKeys(elements) {
-		return elements.map((el, index) => {
-			if (!el) {
-				return null;
-			}
-			return React.cloneElement(el, {key: index}, el.props.children);
-		});
-	}
+            if (classObject instanceof Array) {
+                classes = classes.concat(classObject);
+                return;
+            }
 
-	dispatch(action, data) {
-		return Dispatcher.dispatch(action, data);
-	}
+            _.forIn(classObject, (value, className) => {
+                if (!value) {
+                    return;
+                }
+                classes.push(className);
+            });
+        });
 
-	on(event, callback, meta) {
-		var stopListening = Dispatcher.on(event, callback, meta);
-		this.__listeners.push(stopListening);
-	}
+        return classes.join(' ');
+    }
 
-	onRouteChanged(callback) {
-		var stopListening = Dispatcher.on('RouteChanged', callback);
-		this.__listeners.push(stopListening);
-	}
+    /**
+     * Ex: onChangeImportant(newValue, oldValue){...}
+     * Ex: onChangeName(newValue, oldValue){...}
+     *
+     * @param key
+     * @returns {{value: *, requestChange: *}}
+     */
+    bindTo(key) {
+        const ls = new LinkState(this, key);
+        return ls.create();
+    }
 
-	inject(...components) {
-		var injectables = [];
-		components.forEach(commaSeparatedComponents => {
-			commaSeparatedComponents.replace(/\s+/g, '').split(',').forEach(cmp => {
-				injectables.push(_.get(Webiny.Ui.Components, cmp));
-			})
-		});
+    bindMethods() {
+        let args = arguments;
+        if (arguments.length === 1 && _.isString(arguments[0])) {
+            args = arguments[0].split(',').map(x => x.trim());
+        }
 
-		return injectables;
-	}
+        _.forEach(args, (name) => {
+            if (name in this) {
+                this[name] = this[name].bind(this);
+            } else {
+                console.info('Missing method [' + name + ']', this);
+            }
+        });
+    }
 
-	getParamNames(func) {
-		var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
-		var ARGUMENT_NAMES = /([^\s,]+)/g;
-		var fnStr = func.toString().replace(STRIP_COMMENTS, '');
-		var result = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
-		if (result === null)
-			result = [];
-		return result;
-	}
+    watch(key, func) {
+        const cursor = Webiny.Model.select(key.split('.'));
+        cursor.on('update', e => {
+            func(e.data.currentData, e.data.previousData, e);
+        });
+        this.__cursors.push(cursor);
+        return cursor;
+    }
 
-	getInjectedRadComponents(method) {
-		var injects = [];
-		this.getParamNames(method).forEach(param => {
-			if (_.get(Webiny.Ui.Components, param)) {
-				injects.push(_.get(Webiny.Ui.Components, param));
-			}
-		});
-		return injects;
-	}
-
-	getClassName() {
-		return this.__proto__.constructor.name;
-	}
+    /**
+     * The same as React.render() except this one also checks if this.renderComponent(...) method
+     * was defined - which can be used to have Webiny components automatically injected
+     */
+    render() {
+        if (_.isFunction(this.renderComponent)) {
+            const injects = this.getInjectedRadComponents(this.renderComponent);
+            return this.renderComponent(...injects);
+        }
+    }
 }
 
 export default Component;
