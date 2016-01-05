@@ -1,3 +1,4 @@
+import Webiny from 'Webiny';
 import RouterEvent from './RouterEvent';
 import Utils from './RouterUtils';
 
@@ -72,6 +73,10 @@ class Router {
         return this;
     }
 
+    reloadRoute() {
+        Utils.renderRoute(this.activeRoute);
+    }
+
     addDefaultComponents(components) {
         _.each(components, (component, placeholder) => {
             if (!this.defaultComponents[placeholder]) {
@@ -102,15 +107,37 @@ class Router {
     }
 
     addRoute(route) {
-        Webiny.Console.log('%c[Route]: ' + route.getName() + ' %c' + route.getPattern(), 'color: #666; font-weight: bold', 'color: blue; font-weight: bold');
-        this.routes.push(route);
+        const existingRoute = this.getRouteByPattern(route.getPattern());
+        if (existingRoute) {
+            console.log('%c[Route][Merge]: ' + route.getName() + ' %c' + route.getPattern(), 'color: #666; font-weight: bold', 'color: blue; font-weight: bold');
+            // Merge components
+            _.forIn(route.components, (cmps, placeholder) => {
+                if (!_.has(existingRoute.components, placeholder)) {
+                    existingRoute.components[placeholder] = [];
+                }
+                existingRoute.components[placeholder] = cmps;
+            });
+        } else {
+            console.log('%c[Route][Add]: ' + route.getName() + ' %c' + route.getPattern(), 'color: #666; font-weight: bold', 'color: blue; font-weight: bold');
+            this.routes.push(route);
+        }
+
         return this;
     }
 
     getRoute(name) {
         const route = _.find(this.routes, 'name', name);
         if (!route) {
-            Webiny.Console.error('Route by name: ' + name + ' does not exist.');
+            Webiny.Console.error('Route with name: ' + name + ' does not exist.');
+            return false;
+        }
+        return route;
+    }
+
+    getRouteByPattern(pattern){
+        const route = _.find(this.routes, 'pattern', pattern);
+        if (!route) {
+            Webiny.Console.error('Route with pattern: ' + pattern + ' does not exist.');
             return false;
         }
         return route;
@@ -154,7 +181,6 @@ class Router {
         }
         return url;
     }
-
 
     goBack() {
         return History.back();

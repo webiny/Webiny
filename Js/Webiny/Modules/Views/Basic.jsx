@@ -1,3 +1,4 @@
+import Webiny from 'Webiny';
 import View from './../Core/Core/View';
 
 class Basic extends View {

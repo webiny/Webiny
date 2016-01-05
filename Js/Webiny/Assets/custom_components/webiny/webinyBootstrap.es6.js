@@ -1,3 +1,7 @@
+import Webiny from 'Webiny';
+
+window.Webiny = Webiny;
+
 // Find Webiny app or components and run them
 function runWebiny(meta) {
     // Run app
@@ -8,7 +12,7 @@ function runWebiny(meta) {
         Webiny.Router.setBaseUrl(baseUrl);
         WebinyBootstrap.includeApp(appName).then(app => {
             app.addModules(meta[appName].modules);
-            _.set(window.Webiny.Apps, appName, app);
+            _.set(Webiny.Apps, appName, app);
             app.run(appElement);
         });
     }
@@ -22,7 +26,7 @@ function runWebiny(meta) {
                 props[attr.nodeName] = attr.nodeValue;
             });
 
-            const component = _.get(window, props.name);
+            const component = _.get(Webiny, props.name);
             if (component) {
                 const element = React.createElement(component, props, el.innerHTML);
                 ReactDOM.render(element, el);
@@ -40,10 +44,6 @@ class WebinyBootstrapClass {
     }
 
     import(path) {
-        const parts = path.split('.');
-        if (parts.length === 2 && !_.startsWith(path, './')) {
-            path = '/build/' + this.env + '/' + parts.join('/') + '/scripts/app.min.js';
-        }
         return System.import(path).catch(
             console.error.bind(console)
         );
@@ -60,27 +60,34 @@ class WebinyBootstrapClass {
         });
     }
 
+    loadAssets(meta) {
+        const assets = [];
+        _.each(_.get(meta.assets, 'js', []), item => {
+            if (meta.name === 'Core.Webiny' && _.endsWith(item, 'vendors.min.js')) {
+                return;
+            }
 
-    includeApp(appName) {
-        return axios({url: _apiUrl + '/apps/' + appName}).then(res => {
-            const meta = this.meta[appName] = res.data.data;
-            const assets = [];
-            _.each(_.get(meta.assets, 'js', []), item => {
-                if (appName === 'Core.Webiny' && _.endsWith(item, 'vendors.min.js')) {
-                    return;
-                }
-
-                assets.push(this.import('/build/' + this.env + '/' + item));
-            });
-            _.each(_.get(meta.assets, 'css', []), item => {
-                this.includeCss('/build/' + this.env + '/' + item);
-            });
-
-            return Q.all(assets).then(() => {
-                const parts = appName.split('.');
-                return this.import(parts[1]).then(m => m.default);
-            });
+            assets.push(this.import(item));
         });
+        _.each(_.get(meta.assets, 'css', []), item => {
+            this.includeCss(item);
+        });
+
+        return Q.all(assets).then(() => {
+            return this.import(meta.name).then(m => m.default);
+        });
+    }
+
+
+    includeApp(appName, meta) {
+        if (!meta) {
+            return axios({url: _apiUrl + '/apps/' + appName}).then(res => {
+                this.meta[appName] = res.data.data;
+                return this.loadAssets(this.meta[appName]);
+            });
+        }
+        this.meta[appName] = meta;
+        return this.loadAssets(meta);
     }
 
     includeCss(filename) {

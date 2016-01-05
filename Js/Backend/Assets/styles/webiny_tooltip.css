@@ -1,0 +1,53 @@
+a.info {
+	float: left;
+	position: relative;
+	width: 25px;
+	height: 25px;
+	margin-top: 12px;
+}
+a.info span.icon {
+	font-size: 20px;
+	color: #999;
+	float: left;
+	position: relative;
+	top: 0px;
+	left: 0px;
+	margin-left: -5px;
+	z-index: 1;
+}
+
+.tooltip{
+	z-index: 5000;
+}
+
+.tooltip-inner {
+	background: #3FBFB0;
+	font-size: 14px;
+	white-space: nowrap;
+	font-weight: 300;
+	-webkit-border-radius: 100px;
+	-moz-border-radius: 100px;
+	border-radius: 100px;
+	padding: 5px 10px 5px 10px;
+	max-width: 300px;
+}
+
+.tooltip.top .tooltip-arrow{
+	border-top-color: #3FBFB0;
+}
+.tooltip.right .tooltip-arrow{
+	border-right-color: #3FBFB0;
+	left: 1px;
+}
+.tooltip.bottom .tooltip-arrow{
+	border-bottom-color: #3FBFB0;
+}
+
+.tooltip.left .tooltip-arrow{
+	border-left-color: #3FBFB0;
+	right: 1px;
+}
+.tooltip.in{
+	opacity: 1;
+	display: none;
+}

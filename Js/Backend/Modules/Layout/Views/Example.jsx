@@ -1,3 +1,5 @@
+import Webiny from 'Webiny';
+
 class Example extends Webiny.Ui.View {
 
     constructor(props) {
@@ -20,6 +22,8 @@ class Example extends Webiny.Ui.View {
                 }
             }
         });
+
+        this.bindMethods('loadCms');
     }
 
     componentDidMount() {
@@ -28,14 +32,35 @@ class Example extends Webiny.Ui.View {
         });
     }
 
+    loadCms(){
+        // Load other backend apps
+        const api = new Webiny.Api.Service('/apps');
+        return api.get('/backend').then(res => {
+            let apps = Q();
+            _.forIn(res.getData(), config => {
+                apps = apps.then(() => {
+                    return WebinyBootstrap.includeApp(config.name, config).then(appInstance => {
+                        appInstance.addModules(config.modules);
+                        _.set(Webiny.Apps, config.name, appInstance);
+                        return appInstance.run();
+                    });
+                });
+            });
+            return apps.then(() => {
+                console.log("RELOADING ROUTE");
+                Webiny.Router.reloadRoute();
+            });
+        });
+    }
+
     render() {
         return (
             <div>
-                <h2>First Webiny view</h2>
-                My name is "{this.state.name || 'Unknown'}"
+                <p>My name is "{this.state.name || 'Unknown'}"</p>
                 <ul>
                     {this.state.domains.map((item, i) => <li key={i}>{item}</li>)}
                 </ul>
+                <button onClick={this.loadCms} className="btn btn-primary">Load CMS app</button>
             </div>
         );
     }

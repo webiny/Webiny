@@ -3,10 +3,20 @@ import Router from './Router';
 class Route {
 
     constructor(name, pattern, components, tags = '') {
+        // Normalize components
+        const nComponents = {};
+        _.forIn(components, (cmp, placeholder) => {
+            if(_.isArray(cmp)){
+                nComponents[placeholder] = cmp;
+            } else {
+                nComponents[placeholder] = [cmp];
+            }
+        });
+
         this.name = name;
         this.module = false;
         this.pattern = pattern;
-        this.components = components;
+        this.components = nComponents;
         this.tags = tags;
         this.regex = null;
         this.paramNames = [];
@@ -136,7 +146,7 @@ class Route {
     }
 
     getComponents(placeholder) {
-        return [this.components[placeholder]];
+        return this.components[placeholder] || [];
     }
 
     skipDefaultComponents(flag = null) {

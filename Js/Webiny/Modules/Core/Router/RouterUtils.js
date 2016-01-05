@@ -1,3 +1,4 @@
+import Webiny from 'Webiny';
 import Dispatcher from './../Core/Dispatcher';
 import RouterEvent from './RouterEvent';
 

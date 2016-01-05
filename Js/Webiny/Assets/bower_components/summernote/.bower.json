@@ -1,0 +1,30 @@
+{
+  "name": "summernote",
+  "homepage": "http://summernote.org",
+  "license": "MIT",
+  "main": [
+    "./dist/summernote.js",
+    "./dist/summernote.css"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": ">= 1.9.0",
+    "bootstrap": ">= 3.0.1",
+    "font-awesome": ">=4.2.0"
+  },
+  "_release": "c6c02d1c70",
+  "_resolution": {
+    "type": "branch",
+    "branch": "develop",
+    "commit": "c6c02d1c705e1bd32717aeb47870272f17f62a8f"
+  },
+  "_source": "git://github.com/Pavel910/summernote.git",
+  "_target": "develop",
+  "_originalSource": "git://github.com/Pavel910/summernote.git"
+}

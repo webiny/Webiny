@@ -1,0 +1,412 @@
+/** General **/
+
+/** /General **/
+
+/** Icons **/
+.icon.icon-lg {
+	font-size: 1.4em;
+}
+
+.icon.icon-2x {
+	font-size: 2em;
+}
+
+.icon.icon-3x {
+	font-size: 3em;
+}
+
+.icon.icon-4x {
+	font-size: 4em;
+}
+
+.icon.icon-danger {
+	color: #CC3300;
+}
+
+.icon.icon-success {
+	color: #3FBFB0;
+}
+
+.icon.icon-info {
+	color: #3F89BF;
+}
+
+.icon.icon-warning {
+	color: #FAA32E;
+}
+
+/** /Icons **/
+
+/** Alerts **/
+.alert {
+	background: #CC3300;
+	border-radius: 0px;
+	padding: 15px 10px 10px 45px;
+	border: none;
+	position: relative;
+	font-size: 16px;
+	color: #fff;
+	line-height: 125%;
+	overflow: hidden;
+	font-weight: 300;
+}
+
+.alert strong {
+	font-weight: 600;
+}
+
+.alert a {
+	text-decoration: underline;
+	color: #fff;
+}
+
+.alert button.close {
+	margin: 0px 5px 0px 5px;
+}
+
+.alert.alert-danger {
+	background: #CC3300;
+}
+
+.alert.alert-success {
+	background: #3FBFB0;
+}
+
+.alert.alert-info {
+	background: #3F89BF;
+}
+
+.alert.alert-warning {
+	background: #FAA32E;
+}
+
+.alert span.icon {
+	font-size: 26px;
+	color: #fff;
+	position: absolute;
+	left: 5px;
+	top: 10px;
+}
+
+/** /Alerts **/
+
+/** Labels **/
+.label, .label-default {
+	border-radius: 0px;
+	font-weight: normal;
+	font-size: 90%;
+	display: inline-block;
+	background-color: #ebebeb;
+	color: #fff;
+}
+
+.label.label-default {
+	color: #333;
+}
+
+.label.label-primary {
+	background: #FA5723;
+}
+
+.label.label-danger {
+	background: #CC3300;
+}
+
+.label.label-success {
+	background: #3FBFB0;
+}
+
+.label.label-info {
+	background: #3F89BF;
+}
+
+.label.label-warning {
+	background: #FAA32E;
+}
+
+/** /Labels **/
+
+/** Badges **/
+.badge, .badge-default {
+	border-radius: 100px;
+	padding: 4px 5px;
+	color: #fff;
+	background-color: #ebebeb;
+	font-weight: normal;
+}
+
+.badge.badge-default {
+	color: #333;
+}
+
+.badge.badge-primary {
+	background: #FA5723;
+}
+
+.badge.badge-danger {
+	background: #CC3300;
+}
+
+.badge.badge-success {
+	background: #3FBFB0;
+}
+
+.badge.badge-info {
+	background: #3F89BF;
+}
+
+.badge.badge-warning {
+	background: #FAA32E;
+}
+
+/** /Badges **/
+
+/** Porlets **/
+.porlet {
+	box-sizing: border-box;
+	margin-bottom: 20px;
+	background-color: #fff;
+	border-radius: 0;
+	box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.04);
+	border: 1px solid #E8E8E8;
+}
+
+.porlet.porlet-primary{
+	background: #FA5723;
+	border-color: #ED4005;
+}
+
+.porlet.porlet-success{
+	background: #3FBFB0;
+	border-color: #2E8B80;
+}
+
+.porlet .porlet-header {
+	padding: 10px;
+	margin: 0 10px;
+	border-bottom: 1px solid #eee;
+}
+
+.porlet.porlet-header-primary .porlet-header,
+.porlet.porlet-header-success .porlet-header{
+	background: #FA5723;
+	border-bottom: none;
+	margin: 0;
+	padding: 10px 20px;
+}
+
+.porlet.porlet-header-success .porlet-header{
+	background: #3FBFB0;
+}
+
+.porlet .porlet-header .porlet-actions{
+	float:right;
+	color: #333;
+	padding-top: 5px;
+}
+
+.porlet .porlet-header h3 {
+	font-weight: 300;
+	font-size: 1.4em;
+	margin: 0;
+	padding: 0;
+	border-bottom: none;
+}
+.porlet.porlet-header-primary .porlet-header h3,
+.porlet.porlet-header-success .porlet-header h3,
+.porlet.porlet-primary .porlet-header h3,
+.porlet.porlet-success .porlet-header h3 {
+	color: #fff;
+}
+
+.porlet .porlet-body {
+	padding: 10px;
+	margin: 0 10px;
+}
+
+.porlet .porlet-body p{
+	margin-bottom: 0;
+	font-weight: 300;
+}
+
+.porlet.porlet-primary .porlet-body,
+.porlet.porlet-primary .porlet-body p,
+.porlet.porlet-success .porlet-body,
+.porlet.porlet-success .porlet-body p{
+	color: #fff;
+}
+
+/** /Porlets **/
+
+
+/** Tiles **/
+.tile {
+	box-sizing: border-box;
+	margin-bottom: 10px;
+	background-color: #fff;
+	border-radius: 0;
+	box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.04);
+	border: 1px solid #E8E8E8;
+}
+
+.tile.tile-primary {
+	background: #FA5723;
+	border-color: #ED4005;
+}
+
+.tile.tile-success {
+	background: #3FBFB0;
+	border-color: #2E8B80;
+}
+
+.tile .tile-header{
+	font-size: 1.3em;
+	font-weight: 200;
+	text-transform: uppercase;
+	color: #333;
+	overflow: hidden;
+	border-bottom: 1px solid #eee;
+	padding: 5px;
+}
+
+.tile.tile-primary .tile-header,
+.tile.tile-primary .tile-content,
+.tile.tile-primary .tile-content p,
+.tile.tile-primary .tile-content h1,
+.tile.tile-primary .tile-content h2,
+.tile.tile-primary .tile-content h3,
+.tile.tile-primary .tile-content h4,
+.tile.tile-primary .tile-content h5,
+.tile.tile-success .tile-header,
+.tile.tile-success .tile-content,
+.tile.tile-success .tile-content p,
+.tile.tile-success .tile-content h1,
+.tile.tile-success .tile-content h2,
+.tile.tile-success .tile-content h3,
+.tile.tile-success .tile-content h4,
+.tile.tile-success .tile-content h5{
+	color: #fff;
+	border-color: #ED4005;
+}
+
+.tile.tile-success .tile-header,
+.tile.tile-success .tile-content,
+.tile.tile-success .tile-content p,
+.tile.tile-success .tile-content h1,
+.tile.tile-success .tile-content h2,
+.tile.tile-success .tile-content h3,
+.tile.tile-success .tile-content h4,
+.tile.tile-success .tile-content h5{
+	border-color: #2E8B80;
+}
+
+.tile .tile-header .ico,
+.tile .tile-header .title{
+	float: left;
+	padding: 5px;
+}
+.tile .tile-content {
+	padding: 10px;
+}
+.tile .tile-content h1,
+.tile .tile-content h2,
+.tile .tile-content h3,
+.tile .tile-content h4,
+.tile .tile-content h5{
+	padding: 0;
+	margin: 0;
+	border-bottom: none;
+}
+/** /Tiles **/
+
+/** Navigation **/
+.navbar-default {
+	background-color: #fff;
+	border: none;
+	margin: 0px 0 5px 0;
+	min-height: 0px;
+}
+
+.container-fluid {
+	padding: 0px;
+}
+
+/** /Navigation **/
+
+/** Pagination **/
+.pagination {
+	margin: 0px 0px 0px -10px;
+}
+
+.pagination li {
+	margin-right: 2px;
+	display: inline-block;
+}
+
+.pagination li.prev a {
+	color: #333;
+}
+
+.pagination li a:hover {
+	background: #fff;
+	border-radius: 0px;
+	background: #ECECEC;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	color: #fa5722;
+}
+
+.pagination li.active a, .pagination li.active a:hover {
+	background: #fff;
+	border-radius: 0px;
+	background: #ECECEC;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	color: #fa5722;
+}
+
+.pagination li span.icon {
+	width: 12px;
+	float: left;
+	transform: rotate(90deg);
+	-webkit-transform: rotate(90deg);
+	margin-top: -4px;
+	clear: none;
+}
+
+.pagination li.next span.icon {
+	transform: rotate(-90deg);
+	-webkit-transform: rotate(-90deg);
+	margin-top: 4px;
+}
+
+.pagination li span {
+	float: left;
+	clear: none;
+}
+
+.pagination li > a, .pagination li > span {
+	border: none;
+}
+
+.pagination li.prev span {
+	float: left;
+	margin-right: 5px;
+	border: none;
+	clear: none;
+}
+
+.pagination li a {
+	display: block;
+	font-size: 14px;
+	color: #787878;
+	padding: 8px;
+}
+
+.pagination li.next a {
+	padding-bottom: 4px;
+}
+
+/** /Pagination **/

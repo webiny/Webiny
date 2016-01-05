@@ -1,3 +1,5 @@
+import Webiny from 'Webiny';
+
 class Container extends Webiny.Ui.View {
 
     constructor() {
@@ -41,7 +43,7 @@ class Container extends Webiny.Ui.View {
         );
 
         if (!this.state.loading) {
-            return <Webiny.Ui.Components.Router.Placeholder onDidUpdate={this.onDidUpdate} name="Layout"/>;
+            return <Webiny.Ui.Placeholder onDidUpdate={this.onDidUpdate} name="Layout"/>;
         }
         return content;
     }

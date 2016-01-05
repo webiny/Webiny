@@ -1,0 +1,389 @@
+.sortable > ul {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	padding: 0 15px;
+}
+
+.sortable > ul > li {
+	list-style: none;
+	padding: 0px;
+	width: 100%;
+	text-align: center;
+	color: #333;
+	background-color: #fff;
+	cursor: move;
+	margin-bottom: 10px;
+	margin-right: 10px;
+	border: 1px solid #ccc;
+	position: relative;
+	height: 47px;
+	box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 2px 0px;
+}
+
+.sortable-element-list-left,
+.sortable-element-list-right{
+	height: 720px;
+}
+.sortable-element-list-left{
+	border-right: 1px solid #eee;
+}
+
+.sortable-element-list-right{
+	border-left: 1px solid #eee;
+}
+
+.sortable-element-holder{
+	padding: 0 40px;
+	max-height: 720px;
+	overflow: auto;
+}
+
+.sortable > ul > li > span {
+	position: absolute;
+	left: 80px;
+	top: 2px;
+}
+
+.sortable > ul > li > span.name {
+	font-weight: 600;
+}
+
+.sortable > ul > li > span.details {
+	top: 18px;
+	font-size: 0.7em;
+}
+
+.sortable > ul > li:hover {
+	background-color: #F2F2F2;
+}
+
+.sortable .sortable-ghost {
+	opacity: 0.5;
+}
+
+.sortable .sortable-ghost div, .sortable .sortable-ghost span {
+	display: none;
+}
+
+.sortable > ul > li div.row {
+	margin: 0;
+	border: none;
+	width: 60px;
+	height: 35px;
+	position: absolute;
+	top: 5px;
+	left: 10px;
+	min-width: 0;
+}
+
+.sortable > ul > li div.row div {
+	height: 100%;
+	min-width: 0;
+	text-align: center;
+	color: #fff;
+	padding: 0;
+	border-right: 2px solid #fff;
+	background-color: #ccc;
+}
+
+.sortable > ul > li:hover div.row div {
+	border-color: #F2F2F2;
+}
+
+.sortable > ul > li div.row div:last-child {
+	border: none;
+}
+
+.sortable.form-elements li {
+	height: auto;
+	padding: 10px;
+}
+
+.sortable.form-elements li > span {
+	width: 100%;
+	position: relative;
+	left: 0;
+	display: block;
+	font-weight: 600;
+	color: #333;
+	background-color: transparent;
+	text-align: left;
+	clear: both;
+}
+
+.sortable.form-elements li span.label {
+	padding: 0;
+	margin-bottom: 5px;
+	margin-left: 2px;
+	text-align: center;
+}
+
+.sortable.form-elements li span.form-element {
+	background: #F5F5F5;
+	border: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	border-bottom: 3px solid #ccc;
+	position: relative;
+}
+
+.sortable.form-elements li span.form-element.input,
+.sortable.form-elements li span.form-element.dropdown,
+.sortable.form-elements li span.form-element.calendar {
+	height: 25px;
+}
+
+.sortable.form-elements li span.form-element:after,
+.sortable.form-elements li span.form-element:before {
+	position: absolute;
+	font-size: 0.7em;
+	font-weight: normal;
+	padding-left: 5px;
+}
+
+.sortable.form-elements li span.form-element.input:after {
+	content: 'Input';
+}
+
+.sortable.form-elements li span.form-element.dropdown:before {
+	content: 'Select';
+}
+
+.sortable.form-elements li span.form-element.calendar:before {
+	content: '01. May. 2001';
+}
+
+.sortable.form-elements li span.form-element.dropdown:after,
+.sortable.form-elements li span.form-element.calendar:after {
+	font-family: "fontello";
+	content: '\e809';
+	right: 5px;
+}
+
+.sortable.form-elements li span.form-element.calendar:after {
+	content: '\e804';
+}
+
+.sortable.form-elements li span.form-element.textarea {
+	height: 35px;
+	margin-top: 3px;
+}
+
+.sortable.form-elements li span.form-element.textarea:after {
+	content: 'Textarea \a with multiple lines';
+	white-space: pre;
+	line-height: 140%;
+	padding-top: 1px;
+}
+
+.sortable.form-elements li span.form-element.switch {
+	border-radius: 20px;
+	height: 28px;
+	width: 60px;
+	background-color: #d6d6d6;
+	margin: 0 auto;
+}
+
+.sortable.form-elements li span.form-element.switch:after {
+	content: 'ON';
+	width: 30px;
+	height: 25px;
+	background-color: #fff;
+	display: block;
+	border-radius: 20px;
+	border: 1px solid #ccc;
+}
+
+.sortable.form-elements li span.form-element.checkbox,
+.sortable.form-elements li span.form-element.radio {
+	border: 1px solid #ccc;
+	background-color: #fff;
+	width: 25px;
+	height: 25px;
+	margin: 0 auto;
+}
+
+.sortable.form-elements li span.form-element.checkbox:after {
+	content: '\e80d';
+	font-family: "fontello";
+	left: 0;
+}
+
+.sortable.form-elements li span.form-element.radio {
+	border-radius: 20px;
+}
+
+.sortable.form-elements li span.form-element.radio:after {
+	border-radius: 20px;
+	width: 8px;
+	height: 8px;
+	left: 7px;
+	top: 7px;
+	background-color: #333;
+	content: '';
+}
+
+.sortable .sortable-main-container {
+	min-height: 100px;
+}
+
+.sortable .sortable-main-container .sortable-helper {
+	width: auto;
+	font-size: 1.4em;
+	text-align: center;
+	color: #ccc;
+	margin: 10px 15px 20px 15px;
+	padding: 20px;
+	border: 2px #E8E8E8 dashed;
+}
+
+.sortable .sortable-main-container .sortable-grid-helper{
+	padding: 20px;
+	font-size: 1.4em;
+	text-align: center;
+	color: #666;
+}
+
+.sortable .sortable-main-container .porlet .porlet-body{
+	margin:0;
+	padding:0;
+}
+
+.sortable .sortable-main-container .porlet .porlet-body div.row{
+	margin: 0;
+	background-color: #eee;
+}
+
+.sortable .sortable-main-container .porlet .porlet-body div.row:hover{
+	background-color: #FFEFEA;
+}
+
+.sortable .sortable-main-container .porlet .porlet-body div.row>div{
+	border-right: 1px solid #ccc;
+	padding: 5px;
+}
+
+.sortable .sortable-main-container .porlet .porlet-body div.row>div ul{
+	margin-bottom: 0;
+}
+
+.sortable .sortable-main-container .porlet .porlet-body div.row>div ul>li{
+	margin: 20px 10px;
+	border: 1px dashed #ccc;
+	padding: 10px;
+	box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 2px 0px;
+	background-color: #fff;
+}
+
+.sortable .sortable-main-container .porlet .porlet-body div.row>div ul>li:hover{
+	box-shadow: rgba(0, 0, 0, 0.2) 0px 3px 5px 0px;
+}
+
+.sortable .sortable-main-container .porlet .porlet-body div.row>div:last-child{
+	border-right: none;
+	border-left: 1px solid #ccc;
+	margin-left: -1px;
+}
+
+
+.sortable .sortable-main-container .porlet .porlet-header{
+	cursor: move;
+}
+
+.sortable .sortable-main-container > ul {
+	min-height: 100px;
+	padding: 0;
+	margin: 0;
+}
+
+.sortable .sortable-main-container li {
+	padding: 0;
+	list-style: none;
+	cursor: move;
+}
+
+.sortable .sortable-main-container li.sortable-ghost {
+	background-color: #3FBFB0;
+	height: 50px;
+}
+
+.sortable .sortable-main-container li span.name,
+.sortable .sortable-main-container li span.details {
+	display: none;
+}
+
+.sortable .sortable-main-container li div.row {
+	margin: 0;
+	border-bottom: 5px solid #fff;
+}
+
+.sortable .sortable-main-container li:last-child > div.row {
+	border-bottom: 0px;
+}
+
+.sortable .sortable-main-container li div.row > div {
+	min-height: 65px;
+	background-color: #ccc;
+	border-right: 5px solid #fff;
+	padding: 0;
+}
+
+.sortable .sortable-main-container li div.row > div:last-child {
+	border-right: none;
+}
+
+form.form-sm .sortable .form-group {
+	background-color: #fff;
+	padding: 2px 10px;
+	min-height: 65px;
+	margin-bottom: 0;
+}
+
+.sortable .sortable-attribute-list li {
+	padding-top: 10px;
+	padding-right: 10px;
+}
+
+.sortable .sortable-attribute-list span.icon {
+	display: inline-block;
+	visibility: hidden;
+	margin-top: 10px;
+	width: 30px;
+	left: auto;
+	right: 15px;
+	top: 0px;
+	position: absolute;
+	color: #666;
+}
+
+.sortable .sortable-attribute-list li:hover > span.icon {
+	visibility: visible;
+}
+
+.sortable .sortable-entity-attributes .row {
+	width: 100%;
+}
+
+.sortable .sortable-entity-attributes .row > div {
+	background-color: transparent;
+	border: none;
+	color: #333;
+	text-align: left;
+	font-weight: 500;
+	font-size: 1em;
+}
+
+.sortable .sortable-entity-attributes .row > div.attribute{
+	text-align: center;
+}
+
+.sortable .sortable-entity-attributes .row span.name,
+.sortable .sortable-entity-attributes .row span.type{
+	margin-top: 5px;
+	display: inline-block;
+}
+
+.sortable .sortable-entity-attributes .close {
+	margin-right: 20px;
+	margin-top: 10px;
+}

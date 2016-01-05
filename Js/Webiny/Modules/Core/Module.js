@@ -1,3 +1,4 @@
+import Webiny from 'Webiny';
 import WebinyModule from './Core/Module';
 import App from './Core/App';
 import Component from './Core/Component';
@@ -21,7 +22,7 @@ class Module extends WebinyModule {
 
 		this.name = 'Core';
 
-		_.assign(window.Webiny, {
+		_.assign(Webiny, {
 			App,
 			Module: WebinyModule,
 			Ui: {

@@ -1,3 +1,4 @@
+import Webiny from 'Webiny';
 import Basic from './Basic';
 
 /**

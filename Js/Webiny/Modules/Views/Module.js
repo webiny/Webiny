@@ -1,3 +1,4 @@
+import Webiny from 'Webiny';
 import Views from './Views';
 
 class ViewsModule extends Webiny.Module {
@@ -7,7 +8,7 @@ class ViewsModule extends Webiny.Module {
 
 		this.name = 'Views';
 
-		window.Webiny.Ui.Views = Views;
+		Webiny.Ui.Views = Views;
 	}
 }
 

@@ -1,3 +1,4 @@
+import Webiny from 'Webiny';
 import LinkState from './LinkState';
 import Dispatcher from './Dispatcher';
 

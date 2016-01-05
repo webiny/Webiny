@@ -1,4 +1,7 @@
+import Webiny from 'Webiny';
 import Components from './Components';
+import Placeholder from './Placeholder';
+import Link from './Link';
 
 class Module extends Webiny.Module {
 
@@ -7,7 +10,9 @@ class Module extends Webiny.Module {
 
 		this.name = 'Components';
 
-		window.Webiny.Ui.Components = Components;
+		Webiny.Ui.Components = Components;
+        Webiny.Ui.Placeholder = Placeholder;
+        Webiny.Ui.Link = Link;
 	}
 }
 
