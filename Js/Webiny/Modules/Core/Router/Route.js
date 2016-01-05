@@ -6,7 +6,7 @@ class Route {
         // Normalize components
         const nComponents = {};
         _.forIn(components, (cmp, placeholder) => {
-            if(_.isArray(cmp)){
+            if (_.isArray(cmp)) {
                 nComponents[placeholder] = cmp;
             } else {
                 nComponents[placeholder] = [cmp];

@@ -32,7 +32,7 @@ class Example extends Webiny.Ui.View {
         });
     }
 
-    loadCms(){
+    loadCms() {
         // Load other backend apps
         const api = new Webiny.Api.Service('/apps');
         return api.get('/backend').then(res => {
@@ -47,7 +47,6 @@ class Example extends Webiny.Ui.View {
                 });
             });
             return apps.then(() => {
-                console.log("RELOADING ROUTE");
                 Webiny.Router.reloadRoute();
             });
         });

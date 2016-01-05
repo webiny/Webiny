@@ -107,7 +107,24 @@ class Router {
     }
 
     addRoute(route) {
-        const existingRoute = this.getRouteByPattern(route.getPattern());
+        // Validate route
+        const samePattern = this.getRouteByPattern(route.getPattern());
+        const sameName = this.getRoute(route.getName());
+        if (samePattern || sameName) {
+            // Name and pattern must match, otherwise we throw an error
+            const nameMismatch = samePattern && samePattern.getName() !== route.getName();
+            const patternMistmatch = sameName && sameName.getPattern() !== route.getPattern();
+            if (nameMismatch) {
+                return console.error('Route with URL `' + route.getPattern() + '` already exists! Either change your URL or use the existing name `' + samePattern.getName() + '`');
+            }
+
+            if (patternMistmatch) {
+                return console.error('Route with name `' + route.getName() + '` already exists! Either change your name or use the existing URL `' + sameName.getPattern() + '`');
+            }
+        }
+
+        const existingRoute = samePattern || sameName;
+
         if (existingRoute) {
             console.log('%c[Route][Merge]: ' + route.getName() + ' %c' + route.getPattern(), 'color: #666; font-weight: bold', 'color: blue; font-weight: bold');
             // Merge components
@@ -134,7 +151,7 @@ class Router {
         return route;
     }
 
-    getRouteByPattern(pattern){
+    getRouteByPattern(pattern) {
         const route = _.find(this.routes, 'pattern', pattern);
         if (!route) {
             Webiny.Console.error('Route with pattern: ' + pattern + ' does not exist.');

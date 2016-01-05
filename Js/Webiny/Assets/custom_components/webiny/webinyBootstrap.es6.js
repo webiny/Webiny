@@ -1,7 +1,5 @@
 import Webiny from 'Webiny';
 
-window.Webiny = Webiny;
-
 // Find Webiny app or components and run them
 function runWebiny(meta) {
     // Run app
@@ -52,6 +50,10 @@ class WebinyBootstrapClass {
     run(env = 'development') {
         this.env = env;
         window._apiUrl = '/api';
+        if (env === 'development') {
+            window.Webiny = Webiny;
+        }
+
         // First we need to import Core/Webiny
         this.includeApp('Core.Webiny').then(app => {
             app.addModules(this.meta['Core.Webiny'].modules).run().then(() => {
