@@ -72,6 +72,13 @@ class Module {
         return this;
     }
 
+    injectComponents(obj) {
+        _.forIn(obj, (value, key) => {
+            obj[key] = _.get(this.app, `${this.name}.` + value);
+        });
+
+        return obj;
+    }
 
     /**
      * Override if needed

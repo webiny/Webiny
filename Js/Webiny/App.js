@@ -6,7 +6,7 @@ class WebinyApp {
     }
 
     addModules(modules) {
-        this.modules = modules;
+        this.modules = Object.keys(modules);
         return this;
     }
 
