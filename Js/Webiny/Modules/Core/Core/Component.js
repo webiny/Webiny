@@ -37,7 +37,6 @@ class Component extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         // Reserved for future system-wide functionality
     }
-
     /*eslint-enable */
 
     componentWillUnmount() {
@@ -66,16 +65,6 @@ class Component extends React.Component {
         }
     }
 
-    getInjectedRadComponents(method) {
-        const injects = [];
-        this.getParamNames(method).forEach(param => {
-            if (_.get(Webiny.Ui.Components, param)) {
-                injects.push(_.get(Webiny.Ui.Components, param));
-            }
-        });
-        return injects;
-    }
-
     onRouteChanged(callback) {
         const stopListening = Dispatcher.on('RouteChanged', callback);
         this.__listeners.push(stopListening);
@@ -83,17 +72,6 @@ class Component extends React.Component {
 
     getClassName() {
         return Object.getPrototypeOf(this).constructor.name;
-    }
-
-    getParamNames(func) {
-        const STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
-        const ARGUMENT_NAMES = /([^\s,]+)/g;
-        const fnStr = func.toString().replace(STRIP_COMMENTS, '');
-        let result = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(ARGUMENT_NAMES);
-        if (result === null) {
-            result = [];
-        }
-        return result;
     }
 
     isMobile() {
@@ -116,17 +94,6 @@ class Component extends React.Component {
     on(event, callback, meta) {
         const stopListening = Dispatcher.on(event, callback, meta);
         this.__listeners.push(stopListening);
-    }
-
-    inject(...components) {
-        const injectables = [];
-        components.forEach(commaSeparatedComponents => {
-            commaSeparatedComponents.replace(/\s+/g, '').split(',').forEach(cmp => {
-                injectables.push(_.get(Webiny.Ui.Components, cmp));
-            });
-        });
-
-        return injectables;
     }
 
     classSet() {
@@ -194,16 +161,16 @@ class Component extends React.Component {
         return cursor;
     }
 
-    /**
-     * The same as React.render() except this one also checks if this.renderComponent(...) method
-     * was defined - which can be used to have Webiny components automatically injected
-     */
     render() {
-        if (_.isFunction(this.renderComponent)) {
-            const injects = this.getInjectedRadComponents(this.renderComponent);
-            return this.renderComponent(...injects);
+        if (this.props.renderer) {
+            return this.props.renderer.bind(this)(this);
         }
+
+        console.warn('Component ' + this.getClassName() + ' has no renderer!');
+        return null;
     }
 }
+
+Component.defaultProps = {};
 
 export default Component;

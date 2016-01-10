@@ -6,20 +6,14 @@ import Webiny from 'Webiny';
 class Main extends Webiny.Ui.View {
 
     render() {
+        const Components = Webiny.Apps.Core.Backend.Layout.Components;
         return (
-            <div id="main">
-                <section id="content_wrapper">
-                    <section id="content" className="animated fadeIn">
-                        <div className="panel">
-                            <div className="panel-header">
-                                <Webiny.Ui.Placeholder name="Header"/>
-                            </div>
-                            <div className="panel-body">
-                                <Webiny.Ui.Placeholder name="MasterContent"/>
-                            </div>
-                        </div>
-                    </section>
-                </section>
+            <div className="master minimized">
+                <Webiny.Ui.Placeholder name="Header"/>
+                <div className="master-content container-fluid">
+                    <Webiny.Ui.Placeholder name="MasterContent"/>
+                </div>
+                <Components.Footer/>
             </div>
         );
     }

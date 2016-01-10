@@ -10,45 +10,23 @@ class Example extends Webiny.Ui.View {
             domains: []
         };
 
-        Webiny.Model.set({
-            Core: {
-                Layout: {
-                    name: 'Unknown',
-                    domains: [
-                        'selecto.app',
-                        'huckletree.app',
-                        'webiny.app'
-                    ]
-                }
-            }
-        });
-
         this.bindMethods('loadCms');
+        this.actions = Webiny.Apps.Core.Backend.Layout.Actions;
     }
 
     componentDidMount() {
         this.watch('Core.Layout', (data) => {
             this.setState(data);
         });
+
+        if (!Webiny.Model.exists('Core.Layout'.split('.'))) {
+            this.actions.loadData();
+        }
     }
 
     loadCms() {
-        // Load other backend apps
-        const api = new Webiny.Api.Service('/apps');
-        return api.get('/backend').then(res => {
-            let apps = Q();
-            _.forIn(res.getData(), config => {
-                apps = apps.then(() => {
-                    return WebinyBootstrap.includeApp(config.name, config).then(appInstance => {
-                        appInstance.addModules(config.modules);
-                        _.set(Webiny.Apps, config.name, appInstance);
-                        return appInstance.run();
-                    });
-                });
-            });
-            return apps.then(() => {
-                Webiny.Router.reloadRoute();
-            });
+        this.actions.loadCms().then(() => {
+            Webiny.Router.reloadRoute();
         });
     }
 
@@ -59,6 +37,7 @@ class Example extends Webiny.Ui.View {
                 <ul>
                     {this.state.domains.map((item, i) => <li key={i}>{item}</li>)}
                 </ul>
+                <Webiny.Ui.Input label="Email" placeholder="Enter anything"/>
                 <button onClick={this.loadCms} className="btn btn-primary">Load CMS app</button>
             </div>
         );

@@ -1,22 +1,27 @@
 import Webiny from 'Webiny';
 import Views from './Views/Views';
+import Actions from './Actions/Actions';
+import Components from './Components/Components';
 
-class LayoutModule extends Webiny.Module {
+class Module extends Webiny.Module {
 
     constructor(app) {
         super(app);
 
         this.name = 'Layout';
+        this.setComponents(Components);
         this.setViews(Views);
+        this.setActions(Actions);
+
         this.addDefaultComponents({
-            Layout: Views.Main
+            MasterLayout: Views.Main
         });
 
         this.setRoutes(new Webiny.Route('Dashboard', '/', {
             MasterContent: Views.Example,
-            Header: Views.Header
+            Header: Components.Navigation
         }));
     }
 }
 
-export default LayoutModule;
+export default Module;

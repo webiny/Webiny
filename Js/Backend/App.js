@@ -4,8 +4,8 @@ import Container from 'Core/Backend/Container';
 const app = new Webiny.App('Core.Backend');
 app.setInitialElement(React.createElement(Container));
 app.beforeRender(() => {
-    /*// Load other backend apps
-    const api = new Webiny.Api.Service('/apps');
+    // Load other backend apps
+    /* const api = new Webiny.Api.Service('/apps');
     return api.get('/backend').then(res => {
         let apps = Q();
         _.forIn(res.getData(), config => {
@@ -18,7 +18,7 @@ app.beforeRender(() => {
             });
         });
         return apps;
-    });*/
+    }); */
 });
 
 Webiny.Console.setEnabled(true);

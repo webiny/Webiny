@@ -33,19 +33,10 @@ class Container extends Webiny.Ui.View {
     }
 
     render() {
-        const content = (
-            <div className="preloader" style={{display: 'block'}}>
-				<span className="loader">
-					<span className="loader-inner"></span>
-				</span>
-                <i className="demo-icon icon-hkt-icon"></i>
-            </div>
-        );
-
         if (!this.state.loading) {
-            return <Webiny.Ui.Placeholder onDidUpdate={this.onDidUpdate} name="Layout"/>;
+            return <Webiny.Ui.Placeholder onDidUpdate={this.onDidUpdate} name="MasterLayout"/>;
         }
-        return content;
+        return null;
     }
 }
 

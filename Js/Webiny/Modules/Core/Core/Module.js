@@ -34,10 +34,14 @@ class Module {
     }
 
     /**
-     * @param stores
+     * @param actions
+     * @returns {Module}
      */
-    setStores(stores) {
-        _.forEach(stores, store => Webiny.Registry.addStore(store));
+    setActions(actions) {
+        _.forEach(actions, (value, key) => {
+            _.set(this.app, `${this.name}.Actions.` + key, value);
+        });
+        return this;
     }
 
     /**

@@ -2,6 +2,7 @@ class Injector {
 
 	constructor() {
 		this.container = new Bottle();
+        this.description = 'Injector is a dependency injection micro container based on Bottle: https://github.com/young-steveo/bottlejs';
 	}
 
 	get(name) {
