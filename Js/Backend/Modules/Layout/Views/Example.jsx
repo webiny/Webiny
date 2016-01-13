@@ -20,7 +20,7 @@ class Example extends Webiny.Ui.View {
         });
 
         if (!Webiny.Model.exists('Core.Layout'.split('.'))) {
-            this.actions.loadData();
+            this.actions.loadData('Pavel');
         }
     }
 

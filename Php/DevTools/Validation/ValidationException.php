@@ -1,6 +1,6 @@
 <?php
 
-namespace Webiny\Core\Traits\Helpers;
+namespace Apps\Core\Php\DevTools\Validation;
 
 use Webiny\Component\Entity\Validation\ValidationException as WebinyValidationException;
 

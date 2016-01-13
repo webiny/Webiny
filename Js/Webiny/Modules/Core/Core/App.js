@@ -66,16 +66,12 @@ class App {
         if (config.routes) {
             routes = () => {
                 WebinyBootstrap.import(this.name.replace('.', '/') + '/Modules/' + module.name + '/Routes').then(f => {
-                    const moduleRoutes = [];
                     if (f.default.routes) {
-                        _.forIn(f.default.routes, (rConfig, rName) => {
-                            moduleRoutes.push(new Webiny.Route(rName, rConfig.url, module.injectComponents(rConfig.views)));
-                        });
-                        module.setRoutes(...moduleRoutes);
+                        module.setRoutes(...f.default.routes);
                     }
 
                     if (f.default.defaultComponents) {
-                        module.addDefaultComponents(module.injectComponents(f.default.defaultComponents));
+                        module.addDefaultComponents(f.default.defaultComponents);
                     }
 
                     return f.default;

@@ -1,4 +1,4 @@
-export default {
+const actions = {
     loadCms: () => {
         const api = new Webiny.Api.Service('/apps');
         return api.get('/backend').then(res => {
@@ -16,11 +16,15 @@ export default {
         });
     },
 
-    loadData: () => {
+    /**
+     * @description Loads data from data source
+     * @param name
+     */
+    loadData: (name = 'Webiny') => {
         Webiny.Model.set({
             Core: {
                 Layout: {
-                    name: 'Webiny',
+                    name,
                     domains: [
                         'webiny.com',
                         'google.com',
@@ -31,3 +35,8 @@ export default {
         });
     }
 };
+
+// TODO: razmisli kako ovo izvesti u buildu, preko JsDoc sintakse
+actions.loadData.description = 'Loads data from data source';
+
+export default actions;

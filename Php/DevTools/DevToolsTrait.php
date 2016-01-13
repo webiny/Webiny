@@ -8,6 +8,7 @@
 
 namespace Apps\Core\Php\DevTools;
 
+use Apps\Core\Php\DevTools\Validation\ValidationHelper;
 use Apps\Core\Php\View\View;
 use Webiny\Component\Cache\CacheStorage;
 use Webiny\Component\Mongo\Mongo;
@@ -132,5 +133,10 @@ trait DevToolsTrait
     static protected function wIsProduction()
     {
         return self::wConfig()->get('Application.Environment', 'production') == 'production';
+    }
+
+    static protected function wValidation()
+    {
+        return ValidationHelper::getInstance();
     }
 }

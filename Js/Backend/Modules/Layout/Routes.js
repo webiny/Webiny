@@ -1,15 +1,16 @@
+import Webiny from 'Webiny';
+import Views from './Views/Views';
+import Components from './Components/Components';
+
 export default {
-    routes: {
-        Dashboard: {
-            url: '/',
-            views: {
-                MasterContent: 'Views.Example',
-                Header: 'Components.Navigation'
-            }
-        }
-    },
+    routes: [
+        new Webiny.Route('Dashboard', '/', {
+            MasterContent: Views.Example,
+            Header: Components.Navigation
+        })
+    ],
 
     defaultComponents: {
-        MasterLayout: 'Views.Main'
+        MasterLayout: Views.Main
     }
 };

@@ -1,8 +1,7 @@
 <?php
 
-namespace Webiny\Core\Traits\Helpers;
+namespace Apps\Core\Php\DevTools\Validation;
 
-use Webiny\Core\Platform;
 use Webiny\Component\StdLib\SingletonTrait;
 
 class ValidationHelper
@@ -227,6 +226,7 @@ class ValidationHelper
     /**
      * Does not check the actual type of validator, only if the number itself is integer format
      * (negative, zero or positive whole number)
+     *
      * @param      $number
      * @param bool $exception
      *
@@ -697,37 +697,25 @@ class ValidationHelper
     /**
      * Return credit card type if number is valid
      * @return string
+     *
      * @param $number string
      **/
     public function creditCardType($number)
     {
-        $number=preg_replace('/[^\d]/','',$number);
-        if (preg_match('/^3[47][0-9]{13}$/',$number))
-        {
+        $number = preg_replace('/[^\d]/', '', $number);
+        if (preg_match('/^3[47][0-9]{13}$/', $number)) {
             return 'american';
-        }
-        elseif (preg_match('/^3(?:0[0-5]|[68][0-9])[0-9]{11}$/',$number))
-        {
+        } elseif (preg_match('/^3(?:0[0-5]|[68][0-9])[0-9]{11}$/', $number)) {
             return 'diners';
-        }
-        elseif (preg_match('/^6(?:011|5[0-9][0-9])[0-9]{12}$/',$number))
-        {
+        } elseif (preg_match('/^6(?:011|5[0-9][0-9])[0-9]{12}$/', $number)) {
             return 'discover';
-        }
-        elseif (preg_match('/^(?:2131|1800|35\d{3})\d{11}$/',$number))
-        {
+        } elseif (preg_match('/^(?:2131|1800|35\d{3})\d{11}$/', $number)) {
             return 'jcb';
-        }
-        elseif (preg_match('/^5[1-5][0-9]{14}$/',$number))
-        {
+        } elseif (preg_match('/^5[1-5][0-9]{14}$/', $number)) {
             return 'master';
-        }
-        elseif (preg_match('/^4[0-9]{12}(?:[0-9]{3})?$/',$number))
-        {
+        } elseif (preg_match('/^4[0-9]{12}(?:[0-9]{3})?$/', $number)) {
             return 'visa';
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
