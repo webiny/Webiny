@@ -8,13 +8,14 @@
 
 namespace Apps\Core\Php\Bootstrap;
 
+use Apps\Core\Php\DevTools\Entity\Entity;
 use Apps\Core\Php\DevTools\Response\ApiResponse;
 use Apps\Core\Php\DevTools\Response\HtmlResponse;
 use Apps\Core\Php\DevTools\Response\ResponseAbstract;
 use Apps\Core\Php\DevTools\Response\ResponseEvent;
 use Webiny\Component\Http\Request;
 use Webiny\Component\Http\Response;
-use Webiny\Component\StdLib\StdObject\UrlObject\UrlObject;
+use Webiny\Component\Mongo\Mongo;
 use Webiny\Component\StdLib\StdObjectTrait;
 use Webiny\Component\StdLib\SingletonTrait;
 use Apps\Core\Php\DevTools\DevToolsTrait;
@@ -50,6 +51,10 @@ class Bootstrap
 
         // scan all components to register routes and event handlers
         PackageScanner::getInstance();
+
+        // Register database
+        Mongo::setConfig($this->wConfig()->get('Mongo'));
+        Entity::setConfig($this->wConfig()->get('Entity'));
 
         $this->wEvents()->fire('Core.Bootstrap.End');
     }

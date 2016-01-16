@@ -41,13 +41,7 @@ class ApiResponse extends ResponseAbstract implements \ArrayAccess
 
     public function output()
     {
-        $data = [
-            'error'   => $this->error,
-            'message' => $this->msg,
-            'data'    => $this->data,
-            'code'    => $this->code,
-            'errors'  => $this->errors
-        ];
+        $data = $this->formatResponse();
         header("Content-type: application/json");
         die(json_encode($data));
     }
@@ -127,5 +121,16 @@ class ApiResponse extends ResponseAbstract implements \ArrayAccess
     public function offsetUnset($offset)
     {
         unset($this->data[$offset]);
+    }
+
+    protected function formatResponse()
+    {
+        return $data = [
+            'error'   => $this->error,
+            'message' => $this->msg,
+            'data'    => $this->data,
+            'code'    => $this->code,
+            'trace'  => $this->errors
+        ];
     }
 }

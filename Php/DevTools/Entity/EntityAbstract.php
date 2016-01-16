@@ -9,7 +9,6 @@
 namespace Apps\Core\Php\DevTools\Entity;
 
 use Webiny\Component\Entity\Attribute\DateTimeAttribute;
-use Webiny\Component\Entity\Entity;
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Entity\Event\EntityDeleteEvent;
 use Apps\Core\Php\DevTools\Entity\Event\EntityEvent;

@@ -29,8 +29,8 @@ class Api
         $this->apiEvent = new ApiEvent($event->getRequest());
 
         $events = [
-            'Core.Api.Before', // TODO: Authentication layer will handle this event
-            'Core.Api.HandleRequest', // TODO: Add Dispatcher that will handle this event, work with ACL and Entities
+            'Core.Api.Before',
+            'Core.Api.HandleRequest',
             'Core.Api.After'
         ];
 

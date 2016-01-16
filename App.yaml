@@ -54,3 +54,6 @@ Events:
         Api:
             Before:
                 - {Handler: Php/RequestHandlers/AppsMeta}
+            HandleRequest:
+                - {Handler: Php/RequestHandlers/Dispatchers/EntityDispatcher}
+                - {Handler: Php/RequestHandlers/Dispatchers/ServiceDispatcher}
