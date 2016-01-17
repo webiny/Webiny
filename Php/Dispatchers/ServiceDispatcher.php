@@ -6,7 +6,7 @@
  * @license   http://www.webiny.com/platform/license
  */
 
-namespace Apps\Core\Php\RequestHandlers\Dispatchers;
+namespace Apps\Core\Php\Dispatchers;
 
 use Apps\Core\Php\RequestHandlers\ApiEvent;
 

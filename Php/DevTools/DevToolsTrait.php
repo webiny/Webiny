@@ -9,7 +9,6 @@
 namespace Apps\Core\Php\DevTools;
 
 use Apps\Core\Php\DevTools\Validation\ValidationHelper;
-use Apps\Core\Php\View\View;
 use Webiny\Component\Cache\CacheStorage;
 use Webiny\Component\Mongo\Mongo;
 use Webiny\Component\ServiceManager\ServiceManager;
@@ -81,11 +80,11 @@ trait DevToolsTrait
     /**
      * Get current request information.
      *
-     * @return \Webiny\Component\Http\Request
+     * @return Request
      */
     static protected function wRequest()
     {
-        return Request::getInstance()->getRequest();
+        return Request::getInstance();
     }
 
     /**
@@ -98,7 +97,6 @@ trait DevToolsTrait
         return Events::getInstance();
     }
 
-
     /**
      * @return Router
      */
@@ -108,18 +106,21 @@ trait DevToolsTrait
     }
 
     /**
-     * @TODO This should return a class that we can use to contact REST services directly from within PHP
+     * return ServiceManager
+     *
+     * @param null $name
+     *
+     * @return object|ServiceManager
+     * @throws \Webiny\Component\ServiceManager\ServiceManagerException
      */
-    static protected function wService($name)
+    static protected function wService($name = null)
     {
-        ServiceManager::getInstance()->getService($name);
-    }
+        $sm = ServiceManager::getInstance();
+        if ($name) {
+            return $sm->getService($name);
+        }
 
-    /**
-     * @TODO This should return an instance of EntityAbstract, or some entity in particular.
-     */
-    static protected function wEntity($entity)
-    {
+        return $sm;
     }
 
     /**

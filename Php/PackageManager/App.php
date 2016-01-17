@@ -40,6 +40,7 @@ class App extends PackageAbstract
         $this->parseNamespace($path);
         $this->parseEvents($info);
         $this->parseStorages($info);
+        $this->parseServices($info);
         $this->parseRoutes($info);
     }
 }

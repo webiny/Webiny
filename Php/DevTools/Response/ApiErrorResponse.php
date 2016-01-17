@@ -18,7 +18,7 @@ class ApiErrorResponse extends ApiResponse
     protected function formatResponse()
     {
         $response = parent::formatResponse();
-        $response['description'] = $this->description;
+        //$response['description'] = $this->description;
 
         return $response;
     }

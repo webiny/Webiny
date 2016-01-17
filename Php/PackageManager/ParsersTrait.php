@@ -9,6 +9,7 @@
 namespace Apps\Core\Php\PackageManager;
 
 use Webiny\Component\Config\ConfigObject;
+use Webiny\Component\ServiceManager\ServiceManager;
 use Webiny\Component\StdLib\StdObjectTrait;
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Webiny\Component\Storage\Storage;
@@ -35,7 +36,7 @@ trait ParsersTrait
     /**
      * Parses and registers events attached to the component.
      *
-     * @param ConfigObject $info Parsed Component.yaml ConfigObject.
+     * @param ConfigObject $info Parsed App.yaml ConfigObject.
      */
     private function parseEvents(ConfigObject $info)
     {
@@ -95,13 +96,26 @@ trait ParsersTrait
     /**
      * Parses and registers routes attached to the component.
      *
-     * @param ConfigObject $info Parsed Component.yaml ConfigObject.
+     * @param ConfigObject $info Parsed App.yaml ConfigObject.
      */
     private function parseRoutes(ConfigObject $info)
     {
         $routes = $info->get('Routes', false);
         if ($routes) {
             $this->wRouter()->registerRoutes($routes);
+        }
+    }
+
+    /**
+     * Parses and registers services attached to the component.
+     *
+     * @param ConfigObject $info Parsed App.yaml ConfigObject.
+     */
+    private function parseServices(ConfigObject $info)
+    {
+        $services = $info->get('Services', []);
+        foreach ($services as $sName => $sConfig) {
+            $this->wService()->registerService($sName, $sConfig);
         }
     }
 }

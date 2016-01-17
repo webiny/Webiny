@@ -41,8 +41,8 @@ class User extends EntityAbstract
         $this->attr('firstName')->char()->setValidators('required');
         $this->attr('lastName')->char()->setValidators('required');
         $this->attr('password')->char()->setValidators('password');
-        $this->attr('enabled')->boolean()->setDefaultValue(true)->setValidators('required');
-        $this->attr('groups')->many2many('User2Group')->setEntity('\Apps\Core\Php\Entities\UserGroup')->setValidators('minLength:1');
+        //$this->attr('enabled')->boolean()->setDefaultValue(true)->setValidators('required');
+        //$this->attr('groups')->many2many('User2Group')->setEntity('\Apps\Core\Php\Entities\UserGroup')->setValidators('minLength:1');
     }
 
     public function canCreate($entity)

@@ -8,30 +8,113 @@
 
 namespace Apps\Core\Php\DevTools;
 
-use Webiny\Component\StdLib\SingletonTrait;
+use Webiny\Component\Rest\RestTrait;
+use Webiny\Component\StdLib\StdObject\StdObjectWrapper;
 
 /**
  * Provides you with access to an object containing the data about current request
  */
-class Request
+class Request extends \Webiny\Component\Http\Request
 {
-    use SingletonTrait;
+    use RestTrait;
+
+    private $skippedFilters = [
+        'XDEBUG_SESSION_START'
+    ];
 
     /**
-     * @var \Webiny\Component\Http\Request
+     * Get query filters
+     *
+     * @return array
      */
-    static private $request;
-
-    protected function init()
+    public function getFilters()
     {
-        self::$request = \Webiny\Component\Http\Request::getInstance();
+        $queryFilters = [];
+        $filters = $this->query();
+
+        foreach ($filters as $fName => $fValue) {
+
+            if ($fValue === '') {
+                continue;
+            }
+
+            if (!$this->str($fName)->startsWith('_') && !in_array($fName, $this->skippedFilters)) {
+                if (strtolower($fValue) === 'true' || strtolower($fValue) == 'false') {
+                    $fValue = StdObjectWrapper::toBool($fValue);
+                }
+                $queryFilters[$fName] = $fValue;
+            }
+        }
+
+        $searchFields = $this->query('_searchFields', null);
+        $searchQuery = $this->query('_searchQuery', null);
+        $searchOperator = $this->query('_searchOperator', 'or');
+
+        if ($searchFields && $searchQuery) {
+            // Make sure we have a valid operator
+            if (!in_array($searchOperator, ['and', 'or'])) {
+                $searchOperator = 'or';
+            }
+
+            // Add condition to filters
+            foreach (explode(',', $searchFields) as $key) {
+                $queryFilters['$' . $searchOperator][][$key] = new \MongoRegex("/" . $searchQuery . "/i");
+            }
+        }
+
+        return $queryFilters;
     }
 
     /**
-     * @return \Webiny\Component\Http\Request
+     * @return mixed
      */
-    public function getRequest()
+    public function getRequestData()
     {
-        return self::$request;
+        $data = $this->payload();
+        if (!$data) {
+            $data = $this->post();
+        }
+
+        return $data;
+    }
+
+    public static function getPage($default = 1)
+    {
+        return static::restGetPage($default);
+    }
+
+    public static function getPerPage($default = 10)
+    {
+        return static::restGetPerPage($default);
+    }
+
+    public static function getSortField($default = false)
+    {
+        return static::restGetSortField($default);
+    }
+
+    public static function getSortFields($default = [])
+    {
+        return static::restGetSortFields($default);
+    }
+
+    public static function getSortDirection($default = 1)
+    {
+        return static::getSortDirection($default);
+    }
+
+    public static function getFields($default = '')
+    {
+        return static::restGetFields($default);
+    }
+
+    public static function getFieldsDepth($default = 1)
+    {
+        return static::restGetFieldsDepth($default);
+    }
+
+    public static function getFilter($name, $default = null)
+    {
+        return static::restGetFilter($name, $default);
     }
 }

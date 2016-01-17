@@ -126,7 +126,6 @@ class ApiResponse extends ResponseAbstract implements \ArrayAccess
     protected function formatResponse()
     {
         return $data = [
-            'error'   => $this->error,
             'message' => $this->msg,
             'data'    => $this->data,
             'code'    => $this->code,
