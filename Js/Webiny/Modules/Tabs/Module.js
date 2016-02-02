@@ -1,11 +1,11 @@
 import Webiny from 'Webiny';
-import Input from './Input';
+import {Tabs, Tab} from './Tabs';
 
 class Module extends Webiny.Module {
 
     constructor(app) {
         super(app);
-        Webiny.Ui.Components.Input = Input;
+        Webiny.Ui.Components.Tabs = {Tabs, Tab};
     }
 }
 

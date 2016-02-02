@@ -48,13 +48,11 @@ Storage:
 Events:
     Core:
         Bootstrap:
-            HandleRequest:
+            Request:
                 - {Handler: Php/RequestHandlers/Api, Priority: 400}
                 - {Handler: Php/RequestHandlers/Backend, Priority: 380}
         Api:
-            Before:
-                - {Handler: Php/RequestHandlers/AppsMeta}
-            HandleRequest:
+            Request:
                 - {Handler: Php/Dispatchers/EntityDispatcher}
                 - {Handler: Php/Dispatchers/ServiceDispatcher}
 

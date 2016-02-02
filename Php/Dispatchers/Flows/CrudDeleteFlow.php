@@ -34,7 +34,7 @@ class CrudDeleteFlow extends AbstractFlow
             return true;
         }
 
-        throw new ApiException('Not found', get_class($entity) . ' with id `' . $id . '` was not found!');
+        throw new ApiException(get_class($entity) . ' with id `' . $id . '` was not found!', 'WBY-ED-CRUD_DELETE_FLOW-1');
     }
 
     public function canHandle($httpMethod, $params)

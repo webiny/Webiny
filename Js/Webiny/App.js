@@ -15,14 +15,15 @@ class WebinyApp {
         this.modules.unshift('Core');
         const imported = [];
         let queue = Q();
-
+        
         this.modules.map(name => {
             queue = queue.then(() => {
                 return WebinyBootstrap.import('Core/Webiny/Modules/' + name).then(m => {
-                    const module = new m.default();
+                    const module = new m.default(this);
+                    module.name = name;
                     imported.push(module);
                     module.run();
-                });
+                }).catch(e => console.error(e));
             });
         });
 

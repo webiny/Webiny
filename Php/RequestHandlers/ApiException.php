@@ -31,7 +31,7 @@ class ApiException extends ExceptionAbstract
     /**
      * @var string Error code.
      */
-    protected $code = '';
+    protected $errorCode = '';
 
     /**
      * @var int Http response code that should be send with the error. Default is 404.
@@ -39,50 +39,29 @@ class ApiException extends ExceptionAbstract
     protected $responseCode = 404;
 
     /**
-     * @var array Additional error messages. Useful if you wish to return a validation error, this can be used to
-     *            store errors per-field.
+     * Data attached to exception
+     * @var array
      */
-    protected $errors = [];
-
+    protected $data = [];
 
     /**
      * Base constructor.
      *
-     * @param string $message      Error message.
-     * @param string $description  Error description.
-     * @param string $code         Error code.
-     * @param int    $responseCode Http response code that should be send with the error. Default is 404.
+     * @param string $message Error message
+     * @param string $errorCode Error code
+     * @param int    $responseCode Http response code that should be send with the error. Default is 404
+     * @param array  $data
      */
-    public function __construct($message, $description = '', $code = '', $responseCode = 404)
+    public function __construct($message, $errorCode = '', $responseCode = 404, $data = [])
     {
         $this->message = $message;
-        $this->description = $description;
-        $this->code = $code;
+        $this->errorCode = $errorCode;
         $this->responseCode = $responseCode;
+        $this->data = $data;
     }
 
     /**
-     * Add an additional error to the exception.
-     *
-     * @param array $error Addition error.
-     */
-    public function addError(array $error)
-    {
-        $this->errors[] = $error;
-    }
-
-    /**
-     * Get the list of all additional errors.
-     *
-     * @return array
-     */
-    public function getErrors()
-    {
-        return $this->errors;
-    }
-
-    /**
-     * Get the error message.
+     * Get the error message
      *
      * @return string
      */
@@ -92,23 +71,13 @@ class ApiException extends ExceptionAbstract
     }
 
     /**
-     * Get error description.
-     *
-     * @return string
-     */
-    public function getErrorDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * Get error code.
+     * Get error code
      *
      * @return string
      */
     public function getErrorCode()
     {
-        return $this->code;
+        return $this->errorCode;
     }
 
     /**
@@ -120,10 +89,18 @@ class ApiException extends ExceptionAbstract
     }
 
     /**
-     * @return int Returns the http response code.
+     * @return int Returns the http response code
      */
     public function getResponseCode()
     {
         return $this->responseCode;
+    }
+
+    /**
+     * @return int Returns the data attached to exception
+     */
+    public function getData()
+    {
+        return $this->data;
     }
 }

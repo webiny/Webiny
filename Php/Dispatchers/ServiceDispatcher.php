@@ -8,6 +8,8 @@
 
 namespace Apps\Core\Php\Dispatchers;
 
+use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
+use Apps\Core\Php\DevTools\Response\ApiResponse;
 use Apps\Core\Php\RequestHandlers\ApiEvent;
 
 class ServiceDispatcher extends AbstractApiDispatcher
@@ -18,6 +20,29 @@ class ServiceDispatcher extends AbstractApiDispatcher
             return false;
         }
 
-       die("Now we'll do our Service magic! :)");
+        $result = null;
+        $request = $this->parseUrl($event->getUrl()->replace('/services', ''));
+
+        $params = $request['params'];
+
+        $serviceClass = '\\Apps\\' . $request['app'] . '\\Php\\Services\\' . $request['class'];
+        if (!class_exists($serviceClass)) {
+            return new ApiErrorResponse([], 'Service class ' . $serviceClass . ' does not exist!');
+        }
+
+        $service = new $serviceClass;
+
+        $method = 'index';
+        if (count($params) > 0 && method_exists($service, $params[0])) {
+            $method = $params[0];
+        }
+
+        $result = $service->$method(...$params);
+
+        if ($result) {
+            return new ApiResponse($result);
+        }
+
+        return null;
     }
 }

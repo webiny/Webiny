@@ -77,6 +77,7 @@ class Module {
      * @returns {Module}
      */
     run() {
+        console.log(this);
         return this;
     }
 }

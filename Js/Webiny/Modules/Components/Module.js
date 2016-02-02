@@ -10,7 +10,6 @@ class Module extends Webiny.Module {
 
 		this.name = 'Components';
 
-		Webiny.Ui.Components = Components;
         Webiny.Ui.Placeholder = Placeholder;
         Webiny.Ui.Link = Link;
 	}

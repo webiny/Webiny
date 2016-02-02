@@ -31,7 +31,7 @@ class Cache
      */
     protected function init()
     {
-        $cacheDriver = Config::getInstance()->getConfig()->get("Cache.Driver", "Null");
+        $cacheDriver = Config::getInstance()->getConfig()->get("Cache.Driver", "BlackHole");
         $cacheParams = Config::getInstance()->getConfig()->get("Cache.Arguments", [], true);
 
         try {

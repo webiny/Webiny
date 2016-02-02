@@ -6,7 +6,7 @@ const Webiny = {
     },
     Configure: (path, config) => {
         let target = Webiny.Apps;
-        if(path.indexOf('Webiny.Ui') === 0){
+        if (path.indexOf('Webiny.Ui') === 0) {
             target = Webiny.Ui;
             path = path.replace('Webiny.Ui', '');
         }
@@ -14,7 +14,7 @@ const Webiny = {
         const props = _.get(target, path + '.defaultProps');
         _.forIn(config, (value, key) => {
             props[key] = value;
-        })
+        });
     },
     Ui: {}
 };

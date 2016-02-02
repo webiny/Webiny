@@ -99,6 +99,8 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
 
     public function __construct()
     {
+        $this->attributes = $this->arr();
+        $this->attributeBuilder = new EntityAttributeBuilder($this, $this->attributes);
         parent::__construct();
         /**
          * Add the following built-in system attributes:
@@ -164,17 +166,6 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         $this->wEvents()->fire($this->getEventName() . '.AfterSave', $event);
 
         return $save;
-    }
-
-
-    /**
-     * @param $attribute
-     *
-     * @return EntityAttributeBuilder
-     */
-    public function attr($attribute)
-    {
-        return EntityAttributeBuilder::getInstance()->setContext($this->attributes, $attribute)->setEntity($this);
     }
 
     private function getEventName()

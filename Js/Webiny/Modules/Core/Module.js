@@ -2,6 +2,7 @@ import Webiny from 'Webiny';
 import WebinyModule from './Core/Module';
 import App from './Core/App';
 import Component from './Core/Component';
+import FormComponent from './Core/FormComponent';
 import Injector from './Core/Injector';
 import Model from './Core/Model';
 import View from './Core/View';
@@ -20,13 +21,13 @@ class Module extends WebinyModule {
 	constructor(app) {
 		super(app);
 
-		this.name = 'Core';
-
-		_.assign(Webiny, {
+		_.merge(Webiny, {
 			App,
 			Module: WebinyModule,
 			Ui: {
 				Component,
+                Components: {},
+                FormComponent,
 				Dispatcher: UiDispatcher,
 				View
 			},

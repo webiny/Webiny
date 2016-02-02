@@ -33,7 +33,7 @@ class CrudListFlow extends AbstractFlow
                 'filters'     => $filters,
                 'sorter'      => $sorter
             ],
-            'data' => $entities->toArray($this->wRequest()->getFields(), $this->wRequest()->getFieldsDepth())
+            'list' => $entities->toArray($this->wRequest()->getFields(), $this->wRequest()->getFieldsDepth())
         ];
 
         return $response;

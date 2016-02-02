@@ -36,15 +36,11 @@ class CrudUpdateFlow extends AbstractFlow
 
                 return $entity->toArray($this->wRequest()->getFields(), $this->wRequest()->getFieldsDepth());
             } catch (EntityException $e) {
-                $apiException = new ApiException($e->getMessage(), 'Entity attribute validation failed', '', 422);
-                foreach ($e->getInvalidAttributes() as $attrName => $attrError) {
-                    $apiException->addError([$attrName => $attrError]);
-                }
-                throw $apiException;
+                throw new ApiException($e->getMessage(), 'WBY-ED-CRUD_UPDATE_FLOW-1', 422, $e->getInvalidAttributes());
             }
         }
 
-        throw new ApiException('Not found', get_class($entity) . ' with id `' . $id . '` was not found!');
+        throw new ApiException(get_class($entity) . ' with id `' . $id . '` was not found!', 'WBY-ED-CRUD_UPDATE_FLOW-2');
     }
 
     public function canHandle($httpMethod, $params)

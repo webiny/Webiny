@@ -63,7 +63,7 @@ class Bootstrap
     {
         $responseClass = '\Apps\Core\Php\DevTools\Response\ResponseAbstract';
         /* @var $response ResponseAbstract */
-        $response = $this->wEvents()->fire('Core.Bootstrap.HandleRequest', new BootstrapEvent($request), $responseClass, 1);
+        $response = $this->wEvents()->fire('Core.Bootstrap.Request', new BootstrapEvent($request), $responseClass, 1);
         if ($response) {
             if($response instanceof ApiResponse){
                 $response->setErrors($this->errorHandler->getErrors());

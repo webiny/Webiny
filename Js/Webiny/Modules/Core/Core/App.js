@@ -76,7 +76,7 @@ class App {
 
                     return f.default;
                 });
-            }
+            };
         }
 
         return Promise.all(promises).then(() => routes()).then(() => module);

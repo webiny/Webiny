@@ -1,6 +1,7 @@
 import Webiny from 'Webiny';
 import LinkState from './LinkState';
 import Dispatcher from './Dispatcher';
+import UiDispatcher from './UiDispatcher';
 
 class Component extends React.Component {
 
@@ -13,14 +14,16 @@ class Component extends React.Component {
     }
 
     componentWillMount() {
-        // Reserved for future system-wide functionality
+        if (this.props.ui) {
+            UiDispatcher.register(this.props.ui, this);
+        }
     }
 
     componentDidMount() {
         // Reserved for future system-wide functionality
     }
 
-    /*eslint-disable */
+    /* eslint-disable */
     componentWillReceiveProps(nextProps) {
         // Reserved for future system-wide functionality
     }
@@ -37,7 +40,8 @@ class Component extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         // Reserved for future system-wide functionality
     }
-    /*eslint-enable */
+
+    /* eslint-enable */
 
     componentWillUnmount() {
         // Release event listeners
@@ -51,6 +55,10 @@ class Component extends React.Component {
             cursor.release();
         });
         this.__cursors = [];
+
+        if (this.props.name) {
+            UiDispatcher.unregister(this.props.name);
+        }
     }
 
     setState(key, value = null, callback = null) {
@@ -150,6 +158,10 @@ class Component extends React.Component {
                 console.info('Missing method [' + name + ']', this);
             }
         });
+    }
+
+    signal(call, ...params) {
+        return UiDispatcher.createSignal(this, call, params);
     }
 
     watch(key, func) {

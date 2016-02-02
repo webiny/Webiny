@@ -1,7 +1,5 @@
 import Webiny from 'Webiny';
 
-// TODO: malo oko naminga raspraviti, Ui opisuje i Components i Views i Containers (Smart components)
-
 class Navigation extends Webiny.Ui.Component {
 
     render() {

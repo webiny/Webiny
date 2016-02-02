@@ -11,7 +11,6 @@ namespace Apps\Core\Php\RequestHandlers;
 use Apps\Core\Php\Bootstrap\BootstrapEvent;
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
-use Apps\Core\Php\DevTools\Response\ApiResponse;
 
 class Api
 {
@@ -30,17 +29,18 @@ class Api
 
         $events = [
             'Core.Api.Before',
-            'Core.Api.HandleRequest',
-            'Core.Api.After'
+            'Core.Api.Request'
         ];
 
-        foreach ($events as $event) {
-            $response = $this->wEvents()->fire($event, $this->apiEvent, $this->apiResponse, 1);
-            if ($response) {
-                return $response;
+        try {
+            foreach ($events as $event) {
+                $response = $this->wEvents()->fire($event, $this->apiEvent, $this->apiResponse, 1);
+                if ($response) {
+                    return $response;
+                }
             }
+        } catch (ApiException $e) {
+            return new ApiErrorResponse($e->getData(), $e->getErrorMessage(), $e->getErrorCode(), $e->getResponseCode());
         }
-
-        return new ApiErrorResponse([], 'Request was not handled properly!');
     }
 }

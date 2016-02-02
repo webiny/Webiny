@@ -23,17 +23,16 @@ class ExecuteStaticMethodFlow extends AbstractFlow
     public function handle(EntityAbstract $entity, $params)
     {
         $method = $this->toCamelCase($params[0]);
+        $params = $this->loadParamValues($entity, $method, array_slice($params, 1));
+
+        if ($this->wRequest()->isPost()) {
+            $params[] = $this->wRequest()->getRequestData();
+        }
 
         try {
-            $params = array_slice($params, 1);
-
-            if ($this->wRequest()->isPost()) {
-                $params[] = $this->wRequest()->getRequestData();
-            }
-
             return $entity::$method(...$params);
         } catch (ExceptionAbstract $e) {
-            throw new ApiException($e->getMessage(), $e->getMessage(), 'WBY-EME-1', 400);
+            throw new ApiException($e->getMessage(), $e->getMessage(), 'WBY-ED-EXECUTE_STATIC_METHOD_FLOW', 400);
         }
     }
 

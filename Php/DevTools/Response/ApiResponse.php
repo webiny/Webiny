@@ -8,24 +8,18 @@ class ApiResponse extends ResponseAbstract implements \ArrayAccess
 {
 
     protected $data;
-    protected $error;
     protected $msg;
-    protected $code;
-    protected $errors;
+    protected $phpTrace;
 
     /**
-     * @param array  $data Reponse data
-     * @param bool   $error Is this an error response
+     * @param array  $data Response data
      * @param string $msg Response message
-     * @param string $code Response code (any string meaningful to your app)
      * @param int    $httpStatus HTTP Status Code
      */
-    public function __construct($data, $error = false, $msg = '', $code = '', $httpStatus = 200)
+    public function __construct($data, $msg = '', $httpStatus = 200)
     {
         $this->data = $data;
-        $this->error = $error;
         $this->msg = $msg;
-        $this->code = $code;
         $this->statusCode = $httpStatus;
     }
 
@@ -48,7 +42,7 @@ class ApiResponse extends ResponseAbstract implements \ArrayAccess
 
     public function setErrors(array $errors)
     {
-        $this->errors = $errors;
+        $this->phpTrace = $errors;
 
         return $this;
     }
@@ -125,11 +119,16 @@ class ApiResponse extends ResponseAbstract implements \ArrayAccess
 
     protected function formatResponse()
     {
-        return $data = [
+        $data = [
             'message' => $this->msg,
             'data'    => $this->data,
-            'code'    => $this->code,
-            'trace'  => $this->errors
+            'trace'   => $this->phpTrace
         ];
+
+        if (!$this->msg) {
+            unset($data['message']);
+        }
+
+        return $data;
     }
 }

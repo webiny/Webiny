@@ -1,6 +1,6 @@
 const actions = {
     loadCms: () => {
-        const api = new Webiny.Api.Service('/apps');
+        const api = new Webiny.Api.Service('/services/core/apps');
         return api.get('/backend').then(res => {
             let apps = Q();
             _.forIn(res.getData(), config => {
@@ -35,8 +35,5 @@ const actions = {
         });
     }
 };
-
-// TODO: razmisli kako ovo izvesti u buildu, preko JsDoc sintakse
-actions.loadData.description = 'Loads data from data source';
 
 export default actions;

@@ -7,19 +7,20 @@ namespace Apps\Core\Php\DevTools\Response;
 class ApiErrorResponse extends ApiResponse
 {
 
-    private $description = '';
+    protected $errorCode;
 
-    public function __construct($data, $msg = '', $description = '', $code = '', $httpStatus = 404)
+    public function __construct($data, $msg = '', $errorCode = '', $httpStatus = 404)
     {
-        $this->description = $description;
-        parent::__construct($data, true, $msg, $code, $httpStatus);
+        $this->errorCode = $errorCode;
+        parent::__construct($data, $msg, $httpStatus);
     }
 
     protected function formatResponse()
     {
-        $response = parent::formatResponse();
-        //$response['description'] = $this->description;
+        $data = parent::formatResponse();
+        $data['code'] = $this->errorCode;
+        $data['message'] = $this->msg;
 
-        return $response;
+        return $data;
     }
 }

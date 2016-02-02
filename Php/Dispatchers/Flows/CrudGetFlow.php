@@ -29,7 +29,7 @@ class CrudGetFlow extends AbstractFlow
         } catch (\MongoException $e) {
             throw new \Exception('Database error', $e->getMessage(), $e->getCode(), 400);
         }
-        throw new \Exception('Not found', get_class($entity) . ' with id `' . $id . '` was not found!');
+        throw new \Exception(get_class($entity) . ' with id `' . $id . '` was not found!', 'WBY-ED-CRUD_GET_FLOW-1');
     }
 
     public function canHandle($httpMethod, $params)

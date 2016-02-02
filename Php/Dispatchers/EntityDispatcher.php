@@ -20,6 +20,8 @@ use Apps\Core\Php\RequestHandlers\ApiException;
  */
 class EntityDispatcher extends AbstractApiDispatcher
 {
+    protected $flowClass = '\Apps\Core\Php\Dispatchers\AbstractFlow';
+
     public function handle(ApiEvent $event)
     {
         if (!$event->getUrl()->startsWith('/entities')) {
@@ -38,18 +40,13 @@ class EntityDispatcher extends AbstractApiDispatcher
             return new ApiErrorResponse([], 'Entity class ' . $entityClass . ' does not exist!');
         }
 
-        try {
-            $flows = $this->wService()->getServicesByTag('entity-dispatcher-flow');
-            /* @var $flow AbstractFlow */
-            foreach ($flows as $flow) {
-                if ($flow->canHandle($httpMethod, $params)) {
-                    $result = $flow->handle(new $entityClass(), $params);
-                    break;
-                }
+        $flows = $this->wService()->getServicesByTag('entity-dispatcher-flow');
+        /* @var $flow AbstractFlow */
+        foreach ($flows as $flow) {
+            if ($this->isInstanceOf($flow, $this->flowClass) && $flow->canHandle($httpMethod, $params)) {
+                $result = $flow->handle(new $entityClass(), $params);
+                break;
             }
-        } catch (ApiException $e) {
-            return new ApiErrorResponse($e->getErrors(), $e->getMessage(), $e->getErrorDescription(), $e->getErrorCode(),
-                $e->getResponseCode());
         }
 
         if ($result) {

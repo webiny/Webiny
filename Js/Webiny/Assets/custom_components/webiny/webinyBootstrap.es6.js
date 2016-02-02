@@ -42,9 +42,7 @@ class WebinyBootstrapClass {
     }
 
     import(path) {
-        return System.import(path).catch(
-            console.error.bind(console)
-        );
+        return System.import(path).catch(e => console.error(e));
     }
 
     run(env = 'development') {
@@ -83,7 +81,7 @@ class WebinyBootstrapClass {
 
     includeApp(appName, meta) {
         if (!meta) {
-            return axios({url: _apiUrl + '/apps/' + appName}).then(res => {
+            return axios({url: _apiUrl + '/services/core/apps/' + appName}).then(res => {
                 this.meta[appName] = res.data.data;
                 return this.loadAssets(this.meta[appName]);
             });

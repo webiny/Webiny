@@ -9,6 +9,10 @@ const container = {};
  */
 class UiDispatcher {
 
+    debug() {
+        console.log(container);
+    }
+
     register(name, instance) {
         if (_.has(container, name)) {
             return console.warn(`Component name '${name}' is already registered!`);
@@ -22,7 +26,11 @@ class UiDispatcher {
         return this;
     }
 
-    signal(_this, call, params = null, conditions = null) {
+    get(name) {
+        return container[name];
+    }
+
+    createSignal(_this, call, params) {
         return function executeSignal() {
             let callable = null;
             if (_.isFunction(call)) {
@@ -30,42 +38,32 @@ class UiDispatcher {
             } else {
                 const [name, method] = call.split(':');
                 const component = name === 'this' ? _this : _.get(container, name);
+
                 callable = component[method];
             }
 
-            // Build params: for now we only support one string as a parameter
             const signalParams = [];
-            if (params !== null) {
-                if (_.startsWith(params, '@')) {
+            _.each(params, p => {
+                if (_.startsWith(p, '@')) {
                     // Extract parameter definition
-                    const param = _.trimLeft(params, '@');
-                    if (param.indexOf(':') < 0) {
+                    const param = _.trimLeft(p, '@');
+                    if (p.indexOf(':') < 0) {
                         signalParams.push(_.get(container, param));
                     } else {
                         const [name, method] = param.split(':');
                         signalParams.push(container[name][method]);
                     }
                 } else {
-                    signalParams.push(params);
+                    signalParams.push(p);
                 }
-            }
+            });
 
             let args = arguments;
             if (signalParams.length) {
                 args = signalParams;
             }
 
-            return Q(callable(...args)).then(result => {
-                if (conditions) {
-                    _.forIn(conditions, (condition, callName) => {
-                        // TODO: add better logic for handling conditions
-                        if (result === condition) {
-                            return _this.signal(callName)(...args);
-                        }
-                    });
-                }
-                return result;
-            });
+            return Q(callable(...args)).then(result => result);
         };
     }
 }

@@ -26,16 +26,12 @@ class CrudCreateFlow extends AbstractFlow
             $data = $this->wRequest()->getRequestData();
 
             if (!$this->isArray($data) && !$this->isArrayObject($data)) {
-                throw new ApiException('Invalid data provided', 'Invalid data provided for entity populate()', '', 400);
+                throw new ApiException('Invalid data provided', 'WBY-ED-CRUD_CREATE_FLOW-1', 400);
             }
             $entity->populate($data)->save();
         } catch (EntityException $e) {
             if ($e->getCode() == EntityException::VALIDATION_FAILED) {
-                $exception = new ApiException($e->getMessage(), 'Entity attribute validation failed', '', 422);
-                foreach ($e->getInvalidAttributes() as $attrName => $attrError) {
-                    $exception->addError([$attrName => $attrError]);
-                }
-                throw $exception;
+                throw new ApiException($e->getMessage(), 'WBY-ED-CRUD_CREATE_FLOW-2', 422, $e->getInvalidAttributes());
             }
         }
 
