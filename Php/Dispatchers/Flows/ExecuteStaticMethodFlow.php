@@ -24,7 +24,7 @@ class ExecuteStaticMethodFlow extends AbstractFlow
     {
         $method = $this->toCamelCase($params[0]);
 
-        if(!$this->wLogin()->canExecute($entity, $method)){
+        if(!$this->wAuth()->canExecute($entity, $method)){
             throw new ApiException('You don\'t have an EXECUTE permission on ' . get_class($entity));
         }
 

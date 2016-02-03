@@ -46,7 +46,7 @@ class ServiceDispatcher extends AbstractApiDispatcher
             array_shift($params);
         }
 
-        if (!$this->wLogin()->canExecute($serviceClass, $method)) {
+        if (!$this->wAuth()->canExecute($serviceClass, $method)) {
             throw new ApiException('You don\'t have an EXECUTE permission on ' . $serviceClass);
         }
 

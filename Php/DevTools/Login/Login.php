@@ -50,7 +50,7 @@ class Login
      */
     public function createPasswordHash($password)
     {
-        return $this->security->firewall()->createPasswordHash($password);
+        return $this->security->firewall('Webiny')->createPasswordHash($password);
     }
 
     /**
@@ -59,6 +59,14 @@ class Login
     public function getSecurity()
     {
         return $this->security;
+    }
+
+    /**
+     * @return LoginApp
+     */
+    public function getLogin()
+    {
+        return $this->login;
     }
 
     /**
@@ -134,6 +142,8 @@ class Login
     {
         if (!is_string($class)) {
             $class = get_class($class);
+        } else {
+            $class = trim($class, '\\');
         }
 
         $groups = [UserGroup::findOne(['tag' => 'anonymous'])];

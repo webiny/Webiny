@@ -44,10 +44,21 @@ class User extends EntityAbstract
         $this->attr('lastName')->char()->setValidators('required');
         $this->attr('password')->char()->onSet(function ($password) {
             if (!empty($password) && $this->wValidation()->password($password)) {
-                return $this->wLogin()->createPasswordHash($password);
+                return $this->wAuth()->createPasswordHash($password);
             }
         });
         $this->attr('enabled')->boolean()->setDefaultValue(true)->setValidators('required');
         $this->attr('groups')->many2many('User2Group')->setEntity('\Apps\Core\Php\Entities\UserGroup')->setValidators('minLength:1');
+    }
+
+    public function save()
+    {
+        $new = !$this->exists();
+        $res = parent::save();
+        if ($new) {
+            $this->wAuth()->getLogin()->setUserAccountConfirmationStatus($this->email);
+        }
+
+        return $res;
     }
 }

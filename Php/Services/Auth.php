@@ -18,15 +18,15 @@ class Auth
     public function login()
     {
         $rd = $this->wRequest()->getRequestData();
-        $data = $this->wLogin()->processLogin($rd['username']);
-        $data['user'] = $this->wLogin()->getUser()->toArray('*,!password');
+        $data = $this->wAuth()->processLogin($rd['username']);
+        $data['user'] = $this->wAuth()->getUser()->toArray('*,!password');
 
         return $data;
     }
 
     public function me()
     {
-        $user = $this->wLogin()->getUser();
+        $user = $this->wAuth()->getUser();
         $fields = $this->wRequest()->getFields('*,!password');
 
         if (!$user) {

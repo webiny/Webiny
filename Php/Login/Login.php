@@ -50,7 +50,8 @@ class Login
     private $authToken;
 
     /**
-     * @var LoginMetaEntity
+     * Array of LoginMetaEntity objects by username
+     * @var array
      */
     private $meta;
 
@@ -641,8 +642,8 @@ class Login
      */
     private function getMeta()
     {
-        if (is_object($this->meta)) {
-            return $this->meta;
+        if (isset($this->meta[$this->username])) {
+            return $this->meta[$this->username];
         }
 
         if (empty($this->username)) {
@@ -656,7 +657,7 @@ class Login
             $meta->username = $this->username;
         }
 
-        $this->meta = $meta;
+        $this->meta[$this->username] = $meta;
 
         return $meta;
     }

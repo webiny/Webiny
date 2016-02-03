@@ -22,7 +22,7 @@ class CrudUpdateFlow extends AbstractFlow
 
     public function handle(EntityAbstract $entity, $params)
     {
-        if (!$this->wLogin()->canUpdate($entity)) {
+        if (!$this->wAuth()->canUpdate($entity)) {
             throw new ApiException('You don\'t have an UPDATE permission on ' . get_class($entity), 'WBY-ED-CRUD_UPDATE_FLOW-4');
         }
 

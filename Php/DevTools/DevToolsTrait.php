@@ -151,7 +151,7 @@ trait DevToolsTrait
     /**
      * @return Login
      */
-    static protected function wLogin()
+    static protected function wAuth()
     {
         return Login::getInstance();
     }
