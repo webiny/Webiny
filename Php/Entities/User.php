@@ -1,6 +1,7 @@
 <?php
 namespace Apps\Core\Php\Entities;
 
+use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Entity\EntityAbstract;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Mongo\Index\SingleIndex;
@@ -8,18 +9,19 @@ use Webiny\Component\Mongo\Index\SingleIndex;
 /**
  * Class User
  *
- * @property string $firstName
- * @property string $lastName
- * @property string $email
- * @property string $password
+ * @property string           $firstName
+ * @property string           $lastName
+ * @property string           $email
+ * @property string           $password
  * @property EntityCollection $groups
- * @property bool   $enabled
+ * @property bool             $enabled
  *
- * @package Ht\Entities
+ * @package Apps\Core\Php\Entities
  *
  */
 class User extends EntityAbstract
 {
+    use DevToolsTrait;
 
     protected static $entityCollection = 'Users';
     protected static $entityMask = '{firstName} {lastName}';
@@ -40,45 +42,12 @@ class User extends EntityAbstract
         $this->attr('email')->char()->setValidators('required,email,unique');
         $this->attr('firstName')->char()->setValidators('required');
         $this->attr('lastName')->char()->setValidators('required');
-        $this->attr('password')->char()->setValidators('password');
-        //$this->attr('enabled')->boolean()->setDefaultValue(true)->setValidators('required');
-        //$this->attr('groups')->many2many('User2Group')->setEntity('\Apps\Core\Php\Entities\UserGroup')->setValidators('minLength:1');
-    }
-
-    public function canCreate($entity)
-    {
-        return $this->checkPermission($entity, 'c');
-    }
-
-    public function canRead($entity)
-    {
-        return $this->checkPermission($entity, 'r');
-    }
-
-    public function canUpdate($entity)
-    {
-        return $this->checkPermission($entity, 'u');
-    }
-
-    public function canDelete($entity)
-    {
-        return $this->checkPermission($entity, 'd');
-    }
-
-    public function canExecute($entity, $method = null)
-    {
-        return $this->checkPermission($entity, $method);
-    }
-
-    private function checkPermission($entity, $permission)
-    {
-        /* @var $group UserGroup */
-        foreach($this->groups as $group){
-            if($group->checkPermission($entity, $permission)){
-                return true;
+        $this->attr('password')->char()->onSet(function ($password) {
+            if (!empty($password) && $this->wValidation()->password($password)) {
+                return $this->wLogin()->createPasswordHash($password);
             }
-        }
-
-        return false;
+        });
+        $this->attr('enabled')->boolean()->setDefaultValue(true)->setValidators('required');
+        $this->attr('groups')->many2many('User2Group')->setEntity('\Apps\Core\Php\Entities\UserGroup')->setValidators('minLength:1');
     }
 }

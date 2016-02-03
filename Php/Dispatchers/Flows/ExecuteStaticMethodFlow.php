@@ -23,7 +23,13 @@ class ExecuteStaticMethodFlow extends AbstractFlow
     public function handle(EntityAbstract $entity, $params)
     {
         $method = $this->toCamelCase($params[0]);
-        $params = $this->loadParamValues($entity, $method, array_slice($params, 1));
+
+        if(!$this->wLogin()->canExecute($entity, $method)){
+            throw new ApiException('You don\'t have an EXECUTE permission on ' . get_class($entity));
+        }
+
+
+        $params = $this->injectParams($entity, $method, array_slice($params, 1));
 
         if ($this->wRequest()->isPost()) {
             $params[] = $this->wRequest()->getRequestData();

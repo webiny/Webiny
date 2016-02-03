@@ -10,6 +10,7 @@ namespace Apps\Core\Php\Dispatchers\Flows;
 
 use Apps\Core\Php\DevTools\Entity\EntityAbstract;
 use Apps\Core\Php\Dispatchers\AbstractFlow;
+use Apps\Core\Php\RequestHandlers\ApiException;
 
 /**
  * Class CrudListFlow
@@ -20,6 +21,10 @@ class CrudListFlow extends AbstractFlow
 
     public function handle(EntityAbstract $entity, $params)
     {
+        if (!$this->wLogin()->canRead($entity)) {
+            throw new ApiException('You don\'t have a READ permission on ' . get_class($entity));
+        }
+
         $filters = $this->wRequest()->getFilters();
         $sorter = $this->wRequest()->getSortFields();
 

@@ -8,6 +8,7 @@
 
 namespace Apps\Core\Php\DevTools;
 
+use Apps\Core\Php\DevTools\Login\Login;
 use Apps\Core\Php\DevTools\Validation\ValidationHelper;
 use Webiny\Component\Cache\CacheStorage;
 use Webiny\Component\Mongo\Mongo;
@@ -131,13 +132,27 @@ trait DevToolsTrait
         return TemplateEngine::getInstance()->getTemplateEngine();
     }
 
+    /**
+     * @return bool
+     */
     static protected function wIsProduction()
     {
         return self::wConfig()->get('Application.Environment', 'production') == 'production';
     }
 
+    /**
+     * @return ValidationHelper
+     */
     static protected function wValidation()
     {
         return ValidationHelper::getInstance();
+    }
+
+    /**
+     * @return Login
+     */
+    static protected function wLogin()
+    {
+        return Login::getInstance();
     }
 }

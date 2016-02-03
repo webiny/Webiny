@@ -22,6 +22,10 @@ class CrudCreateFlow extends AbstractFlow
 
     public function handle(EntityAbstract $entity, $params)
     {
+        if (!$this->wLogin()->canCreate($entity)) {
+            throw new ApiException('You don\'t have a CREATE permission on ' . get_class($entity));
+        }
+
         try {
             $data = $this->wRequest()->getRequestData();
 

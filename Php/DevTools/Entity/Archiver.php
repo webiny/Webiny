@@ -10,7 +10,6 @@
 namespace Apps\Core\Php\DevTools\Entity;
 
 use Webiny\Component\Entity\Attribute\AttributeType;
-use Webiny\Component\Entity\EntityAbstract;
 use Webiny\Component\Mongo\MongoTrait;
 use Webiny\Component\StdLib\SingletonTrait;
 use Webiny\Component\StdLib\StdLibTrait;

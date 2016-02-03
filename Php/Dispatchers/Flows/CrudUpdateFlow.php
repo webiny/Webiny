@@ -22,10 +22,14 @@ class CrudUpdateFlow extends AbstractFlow
 
     public function handle(EntityAbstract $entity, $params)
     {
+        if (!$this->wLogin()->canUpdate($entity)) {
+            throw new ApiException('You don\'t have an UPDATE permission on ' . get_class($entity), 'WBY-ED-CRUD_UPDATE_FLOW-4');
+        }
+
         $id = $params[0];
         $data = $this->wRequest()->getRequestData();
         if (!$this->isArray($data) && !$this->isArrayObject($data)) {
-            throw new ApiException('Invalid data provided', 'Invalid data provided for entity populate()', '', 400);
+            throw new ApiException('Invalid data provided', 'WBY-ED-CRUD_UPDATE_FLOW-3', 400);
         }
 
         $entity = $entity->findById($id);

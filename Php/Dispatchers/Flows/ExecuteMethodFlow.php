@@ -25,11 +25,16 @@ class ExecuteMethodFlow extends AbstractFlow
         $id = $params[0];
         $method = $this->toCamelCase($params[1]);
 
+        if(!$this->wLogin()->canExecute($entity, $method)){
+            throw new ApiException('You don\'t have an EXECUTE permission on ' . get_class($entity));
+        }
+
         $entity = $entity->findById($id);
         if ($entity) {
 
-            $params = $this->loadParamValues($entity, $method, array_slice($params, 2));
+            $params = $this->injectParams($entity, $method, array_slice($params, 2));
 
+            // If it's a POST request, we pass the payload to the Entity method as a last parameter
             if ($this->wRequest()->isPost()) {
                 $params[] = $this->wRequest()->getRequestData();
             }

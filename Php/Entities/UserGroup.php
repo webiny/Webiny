@@ -2,14 +2,18 @@
 namespace Apps\Core\Php\Entities;
 
 use Apps\Core\Php\DevTools\Entity\EntityAbstract;
-use Webiny\Component\Mongo\Index\SingleIndex;
+use Webiny\Component\Entity\EntityCollection;
+use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
 /**
  * Class UserGroup
  *
- * @property string $name
+ * @property string           $name
+ * @property string           $tag
+ * @property ArrayObject      $permissions
+ * @property EntityCollection $users
  *
- * @package Ht\Entities
+ * @package Apps\Core\Php\Entities
  *
  */
 class UserGroup extends EntityAbstract
@@ -24,30 +28,11 @@ class UserGroup extends EntityAbstract
      */
     protected function entityStructure()
     {
-        $this->attr('name')->char();
+        $this->attr('name')->char()->setValidators('required');
+        $this->attr('tag')->char()->setValidators('required')->onSet(function ($tag) {
+            return $this->str($tag)->slug()->val();
+        });
         $this->attr('users')->many2many('User2Group')->setEntity('\Apps\Core\Php\Entities\User');
         $this->attr('permissions')->object();
-    }
-
-    /**
-     * Check if given permission is granted on given entity
-     *
-     * @param string $entity Entity class
-     * @param string $permission c,r,u,d or any other entity method
-     *
-     * @return bool
-     */
-    public function checkPermission($entity, $permission)
-    {
-        if (!isset($this->permissions[$entity])) {
-            return false;
-        }
-
-        $entityPermissions = $this->permissions[$entity];
-        if (isset($entityPermissions[$permission])) {
-            return $entityPermissions[$permission];
-        }
-
-        return false;
     }
 }

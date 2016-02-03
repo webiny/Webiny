@@ -16,6 +16,7 @@ use Apps\Core\Php\DevTools\Response\ResponseEvent;
 use Webiny\Component\Http\Request;
 use Webiny\Component\Http\Response;
 use Webiny\Component\Mongo\Mongo;
+use Webiny\Component\Security\Security;
 use Webiny\Component\StdLib\StdObjectTrait;
 use Webiny\Component\StdLib\SingletonTrait;
 use Apps\Core\Php\DevTools\DevToolsTrait;
@@ -55,6 +56,7 @@ class Bootstrap
         // Register database
         Mongo::setConfig($this->wConfig()->get('Mongo'));
         Entity::setConfig($this->wConfig()->get('Entity'));
+        Security::setConfig($this->wConfig()->get('Security'));
 
         $this->wEvents()->fire('Core.Bootstrap.End');
     }
