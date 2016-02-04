@@ -18,7 +18,7 @@ class Request extends \Webiny\Component\Http\Request
 {
     use RestTrait;
 
-    private $skippedFilters = [
+    private $skipFilters = [
         'XDEBUG_SESSION_START'
     ];
 
@@ -38,7 +38,7 @@ class Request extends \Webiny\Component\Http\Request
                 continue;
             }
 
-            if (!$this->str($fName)->startsWith('_') && !in_array($fName, $this->skippedFilters)) {
+            if (!$this->str($fName)->startsWith('_') && !in_array($fName, $this->skipFilters)) {
                 if (strtolower($fValue) === 'true' || strtolower($fValue) == 'false') {
                     $fValue = StdObjectWrapper::toBool($fValue);
                 }

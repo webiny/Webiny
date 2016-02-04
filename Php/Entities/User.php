@@ -48,8 +48,33 @@ class User extends EntityAbstract
             }
         });
         $this->attr('enabled')->boolean()->setDefaultValue(true)->setValidators('required');
-        $this->attr('groups')->many2many('User2Group')->setEntity('\Apps\Core\Php\Entities\UserGroup')->setValidators('minLength:1');
+        $userGroup = '\Apps\Core\Php\Entities\UserGroup';
+        $this->attr('groups')->many2many('User2Group')->setEntity($userGroup)->setValidators('minLength:1')->onSet(function ($groups) {
+            // If not mongo Ids - load groups by tags
+            // TODO: debug many2many validation and population
+            return $groups;
+        });
     }
+
+    protected function entityApi()
+    {
+        // POST /entities/core/users/login
+        $this->api('POST', 'login', function () {
+            $data = $this->wRequest()->getRequestData();
+            $authToken = $this->wAuth()->processLogin($data['username'])['authToken'];
+
+            return [
+                'authToken' => $authToken,
+                'user'      => $this->wAuth()->getUser()->toArray($this->wRequest()->getFields())
+            ];
+        });
+
+        // GET /entities/core/users/me
+        $this->api('GET', 'me', function () {
+            return $this->wAuth()->getUser()->toArray($this->wRequest()->getFields('*,!password'));
+        });
+    }
+
 
     public function save()
     {

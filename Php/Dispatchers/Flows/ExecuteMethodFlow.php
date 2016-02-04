@@ -25,24 +25,31 @@ class ExecuteMethodFlow extends AbstractFlow
         $id = $params[0];
         $method = $this->toCamelCase($params[1]);
 
-        if(!$this->wAuth()->canExecute($entity, $method)){
-            throw new ApiException('You don\'t have an EXECUTE permission on ' . get_class($entity));
+        if (!$this->wAuth()->canExecute($entity, $method)) {
+            throw new ApiException('You don\'t have an EXECUTE permission on ' . get_class($entity), 'WBY-AUTHORIZATION');
         }
 
         $entity = $entity->findById($id);
         if ($entity) {
+            $httpMethod = strtolower($this->wRequest()->getRequestMethod());
+            $entityMethod = $entity->getApiMethod($httpMethod, $method);
+
+            if (!$entityMethod) {
+                $message = 'Method \'' . $method . '\' is not exposed in ' . get_class($entity);
+                throw new ApiException($message, 'WBY-ED-EXECUTE_METHOD_FLOW-3', 404);
+            }
+
+            if ($entityMethod['callable']) {
+                /* @var $method Callable */
+                $method = $entityMethod['callable'];
+            }
 
             $params = $this->injectParams($entity, $method, array_slice($params, 2));
 
-            // If it's a POST request, we pass the payload to the Entity method as a last parameter
-            if ($this->wRequest()->isPost()) {
-                $params[] = $this->wRequest()->getRequestData();
-            }
-
             try {
-                return $entity->$method(...$params);
+                return is_string($method) ? $entity->$method(...$params) : $method(...$params);
             } catch (ExceptionAbstract $e) {
-                throw new ApiException($e->getMessage(), $e->getMessage(), 'WBY-ED-EXECUTE_METHOD_FLOW-1', 400);
+                throw new ApiException($e->getMessage(), 'WBY-ED-EXECUTE_METHOD_FLOW-1', 400);
             }
         }
 
@@ -51,6 +58,6 @@ class ExecuteMethodFlow extends AbstractFlow
 
     public function canHandle($httpMethod, $params)
     {
-        return in_array($httpMethod, ['GET', 'POST']) && count($params) >= 2;
+        return count($params) >= 2 && $this->isValidMongoId($params[0]);
     }
 }

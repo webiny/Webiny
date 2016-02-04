@@ -24,19 +24,27 @@ class ExecuteStaticMethodFlow extends AbstractFlow
     {
         $method = $this->toCamelCase($params[0]);
 
+        $httpMethod = strtolower($this->wRequest()->getRequestMethod());
+        $entityMethod = $entity->getApiMethod($httpMethod, $method);
+
+        if (!$entityMethod) {
+            $message = 'Method \'' . $method . '\' is not exposed in ' . get_class($entity);
+            throw new ApiException($message, 'WBY-ED-EXECUTE_METHOD_FLOW-3', 404);
+        }
+
         if(!$this->wAuth()->canExecute($entity, $method)){
             throw new ApiException('You don\'t have an EXECUTE permission on ' . get_class($entity));
         }
 
+        if (isset($entityMethod['callable'])) {
+            /* @var $method Callable */
+            $method = $entityMethod['callable'];
+        }
 
         $params = $this->injectParams($entity, $method, array_slice($params, 1));
 
-        if ($this->wRequest()->isPost()) {
-            $params[] = $this->wRequest()->getRequestData();
-        }
-
         try {
-            return $entity::$method(...$params);
+            return is_string($method) ? $entity::$method(...$params) : $method(...$params);
         } catch (ExceptionAbstract $e) {
             throw new ApiException($e->getMessage(), $e->getMessage(), 'WBY-ED-EXECUTE_STATIC_METHOD_FLOW', 400);
         }

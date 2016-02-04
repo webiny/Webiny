@@ -8,6 +8,7 @@
 
 namespace Apps\Core\Php\DevTools\Entity;
 
+use Webiny\Component\Entity\Attribute\AttributeAbstract;
 use Webiny\Component\Entity\Attribute\DateTimeAttribute;
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Entity\Event\EntityDeleteEvent;
@@ -20,6 +21,8 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
 {
     use DevToolsTrait;
 
+    private $apiMethods;
+
     private static $protectedAttributes = [
         'id',
         'createdOn',
@@ -29,8 +32,8 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
     final public static function wInstall()
     {
         $indexes = []; //static::entityIndexes();
-        foreach($indexes as $index){
-            if(self::isInstanceOf($index, '\Webiny\Component\Mongo\Index\IndexAbstract')){
+        foreach ($indexes as $index) {
+            if (self::isInstanceOf($index, '\Webiny\Component\Mongo\Index\IndexAbstract')) {
                 Entity::getInstance()->getDatabase()->createIndex(static::$entityCollection, $index);
             }
         }
@@ -52,12 +55,21 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
          * Unset protected attributes
          */
         $fields = array_diff($fields, self::$protectedAttributes);
-        self::wDatabase()
-            ->update(static::$entityCollection, [], ['$unset' => array_flip($fields)], ['multiple' => true]);
+        self::wDatabase()->update(static::$entityCollection, [], ['$unset' => array_flip($fields)], ['multiple' => true]);
     }
 
-    protected static function entityIndexes(){
+    /**
+     * Get entity indexes
+     * @return array
+     */
+    protected static function entityIndexes()
+    {
+        return [];
+    }
 
+    protected function entityApi()
+    {
+        // Expose your methods to API in this method
     }
 
     /**
@@ -72,7 +84,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
     {
         $archiver = Archiver::getInstance();
         $entity = $archiver->restore(get_called_class(), $id);
-        if($entity && $entity->save()) {
+        if ($entity && $entity->save()) {
             $archiver->remove(get_called_class(), $id);
         }
 
@@ -99,6 +111,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
 
     public function __construct()
     {
+        $this->apiMethods = $this->arr();
         $this->attributes = $this->arr();
         $this->attributeBuilder = new EntityAttributeBuilder($this, $this->attributes);
         parent::__construct();
@@ -114,6 +127,12 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
          */
         $this->wEvents()->fire($this->getEventName() . '.Extend', new EntityEvent($this));
 
+        /**
+         * Register entity API methods
+         */
+        if (!$this->apiMethods->count()) {
+            $this->entityApi();
+        }
     }
 
     public function delete()
@@ -121,7 +140,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         /**
          * Make sure the entity instance has an ID
          */
-        if($this->id == null) {
+        if ($this->id == null) {
             return false;
         }
 
@@ -134,7 +153,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         /**
          * If delete was prevented in some event handler, return event result (false by default)
          */
-        if($event->getDeletePrevented()) {
+        if ($event->getDeletePrevented()) {
             return $event->getEventResult();
         }
 
@@ -151,7 +170,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         /**
          * Fire "AfterDelete" event
          */
-        if($deleted) {
+        if ($deleted) {
             $this->wEvents()->fire($this->getEventName() . '.AfterDelete', $event);
         }
 
@@ -168,12 +187,72 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         return $save;
     }
 
+    /**
+     * @param $id
+     *
+     * @return null|EntityAbstract
+     */
+    public static function findById($id)
+    {
+        return parent::findById($id);
+    }
+
+    /**
+     * @param array $conditions
+     *
+     * @return null|EntityAbstract
+     */
+    public static function findOne(array $conditions = [])
+    {
+        return parent::findOne($conditions);
+    }
+
+
+    public function getApiMethod($httpMethod, $entityMethod)
+    {
+        $httpMethod = strtolower($httpMethod);
+
+        return $this->apiMethods->key($httpMethod . '.' . $entityMethod);
+    }
+
+    public static function meta()
+    {
+        $entity = new static();
+
+        $data = [
+            'class' => get_class($entity),
+            'mask'  => $entity::$entityMask
+        ];
+
+        // TODO: add API methods to
+
+        /* @var $attr AttributeAbstract */
+        foreach ($entity->getAttributes() as $attrName => $attr) {
+            $data['attributes'][] = [
+                'name'               => $attrName,
+                'type'               => self::str(get_class($attr))->explode('\\')->last()->replace('Attribute', '')->caseLower()->val(),
+                'validators'         => join(',', $attr->getValidators()),
+                'validationMessages' => $attr->getValidationMessages(),
+                'defaultValue'       => $attr->getDefaultValue()
+            ];
+        }
+
+        return $data;
+    }
+
+    protected function api($httpMethod, $entityMethod, $callback = null)
+    {
+        $httpMethod = strtolower($httpMethod);
+        $this->apiMethods->key($httpMethod . '.' . $entityMethod, ['callable' => $callback]);
+
+        return $this;
+    }
+
     private function getEventName()
     {
         $classParts = $this->str(get_class($this))->explode('\\')->filter();
         $eventName = $classParts[1] . '.' . $classParts->last();
 
         return $eventName;
-
     }
 }

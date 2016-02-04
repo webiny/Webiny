@@ -2,7 +2,8 @@
 namespace Apps\Core\Php\Entities;
 
 use Apps\Core\Php\DevTools\Entity\EntityAbstract;
-use Webiny\Component\Mongo\Index\SingleIndex;
+use Apps\Core\Php\DevTools\Request;
+use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
 /**
  * Class Test
@@ -25,10 +26,17 @@ class Test extends EntityAbstract
     protected function entityStructure()
     {
         $this->attr('name')->char()->setValidators('required');
+
+        $this->expose('bang', function(Request $request, $result){
+            return $result->toArray($request->getFields());
+        });
     }
 
-    public static function bang()
+    public static function bang(ArrayObject $get, ArrayObject $post)
     {
-        return 'Bang!';
+        return [
+            'get'  => $get->val(),
+            'post' => $post->val()
+        ];
     }
 }

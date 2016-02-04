@@ -104,8 +104,6 @@ class Login
                     'authToken' => $authToken
                 ];
             }
-
-
         } catch (LoginException $le) {
             throw new ApiException($le->getMessage(), $le->getCode());
         } catch (\Exception $e) {
