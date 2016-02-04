@@ -3,6 +3,7 @@ namespace Apps\Core\Php\Entities;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\DevTools\Login\AuthorizationTrait;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Mongo\Index\SingleIndex;
 
@@ -21,7 +22,7 @@ use Webiny\Component\Mongo\Index\SingleIndex;
  */
 class User extends EntityAbstract
 {
-    use DevToolsTrait;
+    use DevToolsTrait, AuthorizationTrait;
 
     protected static $entityCollection = 'Users';
     protected static $entityMask = '{firstName} {lastName}';
@@ -31,6 +32,15 @@ class User extends EntityAbstract
         return [
             new SingleIndex('email', 'email', false, true)
         ];
+    }
+
+    /**
+     * Get user instance for authorization
+     * @return $this
+     */
+    protected function getUserToAuthorize()
+    {
+        return $this;
     }
 
     /**
@@ -65,7 +75,7 @@ class User extends EntityAbstract
 
             return [
                 'authToken' => $authToken,
-                'user'      => $this->wAuth()->getUser()->toArray($this->wRequest()->getFields())
+                'user'      => $this->wAuth()->getUser()->toArray($this->wRequest()->getFields('*,!password'))
             ];
         });
 
