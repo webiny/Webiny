@@ -62,18 +62,18 @@ class PackageScanner
             $this->packages['apps'] = $this->scanApps('Apps');
 
             // scan Plugins folder
-            $this->packages['plugins'] = $this->scanPlugins('Plugins');
+            //$this->packages['plugins'] = $this->scanPlugins('Plugins');
 
             // scan Themes folder
-            $this->packages['themes'] = $this->scanThemes('Themes');
+            //$this->packages['themes'] = $this->scanThemes('Themes');
 
             // store the packages, events and routes in cache
-           /* $packageData = [
-                'packages'  => $this->packages,
-                'events'    => $this->wEvents()->getListeners(),
-                'routes'    => $this->wRouter()->getRoutes()
-            ];
-            $this->wCache()->save(self::CACHE_KEY, $packageData, (30 * 60));*/
+            /* $packageData = [
+                 'packages'  => $this->packages,
+                 'events'    => $this->wEvents()->getListeners(),
+                 'routes'    => $this->wRouter()->getRoutes()
+             ];
+             $this->wCache()->save(self::CACHE_KEY, $packageData, (30 * 60));*/
             unset($packageData);
         }
     }
@@ -86,7 +86,7 @@ class PackageScanner
 
     public function listPackages()
     {
-         return $this->packages;
+        return $this->packages;
     }
 
     public function getPackage($package)
@@ -114,12 +114,24 @@ class PackageScanner
         $packages = $this->wStorage()->readDir($root);
         $result = [];
         foreach ($packages as $package) {
+            $key = $package->getKey();
+            $configPath = $key . '/' . $object . '.yaml';
+
+            // If App - detect version and setup autoloader
+            $name = $this->str($key)->explode('/')->last()->val();
+            if ($object == 'App' && $name !== 'Core') {
+                $version = $this->wConfig()->get($object . 's.' . $name);
+                $appPath = $this->wConfig()->get('Application.AbsolutePath') . 'Apps/' . $name . '/' . $version;
+                $this->wClassLoader()->appendLibrary('Apps\\' . $name . '\\', $appPath);
+                $configPath = $key . '/' . $version . '/' . $object . '.yaml';
+            }
+
             // parse packageinfo
-            $info = $this->wConfig()->parseConfig($package->getKey() . '/' . $object . '.yaml');
+            $info = $this->wConfig()->parseConfig($configPath);
 
             // create package instance
             $class = '\\Apps\\Core\\Php\\PackageManager\\' . $object;
-            $result[$package->getKey()] = new $class($info, $package->getKey(), strtolower($object));
+            $result[$key] = new $class($info, $key, strtolower($object));
         }
 
         return $result;

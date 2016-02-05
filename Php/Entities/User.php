@@ -61,7 +61,14 @@ class User extends EntityAbstract
         $userGroup = '\Apps\Core\Php\Entities\UserGroup';
         $this->attr('groups')->many2many('User2Group')->setEntity($userGroup)->setValidators('minLength:1')->onSet(function ($groups) {
             // If not mongo Ids - load groups by tags
-            // TODO: debug many2many validation and population
+            if(is_array($groups)){
+                foreach($groups as $i => $group){
+                    if(!$this->wDatabase()->isMongoId($group)){
+                        $groups[$i] = UserGroup::findOne(['tag' => $group]);
+                    }
+                }
+            }
+
             return $groups;
         });
     }

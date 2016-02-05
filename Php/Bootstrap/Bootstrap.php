@@ -13,6 +13,7 @@ use Apps\Core\Php\DevTools\Response\ApiResponse;
 use Apps\Core\Php\DevTools\Response\HtmlResponse;
 use Apps\Core\Php\DevTools\Response\ResponseAbstract;
 use Apps\Core\Php\DevTools\Response\ResponseEvent;
+use Apps\Core\Php\PackageManager\App;
 use Webiny\Component\Http\Request;
 use Webiny\Component\Http\Response;
 use Webiny\Component\Mongo\Mongo;
@@ -67,7 +68,7 @@ class Bootstrap
         /* @var $response ResponseAbstract */
         $response = $this->wEvents()->fire('Core.Bootstrap.Request', new BootstrapEvent($request), $responseClass, 1);
         if ($response) {
-            if($response instanceof ApiResponse){
+            if ($response instanceof ApiResponse) {
                 $response->setErrors($this->errorHandler->getErrors());
             }
             $this->processResponse($response);
