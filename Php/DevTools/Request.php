@@ -42,6 +42,9 @@ class Request extends \Webiny\Component\Http\Request
                 if (strtolower($fValue) === 'true' || strtolower($fValue) == 'false') {
                     $fValue = StdObjectWrapper::toBool($fValue);
                 }
+                if (is_numeric($fValue)) {
+                    $fValue = strpos($fValue, '.') > 0 ? floatval($fValue) : intval($fValue);
+                }
                 $queryFilters[$fName] = $fValue;
             }
         }
