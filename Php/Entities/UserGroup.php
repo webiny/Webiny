@@ -36,7 +36,8 @@ class UserGroup extends EntityAbstract
         $this->attr('permissions')->object();
     }
 
-    public function checkPermission($item, $permission){
+    public function checkPermission($item, $permission)
+    {
         $group = $this->str($item)->explode('\\')->filter()->values()->val();
 
         // We ony handle the common namespace structure. Everything else will be ignored and returned as false
@@ -50,10 +51,7 @@ class UserGroup extends EntityAbstract
             return false;
         }
 
-        $permissions = $this->permissions->keyNested($key);
-        if (isset($permissions[$permission])) {
-            return $permissions[$permission];
-        }
+        return $this->permissions->keyNested($key . '.' . $permission);
 
         return false;
     }

@@ -8,6 +8,7 @@
 
 namespace Apps\Core\Php\DevTools\Entity;
 
+use Apps\Core\Php\Dispatchers\ApiExpositionTrait;
 use Webiny\Component\Entity\Attribute\AttributeAbstract;
 use Webiny\Component\Entity\Attribute\DateTimeAttribute;
 use Apps\Core\Php\DevTools\DevToolsTrait;
@@ -19,9 +20,7 @@ use Apps\Core\Php\DevTools\Entity\Event\EntityEvent;
  */
 abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
 {
-    use DevToolsTrait;
-
-    private $apiMethods;
+    use DevToolsTrait, ApiExpositionTrait;
 
     private static $protectedAttributes = [
         'id',
@@ -130,9 +129,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         /**
          * Register entity API methods
          */
-        if (!$this->apiMethods->count()) {
-            $this->entityApi();
-        }
+        $this->entityApi();
     }
 
     public function delete()
@@ -217,21 +214,6 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         return parent::attr($attribute);
     }
 
-    public function getApiMethod($httpMethod, $entityMethod)
-    {
-        $httpMethod = strtolower($httpMethod);
-
-        return $this->apiMethods->key($httpMethod . '.' . $entityMethod);
-    }
-
-    public function api($httpMethod, $entityMethod, $callback = null)
-    {
-        $httpMethod = strtolower($httpMethod);
-        $this->apiMethods->key($httpMethod . '.' . $entityMethod, ['callable' => $callback]);
-
-        return $this;
-    }
-
     public static function meta()
     {
         $entity = new static();
@@ -240,8 +222,6 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
             'class' => get_class($entity),
             'mask'  => $entity::$entityMask
         ];
-
-        // TODO: add API methods to
 
         /* @var $attr AttributeAbstract */
         foreach ($entity->getAttributes() as $attrName => $attr) {

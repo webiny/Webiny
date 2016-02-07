@@ -57,8 +57,9 @@ trait ParamsInjectorTrait
                 $requestedValue = $params[$index];
                 $paramValue = call_user_func_array([$mp['class'], 'findById'], [$requestedValue]);
                 if ($mp['required'] && $paramValue === null) {
-                    $message = $mp['name'] . ' with ID `' . $requestedValue . '` was not found!';
-                    throw new ApiException($message, 'WBY-ENITY_DISPATCHER-PARAMS-2', 400);
+                    $data = [];
+                    $data[$mp['name']] = $mp['class'] . ' with ID `' . $requestedValue . '` was not found!';
+                    throw new ApiException('Invalid parameters', 'WBY-ENITY_DISPATCHER-PARAMS-2', 400, $data);
                 }
                 $params[$index] = $paramValue;
             }

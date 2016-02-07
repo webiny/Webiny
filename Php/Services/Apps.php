@@ -2,6 +2,8 @@
 namespace Apps\Core\Php\Services;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\Services\AbstractService;
+use Apps\Core\Php\Dispatchers\ApiExpositionTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Storage\Directory\Directory;
 use Webiny\Component\Storage\File\File;
@@ -11,17 +13,22 @@ use Webiny\Component\Storage\File\File;
  *
  * This service provides meta data about every app
  */
-class Apps
+class Apps extends AbstractService
 {
-    use DevToolsTrait, StdLibTrait;
-
-    public function index($appName = null)
+    function __construct()
     {
-        if(!$appName){
+        $this->api('get', 'index', function ($appName = null) {
+            return $this->index($appName);
+        });
+    }
+
+    private function index($appName = null)
+    {
+        if (!$appName) {
             return $this->getAppsMeta();
         }
 
-        if($appName === 'backend'){
+        if ($appName === 'backend') {
             // Get Backend apps
             $apps = [];
             foreach ($this->getAppsMeta() as $app => $assets) {

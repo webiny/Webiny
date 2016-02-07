@@ -33,9 +33,4 @@ class PriceAttribute extends FloatAttribute
             return 'api-' . $this->getValue();
         });
     }
-
-    public function currencyConvert()
-    {
-
-    }
 }

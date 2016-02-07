@@ -26,17 +26,18 @@ class Test extends EntityAbstract
     protected function entityStructure()
     {
         $this->attr('name')->char()->setValidators('required');
+        $this->attr('nesto')->price(10, 200);
+    }
 
-        $this->expose('bang', function(Request $request, $result){
-            return $result->toArray($request->getFields());
+    protected function entityApi()
+    {
+        $this->api('get', 'getUser', function (User $user) {
+            return $this->getUser($user);
         });
     }
 
-    public static function bang(ArrayObject $get, ArrayObject $post)
+    public function getUser(User $user)
     {
-        return [
-            'get'  => $get->val(),
-            'post' => $post->val()
-        ];
+        return 'user: ' . $user->email;
     }
 }

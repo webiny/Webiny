@@ -24,21 +24,20 @@ class ExecuteMethodFlow extends AbstractFlow
     {
         $id = $params[0];
         $method = $this->toCamelCase($params[1]);
+        $httpMethod = strtolower($this->wRequest()->getRequestMethod());
+        $entityMethod = $entity->getApiMethod($httpMethod, $method);
 
-        if (!$this->wAuth()->canExecute($entity, $method)) {
+        if (!$entityMethod) {
+            $message = 'Method \'' . strtoupper($httpMethod) . ' ' . $method . '\' is not exposed in ' . get_class($entity);
+            throw new ApiException($message, 'WBY-ED-EXECUTE_METHOD_FLOW-3', 404);
+        }
+
+        if (!$this->wAuth()->canExecute($entity, $method . '.' . $httpMethod)) {
             throw new ApiException('You don\'t have an EXECUTE permission on ' . get_class($entity), 'WBY-AUTHORIZATION');
         }
 
         $entity = $entity->findById($id);
         if ($entity) {
-            $httpMethod = strtolower($this->wRequest()->getRequestMethod());
-            $entityMethod = $entity->getApiMethod($httpMethod, $method);
-
-            if (!$entityMethod) {
-                $message = 'Method \'' . $method . '\' is not exposed in ' . get_class($entity);
-                throw new ApiException($message, 'WBY-ED-EXECUTE_METHOD_FLOW-3', 404);
-            }
-
             if ($entityMethod['callable']) {
                 /* @var $method Callable */
                 $method = $entityMethod['callable'];

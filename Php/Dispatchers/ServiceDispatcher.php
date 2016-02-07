@@ -25,6 +25,7 @@ class ServiceDispatcher extends AbstractApiDispatcher
 
         $result = null;
         $request = $this->parseUrl($event->getUrl()->replace('/services', ''));
+        $httpMethod = strtolower($this->wRequest()->getRequestMethod());
 
         $params = $request['params'];
 
@@ -34,23 +35,43 @@ class ServiceDispatcher extends AbstractApiDispatcher
         }
 
         $service = new $serviceClass;
+        if (!method_exists($service, 'getApiMethod')) {
+            throw new ApiException('Services must use `ApiExpositionTrait` to expose public API!', 'WBY-SD-INVALID_SERVICE');
+        }
 
         $method = 'index';
-
         $possibleMethod = null;
         if (isset($params[0])) {
-            $possibleMethod = $this->toCamelCase($params[0]);
+            $possibleMethod = $params[0];
         }
-        if (count($params) > 0 && method_exists($service, $possibleMethod)) {
-            $method = $possibleMethod;
+
+        // Check if method exists
+        $serviceMethod = $service->getApiMethod($httpMethod, $method);
+        $possibleServiceMethod = $service->getApiMethod($httpMethod, $possibleMethod);
+
+        if ($possibleServiceMethod) {
             array_shift($params);
+            $method = $possibleMethod;
+            $serviceMethod = $possibleServiceMethod;
+        }
+
+        if (!$serviceMethod) {
+            $message = 'No applicable methods are exposed in ' . $serviceClass;
+            throw new ApiException($message, 'WBY-SD-NO_METHODS_EXPOSED', 404);
         }
 
         if (!$this->wAuth()->canExecute($serviceClass, $method)) {
-            throw new ApiException('You don\'t have an EXECUTE permission on ' . $serviceClass);
+            throw new ApiException('You don\'t have an EXECUTE permission on ' . $serviceClass, 'WBY-AUTHORIZATION');
         }
 
-        $result = $service->$method(...$this->injectParams($serviceClass, $method, $params));
+        if ($serviceMethod['callable']) {
+            /* @var $method Callable */
+            $method = $serviceMethod['callable'];
+        }
+
+        $params = $this->injectParams($service, $method, $params);
+
+        $result = is_string($method) ? $service->$method(...$params) : $method(...$params);
 
         return new ApiResponse($result);
     }
