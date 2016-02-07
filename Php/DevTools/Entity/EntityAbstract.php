@@ -207,12 +207,29 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         return parent::findOne($conditions);
     }
 
+    /**
+     * @param $attribute
+     *
+     * @return EntityAttributeBuilder
+     */
+    public function attr($attribute)
+    {
+        return parent::attr($attribute);
+    }
 
     public function getApiMethod($httpMethod, $entityMethod)
     {
         $httpMethod = strtolower($httpMethod);
 
         return $this->apiMethods->key($httpMethod . '.' . $entityMethod);
+    }
+
+    public function api($httpMethod, $entityMethod, $callback = null)
+    {
+        $httpMethod = strtolower($httpMethod);
+        $this->apiMethods->key($httpMethod . '.' . $entityMethod, ['callable' => $callback]);
+
+        return $this;
     }
 
     public static function meta()
@@ -238,14 +255,6 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         }
 
         return $data;
-    }
-
-    protected function api($httpMethod, $entityMethod, $callback = null)
-    {
-        $httpMethod = strtolower($httpMethod);
-        $this->apiMethods->key($httpMethod . '.' . $entityMethod, ['callable' => $callback]);
-
-        return $this;
     }
 
     private function getEventName()

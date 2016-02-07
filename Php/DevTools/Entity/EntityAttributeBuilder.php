@@ -8,13 +8,21 @@
 
 namespace Apps\Core\Php\DevTools\Entity;
 
+use Apps\Core\Php\DevTools\Entity\Attributes\PriceAttribute;
+
 /**
  * EntityBuilder
  */
 
 class EntityAttributeBuilder extends \Webiny\Component\Entity\EntityAttributeBuilder
 {
-    public function file() {
-        return;
+    /**
+     * @var EntityAbstract
+     */
+
+    protected $entity;
+
+    public function price($min, $max) {
+        return $this->attributes[$this->attribute] = new PriceAttribute($this->attribute, $this->entity, $min, $max);
     }
 }

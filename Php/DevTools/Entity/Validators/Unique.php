@@ -1,8 +1,8 @@
 <?php
 namespace Apps\Core\Php\DevTools\Entity\Validators;
 
+use Apps\Core\Php\DevTools\Validation\ValidationException;
 use Webiny\Component\Entity\Attribute\AttributeAbstract;
-use Webiny\Component\Entity\Attribute\Exception\ValidationException;
 use Webiny\Component\Entity\Validation\ValidatorInterface;
 
 class Unique implements ValidatorInterface
