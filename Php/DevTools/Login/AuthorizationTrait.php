@@ -48,7 +48,7 @@ trait AuthorizationTrait
         }
 
         $user = $this->getUserToAuthorize();
-        $groups = [UserGroup::findOne(['tag' => 'anonymous'])];
+        $groups = [UserGroup::findOne(['tag' => 'public'])];
         if ($user) {
             foreach ($user->groups as $group) {
                 $groups[] = $group;

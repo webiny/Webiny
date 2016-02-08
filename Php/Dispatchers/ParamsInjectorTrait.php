@@ -38,28 +38,20 @@ trait ParamsInjectorTrait
 
         $methodRequiredParams = $rm->getNumberOfRequiredParameters();
 
-        if (isset($methodParams['get'])) {
-            $methodRequiredParams--;
-        }
-
-        if (isset($methodParams['post'])) {
-            $methodRequiredParams--;
-        }
-
         if (count($params) < $methodRequiredParams) {
             $missingParams = array_slice(array_keys($methodParams), count($params));
-            throw new ApiException('Missing required params', 'WBY-ENITY_DISPATCHER-PARAMS-1', 400, $missingParams);
+            throw new ApiException('Missing required params', 'WBY-ENTITY_DISPATCHER-PARAMS-1', 400, $missingParams);
         }
 
         $index = 0;
         foreach ($methodParams as $mp) {
-            if ($mp['class'] && !in_array($mp['name'], ['get', 'post'])) {
+            if ($mp['class']) {
                 $requestedValue = $params[$index];
                 $paramValue = call_user_func_array([$mp['class'], 'findById'], [$requestedValue]);
                 if ($mp['required'] && $paramValue === null) {
                     $data = [];
                     $data[$mp['name']] = $mp['class'] . ' with ID `' . $requestedValue . '` was not found!';
-                    throw new ApiException('Invalid parameters', 'WBY-ENITY_DISPATCHER-PARAMS-2', 400, $data);
+                    throw new ApiException('Invalid parameters', 'WBY-ENTITY_DISPATCHER-PARAMS-2', 400, $data);
                 }
                 $params[$index] = $paramValue;
             }

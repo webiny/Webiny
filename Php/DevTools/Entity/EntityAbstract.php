@@ -119,7 +119,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
          * createdOn, modifiedOn, deletedOn, deleted and user
          */
         $this->attr('createdOn')->datetime()->setDefaultValue('now');
-        $this->attr('modifiedOn')->datetime()->setDefaultValue('now')->setAutoUpdate(true);
+        $this->attr('modifiedOn')->datetime()->setAutoUpdate(true);
 
         /**
          * Fire event for registering extra attributes

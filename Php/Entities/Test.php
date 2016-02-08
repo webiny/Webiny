@@ -8,10 +8,9 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 /**
  * Class Test
  *
- * @property string $name
+ * @property string $name Your name
  *
  * @package Apps\Core\Php\Entities
- *
  */
 class Test extends EntityAbstract
 {
