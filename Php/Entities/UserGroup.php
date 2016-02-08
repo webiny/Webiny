@@ -29,7 +29,7 @@ class UserGroup extends EntityAbstract
     protected function entityStructure()
     {
         $this->attr('name')->char()->setValidators('required');
-        $this->attr('tag')->char()->setValidators('required')->onSet(function ($tag) {
+        $this->attr('tag')->char()->setValidators('required,unique')->onSet(function ($tag) {
             return $this->str($tag)->slug()->val();
         });
         $this->attr('users')->many2many('User2Group')->setEntity('\Apps\Core\Php\Entities\User');

@@ -16,9 +16,9 @@ class Backend
 {
     use DevToolsTrait;
 
-    public function handle(BootstrapEvent $event)
+    public function handle()
     {
-        if (!$event->getRequest()->getCurrentUrl(true)->getPath(true)->startsWith('/'.$this->wConfig()->get('Application.Backend'))) {
+        if (!$this->wRequest()->getCurrentUrl(true)->getPath(true)->startsWith('/' . $this->wConfig()->get('Application.Backend'))) {
             return false;
         }
 

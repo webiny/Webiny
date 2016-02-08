@@ -9,29 +9,13 @@
 namespace Apps\Core\Php\Bootstrap;
 
 use Webiny\Component\EventManager\Event;
-use Webiny\Component\Http\Request;
 
 /**
- * This class is included in the index.php and it responsible to bootstrap the application.
+ * This class is passed along bootstrap events
+ *
+ * It is empty for now, but we need it for possible future upgrades
  */
 class BootstrapEvent extends Event
 {
-    /**
-     * @var Request
-     */
-    protected $request;
 
-    public function __construct(Request $request)
-    {
-        parent::__construct();
-        $this->request = $request;
-    }
-
-    /**
-     * @return Request
-     */
-    public function getRequest()
-    {
-        return $this->request;
-    }
 }

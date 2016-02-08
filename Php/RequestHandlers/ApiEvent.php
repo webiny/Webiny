@@ -14,37 +14,23 @@ use Webiny\Component\Http\Request;
 use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
 
 /**
- * This class is used to pass request data to Api event handlers
+ * This class is passed to Api event handlers
  */
 class ApiEvent extends Event
 {
     use DevToolsTrait;
 
     /**
-     * @var Request
-     */
-    protected $request;
-
-    public function __construct(Request $request)
-    {
-        parent::__construct();
-        $this->request = $request;
-    }
-
-    /**
-     * @return Request
-     */
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
-    /**
+     * Get URL part of the string relevant to API
+     *
+     * This method returns the URL part after the API part of the URL:
+     * If request is `http://domain.com/api/some-url`, will return `/some-url`
+     *
      * @return StringObject
      * @throws \Webiny\Component\StdLib\StdObject\StringObject\StringObjectException
      */
     public function getUrl(){
-        $url = $this->request->getCurrentUrl(true)->setPort('')->val();
+        $url = $this->wRequest()->getCurrentUrl(true)->setPort('')->val();
         $apiPath = $this->wConfig()->getConfig()->get('Application.ApiPath');
         return $this->str($url)->replace($apiPath, '')->explode('?')->first();
     }

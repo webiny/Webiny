@@ -9,12 +9,11 @@
 namespace Apps\Core\Php\Bootstrap;
 
 use Apps\Core\Php\DevTools\Entity\Entity;
+use Apps\Core\Php\DevTools\Request;
 use Apps\Core\Php\DevTools\Response\ApiResponse;
 use Apps\Core\Php\DevTools\Response\HtmlResponse;
 use Apps\Core\Php\DevTools\Response\ResponseAbstract;
 use Apps\Core\Php\DevTools\Response\ResponseEvent;
-use Apps\Core\Php\PackageManager\App;
-use Webiny\Component\Http\Request;
 use Webiny\Component\Http\Response;
 use Webiny\Component\Mongo\Mongo;
 use Webiny\Component\Security\Security;
@@ -62,11 +61,11 @@ class Bootstrap
         $this->wEvents()->fire('Core.Bootstrap.End');
     }
 
-    public function run(Request $request)
+    public function run()
     {
         $responseClass = '\Apps\Core\Php\DevTools\Response\ResponseAbstract';
         /* @var $response ResponseAbstract */
-        $response = $this->wEvents()->fire('Core.Bootstrap.Request', new BootstrapEvent($request), $responseClass, 1);
+        $response = $this->wEvents()->fire('Core.Bootstrap.Request', new BootstrapEvent(), $responseClass, 1);
         if ($response) {
             if ($response instanceof ApiResponse) {
                 $response->setErrors($this->errorHandler->getErrors());

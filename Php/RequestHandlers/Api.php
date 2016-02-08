@@ -19,13 +19,13 @@ class Api
     private $apiResponse = '\Apps\Core\Php\DevTools\Response\ApiResponse';
     private $apiEvent;
 
-    public function handle(BootstrapEvent $event)
+    public function handle()
     {
-        if (!$event->getRequest()->getCurrentUrl(true)->getPath(true)->startsWith('/api')) {
+        if (!$this->wRequest()->getCurrentUrl(true)->getPath(true)->startsWith('/api')) {
             return false;
         }
 
-        $this->apiEvent = new ApiEvent($event->getRequest());
+        $this->apiEvent = new ApiEvent();
 
         $events = [
             'Core.Api.Before',
