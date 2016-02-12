@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-import Components from './Components';
 import Placeholder from './Placeholder';
 import Link from './Link';
 

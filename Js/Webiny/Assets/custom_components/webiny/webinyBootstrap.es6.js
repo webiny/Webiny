@@ -45,10 +45,10 @@ class WebinyBootstrapClass {
         return System.import(path).catch(e => console.error(e));
     }
 
-    run(env = 'development') {
-        this.env = env;
+    run() {
+        this.env = window.WebinyEnvironment;
         window._apiUrl = '/api';
-        if (env === 'development') {
+        if (this.env === 'development') {
             window.Webiny = Webiny;
         }
 

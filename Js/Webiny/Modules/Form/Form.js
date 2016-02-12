@@ -217,7 +217,7 @@ class Form extends Webiny.Ui.Component {
 
     attachToForm(component) {
         this.inputs[component.props.name] = {
-            component: component,
+            component,
             model: component.getValue()
         };
         this.attachValidators(component.props);

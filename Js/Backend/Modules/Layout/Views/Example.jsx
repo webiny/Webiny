@@ -39,11 +39,36 @@ class Example extends Webiny.Ui.View {
     submit(model) {
         _.merge(this.state.model, model);
         this.setState(this.state, () => {
-            console.log("NEW PARENT STATE", this.state.model);
+            console.log('NEW PARENT STATE', this.state.model);
         });
     }
 
     render() {
+        const firstFormProps = {
+            layout: false,
+            ui: 'myForm',
+            title: 'Webiny Form',
+            data: this.state.model,
+            onSubmit: this.submit,
+            linkedForms: 'mySecondForm,myThirdForm',
+            onReset: this.signal('tabs:selectTab', 0),
+            onInvalid: this.signal('tabs:selectTab', 0)
+        };
+
+        const secondFormProps = {
+            layout: false,
+            ui: 'mySecondForm',
+            data: this.state.model,
+            onInvalid: this.signal('tabs:selectTab', 1)
+        };
+
+        const thirdFormProps = {
+            layout: false,
+            ui: 'myThirdForm',
+            data: this.state.model,
+            onInvalid: this.signal('tabs:selectTab', 2)
+        };
+
         return (
             <div>
                 <p>My name is "{this.state.name || 'Unknown'}" and my email is "{this.state.model.email}"</p>
@@ -51,40 +76,40 @@ class Example extends Webiny.Ui.View {
                     {this.state.domains.map((item, i) => <li key={i}>{item}</li>)}
                 </ul>
 
+                <Ui.Button type="primary" onClick={this.loadCms} label="Load CMS"/>
+
                 <Ui.Panel.Panel>
                     <Ui.Panel.Header title="Webiny Form"/>
                     <Ui.Panel.Body>
                         <Ui.Tabs.Tabs ui="tabs">
                             <Ui.Tabs.Tab label="First tab">
-                                <Ui.Form layout={false} ui="myForm" title="Webiny Form" data={this.state.model} onSubmit={this.submit}
-                                         linkedForms="mySecondForm,myThirdForm" onReset={this.signal('tabs:selectTab', 0)} onInvalid={this.signal('tabs:selectTab', 0)}>
+                                <Ui.Form {...firstFormProps}>
                                     <fields>
                                         <Ui.Grid.Row>
                                             <Ui.Grid.Col all={12}>
-                                                <Ui.Input label="Email" placeholder="Enter anything" name="email"
-                                                          validate="required,email"/>
+                                                <Ui.Input label="Email" name="email" validate="required,email"/>
                                             </Ui.Grid.Col>
                                         </Ui.Grid.Row>
                                     </fields>
                                 </Ui.Form>
                             </Ui.Tabs.Tab>
                             <Ui.Tabs.Tab label="Second tab">
-                                <Ui.Form layout={false} ui="mySecondForm" data={this.state.model} onInvalid={this.signal('tabs:selectTab', 1)}>
+                                <Ui.Form {...secondFormProps}>
                                     <fields>
                                         <Ui.Grid.Row>
                                             <Ui.Grid.Col all={12}>
-                                                <Ui.Input label="Name" placeholder="Enter anything" name="name" validate="required"/>
+                                                <Ui.Input label="Name" name="name" validate="required"/>
                                             </Ui.Grid.Col>
                                         </Ui.Grid.Row>
                                     </fields>
                                 </Ui.Form>
                             </Ui.Tabs.Tab>
                             <Ui.Tabs.Tab label="Third tab">
-                                <Ui.Form layout={false} ui="myThirdForm" data={this.state.model} onInvalid={this.signal('tabs:selectTab', 2)}>
+                                <Ui.Form {...thirdFormProps}>
                                     <fields>
                                         <Ui.Grid.Row>
                                             <Ui.Grid.Col all={12}>
-                                                <Ui.Input label="Brand" placeholder="Enter anything" name="brand" validate="required"/>
+                                                <Ui.Input label="Brand" name="brand" validate="required"/>
                                             </Ui.Grid.Col>
                                         </Ui.Grid.Row>
                                     </fields>

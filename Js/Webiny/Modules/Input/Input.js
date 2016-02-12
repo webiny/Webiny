@@ -2,7 +2,7 @@ import Webiny from 'Webiny';
 
 class Input extends Webiny.Ui.FormComponent {
 
-    constructor(props){
+    constructor(props) {
         super(props);
     }
 

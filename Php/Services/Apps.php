@@ -40,10 +40,10 @@ class Apps extends AbstractService
             return $apps;
         }
 
-        return $this->getAppsMeta()[$appName];
+        return $this->getAppsMeta($appName);
     }
 
-    private function getAppsMeta()
+    public function getAppsMeta($app = null)
     {
         if ($this->wIsProduction()) {
             $storage = $this->wStorage('ProductionBuild');
@@ -51,13 +51,36 @@ class Apps extends AbstractService
             $storage = $this->wStorage('DevBuild');
         }
 
-        $files = new Directory('', $storage, true, '*meta.json');
+        if (!$app) {
+            // If all apps are required we need to fetch meta only for versions currently enabled
+            $apps = ['Core' => null];
+            foreach ($this->wConfig()->get('Apps')->toArray() as $enabledApp => $version) {
+                $apps[$enabledApp] = $version;
+            }
+        } else {
+            // If specific app is given, fetch only one meta.json of the active app version
+            list($appName, $jsApp) = explode('.', $app);
+            if ($appName === 'Core') {
+                $key = $appName . '/' . $jsApp;
+            } else {
+                $version = $this->wConfig()->get('Apps.' . $appName);
+                $key = $appName . '/' . $version . '/' . $jsApp;
+            }
+            $meta = new File($key . '/meta.json', $storage);
 
+            return json_decode($meta->getContents(), true);
+        }
+
+        // Fetch meta.json of each active app
         $assets = [];
-        /* @var $file File */
-        foreach ($files as $file) {
-            $data = json_decode($file->getContents(), true);
-            $assets[$data['name']] = $data;
+        foreach ($apps as $appName => $appVersion) {
+            $key = $appVersion ? $appName . '/' . $appVersion : $appName;
+            $files = new Directory($key, $storage, 1, '*meta.json');
+            /* @var $file File */
+            foreach ($files as $file) {
+                $data = json_decode($file->getContents(), true);
+                $assets[$data['name']] = $data;
+            }
         }
 
         return $assets;

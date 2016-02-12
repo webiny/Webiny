@@ -21,9 +21,12 @@ class Api
 
     public function handle()
     {
+        // TODO: handle this smarter, with possibility of having API subdomain
         if (!$this->wRequest()->getCurrentUrl(true)->getPath(true)->startsWith('/api')) {
             return false;
         }
+
+        header("Access-Control-Allow-Origin: *");
 
         $this->apiEvent = new ApiEvent();
 

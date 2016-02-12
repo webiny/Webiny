@@ -1,18 +1,13 @@
 const actions = {
     loadCms: () => {
         const api = new Webiny.Api.Service('/services/core/apps');
-        return api.get('/backend').then(res => {
-            let apps = Q();
-            _.forIn(res.getData(), config => {
-                apps = apps.then(() => {
-                    return WebinyBootstrap.includeApp(config.name, config).then(appInstance => {
-                        appInstance.addModules(config.modules);
-                        _.set(Webiny.Apps, config.name, appInstance);
-                        appInstance.run();
-                    });
-                });
+        return api.get('/Cms.Backend').then(res => {
+            const config = res.getData();
+            return WebinyBootstrap.includeApp(config.name, config).then(appInstance => {
+                appInstance.addModules(config.modules);
+                _.set(Webiny.Apps, config.name, appInstance);
+                appInstance.run();
             });
-            return apps;
         });
     },
 

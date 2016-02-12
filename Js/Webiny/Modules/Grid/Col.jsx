@@ -20,7 +20,7 @@ const propsMap = {
 };
 
 function getCssClass(key, val) {
-    if (key == 'all') {
+    if (key === 'all') {
         return `${getCssClass('xs', val)}`;
     }
     return _.has(propsMap, key) ? `col-${propsMap[key]}-${val}` : false;
@@ -33,7 +33,6 @@ class Col extends Webiny.Ui.Component {
 Col.defaultProps = {
     className: '',
     renderer: function renderer() {
-
         const props = _.clone(this.props);
         let cssClasses = [];
 

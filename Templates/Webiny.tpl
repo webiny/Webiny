@@ -6,13 +6,12 @@
     <title>Webiny</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
     <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,300" rel="stylesheet" type="text/css">
-    <link href="/build/{$Webiny->getEnvironment()}/Core/Webiny/css/vendors.min.css" rel="stylesheet" type="text/css">
-    <script src="/build/{$Webiny->getEnvironment()}/Core/Webiny/scripts/vendors.min.js" type="text/javascript"></script>
+    {webiny}
 </head>
 <body>
-<webiny-app id="app" name="Core.Backend" rootComponent="Container" base-url="/admin"></webiny-app>
+<webiny-app name="Core.Backend" base-url="/admin"></webiny-app>
 <script>
-    WebinyBootstrap.run('{$Webiny->getEnvironment()}');
+    WebinyBootstrap.run();
 </script>
 </body>
 </html>

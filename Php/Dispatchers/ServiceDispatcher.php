@@ -47,7 +47,7 @@ class ServiceDispatcher extends AbstractApiDispatcher
 
         // Check if method exists
         $serviceMethod = $service->getApiMethod($httpMethod, $method);
-        $possibleServiceMethod = $service->getApiMethod($httpMethod, $possibleMethod);
+        $possibleServiceMethod = $possibleMethod ? $service->getApiMethod($httpMethod, $possibleMethod) : null;
 
         if ($possibleServiceMethod) {
             array_shift($params);

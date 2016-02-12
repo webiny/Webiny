@@ -3,7 +3,7 @@ import Webiny from 'Webiny';
 export class Tab extends Webiny.Ui.Component {
 
     render() {
-        let onClick = (e) => {
+        const onClick = (e) => {
             this.props.onClick(this, this.props.index, e);
             if (!e.isDefaultPrevented()) {
                 this.props.parent.selectTab(this.props.index);
@@ -15,7 +15,7 @@ export class Tab extends Webiny.Ui.Component {
 
         let label = this.props.label;
         if (_.isString(this.props.label)) {
-            label = <a href="javascript:">{this.props.label}</a>;
+            label = <a href="#">{this.props.label}</a>;
         }
 
         if (this.props.render === 'tab') {
@@ -101,8 +101,8 @@ export class Tabs extends Webiny.Ui.Component {
 
             const props = {
                 key: index,
-                index: index,
-                active: active,
+                index,
+                active,
                 parent: this
             };
             props.render = 'tab';

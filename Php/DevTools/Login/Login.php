@@ -3,13 +3,13 @@ namespace Apps\Core\Php\DevTools\Login;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\Entities\User;
-use Apps\Core\Php\Login\LoginException;
 use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Security\Security;
 use Webiny\Component\Security\SecurityTrait;
 use Webiny\Component\StdLib\SingletonTrait;
-use \Apps\Core\Php\Login\Login as LoginApp;
+use Webiny\Login\Login as LoginApp;
 use Webiny\Component\StdLib\StdLibTrait;
+use Webiny\Login\LoginException;
 
 /**
  * Class Login

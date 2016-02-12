@@ -6,7 +6,7 @@ class Body extends Webiny.Ui.Component {
 
 Body.defaultProps = {
     renderer: function renderer() {
-        var classes = this.classSet('panel-body', this.props.className);
+        const classes = this.classSet('panel-body', this.props.className);
         return <div {...this.props} className={classes}>{this.props.children}</div>;
     }
 };
