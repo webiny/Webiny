@@ -1,0 +1,58 @@
+{
+    "id": "b6a3901d-d8e9-f777-0191-13f165c11ab0",
+    "name": "Box Content API",
+    "description": "",
+    "order": [],
+    "folders": [
+        {
+            "id": "a3d53323-42f1-4293-115d-71cdfe842bbe",
+            "name": "Collaborations",
+            "description": "",
+            "order": [
+                "ff2cf9b0-b2d5-1b53-9150-46ee0ab27f39",
+                "51fbba25-e1e0-e9c6-bd00-de2e26209013",
+                "d577ea37-3b5b-fbc9-36b5-33c96d6ae99a",
+                "b1016ee5-b91f-dcaa-f607-672dd7a6dcaa",
+                "dd20cfb8-fa5f-70e9-ad18-5d9369f67a4d",
+                "9581893e-5c2d-8e51-7d64-66927e48ede1",
+                "e7ab72e1-2ed9-0f41-dbb1-59518bf23d99"
+            ],
+            "collection_name": "Box Content API",
+            "collection_id": "b6a3901d-d8e9-f777-0191-13f165c11ab0"
+        }
+    ],
+    "requests": [
+        {
+            "id": "034b1f09-4254-767b-1419-ad82d1dcb8bc",
+            "headers": "",
+            "url": "https://api.box.com/oauth2/revoke",
+            "method": "POST",
+            "data": [
+                {
+                    "key": "token",
+                    "value": "",
+                    "type": "text"
+                },
+                {
+                    "key": "client_id",
+                    "value": "",
+                    "type": "text"
+                },
+                {
+                    "key": "client_secret",
+                    "value": "",
+                    "type": "text"
+                }
+            ],
+            "dataMode": "params",
+            "name": "Destroy a Token",
+            "description": "",
+            "descriptionFormat": "html",
+            "time": 1380498852819,
+            "version": 2,
+            "responses": [],
+            "collectionId": "b6a3901d-d8e9-f777-0191-13f165c11ab0",
+            "synced": false
+        }
+    ]
+}

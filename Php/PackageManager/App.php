@@ -34,7 +34,7 @@ class App extends PackageAbstract
         $this->version = $info->get('Version', '');
 
         if ($this->name == '' || $this->version == '') {
-            throw new \Exception("A component must have both name and version properties defined.");
+            throw new \Exception('A component must have both name and version properties defined');
         }
 
         $this->parseNamespace($path);
@@ -49,10 +49,19 @@ class App extends PackageAbstract
         return $this->version;
     }
 
-    public function getPath()
+    public function getPath($absolute = true)
     {
-        $version = str_replace('.', '_', $this->wConfig()->get('Apps.' . $this->name));
+        $version = $this->wConfig()->get('Apps.' . $this->name);
+        if ($version) {
+            $version = '/' . str_replace('.', '_', $version);
+        } else {
+            $version = '';
+        }
 
-        return $this->wConfig()->get('Application.AbsolutePath') . 'Apps/' . $this->name . '/' . $version;
+        if ($absolute) {
+            return $this->wConfig()->get('Application.AbsolutePath') . 'Apps/' . $this->name . $version;
+        }
+
+        return 'Apps/' . $this->name . $version;
     }
 }

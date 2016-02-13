@@ -11,6 +11,9 @@ namespace Apps\Core\Php\RequestHandlers;
 use Apps\Core\Php\Bootstrap\BootstrapEvent;
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
+use Apps\Core\Php\DevTools\Response\ApiRawResponse;
+use Apps\Core\Php\DevTools\Response\ApiResponse;
+use Apps\Core\Php\Lib\PostmanDocs;
 
 class Api
 {
@@ -22,11 +25,17 @@ class Api
     public function handle()
     {
         // TODO: handle this smarter, with possibility of having API subdomain
-        if (!$this->wRequest()->getCurrentUrl(true)->getPath(true)->startsWith('/api')) {
+        $path = $this->wRequest()->getCurrentUrl(true)->getPath(true);
+        if (!$path->startsWith('/api')) {
             return false;
         }
 
         header("Access-Control-Allow-Origin: *");
+
+        if ($path->startsWith('/api/discover')) {
+            $postmanDocs = new PostmanDocs();
+            return new ApiRawResponse($postmanDocs->generate());
+        }
 
         $this->apiEvent = new ApiEvent();
 

@@ -1,9 +1,9 @@
 <?php
 namespace Apps\Core\Php\Entities;
 
+use Apps\Core\Php\DevTools\Authorization\AuthorizationTrait;
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Entity\EntityAbstract;
-use Apps\Core\Php\DevTools\Login\AuthorizationTrait;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Mongo\Index\SingleIndex;
 
