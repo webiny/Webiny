@@ -8,8 +8,9 @@
 
 namespace Apps\Core\Php\DevTools;
 
-use Apps\Core\Php\DevTools\Login\Login;
+use Apps\Core\Php\DevTools\Authorization\Authorization;
 use Apps\Core\Php\DevTools\Validation\ValidationHelper;
+use Apps\Core\Php\PackageManager\App;
 use Webiny\Component\Cache\CacheStorage;
 use Webiny\Component\Mongo\Mongo;
 use Webiny\Component\ServiceManager\ServiceManager;
@@ -21,7 +22,7 @@ use Webiny\Component\Storage\Storage as WebinyStorage;
 trait DevToolsTrait
 {
     /**
-     * Get access to database.
+     * Get access to database
      *
      * @param string $database Name of the database
      *
@@ -33,7 +34,7 @@ trait DevToolsTrait
     }
 
     /**
-     * Get access to storage.
+     * Get access to storage
      *
      * @param null $name
      *
@@ -49,7 +50,7 @@ trait DevToolsTrait
     }
 
     /**
-     * Get access to class loader.
+     * Get access to class loader
      *
      * @return ClassLoader
      */
@@ -59,7 +60,7 @@ trait DevToolsTrait
     }
 
     /**
-     * Get access to caching system.
+     * Get access to caching system
      *
      * @return CacheStorage
      */
@@ -69,7 +70,7 @@ trait DevToolsTrait
     }
 
     /**
-     * Get access to system configuration.
+     * Get access to system configuration
      *
      * @return Config
      */
@@ -79,7 +80,7 @@ trait DevToolsTrait
     }
 
     /**
-     * Get current request information.
+     * Get current request
      *
      * @return Request
      */
@@ -89,7 +90,7 @@ trait DevToolsTrait
     }
 
     /**
-     * Get access to event manager.
+     * Get access to event manager
      *
      * @return Events
      */
@@ -107,7 +108,7 @@ trait DevToolsTrait
     }
 
     /**
-     * return ServiceManager
+     * Get ServiceManager
      *
      * @param null $name
      *
@@ -125,11 +126,13 @@ trait DevToolsTrait
     }
 
     /**
+     * Get template engine
+     *
      * @return \Webiny\Component\TemplateEngine\Bridge\TemplateEngineInterface
      */
     static protected function wTemplateEngine()
     {
-        return TemplateEngine::getInstance()->getTemplateEngine();
+        return TemplateEngine::getInstance();
     }
 
     /**
@@ -141,6 +144,8 @@ trait DevToolsTrait
     }
 
     /**
+     * Get Validation
+     *
      * @return ValidationHelper
      */
     static protected function wValidation()
@@ -149,10 +154,28 @@ trait DevToolsTrait
     }
 
     /**
-     * @return Login
+     * Get Authorization
+     *
+     * @return Authorization
      */
     static protected function wAuth()
     {
-        return Login::getInstance();
+        return Authorization::getInstance();
+    }
+
+    /**
+     * Get Apps container or App instance
+     *
+     * @param null|string $app
+     *
+     * @return Apps|App
+     */
+    static protected function wApps($app = null)
+    {
+        if ($app) {
+            return Apps::getInstance()->getApp($app);
+        }
+
+        return Apps::getInstance();
     }
 }

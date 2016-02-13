@@ -36,11 +36,23 @@ class App extends PackageAbstract
         if ($this->name == '' || $this->version == '') {
             throw new \Exception("A component must have both name and version properties defined.");
         }
-        
+
         $this->parseNamespace($path);
         $this->parseEvents($info);
         $this->parseStorages($info);
         $this->parseServices($info);
         $this->parseRoutes($info);
+    }
+
+    public function getVersion()
+    {
+        return $this->version;
+    }
+
+    public function getPath()
+    {
+        $version = str_replace('.', '_', $this->wConfig()->get('Apps.' . $this->name));
+
+        return $this->wConfig()->get('Application.AbsolutePath') . 'Apps/' . $this->name . '/' . $version;
     }
 }

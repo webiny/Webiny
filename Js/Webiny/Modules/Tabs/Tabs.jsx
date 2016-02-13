@@ -15,7 +15,7 @@ export class Tab extends Webiny.Ui.Component {
 
         let label = this.props.label;
         if (_.isString(this.props.label)) {
-            label = <a href="#">{this.props.label}</a>;
+            label = <a href="javascript:void(0);">{this.props.label}</a>;
         }
 
         if (this.props.render === 'tab') {

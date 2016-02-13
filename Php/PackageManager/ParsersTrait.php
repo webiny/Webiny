@@ -102,6 +102,20 @@ trait ParsersTrait
     {
         $routes = $info->get('Routes', false);
         if ($routes) {
+            foreach ($routes as $key => $route) {
+
+                if (is_string($route['Callback'])) {
+                    $route['Callback'] = new ConfigObject([
+                        'Class' => $route['Callback'],
+                        'Method' => 'handle'
+                    ]);
+                }
+
+                $callback = $this->str($route['Callback']['Class']);
+                if (!$callback->startsWith('\\')) {
+                    $route['Callback']['Class'] = $this->namespace . '\\' . $callback->replace('/', '\\')->val();
+                }
+            }
             $this->wRouter()->registerRoutes($routes);
         }
     }

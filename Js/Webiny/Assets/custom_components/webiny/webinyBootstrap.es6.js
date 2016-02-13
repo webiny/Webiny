@@ -63,7 +63,8 @@ class WebinyBootstrapClass {
     loadAssets(meta) {
         const assets = [];
         _.each(_.get(meta.assets, 'js', []), item => {
-            if (meta.name === 'Core.Webiny' && _.endsWith(item, 'vendors.min.js')) {
+            // TODO: ovo rijeiti u skladu sa cache hashevima jer tu requesta ponovo filove od Core.Webiny
+            if (meta.name === 'Core.Webiny' && _.indexOf(item, 'vendors.min.js')) {
                 return;
             }
 

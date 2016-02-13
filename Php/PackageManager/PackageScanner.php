@@ -33,54 +33,16 @@ class PackageScanner
      */
     protected function init()
     {
-        // see if we have already all the packages, events and routes in cache
-        $data = $this->wCache()->read(self::CACHE_KEY);
-        if ($data) {
-            ##############
-            # FROM CACHE #
-            ##############
+        $this->packages['apps'] = $this->scanApps('Apps');
+        $this->wApps()->setApps($this->packages['apps']);
 
-            // unpack cache
-            $packageData = $this->unserialize($data);
-
-            // register packages
-            $this->packages = $packageData['packages'];
-
-            // register events
-            $this->wEvents()->setListeners($packageData['events']);
-
-            // register routes
-            $this->wRouter()->setRoutes($packageData['routes']);
-
-            unset($packageData);
-        } else {
-            ##################
-            # NOT FROM CACHE #
-            ##################
-
-            // scan Apps folder
-            $this->packages['apps'] = $this->scanApps('Apps');
-
-            // scan Plugins folder
-            //$this->packages['plugins'] = $this->scanPlugins('Plugins');
-
-            // scan Themes folder
-            //$this->packages['themes'] = $this->scanThemes('Themes');
-
-            // store the packages, events and routes in cache
-            /* $packageData = [
-                 'packages'  => $this->packages,
-                 'events'    => $this->wEvents()->getListeners(),
-                 'routes'    => $this->wRouter()->getRoutes()
-             ];
-             $this->wCache()->save(self::CACHE_KEY, $packageData, (30 * 60));*/
-            unset($packageData);
-        }
+        // Register routes in Webiny/Router
+        $this->wRouter()->compileRoutes();
     }
 
     static function clearCacheCallback($event)
     {
-        //@TODO ovo mora ici u EventHandlers
+        // TODO ovo mora ici u EventHandlers
         self::wCache()->delete(self::CACHE_KEY);
     }
 
@@ -99,16 +61,6 @@ class PackageScanner
         return $this->_scan($appRoot, "App");
     }
 
-    private function scanPlugins($pluginsRoot)
-    {
-        return $this->_scan($pluginsRoot, "Plugin");
-    }
-
-    private function scanThemes($themesRoot)
-    {
-        return $this->_scan($themesRoot, "Theme");
-    }
-
     private function _scan($root, $object)
     {
         $packages = $this->wStorage()->readDir($root);
@@ -120,7 +72,7 @@ class PackageScanner
             // If App - detect version and setup autoloader
             $name = $this->str($key)->explode('/')->last()->val();
             if ($object == 'App' && $name !== 'Core') {
-                $version = $this->wConfig()->get($object . 's.' . $name);
+                $version = str_replace('.', '_', $this->wConfig()->get($object . 's.' . $name));
                 $appPath = $this->wConfig()->get('Application.AbsolutePath') . 'Apps/' . $name . '/' . $version;
                 $this->wClassLoader()->appendLibrary('Apps\\' . $name . '\\', $appPath);
                 $configPath = $key . '/' . $version . '/' . $object . '.yaml';

@@ -1,5 +1,5 @@
 <?php
-namespace Apps\Core\Php\DevTools\Login;
+namespace Apps\Core\Php\DevTools\Authorization;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\Entities\User;
@@ -14,7 +14,7 @@ use Webiny\Login\LoginException;
 /**
  * Class Login
  */
-class Login
+class Authorization
 {
     use DevToolsTrait, SingletonTrait, SecurityTrait, StdLibTrait, AuthorizationTrait;
 

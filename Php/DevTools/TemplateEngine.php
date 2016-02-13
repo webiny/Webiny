@@ -10,6 +10,7 @@ namespace Apps\Core\Php\DevTools;
 
 use Apps\Core\Php\View\View;
 use Webiny\Component\StdLib\SingletonTrait;
+use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\TemplateEngine\TemplateEngineTrait;
 
 /**
@@ -17,7 +18,7 @@ use Webiny\Component\TemplateEngine\TemplateEngineTrait;
  */
 class TemplateEngine
 {
-    use SingletonTrait, TemplateEngineTrait;
+    use SingletonTrait, TemplateEngineTrait, StdLibTrait, DevToolsTrait;
 
     /**
      * @var \Webiny\Component\TemplateEngine\Bridge\TemplateEngineInterface
@@ -52,4 +53,14 @@ class TemplateEngine
         return self::$templateEngine;
     }
 
+    public function fetch($template, $parameters = [])
+    {
+        $template = $this->str($template);
+        if ($template->contains(':')) {
+            $parts = $template->explode(':');
+            $template = $this->wApps($parts[0])->getPath() . '/' . $parts[1];
+        }
+
+        return self::$templateEngine->fetch($template, $parameters);
+    }
 }
