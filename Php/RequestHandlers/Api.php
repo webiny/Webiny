@@ -8,12 +8,10 @@
 
 namespace Apps\Core\Php\RequestHandlers;
 
-use Apps\Core\Php\Bootstrap\BootstrapEvent;
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
 use Apps\Core\Php\DevTools\Response\ApiRawResponse;
-use Apps\Core\Php\DevTools\Response\ApiResponse;
-use Apps\Core\Php\Lib\PostmanDocs;
+use Apps\Core\Php\Discover\Postman;
 
 class Api
 {
@@ -33,8 +31,9 @@ class Api
         header("Access-Control-Allow-Origin: *");
 
         if ($path->startsWith('/api/discover')) {
-            $postmanDocs = new PostmanDocs();
-            return new ApiRawResponse($postmanDocs->generate());
+            $app = $path->replace('/api/discover/', '')->pascalCase()->val();
+            $postmanDocs = new Postman();
+            return new ApiRawResponse($postmanDocs->generate($app));
         }
 
         $this->apiEvent = new ApiEvent();
