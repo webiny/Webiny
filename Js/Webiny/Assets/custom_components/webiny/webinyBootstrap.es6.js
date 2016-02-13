@@ -63,14 +63,19 @@ class WebinyBootstrapClass {
     loadAssets(meta) {
         const assets = [];
         _.each(_.get(meta.assets, 'js', []), item => {
-            // TODO: ovo rijeiti u skladu sa cache hashevima jer tu requesta ponovo filove od Core.Webiny
-            if (meta.name === 'Core.Webiny' && _.indexOf(item, 'vendors.min.js')) {
+            const vendors = new RegExp('\/vendors-[0-9a-z]+.js');
+            if (meta.name === 'Core.Webiny' && vendors.test(item)) {
                 return;
             }
 
             assets.push(this.import(item));
         });
+
+        const vendors = new RegExp('\/vendors-[0-9a-z]+.css');
         _.each(_.get(meta.assets, 'css', []), item => {
+            if (meta.name === 'Core.Webiny' && vendors.test(item)) {
+                return;
+            }
             this.includeCss(item);
         });
 

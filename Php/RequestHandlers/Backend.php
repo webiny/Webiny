@@ -8,7 +8,6 @@
 
 namespace Apps\Core\Php\RequestHandlers;
 
-use Apps\Core\Php\Bootstrap\BootstrapEvent;
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Response\HtmlResponse;
 

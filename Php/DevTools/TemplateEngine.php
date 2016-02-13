@@ -61,6 +61,6 @@ class TemplateEngine
             $template = $this->wApps($parts[0])->getPath() . '/' . $parts[1];
         }
 
-        return self::$templateEngine->fetch($template, $parameters);
+        return self::$templateEngine->fetch((string)$template, $parameters);
     }
 }
