@@ -10,9 +10,7 @@ namespace Apps\Core\Php\Dispatchers;
 
 use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
 use Apps\Core\Php\DevTools\Response\ApiResponse;
-use Apps\Core\Php\Lib\Inflect;
 use Apps\Core\Php\RequestHandlers\ApiEvent;
-use Apps\Core\Php\RequestHandlers\ApiException;
 
 /**
  * Class EntityDispatcher
@@ -34,8 +32,7 @@ class EntityDispatcher extends AbstractApiDispatcher
         $httpMethod = $this->wRequest()->getRequestMethod();
         $params = $request['params'];
 
-        $inflector = new Inflect();
-        $entityClass = '\\Apps\\' . $request['app'] . '\\Php\\Entities\\' . $inflector->singularize($request['class']);
+        $entityClass = '\\Apps\\' . $request['app'] . '\\Php\\Entities\\' . $this->str($request['class'])->singularize();
         if (!class_exists($entityClass)) {
             return new ApiErrorResponse([], 'Entity class ' . $entityClass . ' does not exist!');
         }

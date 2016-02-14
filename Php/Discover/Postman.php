@@ -2,8 +2,9 @@
 namespace Apps\Core\Php\Discover;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
-use Apps\Core\Php\Discover\Postman\EntityEndpoint;
+use Apps\Core\Php\Discover\Postman\EntityEndPoint;
 use Webiny\Component\StdLib\StdLibTrait;
+use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
 use Webiny\Component\Storage\Directory\Directory;
 
 class Postman
@@ -12,7 +13,7 @@ class Postman
 
     public function generate($app = 'Core')
     {
-        $collectionId = uniqid('collection-');
+        $collectionId = StringObject::uuid();
         $collectionName = 'Webiny ' . $app;
 
         $entitiesPath = $this->wApps($app)->getPath(false) . '/Php/Entities';
@@ -23,7 +24,7 @@ class Postman
         $entities = [];
         foreach ($files as $file) {
             $key = $this->str($file->getKey());
-            $class = $key->replace('.php', '')->replace('/', '\\');
+            $class = $key->replace('.php', '')->pregReplace('#/v\d+(_\d+)?#', '')->replace('/', '\\');
             $entities[] = $class->val();
         }
 
@@ -31,9 +32,13 @@ class Postman
         $requests = [];
 
         foreach ($entities as $entity) {
-            $endpoint = new EntityEndpoint($app, $entity);
+            $endpoint = new EntityEndPoint($app, $entity);
             $requests = array_merge($requests, $endpoint->getRequests());
-            $folders = array_merge($folders, $endpoint->getFolder());
+            $folders[] = $endpoint->getFolder();
+        }
+
+        foreach($requests as $index => $r){
+            $requests[$index]['collectionId'] = $collectionId;
         }
 
         return [

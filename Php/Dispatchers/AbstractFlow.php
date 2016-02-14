@@ -31,14 +31,4 @@ abstract class AbstractFlow
 
         return (string)$id === $str;
     }
-
-    protected function toCamelCase($str)
-    {
-        return $this->str($this->toPascalCase($str))->caseFirstLower()->val();
-    }
-
-    protected function toPascalCase($str)
-    {
-        return $this->str($str)->replace('-', ' ')->caseWordUpper()->replace(' ', '')->val();
-    }
 }

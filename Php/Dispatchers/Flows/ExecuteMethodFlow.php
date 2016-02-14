@@ -23,7 +23,7 @@ class ExecuteMethodFlow extends AbstractFlow
     public function handle(EntityAbstract $entity, $params)
     {
         $id = $params[0];
-        $method = $this->toCamelCase($params[1]);
+        $method = $this->str($params[1])->camelCase()->val();
         $httpMethod = strtolower($this->wRequest()->getRequestMethod());
         $entityMethod = $entity->getApiMethod($httpMethod, $method);
 

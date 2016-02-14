@@ -29,14 +29,14 @@ class Api
         }
 
         header("Access-Control-Allow-Origin: *");
+        $this->apiEvent = new ApiEvent();
 
-        if ($path->startsWith('/api/discover')) {
-            $app = $path->replace('/api/discover/', '')->pascalCase()->val();
+        $apiUrl = $this->apiEvent->getUrl();
+        if ($apiUrl->startsWith('/discover')) {
+            $app = $apiUrl->replace('/discover/', '')->pascalCase()->val();
             $postmanDocs = new Postman();
             return new ApiRawResponse($postmanDocs->generate($app));
         }
-
-        $this->apiEvent = new ApiEvent();
 
         $events = [
             'Core.Api.Before',

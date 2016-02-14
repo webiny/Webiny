@@ -97,7 +97,7 @@ class ApiException extends ExceptionAbstract
     }
 
     /**
-     * @return int Returns the data attached to exception
+     * @return array Returns the data attached to exception
      */
     public function getData()
     {
