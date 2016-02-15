@@ -2,6 +2,7 @@
 namespace Apps\Core\Php\Discover;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\Discover\Parser\EntityParser;
 use Apps\Core\Php\Discover\Postman\EntityEndPoint;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
@@ -21,6 +22,7 @@ class Postman
 
         $files = new Directory($entitiesPath, $storage, 1);
 
+        // Read all entities
         $entities = [];
         foreach ($files as $file) {
             $key = $this->str($file->getKey());
@@ -31,10 +33,24 @@ class Postman
         $folders = [];
         $requests = [];
 
+        // Generate API requests for each entity
         foreach ($entities as $entity) {
-            $endpoint = new EntityEndPoint($app, $entity);
-            $requests = array_merge($requests, $endpoint->getRequests());
-            $folders[] = $endpoint->getFolder();
+            $parser = new EntityParser($app, $entity);
+            $order = [];
+            foreach($parser->getEntityApiMethods() as $method){
+                $endpoint = new EntityEndPoint($parser, $method);
+                $request = $endpoint->getRequest();
+                $requests[] = $request;
+                $order[] = $request['id'];
+            }
+
+            // Each Entity is stored in its own folder
+            $folders[] = [
+                'id'          => StringObject::uuid(),
+                'name'        => $parser->getEntityName(),
+                'description' => '',
+                'order'       => $order
+            ];
         }
 
         foreach($requests as $index => $r){

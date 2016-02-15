@@ -25,7 +25,14 @@ class Test extends EntityAbstract
     protected function entityStructure()
     {
         $this->attr('name')->char()->setValidators('required');
-        $this->attr('nesto')->price(10, 200);
+        $this->attr('price')->price(10, 200);
+        $this->attr('template')->char()->setValidators('required,in:blog:static');
+        $this->attr('published')->boolean();
+        $this->attr('publishedOn')->datetime()->setValidators('required');
+        $this->attr('author')->many2one()->setEntity('Apps\Core\Php\Entities\User')->setValidators('required');
+        $this->attr('canComment')->boolean()->setValidators('required');
+        $this->attr('settings')->object()->setValidators('required');
+        $this->attr('comments')->arr()->setValidators('required');
     }
 
     protected function entityApi()

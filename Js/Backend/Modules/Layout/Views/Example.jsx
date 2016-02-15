@@ -82,7 +82,7 @@ class Example extends Webiny.Ui.View {
                     <Ui.Panel.Header title="Webiny Form"/>
                     <Ui.Panel.Body>
                         <Ui.Tabs.Tabs ui="tabs">
-                            <Ui.Tabs.Tab label="First tab">
+                            <Ui.Tabs.Tab label="First Tab">
                                 <Ui.Form {...firstFormProps}>
                                     <fields>
                                         <Ui.Grid.Row>

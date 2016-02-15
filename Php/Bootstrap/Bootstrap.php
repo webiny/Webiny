@@ -58,7 +58,6 @@ class Bootstrap
         Mongo::setConfig($this->wConfig()->get('Mongo'));
         Entity::setConfig($this->wConfig()->get('Entity'));
         Security::setConfig($this->wConfig()->get('Security'));
-        Annotations::setConfig($this->wApps('Core')->getConfig()->get('Annotations'));
 
         $this->wEvents()->fire('Core.Bootstrap.End');
     }

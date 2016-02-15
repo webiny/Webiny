@@ -7,9 +7,6 @@ AuthorName: Webiny LTD
 AuthorLink: http://www.webiny.com
 AuthorEmail: info@webiny.com
 
-Annotations:
-    Bridge: \Webiny\Component\Annotations\Bridge\Minime\Annotations
-
 Storage:
     Services:
         Root:
