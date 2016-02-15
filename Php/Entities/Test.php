@@ -28,20 +28,21 @@ class Test extends EntityAbstract
         $this->attr('nesto')->price(10, 200);
     }
 
-    /**
-     * @api.getUser.name Get User data by given ID
-     * @api.getUser.url.id char User ID
-     *
-     * @api.calculatePrice.name Calculate price
-     * @api.calculatePrice.url.date date Booking date
-     * @api.calculatePrice.body.factor integer Price factor
-     */
     protected function entityApi()
     {
+        /**
+         * @api.name Get User data by given ID
+         * @api.url.id char User ID
+         */
         $this->api('get', 'getUser', function (User $user) {
             return $this->getUser($user);
         });
 
+        /**
+         * @api.name Calculate price
+         * @api.url.date date Booking date
+         * @api.body.factor integer Price factor
+         */
         $this->api('post', 'calculatePrice', function ($date) {
             return $date;
         });

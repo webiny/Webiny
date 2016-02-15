@@ -60,6 +60,12 @@ abstract class PackageAbstract
      */
     protected $type;
 
+    /**
+     * Package config object
+     *
+     * @var ConfigObject
+     */
+    protected $config;
 
     /**
      * Base constructor.
@@ -73,6 +79,7 @@ abstract class PackageAbstract
     public function __construct(ConfigObject $info, $path, $type)
     {
         $this->populateProperties($info);
+        $this->config = $info;
         $possibleTypes = ['app', 'plugin', 'theme'];
         if (!in_array($type, $possibleTypes)) {
             throw new \Exception("Invalid package type: " . $type);
@@ -88,6 +95,16 @@ abstract class PackageAbstract
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Get package config
+     *
+     * @return ConfigObject
+     */
+    public function getConfig()
+    {
+        return $this->config;
     }
 
     /**

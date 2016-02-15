@@ -14,6 +14,7 @@ use Apps\Core\Php\DevTools\Response\ApiResponse;
 use Apps\Core\Php\DevTools\Response\HtmlResponse;
 use Apps\Core\Php\DevTools\Response\ResponseAbstract;
 use Apps\Core\Php\DevTools\Response\ResponseEvent;
+use Webiny\Component\Annotations\Annotations;
 use Webiny\Component\Http\Response;
 use Webiny\Component\Mongo\Mongo;
 use Webiny\Component\Security\Security;
@@ -57,6 +58,7 @@ class Bootstrap
         Mongo::setConfig($this->wConfig()->get('Mongo'));
         Entity::setConfig($this->wConfig()->get('Entity'));
         Security::setConfig($this->wConfig()->get('Security'));
+        Annotations::setConfig($this->wApps('Core')->getConfig()->get('Annotations'));
 
         $this->wEvents()->fire('Core.Bootstrap.End');
     }
