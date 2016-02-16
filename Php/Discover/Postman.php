@@ -2,6 +2,7 @@
 namespace Apps\Core\Php\Discover;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\Discover\Parser\AppParser;
 use Apps\Core\Php\Discover\Parser\EntityParser;
 use Apps\Core\Php\Discover\Postman\EntityEndPoint;
 use Webiny\Component\StdLib\StdLibTrait;
@@ -12,33 +13,19 @@ class Postman
 {
     use DevToolsTrait, StdLibTrait;
 
-    public function generate($app = 'Core')
+    public function generate(AppParser $app)
     {
         $collectionId = StringObject::uuid();
-        $collectionName = 'Webiny ' . $app;
-
-        $entitiesPath = $this->wApps($app)->getPath(false) . '/Php/Entities';
-        $storage = $this->wStorage('Root');
-
-        $files = new Directory($entitiesPath, $storage, 1);
-
-        // Read all entities
-        $entities = [];
-        foreach ($files as $file) {
-            $key = $this->str($file->getKey());
-            $class = $key->replace('.php', '')->pregReplace('#/v\d+(_\d+)?#', '')->replace('/', '\\');
-            $entities[] = $class->val();
-        }
+        $collectionName = 'Webiny ' . $app->getName();
 
         $folders = [];
         $requests = [];
 
-        // Generate API requests for each entity
-        foreach ($entities as $entity) {
-            $parser = new EntityParser($app, $entity);
+        /* @var $entity EntityParser */
+        foreach ($app->getEntities() as $entity) {
             $order = [];
-            foreach($parser->getEntityApiMethods() as $method){
-                $endpoint = new EntityEndPoint($parser, $method);
+            foreach($entity->getApiMethods() as $method){
+                $endpoint = new EntityEndPoint($entity, $method);
                 $request = $endpoint->getRequest();
                 $requests[] = $request;
                 $order[] = $request['id'];
@@ -47,7 +34,7 @@ class Postman
             // Each Entity is stored in its own folder
             $folders[] = [
                 'id'          => StringObject::uuid(),
-                'name'        => $parser->getEntityName(),
+                'name'        => $entity->getName(),
                 'description' => '',
                 'order'       => $order
             ];
@@ -60,7 +47,7 @@ class Postman
         return [
             'id'          => $collectionId,
             'name'        => $collectionName,
-            'description' => 'Webiny ' . $app . ' API docs',
+            'description' => 'Webiny ' . $app->getName() . ' API docs',
             'order'       => [],
             'timestamp'   => time(),
             'owner'       => 0,

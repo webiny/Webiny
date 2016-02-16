@@ -13,28 +13,45 @@ class EntityParser
 {
     use DevToolsTrait, StdLibTrait;
 
+    /**
+     * @var AppParser
+     */
     private $app;
-    private $appVersion;
-    private $appSlug;
-    private $entityClass;
-    private $entityName;
-    private $entitySlug;
-    private $entityUrl;
-    private $entityApiMethods;
+    private $class;
+    private $name;
+    private $slug;
+    private $url;
+    private $apiMethods;
 
-    function __construct($app, $entity)
+    private $paramId;
+    private $headerAuthorizationToken;
+
+    function __construct(AppParser $app, $entity)
     {
         $this->app = $app;
-        $this->appSlug = $this->str($app)->kebabCase()->val();
-        $this->appVersion = $this->wApps($app)->getVersion();
-        $this->entityClass = $entity;
-        $this->entityName = $this->str($entity)->explode('\\')->last()->val();
-        $this->entitySlug = $this->str($this->entityName)->kebabCase()->pluralize()->val();
-        $this->entityUrl = '/entities/' . $this->appSlug . '/' . $this->entitySlug;
+        $this->class = $entity;
+        $this->name = $this->str($entity)->explode('\\')->last()->val();
+        $this->slug = $this->str($this->name)->kebabCase()->pluralize()->val();
+        $this->url = '/entities/' . $app->getSlug() . '/' . $this->slug;
+
+        $this->paramId = [
+            'name'        => 'id',
+            'in'          => 'path',
+            'description' => 'Mongo ID of ' . $this->name,
+            'type'        => 'string',
+            'required'    => true
+        ];
+
+        $this->headerAuthorizationToken = [
+            'name'        => 'Authorization',
+            'description' => 'Authorization token',
+            'type'        => 'string',
+            'required'    => true
+        ];
     }
 
     /**
-     * @return mixed
+     * @return AppParser
      */
     public function getApp()
     {
@@ -44,57 +61,41 @@ class EntityParser
     /**
      * @return mixed
      */
-    public function getAppSlug()
+    public function getClass()
     {
-        return $this->appSlug;
-    }
-
-    /**
-     * @return mixed|string|\Webiny\Component\Config\ConfigObject
-     */
-    public function getAppVersion()
-    {
-        return $this->appVersion;
+        return $this->class;
     }
 
     /**
      * @return mixed
      */
-    public function getEntityClass()
+    public function getName()
     {
-        return $this->entityClass;
+        return $this->name;
     }
 
     /**
      * @return mixed
      */
-    public function getEntityName()
+    public function getSlug()
     {
-        return $this->entityName;
+        return $this->slug;
     }
 
     /**
      * @return mixed
      */
-    public function getEntitySlug()
+    public function getUrl()
     {
-        return $this->entitySlug;
+        return $this->url;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEntityUrl()
-    {
-        return $this->entityUrl;
-    }
-
-    public function getRequiredEntityAttributes()
+    public function getRequiredAttributes()
     {
         $required = [];
 
         /* @var $entity EntityAbstract */
-        $entity = new $this->entityClass;
+        $entity = new $this->class;
 
         /* @var $attr AttributeAbstract */
         foreach ($entity->getAttributes() as $name => $attr) {
@@ -106,45 +107,56 @@ class EntityParser
             }
 
             if ($attr->isRequired()) {
+                $attribute = ['type' => '', 'value' => ''];
+
                 switch (true) {
                     case $this->isInstanceOf($attr, AttributeType::OBJECT):
-                        $value = new \stdClass();
+                        $attribute['type'] = 'object';
+                        $attribute['value'] = new \stdClass();
                         break;
                     case $this->isInstanceOf($attr, AttributeType::ARR):
-                        $value = [];
+                        $attribute['type'] = 'array';
+                        $attribute['value'] = [];
                         break;
                     case $this->isInstanceOf($attr, AttributeType::DATE):
-                        $value = $this->datetime()->format('Y-m-d');
+                        $attribute['type'] = 'date';
+                        $attribute['value'] = $this->datetime()->format('Y-m-d');
                         break;
                     case $this->isInstanceOf($attr, AttributeType::DATE_TIME):
-                        $value = $this->datetime()->format('Y-m-d H:i:s');
+                        $attribute['type'] = 'datetime';
+                        $attribute['value'] = $this->datetime()->format('Y-m-d H:i:s');
                         break;
                     case $this->isInstanceOf($attr, AttributeType::MANY2ONE):
-                        $value = (string)new \MongoId();
+                        $attribute['type'] = 'string';
+                        $attribute['value'] = (string)new \MongoId();
                         break;
                     case $this->isInstanceOf($attr, AttributeType::BOOLEAN):
-                        $value = true;
+                        $attribute['type'] = 'boolean';
+                        $attribute['value'] = true;
                         break;
                     case $this->isInstanceOf($attr, AttributeType::CHAR):
                         $value = '';
                         if (array_key_exists('in', $validators)) {
                             $value = $validators['in']->implode('|')->val();
                         }
+                        $attribute['type'] = 'string';
+                        $attribute['value'] = $value;
                         break;
                     default:
-                        $value = '';
+                        $attribute['type'] = 'string';
+                        $attribute['value'] = '';
                 }
-                $required[$name] = $value;
+                $required[$name] = $attribute;
             }
         }
 
         return $required;
     }
 
-    public function getEntityApiMethods()
+    public function getApiMethods()
     {
-        if (!$this->entityApiMethods) {
-            $this->entityApiMethods = [
+        if (!$this->apiMethods) {
+            $this->apiMethods = [
                 'crudList'   => $this->getCrudList(),
                 'crudGet'    => $this->getCrudGet(),
                 'crudCreate' => $this->getCrudCreate(),
@@ -153,35 +165,41 @@ class EntityParser
             ];
         }
 
-        return $this->entityApiMethods;
+        return $this->apiMethods;
     }
 
     private function getCrudList()
     {
         return [
-            'path'        => $this->entityUrl,
-            'summary'     => 'List',
-            'description' => 'List ' . $this->str($this->entityName)->pluralize(),
+            'path'        => $this->url,
+            'description' => 'List ' . $this->str($this->name)->pluralize(),
             'method'      => 'GET',
-            'parameters'  => []
+            'parameters'  => [
+                $this->headerAuthorizationToken
+            ],
+            'headers'     => [
+                $this->headerAuthorizationToken
+            ],
+            'tests'       => [
+                'var jsonData = JSON.parse(responseBody);',
+                'tests["Status code is 200"] = responseCode.code === 200;',
+                'tests["Meta exists"] = jsonData.data !== undefined && jsonData.data.meta instanceof Object;',
+                'tests["List exists"] = jsonData.data !== undefined && jsonData.data.list instanceof Array;'
+            ]
         ];
     }
 
     private function getCrudGet()
     {
         return [
-            'path'        => $this->entityUrl . '/{{id}}',
-            'summary'     => 'Get One',
-            'description' => 'Get a single ' . $this->entityName . ' by ID',
+            'path'        => $this->url . '/{{id}}',
+            'description' => 'Get a single ' . $this->name . ' by ID',
             'method'      => 'GET',
             'parameters'  => [
-                [
-                    'name'        => 'id',
-                    'in'          => 'path',
-                    'description' => 'Mongo ID of ' . $this->entityName,
-                    'type'        => 'string',
-                    'required'    => true
-                ]
+                $this->paramId
+            ],
+            'headers'     => [
+                $this->headerAuthorizationToken
             ]
         ];
     }
@@ -189,77 +207,58 @@ class EntityParser
     private function getCrudCreate()
     {
         return [
-            'path'        => $this->entityUrl,
-            'summary'     => 'Create',
-            'description' => 'Create a ' . $this->entityName,
+            'path'        => $this->url,
+            'description' => 'Create a ' . $this->name,
             'method'      => 'POST',
-            'parameters'  => [
-                [
-                    'name'        => 'body',
-                    'in'          => 'body',
-                    'description' => $this->entityName . ' to create in the system',
-                    'required'    => true,
-                    'structure'   => $this->getRequiredEntityAttributes()
-                ]
-            ]
+            'parameters'  => [],
+            'headers'     => [
+                $this->headerAuthorizationToken
+            ],
+            'body'        => $this->getRequiredAttributes()
         ];
     }
 
     private function getCrudUpdate()
     {
         return [
-            'path'        => $this->entityUrl . '/{{id}}',
-            'summary'     => 'Update',
-            'description' => 'Update a signle ' . $this->entityName,
+            'path'        => $this->url . '/{{id}}',
+            'description' => 'Update a single ' . $this->name,
             'method'      => 'PATCH',
             'parameters'  => [
-                [
-                    'name'        => 'id',
-                    'in'          => 'path',
-                    'description' => 'Mongo ID of ' . $this->entityName,
-                    'type'        => 'string',
-                    'required'    => true
-                ],
-                [
-                    'name'        => 'body',
-                    'in'          => 'body',
-                    'description' => $this->entityName . ' to update',
-                    'required'    => true,
-                    'structure'   => $this->getRequiredEntityAttributes() // TODO: add possibility to list optional attributes
-                ]
-            ]
+                $this->paramId
+            ],
+            'headers'     => [
+                $this->headerAuthorizationToken
+            ],
+            'body'        => $this->getRequiredAttributes()
         ];
     }
 
     private function getCrudDelete()
     {
         return [
-            'path'        => $this->entityUrl . '/{{id}}',
-            'summary'     => 'Delete One',
-            'description' => 'Delete a single ' . $this->entityName . ' by ID',
+            'path'        => $this->url . '/{{id}}',
+            'description' => 'Delete a single ' . $this->name . ' by ID',
             'method'      => 'DELETE',
             'parameters'  => [
-                [
-                    'name'        => 'id',
-                    'in'          => 'path',
-                    'description' => 'Mongo ID of ' . $this->entityName,
-                    'type'        => 'string',
-                    'required'    => true
-                ]
+                $this->paramId
+            ],
+            'headers'     => [
+                $this->headerAuthorizationToken
             ]
         ];
     }
 
     private function getCustomMethods()
     {
-        $class = new \ReflectionClass($this->entityClass);
+        $class = new \ReflectionClass($this->class);
         $method = $class->getMethod('entityApi');
         $startLine = $method->getStartLine() + 1;
         $endLine = $method->getEndLine() - 1;
 
         $storage = $this->wStorage('Root');
 
-        $classFile = new File($this->str($this->entityClass)->replace('\\', '/')->append('.php'), $storage);
+        $classFile = new File($this->str($this->class)->replace('\\', '/')->append('.php'), $storage);
         $classContents = $classFile->getContents();
         $classLines = $this->str($classContents)->explode("\n");
 

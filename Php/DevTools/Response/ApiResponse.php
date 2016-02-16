@@ -37,7 +37,7 @@ class ApiResponse extends ResponseAbstract implements \ArrayAccess
     {
         $data = $this->formatResponse();
         header("Content-type: application/json");
-        die(json_encode($data));
+        return json_encode($data);
     }
 
     public function setErrors(array $errors)

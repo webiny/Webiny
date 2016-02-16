@@ -132,13 +132,11 @@ class Bootstrap
      */
     private function processResponse(ResponseAbstract $response)
     {
-        $event = new ResponseEvent();
-        $event->setOutput($response->output());
+        $event = new ResponseEvent($response);
         $this->wEvents()->fire('Core.Bootstrap.Response', $event);
 
         // Build response body
-        $responseBody = $event->getOutput();
+        $responseBody = $response->output();
         Response::create($responseBody, $response->getStatusCode())->send();
     }
-
 }

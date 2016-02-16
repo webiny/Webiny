@@ -9,14 +9,19 @@ use Webiny\Component\EventManager\Event;
  */
 class ResponseEvent extends Event
 {
+    /**
+     * @var ResponseAbstract
+     */
+    private $response;
 
-    public function setOutput($output)
+    public function __construct(ResponseAbstract $response)
     {
-        $this->output = $output;
+        parent::__construct();
+        $this->response = $response;
     }
 
-    public function getOutput()
+    public function getResponse()
     {
-        return $this->output;
+        return $this->response;
     }
 }

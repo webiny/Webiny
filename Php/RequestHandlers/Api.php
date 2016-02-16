@@ -11,7 +11,9 @@ namespace Apps\Core\Php\RequestHandlers;
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
 use Apps\Core\Php\DevTools\Response\ApiRawResponse;
+use Apps\Core\Php\Discover\Parser\AppParser;
 use Apps\Core\Php\Discover\Postman;
+use Apps\Core\Php\Discover\Swagger;
 
 class Api
 {
@@ -34,8 +36,10 @@ class Api
         $apiUrl = $this->apiEvent->getUrl();
         if ($apiUrl->startsWith('/discover')) {
             $app = $apiUrl->replace('/discover/', '')->pascalCase()->val();
-            $postmanDocs = new Postman();
-            return new ApiRawResponse($postmanDocs->generate($app));
+            $appParser = new AppParser($app);
+            $docs = new Postman();
+
+            return new ApiRawResponse($docs->generate($appParser));
         }
 
         $events = [
