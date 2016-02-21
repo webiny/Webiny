@@ -21,13 +21,14 @@ class App {
     run(mountPoint = null) {
         console.info(this.name + ' app bootstrap');
 
+        // Import and setup all modules
         const promises = this.modules.map(config => {
             if (config.module) {
                 return WebinyBootstrap.import(this.name.replace('.', '/') + '/Modules/' + config.name).then(m => {
-                    if (m.default) {
-                        return this.setupModule(new m.default(this), config);
-                    }
-                    return this.setupModule(new Webiny.Module(this), config);
+                    const module = m.default ? new m.default(this) : new Webiny.Module(this);
+                    // Run setup method (does nothing unless module has a custom module class)
+                    module.init();
+                    return this.setupModule(module, config);
                 });
             }
 
@@ -55,23 +56,25 @@ class App {
             module.name = config.name;
         }
 
+        // Automatically set Actions, Components and Views
         const promises = config.folders.map(x => {
             return WebinyBootstrap.import(this.name.replace('.', '/') + '/Modules/' + module.name + '/' + x + '/' + x).then(f => {
-                const methodName = 'set' + x;
+                const methodName = 'register' + x;
                 return module[methodName](f.default);
             });
         });
 
         let routes = _.noop;
+        // If Routes.js exists, import it and register 'routes' and 'defaultComponents'
         if (config.routes) {
             routes = () => {
                 WebinyBootstrap.import(this.name.replace('.', '/') + '/Modules/' + module.name + '/Routes').then(f => {
                     if (f.default.routes) {
-                        module.setRoutes(...f.default.routes);
+                        module.registerRoutes(...f.default.routes);
                     }
 
                     if (f.default.defaultComponents) {
-                        module.addDefaultComponents(f.default.defaultComponents);
+                        module.registerDefaultComponents(f.default.defaultComponents);
                     }
 
                     return f.default;

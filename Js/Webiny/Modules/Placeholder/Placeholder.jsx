@@ -2,11 +2,17 @@ import Webiny from 'Webiny';
 
 class Placeholder extends Webiny.Ui.Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
     }
 
     componentDidMount() {
+        if (this.props.onDidUpdate) {
+            this.props.onDidUpdate();
+        }
+    }
+
+    componentDidUpdate() {
         if (this.props.onDidUpdate) {
             this.props.onDidUpdate();
         }
@@ -42,12 +48,6 @@ class Placeholder extends Webiny.Ui.Component {
         return (
             <rad-placeholder>{cmps}</rad-placeholder>
         );
-    }
-
-    componentDidUpdate() {
-        if (this.props.onDidUpdate) {
-            this.props.onDidUpdate();
-        }
     }
 }
 

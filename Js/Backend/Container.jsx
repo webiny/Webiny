@@ -34,7 +34,7 @@ class Container extends Webiny.Ui.View {
 
     render() {
         if (!this.state.loading) {
-            return <Webiny.Ui.Placeholder onDidUpdate={this.onDidUpdate} name="MasterLayout"/>;
+            return <Webiny.Ui.Components.Placeholder onDidUpdate={this.onDidUpdate} name="MasterLayout"/>;
         }
         return null;
     }

@@ -23,7 +23,7 @@ class CrudCreateFlow extends AbstractFlow
     public function handle(EntityAbstract $entity, $params)
     {
         if (!$this->wAuth()->canCreate($entity)) {
-            throw new ApiException('You don\'t have a CREATE permission on ' . get_class($entity), 'WBY-AUTHORIZATION', 403);
+            throw new ApiException('You don\'t have a CREATE permission on ' . get_class($entity), 'WBY-AUTHORIZATION', 401);
         }
 
         try {

@@ -22,7 +22,7 @@ class CrudListFlow extends AbstractFlow
     public function handle(EntityAbstract $entity, $params)
     {
         if (!$this->wAuth()->canRead($entity)) {
-            throw new ApiException('You don\'t have a READ permission on ' . get_class($entity), 'WBY-AUTHORIZATION', 403);
+            throw new ApiException('You don\'t have a READ permission on ' . get_class($entity), 'WBY-AUTHORIZATION', 401);
         }
 
         $filters = $this->wRequest()->getFilters();

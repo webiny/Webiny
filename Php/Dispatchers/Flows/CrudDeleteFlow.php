@@ -23,7 +23,7 @@ class CrudDeleteFlow extends AbstractFlow
     public function handle(EntityAbstract $entity, $params)
     {
         if (!$this->wAuth()->canDelete($entity)) {
-            throw new ApiException('You don\'t have a DELETE permission on ' . get_class($entity), 'WBY-AUTHORIZATION', 403);
+            throw new ApiException('You don\'t have a DELETE permission on ' . get_class($entity), 'WBY-AUTHORIZATION', 401);
         }
 
         $id = $params[0];

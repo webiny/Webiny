@@ -56,8 +56,8 @@ class Component extends React.Component {
         });
         this.__cursors = [];
 
-        if (this.props.name) {
-            UiDispatcher.unregister(this.props.name);
+        if (this.props.ui) {
+            UiDispatcher.unregister(this.props.ui);
         }
     }
 

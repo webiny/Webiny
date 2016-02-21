@@ -3,19 +3,36 @@ import Webiny from 'Webiny';
 class Module {
 
     /**
+     * Instantiate a module of given app instance
      * @param app
      */
     constructor(app) {
         this.app = app;
-        this.components = {};
-        this.type = 'default';
+        this.menus = [];
+        this.settings = [];
+    }
+
+    /**
+     * Setup the module
+     * This module is called right after the constructor
+     */
+    init() {
+        // Override to implement
+    }
+
+    /**
+     * Get module name
+     * @returns {string}
+     */
+    getName() {
+        return this.name;
     }
 
     /**
      * @param components
      * @returns {Module}
      */
-    setComponents(components) {
+    registerComponents(components) {
         _.forEach(components, (value, key) => {
             _.set(this.app, `${this.name}.Components.` + key, value);
         });
@@ -26,7 +43,7 @@ class Module {
      * @param views
      * @returns {Module}
      */
-    setViews(views) {
+    registerViews(views) {
         _.forEach(views, (value, key) => {
             _.set(this.app, `${this.name}.Views.` + key, value);
         });
@@ -37,7 +54,7 @@ class Module {
      * @param actions
      * @returns {Module}
      */
-    setActions(actions) {
+    registerActions(actions) {
         _.forEach(actions, (value, key) => {
             _.set(this.app, `${this.name}.Actions.` + key, value);
         });
@@ -47,7 +64,7 @@ class Module {
     /**
      * @returns {Module}
      */
-    setRoutes(...routes) {
+    registerRoutes(...routes) {
         _.each(routes, route => {
             route.setModule(this);
             Webiny.Router.addRoute(route);
@@ -55,20 +72,22 @@ class Module {
         return this;
     }
 
-    getName() {
-        return this.name;
-    }
-
-    getNamespace(addon = '') {
-        return `${this.name}.${addon}`;
-    }
-
     /**
      * @param content
      * @returns {Module}
      */
-    addDefaultComponents(content) {
+    registerDefaultComponents(content) {
         Webiny.Router.addDefaultComponents(content);
+        return this;
+    }
+
+    registerMenus(...menus) {
+        this.menus = menus;
+        return this;
+    }
+
+    registerSettings(...settings) {
+        this.settings = settings;
         return this;
     }
 
@@ -77,7 +96,6 @@ class Module {
      * @returns {Module}
      */
     run() {
-        console.log(this);
         return this;
     }
 }

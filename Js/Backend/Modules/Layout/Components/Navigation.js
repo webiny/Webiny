@@ -1,9 +1,151 @@
 import Webiny from 'Webiny';
+const Link = Webiny.Ui.Components.Link;
 
 class Navigation extends Webiny.Ui.Component {
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            menu: null,
+            submenu: null
+        };
+
+        this.bindMethods('renderMainMenu,renderSubMenu,renderSubMenuItem,mainMenuItemClick');
+    }
+
+    getLink(route, linkProps = {}) {
+        route = _.isString(route) ? route : null;
+
+        if (route && route.indexOf(Webiny.Router.getBaseUrl()) === 0) {
+            linkProps.url = route;
+        } else {
+            linkProps.route = route;
+        }
+
+        if (!linkProps.children) {
+            linkProps.children = linkProps.label;
+        }
+
+        return <Link {...linkProps}/>;
+    }
+
+    mainMenuItemClick(menu) {
+        let submenu = _.isString(menu.route) || _.isNull(menu.route) ? null : menu.key;
+        if (this.state.submenu === menu.key) {
+            submenu = null;
+        }
+        this.setState({submenu});
+    }
+
+    renderMainMenu(menu) {
+        const menuIconClass = this.classSet('icon app-icon', menu.icon);
+        const linkProps = {
+            key: menu.key,
+            label: menu.label,
+            children: [
+                <span key="icon" className={menuIconClass}></span>,
+                <span key="title" className="app-title">{menu.label}</span>,
+                <span key="caret" className="icon-caret-down icon mobile-caret"></span>
+            ]
+        };
+
+        if (_.isArray(menu.route)) {
+            linkProps['data-open-submenu'] = menu.key;
+        }
+
+        const active = this.state.menu === menu.key ? 'active' : '';
+
+        const click = () => {
+            this.mainMenuItemClick(menu);
+        };
+
+        return (
+            <li className={active} key={menu.key} onClick={click}>
+                {this.getLink(menu.route, linkProps)}
+            </li>
+        );
+    }
+
+    renderSubMenu(menu) {
+        let items = [];
+        if (_.isFunction(menu.route)) {
+            items = menu.route(menu);
+        } else if (_.isArray(menu.route)) {
+            items = menu.route;
+        }
+
+        if (items.length === 0) {
+            return null;
+        }
+
+        const menuProps = {
+            key: menu.key,
+            className: 'subnavigation',
+            'data-this-menu': menu.key,
+            style: {
+                display: menu.key === this.state.submenu ? 'block' : 'none'
+            }
+        };
+
+        return (
+            <ul {...menuProps}>
+                {items.map(this.renderSubMenuItem)}
+            </ul>
+        );
+    }
+
+    renderSubMenuItem(menu, index) {
+        const mainAction = this.getLink(menu.route, {key: index, label: menu.label});
+        let secondaryAction = null;
+        let caret = null;
+        let items = null;
+
+        if (menu.action) {
+            const actionIcon = menu.action.icon || 'icon-plus-circled';
+            const linkProps = {
+                label: menu.action.label,
+                route: menu.action.route,
+                className: 'small quick-link',
+                children: [
+                    <span key="label">{menu.action.label}</span>,
+                    <span key="icon" className={this.classSet('icon', actionIcon)}></span>
+                ]
+            };
+            secondaryAction = this.getLink(menu.action.route, linkProps);
+        }
+
+        if (_.isArray(menu.route)) {
+            caret = <span className="icon icon-caret-down"></span>;
+            items = (
+                <ul>
+                    {menu.route.map((i, key) => {
+                        return (
+                            <li key={key}>
+                                <Link route={i.route}>{i.label}</Link>
+                            </li>
+                        );
+                    })}
+                </ul>
+            );
+        }
+
+        const active = '';
+
+        return (
+            <li key={index} className={active}>
+                {mainAction}
+                {secondaryAction}
+                {caret}
+                {items}
+            </li>
+        );
+    }
+
     render() {
         const Layout = Webiny.Apps.Core.Backend.Layout.Components;
+
+        const menus = Webiny.Tools.getAppsMenus();
 
         return (
             <div className="master-navigation">
@@ -11,163 +153,15 @@ class Navigation extends Webiny.Ui.Component {
 
                 <div className="navbar-collapse collapse" id="left-sidebar">
                     <div className="shield"></div>
-                    <div className="domain-picker-mobile visible-xs">
-                        <div className="dropdown">
-                            <button className="btn btn-default dropdown-toggle" type="button" id="dropdownMenu10" data-toggle="dropdown">
-                                <span className="domain-name">www.badabing.com.hr</span>
-                                <span className="caret"></span>
-                            </button>
-                            <ul className="dropdown-menu" role="menu" aria-labelledby="dropdownMenu10">
-                                <li role="presentation"><a role="menuitem" tabIndex="-1" href="#">www.booking.com</a></li>
-                                <li role="presentation"><a role="menuitem" tabIndex="-1" href="#">www.amazon.com</a></li>
-                                <li role="presentation"><a role="menuitem" tabIndex="-1" href="#">www.apple.com</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div className="search-holder visible-xs">
-                        <input type="text" placeholder="Search..."/>
-                    </div>
                     <div className="left-menu">
                         <ul className="nav navbar-nav navbar-right">
-                            <li className="dashboard"><a href="#">
-                                <span className="icon-gauge icon app-icon"></span>
-                                <span className="app-title">Dashboard</span>
-                                <span className="icon-caret-down icon mobile-caret"></span>
-                            </a>
-                            </li>
-                            <li className="content active">
-                                <a href="#" data-open-submenu="content">
-                                    <span className="icon-browser icon app-icon"></span>
-                                    <span className="app-title">Content</span>
-                                    <span className="icon-caret-down icon mobile-caret"></span>
-                                </a>
-                                <ul className="subnavigation only-mob">
-                                    <li><a href="#">Posts</a>
-                                        <a href="#" className="small"><span>Add post</span>
-                                            <span className="icon-plus-circled icon"></span>
-                                        </a>
-                                    </li>
-                                    <li><a href="#">Pages</a></li>
-                                    <li className="active"><a href="#">Menus</a>
-                                        <ul>
-                                            <li><a href="#">Add new page</a></li>
-                                            <li><a href="#">View all pages</a></li>
-                                            <li><a href="#">Download all content</a></li>
-                                            <li><a href="#">Sub item No. 4</a></li>
-                                            <li><a href="#">Sub item</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Widgets</a></li>
-                                    <li><a href="#">Plugins</a></li>
-                                    <li><a href="#">Users</a></li>
-                                    <li><a href="#">Stats</a></li>
-                                </ul>
-                            </li>
-                            <li className="booking">
-                                <a href="#" data-open-submenu="booking">
-                                    <span className="icon-calendar icon app-icon"></span>
-                                    <span className="app-title">Booking</span>
-                                    <span className="icon-caret-down icon mobile-caret"></span>
-                                </a>
-
-                            </li>
-                            <li className="store">
-                                <a href="#" data-open-submenu="store">
-                                    <span className="icon-basket_n icon app-icon"></span>
-                                    <span className="app-title">Store</span>
-                                    <span className="icon-caret-down icon mobile-caret"></span>
-                                </a>
-                            </li>
-                            <li className="settings">
-                                <a href="#" data-open-submenu="settings">
-                                    <span className="icon-settings icon app-icon"></span>
-                                    <span className="app-title">Settings</span>
-                                    <span className="icon-caret-down icon mobile-caret"></span>
-                                </a>
-                            </li>
-                            <li className="users">
-                                <a href="#" data-open-submenu="user">
-                                    <span className="icon-user icon app-icon"></span>
-                                    <span className="app-title">Users</span>
-                                    <span className="icon-caret-down icon mobile-caret"></span>
-                                </a>
-                            </li>
+                            {menus.map(this.renderMainMenu)}
                         </ul>
                     </div>
 
-                    <div className="left-menu-submenu">
+                    <div className="left-menu-submenu" style={{display: this.state.submenu ? 'block' : 'none'}}>
                         <div>
-                            <ul className="subnavigation" data-this-menu="content" style={{display: 'block'}}>
-                                <li><a href="#">Posts</a>
-                                    <a href="#" className="small quick-link"><span>Add post</span>
-                                        <span className="icon-plus-circled icon"></span>
-                                    </a>
-                                </li>
-                                <li><a href="#">Pages</a></li>
-                                <li className="active">
-                                    <a href="#">Menus</a>
-                                    <span className="icon-caret-down icon"></span>
-                                    <ul>
-                                        <li><a href="#">Add new page</a></li>
-                                        <li><a href="#">View all pages</a></li>
-                                        <li className="active"><a href="#">Download all content</a></li>
-                                        <li><a href="#">Sub item No. 4</a></li>
-                                        <li><a href="#">Sub item</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a href="#">Widgets</a>
-                                    <span className="icon-caret-down icon"></span>
-                                </li>
-                                <li><a href="#">Plugins</a></li>
-                                <li><a href="#">Users</a></li>
-                                <li><a href="#">Stats</a></li>
-                            </ul>
-
-                            <ul className="subnavigation" data-this-menu="booking">
-                                <li><a href="#">Posts</a>
-                                    <a href="#" className="small"><span>Add BOOKING</span>
-                                        <span className="icon-plus-circled icon"></span>
-                                    </a>
-                                </li>
-                                <li><a href="#">Pages</a></li>
-                                <li className="active"><a href="#">Menus</a>
-                                    <ul>
-                                        <li><a href="#">Add new page</a></li>
-                                        <li><a href="#">View all pages</a></li>
-                                        <li><a href="#">Download all content</a></li>
-                                        <li><a href="#">Sub item No. 4</a></li>
-                                        <li><a href="#">Sub item</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="#">Widgets</a></li>
-                                <li><a href="#">Plugins</a></li>
-                                <li><a href="#">Users</a></li>
-                                <li><a href="#">Stats</a></li>
-                            </ul>
-
-                            <ul className="subnavigation" data-this-menu="store">
-                                <li><a href="#">Posts</a>
-                                    <a href="#" className="small"><span>Add ITEM</span>
-                                        <span className="icon-plus-circled icon"></span>
-                                    </a>
-                                </li>
-                                <li><a href="#">Pages</a></li>
-                                <li className="active"><a href="#">Menus</a>
-                                    <ul>
-                                        <li><a href="#">Add new page</a></li>
-                                        <li><a href="#">View all pages</a></li>
-                                        <li><a href="#">Download all content</a></li>
-                                        <li><a href="#">Sub item No. 4</a></li>
-                                        <li><a href="#">Sub item</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="#">Widgets</a></li>
-                                <li><a href="#">Plugins</a></li>
-                                <li><a href="#">Users</a></li>
-                                <li><a href="#">Stats</a></li>
-                            </ul>
-
+                            {menus.map(this.renderSubMenu)}
                         </div>
                     </div>
                 </div>

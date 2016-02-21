@@ -28,11 +28,11 @@ class ExecuteStaticMethodFlow extends AbstractFlow
 
         if (!$entityMethod) {
             $message = 'Method \'' . strtoupper($httpMethod) . ' ' . $method . '\' is not exposed in ' . get_class($entity);
-            throw new ApiException($message, 'WBY-ED-EXECUTE_STATIC_METHOD_FLOW-1', 404);
+            throw new ApiException($message, 'WBY-ED-EXECUTE_STATIC_METHOD_FLOW-1');
         }
 
         if (!$this->wAuth()->canExecute($entity, $method . '.' . $httpMethod)) {
-            throw new ApiException('You don\'t have an EXECUTE permission on ' . get_class($entity), 'WBY-AUTHORIZATION');
+            throw new ApiException('You don\'t have an EXECUTE permission on ' . get_class($entity), 'WBY-AUTHORIZATION', 401);
         }
 
         if (isset($entityMethod['callable'])) {
@@ -44,8 +44,10 @@ class ExecuteStaticMethodFlow extends AbstractFlow
 
         try {
             return is_string($method) ? $entity::$method(...$params) : $method(...$params);
+        } catch (ApiException $e) {
+            throw $e;
         } catch (ExceptionAbstract $e) {
-            throw new ApiException($e->getMessage(), $e->getMessage(), 'WBY-ED-EXECUTE_STATIC_METHOD_FLOW', 400);
+            throw new ApiException($e->getMessage(), 'WBY-ED-EXECUTE_STATIC_METHOD_FLOW', 400);
         }
     }
 

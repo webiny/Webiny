@@ -2,6 +2,7 @@
 namespace Apps\Core\Php\Discover\Postman;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\Discover\Parser\EntityParser;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
 
@@ -9,109 +10,72 @@ class EntityEndPoint
 {
     use DevToolsTrait, StdLibTrait;
 
-    private $app;
-    private $appVersion;
-    private $appSlug;
-    private $entityClass;
-    private $entityName;
-    private $entitySlug;
-    private $requests = [];
-    private $folder = [];
-    private $order = [];
-
-    function __construct($app, $entity)
-    {
-        $this->app = $app;
-        $this->appSlug = $this->str($app)->kebabCase()->val();
-        $this->appVersion = $this->wApps($app)->getVersion();
-        $this->entityClass = $entity;
-        $this->entityName = $this->str($entity)->explode('\\')->last()->val();
-        $this->entitySlug = $this->str($this->entityName)->kebabCase()->pluralize()->val();
-
-        $this->generate();
-    }
+    /**
+     * @var EntityParser
+     */
+    private $parser;
 
     /**
-     * @return mixed
+     * Entity API method
+     * @var array
      */
-    public function getApp()
+    private $method;
+
+    function __construct(EntityParser $parser, $method)
     {
-        return $this->app;
+        $this->parser = $parser;
+        $this->method = $method;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAppSlug()
+    public function getRequest()
     {
-        return $this->appSlug;
-    }
-
-    /**
-     * @return mixed|string|\Webiny\Component\Config\ConfigObject
-     */
-    public function getAppVersion()
-    {
-        return $this->appVersion;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEntityClass()
-    {
-        return $this->entityClass;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEntityName()
-    {
-        return $this->entityName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEntitySlug()
-    {
-        return $this->entitySlug;
-    }
-
-    public function getRequests()
-    {
-        return $this->requests;
-    }
-
-    public function getFolder()
-    {
-        return $this->folder;
-    }
-
-    private function generate()
-    {
-        $endPoints = [
-            new CrudList($this),
-            new CrudGet($this),
-            new CrudDelete($this),
-            new CrudCreate($this),
-            new CustomMethods($this)
+        $request = [
+            'id'      => StringObject::uuid(),
+            'headers' => $this->formatHeaders(),
+            'url'     => '{{apiUrl}}' . $this->method['path'],
+            'method'  => $this->method['method'],
+            'data'    => [],
+            'name'    => $this->method['description'],
+            'time'    => time(),
+            'version' => (string)$this->parser->getApp()->getVersion(),
+            'tests' => join("\n", $this->method['tests'])
         ];
 
-        /* @var $ep AbstractEndPoint */
-        foreach ($endPoints as $ep) {
-            foreach ($ep->getRequests() as $r) {
-                $this->requests[] = $r;
-                $this->order[] = $r['id'];
-            }
+        if (in_array($this->method['method'], ['POST', 'PATCH'])) {
+            $request['dataMode'] = 'raw';
+            $request['rawModeData'] = $this->formatBody();
         }
 
-        $this->folder = [
-            'id'          => StringObject::uuid(),
-            'name'        => $this->entityName,
-            'description' => '',
-            'order'       => $this->order
-        ];
+        return $request;
+    }
+
+    private function formatHeaders()
+    {
+        $headers = [];
+        foreach ($this->method['headers'] as $p) {
+            $headers[] = $p['name'] . ':{{' . $this->str($p['name'])->camelCase() . '}}';
+        }
+
+        return join("\n", $headers);
+    }
+
+    private function formatBody()
+    {
+        $body = [];
+        foreach ($this->method['body'] as $name => $p) {
+            $body[$name] = $p['value'];
+        }
+
+        return json_encode($body, JSON_PRETTY_PRINT);
+    }
+
+    private function getBody($attrs)
+    {
+        $body = [];
+        foreach ($attrs as $name => $attr) {
+            $body[$name] = $attr['value'];
+        }
+
+        return $body;
     }
 }

@@ -142,6 +142,10 @@ class Router {
         return this;
     }
 
+    routeExists(name){
+        return _.find(this.routes, 'name', name) ? true : false;
+    }
+
     getRoute(name) {
         const route = _.find(this.routes, 'name', name);
         if (!route) {

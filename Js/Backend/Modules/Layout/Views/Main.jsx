@@ -9,9 +9,9 @@ class Main extends Webiny.Ui.View {
         const Components = Webiny.Apps.Core.Backend.Layout.Components;
         return (
             <div className="master minimized">
-                <Webiny.Ui.Placeholder name="Header"/>
+                <Webiny.Ui.Components.Placeholder name="Header"/>
                 <div className="master-content container-fluid">
-                    <Webiny.Ui.Placeholder name="MasterContent"/>
+                    <Webiny.Ui.Components.Placeholder name="MasterContent"/>
                 </div>
                 <Components.Footer/>
             </div>

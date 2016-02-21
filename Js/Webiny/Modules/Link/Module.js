@@ -1,10 +1,10 @@
 import Webiny from 'Webiny';
-import Button from './Button';
+import Link from './Link';
 
 class Module extends Webiny.Module {
 
     init() {
-        Webiny.Ui.Components.Button = Button;
+        Webiny.Ui.Components.Link = Link;
     }
 }
 

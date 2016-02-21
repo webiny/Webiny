@@ -48,6 +48,11 @@ class FormComponent extends Component {
         if (this.props.validate && this.props.validate.indexOf('required') === -1) {
             return true;
         }
+
+        if(_.isNumber(this.props.valueLink.value)){
+            return true;
+        }
+
         return !_.isEmpty(this.props.valueLink.value);
     }
 

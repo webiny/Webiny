@@ -104,7 +104,7 @@ class Authorization
                 ];
             }
         } catch (LoginException $le) {
-            throw new ApiException($le->getMessage(), $le->getCode());
+            throw new ApiException($le->getMessage(), 'WBY-INVALID-CREDENTIALS', 401);
         } catch (\Exception $e) {
             throw new ApiException($e->getMessage());
         }

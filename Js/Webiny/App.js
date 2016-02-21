@@ -20,6 +20,7 @@ class WebinyApp {
                 return WebinyBootstrap.import('Core/Webiny/Modules/' + name).then(m => {
                     const module = new m.default(this);
                     module.name = name;
+                    module.init();
                     imported.push(module);
                     module.run();
                 }).catch(e => console.error(e));

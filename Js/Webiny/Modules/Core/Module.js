@@ -15,6 +15,8 @@ import Tools from './Tools';
 import Console from './Console';
 import Service from './Api/Service';
 import EntityService from './Api/EntityService';
+import Settings from './Ui/Settings';
+import Menu from './Ui/Menu';
 
 class Module extends WebinyModule {
 
@@ -27,9 +29,12 @@ class Module extends WebinyModule {
 			Ui: {
 				Component,
                 Components: {},
-                FormComponent,
 				Dispatcher: UiDispatcher,
-				View
+                FormComponent,
+                Menu,
+                Settings,
+				View,
+                Views: {}
 			},
 			Injector,
 			Model,
