@@ -63,7 +63,7 @@ class WebinyBootstrapClass {
     loadAssets(meta) {
         const assets = [];
         _.each(_.get(meta.assets, 'js', []), item => {
-            const vendors = new RegExp('\/vendors-[0-9a-z]+.js');
+            const vendors = new RegExp('\/vendors([-0-9a-z]+)?.js');
             // Do NOT import Core.Webiny vendors.js
             if (meta.name === 'Core.Webiny' && vendors.test(item)) {
                 return;
@@ -72,7 +72,7 @@ class WebinyBootstrapClass {
             assets.push(this.import(item));
         });
 
-        const vendors = new RegExp('\/vendors-[0-9a-z]+.css');
+        const vendors = new RegExp('\/vendors([-0-9a-z]+)?.css');
         _.each(_.get(meta.assets, 'css', []), item => {
             // Do NOT import Core.Webiny vendors.css
             if (meta.name === 'Core.Webiny' && vendors.test(item)) {

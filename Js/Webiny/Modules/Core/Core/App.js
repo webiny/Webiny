@@ -64,25 +64,7 @@ class App {
             });
         });
 
-        let routes = _.noop;
-        // If Routes.js exists, import it and register 'routes' and 'defaultComponents'
-        if (config.routes) {
-            routes = () => {
-                WebinyBootstrap.import(this.name.replace('.', '/') + '/Modules/' + module.name + '/Routes').then(f => {
-                    if (f.default.routes) {
-                        module.registerRoutes(...f.default.routes);
-                    }
-
-                    if (f.default.defaultComponents) {
-                        module.registerDefaultComponents(f.default.defaultComponents);
-                    }
-
-                    return f.default;
-                });
-            };
-        }
-
-        return Promise.all(promises).then(() => routes()).then(() => module);
+        return Promise.all(promises).then(() => module);
     }
 
     beforeRender(callback) {
