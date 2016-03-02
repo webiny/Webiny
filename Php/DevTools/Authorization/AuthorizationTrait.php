@@ -41,6 +41,10 @@ trait AuthorizationTrait
 
     private function checkPermission($class, $permission)
     {
+        if(!$this->wConfig()->get('Application.EntityDispatcher.CheckUserPermissions', true)){
+            return true;
+        }
+
         if (!is_string($class)) {
             $class = get_class($class);
         } else {

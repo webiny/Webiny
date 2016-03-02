@@ -10,8 +10,8 @@ use Webiny\Component\Mongo\Index\SingleIndex;
 /**
  * Class User
  *
- * @property string           $firstName
- * @property string           $lastName
+ * @property string           $id
+ * @property string           $fullName
  * @property string           $email
  * @property string           $password
  * @property EntityCollection $groups
@@ -25,7 +25,7 @@ class User extends EntityAbstract
     use DevToolsTrait, AuthorizationTrait;
 
     protected static $entityCollection = 'Users';
-    protected static $entityMask = '{firstName} {lastName}';
+    protected static $entityMask = '{fullName}';
 
     protected static function entityIndexes()
     {
@@ -50,8 +50,7 @@ class User extends EntityAbstract
     protected function entityStructure()
     {
         $this->attr('email')->char()->setValidators('required,email,unique');
-        $this->attr('firstName')->char()->setValidators('required');
-        $this->attr('lastName')->char()->setValidators('required');
+        $this->attr('fullName')->char()->setValidators('required');
         $this->attr('password')->char()->onSet(function ($password) {
             if (!empty($password) && $this->wValidation()->password($password)) {
                 return $this->wAuth()->createPasswordHash($password);
@@ -61,9 +60,9 @@ class User extends EntityAbstract
         $userGroup = '\Apps\Core\Php\Entities\UserGroup';
         $this->attr('groups')->many2many('User2Group')->setEntity($userGroup)->setValidators('minLength:1')->onSet(function ($groups) {
             // If not mongo Ids - load groups by tags
-            if(is_array($groups)){
-                foreach($groups as $i => $group){
-                    if(!$this->wDatabase()->isMongoId($group)){
+            if (is_array($groups)) {
+                foreach ($groups as $i => $group) {
+                    if (!$this->wDatabase()->isMongoId($group)) {
                         $groups[$i] = UserGroup::findOne(['tag' => $group]);
                     }
                 }
@@ -75,7 +74,9 @@ class User extends EntityAbstract
 
     protected function entityApi()
     {
-        // POST /entities/core/users/login
+        /**
+         * @api.name Login
+         */
         $this->api('POST', 'login', function () {
             $data = $this->wRequest()->getRequestData();
             $authToken = $this->wAuth()->processLogin($data['username'])['authToken'];
@@ -86,8 +87,20 @@ class User extends EntityAbstract
             ];
         });
 
-        // GET /entities/core/users/me
+        /**
+         * @api.name Get my profile
+         */
         $this->api('GET', 'me', function () {
+            return $this->wAuth()->getUser()->toArray($this->wRequest()->getFields('*,!password'));
+        });
+
+        /**
+         * @api.name Update my profile
+         */
+        $this->api('PATCH', 'me', function () {
+            $data = $this->wRequest()->getRequestData();
+            $this->wAuth()->getUser()->populate($data)->save();
+
             return $this->wAuth()->getUser()->toArray($this->wRequest()->getFields('*,!password'));
         });
     }

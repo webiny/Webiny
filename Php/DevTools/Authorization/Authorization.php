@@ -29,6 +29,11 @@ class Authorization
     private $user;
 
     /**
+     * @var string
+     */
+    private $userClass = 'Apps\Core\Php\Entities\User';
+
+    /**
      * @var Security
      */
     private $security;
@@ -80,8 +85,9 @@ class Authorization
         $authCookie = $this->wRequest()->header('Authorization');
 
         try {
+            $class = $this->userClass;
             $user = $this->login->getUser($authCookie);
-            $this->user = User::findOne(['email' => $user->getUsername()]);
+            $this->user = $class::findOne(['email' => $user->getUsername()]);
         } catch (\Exception $le) {
             return null;
         }
@@ -96,7 +102,8 @@ class Authorization
             // if login is successful, return device and auth tokens
             $authToken = $this->login->getAuthToken();
 
-            $this->user = User::findOne(['email' => $username]);
+            $class = $this->userClass;
+            $this->user = $class::findOne(['email' => $username]);
 
             if ($this->user && $this->user->enabled) {
                 return [
@@ -110,6 +117,13 @@ class Authorization
         }
 
         return null;
+    }
+
+    public function setUserClass(User $entity)
+    {
+        $this->userClass = get_class($entity);
+
+        return $this;
     }
 
     protected function getUserToAuthorize()
