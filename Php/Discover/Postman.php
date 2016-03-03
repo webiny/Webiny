@@ -7,7 +7,6 @@ use Apps\Core\Php\Discover\Parser\EntityParser;
 use Apps\Core\Php\Discover\Postman\EntityEndPoint;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
-use Webiny\Component\Storage\Directory\Directory;
 
 class Postman
 {

@@ -22,6 +22,7 @@ class EntityParser
     private $slug;
     private $url;
     private $apiMethods;
+    private $defaultValues;
 
     private $paramId;
     private $headerAuthorizationToken;
@@ -33,6 +34,15 @@ class EntityParser
         $this->name = $this->str($entity)->explode('\\')->last()->val();
         $this->slug = $this->str($this->name)->kebabCase()->pluralize()->val();
         $this->url = '/entities/' . $app->getSlug() . '/' . $this->slug;
+        $this->defaultValues = [
+            'object'   => new \stdClass(),
+            'array'    => '',
+            'date'     => $this->datetime()->format('Y-m-d'),
+            'datetime' => $this->datetime()->format('Y-m-d H:i:s'),
+            'id'       => (string)new \MongoId(),
+            'boolean'  => true,
+            'string'   => ''
+        ];
 
         $this->paramId = [
             'name'        => 'id',
@@ -112,27 +122,27 @@ class EntityParser
                 switch (true) {
                     case $this->isInstanceOf($attr, AttributeType::OBJECT):
                         $attribute['type'] = 'object';
-                        $attribute['value'] = new \stdClass();
+                        $attribute['value'] = $this->defaultValues['object'];
                         break;
                     case $this->isInstanceOf($attr, AttributeType::ARR):
                         $attribute['type'] = 'array';
-                        $attribute['value'] = [];
+                        $attribute['value'] = $this->defaultValues['array'];
                         break;
                     case $this->isInstanceOf($attr, AttributeType::DATE):
                         $attribute['type'] = 'date';
-                        $attribute['value'] = $this->datetime()->format('Y-m-d');
+                        $attribute['value'] = $this->defaultValues['date'];
                         break;
                     case $this->isInstanceOf($attr, AttributeType::DATE_TIME):
                         $attribute['type'] = 'datetime';
-                        $attribute['value'] = $this->datetime()->format('Y-m-d H:i:s');
+                        $attribute['value'] = $this->defaultValues['datetime'];
                         break;
                     case $this->isInstanceOf($attr, AttributeType::MANY2ONE):
                         $attribute['type'] = 'string';
-                        $attribute['value'] = (string)new \MongoId();
+                        $attribute['value'] = $this->defaultValues['id'];
                         break;
                     case $this->isInstanceOf($attr, AttributeType::BOOLEAN):
                         $attribute['type'] = 'boolean';
-                        $attribute['value'] = true;
+                        $attribute['value'] = $this->defaultValues['boolean'];
                         break;
                     case $this->isInstanceOf($attr, AttributeType::CHAR):
                         $value = '';
@@ -163,6 +173,8 @@ class EntityParser
                 'crudUpdate' => $this->getCrudUpdate(),
                 'crudDelete' => $this->getCrudDelete()
             ];
+            $customMethods = $this->getCustomMethods();
+            $this->apiMethods = array_merge($this->apiMethods, $customMethods);
         }
 
         return $this->apiMethods;
@@ -172,7 +184,7 @@ class EntityParser
     {
         return [
             'path'        => $this->url,
-            'description' => 'List ' . $this->str($this->name)->pluralize(),
+            'name' => 'List ' . $this->str($this->name)->pluralize(),
             'method'      => 'GET',
             'parameters'  => [
                 $this->headerAuthorizationToken
@@ -192,8 +204,8 @@ class EntityParser
     private function getCrudGet()
     {
         return [
-            'path'        => $this->url . '/{{id}}',
-            'description' => 'Get a single ' . $this->name . ' by ID',
+            'path'        => $this->url . '/{id}',
+            'name' => 'Get a single ' . $this->name . ' by ID',
             'method'      => 'GET',
             'parameters'  => [
                 $this->paramId
@@ -208,7 +220,7 @@ class EntityParser
     {
         return [
             'path'        => $this->url,
-            'description' => 'Create a ' . $this->name,
+            'name' => 'Create a ' . $this->name,
             'method'      => 'POST',
             'parameters'  => [],
             'headers'     => [
@@ -221,8 +233,8 @@ class EntityParser
     private function getCrudUpdate()
     {
         return [
-            'path'        => $this->url . '/{{id}}',
-            'description' => 'Update a single ' . $this->name,
+            'path'        => $this->url . '/{id}',
+            'name' => 'Update a single ' . $this->name,
             'method'      => 'PATCH',
             'parameters'  => [
                 $this->paramId
@@ -237,8 +249,8 @@ class EntityParser
     private function getCrudDelete()
     {
         return [
-            'path'        => $this->url . '/{{id}}',
-            'description' => 'Delete a single ' . $this->name . ' by ID',
+            'path'        => $this->url . '/{id}',
+            'name' => 'Delete a single ' . $this->name . ' by ID',
             'method'      => 'DELETE',
             'parameters'  => [
                 $this->paramId
@@ -249,16 +261,80 @@ class EntityParser
         ];
     }
 
+    /**
+     * Recursively parse entity classes to find all methods exposed to API
+     */
     private function getCustomMethods()
     {
-        $class = new \ReflectionClass($this->class);
-        $method = $class->getMethod('entityApi');
+        $apiDocs = $this->parseEntityApi($this->class);
+        $methods = [];
+        foreach ($apiDocs as $name => $httpMethods) {
+            foreach ($httpMethods as $httpMethod => $config) {
+                $config = $this->arr($config);
+                $definition = [
+                    'path'        => $this->url . $config['url'],
+                    'name'        => $config->key('name'),
+                    'description' => $config->key('description', '', true),
+                    'method'      => $httpMethod,
+                ];
+                foreach ($config['path'] as $pName => $pConfig) {
+                    $definition['parameters'][$pName] = [
+                        'name'        => $pName,
+                        'in'          => 'path',
+                        'description' => $pConfig['description'],
+                        'type'        => $pConfig['type'],
+                        'required'    => true // TODO
+                    ];
+                }
+
+                foreach ($config['body'] as $pName => $pConfig) {
+                    $definition['body'][$pName] = [
+                        'type'  => $pConfig['type'],
+                        'value' => $pConfig['value']
+                    ];
+                }
+                foreach ($config['headers'] as $pName => $pConfig) {
+                    $definition['headers'][$pName] = [
+                        'name'        => $pName,
+                        'description' => $pConfig['description'],
+                        'type'        => $pConfig['type'],
+                        'required'    => true
+                    ];
+                }
+
+                $methods[$name . '.' . $httpMethod] = $definition;
+            }
+        }
+
+        return $methods;
+    }
+
+    /**
+     * Parse entity class
+     *
+     * @param $class
+     *
+     * @return array
+     * @throws \Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObjectException
+     * @throws \Webiny\Component\StdLib\StdObject\StringObject\StringObjectException
+     */
+    private function parseEntityApi($class)
+    {
+        try {
+            $reflectionClass = new \ReflectionClass($class);
+            $method = $reflectionClass->getMethod('entityApi');
+        } catch (\ReflectionException $e) {
+            return [];
+        }
+
         $startLine = $method->getStartLine() + 1;
         $endLine = $method->getEndLine() - 1;
 
         $storage = $this->wStorage('Root');
+        $classPath = $this->str($class)->explode('\\')->filter();
+        $classFile = $this->wApps($classPath[1])->getPath(false) . '/' . $classPath->slice(2)->implode('\\')->replace('\\', '/');
 
-        $classFile = new File($this->str($this->class)->replace('\\', '/')->append('.php'), $storage);
+        $classFile = new File($classFile . '.php', $storage);
         $classContents = $classFile->getContents();
         $classLines = $this->str($classContents)->explode("\n");
 
@@ -268,25 +344,53 @@ class EntityParser
         $tmpDoc = $this->arr();
         foreach ($entityApiLines as $line => $code) {
             $code = $this->str($code)->trim();
+            if ($code->trim()->val() == 'parent::entityApi();') {
+                $parentClass = $reflectionClass->getParentClass()->getName();
+                $parentApi = $this->parseEntityApi($parentClass);
+                foreach ($parentApi as $key => $api) {
+                    if (!array_key_exists($key, $apiDocs)) {
+                        $apiDocs[$key] = $api;
+                    }
+                }
+            }
+
             if ($code->startsWith('/*') || $code->endsWith('*/')) {
                 continue;
             }
 
             if ($code->startsWith('$this->api(')) {
-                $methodName = $code->match('\'\w+\',\s?\'(\w+)\'')->keyNested('1.0');
+                $match = $code->match('\'(\w+)\',\s?\'(\w+)\'');
+                $httpMethod = strtoupper($match->keyNested('1.0'));
+                $methodName = $match->keyNested('2.0');
                 if ($methodName) {
-                    $apiDocs[$methodName] = $tmpDoc->val();
+                    $apiDocs[$methodName][$httpMethod] = $tmpDoc->val();
                 }
                 $tmpDoc = $this->arr();
                 continue;
             }
 
             if ($code->startsWith('* @api')) {
-                $annotationLine = $code->trimLeft('* @api.')->explode(' ', 2)->val();
+                $annotationLine = $code->replace('* @api.', '')->explode(' ', 2)->val();
+                $line = $this->str($annotationLine[0]);
+                // Parse parameters and fetch the appropriate value for given parameter type
+                if ($line->startsWith('body.') || $line->startsWith('path.') || $line->startsWith('headers.')) {
+                    $paramLine = $this->str($annotationLine[1])->explode(' ', 2);
+                    $param = [
+                        'type'        => $paramLine[0],
+                        'value'       => $this->defaultValues[$paramLine[0]],
+                        'name'        => $line->replace(['body.', 'path.'], '')->val(),
+                        'description' => $paramLine[1]
+                    ];
+
+                    // TODO: add check if this parameter is 'required'
+
+                    $tmpDoc->keyNested($annotationLine[0], $param);
+                    continue;
+                }
                 $tmpDoc->keyNested($annotationLine[0], $annotationLine[1]);
             }
         }
 
-        die(print_r($apiDocs));
+        return $apiDocs;
     }
 }

@@ -76,19 +76,25 @@ class User extends EntityAbstract
     {
         /**
          * @api.name Login
+         * @api.url /login
+         * @api.body.username string Username
+         * @api.body.password string Password
+         * @api.body.rememberme boolean Remember Me
          */
         $this->api('POST', 'login', function () {
             $data = $this->wRequest()->getRequestData();
-            $authToken = $this->wAuth()->processLogin($data['username'])['authToken'];
+            $login = $this->login($data['username']);
 
             return [
-                'authToken' => $authToken,
+                'authToken' => $login['authToken'],
                 'user'      => $this->wAuth()->getUser()->toArray($this->wRequest()->getFields('*,!password'))
             ];
         });
 
         /**
          * @api.name Get my profile
+         * @api.url /me
+         * @api.headers.Authorization string Authorization token
          */
         $this->api('GET', 'me', function () {
             return $this->wAuth()->getUser()->toArray($this->wRequest()->getFields('*,!password'));
@@ -96,6 +102,8 @@ class User extends EntityAbstract
 
         /**
          * @api.name Update my profile
+         * @api.url /me
+         * @api.headers.Authorization string Authorization token
          */
         $this->api('PATCH', 'me', function () {
             $data = $this->wRequest()->getRequestData();
@@ -115,5 +123,10 @@ class User extends EntityAbstract
         }
 
         return $res;
+    }
+
+    protected function login($username)
+    {
+        return $this->wAuth()->processLogin($username);
     }
 }
