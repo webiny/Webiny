@@ -16,31 +16,32 @@ trait ParamsInjectorTrait
         'XDEBUG_SESSION_START'
     ];
 
-    protected function injectParams($class, $method, array $params)
+    protected function injectParams($function, array $params)
     {
-        if(is_string($method)){
-            $rc = new \ReflectionClass($class);
-            $rm = $rc->getMethod($method);
-        } else {
-            $rm = new \ReflectionFunction($method);
-        }
+        $rm = new \ReflectionFunction($function);
 
         $methodParams = [];
+        $methodRequiredParams = 0;
         /* @var $p \ReflectionParameter */
         foreach ($rm->getParameters() as $p) {
+            if ($p->getName() == 'parent') {
+                continue;
+            }
             $pClass = $p->getClass();
             $methodParams[$p->getName()] = [
                 'name'     => $p->getName(),
                 'class'    => $pClass ? $pClass->getName() : null,
                 'required' => !$p->allowsNull()
             ];
-        }
 
-        $methodRequiredParams = $rm->getNumberOfRequiredParameters();
+            if (!$p->allowsNull()) {
+                $methodRequiredParams++;
+            }
+        }
 
         if (count($params) < $methodRequiredParams) {
             $missingParams = array_slice(array_keys($methodParams), count($params));
-            throw new ApiException('Missing required params', 'WBY-ENTITY_DISPATCHER-PARAMS-1', 400, $missingParams);
+            throw new ApiException('Missing required params', 'WBY-PARAMS_INJECTOR-1', 400, $missingParams);
         }
 
         $index = 0;
@@ -51,7 +52,7 @@ trait ParamsInjectorTrait
                 if ($mp['required'] && $paramValue === null) {
                     $data = [];
                     $data[$mp['name']] = $mp['class'] . ' with ID `' . $requestedValue . '` was not found!';
-                    throw new ApiException('Invalid parameters', 'WBY-ENTITY_DISPATCHER-PARAMS-2', 400, $data);
+                    throw new ApiException('Invalid parameters', 'WBY-PARAMS_INJECTOR-2', 400, $data);
                 }
                 $params[$index] = $paramValue;
             }

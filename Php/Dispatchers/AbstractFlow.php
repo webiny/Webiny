@@ -14,7 +14,7 @@ use Webiny\Component\StdLib\StdLibTrait;
 
 abstract class AbstractFlow
 {
-    use DevToolsTrait, StdLibTrait, ParamsInjectorTrait;
+    use DevToolsTrait, StdLibTrait;
 
     abstract public function canHandle($httpMethod, $params);
 

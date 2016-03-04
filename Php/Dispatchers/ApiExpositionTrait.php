@@ -24,6 +24,12 @@ trait ApiExpositionTrait
      */
     private $apiMethods;
 
+    /**
+     * @param $httpMethod
+     * @param $entityMethod
+     *
+     * @return ApiMethod
+     */
     public function getApiMethod($httpMethod, $entityMethod)
     {
         if (!$this->apiMethods) {
@@ -44,15 +50,25 @@ trait ApiExpositionTrait
         return $this->apiMethods;
     }
 
-    public function api($httpMethod, $entityMethod, $callback = null)
+    /**
+     * Expose API method
+     *
+     * @param string   $httpMethod
+     * @param string   $entityMethod
+     * @param callable $callable
+     *
+     * @return ApiMethod
+     */
+    public function api($httpMethod, $entityMethod, $callable)
     {
         if (!$this->apiMethods) {
             $this->apiMethods = new ArrayObject();
         }
 
         $httpMethod = strtolower($httpMethod);
-        $this->apiMethods->keyNested($entityMethod . '.' . $httpMethod, ['callable' => $callback]);
+        $apiMethod = $this->apiMethods->keyNested($entityMethod . '.' . $httpMethod, new ApiMethod($httpMethod, $entityMethod), true);
+        $apiMethod->addCallback($callable);
 
-        return $this;
+        return $apiMethod;
     }
 }

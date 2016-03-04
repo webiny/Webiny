@@ -30,15 +30,16 @@ class EntityEndPoint
     public function getRequest()
     {
         $request = [
-            'id'      => StringObject::uuid(),
-            'headers' => $this->formatHeaders(),
-            'url'     => '{{apiUrl}}' . $this->method['path'],
-            'method'  => $this->method['method'],
-            'data'    => [],
-            'name'    => $this->method['description'],
-            'time'    => time(),
-            'version' => (string)$this->parser->getApp()->getVersion(),
-            'tests' => join("\n", $this->method['tests'])
+            'id'          => StringObject::uuid(),
+            'headers'     => $this->formatHeaders(),
+            'url'         => '{{apiUrl}}' . $this->method['path'],
+            'method'      => $this->method['method'],
+            'data'        => [],
+            'name'        => $this->method['name'],
+            'description' => $this->method['description'],
+            'time'        => time(),
+            'version'     => (string)$this->parser->getApp()->getVersion(),
+            'tests'       => join("\n", $this->method['tests'])
         ];
 
         if (in_array($this->method['method'], ['POST', 'PATCH'])) {

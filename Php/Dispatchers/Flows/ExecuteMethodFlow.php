@@ -38,15 +38,8 @@ class ExecuteMethodFlow extends AbstractFlow
 
         $entity = $entity->findById($id);
         if ($entity) {
-            if ($entityMethod['callable']) {
-                /* @var $method Callable */
-                $method = $entityMethod['callable'];
-            }
-
-            $params = $this->injectParams($entity, $method, array_slice($params, 2));
-
             try {
-                return is_string($method) ? $entity->$method(...$params) : $method(...$params);
+                return $entityMethod(array_slice($params, 2));
             } catch (ApiException $e) {
                 throw $e;
             } catch (ExceptionAbstract $e) {

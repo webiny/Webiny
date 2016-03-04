@@ -1,5 +1,5 @@
 /**
- * ReactDOMServer v0.14.3
+ * ReactDOM v0.14.7
  *
  * Copyright 2013-2015, Facebook, Inc.
  * All rights reserved.
@@ -21,7 +21,7 @@
 
   // <script>
   } else {
-    var g
+    var g;
     if (typeof window !== "undefined") {
       g = window;
     } else if (typeof global !== "undefined") {
@@ -34,9 +34,9 @@
       // see https://github.com/facebook/react/issues/3037
       g = this;
     }
-    g.ReactDOMServer = f(g.React);
+    g.ReactDOM = f(g.React);
   }
 
 })(function(React) {
-  return React.__SECRET_DOM_SERVER_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+  return React.__SECRET_DOM_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
 });

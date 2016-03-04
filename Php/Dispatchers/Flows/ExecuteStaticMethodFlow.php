@@ -35,15 +35,8 @@ class ExecuteStaticMethodFlow extends AbstractFlow
             throw new ApiException('You don\'t have an EXECUTE permission on ' . get_class($entity), 'WBY-AUTHORIZATION', 401);
         }
 
-        if (isset($entityMethod['callable'])) {
-            /* @var $method Callable */
-            $method = $entityMethod['callable'];
-        }
-
-        $params = $this->injectParams($entity, $method, array_slice($params, 1));
-
         try {
-            return is_string($method) ? $entity::$method(...$params) : $method(...$params);
+            return $entityMethod(array_slice($params, 1));
         } catch (ApiException $e) {
             throw $e;
         } catch (ExceptionAbstract $e) {

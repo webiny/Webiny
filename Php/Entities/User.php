@@ -83,13 +83,13 @@ class User extends EntityAbstract
          */
         $this->api('POST', 'login', function () {
             $data = $this->wRequest()->getRequestData();
-            $login = $this->login($data['username']);
+            $login = $this->wAuth()->processLogin($data['username']);
 
             return [
                 'authToken' => $login['authToken'],
                 'user'      => $this->wAuth()->getUser()->toArray($this->wRequest()->getFields('*,!password'))
             ];
-        });
+        })->setBodyValidators(['username' => 'required', 'password' => 'required']);
 
         /**
          * @api.name Get my profile
@@ -123,10 +123,5 @@ class User extends EntityAbstract
         }
 
         return $res;
-    }
-
-    protected function login($username)
-    {
-        return $this->wAuth()->processLogin($username);
     }
 }

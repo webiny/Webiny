@@ -183,16 +183,16 @@ class EntityParser
     private function getCrudList()
     {
         return [
-            'path'        => $this->url,
-            'name' => 'List ' . $this->str($this->name)->pluralize(),
-            'method'      => 'GET',
-            'parameters'  => [
+            'path'       => $this->url,
+            'name'       => 'List ' . $this->str($this->name)->pluralize(),
+            'method'     => 'GET',
+            'parameters' => [
                 $this->headerAuthorizationToken
             ],
-            'headers'     => [
+            'headers'    => [
                 $this->headerAuthorizationToken
             ],
-            'tests'       => [
+            'tests'      => [
                 'var jsonData = JSON.parse(responseBody);',
                 'tests["Status code is 200"] = responseCode.code === 200;',
                 'tests["Meta exists"] = jsonData.data !== undefined && jsonData.data.meta instanceof Object;',
@@ -204,13 +204,13 @@ class EntityParser
     private function getCrudGet()
     {
         return [
-            'path'        => $this->url . '/{id}',
-            'name' => 'Get a single ' . $this->name . ' by ID',
-            'method'      => 'GET',
-            'parameters'  => [
+            'path'       => $this->url . '/{id}',
+            'name'       => 'Get a single ' . $this->name . ' by ID',
+            'method'     => 'GET',
+            'parameters' => [
                 $this->paramId
             ],
-            'headers'     => [
+            'headers'    => [
                 $this->headerAuthorizationToken
             ]
         ];
@@ -219,43 +219,43 @@ class EntityParser
     private function getCrudCreate()
     {
         return [
-            'path'        => $this->url,
-            'name' => 'Create a ' . $this->name,
-            'method'      => 'POST',
-            'parameters'  => [],
-            'headers'     => [
+            'path'       => $this->url,
+            'name'       => 'Create a ' . $this->name,
+            'method'     => 'POST',
+            'parameters' => [],
+            'headers'    => [
                 $this->headerAuthorizationToken
             ],
-            'body'        => $this->getRequiredAttributes()
+            'body'       => $this->getRequiredAttributes()
         ];
     }
 
     private function getCrudUpdate()
     {
         return [
-            'path'        => $this->url . '/{id}',
-            'name' => 'Update a single ' . $this->name,
-            'method'      => 'PATCH',
-            'parameters'  => [
+            'path'       => $this->url . '/{id}',
+            'name'       => 'Update a single ' . $this->name,
+            'method'     => 'PATCH',
+            'parameters' => [
                 $this->paramId
             ],
-            'headers'     => [
+            'headers'    => [
                 $this->headerAuthorizationToken
             ],
-            'body'        => $this->getRequiredAttributes()
+            'body'       => $this->getRequiredAttributes()
         ];
     }
 
     private function getCrudDelete()
     {
         return [
-            'path'        => $this->url . '/{id}',
-            'name' => 'Delete a single ' . $this->name . ' by ID',
-            'method'      => 'DELETE',
-            'parameters'  => [
+            'path'       => $this->url . '/{id}',
+            'name'       => 'Delete a single ' . $this->name . ' by ID',
+            'method'     => 'DELETE',
+            'parameters' => [
                 $this->paramId
             ],
-            'headers'     => [
+            'headers'    => [
                 $this->headerAuthorizationToken
             ]
         ];
@@ -275,15 +275,16 @@ class EntityParser
                     'path'        => $this->url . $config['url'],
                     'name'        => $config->key('name'),
                     'description' => $config->key('description', '', true),
-                    'method'      => $httpMethod,
+                    'method'      => strtoupper($httpMethod),
                 ];
+
+                // Build path, body and header parameters
                 foreach ($config['path'] as $pName => $pConfig) {
                     $definition['parameters'][$pName] = [
                         'name'        => $pName,
                         'in'          => 'path',
                         'description' => $pConfig['description'],
-                        'type'        => $pConfig['type'],
-                        'required'    => true // TODO
+                        'type'        => $pConfig['type']
                     ];
                 }
 
@@ -360,7 +361,7 @@ class EntityParser
 
             if ($code->startsWith('$this->api(')) {
                 $match = $code->match('\'(\w+)\',\s?\'(\w+)\'');
-                $httpMethod = strtoupper($match->keyNested('1.0'));
+                $httpMethod = strtolower($match->keyNested('1.0'));
                 $methodName = $match->keyNested('2.0');
                 if ($methodName) {
                     $apiDocs[$methodName][$httpMethod] = $tmpDoc->val();

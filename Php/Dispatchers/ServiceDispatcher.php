@@ -10,6 +10,7 @@ namespace Apps\Core\Php\Dispatchers;
 
 use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
 use Apps\Core\Php\DevTools\Response\ApiResponse;
+use Apps\Core\Php\Dispatchers\ApiMethod;
 use Apps\Core\Php\RequestHandlers\ApiEvent;
 use Apps\Core\Php\RequestHandlers\ApiException;
 
@@ -46,6 +47,7 @@ class ServiceDispatcher extends AbstractApiDispatcher
         }
 
         // Check if method exists
+        /* @var $serviceMethod ApiMethod */
         $serviceMethod = $service->getApiMethod($httpMethod, $method);
         $possibleServiceMethod = $possibleMethod ? $service->getApiMethod($httpMethod, $possibleMethod) : null;
 
@@ -64,14 +66,7 @@ class ServiceDispatcher extends AbstractApiDispatcher
             throw new ApiException('You don\'t have an EXECUTE permission on ' . $serviceClass, 'WBY-AUTHORIZATION');
         }
 
-        if ($serviceMethod['callable']) {
-            /* @var $method Callable */
-            $method = $serviceMethod['callable'];
-        }
-
-        $params = $this->injectParams($service, $method, $params);
-
-        $result = is_string($method) ? $service->$method(...$params) : $method(...$params);
+        $result = $serviceMethod($params);
 
         return new ApiResponse($result);
     }
