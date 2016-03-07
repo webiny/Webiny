@@ -72,7 +72,12 @@ class PackageScanner
             // If App - detect version and setup autoloader
             $name = $this->str($key)->explode('/')->last()->val();
             if ($object == 'App' && $name !== 'Core') {
-                $version = str_replace('.', '_', $this->wConfig()->get($object . 's.' . $name));
+                $version = $this->wConfig()->get($object . 's.' . $name);
+                // If app's version is not configured - skip it
+                if (!$version) {
+                    continue;
+                }
+                $version = str_replace('.', '_', $version);
                 $appPath = $this->wConfig()->get('Application.AbsolutePath') . 'Apps/' . $name . '/' . $version;
                 $this->wClassLoader()->appendLibrary('Apps\\' . $name . '\\', $appPath);
                 $configPath = $key . '/' . $version . '/' . $object . '.yaml';
