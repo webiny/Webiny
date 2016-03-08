@@ -10,6 +10,3 @@ Assets:
         - bower_components/react/react.js
         - bower_components/react/react-dom.js
         - bower_components/react/react-dom-server.js
-        #- custom_components/react/react.js
-        #- custom_components/react/react-dom.js
-        #- custom_components/react/react-dom-server.js

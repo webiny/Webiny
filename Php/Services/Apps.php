@@ -43,7 +43,14 @@ class Apps extends AbstractService
         return $this->getAppsMeta($appName);
     }
 
-    private function getAppsMeta($app = null)
+    /**
+     * Get apps meta
+     *
+     * @param null $app
+     *
+     * @return array|mixed
+     */
+    public function getAppsMeta($app = null)
     {
         if ($this->wIsProduction()) {
             $storage = $this->wStorage('ProductionBuild');
