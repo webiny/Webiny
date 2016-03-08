@@ -142,7 +142,7 @@ class Router {
         return this;
     }
 
-    routeExists(name){
+    routeExists(name) {
         return _.find(this.routes, 'name', name) ? true : false;
     }
 

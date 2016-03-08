@@ -49,7 +49,7 @@ class FormComponent extends Component {
             return true;
         }
 
-        if(_.isNumber(this.props.valueLink.value)){
+        if (_.isNumber(this.props.valueLink.value)) {
             return true;
         }
 
