@@ -8,15 +8,17 @@
 
 namespace Apps\Core\Php\View;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Webiny\Component\Config\Config;
 
 class View
 {
-    use DevToolsTrait;
-
-    public function getEnvironment()
+    /**
+     * Get access to system configuration
+     *
+     * @return Config
+     */
+    public static function wConfig()
     {
-        // TODO: debug problem with Production ConfigSet
-        return $this->wConfig()->get('Application.Environment', 'production');
+        return \Apps\Core\Php\DevTools\Config::getInstance();
     }
 }
