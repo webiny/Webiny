@@ -1,3 +1,4 @@
 {
-    "name": "webiny/core"
+    "name": "webiny/core",
+    "type": "webiny-app"
 }
