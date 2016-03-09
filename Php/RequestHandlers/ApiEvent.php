@@ -30,7 +30,7 @@ class ApiEvent extends Event
      * @throws \Webiny\Component\StdLib\StdObject\StringObject\StringObjectException
      */
     public function getUrl(){
-        $url = $this->wRequest()->getCurrentUrl(true)->setPort('')->val();
+        $url = $this->wRequest()->getCurrentUrl(true)->val();
         $apiPath = $this->wConfig()->getConfig()->get('Application.ApiPath');
         return $this->str($url)->replace($apiPath, '')->explode('?')->first();
     }
