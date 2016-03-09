@@ -7,81 +7,28 @@
 
 namespace Apps\Core\Php\RequestHandlers;
 
-use Webiny\Component\Http\Http;
-use Webiny\Component\StdLib\Exception\ExceptionAbstract;
+use Apps\Core\Php\DevTools\Exceptions\AppException;
 
 /**
- * RestErrorExceptions are thrown by the api service methods.
- * Implemented methods can throw this exception to notify the rest component that there has been an error.
+ * ApiExceptions are thrown by the API methods.
  *
- * @package         Webiny\Component\Rest
+ * @package Apps\Core\Php\RequestHandlers
  */
-class ApiException extends ExceptionAbstract
+class ApiException extends AppException
 {
-    /**
-     * @var string Error message.
-     */
-    protected $message = '';
-
-    /**
-     * @var string Error description.
-     */
-    protected $description = '';
-
-    /**
-     * @var string Error code.
-     */
-    protected $errorCode = '';
-
     /**
      * @var int Http response code that should be send with the error. Default is 404.
      */
     protected $responseCode = 404;
 
-    /**
-     * Data attached to exception
-     * @var array
-     */
-    protected $data = [];
-
-    /**
-     * Base constructor.
-     *
-     * @param string $message Error message
-     * @param string $errorCode Error code
-     * @param int    $responseCode Http response code that should be send with the error. Default is 404
-     * @param array  $data
-     */
     public function __construct($message, $errorCode = '', $responseCode = 404, $data = [])
     {
-        $this->message = $message;
-        $this->errorCode = $errorCode;
         $this->responseCode = $responseCode;
-        $this->data = $data;
+        parent::__construct($message, $errorCode, $data);
     }
 
     /**
-     * Get the error message
-     *
-     * @return string
-     */
-    public function getErrorMessage()
-    {
-        return $this->message;
-    }
-
-    /**
-     * Get error code
-     *
-     * @return string
-     */
-    public function getErrorCode()
-    {
-        return $this->errorCode;
-    }
-
-    /**
-     * @param $responseCode Http response code that should be send with the error. Default is 404.
+     * @param int|string $responseCode Http response code that should be send with the error. Default is 404.
      */
     public function setResponseCode($responseCode)
     {
@@ -94,13 +41,5 @@ class ApiException extends ExceptionAbstract
     public function getResponseCode()
     {
         return $this->responseCode;
-    }
-
-    /**
-     * @return array Returns the data attached to exception
-     */
-    public function getData()
-    {
-        return $this->data;
     }
 }

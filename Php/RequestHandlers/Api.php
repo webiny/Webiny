@@ -13,7 +13,6 @@ use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
 use Apps\Core\Php\DevTools\Response\ApiRawResponse;
 use Apps\Core\Php\Discover\Parser\AppParser;
 use Apps\Core\Php\Discover\Postman;
-use Apps\Core\Php\Discover\Swagger;
 
 class Api
 {
@@ -56,6 +55,8 @@ class Api
             }
         } catch (ApiException $e) {
             return new ApiErrorResponse($e->getData(), $e->getErrorMessage(), $e->getErrorCode(), $e->getResponseCode());
+        } catch (AppException $e) {
+            return new ApiErrorResponse($e->getData(), $e->getErrorMessage(), $e->getErrorCode(), 404);
         }
     }
 }
