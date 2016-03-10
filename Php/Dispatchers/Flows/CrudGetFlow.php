@@ -39,6 +39,6 @@ class CrudGetFlow extends AbstractFlow
 
     public function canHandle($httpMethod, $params)
     {
-        return $httpMethod === 'GET' && count($params) === 1 && $this->isValidMongoId($params[0]);
+        return $httpMethod === 'GET' && count($params) === 1 && $this->mongo()->isId($params[0]);
     }
 }

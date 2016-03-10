@@ -43,6 +43,6 @@ class CrudDeleteFlow extends AbstractFlow
 
     public function canHandle($httpMethod, $params)
     {
-        return $httpMethod === 'DELETE' && count($params) === 1 && $this->isValidMongoId($params[0]);
+        return $httpMethod === 'DELETE' && count($params) === 1 && $this->mongo()->isId($params[0]);
     }
 }

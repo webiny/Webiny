@@ -5,13 +5,13 @@ use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Entity\EntityAbstract;
 use Webiny\Component\Entity\Attribute\AttributeAbstract;
 use Webiny\Component\Entity\Attribute\AttributeType;
+use Webiny\Component\Mongo\MongoTrait;
 use Webiny\Component\StdLib\StdLibTrait;
-use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
 use Webiny\Component\Storage\File\File;
 
 class EntityParser
 {
-    use DevToolsTrait, StdLibTrait;
+    use DevToolsTrait, StdLibTrait, MongoTrait;
 
     /**
      * @var AppParser
@@ -39,7 +39,7 @@ class EntityParser
             'array'    => '',
             'date'     => $this->datetime()->format('Y-m-d'),
             'datetime' => $this->datetime()->format('Y-m-d H:i:s'),
-            'id'       => (string)new \MongoId(),
+            'id'       => (string) $this->mongo()->id(),
             'boolean'  => true,
             'string'   => ''
         ];

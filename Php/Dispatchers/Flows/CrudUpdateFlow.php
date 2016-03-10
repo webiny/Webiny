@@ -49,6 +49,6 @@ class CrudUpdateFlow extends AbstractFlow
 
     public function canHandle($httpMethod, $params)
     {
-        return $httpMethod === 'PATCH' && count($params) === 1 && $this->isValidMongoId($params[0]);
+        return $httpMethod === 'PATCH' && count($params) === 1 && $this->mongo()->isId($params[0]);
     }
 }

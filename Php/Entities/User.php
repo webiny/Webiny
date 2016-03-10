@@ -62,7 +62,7 @@ class User extends EntityAbstract
             // If not mongo Ids - load groups by tags
             if (is_array($groups)) {
                 foreach ($groups as $i => $group) {
-                    if (!$this->wDatabase()->isMongoId($group)) {
+                    if (!$this->wDatabase()->isId($group)) {
                         $groups[$i] = UserGroup::findOne(['tag' => $group]);
                     }
                 }

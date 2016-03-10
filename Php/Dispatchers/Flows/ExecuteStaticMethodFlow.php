@@ -46,6 +46,6 @@ class ExecuteStaticMethodFlow extends AbstractFlow
 
     public function canHandle($httpMethod, $params)
     {
-        return in_array($httpMethod, ['GET', 'POST', 'PATCH', 'DELETE']) && count($params) >= 1 && !$this->isValidMongoId($params[0]);
+        return in_array($httpMethod, ['GET', 'POST', 'PATCH', 'DELETE']) && count($params) >= 1 && !$this->mongo()->isId($params[0]);
     }
 }

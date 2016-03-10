@@ -52,6 +52,6 @@ class ExecuteMethodFlow extends AbstractFlow
 
     public function canHandle($httpMethod, $params)
     {
-        return count($params) >= 2 && $this->isValidMongoId($params[0]);
+        return count($params) >= 2 && $this->mongo()->isId($params[0]);
     }
 }
