@@ -12,7 +12,7 @@ use Webiny\Component\Entity\Attribute\FloatAttribute;
 
 /**
  * Price attribute
- * @package Ht\Platform\Entity\Attribute
+ * @package Apps\Core\Php\DevTools\Entity\Attributes
  */
 class PriceAttribute extends FloatAttribute
 {
@@ -24,13 +24,5 @@ class PriceAttribute extends FloatAttribute
         parent::__construct($attribute, $entity);
         $this->setValidators('required,number,gt:' . $min . ',lte:' . $max);
         $this->setDefaultValue(0);
-
-        $entity->api('get', 'price', function () {
-            return 'api-' . $this->getValue();
-        });
-
-        $entity->api('post', 'price', function () {
-            return 'api-' . $this->getValue();
-        });
     }
 }

@@ -11,6 +11,7 @@ namespace Apps\Core\Php\Dispatchers\Flows;
 use Apps\Core\Php\DevTools\Entity\EntityAbstract;
 use Apps\Core\Php\Dispatchers\AbstractFlow;
 use Apps\Core\Php\RequestHandlers\ApiException;
+use Webiny\Component\Entity\Attribute\Validation\ValidationException;
 use Webiny\Component\StdLib\Exception\ExceptionAbstract;
 
 /**
@@ -39,9 +40,11 @@ class ExecuteMethodFlow extends AbstractFlow
         $entity = $entity->findById($id);
         if ($entity) {
             try {
-                return $entityMethod(array_slice($params, 2));
+                return $entityMethod(array_slice($params, 2), $entity);
             } catch (ApiException $e) {
                 throw $e;
+            } catch (ValidationException $e) {
+                throw new ApiException($e->getMessage(), 'WBY-ED-EXECUTE_STATIC_METHOD_FLOW', 400, iterator_to_array($e->getIterator()));
             } catch (ExceptionAbstract $e) {
                 throw new ApiException($e->getMessage(), 'WBY-ED-EXECUTE_METHOD_FLOW-1', 400);
             }

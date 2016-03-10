@@ -9,12 +9,12 @@
 namespace Apps\Core\Php\DevTools;
 
 use Apps\Core\Php\DevTools\Authorization\Authorization;
-use Apps\Core\Php\DevTools\Validation\ValidationHelper;
 use Apps\Core\Php\PackageManager\App;
 use Webiny\Component\Cache\CacheStorage;
 use Webiny\Component\Mongo\Mongo;
 use Webiny\Component\ServiceManager\ServiceManager;
 use Webiny\Component\Storage\Storage as WebinyStorage;
+use Webiny\Component\Validation\Validation;
 
 /**
  * This trait provides you with access to all core components.
@@ -146,11 +146,11 @@ trait DevToolsTrait
     /**
      * Get Validation
      *
-     * @return ValidationHelper
+     * @return Validation
      */
     static protected function wValidation()
     {
-        return ValidationHelper::getInstance();
+        return Validation::getInstance();
     }
 
     /**

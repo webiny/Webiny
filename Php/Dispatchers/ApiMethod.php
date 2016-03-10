@@ -33,12 +33,16 @@ class ApiMethod
         }
     }
 
-    public function __invoke($params)
+    public function __invoke($params, $bindTo = null)
     {
-        if(!$params){
+        if (!$params) {
             $params = [];
         }
+
         $callback = $this->callbacks[0];
+        if ($bindTo) {
+            $callback = $callback->bindTo($bindTo);
+        }
         $callbackCount = count($this->callbacks);
         $params = $this->injectParams($callback, $params);
         if ($callbackCount > 1) {

@@ -4,6 +4,7 @@ namespace Apps\Core\Php\Entities;
 use Apps\Core\Php\DevTools\Authorization\AuthorizationTrait;
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\Entities\Attributes\EmailAttribute;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Mongo\Index\SingleIndex;
 
@@ -49,10 +50,10 @@ class User extends EntityAbstract
      */
     protected function entityStructure()
     {
-        $this->attr('email')->char()->setValidators('required,email,unique');
+        $this->attr('email')->smart(new EmailAttribute());
         $this->attr('fullName')->char()->setValidators('required');
         $this->attr('password')->char()->onSet(function ($password) {
-            if (!empty($password) && $this->wValidation()->password($password)) {
+            if (!empty($password) && $this->wValidation()->validate($password, 'password')) {
                 return $this->wAuth()->createPasswordHash($password);
             }
         });

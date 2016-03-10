@@ -25,11 +25,11 @@ class ErrorHandler
         }
 
         $error = [
-            'type'      => isset($this->codes[$errorCode]) ? $this->codes[$errorCode] : 'notice',
-            'message'   => $errorMessage,
-            'file'      => $errorFile,
-            'line'      => $errorLine,
-            'trace'     => $backtrace
+            'type'    => isset($this->codes[$errorCode]) ? $this->codes[$errorCode] : 'notice',
+            'message' => $errorMessage,
+            'file'    => $errorFile,
+            'line'    => $errorLine,
+            'trace'   => $backtrace
         ];
 
         $this->errors[] = $error;
