@@ -61,7 +61,7 @@ class Request extends \Webiny\Component\Http\Request
 
             // Add condition to filters
             foreach (explode(',', $searchFields) as $key) {
-                $queryFilters['$' . $searchOperator][][$key] = new \MongoRegex("/" . $searchQuery . "/i");
+                $queryFilters['$' . $searchOperator][][$key] = new \MongoDB\BSON\Regex($searchQuery, 'i');
             }
         }
 
