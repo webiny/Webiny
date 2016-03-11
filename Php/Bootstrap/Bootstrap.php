@@ -8,13 +8,11 @@
 
 namespace Apps\Core\Php\Bootstrap;
 
-use Apps\Core\Php\DevTools\Entity\Entity;
-use Apps\Core\Php\DevTools\Request;
 use Apps\Core\Php\DevTools\Response\ApiResponse;
 use Apps\Core\Php\DevTools\Response\HtmlResponse;
 use Apps\Core\Php\DevTools\Response\ResponseAbstract;
 use Apps\Core\Php\DevTools\Response\ResponseEvent;
-use Webiny\Component\Annotations\Annotations;
+use Webiny\Component\Entity\Entity;
 use Webiny\Component\Http\Response;
 use Webiny\Component\Mongo\Mongo;
 use Webiny\Component\Security\Security;

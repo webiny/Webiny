@@ -110,10 +110,8 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
 
     public function __construct()
     {
-        $this->apiMethods = $this->arr();
-        $this->attributes = $this->arr();
-        $this->attributeBuilder = new EntityAttributeBuilder($this, $this->attributes);
         parent::__construct();
+        $this->apiMethods = $this->arr();
         /**
          * Add the following built-in system attributes:
          * createdOn, modifiedOn, deletedOn, deleted and user
@@ -202,16 +200,6 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
     public static function findOne(array $conditions = [])
     {
         return parent::findOne($conditions);
-    }
-
-    /**
-     * @param $attribute
-     *
-     * @return EntityAttributeBuilder
-     */
-    public function attr($attribute)
-    {
-        return parent::attr($attribute);
     }
 
     public static function meta()

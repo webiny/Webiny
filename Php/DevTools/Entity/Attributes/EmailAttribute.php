@@ -5,15 +5,15 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\Entities\Attributes;
+namespace Apps\Core\Php\DevTools\Entity\Attributes;
 
-use Webiny\Component\Entity\Attribute\SmartAttributeAbstract;
+use Webiny\Component\Entity\Attribute\AttributeAbstract;
 
 /**
  * Email attribute
  * @package Apps\Core\Php\Entities\Attributes
  */
-class EmailAttribute extends SmartAttributeAbstract
+class EmailAttribute extends AttributeAbstract
 {
     /**
      * @inheritDoc
