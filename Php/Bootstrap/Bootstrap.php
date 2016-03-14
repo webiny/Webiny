@@ -103,8 +103,7 @@ class Bootstrap
 
         $configSet = false;
         foreach ($configSets as $name => $domain) {
-            // TODO: take port into account - strip it before comparing URLs
-            if ($currentDomain == $this->str($domain)->caseLower()->trimRight('/')) {
+            if ($currentDomain == $this->url($domain)->getDomain()) {
                 $configSet = $name;
             }
         }
