@@ -50,7 +50,9 @@ class User extends EntityAbstract
      */
     protected function entityStructure()
     {
-        $this->attr('email')->smart(new EmailAttribute());
+        $this->attr('email')->char()->setValidators('required,email,unique')->onSet(function ($email) {
+            return trim(strtolower($email));
+        });
         $this->attr('fullName')->char()->setValidators('required');
         $this->attr('password')->char()->onSet(function ($password) {
             if (!empty($password) && $this->wValidation()->validate($password, 'password')) {
