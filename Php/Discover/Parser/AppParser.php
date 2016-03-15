@@ -2,6 +2,7 @@
 namespace Apps\Core\Php\Discover\Parser;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
+use Webiny\Component\Entity\EntityAbstract;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Storage\Directory\Directory;
 
@@ -52,8 +53,7 @@ class AppParser
     {
         $entitiesPath = $this->wApps($this->name)->getPath(false) . '/Php/Entities';
         $storage = $this->wStorage('Root');
-
-        $files = new Directory($entitiesPath, $storage, 1);
+        $files = new Directory($entitiesPath, $storage, 0, '*.php');
 
         // Read all entities
         $entities = [];
