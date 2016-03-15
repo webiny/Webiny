@@ -49,12 +49,12 @@ class Archiver
         $this->entity = $entity;
 
         $archive = [
-            'entityId'    => $this->entity->getId()->getValue(),
+            'entityId'    => $this->entity->id,
             'entityClass' => get_class($this->entity),
             'data'        => $this->extractData($this->entity)
         ];
 
-        $this->mongo()->insert($this->collectionName, $archive);
+        $this->mongo()->insertOne($this->collectionName, $archive);
 
         return $this->archiveCallCount;
     }
@@ -100,7 +100,7 @@ class Archiver
             'entityId'    => $id,
             'entityClass' => $class
         ];
-        $this->mongo()->remove($this->collectionName, $find);
+        $this->mongo()->delete($this->collectionName, $find);
     }
 
     /**
@@ -127,11 +127,11 @@ class Archiver
             } elseif($isMany2Many) {
                 $data[$attr] = [];
                 foreach ($entityAttributeValue as $item) {
-                    $data[$attr][] = $item->getId()->getValue();
+                    $data[$attr][] = $item->id;
                 }
             } elseif($isMany2One) {
-                $id = $entityAttribute->getId();
-                $id = $id ? $id->getValue() : null;
+                $id = $entityAttribute->id;
+                $id = $id ? $id : null;
                 $data[$attr] = $id;
             } else {
                 $data[$attr] = $entityAttribute->getValue();
