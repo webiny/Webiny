@@ -53,7 +53,8 @@ class User extends EntityAbstract
         $this->attr('email')->char()->setValidators('required,email,unique')->onSet(function ($email) {
             return trim(strtolower($email));
         });
-        $this->attr('fullName')->char()->setValidators('required');
+        $this->attr('firstName')->char()->setValidators('required');
+        $this->attr('lastName')->char()->setValidators('required');
         $this->attr('password')->char()->onSet(function ($password) {
             if (!empty($password) && $this->wValidation()->validate($password, 'password')) {
                 return $this->wAuth()->createPasswordHash($password);
