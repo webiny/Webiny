@@ -8,20 +8,45 @@
 namespace Apps\Core\Php\DevTools\Entity\Attributes;
 
 use Webiny\Component\Entity\Attribute\Many2OneAttribute;
-use Webiny\Component\Entity\EntityAbstract;
 
 /**
  * File attribute
- * @package Ht\Platform\Entity\Attribute
+ * @package Apps\Core\Php\DevTools\Entity\Attributes
  */
 class FileAttribute extends Many2OneAttribute
 {
+    private $tags = [];
+
     /**
      * @inheritDoc
      */
-    public function __construct($attribute, EntityAbstract $entity)
+    public function __construct()
     {
-        parent::__construct($attribute, $entity);
+        parent::__construct();
         $this->setEntity('\Apps\Core\Php\Entities\File')->onSetNull('delete')->setUpdateExisting();
+    }
+
+    /**
+     * Set tags that will always be assigned to the file
+     *
+     * @param $tags
+     *
+     * @return $this
+     */
+    public function setTags(...$tags)
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
+
+    public function getValue()
+    {
+        $value = parent::getValue();
+        if ($this->isInstanceOf($value, $this->getEntity())) {
+            $value->tags->merge($this->tags)->unique();
+        }
+
+        return $value;
     }
 }

@@ -3,7 +3,7 @@ namespace Apps\Core\Php\Entities;
 
 use Apps\Core\Php\DevTools\Authorization\AuthorizationTrait;
 use Apps\Core\Php\DevTools\DevToolsTrait;
-use Apps\Core\Php\DevTools\Entity\Attributes\EmailAttribute;
+use Apps\Core\Php\DevTools\Entity\Attributes\FileAttribute;
 use Apps\Core\Php\DevTools\Entity\EntityAbstract;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Mongo\Index\SingleIndex;
@@ -12,7 +12,6 @@ use Webiny\Component\Mongo\Index\SingleIndex;
  * Class User
  *
  * @property string           $id
- * @property string           $fullName
  * @property string           $email
  * @property string           $password
  * @property EntityCollection $groups
@@ -26,7 +25,7 @@ class User extends EntityAbstract
     use DevToolsTrait, AuthorizationTrait;
 
     protected static $entityCollection = 'Users';
-    protected static $entityMask = '{fullName}';
+    protected static $entityMask = '{email}';
 
     protected static function entityIndexes()
     {
@@ -53,6 +52,7 @@ class User extends EntityAbstract
         $this->attr('email')->char()->setValidators('required,email,unique')->onSet(function ($email) {
             return trim(strtolower($email));
         });
+        $this->attr('avatar')->smart(new FileAttribute())->setTags('user', 'avatar');
         $this->attr('firstName')->char()->setValidators('required');
         $this->attr('lastName')->char()->setValidators('required');
         $this->attr('password')->char()->onSet(function ($password) {

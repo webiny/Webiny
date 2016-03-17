@@ -12,7 +12,7 @@ use Webiny\Component\Entity\EntityAbstract;
 
 /**
  * File attribute
- * @package Ht\Platform\Entity\Attribute
+ * @package Apps\Core\Php\DevTools\Entity\Attributes
  */
 class FilesAttribute extends One2ManyAttribute
 {

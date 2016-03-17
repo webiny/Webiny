@@ -12,6 +12,7 @@ use Apps\Core\Php\DevTools\Entity\EntityAbstract;
 use Apps\Core\Php\Dispatchers\AbstractFlow;
 use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\Attribute\Validation\ValidationException;
+use Webiny\Component\Entity\EntityException;
 use Webiny\Component\StdLib\Exception\ExceptionAbstract;
 
 /**
@@ -42,6 +43,8 @@ class ExecuteStaticMethodFlow extends AbstractFlow
             throw $e;
         } catch (ValidationException $e) {
             throw new ApiException($e->getMessage(), 'WBY-ED-EXECUTE_STATIC_METHOD_FLOW', 400, iterator_to_array($e->getIterator()));
+        } catch (EntityException $e) {
+            throw new ApiException($e->getMessage(), 'WBY-ED-EXECUTE_STATIC_METHOD_FLOW', 400, $e->getInvalidAttributes());
         } catch (ExceptionAbstract $e) {
             throw new ApiException($e->getMessage(), 'WBY-ED-EXECUTE_STATIC_METHOD_FLOW', 400);
         }
