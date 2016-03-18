@@ -1,8 +1,9 @@
 class LinkState {
 
-    constructor(component, key) {
+    constructor(component, key, callback) {
         this.component = component;
         this.key = key;
+        this.callback = callback;
     }
 
     create() {
@@ -21,7 +22,7 @@ class LinkState {
         const key = this.key;
 
         const _this = this;
-        return function stateKeySetter(value, callback) {
+        return function stateKeySetter(value, callback = null) {
             if (typeof value === 'undefined') {
                 value = false;
             }
@@ -32,13 +33,8 @@ class LinkState {
             component.setState(partialState);
             partialState = null;
 
-            // Execute callback if defined
-            const keyFnName = _.capitalize(_.camelCase(key));
-
-            if (callback) {
-                callback(value, oldValue);
-            } else if (component['onChange' + keyFnName]) {
-                component['onChange' + keyFnName].call(component, value, oldValue);
+            if (_this.callback) {
+                _this.callback(value, oldValue);
             }
         };
     }

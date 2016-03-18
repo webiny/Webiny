@@ -15628,6 +15628,9 @@ var Mixin = {
       this.initializeAll(0);
       ret = method.call(scope, a, b, c, d, e, f);
       errorThrown = false;
+    } catch(e){
+        // Log caught error (Webiny)
+        console.error(e);
     } finally {
       try {
         if (errorThrown) {

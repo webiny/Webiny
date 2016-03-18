@@ -138,10 +138,11 @@ class Component extends React.Component {
      * Ex: onChangeName(newValue, oldValue){...}
      *
      * @param key
+     * @param callback
      * @returns {{value: *, requestChange: *}}
      */
-    bindTo(key) {
-        const ls = new LinkState(this, key);
+    bindTo(key, callback = _.noop) {
+        const ls = new LinkState(this, key, callback);
         return ls.create();
     }
 

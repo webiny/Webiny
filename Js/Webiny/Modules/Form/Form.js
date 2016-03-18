@@ -33,8 +33,8 @@ class Form extends Webiny.Ui.Component {
         super.componentWillUpdate(newProps, newState);
     }
 
-    bindTo(name) {
-        return super.bindTo('model.' + name);
+    bindTo(name, callback = _.noop) {
+        return super.bindTo('model.' + name, callback);
     }
 
     /**
@@ -53,10 +53,6 @@ class Form extends Webiny.Ui.Component {
 
             if (child.type === 'actions') {
                 this.actions = child.props.children;
-            }
-
-            if (child.type === 'layout') {
-                this.layout = child.props.children;
             }
         }, this);
 
@@ -119,7 +115,15 @@ class Form extends Webiny.Ui.Component {
         };
 
         if (input.props && input.props.name) {
-            newProps['valueLink'] = this.bindTo(input.props.name);
+            // Add onChange callback to valueLink
+            let name = _.upperFirst(_.camelCase(input.props.name));
+            const callback = _.get(this.props.config, 'onChange' + name, _.noop);
+            newProps['valueLink'] = this.bindTo(input.props.name, callback.bind(this));
+
+            // Add input renderer
+            if (_.has(this.props.config, 'render' + name)) {
+                newProps.renderer = this.props.config['render' + name];
+            }
             return React.cloneElement(input, newProps, input.props && input.props.children);
         }
         return React.cloneElement(input, input.props, this.registerInputs(input.props && input.props.children));
@@ -139,7 +143,9 @@ class Form extends Webiny.Ui.Component {
 
     /**
      * Get data this form is responsible for.
-     * Form may receive data through props that is not handled by any of form input elements, so we only return relevant data.
+     * Form may receive data through props that is not handled by any of form input elements,
+     * so we only return the data handled by form input elements.
+     *
      * @returns {{}}
      */
     getData() {
@@ -160,7 +166,7 @@ class Form extends Webiny.Ui.Component {
         const mainFormValid = this.validateForm();
 
         if (!mainFormValid) {
-            return this.props.onInvalid(this);
+            return this.props.config.onInvalid && this.props.config.onInvalid(this) || this.props.onInvalid(this);
         }
         const model = this.getData();
         // Validate linked forms
@@ -170,7 +176,7 @@ class Form extends Webiny.Ui.Component {
             _.each(forms, form => {
                 if (!form.validateForm()) {
                     if (valid) {
-                        form.props.onInvalid(form);
+                        form.props.config.onInvalid && form.props.config.onInvalid(this) || form.props.onInvalid(form);
                     }
                     valid = false;
                 }
@@ -185,7 +191,7 @@ class Form extends Webiny.Ui.Component {
             });
         }
 
-        this.props.onSubmit(model, this);
+        this.props.config.onSubmit && this.props.config.onSubmit(model, this) || this.props.onSubmit(model, this);
     }
 
     reset() {
@@ -197,13 +203,13 @@ class Form extends Webiny.Ui.Component {
         });
         this.$isValid = null;
 
-        this.props.onReset();
+        this.props.config.onReset && this.props.config.onReset() || this.props.onReset();
 
         this.setState({model: _.clone(this.props.data)});
     }
 
     cancel() {
-        this.props.onCancel();
+        this.props.config.onCancel && this.props.config.onCancel() || this.props.onCancel();
     }
 
     isValid() {
@@ -288,7 +294,8 @@ Form.defaultProps = {
     onCancel: _.noop,
     onInvalid: _.noop,
     showLoader: true,
-    linkedForms: ''
+    linkedForms: '',
+    config: {}
 };
 
 export default Form;

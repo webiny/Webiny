@@ -14,7 +14,7 @@ import Http from './Http/Http';
 import Tools from './Tools';
 import Console from './Console';
 import Service from './Api/Service';
-import EntityService from './Api/EntityService';
+import Entity from './Api/Entity';
 import Settings from './Ui/Settings';
 import Menu from './Ui/Menu';
 
@@ -46,7 +46,7 @@ class Module extends WebinyModule {
 			Http,
 			Api: {
 				Service,
-				EntityService
+				Entity
 			}
 		});
 	}

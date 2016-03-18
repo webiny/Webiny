@@ -143,11 +143,11 @@ class Router {
     }
 
     routeExists(name) {
-        return _.find(this.routes, 'name', name) ? true : false;
+        return _.find(this.routes, ['name', name]) ? true : false;
     }
 
     getRoute(name) {
-        const route = _.find(this.routes, 'name', name);
+        const route = _.find(this.routes, ['name', name]);
         if (!route) {
             Webiny.Console.error('Route with name: ' + name + ' does not exist.');
             return false;
@@ -156,7 +156,7 @@ class Router {
     }
 
     getRouteByPattern(pattern) {
-        const route = _.find(this.routes, 'pattern', pattern);
+        const route = _.find(this.routes, ['pattern', pattern]);
         if (!route) {
             Webiny.Console.error('Route with pattern: ' + pattern + ' does not exist.');
             return false;
@@ -175,7 +175,7 @@ class Router {
     goToRoute(name, params = {}, merge = true) {
         let route = this.activeRoute;
         if (name !== 'current') {
-            route = _.find(this.routes, 'name', name);
+            route = _.find(this.routes, ['name', name]);
         }
 
         if (!route) {
