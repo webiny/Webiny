@@ -7,12 +7,12 @@ class Module extends Webiny.Module {
         const Menu = Webiny.Ui.Menu;
 
         this.registerMenus(
-            new Menu('Users', 'Users.List', 'icon-users')
+            new Menu('Users', 'Users.Form', 'icon-users')
         );
 
         this.registerRoutes(
-            new Webiny.Route('Users.List', '/users', {
-                MasterContent: Views.List
+            new Webiny.Route('Users.Form', '/users/:id', {
+                MasterContent: Views.Form
             })
         );
     }

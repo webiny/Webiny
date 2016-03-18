@@ -86,7 +86,7 @@ class Validator {
     parseArgs(args, formInputs) {
         _.each(args, (value, index) => {
             if (value.indexOf('@') === 0) {
-                const inputName = _.trimLeft(value, '@');
+                const inputName = _.trimStart(value, '@');
                 args[index] = formInputs[inputName].component.getValue();
             }
         });

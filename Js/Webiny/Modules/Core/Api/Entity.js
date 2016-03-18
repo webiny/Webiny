@@ -2,23 +2,28 @@ import ApiService from './Service';
 
 class EntityApiService extends ApiService {
 
-    constructor(url) {
+    constructor(url, fields = null) {
         super('/entities' + url);
+        this.fields = fields || '';
     }
 
     crudList(params) {
+        params = this.prepareParams(params);
         return this.get('/', params);
     }
 
     crudGet(id, params) {
+        params = this.prepareParams(params);
         return this.get(id, params);
     }
 
     crudCreate(data, params) {
+        params = this.prepareParams(params);
         return this.post('/', data, params);
     }
 
     crudUpdate(id, data, params = {}) {
+        params = this.prepareParams(params);
         return this.patch(id, data, params);
     }
 
@@ -28,6 +33,20 @@ class EntityApiService extends ApiService {
 
     crudRestore(id) {
         return this.post('/restore/' + id);
+    }
+
+    setFields(fields) {
+        this.fields = fields;
+
+        return this;
+    }
+
+    prepareParams(params) {
+        params = params || {};
+        if (!params._fields) {
+            params._fields = this.fields;
+        }
+        return params;
     }
 }
 

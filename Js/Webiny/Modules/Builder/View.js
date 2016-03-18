@@ -5,26 +5,41 @@ class View extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
 
-        this.bindMethods('prepareContent');
+        this.bindMethods('prepareChildren,prepareChild');
     }
 
-    prepareContent(children) {
+    prepareChild(child, index) {
+        if (typeof child !== 'object' || child === null) {
+            return child;
+        }
+
         const config = this.props.config;
-        let index = 0;
-        return React.Children.map(children, child => {
+        if (child.props.ui && _.has(config, child.props.ui)) {
             const props = _.clone(child.props);
             props.key = index;
-            if (_.has(config, child.props.ui)) {
-                props.config = config[child.props.ui];
+            if (child.props.ui && _.has(config, child.props.ui)) {
+                _.merge(props, config[child.props.ui]);
             }
-            index++;
-            return React.cloneElement(child, props);
-        }, this);
+            return React.cloneElement(child, props, props.children);
+        }
+
+        return React.cloneElement(child, child.props, this.prepareChildren(child.props && child.props.children));
+    }
+
+    /**
+     * @private
+     * @param children
+     * @returns {*}
+     */
+    prepareChildren(children) {
+        if (typeof children !== 'object' || children === null) {
+            return children;
+        }
+        return React.Children.map(children, this.prepareChild, this);
     }
 
     render() {
-        const content = this.prepareContent(this.props.children);
-        console.log(content);
+        const content = this.prepareChildren(this.props.children);
         return (
             <webiny-view>{content}</webiny-view>
         );

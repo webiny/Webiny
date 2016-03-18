@@ -6,7 +6,7 @@ export default {
     layout: function layout() {
         return (
             <Ui.Panel.Panel>
-                <Ui.Panel.Header title={this.props.config.title() || this.props.title} icon={this.props.icon}/>
+                <Ui.Panel.Header title={this.props.title()} icon={this.props.icon}/>
                 <Ui.Panel.Body>
                     <fields/>
                 </Ui.Panel.Body>

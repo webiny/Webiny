@@ -6,7 +6,7 @@ function handleResponse(response) {
 }
 
 function sanitize(string) {
-	return _.trimLeft(string, '/ ');
+	return _.trimStart(string, '/ ');
 }
 
 class Service {

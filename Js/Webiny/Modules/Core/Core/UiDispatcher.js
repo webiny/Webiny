@@ -30,6 +30,24 @@ class UiDispatcher {
         return container[name];
     }
 
+    eq(key, value) {
+        const _this = this;
+        return function () {
+            const parts = _.split(key, '.');
+            const name = parts.shift();
+            return _.get(_this.get(name), parts.join('.')) == value;
+        };
+    }
+
+    value(key) {
+        const _this = this;
+        return function () {
+            const parts = _.split(key, '.');
+            const name = parts.shift();
+            return _.get(_this.get(name), parts.join('.'));
+        };
+    }
+
     createSignal(_this, call, params) {
         return function executeSignal() {
             let callable = null;
@@ -46,7 +64,7 @@ class UiDispatcher {
             _.each(params, p => {
                 if (_.startsWith(p, '@')) {
                     // Extract parameter definition
-                    const param = _.trimLeft(p, '@');
+                    const param = _.trimStart(p, '@');
                     if (p.indexOf(':') < 0) {
                         signalParams.push(_.get(container, param));
                     } else {

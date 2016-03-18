@@ -15,13 +15,16 @@ class Form extends Webiny.Ui.Component {
         this.actions = [];
         this.layout = null;
 
-        this.bindMethods('submit', 'reset', 'cancel', 'attachToForm', 'attachValidators', 'detachFromForm', 'validateInput', 'validateForm');
+        this.bindMethods('submit', 'reset', 'cancel', 'attachToForm', 'attachValidators', 'detachFromForm', 'validateInput', 'validate');
     }
 
     componentWillMount() {
         super.componentWillMount();
         this.inputs = {};
         this.setState({model: _.clone(this.props.data)});
+        if (this.props.container) {
+            this.props.container.registerForm(this);
+        }
     }
 
     componentWillReceiveProps(props) {
@@ -117,12 +120,12 @@ class Form extends Webiny.Ui.Component {
         if (input.props && input.props.name) {
             // Add onChange callback to valueLink
             let name = _.upperFirst(_.camelCase(input.props.name));
-            const callback = _.get(this.props.config, 'onChange' + name, _.noop);
+            const callback = _.get(this.props, 'onChange' + name, _.noop);
             newProps['valueLink'] = this.bindTo(input.props.name, callback.bind(this));
 
             // Add input renderer
-            if (_.has(this.props.config, 'render' + name)) {
-                newProps.renderer = this.props.config['render' + name];
+            if (_.has(this.props, 'render' + name)) {
+                newProps.renderer = this.props['render' + name];
             }
             return React.cloneElement(input, newProps, input.props && input.props.children);
         }
@@ -158,25 +161,33 @@ class Form extends Webiny.Ui.Component {
     }
 
     getLinkedForms() {
-        return _.filter(this.props.linkedForms.split(',')).map(Webiny.Ui.Dispatcher.get);
+        if (this.props.container && this === this.props.container.mainForm) {
+            return this.props.container.linkedForms;
+        }
+
+        if(!this.props.container){
+            return _.filter(this.props.linkedForms.split(',')).map(Webiny.Ui.Dispatcher.get);
+        }
+
+        return [];
     }
 
     submit(e) {
         e.preventDefault();
-        const mainFormValid = this.validateForm();
+        const mainFormValid = this.validate();
 
         if (!mainFormValid) {
-            return this.props.config.onInvalid && this.props.config.onInvalid(this) || this.props.onInvalid(this);
+            return this.props.onInvalid(this);
         }
         const model = this.getData();
         // Validate linked forms
-        if (this.props.linkedForms) {
+        const forms = this.getLinkedForms();
+        if (forms.length) {
             let valid = true;
-            const forms = this.getLinkedForms();
             _.each(forms, form => {
-                if (!form.validateForm()) {
+                if (!form.validate()) {
                     if (valid) {
-                        form.props.config.onInvalid && form.props.config.onInvalid(this) || form.props.onInvalid(form);
+                        form.props.onInvalid(form);
                     }
                     valid = false;
                 }
@@ -191,7 +202,7 @@ class Form extends Webiny.Ui.Component {
             });
         }
 
-        this.props.config.onSubmit && this.props.config.onSubmit(model, this) || this.props.onSubmit(model, this);
+        this.props.onSubmit(model, this);
     }
 
     reset() {
@@ -203,13 +214,13 @@ class Form extends Webiny.Ui.Component {
         });
         this.$isValid = null;
 
-        this.props.config.onReset && this.props.config.onReset() || this.props.onReset();
+        this.props.onReset();
 
         this.setState({model: _.clone(this.props.data)});
     }
 
     cancel() {
-        this.props.config.onCancel && this.props.config.onCancel() || this.props.onCancel();
+        this.props.onCancel();
     }
 
     isValid() {
@@ -261,7 +272,7 @@ class Form extends Webiny.Ui.Component {
         });
     }
 
-    validateForm() {
+    validate() {
         let allIsValid = true;
 
         const inputs = this.inputs;
@@ -294,8 +305,7 @@ Form.defaultProps = {
     onCancel: _.noop,
     onInvalid: _.noop,
     showLoader: true,
-    linkedForms: '',
-    config: {}
+    linkedForms: null
 };
 
 export default Form;
