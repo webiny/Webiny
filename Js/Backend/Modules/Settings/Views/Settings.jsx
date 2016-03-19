@@ -9,7 +9,7 @@ class Settings extends Webiny.Ui.View {
     }
 
     getSettings() {
-        const key = Webiny.Router.getParam('settingsKey');
+        const key = Webiny.Router.getParams('settingsKey');
         let settings = null;
         Webiny.Tools.getAppsSettings().forEach(s => {
             if (s.key === key) {

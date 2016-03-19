@@ -164,7 +164,7 @@ class Router {
         return route;
     }
 
-    getParam(param) {
+    getParams(param) {
         return this.activeRoute.getParams(param);
     }
 

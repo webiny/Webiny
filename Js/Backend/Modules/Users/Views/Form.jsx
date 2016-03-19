@@ -5,15 +5,15 @@ const UiD = Webiny.Ui.Dispatcher;
 class Form extends Webiny.Ui.View {
 
     getConfig() {
-        // Return an object containing config for each UI component (ui="profileForm", ui="invoiceList")
+        // Return an object containing config for each UI component (ui="myForm", ui="myList")
         return {
             // Form config
             myForm: {
                 // Form component will pass this function as a renderer to `email` component
-                renderEmail: function inputRenderEmail() {
+                /*renderEmail: function inputRenderEmail() {
                     // NOTE: `this` is bound to the input instance
                     return <input type="text" className="form-control" placeholder="Custom input" valueLink={this.props.valueLink}/>;
-                },
+                },*/
 
                 // Form will pass this function as a callback to `valueLink`
                 onChangeEmail: function inputChangeEmail(newVal, oldVal) {
@@ -33,10 +33,11 @@ class Form extends Webiny.Ui.View {
 
                 onSubmitSuccess: function onSubmitSuccess(apiResponse) {
                     console.log('API SUCCESS', apiResponse);
-                    Webiny.Router.goToRoute('Dashboard');
+                    //Webiny.Router.goToRoute('Dashboard');
                 },
 
-                onInvalid: function onInvalid() {
+                onInvalid: function onInvalid(attributes = {}) {
+                    // TODO: pass invalid attributes to this callback
                     // This will be passed as Form's `onInvalid` prop
                     // `this` is bound to FormContainer
                     console.warn('Form validation failed!');
@@ -48,45 +49,42 @@ class Form extends Webiny.Ui.View {
                 },
 
                 /**
-                 * Custom OPTIONS loader for form combo boxes (includes DATA and RENDERING)
+                 * Custom OPTIONS loader for form combo boxes (ONLY DATA)
                  * @returns {Promise<TResult>|Promise.<T>}
                  */
                 optionsUserGroup: function optionsUserGroup() {
-                    let apiParams = this.apiParams({
+                    let apiParams = {
                         _perPage: 100,
-                        enabled: true,
-                        location: '@activeLocation.id',
                         _fields: 'id,name,tag'
-                    });
+                    };
+
                     return new Webiny.Api.Entity('/core/user-groups').crudList(apiParams).then(apiResponse => {
-                        return this.createOptions(apiResponse.getData(), 'id', (item) => {
-                            return (
-                                <div>
-                                    <strong>{item.name}</strong><br/>
-                                    <span>Tag: {item.tag}</span>
-                                </div>
-                            );
-                        });
+                        return {
+                            data: apiResponse.getData().list,
+                            valueAttr: 'id',
+                            textAttr: 'name'
+                        };
                     });
                 },
 
                 /**
-                 * Custom OPTION renderer (ONLY RENDERING, NO DATA LOADING)
+                 * Custom OPTION renderer (ONLY RENDERING)
                  * @param item
                  * @returns {*}
                  */
-                optionCreatedBy: function optionCreatedBy(item) {
+                /*optionRendererUserGroup: function optionRendererUserGroup(item) {
                     return (
                         <div>
-                            <strong>{item.firstName} {item.lastName}</strong><br/>
-                            <span>Email: {item.email}</span>
+                            <strong>{item.name}</strong><br/>
+                            <span>Tag: {item.tag}</span>
                         </div>
                     );
-                },
+                },*/
 
-                getData: function () {
-                    // TODO: customize data loading
-                }
+                /*loadData: function () {
+                    const id = Webiny.Router.getParams('id');
+                    return this.api.crudGet(id).then(apiResponse => apiResponse.getData());
+                }*/
             },
             // List config
             invoiceList: {
@@ -98,6 +96,24 @@ class Form extends Webiny.Ui.View {
     }
 
     render() {
+        const userGroupSelect = {
+            label: 'User group',
+            name: 'userGroup',
+            placeholder: 'Select user group',
+            allowClear: true
+        };
+
+        const createdBySelect = {
+            label: 'Created by',
+            name: 'createdBy',
+            placeholder: 'Select user',
+            allowClear: true,
+            api: '/core/users',
+            apiParams: {_fields: 'id,email'},
+            valueAttr: 'id',
+            textAttr: 'email'
+        };
+
         return (
             <Webiny.Builder.View name="core-users-list" config={this.getConfig()}>
                 <Ui.FormContainer ui="myForm" api="/core/users" fields="id,firstName,lastName,email">
@@ -118,6 +134,8 @@ class Form extends Webiny.Ui.View {
                                                         <Ui.Input label="ID" name="id"/>
                                                     </Ui.Hide>
                                                     <Ui.Input label="Email" name="email"/>
+                                                    <Ui.Select {...userGroupSelect}/>
+                                                    <Ui.Select {...createdBySelect}/>
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
                                         </fields>

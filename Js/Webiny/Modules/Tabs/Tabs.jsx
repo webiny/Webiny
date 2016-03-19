@@ -68,12 +68,12 @@ export class Tabs extends Webiny.Ui.Component {
 
     componentWillMount() {
         super.componentWillMount();
-        this.setState({selected: Webiny.Router.getParam('tab', this.props.selected) || 0});
+        this.setState({selected: Webiny.Router.getParams('tab', this.props.selected) || 0});
     }
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        let selected = Webiny.Router.getParam('tab', props.selected);
+        let selected = Webiny.Router.getParams('tab', props.selected);
         if (selected === null) {
             selected = this.state.selected;
         }

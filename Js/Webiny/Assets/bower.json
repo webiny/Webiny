@@ -18,17 +18,31 @@
         "js-cookie": "~2.0.4",
         "bottlejs": "~1.2.1",
         "baobab": "~2.2.1",
-        "react": "https://github.com/reactjs/react-bower.git#v0.14.7"
+        "react": "https://github.com/reactjs/react-bower.git#v0.14.7",
+        "select2": "4.0.0"
     },
     "overrides": {
         "system.js": {
             "main": "dist/system.js"
+        },
+        "react": {
+            "main": [
+                "react.js",
+                "react-dom.js",
+                "react-dom-server.js"
+            ]
         },
         "history.js": {
             "main": "scripts/bundled-uncompressed/html5/native.history.js"
         },
         "filesize": {
             "main": "lib/filesize.js"
+        },
+        "select2": {
+            "main": [
+                "dist/js/select2.js",
+                "dist/css/select2.min.css"
+            ]
         }
     }
 }

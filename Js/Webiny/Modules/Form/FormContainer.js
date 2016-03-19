@@ -25,7 +25,13 @@ class FormContainer extends Webiny.Ui.Component {
 
     componentWillMount() {
         super.componentWillMount();
-        const id = Webiny.Router.getParam('id');
+        if(this.props.loadData){
+            return this.props.loadData.call(this).then(data => {
+                this.setState({model: data});
+            });
+        }
+
+        const id = Webiny.Router.getParams('id');
         if (id) {
             this.api.crudGet(id).then(apiResponse => {
                 this.setState({model: apiResponse.getData()});
