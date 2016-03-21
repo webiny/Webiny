@@ -5,7 +5,7 @@ const app = new Webiny.App('Core.Backend');
 app.setInitialElement(React.createElement(Container));
 app.beforeRender(() => {
     // Load other backend apps
-    /* const api = new Webiny.Api.Service('/apps');
+    const api = new Webiny.Api.Service('/core/apps');
     return api.get('/backend').then(res => {
         let apps = Q();
         _.forIn(res.getData(), config => {
@@ -18,11 +18,14 @@ app.beforeRender(() => {
             });
         });
         return apps;
-    }); */
+    });
 });
 
 Webiny.Console.setEnabled(true);
 
+/**
+ * Injector example usage
+ */
 class Config {
     constructor() {
         console.log('Me being constructed!');

@@ -21,7 +21,11 @@ class Form extends Webiny.Ui.View {
                     console.log('Email changed', newVal);
                 },
 
-                onSubmit: function onSubmit(model) {
+                onChangeCreatedBy: function inputChangeEmail(newVal, oldVal) {
+                    Webiny.Injector.value('activeUser', newVal);
+                },
+
+                /*onSubmit: function onSubmit(model) {
                     // This will be passed as Form's `onSubmit` prop
                     // `this` is bound to FormContainer
                     console.info('Form submitted: ', model);
@@ -34,7 +38,7 @@ class Form extends Webiny.Ui.View {
                 onSubmitSuccess: function onSubmitSuccess(apiResponse) {
                     console.log('API SUCCESS', apiResponse);
                     //Webiny.Router.goToRoute('Dashboard');
-                },
+                },*/
 
                 onInvalid: function onInvalid(attributes = {}) {
                     // TODO: pass invalid attributes to this callback
@@ -72,19 +76,19 @@ class Form extends Webiny.Ui.View {
                  * @param item
                  * @returns {*}
                  */
-                /*optionRendererUserGroup: function optionRendererUserGroup(item) {
+                optionRendererUserGroup: function optionRendererUserGroup(item) {
                     return (
                         <div>
                             <strong>{item.name}</strong><br/>
                             <span>Tag: {item.tag}</span>
                         </div>
                     );
-                },*/
+                },
 
-                /*loadData: function () {
+                loadData: function () {
                     const id = Webiny.Router.getParams('id');
                     return this.api.crudGet(id).then(apiResponse => apiResponse.getData());
-                }*/
+                }
             },
             // List config
             invoiceList: {
@@ -103,20 +107,32 @@ class Form extends Webiny.Ui.View {
             allowClear: true
         };
 
+        const userGroupsSelect = {
+            label: 'User groups',
+            name: 'userGroups',
+            placeholder: 'Select user groups',
+            allowClear: true,
+            api: '/core/user-groups',
+            apiParams: this.apiParams({_fields: 'id,name'}),
+            valueAttr: 'id',
+            textAttr: 'name',
+            multiple: true
+        };
+
         const createdBySelect = {
             label: 'Created by',
             name: 'createdBy',
             placeholder: 'Select user',
             allowClear: true,
             api: '/core/users',
-            apiParams: {_fields: 'id,email'},
+            apiParams: this.apiParams({_fields: 'id,email'}),
             valueAttr: 'id',
             textAttr: 'email'
         };
 
         return (
             <Webiny.Builder.View name="core-users-list" config={this.getConfig()}>
-                <Ui.FormContainer ui="myForm" api="/core/users" fields="id,firstName,lastName,email">
+                <Ui.FormContainer ui="myForm" api="/core/users" fields="id,firstName,lastName,email,userGroups">
                     <Ui.Panel.Panel>
                         <Ui.Panel.Header title="Webiny Form"/>
                         <Ui.Panel.Body>
@@ -133,7 +149,7 @@ class Form extends Webiny.Ui.View {
                                                         <Ui.Value value={'myForm-1.state.model.email'}/>
                                                         <Ui.Input label="ID" name="id"/>
                                                     </Ui.Hide>
-                                                    <Ui.Input label="Email" name="email"/>
+                                                    <Ui.Input label="Email" name="email" validate="required,email"/>
                                                     <Ui.Select {...userGroupSelect}/>
                                                     <Ui.Select {...createdBySelect}/>
                                                 </Ui.Grid.Col>

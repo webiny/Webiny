@@ -22,7 +22,7 @@ class LinkState {
         const key = this.key;
 
         const _this = this;
-        return function stateKeySetter(value, callback = null) {
+        return function stateKeySetter(value) {
             if (typeof value === 'undefined') {
                 value = false;
             }

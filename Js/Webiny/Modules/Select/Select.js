@@ -49,7 +49,7 @@ class Select extends Webiny.Ui.FormComponent {
         this.select2.val('').trigger('change');
     }
 
-    getSelect2Element(){
+    getSelect2Element() {
         return $(ReactDOM.findDOMNode(this)).find('select');
     }
 
@@ -64,6 +64,11 @@ class Select extends Webiny.Ui.FormComponent {
 
     triggerChange(value) {
         if (this.props.valueLink) {
+            if (this.props.multiple) {
+                const newValue = this.props.valueLink.value;
+                newValue.push(value);
+                value = newValue;
+            }
             this.props.valueLink.requestChange(value);
         }
         this.props.changed(value);
@@ -83,12 +88,12 @@ class Select extends Webiny.Ui.FormComponent {
             placeholder: this.props.placeholder,
             allowClear: props.allowClear,
             templateResult: renderer,
-            templateSelection: renderer
+            templateSelection: renderer,
+            multiple: props.multiple
         };
 
         if (!this.options || !_.isEqual(props.options, this.options)) {
-            this.options = props.options;
-            config['data'] = props.options;
+            config['data'] = this.options = props.options;
         }
 
         return config;
@@ -127,6 +132,7 @@ Select.defaultProps = {
     changed: _.noop,
     selectedValue: '',
     minimumResultsForSearch: 15,
+    multiple: false,
     renderer: function renderer() {
         const cssConfig = {
             'form-group': true,

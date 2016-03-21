@@ -32,16 +32,16 @@ class UiDispatcher {
 
     eq(key, value) {
         const _this = this;
-        return function () {
+        return function eq() {
             const parts = _.split(key, '.');
             const name = parts.shift();
-            return _.get(_this.get(name), parts.join('.')) == value;
+            return _.get(_this.get(name), parts.join('.')) === value;
         };
     }
 
     value(key) {
         const _this = this;
-        return function () {
+        return function value() {
             const parts = _.split(key, '.');
             const name = parts.shift();
             return _.get(_this.get(name), parts.join('.'));

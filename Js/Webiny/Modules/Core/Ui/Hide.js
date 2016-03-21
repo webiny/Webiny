@@ -14,8 +14,8 @@ class Hide extends Component {
             return <webiny-hide></webiny-hide>;
         }
 
-        let children = React.Children.toArray(this.props.children);
-        if (children.length == 1) {
+        const children = React.Children.toArray(this.props.children);
+        if (children.length === 1) {
             return <webiny-hide>{children[0]}</webiny-hide>;
         }
 

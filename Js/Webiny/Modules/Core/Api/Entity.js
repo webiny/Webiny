@@ -1,9 +1,9 @@
-import ApiService from './Service';
+import BaseService from './BaseService';
 
-class EntityApiService extends ApiService {
+class EntityApiService extends BaseService {
 
     constructor(url, fields = null) {
-        super('/entities' + url);
+        super('/entities/' + _.trimStart(url, '/'));
         this.fields = fields || '';
     }
 

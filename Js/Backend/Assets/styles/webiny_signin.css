@@ -1,0 +1,592 @@
+
+body {
+	background: #fff;
+	width: 100%;
+	height: 350px;
+	overflow-x: hidden;
+}
+
+body.opened-mobile-nav {
+	margin-left: 270px;
+	width: 100%;
+}
+
+.sign-in {
+	/*background: #FFFFFF url(../images/bg-login.png) repeat;*/
+	background-color: #F3F3F3;
+	padding: 20px;
+	text-align: center;
+}
+
+.sign-in a, .sign-in p {
+	color: #FA5A28;
+}
+
+.sign-in a.logo {
+	display: block;
+	margin-bottom: 8px;
+}
+
+.sign-in-holder form{
+	background-color: #ffffff;
+	padding: 50px 100px 50px 100px;
+	overflow: hidden;
+}
+
+.sign-in-holder.password-rec a.logo {
+	margin-bottom: 25px;
+}
+
+.sign-in h2 {
+	margin-bottom: 25px;
+	font-weight: 300;
+	font-size: 24px;
+	position: relative;
+	text-align: center;
+	display: inline-block;
+	letter-spacing: -0.1px;
+	color: #FA5A28;
+}
+
+.sign-in-holder.password-rec h2 {
+	margin-bottom: 10px;
+	font-size: 26px;
+}
+
+.sign-in p.desc {
+	font-size: 15px;
+	color: #FA5A28;
+	line-height: 120%;
+	font-weight: 300;
+	margin-bottom: 20px;
+}
+
+.sign-in-holder {
+	position: relative;
+}
+
+.sign-in h2 span {
+	display: inline-block;
+	background: url(../images/icons.png) no-repeat -46px -3px;
+	width: 20px;
+	height: 26px;
+	margin-right: 5px;
+	margin-bottom: -2px;
+}
+
+.sign-in label.chk {
+	margin-bottom: 25px;
+	float:left;
+}
+
+.sign-in .input-holder {
+	position: relative;
+}
+
+.sign-in .input-holder.success span.not {
+	background: url(../images/icons.png) no-repeat 1px 2px;
+	width: 42px;
+	height: 39px;
+	display: block;
+	position: absolute;
+	right: 7px;
+	top: 38px;
+	z-index: 1;
+}
+
+.sign-in .input-holder.error span.not {
+	background: url(../images/icons.png) no-repeat 1px -41px;
+	width: 42px;
+	height: 39px;
+	display: block;
+	position: absolute;
+	right: 7px;
+	top: 38px;
+	z-index: 1;
+}
+
+.sign-in .input-holder label.chk {
+	position: absolute;
+	right: 15px;
+	top: 44px;
+	z-index: 1;
+}
+
+.sign-in .input-holder label.chk .icheckbox_minimal {
+	background: url("../images/icons.png") no-repeat scroll -97px -6px rgba(0, 0, 0, 0);
+	border: 1px solid #DB840F;
+}
+
+.sign-in .input-holder label.chk .icheckbox_minimal.checked {
+	background: url("../images/icons.png") no-repeat scroll -97px -30px rgba(0, 0, 0, 0);
+	border: 1px solid #DB840F;
+}
+
+.sign-in .input-holder label.chk span.remember {
+	color: #777;
+	font-size: 16px;
+}
+
+.sign-in .icheckbox_minimal {
+	background: url(../images/icons.png) no-repeat -72px -6px;
+	display: block;
+	width: 24px;
+	height: 24px;
+	cursor: pointer;
+	float: left;
+	margin: 0px 5px 0px 0px;
+	border: 2px solid #FA5A28;
+}
+
+.sign-in .icheckbox_minimal.checked {
+	background: url(../images/icons.png) no-repeat -99px -30px;
+	display: block;
+	width: 24px;
+	height: 24px;
+	cursor: pointer;
+	float: left;
+	margin: 0px 5px 0px 0px;
+	border: 2px solid #FA5A28;
+}
+
+.sign-in span.remember {
+	font-size: 22px;
+	color: #FA5A28;
+	font-weight: 300;
+	float: left;
+	cursor: pointer;
+	line-height: 115%;
+}
+
+.sign-in a.info {
+	background: url(../images/icons.png) no-repeat -46px -40px;
+	width: 18px;
+	height: 18px;
+	float: left;
+	margin: 5px 0px 0px 5px;
+	position: relative;
+}
+
+.sign-in span.info .notification {
+	display: block;
+}
+
+.sign-in span.info .notification {
+	font-size: 14px;
+	position: absolute;
+	bottom: 25px;
+	right: -85px;
+	background: #3FBFB0;
+	-webkit-border-radius: 100px;
+	-moz-border-radius: 100px;
+	border-radius: 100px;
+	padding: 5px 10px;
+	display: block;
+	white-space: nowrap;
+	font-weight: 300;
+}
+
+.sign-in .form-footer{
+	margin-top:25px;
+}
+
+.sign-in .alert{
+	padding-bottom: 15px;
+}
+
+.sign-in p.copyright {
+	font-siz: 14px;
+	margin: 0px;
+	clear: both;
+}
+
+.sign-in a.site {
+	font-size: 14px;
+	border-bottom: 1px solid #FC9676;
+	font-weight: 300;
+	margin-top: 5px;
+	z-index: 50;
+}
+
+.sign-in a.site:hover {
+	border-bottom: 1px solid #fff;
+	text-decoration: none;
+	color: #fff;
+}
+
+.sign-in a.site:focus {
+	text-decoration: none;
+	color: #fff;
+	border-bottom: 1px solid #fff;
+}
+
+/* -------------- loader3 -------------- */
+.preloader-wrap .box {
+	background: #FA5A28 url(../images/bg-login.png) repeat;
+	top: 0px;
+	left: 0px;
+	z-index: 499;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	display: none;
+}
+
+.loader3 {
+	position: relative;
+	width: 150px;
+	height: 80px;
+	top: 49%;
+	left: 49%;
+	background: url(../images/preloader_2.png) no-repeat top left;
+	background-size: 45px 45px;
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+	filter: alpha(opacity=50);
+	-moz-opacity: 0.5;
+	-khtml-opacity: 0.5;
+	opacity: 0.5;
+}
+
+.loader4 {
+	content: "";
+	position: absolute;
+	background-color: #fff;
+	background: url(../images/preloader_2.png) no-repeat top left;
+	top: 49%;
+	left: 49%;
+	width: 150px;
+	height: 80px;
+	z-index: 0;
+	opacity: 1;
+	-webkit-transform-origin: 100% 0%;
+	transform-origin: 100% 0%;
+	-webkit-animation: loader3 10s ease-in-out infinite;
+	animation: loader3 10s ease-in-out infinite;
+	background-size: 45px 45px;
+
+}
+
+@-webkit-keyframes loader3 {
+	0% {
+		width: 0px;
+	}
+	70% {
+		width: 150px;
+		opacity: 1;
+	}
+	90% {
+		opacity: 0;
+		width: 150px;
+	}
+	100% {
+		opacity: 0;
+		width: 0px;
+	}
+}
+
+@keyframes loader3 {
+	0% {
+		width: 0px;
+	}
+	70% {
+		width: 150px;
+		opacity: 1;
+	}
+	90% {
+		opacity: 0;
+		width: 150px;
+	}
+	100% {
+		opacity: 0;
+		width: 0px;
+	}
+}
+
+@media (min-width: 768px) {
+	.sign-in {
+		padding: 0px;
+	}
+
+	.sign-in-holder {
+		margin: auto;
+		padding: 50px 150px 40px 150px;
+		margin: 20px 0px 0px 0px;
+	}
+
+	.sign-in h2 {
+		font-size: 28px;
+		margin-bottom: 41px;
+	}
+
+	.sign-in h2 span {
+		margin-right: 9px;
+	}
+
+	.sign-in .btn-primary {
+		float: right;
+		text-align: left;
+		padding-left: 25px;
+		width: inherit;
+		padding-right: 52px;
+	}
+
+	.sign-in label.chk {
+		margin-top: 8px;
+	}
+
+	.sign-in a.info {
+		margin: 13px 0px 0px 5px;
+	}
+
+	.sign-in .input-holder label.chk {
+		top: 39px;
+	}
+
+	.sign-in input {
+		height: 57px;
+	}
+
+	.sign-in .input-holder.success span.not {
+		top: 43px;
+	}
+
+	.sign-in-holder.password-rec h2 {
+		margin-bottom: 010px;
+		font-size: 35px;
+	}
+
+	.sign-in p.desc {
+		font-size: 18px;
+		color: #FA5A28;
+		line-height: 120%;
+		font-weight: 300;
+	}
+
+	.sign-in .input-holder.success span.not {
+		top: 42px;
+	}
+
+	.sign-in .input-holder.error span.not {
+		top: 42px;
+	}
+}
+
+@media (min-width: 992px) {
+	.sign-in {
+		padding: 0px;
+	}
+
+	.sign-in-holder {
+		margin: auto;
+		padding: 80px 250px 40px 250px;
+		margin: 40px 100px 0px 100px;
+	}
+
+	.sign-in h2 {
+		font-size: 28px;
+		margin-bottom: 41px;
+	}
+
+	.sign-in h2 span {
+		margin-right: 9px;
+	}
+
+	.sign-in .btn-primary {
+		float: right;
+		text-align: left;
+		padding-left: 25px;
+		width: inherit;
+		padding-right: 52px;
+	}
+
+	.sign-in label.chk {
+		margin-top: 8px;
+	}
+
+	.sign-in a.info {
+		margin: 13px 0px 0px 5px;
+	}
+
+	.sign-in .input-holder label.chk {
+		top: 39px;
+	}
+
+	.sign-in .input-holder.success span.not {
+		top: 43px;
+	}
+
+	.sign-in-holder.password-rec h2 {
+		margin-bottom: 010px;
+		font-size: 35px;
+	}
+
+	.sign-in p.desc {
+		font-size: 18px;
+		color: #FA5A28;
+		line-height: 120%;
+		font-weight: 300;
+	}
+
+	.sign-in .input-holder.success span.not {
+		top: 42px;
+	}
+
+	.sign-in .input-holder.error span.not {
+		top: 42px;
+	}
+}
+
+@media (min-width: 1200px) {
+	.sign-in .input-holder.success span.not {
+		background: url("../images/icons.png") no-repeat scroll 1px 2px rgba(0, 0, 0, 0);
+	}
+
+	.sign-in {
+		padding: 0px;
+	}
+
+	.sign-in-holder {
+		margin: auto;
+		/*padding: 100px 210px 40px 210px;
+		margin: 40px 150px 0px 150px;*/
+	}
+
+	.sign-in h2 {
+		font-size: 28px;
+		margin-bottom: 41px;
+	}
+
+	.sign-in h2 span {
+		margin-right: 9px;
+	}
+
+	.sign-in .btn-primary {
+		float: right;
+		text-align: left;
+		padding-left: 25px;
+		padding-right: 52px;
+		width: inherit;
+	}
+
+	.sign-in label.chk {
+		margin-top: 15px;
+	}
+
+	.sign-in a.info {
+		margin: 20px 0px 0px 5px;
+	}
+
+	.sign-in .input-holder label.chk {
+		top: 39px;
+	}
+
+	.sign-in .input-holder.success span.not {
+		top: 43px;
+	}
+
+	.sign-in-holder.password-rec h2 {
+		margin-bottom: 010px;
+		font-size: 35px;
+	}
+
+	.sign-in p.desc {
+		font-size: 18px;
+		color: #FA5A28;
+		line-height: 120%;
+		font-weight: 300;
+	}
+
+	.sign-in p.copyright {
+		margin-top: 196px;
+		display: block;
+		clear: both;
+	}
+
+	.sign-in .input-holder.success span.not {
+		top: 42px;
+	}
+
+	.sign-in .input-holder.error span.not {
+		top: 42px;
+	}
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.3), only screen and (-o-min-device-pixel-ratio: 13/10) , only screen and (min-resolution: 120dpi) {
+	.sign-in h2 span {
+		background: url(../images/icons_retina.png) no-repeat -51px -1px;
+		background-size: 180px 82px;
+	}
+
+	.sign-in .input-holder.success span.not {
+		background: url(../images/icons_retina.png) no-repeat 1px 1px;
+		background-size: 180px 82px;
+	}
+
+	.sign-in a.info {
+		background: url(../images/icons_retina.png) no-repeat -49px -33px;
+		background-size: 180px 82px;
+		width: 24px;
+		height: 24px;
+		margin-top: 3px;
+	}
+
+	.sign-in .btn-primary span {
+		background: url(../images/icons_retina.png) no-repeat -79px -3px;
+		background-size: 180px 82px;
+	}
+
+	.sign-in .btn-primary:active span,
+	.sign-in .btn-primary:hover span {
+		background: url(../images/icons_retina.png) no-repeat -79px -33px;
+		background-size: 180px 82px;
+	}
+
+	.sign-in .input-holder.error span.not {
+		background: url(../images/icons_retina.png) no-repeat 1px -44px;
+		background-size: 180px 82px;
+	}
+
+	.sign-in .btn-primary.reset span {
+		background: url(../images/icons_retina.png) no-repeat -113px -3px;
+		background-size: 180px 82px;
+	}
+
+	.sign-in .btn-primary.reset:active span,
+	.sign-in .btn-primary.reset:hover span {
+		background: url(../images/icons_retina.png) no-repeat -113px -3px;
+		background-size: 180px 82px;
+	}
+
+	.sign-in .btn-primary.save span {
+		background: url(../images/icons_retina.png) no-repeat -148px -3px;
+		background-size: 180px 82px;
+	}
+
+	.sign-in .btn-primary.save:active span,
+	.sign-in .btn-primary.save:hover span {
+		background: url(../images/icons_retina.png) no-repeat -148px -3px;
+		background-size: 180px 82px;
+	}
+
+	.sign-in .input-holder label.chk .icheckbox_minimal.checked {
+		background: url(../images/icons_retina.png) no-repeat -111px -63px;
+		background-size: 180px 82px;
+	}
+
+	.sign-in .icheckbox_minimal.checked {
+		background: url(../images/icons_retina.png) no-repeat -81px -63px;
+		background-size: 180px 82px;
+	}
+
+	.sign-in a.info .tooltip-inner {
+		background: #3FBFB0;
+		font-size: 14px;
+		white-space: nowrap;
+		font-weight: 300;
+		-webkit-border-radius: 100px;
+		-moz-border-radius: 100px;
+		border-radius: 100px;
+		padding: 5px 10px 5px 10px;
+		max-width: 300px;
+	}
+}

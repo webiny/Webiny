@@ -28,6 +28,7 @@ class Module extends WebinyModule {
 		_.merge(Webiny, {
 			App,
 			Module: WebinyModule,
+            Modules: {},
 			Ui: {
 				Component,
                 Components: {
@@ -48,6 +49,7 @@ class Module extends WebinyModule {
 			Dispatcher,
 			Tools,
 			Console: Console.init(),
+            Cookies, // from js-cookies
 			Http,
 			Api: {
 				Service,
