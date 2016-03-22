@@ -9,22 +9,15 @@ class ApiResponse {
     }
 
     isError() {
-        return 'errorReport' in this.data;
+        return 'code' in this.data;
     }
 
     isSuccess() {
         return !this.isError();
     }
 
-    getErrorReport(key = false) {
-        if (this.isError()) {
-            return key ? _.get(this.data.errorReport, key) : this.data.errorReport;
-        }
-        return null;
-    }
-
-    getFirstErrorMessage() {
-        return this.getErrorReport().errors[0].message;
+    getError() {
+        return this.data.message;
     }
 
     getData(key) {

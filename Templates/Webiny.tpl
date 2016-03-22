@@ -9,9 +9,13 @@
     {webiny}
 </head>
 <body>
-<webiny-app name="Core.Backend" base-url="/admin"></webiny-app>
+<webiny-app/>
 <script>
-    WebinyBootstrap.run();
+    WebinyBootstrap.run({
+        app: 'Core.Backend',
+        baseUrl: '/admin',
+        authentication: 'Selecto.Backend'
+    });
 </script>
 </body>
 </html>

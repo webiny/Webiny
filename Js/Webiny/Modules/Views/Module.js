@@ -8,7 +8,7 @@ class ViewsModule extends Webiny.Module {
 
 		this.name = 'Views';
 
-		Webiny.Ui.Views = Views;
+		_.assign(Webiny.Ui.Views, Views);
 	}
 }
 

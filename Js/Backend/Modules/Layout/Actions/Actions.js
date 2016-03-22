@@ -16,16 +16,14 @@ const actions = {
      * @param name
      */
     loadData: (name = 'Webiny') => {
-        Webiny.Model.set({
-            Core: {
-                Layout: {
-                    name,
-                    domains: [
-                        'webiny.com',
-                        'google.com',
-                        'slack.com'
-                    ]
-                }
+        Webiny.Model.set('Core', {
+            Layout: {
+                name,
+                domains: [
+                    'webiny.com',
+                    'google.com',
+                    'slack.com'
+                ]
             }
         });
     }

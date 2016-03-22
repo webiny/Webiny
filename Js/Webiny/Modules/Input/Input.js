@@ -39,7 +39,7 @@ Input.defaultProps = {
 
         if (this.state.isValid === false) {
             validationIcon = <span className="icon icon-bad"></span>;
-            validationMessage = <span className="info-txt">({this.state.validationMessage})</span>;
+            validationMessage = <span className="help-block">{this.state.validationMessage}</span>;
         }
 
         const props = {
@@ -57,8 +57,9 @@ Input.defaultProps = {
         return (
             <div className={this.classSet(cssConfig)}>
                 {label}
-                {validationMessage}
+                {this.props.description}
                 <input {...props}/>
+                {validationMessage}
                 {validationIcon}
             </div>
         );

@@ -4,6 +4,7 @@ import Container from 'Core/Backend/Container';
 const app = new Webiny.App('Core.Backend');
 app.setInitialElement(React.createElement(Container));
 app.beforeRender(() => {
+    const authenticationApp = WebinyBootstrap.config.authentication || 'Core.Backend';
     // Load other backend apps
     const api = new Webiny.Api.Service('/core/apps');
     return api.get('/backend').then(res => {
@@ -11,7 +12,13 @@ app.beforeRender(() => {
         _.forIn(res.getData(), config => {
             apps = apps.then(() => {
                 return WebinyBootstrap.includeApp(config.name, config).then(appInstance => {
-                    appInstance.addModules(config.modules);
+                    // Filter modules
+                    const modules = config.modules;
+                    if (config.name !== authenticationApp) {
+                        delete modules['Authentication'];
+                    }
+
+                    appInstance.addModules(modules);
                     _.set(Webiny.Apps, config.name, appInstance);
                     appInstance.run();
                 });

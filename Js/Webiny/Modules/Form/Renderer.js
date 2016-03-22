@@ -6,7 +6,7 @@ export default {
     layout: function layout() {
         return (
             <Ui.Panel.Panel>
-                <Ui.Panel.Header title={this.props.title()} icon={this.props.icon}/>
+                <Ui.Panel.Header title={this.props.title && this.props.title()} icon={this.props.icon}/>
                 <Ui.Panel.Body>
                     <fields/>
                 </Ui.Panel.Body>
@@ -25,7 +25,7 @@ export default {
         const formProps = {
             id: this.props.id,
             autoComplete: 'off',
-            className: css,
+            className: this.classSet(css, this.props.className),
             onSubmit: this.submit,
             ref: this.props.name,
             name: this.props.name

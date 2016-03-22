@@ -60,6 +60,7 @@ textarea.form-control {
 
 .form-group {
 	position: relative;
+	text-align: left;
 }
 
 .form-group.error input.form-control {

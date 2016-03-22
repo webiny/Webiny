@@ -2,35 +2,21 @@ import Webiny from 'Webiny';
 
 // Find Webiny app or components and run them
 function runWebiny(meta) {
-    // Run app
+    const config = WebinyBootstrap.config;
     const appElement = document.querySelector('webiny-app');
     if (appElement) {
-        const appName = appElement.attributes.name.nodeValue;
-        const baseUrl = appElement.attributes['base-url'].nodeValue;
-        Webiny.Router.setBaseUrl(baseUrl);
+        const appName = config.app;
+        const authenticationApp = config.authentication || 'Core.Backend';
+        Webiny.Router.setBaseUrl(config.baseUrl);
         WebinyBootstrap.includeApp(appName).then(app => {
-            app.addModules(meta[appName].modules);
+            // Filter modules
+            const modules = meta[appName].modules;
+            if (appName !== authenticationApp) {
+                delete modules['Authentication'];
+            }
+            app.addModules(modules);
             _.set(Webiny.Apps, appName, app);
             app.run(appElement);
-        });
-    }
-
-    // Mount components
-    const componentElements = document.querySelectorAll('webiny-component');
-    if (componentElements) {
-        _.each(componentElements, el => {
-            const props = {};
-            _.each(el.attributes, attr => {
-                props[attr.nodeName] = attr.nodeValue;
-            });
-
-            const component = _.get(Webiny, props.name);
-            if (component) {
-                const element = React.createElement(component, props, el.innerHTML);
-                ReactDOM.render(element, el);
-            } else {
-                el.remove();
-            }
         });
     }
 }
@@ -45,7 +31,8 @@ class WebinyBootstrapClass {
         return System.import(path).catch(e => console.error(e));
     }
 
-    run() {
+    run(config) {
+        this.config = config;
         this.env = window.WebinyEnvironment;
         window._apiUrl = '/api';
         if (this.env === 'development') {

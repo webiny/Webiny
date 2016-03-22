@@ -29,12 +29,20 @@ class Module extends Webiny.Module {
 
     onVerifyUser(routerEvent, apiResponse) {
         const data = apiResponse.getData();
-        if (!_.find(data.groups, {tag: 'admins'})) {
+        if (!_.find(data.groups, {tag: 'administrators'})) {
             Webiny.Cookies.remove(this.getCookieName());
             return this.goToLogin(routerEvent);
+        } else {
+            Webiny.Model.set('User', data);
         }
 
         return routerEvent;
+    }
+
+    onLogout() {
+        Webiny.Model.set('User', null);
+        Webiny.Cookies.remove(this.getCookieName());
+        Webiny.Router.goToRoute('Login');
     }
 
     getUserEntity() {
@@ -42,7 +50,7 @@ class Module extends Webiny.Module {
     }
 
     getUserFields() {
-        return '*,groups.tag';
+        return '*,groups.tag,!password';
     }
 
     getUser(routerEvent) {
@@ -65,6 +73,8 @@ class Module extends Webiny.Module {
     }
 
     run() {
+        Webiny.Dispatcher.on('Logout', this.onLogout.bind(this));
+
         Webiny.Router.onBeforeStart(routerEvent => {
             Webiny.Http.addRequestInterceptor(http => {
                 http.addHeader('Authorization', Webiny.Cookies.get(this.getCookieName()));

@@ -1,18 +1,15 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-class FormContainer extends Webiny.Ui.Component {
+class ListContainer extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            model: {}
+            meta: {},
+            data: []
         };
-
-        this.mainForm = null;
-        this.formsCount = 0;
-        this.linkedForms = [];
 
         if (props.api) {
             if (props.api instanceof Webiny.Api.Entity) {
@@ -22,75 +19,17 @@ class FormContainer extends Webiny.Ui.Component {
             }
         }
 
-        this.bindMethods('registerForm,onSubmit,onInvalid,onReset,onCancel,prepareChildren,prepareChild,submit,reset,validate,cancel');
+        this.bindMethods('registerList,prepareChildren,prepareChild');
     }
 
     componentWillMount() {
         super.componentWillMount();
-        if (this.props.loadData) {
-            return this.props.loadData.call(this).then(data => {
-                this.setState({model: data});
-            });
-        }
-
         if (this.api) {
-            const id = Webiny.Router.getParams('id');
-            if (id) {
-                this.api.crudGet(id).then(apiResponse => {
-                    this.setState({model: apiResponse.getData()});
-                });
-            }
-        }
-    }
-
-    submit(e) {
-        // This should pass 'submit' signal to the main form
-        return this.mainForm.submit(e);
-    }
-
-    validate() {
-        // This should pass 'validate' signal to the main form
-        return this.mainForm.validate();
-    }
-
-    reset() {
-        // This should pass 'reset' signal to the main form
-        return this.mainForm.reset();
-    }
-
-    cancel() {
-        // This should pass 'cancel' signal to the main form
-        return this.mainForm.cancel();
-    }
-
-    onSubmit(model) {
-        console.log("Form Container [ON SUBMIT]", model);
-        this.setState({model: _.assign({}, this.state.model, model)}, () => {
-            this.api.crudUpdate(this.state.model.id, this.state.model).then(ar => {
-                const onSubmitSuccess = this.props.onSubmitSuccess;
-                if (!ar.isError() && onSubmitSuccess) {
-                    if (_.isFunction(onSubmitSuccess)) {
-                        return onSubmitSuccess.bind(this)(ar);
-                    }
-
-                    if (_.isString(onSubmitSuccess)) {
-                        Webiny.Router.goToRoute(onSubmitSuccess);
-                    }
-                }
+            this.api.crudList().then(apiResponse => {
+                const data = apiResponse.getData();
+                this.setState({data: data.data, meta: data.meta});
             });
-        });
-    }
-
-    onInvalid() {
-        console.log("Form Container [ON INVALID]");
-    }
-
-    onReset() {
-        console.log("Form Container [ON RESET]");
-    }
-
-    onCancel() {
-        console.log("Form Container [ON CANCEL]");
+        }
     }
 
     prepareChild(child, index) {
@@ -101,10 +40,10 @@ class FormContainer extends Webiny.Ui.Component {
         const props = _.clone(child.props);
         props.key = index;
         // Pass model, container, ui and callbacks to each form you encounter
-        if (child.type === Ui.Form) {
+        if (child.type === Ui.List) {
             this.formsCount++;
 
-            // Pass relevant props from FormContainer to Form
+            // Pass relevant props from ListContainer to List
             _.each(this.props, (value, name) => {
                 if (_.startsWith(name, 'render') || _.startsWith(name, 'option') || _.startsWith(name, 'onChange') || name == 'title') {
                     props[name] = value;
@@ -146,29 +85,12 @@ class FormContainer extends Webiny.Ui.Component {
         return React.Children.map(children, this.prepareChild);
     }
 
-    registerForm(form) {
-        if (!this.mainForm) {
-            this.mainForm = form;
-
-            return this;
-        }
-        this.linkedForms.push(form);
-
-        return this;
-    }
-
     render() {
-        this.formsCount = 0;
-
         const content = this.prepareChildren(this.props.children);
         return (
-            <webiny-form-container>{content}</webiny-form-container>
+            <webiny-list-container>{content}</webiny-list-container>
         );
-    }
-
-    getLinkedForms() {
-        return this.linkedForms;
     }
 }
 
-export default FormContainer;
+export default ListContainer;

@@ -1,5 +1,1 @@
-class Model extends Baobab {
-
-}
-
-export default new Model;
+export default new Baobab({}).select();

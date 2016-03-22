@@ -22,6 +22,7 @@ class Button extends Webiny.Ui.Component {
 Button.defaultProps = {
     size: 'normal',
     type: 'default',
+    icon: null,
     renderer: function renderer() {
         const props = _.clone(this.props);
 
@@ -54,7 +55,9 @@ Button.defaultProps = {
             typeClasses[props.type],
             props.className
         );
-        return <button {...props} type="button" className={classes}>{props.children || props.label}</button>;
+
+        const icon = this.props.icon ? <span className={this.classSet('icon right', this.props.icon)}></span> : null;
+        return <button {...props} type="button" className={classes}>{props.children || props.label} {icon}</button>;
     }
 };
 

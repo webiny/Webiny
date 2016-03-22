@@ -1,12 +1,12 @@
 import Webiny from 'Webiny';
-import Views from './Views/Views';
+import Login from './Login';
 
 class Authentication extends Webiny.Modules.Authentication {
 
     init() {
         this.registerRoutes(
             new Webiny.Route('Login', '/login', {
-                MasterLayout: Views.Login
+                MasterLayout: Login
             }).skipDefaultComponents(true)
         );
     }

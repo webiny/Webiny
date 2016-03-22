@@ -131,7 +131,7 @@ class Form extends Webiny.Ui.View {
         };
 
         return (
-            <Webiny.Builder.View name="core-users-list" config={this.getConfig()}>
+            <Webiny.Builder.View name="core-users-form" config={this.getConfig()}>
                 <Ui.FormContainer ui="myForm" api="/core/users" fields="id,firstName,lastName,email,userGroups">
                     <Ui.Panel.Panel>
                         <Ui.Panel.Header title="Webiny Form"/>

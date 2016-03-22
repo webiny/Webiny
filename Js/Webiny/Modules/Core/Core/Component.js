@@ -86,15 +86,6 @@ class Component extends React.Component {
         return isMobile.any;
     }
 
-    addKeys(elements) {
-        return elements.map((el, index) => {
-            if (!el) {
-                return null;
-            }
-            return React.cloneElement(el, {key: index}, el.props.children);
-        });
-    }
-
     dispatch(action, data) {
         return Dispatcher.dispatch(action, data);
     }

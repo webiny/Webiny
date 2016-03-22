@@ -18,6 +18,7 @@ import Entity from './Api/Entity';
 import Settings from './Ui/Settings';
 import Menu from './Ui/Menu';
 import Hide from './Ui/Hide';
+import Show from './Ui/Show';
 import Value from './Ui/Value';
 
 class Module extends WebinyModule {
@@ -33,6 +34,7 @@ class Module extends WebinyModule {
 				Component,
                 Components: {
                     Hide,
+                    Show,
                     Value
                 },
 				Dispatcher: UiDispatcher,

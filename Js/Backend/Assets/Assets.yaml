@@ -8,6 +8,7 @@ Assets:
         - styles/animation.css
         - styles/jgrowl.css
         - styles/webiny_style.css
+        - styles/webiny_signin.css
         - styles/webiny_general.css
         - styles/webiny_modal.css
         - styles/webiny_buttons.css

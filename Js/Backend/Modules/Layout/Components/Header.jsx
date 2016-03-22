@@ -2,6 +2,24 @@ import Webiny from 'Webiny';
 
 class Header extends Webiny.Ui.Component {
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            user: {}
+        };
+    }
+
+    componentDidMount() {
+        super.componentDidMount();
+        this.watch('User', (data) => {
+            this.setState({user: data});
+        });
+    }
+
+    logout() {
+        Webiny.Dispatcher.dispatch('Logout');
+    }
 }
 
 function renderer() {
@@ -29,28 +47,15 @@ function renderer() {
                 <div className="dropdown profile-holder">
                     <a href="#" className="profile" id="dropdownMenu4" data-toggle="dropdown">
                         <span className="icon-user icon"></span>
-                        <span className="user">Sven Al Hamad</span>
+                        <span className="user">{_.get(this.state.user, 'firstName', '')} {_.get(this.state.user, 'lastName', '')}</span>
                         <span className="icon-caret-down icon"></span>
                     </a>
 
                     <div className="drop dropdown-menu" role="menu" aria-labelledby="dropdownMenu4">
                         <span className="top-arr"></span>
-                        <ul>
-                            <li>
-                                <a href="#">Account preferences</a>
-                                <span>Set your account and user preferences </span>
-                            </li>
-                            <li>
-                                <a href="#">Payment Gateways</a>
-                                <span>Set gateways and offline payments</span>
-                            </li>
-                            <li className="last">
-                                <a href="#">Some third option</a>
-                                <span>Short option description goes here</span>
-                            </li>
-                        </ul>
+
                         <div className="drop-footer">
-                            <a href="#" className="logout">
+                            <a href="javascript:void(0);" className="logout" onClick={this.logout}>
                                 <span className="icon-sign-out icon-bell icon"></span>
                                 <span>Log out</span>
                             </a>
