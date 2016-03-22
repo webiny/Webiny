@@ -41,7 +41,7 @@ class ExecuteMethodFlow extends AbstractFlow
         $entity = $entity->findById($id);
         if ($entity) {
             try {
-                return $entityMethod(array_slice($params, 1));
+                return $entityMethod(array_slice($params, 1), $entity);
             } catch (ApiException $e) {
                 throw $e;
             } catch (ValidationException $e) {
