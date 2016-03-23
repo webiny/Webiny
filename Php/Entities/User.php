@@ -62,7 +62,6 @@ class User extends EntityAbstract
         });
         $this->attr('enabled')->boolean()->setDefaultValue(true)->setValidators('required');
         $userGroup = '\Apps\Core\Php\Entities\UserGroup';
-        $this->attr('userGroups')->arr();
         $this->attr('groups')->many2many('User2Group')->setEntity($userGroup)->setValidators('minLength:1')->onSet(function ($groups) {
             // If not mongo Ids - load groups by tags
             if (is_array($groups)) {
