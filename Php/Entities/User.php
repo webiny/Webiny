@@ -52,7 +52,8 @@ class User extends EntityAbstract
     {
         $this->attr('email')->char()->setValidators('required,email,unique')->onSet(function ($email) {
             return trim(strtolower($email));
-        });
+        })->setValidationMessages(['unique' => 'Given e-mail address already exists.']);
+
         $this->attr('avatar')->smart(new FileAttribute())->setTags('user', 'avatar');
         $this->attr('firstName')->char()->setValidators('required');
         $this->attr('lastName')->char()->setValidators('required');
@@ -61,9 +62,9 @@ class User extends EntityAbstract
                 return $this->wAuth()->createPasswordHash($password);
             }
         });
+        
         $this->attr('enabled')->boolean()->setDefaultValue(true)->setValidators('required');
         $userGroup = '\Apps\Core\Php\Entities\UserGroup';
-        $this->attr('userGroups')->arr();
         $this->attr('groups')->many2many('User2Group')->setEntity($userGroup)->setValidators('minLength:1')->onSet(function ($groups) {
             // If not mongo Ids - load groups by tags
             if (is_array($groups)) {
