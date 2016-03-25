@@ -34,9 +34,7 @@ class CrudListFlow extends AbstractFlow
                 'totalCount'  => $entities->totalCount(),
                 'totalPages'  => ceil($entities->totalCount() / $this->wRequest()->getPerPage()),
                 'perPage'     => $this->wRequest()->getPerPage(),
-                'currentPage' => $this->wRequest()->getPage(),
-                'filters'     => $filters,
-                'sorter'      => $sorter
+                'currentPage' => $this->wRequest()->getPage()
             ],
             'list' => $entities->toArray($this->wRequest()->getFields(), $this->wRequest()->getFieldsDepth())
         ];

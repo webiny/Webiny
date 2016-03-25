@@ -5,6 +5,7 @@ use Apps\Core\Php\DevTools\Authorization\AuthorizationTrait;
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Entity\Attributes\FileAttribute;
 use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Mongo\Index\SingleIndex;
 
@@ -102,7 +103,12 @@ class User extends EntityAbstract
          * @api.headers.Authorization string Authorization token
          */
         $this->api('GET', 'me', function () {
-            return $this->wAuth()->getUser()->toArray($this->wRequest()->getFields('*,!password'));
+            $user = $this->wAuth()->getUser();
+            if (!$user) {
+                throw new ApiException('Invalid token', 'WBY-INVALID-TOKEN');
+            }
+
+            return $user->toArray($this->wRequest()->getFields('*,!password'));
         });
 
         /**
@@ -114,7 +120,12 @@ class User extends EntityAbstract
             $data = $this->wRequest()->getRequestData();
             $this->wAuth()->getUser()->populate($data)->save();
 
-            return $this->wAuth()->getUser()->toArray($this->wRequest()->getFields('*,!password'));
+            $user = $this->wAuth()->getUser();
+            if (!$user) {
+                throw new ApiException('Invalid token', 'WBY-INVALID-TOKEN');
+            }
+
+            return $user->toArray($this->wRequest()->getFields('*,!password'));
         });
     }
 

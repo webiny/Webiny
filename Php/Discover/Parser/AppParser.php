@@ -60,7 +60,11 @@ class AppParser
         foreach ($files as $file) {
             $key = $this->str($file->getKey());
             $class = $key->replace('.php', '')->pregReplace('#/v\d+(_\d+)?#', '')->replace('/', '\\');
-            $entities[] = new EntityParser($this, $class->val());
+            // Check if abstract
+            $cls = new \ReflectionClass($class->val());
+            if (!$cls->isAbstract() && !$cls->isTrait()) {
+                $entities[] = new EntityParser($this, $class->val());
+            }
         }
 
         return $entities;
