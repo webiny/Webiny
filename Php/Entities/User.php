@@ -62,6 +62,7 @@ class User extends EntityAbstract
                 return $this->wAuth()->createPasswordHash($password);
             }
         });
+        
         $this->attr('enabled')->boolean()->setDefaultValue(true)->setValidators('required');
         $userGroup = '\Apps\Core\Php\Entities\UserGroup';
         $this->attr('groups')->many2many('User2Group')->setEntity($userGroup)->setValidators('minLength:1')->onSet(function ($groups) {
