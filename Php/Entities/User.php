@@ -51,7 +51,8 @@ class User extends EntityAbstract
     {
         $this->attr('email')->char()->setValidators('required,email,unique')->onSet(function ($email) {
             return trim(strtolower($email));
-        });
+        })->setValidationMessages(['unique' => 'Given e-mail address already exists.']);
+        
         $this->attr('avatar')->smart(new FileAttribute())->setTags('user', 'avatar');
         $this->attr('firstName')->char()->setValidators('required');
         $this->attr('lastName')->char()->setValidators('required');
