@@ -250,6 +250,33 @@ class Router {
             this.goToUrl(href);
         }
     }
+
+    sortersToString(sorters) {
+        const sort = [];
+        _.each(sorters, (value, field) => {
+            if (value == 1) {
+                sort.push(field);
+            } else {
+                sort.push('-' + field);
+            }
+        });
+        return sort.length ? sort.join(',') : null;
+    }
+
+    sortersToObject(sorters) {
+        const object = {};
+        sorters.split(',').map(sorter => {
+            if (sorter === '') {
+                return;
+            }
+            if (_.startsWith(sorter, '-')) {
+                object[_.trimStart(sorter, '-')] = -1;
+            } else {
+                object[sorter] = 1;
+            }
+        });
+        return object;
+    }
 }
 
 const router = new Router;

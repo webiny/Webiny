@@ -14,16 +14,15 @@ class View extends Webiny.Ui.Component {
         }
 
         const config = this.props.config;
+        let props = _.clone(child.props);
         if (child.props.ui && _.has(config, child.props.ui)) {
-            const props = _.clone(child.props);
             props.key = index;
-            if (child.props.ui && _.has(config, child.props.ui)) {
-                _.merge(props, config[child.props.ui]);
+            if (props.ui && _.has(config, props.ui)) {
+                props = _.merge({}, props, config[props.ui]);
             }
-            return React.cloneElement(child, props, props.children);
         }
 
-        return React.cloneElement(child, child.props, this.prepareChildren(child.props && child.props.children));
+        return React.cloneElement(child, props, this.prepareChildren(props && props.children));
     }
 
     /**

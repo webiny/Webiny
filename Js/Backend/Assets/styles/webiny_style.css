@@ -1174,7 +1174,7 @@ body.opened-mobile-nav .left-menu-submenu {
 
 	.master-content.container-fluid {
 		float: left;
-		min-width: 90%;
+		min-width: 100%;
 		background: #fff;
 		padding: 65px;
 		-webkit-transition: width 0.5s; /* Safari */

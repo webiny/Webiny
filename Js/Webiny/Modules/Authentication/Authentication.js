@@ -18,7 +18,7 @@ class Module extends Webiny.Module {
         localStorage.loginRedirect = window.location.href;
         routerEvent.stop();
 
-        var isLoginRoute = routerEvent.route.name == 'Login';
+        var isLoginRoute = routerEvent.route.name === 'Login';
 
         if (!isLoginRoute) {
             routerEvent.goToRoute('Login', {logout: 'not'});
@@ -95,6 +95,10 @@ class Module extends Webiny.Module {
     }
 
     checkUser(routerEvent) {
+        if (Webiny.Model.get('User')) {
+            return;
+        }
+
         const token = Webiny.Cookies.get(this.getCookieName());
 
         // Check if token exists on client side

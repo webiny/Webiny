@@ -8,7 +8,7 @@ class Login extends Webiny.Ui.View {
         super.componentWillMount();
 
         // If already logged in - execute onSuccess
-        if (Webiny.Model.get('User') !== null) {
+        if (!_.isEmpty(Webiny.Model.get('User'))) {
             if(_.isFunction(this.props.onSuccess)){
                 return this.props.onSuccess();
             }
