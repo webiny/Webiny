@@ -8,6 +8,11 @@
 
 namespace Apps\Core\Php\Dispatchers;
 
+use Apps\Core\Php\DevTools\DevToolsTrait;
+use Webiny\Component\StdLib\StdLibTrait;
+use Webiny\Component\Validation\Validation;
+use Webiny\Component\Validation\ValidationException;
+
 /**
  * Class ApiMethod
  *
@@ -17,7 +22,7 @@ namespace Apps\Core\Php\Dispatchers;
  */
 class ApiMethod
 {
-    use ParamsInjectorTrait;
+    use ParamsInjectorTrait, StdLibTrait, DevToolsTrait;
 
     private $httpMethod;
     private $methodName;
@@ -37,6 +42,10 @@ class ApiMethod
     {
         if (!$params) {
             $params = [];
+        }
+
+        if ($this->httpMethod === 'post' || $this->httpMethod === 'patch') {
+            $this->validateBody($this->wRequest()->getRequestData());
         }
 
         $callback = $this->callbacks[0];
@@ -99,5 +108,35 @@ class ApiMethod
 
             return $callback(...$params);
         };
+    }
+
+    private function validateBody($params)
+    {
+        $errors = [];
+
+        $params = $this->arr($params);
+        foreach ($this->bodyValidators as $key => $validators) {
+            $keyValue = $params->keyNested($key);
+            if ($this->isString($validators)) {
+                $validators = explode(',', $validators);
+            }
+
+            // Do not validate if value is not required and empty value is given
+            // 'empty' function is not suitable for this check here
+            if (!in_array('required', $validators) && (is_null($keyValue) || $keyValue === '')) {
+                continue;
+            }
+
+            try {
+                Validation::getInstance()->validate($keyValue, $validators);
+            } catch (ValidationException $e) {
+                $errors[$key] = $e->getMessage();
+            }
+        }
+
+        if (count($errors)) {
+            $message = 'Invalid arguments provided to method `' . $this->httpMethod . '.' . $this->methodName . '`';
+            throw new ApiMethodException($message, 'WBY-ENTITY-API-METHOD-VALIDATION', 404, $errors);
+        }
     }
 }
