@@ -38,7 +38,7 @@ class Bootstrap
         $this->errorHandler = new ErrorHandler();
 
         // read production configs
-        $this->buildConfiguration("Production");
+        $this->buildConfiguration('Production');
 
         // get additional config set
         $configSet = $this->getConfigSet();
@@ -47,7 +47,7 @@ class Bootstrap
         }
 
         // set the environment
-        $this->setEnvironment($this->wConfig()->get("Application.Environment", "production"));
+        $this->setEnvironment($this->wConfig()->get('Application.Environment', 'production'));
 
         // scan all components to register routes and event handlers
         PackageScanner::getInstance();
@@ -81,7 +81,7 @@ class Bootstrap
     {
         try {
             // get the configuration files
-            $dir = $this->wStorage()->readDir("Configs/" . $configSet)->filter("*.yaml");
+            $dir = $this->wStorage()->readDir('Configs/' . $configSet)->filter('*.yaml');
 
             // insert them into the global configuration object
             foreach ($dir as &$file) {
@@ -89,15 +89,15 @@ class Bootstrap
             }
 
             // append config sets
-            $this->wConfig()->appendConfig("Configs/ConfigSets.yaml");
+            $this->wConfig()->appendConfig('Configs/ConfigSets.yaml');
         } catch (\Exception $e) {
-            throw new \Exception("Unable to build config set " . $configSet . ". " . $e->getMessage());
+            throw new \Exception('Unable to build config set ' . $configSet . '. ' . $e->getMessage());
         }
     }
 
     private function getConfigSet()
     {
-        $configSets = $this->wConfig()->get("ConfigSets", []);
+        $configSets = $this->wConfig()->get('ConfigSets', []);
         $url = $this->wRequest()->getCurrentUrl(true)->getDomain();
         $currentDomain = $this->str($url)->caseLower()->trimRight('/')->val();
 

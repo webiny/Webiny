@@ -65,6 +65,7 @@ class ListContainer extends Webiny.Ui.Component {
     prepare(props) {
         this.sorters = {};
         this.filters = {};
+
         if (props.connectToRouter) {
             const params = Webiny.Router.getParams();
             const urlSort = params._sort || '';
@@ -80,8 +81,8 @@ class ListContainer extends Webiny.Ui.Component {
             });
 
             // Get limit and page
-            this.perPage = params._perPage || null;
-            this.page = params._page || null;
+            this.perPage = params._perPage || props.page || 1;
+            this.page = params._page || props.perPage || 10;
 
             // Get filters
             _.each(params, (value, name) => {
@@ -105,6 +106,8 @@ class ListContainer extends Webiny.Ui.Component {
             this.sorters = sorters;
             this.loadData();
         }
+
+        return this;
     }
 
     setFilters(filters) {
@@ -116,6 +119,8 @@ class ListContainer extends Webiny.Ui.Component {
             this.filters = filters;
             this.loadData();
         }
+
+        return this;
     }
 
     setPage(page) {
@@ -125,15 +130,20 @@ class ListContainer extends Webiny.Ui.Component {
             this.page = page;
             this.loadData();
         }
+
+        return this;
     }
 
     setPerPage(perPage) {
         if (this.props.connectToRouter) {
             Webiny.Router.goToRoute('current', {_perPage: perPage});
         } else {
+            this.page = 1;
             this.perPage = perPage;
             this.loadData();
         }
+
+        return this;
     }
 
     tableProps(tableProps) {
@@ -198,7 +208,9 @@ class ListContainer extends Webiny.Ui.Component {
 
 ListContainer.defaultProps = {
     connectToRouter: false,
-    defaultParams: {}
+    defaultParams: {},
+    page: 1,
+    perPage: 10
 };
 
 export default ListContainer;
