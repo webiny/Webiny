@@ -1,5 +1,5 @@
 import Webiny from 'Webiny';
-import ListContainer from './Components/ListContainer';
+import Container from './Components/Container';
 import Table from './Components/Table/Table';
 import Row from './Components/Table/Row';
 import Field from './Components/Table/Field';
@@ -14,8 +14,8 @@ class Module extends Webiny.Module {
 
     constructor(app) {
         super(app);
-        Webiny.Ui.Components.ListContainer = ListContainer;
         Webiny.Ui.Components.List = {
+            Container,
             Table: {
                 Table,
                 Header,

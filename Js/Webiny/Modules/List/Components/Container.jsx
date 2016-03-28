@@ -3,7 +3,7 @@ import ApiDataSource from './DataSource/Api';
 import StaticDataSource from './DataSource/Static';
 const Ui = Webiny.Ui.Components;
 
-class ListContainer extends Webiny.Ui.Component {
+class Container extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);
@@ -15,7 +15,17 @@ class ListContainer extends Webiny.Ui.Component {
 
         this.sorters = {};
         this.filters = {};
+        this.page = props.page;
+        this.perPage = props.perPage;
+        this.searchQuery = null;
+        this.searchOperator = props.searchOperator || 'or';
+        this.searchFields = props.searchFields || null;
+
         this.dataSource = null;
+
+        this.filtersElement = null;
+        this.tableElement = null;
+        this.paginationElement = null;
 
         if (props.api) {
             this.dataSource = new ApiDataSource(props.api, props.defaultParams);
@@ -29,8 +39,7 @@ class ListContainer extends Webiny.Ui.Component {
         }
 
         this.bindMethods(
-            'prepareChildren',
-            'prepareChild',
+            'prepareList',
             'tableProps',
             'paginationProps',
             'setSorters',
@@ -56,6 +65,7 @@ class ListContainer extends Webiny.Ui.Component {
 
     loadData() {
         this.dataSource.setSorters(this.sorters).setFilters(this.filters).setPage(this.page).setPerPage(this.perPage);
+        this.dataSource.setSearchQuery(this.searchQuery).setSearchFields(this.searchFields).setSearchOperator(this.searchOperator);
 
         return this.dataSource.getData().then(data => {
             return this.setState(data);
@@ -81,8 +91,9 @@ class ListContainer extends Webiny.Ui.Component {
             });
 
             // Get limit and page
-            this.perPage = params._perPage || props.page || 1;
-            this.page = params._page || props.perPage || 10;
+            this.page = params._page || props.page || 1;
+            this.perPage = params._perPage || props.perPage || 10;
+            this.searchQuery = params._searchQuery || null;
 
             // Get filters
             _.each(params, (value, name) => {
@@ -146,8 +157,20 @@ class ListContainer extends Webiny.Ui.Component {
         return this;
     }
 
+    setSearchQuery(query) {
+        if (this.props.connectToRouter) {
+            Webiny.Router.goToRoute('current', {_searchQuery: query});
+        } else {
+            this.page = 1;
+            this.searchQuery = query;
+            this.loadData();
+        }
+
+        return this;
+    }
+
     tableProps(tableProps) {
-        // Pass relevant props from ListContainer to Table
+        // Pass relevant props from Container to Table
         _.each(this.props, (value, name) => {
             if (_.startsWith(name, 'field') && name !== 'fields' || _.startsWith(name, 'action')) {
                 tableProps[name] = value;
@@ -156,61 +179,121 @@ class ListContainer extends Webiny.Ui.Component {
         tableProps.data = this.state.list;
         tableProps.sorters = this.sorters;
         tableProps.onSort = this.setSorters;
+
+        return tableProps;
     }
 
     paginationProps(paginationProps) {
         _.assign(paginationProps, {
             onPageChange: this.setPage,
             totalPages: this.dataSource.getTotalPages(),
-            currentPage: this.page
+            currentPage: this.page,
+            perPage: this.perPage,
+            count: this.state.list.length,
+            totalCount: this.state.meta.totalCount
         });
+
+        return paginationProps;
     }
 
-    prepareChild(child, index) {
-        if (typeof child !== 'object' || child === null) {
-            return child;
-        }
-
-        const props = _.clone(child.props);
-        props.key = index;
-
-        // ListContainer handles different List components: Filters, Table, Actions, MultiActions and Pagination
-        switch (child.type) {
-            case Ui.List.Filters:
-            case Ui.List.MultiActions:
-            case Ui.List.Table.Table:
-                this.tableProps(props);
-                break;
-            case Ui.List.Pagination:
-                this.paginationProps(props);
-                break;
-            default:
-                return React.cloneElement(child, props, this.prepareChildren(props.children));
-        }
-
-        return React.cloneElement(child, props);
-    }
-
-    prepareChildren(children) {
+    /**
+     * @private
+     * @param children
+     */
+    prepareList(children) {
         if (typeof children !== 'object' || children === null) {
-            return children;
+            return;
         }
-        return React.Children.map(children, this.prepareChild);
+
+        React.Children.map(children, child => {
+            if (child.type === Ui.List.Filters) {
+                this.filtersElement = child;
+            }
+
+            if (child.type === Ui.List.Table.Table) {
+                this.tableElement = React.cloneElement(child, this.tableProps(_.clone(child.props)));
+            }
+
+            if (child.type === Ui.List.Pagination) {
+                this.paginationElement = React.cloneElement(child, this.paginationProps(_.clone(child.props)));
+            }
+        }, this);
     }
 
-    render() {
-        const content = this.prepareChildren(this.props.children);
-        return (
-            <webiny-list-container>{content}</webiny-list-container>
-        );
+    /**
+     * @private
+     * @param element
+     * @returns {*}
+     */
+    replacePlaceholders(element) {
+        if (typeof element !== 'object' || element === null) {
+            return element;
+        }
+
+        if (element.type === 'filters') {
+            return this.filtersElement;
+        }
+
+        if (element.type === 'table') {
+            return this.tableElement;
+        }
+
+        if (element.type === 'pagination') {
+            return this.paginationElement;
+        }
+
+        if (element.props && element.props.children) {
+            return React.cloneElement(element, element.props, React.Children.map(element.props.children, item => {
+                return this.replacePlaceholders(item);
+            }));
+        }
+
+        return element;
     }
 }
 
-ListContainer.defaultProps = {
+Container.defaultProps = {
     connectToRouter: false,
     defaultParams: {},
     page: 1,
-    perPage: 10
+    perPage: 10,
+    layout: function () {
+        return (
+            <Ui.Panel.Panel>
+                <Ui.Panel.Header title="Generic list title">
+                    <div className="pull-right" style={{marginTop: '-10px'}}>
+                        <filters/>
+                    </div>
+                </Ui.Panel.Header>
+                <Ui.Panel.Body>
+                    <table/>
+                    <pagination/>
+                </Ui.Panel.Body>
+            </Ui.Panel.Panel>
+        );
+    },
+    renderer: function renderer() {
+        this.prepareList(this.props.children);
+
+        if (_.isFunction(this.props.layout)) {
+            const layout = this.props.layout.bind(this)();
+            const render = [];
+            React.Children.map(layout, (item, index) => {
+                render.push(React.cloneElement(this.replacePlaceholders(item), {key: index}));
+            });
+            return <webiny-list>{render}</webiny-list>;
+        } else if (React.isValidElement(this.props.layout)) {
+            const layoutProps = {
+                filters: this.filtersElement,
+                table: this.tableElement,
+                pagination: this.paginationElement,
+                container: this
+            };
+            return React.cloneElement(this.props.layout, layoutProps);
+        }
+
+        return null;
+    }
 };
 
-export default ListContainer;
+export default Container;

@@ -27,7 +27,10 @@ class Api extends DataSource {
         const params = _.assign({}, this.defaultParams, {
             _page: this.page,
             _perPage: this.perPage,
-            _sort: Webiny.Router.sortersToString(this.sorters)
+            _sort: Webiny.Router.sortersToString(this.sorters),
+            _searchFields: this.searchFields,
+            _searchQuery: this.searchQuery,
+            _searchOperator: this.searchOperator
         }, this.filters);
 
         const requestFingerprint = JSON.stringify(params);

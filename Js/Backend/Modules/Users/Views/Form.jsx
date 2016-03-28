@@ -11,9 +11,9 @@ class Form extends Webiny.Ui.View {
             myForm: {
                 // Form component will pass this function as a renderer to `email` component
                 /*renderEmail: function inputRenderEmail() {
-                    // NOTE: `this` is bound to the input instance
-                    return <input type="text" className="form-control" placeholder="Custom input" valueLink={this.props.valueLink}/>;
-                },*/
+                 // NOTE: `this` is bound to the input instance
+                 return <input type="text" className="form-control" placeholder="Custom input" valueLink={this.props.valueLink}/>;
+                 },*/
 
                 // Form will pass this function as a callback to `valueLink`
                 onChangeEmail: function inputChangeEmail(newVal, oldVal) {
@@ -26,19 +26,19 @@ class Form extends Webiny.Ui.View {
                 },
 
                 /*onSubmit: function onSubmit(model) {
-                    // This will be passed as Form's `onSubmit` prop
-                    // `this` is bound to FormContainer
-                    console.info('Form submitted: ', model);
-                    this.api.crudUpdate(this.state.model.id, model).then(ar => {
-                        console.log(ar.getData());
-                        this.props.onSubmitSuccess(ar);
-                    })
-                },
+                 // This will be passed as Form's `onSubmit` prop
+                 // `this` is bound to FormContainer
+                 console.info('Form submitted: ', model);
+                 this.api.crudUpdate(this.state.model.id, model).then(ar => {
+                 console.log(ar.getData());
+                 this.props.onSubmitSuccess(ar);
+                 })
+                 },
 
-                onSubmitSuccess: function onSubmitSuccess(apiResponse) {
-                    console.log('API SUCCESS', apiResponse);
-                    //Webiny.Router.goToRoute('Dashboard');
-                },*/
+                 onSubmitSuccess: function onSubmitSuccess(apiResponse) {
+                 console.log('API SUCCESS', apiResponse);
+                 //Webiny.Router.goToRoute('Dashboard');
+                 },*/
 
                 onInvalid: function onInvalid(attributes = {}) {
                     // TODO: pass invalid attributes to this callback
@@ -132,7 +132,7 @@ class Form extends Webiny.Ui.View {
 
         return (
             <Webiny.Builder.View name="core-users-form" config={this.getConfig()}>
-                <Ui.FormContainer ui="myForm" api="/core/users" fields="id,firstName,lastName,email,userGroups">
+                <Ui.FormContainer ui="myForm" api="/core/users" fields="id,firstName,lastName,email,userGroups,settings">
                     <Ui.Panel.Panel>
                         <Ui.Panel.Header title="Webiny Form"/>
                         <Ui.Panel.Body>
@@ -152,6 +152,39 @@ class Form extends Webiny.Ui.View {
                                                     <Ui.Input label="Email" name="email" validate="required,email"/>
                                                     <Ui.Select {...userGroupSelect}/>
                                                     <Ui.Select {...createdBySelect}/>
+
+                                                    <h3>Settings</h3>
+                                                    <Ui.Dynamic.FieldSet name="settings">
+                                                        <Ui.Dynamic.Row>
+                                                            <Ui.Grid.Row>
+                                                                <Ui.Grid.Col all={3}>
+                                                                    <Ui.Input placeholder="Key" name="key" validate="required"/>
+                                                                </Ui.Grid.Col>
+                                                                <Ui.Grid.Col all={3}>
+                                                                    <Ui.Input placeholder="Value" name="value" validate="required"/>
+                                                                </Ui.Grid.Col>
+                                                                <Ui.Grid.Col all={3}>
+                                                                    <Ui.Select {...createdBySelect} label={null}/>
+                                                                </Ui.Grid.Col>
+                                                                <Ui.Grid.Col all={3}>
+                                                                    <div className="btn-group">
+                                                                        <Ui.Dynamic.Add>
+                                                                            <Ui.Button type="primary" label="Add"/>
+                                                                        </Ui.Dynamic.Add>
+                                                                        <Ui.Dynamic.Remove>
+                                                                            <Ui.Button type="secondary" label="Remove"/>
+                                                                        </Ui.Dynamic.Remove>
+                                                                    </div>
+                                                                </Ui.Grid.Col>
+                                                            </Ui.Grid.Row>
+                                                        </Ui.Dynamic.Row>
+                                                        <Ui.Dynamic.Empty>
+                                                            <h5>You have not created any settings yet. Click "Add settings" to start creating your settings!</h5>
+                                                            <Ui.Dynamic.Add>
+                                                                <Ui.Button type="primary" label="Add settings"/>
+                                                            </Ui.Dynamic.Add>
+                                                        </Ui.Dynamic.Empty>
+                                                    </Ui.Dynamic.FieldSet>
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
                                         </fields>

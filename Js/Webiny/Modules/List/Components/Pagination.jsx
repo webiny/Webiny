@@ -75,6 +75,11 @@ class Pagination extends Webiny.Ui.Component {
 
 Pagination.defaultProps = {
     onPageChange: _.noop,
+    totalPages: 0,
+    currentPage: 0,
+    perPage: 0,
+    count: 0,
+    totalCount: 0,
     size: 'large', // large or small
     renderer: function render() {
         const previousPage = this.props.currentPage === 1 ? null : this.pageChanged.bind(this, this.props.currentPage - 1);
