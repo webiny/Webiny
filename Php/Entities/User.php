@@ -15,6 +15,8 @@ use Webiny\Component\Mongo\Index\SingleIndex;
  * @property string           $id
  * @property string           $email
  * @property string           $password
+ * @property string           $firstName
+ * @property string           $lastName
  * @property EntityCollection $groups
  * @property bool             $enabled
  *
@@ -52,11 +54,13 @@ class User extends EntityAbstract
     {
         $this->attr('email')->char()->setValidators('required,email,unique')->onSet(function ($email) {
             return trim(strtolower($email));
-        })->setValidationMessages(['unique' => 'Given e-mail address already exists.']);
+        })->setValidationMessages([
+            'unique' => 'Given e-mail address already exists.'
+        ])->setToArrayDefault();
 
         $this->attr('avatar')->smart(new FileAttribute())->setTags('user', 'avatar');
-        $this->attr('firstName')->char()->setValidators('required');
-        $this->attr('lastName')->char()->setValidators('required');
+        $this->attr('firstName')->char()->setValidators('required')->setToArrayDefault();
+        $this->attr('lastName')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('password')->char()->onSet(function ($password) {
             if (!empty($password) && $this->wValidation()->validate($password, 'password')) {
                 return $this->wAuth()->createPasswordHash($password);
