@@ -44,7 +44,7 @@ class ApiMethod
             $params = [];
         }
 
-        if ($this->httpMethod === 'post' || $this->httpMethod === 'patch') {
+        if (($this->httpMethod === 'post' || $this->httpMethod === 'patch') && count($this->bodyValidators)) {
             $this->validateBody($this->wRequest()->getRequestData());
         }
 
