@@ -7,7 +7,8 @@ class Row extends Webiny.Ui.Component {
         super(props);
 
         this.fields = [];
-        this.actions = [];
+        this.actions = null;
+        this.data = [];
 
         this.bindMethods('prepareChildren,prepareChild,renderField,renderActions');
     }
@@ -28,16 +29,16 @@ class Row extends Webiny.Ui.Component {
         }
 
         // Table handles Row and Footer
-        if (child.type === Ui.List.Table.Field) {
+        if (child.type === Ui.List.Table.Field || child.type.prototype instanceof Ui.List.Table.Field) {
             this.fields.push(child);
-        } else if (child.type === Ui.List.Table.Action) {
-            this.actions.push(child);
+        } else if (child.type === Ui.List.Table.Actions) {
+            this.actions = child;
         }
     }
 
     prepareChildren(children) {
         this.fields = [];
-        this.actions = [];
+        this.actions = null;
 
         if (typeof children !== 'object' || children === null) {
             return children;
@@ -46,8 +47,8 @@ class Row extends Webiny.Ui.Component {
     }
 
     renderField(field, i) {
-        const props = _.clone(field.props);
-        props.data = this.props.data;
+        const props = _.omit(field.props, ['children']);
+        props.data = this.data;
         props.key = i;
         props.sorted = this.props.sorters[props.name] || null;
 
@@ -57,7 +58,7 @@ class Row extends Webiny.Ui.Component {
             props.renderer = this.props['field' + name];
         }
 
-        return React.cloneElement(field, props);
+        return React.cloneElement(field, props, field.props.children);
     }
 
     renderActions() {
@@ -65,9 +66,11 @@ class Row extends Webiny.Ui.Component {
     }
 
     render() {
+        this.data = _.clone(this.props.data);
         return (
             <tr>
                 {this.fields.map(this.renderField)}
+                {this.actions ? <td>{this.actions}</td> : null}
             </tr>
         );
     }

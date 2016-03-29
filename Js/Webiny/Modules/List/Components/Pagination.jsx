@@ -82,6 +82,10 @@ Pagination.defaultProps = {
     totalCount: 0,
     size: 'large', // large or small
     renderer: function render() {
+        if(!this.props.count){
+            return null;
+        }
+
         const previousPage = this.props.currentPage === 1 ? null : this.pageChanged.bind(this, this.props.currentPage - 1);
         const previousClasses = this.classSet({
             previous: true,

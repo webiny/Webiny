@@ -13,6 +13,7 @@ class Main extends Webiny.Ui.View {
                 <div className="master-content container-fluid">
                     <Webiny.Ui.Components.Placeholder name="MasterContent"/>
                 </div>
+                <Webiny.Ui.Components.Modal.Container ui="ModalContainer"/>
                 <Components.Footer/>
             </div>
         );
