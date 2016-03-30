@@ -1,0 +1,48 @@
+%clearfix {
+	*zoom: 1;
+	&:before, &:after {
+		content: " ";
+		display: table;
+	}
+	&:after {
+		clear: both;
+	}
+}
+
+%fontawesome {
+	display: inline-block;
+
+	&:before {
+		font-family: FontAwesome;
+	    font-style: normal;
+	    font-weight: normal;
+	    text-decoration: inherit;
+	    font-size: 18px;
+	    line-height: 1;
+	    padding-right: 0.5em;
+	}
+
+	&:after {
+		font-family: FontAwesome;
+	    font-style: normal;
+	    font-weight: normal;
+	    text-decoration: inherit;
+	    font-size: 18px;
+	    padding-right: 0.5em;
+	}
+}
+
+%icon {
+	/* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'fontello' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}

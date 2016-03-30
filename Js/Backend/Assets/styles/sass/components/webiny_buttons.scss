@@ -1,0 +1,218 @@
+.btn {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 14px 20px;
+  vertical-align: top;
+
+  text-align: center;
+  font-size: 12px;
+  line-height: 1;
+  text-transform: uppercase;
+
+  border-radius: 60px;
+}
+
+button.btn {
+  &:hover, span:hover {
+    cursor: pointer;
+  }
+}
+
+.btn.btn-lg, .btn-group.btn-group-lg .btn {
+  font-size: 18px;
+  font-weight: 300;
+  padding: 11px 15px 11px 15px;
+  line-height: 150%;
+}
+
+.btn.btn-default.btn-lg {
+  font-weight: 400;
+}
+
+.btn-group {
+  &.btn-group-lg .btn.btn-default {
+    font-weight: 400;
+  }
+  .btn {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.btn-add{
+  width: 187px;
+  height: 40px;
+  border-color: $borderColor;
+  .btn-caption{
+    position: relative;
+    padding-left: 20px;
+    &:before{
+      content: "+";
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      color: $highlightColor;
+      font-size: 20px;
+      font-weight: 600;
+    }
+  }
+  &:hover{
+    background-color: #fff;
+    border-color: $borderColor;
+    .btn-caption{
+      color: $highlightColor;
+    }
+  }
+}
+
+.btn.btn-lg span, .btn-group.btn-group-lg .btn span {
+  float: left;
+  margin: 2px 0px;
+}
+
+.btn.btn-lg span.icon, .btn-group.btn-group-lg .btn span.icon {
+  font-size: 32px;
+  height: 20px;
+  margin: 0px -8px 1px 0px;
+}
+
+.btn.btn-lg span.icon.right, .btn-group.btn-group-lg .btn span.icon.right {
+  margin: 0px -7px 0px 0px;
+}
+
+.btn.btn-lg span.icon.left, .btn-group.btn-group-lg .btn span.icon.left {
+  margin: 0px 0px 0px -7px;
+}
+
+.btn {
+  &:active, &.active {
+    -webkit-box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.3);
+    -moz-box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.3);
+    box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.3);
+  }
+  &.btn-default {
+    &:active, &.active {
+      background: #F2F2F2;
+    }
+  }
+  &.btn-primary {
+    background-color: #FA5723;
+    border-color: #ED4005;
+    &.preloading {
+      &:hover, &:active, &:focus {
+        background-color: #FA5723;
+        border-color: #ED4005;
+      }
+    }
+    &:hover {
+      background: #ED4005;
+    }
+    &:active, &.active {
+      -webkit-box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.5);
+      -moz-box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.5);
+      box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.5);
+    }
+  }
+  &.btn-success {
+    background: #3FBFB0;
+    border: 1px solid #2E8B80;
+    &.preloading {
+      &:hover, &:active, &:focus {
+        background: #3FBFB0;
+        border: 1px solid #2E8B80;
+      }
+    }
+    &:hover {
+      background: #32988B;
+    }
+    &:active, &.active {
+      background: #32988B;
+      -webkit-box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.9);
+      -moz-box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.9);
+      box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.9);
+    }
+  }
+  &.preloading {
+    opacity: 0.9;
+    cursor: default;
+    span.icon {
+      float: right;
+      margin-left: 5px;
+      margin-right: 0;
+      &.left {
+        float: left;
+        margin-left: 0;
+        margin-right: 5px;
+      }
+    }
+  }
+  &.btn-lg.preloading span.icon {
+    &.left {
+      margin-right: 10px;
+      margin-left: 0px;
+      float: left;
+    }
+    margin-left: 10px;
+    margin-right: 0px;
+  }
+  &.preloading span.icon {
+    height: 15px !important;
+    width: 15px !important;
+    position: relative;
+    border-radius: 80px;
+    border: 2px solid #fff;
+    -webkit-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+    -webkit-animation: spin 3s linear infinite;
+    animation: spin 3s linear infinite;
+    background: transparent;
+    display: inline-block;
+  }
+  &.btn-lg.preloading span.icon {
+    height: 30px !important;
+    width: 30px !important;
+    border-width: 4px;
+  }
+  &.preloading span.icon {
+    &:before {
+      content: "";
+    }
+    &:after {
+      content: "";
+      border-radius: 100%;
+      position: absolute;
+      top: -3px;
+      left: 3px;
+      width: 4px;
+      height: 4px;
+      background-color: #FA5A28;
+    }
+  }
+}
+
+.btn {
+  &.upload {
+    display: inline-block;
+    width: auto;
+    padding: 14px 12px;
+    margin-bottom: 10px;
+    position: relative;
+
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+
+    &:before {
+      content: "\e83c";
+      margin-right: 5px;
+
+      color: #fff;
+      font-family: 'fontello';
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1em;
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import Webiny from 'Webiny';
 import data from './data';
 const Ui = Webiny.Ui.Components;
+const Table = Ui.List.Table;
 const UiD = Webiny.Ui.Dispatcher;
 import CustomLayout from './CustomLayout';
 
@@ -36,10 +37,10 @@ class List extends Webiny.Ui.View {
             <Webiny.Builder.View name="core-users-list" config={this.getConfig()}>
                 <Ui.Grid.Row>
                     <Ui.List.Container ui="myList" api="/core/users" fields="id,firstName,lastName,email,createdOn">
-                        <Ui.List.Table.Table>
-                            <Ui.List.Table.Row detailsRenderer={null} onShowDetails={null}>
-                                <Ui.List.Table.Field name="firstName" align="left" label="First Name" sort="firstName">
-                                    <Ui.List.Table.FieldInfo title="About first name">
+                        <Table.Table>
+                            <Table.Row detailsRenderer={null} onShowDetails={null}>
+                                <Table.Field name="firstName" align="left" label="First Name" sort="firstName">
+                                    <Table.FieldInfo title="About first name">
                                         <div className="table-responsive">
                                             <table className="table table-simple">
                                                 <thead>
@@ -71,11 +72,11 @@ class List extends Webiny.Ui.View {
                                                 </tbody>
                                             </table>
                                         </div>
-                                    </Ui.List.Table.FieldInfo>
-                                </Ui.List.Table.Field>
-                                <Ui.List.Table.Field name="lastName" align="left" sort="lastName" label="Last Name"/>
-                                <Ui.List.Table.Field name="email" align="left" sort="email" label="Email">
-                                    <Ui.List.Table.FieldInfo title="About email">
+                                    </Table.FieldInfo>
+                                </Table.Field>
+                                <Table.Field name="lastName" align="left" sort="lastName" label="Last Name"/>
+                                <Table.Field name="email" align="left" sort="email" label="Email">
+                                    <Table.FieldInfo title="About email">
                                         <p>
                                             API Key is used if you wish to make API calls from other websites, or devices, to retrieve
                                             content
@@ -87,16 +88,16 @@ class List extends Webiny.Ui.View {
                                             header.
                                             <br/>
                                         </p>
-                                    </Ui.List.Table.FieldInfo>
-                                </Ui.List.Table.Field>
-                                <Ui.List.Table.Field name="createdOn" align="left" label="Created On" sort="createdOn"/>
-                                <Ui.List.Table.Actions>
-                                    <Ui.List.Table.Action label="Edit" route="Users.Form" params="id"/>
-                                    <Ui.List.Table.Action label="Delete" route="Users.Form" params="id"/>
-                                </Ui.List.Table.Actions>
-                            </Ui.List.Table.Row>
-                            <Ui.List.Table.Footer/>
-                        </Ui.List.Table.Table>
+                                    </Table.FieldInfo>
+                                </Table.Field>
+                                <Table.Field name="createdOn" align="left" label="Created On" sort="createdOn"/>
+                                <Table.Actions>
+                                    <Table.Action label="Edit" route="Users.Form" params="id"/>
+                                    <Table.Action label="Delete" route="Users.Form" params="id"/>
+                                </Table.Actions>
+                            </Table.Row>
+                            <Table.Footer/>
+                        </Table.Table>
                         <Ui.List.Pagination/>
                     </Ui.List.Container>
                 </Ui.Grid.Row>
@@ -106,20 +107,20 @@ class List extends Webiny.Ui.View {
                             <Ui.Button onClick={this.signal('myInlineList:setFilters', {category: null})} label="Show All"/>
                             <Ui.Button onClick={this.signal('myInlineList:setFilters', {category: 'joinedTeam'})} label="Show Joined Team"/>
                         </Ui.List.Filters>
-                        <Ui.List.Table.Table type="striped">
-                            <Ui.List.Table.Row>
-                                <Ui.List.Table.Field name="category" align="left" sort="category" label="Category"/>
-                                <Ui.List.Table.DateTimeField name="createdOn" align="left" label="Created On" sort="createdOn.$date"
+                        <Table.Table type="striped">
+                            <Table.Row>
+                                <Table.Field name="category" align="left" sort="category" label="Category"/>
+                                <Table.DateTimeField name="createdOn" align="left" label="Created On" sort="createdOn.$date"
                                                              format="DD/MMM/YY HH:mm"/>
-                                <Ui.List.Table.DateField name="createdOn" align="left" label="Date"/>
-                                <Ui.List.Table.TimeField name="createdOn" align="left" label="Time"/>
-                                <Ui.List.Table.Actions>
-                                    <Ui.List.Table.Action label="Edit" route="Users.Form" params="id"/>
-                                    <Ui.List.Table.Action label="Delete" route="Users.Form" params="id"/>
-                                </Ui.List.Table.Actions>
-                            </Ui.List.Table.Row>
-                            <Ui.List.Table.Footer/>
-                        </Ui.List.Table.Table>
+                                <Table.DateField name="createdOn" align="left" label="Date"/>
+                                <Table.TimeField name="createdOn" align="left" label="Time"/>
+                                <Table.Actions>
+                                    <Table.Action label="Edit" route="Users.Form" params="id"/>
+                                    <Table.Action label="Delete" route="Users.Form" params="id"/>
+                                </Table.Actions>
+                            </Table.Row>
+                            <Table.Footer/>
+                        </Table.Table>
                         <Ui.List.Pagination/>
                     </Ui.List.Container>
                 </Ui.Grid.Row>
@@ -129,15 +130,15 @@ class List extends Webiny.Ui.View {
                             <Ui.Button onClick={this.signal('myInlineList2:setFilters', {type: null})} label="Show All"/>
                             <Ui.Button onClick={this.signal('myInlineList2:setFilters', {type: 'image/png'})} label="Show PNG"/>
                         </Ui.List.Filters>
-                        <Ui.List.Table.Table>
-                            <Ui.List.Table.Row>
-                                <Ui.List.Table.Field name="name" align="left" label="Name"/>
-                                <Ui.List.Table.Field name="type" align="left" label="Type" sort="type"/>
-                                <Ui.List.Table.Field name="size" align="left" label="Size" sort="size"/>
-                            </Ui.List.Table.Row>
-                            <Ui.List.Table.Empty/>
-                            <Ui.List.Table.Footer/>
-                        </Ui.List.Table.Table>
+                        <Table.Table>
+                            <Table.Row>
+                                <Table.Field name="name" align="left" label="Name"/>
+                                <Table.Field name="type" align="left" label="Type" sort="type"/>
+                                <Table.Field name="size" align="left" label="Size" sort="size"/>
+                            </Table.Row>
+                            <Table.Empty/>
+                            <Table.Footer/>
+                        </Table.Table>
                         <Ui.List.Pagination size="small"/>
                     </Ui.List.Container>
                 </Ui.Grid.Row>
