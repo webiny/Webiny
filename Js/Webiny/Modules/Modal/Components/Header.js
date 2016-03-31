@@ -1,7 +1,12 @@
 import Webiny from 'Webiny';
 
 class Header extends Webiny.Ui.Component {
-    render() {
+
+}
+
+Header.defaultProps = {
+    onClose: _.noop,
+    renderer: function renderer() {
         return (
             <div className="modal-header">
                 <h4>{this.props.title}</h4>
@@ -9,6 +14,6 @@ class Header extends Webiny.Ui.Component {
             </div>
         );
     }
-}
+};
 
 export default Header;

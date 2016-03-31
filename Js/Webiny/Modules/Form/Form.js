@@ -135,7 +135,9 @@ class Form extends Webiny.Ui.Component {
 
             // Add options source
             if (_.has(this.props, 'optionRenderer' + name)) {
-                newProps.optionRenderer = this.props['optionRenderer' + name];
+                const selectRenderers = this.props['optionRenderer' + name];
+                newProps.optionRenderer = selectRenderers.option || null;
+                newProps.selectedRenderer = selectRenderers.selected || null;
             }
             return React.cloneElement(input, newProps, input.props && input.props.children);
         }

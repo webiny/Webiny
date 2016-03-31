@@ -49,24 +49,10 @@ class Table extends Webiny.Ui.Component {
             this.headers = [];
             React.Children.map(child.props.children, rowChild => {
                 if (rowChild.type === Ui.List.Table.Field || rowChild.type.prototype instanceof Ui.List.Table.Field) {
-                    const header = {
-                        name: rowChild.props.name,
-                        label: rowChild.props.label,
-                        align: rowChild.props.align || 'center',
-                        sortable: rowChild.props.sort || false,
-                        sorted: this.tempProps.sorters[rowChild.props.name] || 0
-                    };
-
-                    if (rowChild.props.children) {
-                        React.Children.map(rowChild.props.children, fieldChild => {
-                            if (fieldChild.type === Ui.List.Table.FieldInfo) {
-                                header.infoTitle = fieldChild.props.title;
-                                header.infoContent = fieldChild.props.children;
-                            }
-                        });
-                    }
-
-                    this.headers.push(header);
+                    const headerProps = _.omit(rowChild.props, 'renderer');
+                    headerProps.sortable = headerProps.sort || false;
+                    headerProps.sorted = this.tempProps.sorters[headerProps.name] || 0;
+                    this.headers.push(headerProps);
                 }
 
                 if (rowChild.type === Ui.List.Table.Actions) {

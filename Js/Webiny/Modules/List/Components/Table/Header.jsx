@@ -6,11 +6,7 @@ class Header extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            showInfo: false
-        };
-
-        this.bindMethods('toggleSorter,showInfo,hideInfo');
+        this.bindMethods('toggleSorter');
     }
 
     toggleSorter() {
@@ -27,14 +23,6 @@ class Header extends Webiny.Ui.Component {
         }
 
         this.props.onSort(this.props.name, sort);
-    }
-
-    showInfo() {
-        this.setState({showInfo: true});
-    }
-
-    hideInfo() {
-        this.setState({showInfo: false});
     }
 }
 
@@ -62,30 +50,9 @@ Header.defaultProps = {
             );
         }
 
-        let info = null;
-        let modal = null;
-        if (this.props.infoContent) {
-            info = (
-                <a onClick={this.showInfo} href="javascript:void(0);">
-                    <span className="icon icon-info"></span>
-                </a>
-            );
-
-            modal = (
-                <Ui.Modal.Dialog show={this.state.showInfo}>
-                    <Ui.Modal.Header title={this.props.infoTitle} onClose={this.hideInfo}/>
-                    <Ui.Modal.Body children={this.props.infoContent}/>
-                    <Ui.Modal.Footer>
-                        <Ui.Button label="Close" onClick={this.hideInfo}/>
-                    </Ui.Modal.Footer>
-                </Ui.Modal.Dialog>
-            );
-        }
-
         return (
             <th className={classes}>
-                {modal}
-                {info}
+                {this.props.children}
                 {content}
             </th>
         );

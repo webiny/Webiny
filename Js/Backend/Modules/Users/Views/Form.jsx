@@ -27,7 +27,7 @@ class Form extends Webiny.Ui.View {
 
                 /*onSubmit: function onSubmit(model) {
                  // This will be passed as Form's `onSubmit` prop
-                 // `this` is bound to FormContainer
+                 // `this` is bound to Form.Container
                  console.info('Form submitted: ', model);
                  this.api.crudUpdate(this.state.model.id, model).then(ar => {
                  console.log(ar.getData());
@@ -43,7 +43,7 @@ class Form extends Webiny.Ui.View {
                 onInvalid: function onInvalid(attributes = {}) {
                     // TODO: pass invalid attributes to this callback
                     // This will be passed as Form's `onInvalid` prop
-                    // `this` is bound to FormContainer
+                    // `this` is bound to Form.Container
                     console.warn('Form validation failed!');
                 },
 
@@ -76,13 +76,18 @@ class Form extends Webiny.Ui.View {
                  * @param item
                  * @returns {*}
                  */
-                optionRendererUserGroup: function optionRendererUserGroup(item) {
-                    return (
-                        <div>
-                            <strong>{item.name}</strong><br/>
-                            <span>Tag: {item.tag}</span>
-                        </div>
-                    );
+                optionRendererUserGroup: {
+                    option: function optionRenderer(item) {
+                        return (
+                            <div>
+                                <strong>{item.name}</strong><br/>
+                                <span>Tag: {item.tag}</span>
+                            </div>
+                        );
+                    },
+                    selected: function selectedOptionRenderer(item) {
+                        return item.name;
+                    }
                 },
 
                 loadData: function () {
@@ -130,9 +135,19 @@ class Form extends Webiny.Ui.View {
             textAttr: 'email'
         };
 
+        const fileSelect = {
+            label: 'File',
+            name: 'file',
+            placeholder: 'Select file',
+            api: '/core/files',
+            apiParams: this.apiParams({_fields: 'id,name', _perPage: 100}),
+            valueAttr: 'id',
+            textAttr: 'name'
+        };
+
         return (
             <Webiny.Builder.View name="core-users-form" config={this.getConfig()}>
-                <Ui.FormContainer ui="myForm" api="/core/users" fields="id,firstName,lastName,email,userGroups,settings">
+                <Ui.Form.Container ui="myForm" api="/core/users" fields="id,firstName,lastName,email,userGroups,settings">
                     <Ui.Panel.Panel>
                         <Ui.Panel.Header title="Webiny Form"/>
                         <Ui.Panel.Body>
@@ -141,7 +156,7 @@ class Form extends Webiny.Ui.View {
                             </Ui.Hide>
                             <Ui.Tabs.Tabs ui="tabs">
                                 <Ui.Tabs.Tab label="First Tab">
-                                    <Ui.Form layout={false}>
+                                    <Ui.Form.Form layout={false}>
                                         <fields>
                                             <Ui.Grid.Row>
                                                 <Ui.Grid.Col all={12}>
@@ -152,6 +167,7 @@ class Form extends Webiny.Ui.View {
                                                     <Ui.Input label="Email" name="email" validate="required,email"/>
                                                     <Ui.Select {...userGroupSelect}/>
                                                     <Ui.Select {...createdBySelect}/>
+                                                    <Ui.Select {...fileSelect}/>
 
                                                     <h3>Settings</h3>
                                                     <Ui.Dynamic.FieldSet name="settings">
@@ -179,7 +195,8 @@ class Form extends Webiny.Ui.View {
                                                             </Ui.Grid.Row>
                                                         </Ui.Dynamic.Row>
                                                         <Ui.Dynamic.Empty>
-                                                            <h5>You have not created any settings yet. Click "Add settings" to start creating your settings!</h5>
+                                                            <h5>You have not created any settings yet. Click "Add settings" to start
+                                                                creating your settings!</h5>
                                                             <Ui.Dynamic.Add>
                                                                 <Ui.Button type="primary" label="Add settings"/>
                                                             </Ui.Dynamic.Add>
@@ -188,10 +205,10 @@ class Form extends Webiny.Ui.View {
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
                                         </fields>
-                                    </Ui.Form>
+                                    </Ui.Form.Form>
                                 </Ui.Tabs.Tab>
                                 <Ui.Tabs.Tab label="Second tab">
-                                    <Ui.Form layout={false} onInvalid={this.signal('tabs:selectTab', 1)}>
+                                    <Ui.Form.Form layout={false} onInvalid={this.signal('tabs:selectTab', 1)}>
                                         <fields>
                                             <Ui.Grid.Row>
                                                 <Ui.Grid.Col all={12}>
@@ -200,7 +217,7 @@ class Form extends Webiny.Ui.View {
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
                                         </fields>
-                                    </Ui.Form>
+                                    </Ui.Form.Form>
                                 </Ui.Tabs.Tab>
                             </Ui.Tabs.Tabs>
                         </Ui.Panel.Body>
@@ -210,7 +227,7 @@ class Form extends Webiny.Ui.View {
                             <Ui.Button type="primary" onClick={this.signal('myForm:submit')} label="Submit"/>
                         </Ui.Panel.Footer>
                     </Ui.Panel.Panel>
-                </Ui.FormContainer>
+                </Ui.Form.Container>
             </Webiny.Builder.View>
         );
     }

@@ -92,7 +92,8 @@ class SelectContainer extends Webiny.Ui.Component {
             if (!_.isString(text)) {
                 text = ReactDOMServer.renderToStaticMarkup(text);
             }
-            return {id, text};
+            // Add data to option so we can run it through selectedRenderer when item selection changes
+            return {id, text, data: option};
         });
     }
 

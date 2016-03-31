@@ -1,4 +1,7 @@
 import Webiny from 'Webiny';
+const Ui = Webiny.Ui.Components;
+
+let handlersBound = false;
 
 class Dialog extends Webiny.Ui.Component {
 
@@ -9,7 +12,7 @@ class Dialog extends Webiny.Ui.Component {
             isShown: false
         };
 
-        this.bindMethods('show,hide');
+        this.bindMethods('show,hide,bindHandlers,unbindHandlers,prepareChildren,prepareChild');
     }
 
     componentWillMount() {
@@ -20,6 +23,43 @@ class Dialog extends Webiny.Ui.Component {
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
         this.setState({isShown: props.show});
+    }
+
+    componentDidMount() {
+        super.componentDidMount();
+        this.bindHandlers();
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        this.unbindHandlers();
+    }
+
+    bindHandlers() {
+        if (handlersBound) {
+            return;
+        }
+
+        $('webiny-modal-container').on('keyup.modal', '.modal', e => {
+            // Listen for ESC button
+            if (e.keyCode === 27) {
+                this.hide();
+            }
+        }).on('click.modal', '.modal', e => {
+            // Catch backdrop click
+            if ($(e.target).hasClass('modal')) {
+                if (this.props.closeOnClick) {
+                    this.hide();
+                }
+            }
+        });
+
+        handlersBound = true;
+    }
+
+    unbindHandlers() {
+        $('webiny-modal-container').off('.modal');
+        handlersBound = false;
     }
 
     hide() {
@@ -38,10 +78,36 @@ class Dialog extends Webiny.Ui.Component {
         }, this.props.onShown);
     }
 
-    render() {
-        // TODO: parse children and pass onClose to Header
+    prepareChild(child) {
+        if (typeof child !== 'object' || child === null) {
+            return child;
+        }
 
-        if(!this.state.isShown) {
+        // Table handles Row and Footer
+        if (child.type === Ui.Modal.Header) {
+            return React.cloneElement(child, {onClose: this.hide});
+        }
+
+        return child;
+    }
+
+    prepareChildren(children) {
+        if (typeof children !== 'object' || children === null) {
+            return children;
+        }
+        return React.Children.map(children, this.prepareChild);
+    }
+}
+
+Dialog.defaultProps = {
+    wide: false,
+    onHide: _.noop,
+    onHidden: _.noop,
+    onShow: _.noop,
+    onShown: _.noop,
+    closeOnClick: true,
+    renderer: function renderer() {
+        if (!this.state.isShown) {
             Webiny.Ui.Dispatcher.get('ModalContainer').setContent(null);
             return null;
         }
@@ -54,7 +120,7 @@ class Dialog extends Webiny.Ui.Component {
                 <div className={className} tabIndex="-1" style={{display: 'block'}}>
                     <div className="modal-dialog">
                         <div className="modal-content">
-                            {this.props.children}
+                            {this.prepareChildren(this.props.children)}
                         </div>
                     </div>
                 </div>
@@ -63,14 +129,6 @@ class Dialog extends Webiny.Ui.Component {
 
         return null;
     }
-}
-
-Dialog.defaultProps = {
-    wide: false,
-    onHide: _.noop,
-    onHidden: _.noop,
-    onShow: _.noop,
-    onShown: _.noop
 };
 
 export default Dialog;
