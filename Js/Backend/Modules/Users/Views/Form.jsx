@@ -114,14 +114,13 @@ class Form extends Webiny.Ui.View {
 
         const userGroupsSelect = {
             label: 'User groups',
-            name: 'userGroups',
+            name: 'nestedGroups',
             placeholder: 'Select user groups',
             allowClear: true,
             api: '/core/user-groups',
-            apiParams: this.apiParams({_fields: 'id,name'}),
-            valueAttr: 'id',
-            textAttr: 'name',
-            multiple: true
+            apiParams: this.apiParams({_fields: 'tag,name', _perPage: 2}),
+            valueAttr: 'tag',
+            textAttr: 'name'
         };
 
         const createdBySelect = {
@@ -147,7 +146,7 @@ class Form extends Webiny.Ui.View {
 
         return (
             <Webiny.Builder.View name="core-users-form" config={this.getConfig()}>
-                <Ui.Form.Container ui="myForm" api="/core/users" fields="id,firstName,lastName,email,userGroups,settings">
+                <Ui.Form.Container ui="myForm" api="/core/users" fields="id,firstName,lastName,email,userGroups,settings,enabled">
                     <Ui.Panel.Panel>
                         <Ui.Panel.Header title="Webiny Form"/>
                         <Ui.Panel.Body>
@@ -166,10 +165,27 @@ class Form extends Webiny.Ui.View {
                                                     </Ui.Hide>
                                                     <Ui.Input label="Email" name="email" validate="required,email"/>
                                                     <Ui.Select {...userGroupSelect}/>
-                                                    <Ui.Select {...createdBySelect}/>
-                                                    <Ui.Select {...fileSelect}/>
-
-                                                    <h3>Settings</h3>
+                                                    <Ui.Switch label="Enabled" name="enabled"/>
+                                                </Ui.Grid.Col>
+                                                <Ui.Grid.Col all={6}>
+                                                    <Ui.CheckboxGroup label="Roles" name="roles" grid={12}>
+                                                        <checkbox value="Admin">Admin&nbsp;management</checkbox>
+                                                        <checkbox value="Billing">Billing</checkbox>
+                                                        <checkbox value="Booking">Bookings</checkbox>
+                                                        <checkbox value="Cms">Cms</checkbox>
+                                                        <checkbox value="Coupon">Coupon&nbsp;management</checkbox>
+                                                        <checkbox value="Crm">CRM</checkbox>
+                                                        <checkbox value="Dashboard">Dashboard</checkbox>
+                                                        <validator name="minLength">Please select at least 2 options</validator>
+                                                    </Ui.CheckboxGroup>
+                                                </Ui.Grid.Col>
+                                                <Ui.Grid.Col all={6}>
+                                                    <Ui.CheckboxGroup {...userGroupsSelect}>
+                                                        <Ui.CheckboxGroup className="mt5" api="/core/users" apiParams={{_fields: 'id,email'}} textAttr="email"/>
+                                                    </Ui.CheckboxGroup>
+                                                </Ui.Grid.Col>
+                                                <Ui.Grid.Col all={12}>
+                                                    <h4>Settings</h4>
                                                     <Ui.Dynamic.FieldSet name="settings">
                                                         <Ui.Dynamic.Row>
                                                             <Ui.Grid.Row>
