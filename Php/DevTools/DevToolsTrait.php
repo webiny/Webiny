@@ -10,6 +10,7 @@ namespace Apps\Core\Php\DevTools;
 
 use Apps\Core\Php\DevTools\Authorization\Authorization;
 use Apps\Core\Php\PackageManager\App;
+use Webiny\AnalyticsDb\AnalyticsDb;
 use Webiny\Component\Cache\CacheStorage;
 use Webiny\Component\Mongo\Mongo;
 use Webiny\Component\ServiceManager\ServiceManager;
@@ -21,6 +22,16 @@ use Webiny\Component\Validation\Validation;
  */
 trait DevToolsTrait
 {
+    /**
+     * Get access to AnalyticsDb
+     *
+     * @return AnalyticsDb
+     */
+    static protected function wAnalytics()
+    {
+        return ServiceManager::getInstance()->getService('AnalyticsDb');
+    }
+
     /**
      * Get access to database
      *

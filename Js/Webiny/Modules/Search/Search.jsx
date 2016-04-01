@@ -303,8 +303,10 @@ Search.defaultProps = {
         }
 
         let validationMessage = null;
+        let validationIcon = null;
         if (this.state.isValid === false) {
             validationMessage = <span className="help-block">{this.state.validationMessage}</span>;
+            validationIcon = <span className="icon icon-bad"></span>;
         }
 
         const cssConfig = {
@@ -318,6 +320,7 @@ Search.defaultProps = {
                 {label}
                 <div className="clearfix"/>
                 {input}
+                {validationIcon}
                 {validationMessage}
             </div>
         );

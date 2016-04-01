@@ -173,7 +173,7 @@ class Form extends Webiny.Ui.View {
                                                     <Ui.Select {...userGroupSelect}/>
                                                 </Ui.Grid.Col>
                                                 <Ui.Grid.Col all={4}>
-                                                    <Ui.Search label="Find user" api="/core/files" searchFields="name" textAttr="name" fields="id,name" name="userQuery"/>
+                                                    <Ui.Search validate="required" label="Find user" api="/core/files" searchFields="name" textAttr="name" fields="id,name" name="userQuery"/>
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
                                             <Ui.Grid.Row>
