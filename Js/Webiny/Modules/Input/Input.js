@@ -28,7 +28,7 @@ Input.defaultProps = {
 
         let label = null;
         if (this.props.label) {
-            label = <label key="label" className="control-label">{this.props.label}</label>;
+            label = <label className="control-label">{this.props.label}</label>;
         }
 
         let validationIcon = null;

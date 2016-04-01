@@ -35,6 +35,7 @@ class Link extends Webiny.Ui.Component {
         }
         classes.btn = this.props.type || this.props.size;
         if (this.props.type) {
+            classes['btn'] = true;
             classes['btn-' + this.props.type] = true;
         }
 

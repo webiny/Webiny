@@ -22,7 +22,7 @@ class LinkState {
         const key = this.key;
 
         const _this = this;
-        return function stateKeySetter(value) {
+        return function stateKeySetter(value, callback = _.noop) {
             if (typeof value === 'undefined') {
                 value = false;
             }
@@ -30,7 +30,7 @@ class LinkState {
 
             let partialState = component.state;
             _.set(partialState, key, value);
-            component.setState(partialState);
+            component.setState(partialState, callback);
             partialState = null;
 
             if (_this.callback) {

@@ -50,12 +50,10 @@ class BaseCheckboxGroup extends Webiny.Ui.FormComponent {
 
 		// Notify main form of a new checkbox group state
 		if (this.props.valueLink) {
-			this.props.valueLink.requestChange(partialState);
+			this.props.valueLink.requestChange(partialState, this.validate);
 		} else {
 			this.props.onChange(this.props.stateKey, partialState);
 		}
-
-		setTimeout(this.validate, 10);
 	}
 
 	/**

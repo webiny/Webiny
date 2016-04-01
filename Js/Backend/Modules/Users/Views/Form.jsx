@@ -163,12 +163,39 @@ class Form extends Webiny.Ui.View {
                                                         <Ui.Value value={'myForm-1.state.model.email'}/>
                                                         <Ui.Input label="ID" name="id"/>
                                                     </Ui.Hide>
+                                                </Ui.Grid.Col>
+                                            </Ui.Grid.Row>
+                                            <Ui.Grid.Row>
+                                                <Ui.Grid.Col all={4}>
                                                     <Ui.Input label="Email" name="email" validate="required,email"/>
+                                                </Ui.Grid.Col>
+                                                <Ui.Grid.Col all={4}>
                                                     <Ui.Select {...userGroupSelect}/>
+                                                </Ui.Grid.Col>
+                                                <Ui.Grid.Col all={4}>
+                                                    <Ui.Search label="Find user" api="/core/files" searchFields="name" textAttr="name" fields="id,name" name="userQuery"/>
+                                                </Ui.Grid.Col>
+                                            </Ui.Grid.Row>
+                                            <Ui.Grid.Row>
+                                                <Ui.Grid.Col all={4}>
+                                                    <Ui.DateTime label="Date & Time" name="datetime"/>
+                                                </Ui.Grid.Col>
+                                                <Ui.Grid.Col all={4}>
+                                                    <Ui.Date label="Date" name="date"/>
+                                                </Ui.Grid.Col>
+                                                <Ui.Grid.Col all={4}>
+                                                    <Ui.Time label="Time" name="time"/>
+                                                </Ui.Grid.Col>
+                                            </Ui.Grid.Row>
+                                            <Ui.Grid.Row>
+                                                <Ui.Grid.Col all={12}>
                                                     <Ui.Switch label="Enabled" name="enabled"/>
                                                 </Ui.Grid.Col>
+                                            </Ui.Grid.Row>
+                                            <Ui.Grid.Row>
+                                                {/* CHECKBOXES */}
                                                 <Ui.Grid.Col all={6}>
-                                                    <Ui.CheckboxGroup label="Roles" name="roles" grid={12}>
+                                                    <Ui.CheckboxGroup label="Roles (Static)" name="roles" grid={12}>
                                                         <checkbox value="Admin">Admin&nbsp;management</checkbox>
                                                         <checkbox value="Billing">Billing</checkbox>
                                                         <checkbox value="Booking">Bookings</checkbox>
@@ -180,10 +207,31 @@ class Form extends Webiny.Ui.View {
                                                     </Ui.CheckboxGroup>
                                                 </Ui.Grid.Col>
                                                 <Ui.Grid.Col all={6}>
-                                                    <Ui.CheckboxGroup {...userGroupsSelect}>
-                                                        <Ui.CheckboxGroup className="mt5" api="/core/users" apiParams={{_fields: 'id,email'}} textAttr="email"/>
+                                                    <Ui.CheckboxGroup {...userGroupsSelect} label="User groups (API)">
+                                                        <Ui.CheckboxGroup className="mt5" api="/core/users" textAttr="email"/>
                                                     </Ui.CheckboxGroup>
                                                 </Ui.Grid.Col>
+                                            </Ui.Grid.Row>
+                                            <Ui.Grid.Row>
+                                                {/* RADIO */}
+                                                <Ui.Grid.Col all={6}>
+                                                    <Ui.RadioGroup label="Roles (static)" name="access" grid={12} validate="required">
+                                                        <checkbox value="Admin">Admin</checkbox>
+                                                        <checkbox value="Billing">Billing</checkbox>
+                                                        <checkbox value="Crm">CRM</checkbox>
+                                                        <checkbox value="Dashboard">Dashboard</checkbox>
+                                                    </Ui.RadioGroup>
+                                                </Ui.Grid.Col>
+                                                <Ui.Grid.Col all={6}>
+                                                    <Ui.RadioGroup label="User (API)" name="user" api="/core/users" textAttr="email"/>
+                                                </Ui.Grid.Col>
+                                            </Ui.Grid.Row>
+                                            <Ui.Grid.Row>
+                                                <Ui.Grid.Col all={12}>
+                                                    <Ui.Textarea label="Description" name="description"/>
+                                                </Ui.Grid.Col>
+                                            </Ui.Grid.Row>
+                                            <Ui.Grid.Row>
                                                 <Ui.Grid.Col all={12}>
                                                     <h4>Settings</h4>
                                                     <Ui.Dynamic.FieldSet name="settings">
@@ -204,7 +252,7 @@ class Form extends Webiny.Ui.View {
                                                                             <Ui.Button type="primary" label="Add"/>
                                                                         </Ui.Dynamic.Add>
                                                                         <Ui.Dynamic.Remove>
-                                                                            <Ui.Button type="secondary" label="Remove"/>
+                                                                            <Ui.Button type="secondary" label="x"/>
                                                                         </Ui.Dynamic.Remove>
                                                                     </div>
                                                                 </Ui.Grid.Col>
