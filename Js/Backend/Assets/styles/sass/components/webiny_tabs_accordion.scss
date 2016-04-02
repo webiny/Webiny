@@ -1,0 +1,92 @@
+/**
+ * Tabs
+ */
+
+ul.nav.nav-tabs {
+  background-color: #F0F0F0;
+  border: 1px solid #E8E8E8;
+  padding: 0;
+  &.nav-stacked {
+    margin-right: -1px;
+  }
+  li {
+    float: left;
+    clear: none;
+    border-bottom: 4px solid #F0F0F0;
+    padding: 0;
+    &:hover {
+      border-bottom: 4px solid #ccc;
+    }
+  }
+  &.nav-stacked li {
+    float: none;
+    clear: both;
+  }
+  li {
+    &.active {
+      border-bottom: 4px solid #FA5723;
+      margin-left: -1px;
+      padding-left: 1px;
+    }
+    button.close {
+      padding-top: 3px;
+      &:hover {
+        color: #FA5723;
+      }
+    }
+    a {
+      border: none;
+      background-color: transparent;
+      &:hover {
+        border: none;
+        background-color: transparent;
+      }
+      text-transform: uppercase;
+      border-radius: 0;
+      color: #666666;
+    }
+  }
+}
+
+.tab-content {
+  border: 1px solid #E8E8E8;
+  > .active {
+    padding: 15px 10px 0 10px;
+  }
+  .tab-pane {
+    clear: both;
+  }
+}
+
+/**
+ * Tabs end
+ */
+
+/**
+ * Collapsible
+ */
+
+.panel-group .panel {
+  border-radius: 0;
+}
+
+.panel-default {
+  border-color: #cccccc;
+  > .panel-heading {
+    border-color: #cccccc;
+    background-color: #F0F0F0;
+  }
+}
+
+.panel-title {
+  text-transform: uppercase;
+  color: #666666;
+}
+
+.panel-body {
+  color: #666;
+}
+
+.panel-title > a:hover {
+  color: #FA5723;
+}

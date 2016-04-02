@@ -1,0 +1,198 @@
+/*==================================================
+  Switches - Created with Pure CSS, no js required
+==================================================== */
+.switch {
+  float: left;
+  margin-bottom: 15px;
+
+  color: #f85926;
+
+  label {
+    position: relative;
+    display: inline-block;
+    border: 1px solid #d6d6d6;
+    border-radius: 60px;
+
+    color: #6b6b6b;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 20px;
+    text-align: center;
+
+    background: #ddd;
+    width: 85px;
+    height: 32px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+
+    &:after {
+      content: "";
+      display: block;
+      background: #fff;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      width: 41px;
+      height: 30px;
+      padding: 5px;
+      text-align: center;
+      border-radius: 60px;
+      transition: 0.3s ease-in-out;
+    }
+  }
+
+  input {
+    display: none;
+  }
+
+  input + label {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  input:checked + label {
+    background: $color-primary;
+  }
+  input:checked + label:after {
+    left: 42px;
+  }
+}
+
+/*==================================================================
+  Switches
+===================================================================*/
+.switch--yes-no {
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  
+  > label {
+    cursor: pointer;
+
+    &:before {
+      content: attr(data-on);
+      position: absolute;
+      top: 6px;
+      left: 43px;
+      width: 33px;
+
+      transition: 0.3s ease-in-out;
+    }
+
+    &:after {
+      content: attr(data-off);
+      color: $color-primary;
+      display: block;
+      background: #fff;
+      border-radius: 60px;
+      transition: 0.3s ease-in-out;
+    }
+  }
+}
+
+/* Switch Sizes */
+.switch--lg {
+  label {
+    width: 65px;
+    height: 32px;
+
+  }
+
+  label:after {
+    width: 26px;
+    height: 26px;
+  }
+
+  input:checked + label:after {
+    left: 35px;
+  }
+}
+
+.switch--sm {
+  label {
+    width: 45px;
+    height: 22px;
+  }
+
+  label:after {
+    width: 16px;
+    height: 16px;
+  }
+
+  input:checked + label:after {
+    left: 26px;
+  }
+}
+
+.switch--xs {
+  label {
+    width: 39px;
+    height: 19px;
+  }
+  label:after {
+    width: 13px;
+    height: 13px;
+  }
+
+  input:checked + label:after {
+    left: 22px;
+  }
+}
+
+.switch--radius {
+  label {
+    border-radius: 4px;
+  }
+
+  label:after {
+    border-radius: 3px;
+  }
+}
+
+/* Switch Option - Inline */
+.switch--inline {
+  display: inline-block;
+
+  & + .switch--inline {
+    margin-left: 15px;
+  }
+}
+
+.switch-label {
+  color: #6b6b6b;
+}
+
+.switch-label--left {
+  float: left;
+  margin-right: 7px;
+  clear: left;
+  padding-top: 7px;
+}
+
+.switch-label--right {
+  float: right;
+  margin-left: 7px;
+  clear: right;
+  padding-top: 5px;
+}
+
+/*==================================================================
+  Switch:checked state
+===================================================================*/
+.switch--yes-no > input:checked + label {
+  border-color: #d6d6d6;
+  background: #d6d6d6;
+  padding-left: 48px;
+}
+.switch--yes-no > input:checked + label:before {
+  content: attr(data-off);
+  left: 8px;
+  top: 6px;
+}
+.switch--yes-no > input:checked + label:after {
+  content: attr(data-on);
+  color: $color-primary;
+  left: 42px;
+  font-weight: 300;
+  background: white;
+}

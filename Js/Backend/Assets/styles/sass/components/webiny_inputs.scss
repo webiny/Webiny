@@ -1,0 +1,345 @@
+.form-group {
+  min-height: 72px;
+}
+
+label, .form-group label, label.control-label {
+  font-size: 16px;
+  color: #393939;
+  clear: left;
+  cursor: pointer;
+}
+
+.form-group {
+  label span.mandat {
+    color: #CC3300;
+    margin-left: 2px;
+  }
+}
+
+.form-control {
+  border: 1px solid $borderColor;
+  width: 100%;
+  line-height: 135%;
+  padding: 0 8px;
+  background-color: $formBgColor;
+  color: #333;
+  box-shadow: none;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  &:focus {
+    background: #fff;
+    border-color: #333;
+  }
+  &:disabled {
+    background: $formBgColor;
+    opacity: 0.4;
+  }
+  &[readonly] {
+    color: #393939 !important;
+    background-color: #F5F5F5 !important;
+    &:hover, &:focus {
+      color: #393939 !important;
+      background-color: #F5F5F5 !important;
+    }
+  }
+}
+
+input.form-control {
+  padding: 21px 15px;
+}
+
+textarea.form-control {
+  min-height: 145px;
+  line-height: 135%;
+  padding: 20px 15px;
+}
+
+.form-group {
+  position: relative;
+  text-align: left;
+  &.error input.form-control {
+    border: 1px solid #CC3300;
+  }
+  &.success input.form-control {
+    border: 1px solid #3FBFB0;
+  }
+  span.icon {
+    position: absolute;
+    top: 28px;
+    z-index: 500;
+    font-size: 41px;
+    line-height: 98%;
+    right: -6px;
+  }
+  &.error span.icon {
+    color: #CC3300;
+  }
+  &.success span.icon {
+    color: #3FBFB0;
+    top: 27px;
+    right: -4px;
+  }
+  span.info-txt {
+    float: right;
+    color: #6C6C6C;
+    margin-top: 3px;
+    font-size: 0.9em;
+    font-weight: 500;
+  }
+  &.error span.info-txt {
+    color: #cc3300;
+  }
+  .bootstrap-switch {
+    margin-top: 8px;
+  }
+  label.cb-label {
+    margin-top: 10px;
+  }
+  .dropdown {
+    position: relative;
+    display: block;
+    margin-right: 0;
+    &.sel {
+      button {
+        border: 1px solid #ccc;
+        width: 100%;
+        height: 45px;
+        line-height: 135%;
+        padding: 13px 23px;
+        background: $formBgColor;
+        color: #333;
+        border-radius: 0;
+      }
+      &.open button {
+        border-bottom: 1px solid #ccc;
+      }
+      .dropdown-value {
+        float: left;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1;
+      }
+      .caret {
+        display: none;
+      }
+      .dropdown-menu {
+        width: 100%;
+        margin-top: -1px;
+        border-radius: 0;
+        padding: 15px 15px 5px 15px;
+        li {
+          margin-bottom: 2px;
+          a {
+            padding: 5px 10px;
+          }
+        }
+        > li label {
+          padding-top: 0;
+        }
+      }
+    }
+
+    &:after {
+      position: absolute;
+      top: 50%;
+      right: 25px;
+      transform: translateY(-50%);
+      content: "\e811";
+      font-family: "fontello";
+      font-style: normal;
+      font-weight: normal;
+      speak: none;
+    }
+  }
+  .picker-holder {
+    position: relative;
+    cursor: pointer;
+    .ui-datepicker-trigger {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 45px;
+      width: 100%;
+      z-index: 500;
+    }
+    input {
+      cursor: pointer;
+    }
+    span.icon_c {
+      font-size: 20px;
+      color: #333;
+      top: 11px;
+      right: 6px;
+      position: absolute;
+      z-index: 8;
+    }
+  }
+}
+
+
+form {
+  &.form-sm {
+    .form-group {
+      margin-bottom: 10px;
+      min-height: 56px;
+      input.form-control, .dropdown.sel button {
+        height: 42px;
+      }
+      label {
+      }
+      span.icon, &.error span.icon, &.success span.icon {
+        display: none;
+      }
+    }
+    textarea.form-control {
+      height: 80px;
+    }
+    .form-group {
+      .bootstrap-switch {
+        margin-top: 3px;
+      }
+      .dropdown.sel .dropdown-menu {
+        margin-top: -5px;
+      }
+      .picker-holder span.icon_c {
+        font-size: 20px;
+      }
+    }
+  }
+  &.navbar-form {
+    margin: 0;
+    padding: 0;
+    .form-group {
+      min-height: 0;
+      margin-bottom: 5px;
+      input {
+        min-width: 200px;
+      }
+    }
+  }
+}
+
+.fileUpload input.upload {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+
+.choose-file {
+  position: relative;
+
+  input {
+    background-color: $formBgColor;
+  }
+
+  ::placeholder {
+    font-style: italic;
+  }
+}
+
+.choose-file input {
+  display: block;
+  width: 100%;
+  border: 1px solid $borderColor;
+  border-radius: 2px;
+  transition: border-color ease-in-out .15s;
+
+  &:disabled {
+    opacity: 1;
+  }
+}
+.choose-file .fileUpload {
+  position: absolute;
+  z-index: 1;
+  top: 3px;
+  right: -5px;
+  bottom: 3px;
+  cursor: pointer;
+
+  padding: 12px 15px;
+
+  color: #393939;
+  font-size: 12px;
+  font-weight: 600;
+
+  border-radius: 0;
+  background: none;
+
+  &:before {
+    content: "\e83c";
+    margin-right: 5px;
+
+    color: $color-primary;
+    font-family: 'fontello';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1em;
+  }
+}
+
+
+.avatars {
+  margin-bottom: 20px;
+}
+.edit-avatar {
+  width: 132px;
+  display: inline-block;
+  margin-right: 40px;
+  text-align: center;
+}
+.edit-avatar button.upload {
+  width: 100%;
+  padding: 14px 12px;
+  margin-bottom: 10px;
+  position: relative;
+
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+
+  &:before {
+    content: "\e83c";
+    margin-right: 5px;
+
+    color: #fff;
+    font-family: 'fontello';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1em;
+  }
+}
+
+.edit-avatar .small-txt {
+  color: #c6c6c6;
+  font-size: 12px;
+}
+.avatar-placeholder {
+  display: block;
+  width: 132px;
+  height: 132px;
+  margin-bottom: 15px;
+  overflow: hidden;
+
+  border: 2px dashed $borderColor;
+  border-radius: 50%;
+
+  color: #777;
+  font-size: 44px;
+  text-align: center;
+  line-height: 275%;
+
+  background-color: $formBgColor;
+}
+
+.avatar-placeholder--no-border {
+  border: none;
+}
+

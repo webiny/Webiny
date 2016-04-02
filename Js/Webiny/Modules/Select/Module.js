@@ -3,8 +3,7 @@ import SelectContainer from './SelectContainer';
 
 class Module extends Webiny.Module {
 
-    constructor(app) {
-        super(app);
+    init() {
         Webiny.Ui.Components.Select = SelectContainer;
     }
 }

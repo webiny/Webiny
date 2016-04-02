@@ -75,12 +75,28 @@ class Select extends Webiny.Ui.FormComponent {
     }
 
     getConfig(props) {
-        const renderer = function (item) {
+        const renderer = function renderer(item) {
+            // If HTML - convert to jQuery object
             if (item.text.indexOf('<') === 0) {
                 return $(item.text);
             }
             return item.text;
         };
+
+        let selectedRenderer = renderer;
+        if (_.isFunction(props.selectedRenderer)) {
+            selectedRenderer = function selectedRenderer(item) {
+                if (item.data) {
+                    let option = props.selectedRenderer(item.data);
+                    if (!_.isString(option)) {
+                        option = $(ReactDOMServer.renderToStaticMarkup(option));
+                    }
+                    return option;
+                }
+
+                return item.text || '';
+            };
+        }
 
         const config = {
             disabled: props.disabled,
@@ -88,7 +104,7 @@ class Select extends Webiny.Ui.FormComponent {
             placeholder: this.props.placeholder,
             allowClear: props.allowClear,
             templateResult: renderer,
-            templateSelection: renderer,
+            templateSelection: selectedRenderer,
             multiple: props.multiple
         };
 

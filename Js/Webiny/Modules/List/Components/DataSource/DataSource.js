@@ -8,6 +8,9 @@ class DataSource {
         this.sorters = {};
         this.page = 1;
         this.perPage = 10;
+        this.searchQuery = null;
+        this.searchFields = '';
+        this.searchOperator = 'or';
         this.totalPages = 0;
         this.defaultParams = {};
         this.reservedKeywords = ['_page', '_perPage', '_sort', '_fields', '_searchQuery', '_searchFields', '_searchOperator'];
@@ -58,6 +61,21 @@ class DataSource {
 
     setPerPage(perPage) {
         this.perPage = perPage;
+        return this;
+    }
+
+    setSearchQuery(searchQuery) {
+        this.searchQuery = searchQuery;
+        return this;
+    }
+
+    setSearchFields(searchFields) {
+        this.searchFields = searchFields;
+        return this;
+    }
+
+    setSearchOperator(searchOperator) {
+        this.searchOperator = searchOperator;
         return this;
     }
 }

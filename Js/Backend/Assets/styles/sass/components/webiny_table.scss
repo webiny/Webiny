@@ -1,0 +1,353 @@
+th {
+  text-align: center;
+}
+
+table.table {
+  clear: both;
+  width: 100%;
+  thead {
+    border-top: 4px solid #FA5723;
+    padding: 20px;
+    font-weight: 800;
+    font-size: 16px;
+    color: #464646;
+    text-align: center;
+  }
+  &.table-simple thead {
+    border-top-width: 2px;
+  }
+  .dropdown {
+    > .btn {
+      z-index: 10;
+    }
+    .dropdown-menu {
+      z-index: 9;
+    }
+  }
+  thead th, tfoot td {
+    border-right: 1px solid #CCC;
+    white-space: nowrap;
+  }
+  &.table-simple {
+    thead th, tfoot td, tbody td {
+      border-right: none;
+    }
+  }
+  thead {
+    th {
+      padding: 10px;
+      vertical-align: middle;
+      > a {
+        font-weight: 800;
+        font-size: 16px;
+        color: #464646;
+      }
+    }
+    .btn {
+      font-weight: 800;
+      font-size: 16px;
+      color: #464646;
+    }
+    .dropdown {
+      .btn, &.open .btn {
+        background-color: transparent;
+        text-transform: none;
+        padding: 0;
+        margin: 0;
+      }
+    }
+    th.sorted {
+      background: #EDEDED;
+    }
+  }
+  > tbody > tr > td.sorted {
+    background: #EDEDED;
+  }
+  &.table-striped > tbody > tr {
+    &:nth-child(odd) > td.sorted {
+      background: #EDEDED;
+    }
+    &:nth-child(even) > td.sorted {
+      background: #F6F6F6;
+    }
+  }
+  tbody tr {
+    &.active td.sorted, &:hover {
+      background: #ffefea !important;
+    }
+    td {
+      padding: 10px 15px;
+      font-size: 14px;
+      color: #666666;
+      text-align: left;
+      border-right: 1px solid #CCC;
+      vertical-align: middle;
+    }
+  }
+  > thead > tr > th {
+    border-bottom: none;
+  }
+  > tbody > tr:hover > td {
+    background: #ffefea !important;
+  }
+  thead tr th:last-child, tbody tr td:last-child, tfoot tr td:last-child {
+    border-right: none;
+  }
+  tbody tr {
+    &:first-child {
+      border-top: 2px solid #ddd;
+    }
+    &:last-child {
+      border-bottom: 2px solid #ddd;
+    }
+  }
+  &.table-simple tbody tr {
+    &:first-child, &:last-child {
+      border-top: none;
+      border-bottom: none;
+    }
+  }
+  tbody tr.active {
+    border: 2px solid #FA5825;
+    td {
+      background: #FFEFEA;
+    }
+  }
+  td a.expand {
+    width: 22px;
+    height: 23px;
+    background: #D8D8D8;
+    font-size: 20px;
+    font-weight: 800;
+    float: left;
+    text-align: center;
+    margin-right: 15px;
+    line-height: 130%;
+    color: #fff;
+    &:after {
+      content: '+';
+    }
+  }
+  th.sorted {
+    span {
+      color: #F95722;
+    }
+    background: #EDEDED;
+  }
+  td.sorted {
+    background: #EDEDED;
+  }
+  &.table-striped > tbody > tr:nth-child(odd) > td {
+    background: #F6F6F6;
+  }
+}
+
+.table-striped > tbody > tr:nth-child(odd) > th {
+  background: #F6F6F6;
+}
+
+table.table {
+  td a.expand {
+    &:hover {
+      text-decoration: none;
+    }
+    &.close {
+      background: #3FBFB0;
+      opacity: 1;
+      line-height: 110%;
+      &:after {
+        content: '-';
+      }
+    }
+  }
+  tr.hidden-row {
+    display: none;
+    dl {
+      margin-bottom: 0;
+      font-size: 1em;
+    }
+    td {
+      .icheckbox_minimal, .iradio_minimal {
+        margin: 10px 10px 0 0;
+      }
+      .dropdown-menu .icheckbox_minimal {
+        margin-top: 0;
+      }
+    }
+    &:hover > td {
+      background-color: #fff !important;
+    }
+  }
+  td {
+    a.expand:hover {
+      background: #999;
+    }
+    img {
+      margin-right: 15px;
+      float: left;
+    }
+  }
+  tfoot tr td {
+    padding: 20px;
+    font-size: 15px;
+    color: #333;
+    font-weight: 800;
+    border-bottom: 4px solid #3B3B3B;
+  }
+  &.table-simple tfoot tr td {
+    border-bottom-width: 2px;
+  }
+  .icheckbox_minimal {
+    margin: 0;
+    .iradio_minimal {
+      margin: 0;
+    }
+  }
+}
+
+/** Table filters */
+
+.table-filters {
+  position: absolute;
+  width: 100%;
+  z-index: 100;
+  border: 1px solid #ccc;
+  box-shadow: 6px 8px 12px -4px rgba(0, 0, 0, 0.175);
+  background-color: #fff;
+  padding: 20px 30px;
+  margin-top: -11px;
+  border-radius: 0;
+  li {
+    > a.filter {
+      padding: 0;
+      float: left;
+      clear: none;
+      margin-left: 20px;
+    }
+    margin-bottom: 5px;
+    margin-top: 5px;
+    overflow: hidden;
+  }
+  a.del {
+    background: #ECECEC;
+    color: #333;
+    padding: 3px 5px 5px 5px;
+    float: right;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 11px;
+    text-align: center;
+    line-height: 75%;
+    margin-top: 4px;
+    margin-right: 20px;
+    clear: none;
+  }
+  form {
+    .form-group {
+      min-height: 0;
+      margin-bottom: 5px;
+    }
+    label {
+      padding-top: 5px;
+    }
+  }
+}
+
+/** /Table filters */
+
+/** Applied filters */
+
+.applied-filters {
+  border-top: 1px solid #E4E4E4;
+  padding: 15px 0;
+  span {
+    font-size: 12px;
+    color: #666;
+    float: left;
+    margin-right: 10px;
+    margin-top: 3px;
+  }
+  ul {
+    margin: 0;
+    li {
+      float: left;
+      margin-right: 5px;
+      background: #F4F4F4;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+      padding: 5px 10px 5px 10px;
+      list-style: none;
+      a {
+        float: left;
+        font-size: 12px;
+        color: #666;
+        margin-right: 10px;
+        &.del {
+          float: right;
+          font-weight: 800;
+          font-size: 14px;
+          color: #999;
+          margin: 0;
+          margin-top: -2px;
+          &:hover {
+            color: #666;
+          }
+        }
+      }
+    }
+  }
+  a.clear-all {
+    color: #666;
+    float: right;
+    margin-top: 5px;
+    &:hover {
+      text-decoration: underline;
+    }
+    span {
+      float: right;
+      font-weight: 800;
+      font-size: 13px;
+      background: #CC3300;
+      color: #fff;
+      width: 16px;
+      height: 16px;
+      text-align: center;
+      line-height: 115%;
+      padding: 0;
+      -webkit-border-radius: 50px;
+      -moz-border-radius: 50px;
+      border-radius: 50px;
+      margin: 2px 0 0 5px;
+    }
+  }
+}
+
+/** /Applied filters */
+
+table.table {
+  .list-group {
+    margin-bottom: 0;
+  }
+  .list-group-item {
+    border-radius: 0;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+  }
+}
+
+a.list-group-item:hover {
+  border-radius: 0;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+
+table.table .list-group-item-text {
+  font-size: 14px;
+  color: #666;
+  line-height: 140%;
+}

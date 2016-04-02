@@ -1,0 +1,123 @@
+.dropdown {
+  margin-right: 8px;
+  display: inline-block;
+  > .btn {
+    border-bottom: 2px solid #CCC;
+    border-radius: 0 ;
+    padding: 6px 8px;
+    height: 35px;
+    line-height: 156%;
+    position: relative;
+    z-index: 110;
+    margin-right: 0 ;
+  }
+  &.open > .btn {
+    padding-top: 4px;
+    border-bottom: none;
+    border-color: #ccc;
+    &:hover {
+      padding-top: 4px;
+      border-bottom: none;
+      border-color: #ccc;
+    }
+    background-color: #fff;
+  }
+  > {
+    .btn {
+      &:hover {
+        border-right: 2px solid #9A9A9A;
+        border-bottom: 2px solid #9A9A9A;
+      }
+      > .caret {
+        margin-left: 5px;
+      }
+    }
+    .dropdown-menu {
+      padding: 25px 10px;
+      border-radius: 0 ;
+      margin-top: 1px;
+      border: 1px solid #ccc;
+      box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.175);
+      left: 0 ;
+      z-index: 100;
+      text-align: left;
+    }
+  }
+}
+
+.dropdown-menu > li {
+  list-style: none;
+  padding-left: 0;
+  &.dropdown-header {
+    padding-left: 10px;
+  }
+  > a {
+    padding: 3px 10px;
+  }
+}
+
+.navbar-nav > li > .dropdown-menu {
+  margin-top: -1px;
+}
+
+.dropdown {
+  &.right {
+    text-align: right;
+    > .dropdown-menu {
+      right: 0 ;
+      left: auto;
+      border-right: 2px solid #CCC;
+    }
+  }
+  &.balloon {
+    > .dropdown-menu {
+      z-index: 120;
+      &:before {
+        background: url(../img/arr_2.png) no-repeat;
+        top: -10px;
+        content: "";
+        left: 10px;
+        display: inline-block;
+        height: 43px;
+        width: 17px;
+        position: absolute;
+      }
+    }
+    &.right > .dropdown-menu:before {
+      left: auto;
+      right: 10px;
+    }
+    > .btn {
+      border: none;
+      padding: 5px;
+    }
+  }
+  &.open.balloon > .btn {
+    border: none;
+    padding: 5px;
+  }
+}
+
+.btn-group {
+  > .dropdown-toggle {
+    &.btn-lg {
+      height: 51px;
+    }
+    &.btn-success {
+      background: #3FBFB0;
+      border: 1px solid #2E8B80;
+    }
+  }
+  &.open {
+    > .dropdown-toggle.btn-success {
+      background: #32988B;
+    }
+    > .dropdown-toggle.btn-primary {
+      background: #ED4005;
+      border-color: #ED4005;
+    }
+  }
+  > .dropdown-toggle.btn-success:hover {
+    background: #32988B;
+  }
+}

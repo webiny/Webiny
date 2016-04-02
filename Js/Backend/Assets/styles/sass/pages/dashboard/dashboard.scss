@@ -1,0 +1,323 @@
+@import '../variables.scss';
+
+.hl-element{
+  color: $highlightColor;
+}
+
+  .master-header {
+    text-align: center;
+    h2 {
+      display: inline-block;
+      border: none;
+    }
+    .date-picker {
+      display: block;
+      margin: auto;
+      .form-group {
+        min-height: 45px;
+        text-align: center;
+      }
+      .control-label {
+        font-size: 15px;
+        font-weight: 600;
+        display: block;
+        vertical-align: middle;
+      }
+      .picker-holder {
+        vertical-align: middle;
+        display: inline-block;
+        width: 80%;
+        height: 45px;
+        .form-control {
+          border: 1px solid $borderColor;
+          background: $formBgBolor;
+          padding: 4px 18px;
+        }
+        span.icon_c {
+          color: $formIconColor;
+          font-size: 19px;
+          top: 12px;
+          right: 8px;
+          cursor: pointer;
+          pointer-events: none;
+        }
+      }
+    }
+  }
+
+
+  .row-section {
+    &::after {
+      clear: both;
+    }
+  }
+
+  .chart-block {
+    margin-top: 30px;
+    margin-bottom: 1px;
+    background-color: white;
+    height: 369px;
+    overflow: auto;
+  }
+
+  .dash-table{
+    height: 100%;
+  }
+
+  .view-switch{
+    font-size: 18px;
+    float: right;
+    margin: 5px 0 0 15px;
+    color: $smallLabelFontColor;
+
+    .active{
+      color: $highlightColor;
+    }
+
+    .switch-graph{
+      cursor: pointer;
+      &:hover{
+        color: $highlightColor;
+      }
+    }
+    .switch-list{
+      cursor: pointer;
+      &:hover{
+        color: $highlightColor;
+      }
+    }
+    @media (max-width: 486px){
+      margin: 5px 0 0 0;
+    }
+  }
+
+  #chart_browsers{
+    display: none;
+  }
+
+  #chart_os{
+    display: none;
+  }
+
+
+  .list-switch-drop{
+    margin-top: 10px;
+    .btn{
+    }
+  }
+
+  .mark-as-read{
+      margin-left: 25px;
+  }
+
+
+
+@media (min-width: 485px) and (max-width: 767px)  {
+
+  .counter-block-element {
+    display: inline-block;
+    width: calc(100% / 2 - 2px);
+  }
+
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+
+  .master-header {
+    text-align: center;
+    clear: left;
+    h2 {
+      display: inline-block;
+      border: none;
+    }
+    .date-picker {
+      display: block;
+      margin: auto;
+      .form-group {
+        min-height: 45px;
+        text-align: center;
+      }
+      .control-label {
+        font-size: 15px;
+        font-weight: 600;
+        display: block;
+      }
+      .picker-holder {
+        display: inline-block;
+        height: 45px;
+        .form-control {
+          border: 1px solid $borderColor;
+          background: $formBgBolor;
+          padding: 4px 18px;
+        }
+        span.icon_c {
+          color: $formIconColor;
+          font-size: 19px;
+          top: 12px;
+          right: 8px;
+        }
+      }
+    }
+  }
+
+  .master-content.container-fluid.master-dashboard {
+    width: 100%;
+    background-color: $masterContentBgColor;
+    padding-top: 0;
+    margin-top: 0;
+  }
+
+  .row-section {
+    &::after {
+      clear: both;
+    }
+  }
+
+  .counter-block-element {
+    display: inline-block;
+    width: calc(100% / 2 - 2px);
+  }
+
+
+
+
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+
+  .master-header {
+    height: 92px;
+    margin-top: 0;
+    text-align: left;
+    clear: left;
+    h2 {
+      display: inline-block;
+      margin: 30px 0 0 0;
+    }
+
+    .date-picker {
+      display: inline-block;
+      float: right;
+      margin: 25px 0 0 0;
+      .form-group {
+        min-height: 45px;
+        height: 45px;
+      }
+      .control-label {
+        font-size: 15px;
+        font-weight: 600;
+        display: inline-block;
+      }
+      .picker-holder {
+        margin-left: 20px;
+        display: inline-block;
+        width: 300px;
+        height: 45px;
+        .form-control {
+          border: 1px solid $borderColor;
+          background: $formBgBolor;
+          padding: 4px 18px;
+        }
+        span.icon_c {
+          color: $formIconColor;
+          font-size: 19px;
+          top: 12px;
+          right: 8px;
+        }
+      }
+    }
+  }
+  .visitors-counter{
+    margin-top: 0;
+  }
+
+  .line-chart {
+    margin-top: 0;
+  }
+
+
+  .row-section {
+    &::after {
+      clear: both;
+    }
+  }
+
+  .chart-block {
+    margin-top:0;
+  }
+
+}
+
+@media (min-width: 1200px) {
+
+  .master-header {
+    height: 92px;
+    margin-top: 55px;
+    text-align: left;
+    h2 {
+      display: inline-block;
+      margin: 30px 0 0 0;
+    }
+
+    .date-picker {
+      display: inline-block;
+      float: right;
+      margin: 25px 0 0 0;
+      .form-group {
+        min-height: 45px;
+        height: 45px;
+      }
+      .control-label {
+        font-size: 15px;
+        font-weight: 600;
+        display: inline-block;
+      }
+      .picker-holder {
+        margin-left: 20px;
+        display: inline-block;
+        width: 300px;
+        height: 45px;
+        .form-control {
+          border: 1px solid $borderColor;
+          background: $formBgBolor;
+          padding: 4px 18px;
+        }
+        span.icon_c {
+          color: $formIconColor;
+          font-size: 19px;
+          top: 12px;
+          right: 8px;
+        }
+      }
+    }
+  }
+
+  .visitors-counter{
+    margin-top: 0;
+  }
+
+  .line-chart {
+    margin-top: 0;
+  }
+
+  .row-section {
+    &::after {
+      clear: both;
+    }
+  }
+
+  .chart-block {
+    margin-top: 0;
+    margin-bottom: 1px;
+    background-color: white;
+    height: 369px;
+    overflow: auto;
+  }
+
+  #chart {
+    padding: 0 20px;
+  }
+}
+
+
+

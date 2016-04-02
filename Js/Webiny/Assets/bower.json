@@ -19,7 +19,8 @@
         "bottlejs": "~1.2.1",
         "baobab": "~2.2.1",
         "react": "https://github.com/reactjs/react-bower.git#v0.14.7",
-        "select2": "4.0.0"
+        "select2": "4.0.0",
+        "eonasdan-bootstrap-datetimepicker": "~4.17.37"
     },
     "overrides": {
         "system.js": {
@@ -43,6 +44,9 @@
                 "dist/js/select2.js",
                 "dist/css/select2.min.css"
             ]
+        },
+        "eonasdan-bootstrap-datetimepicker": {
+            "main": "build/js/bootstrap-datetimepicker.min.js"
         }
     }
 }

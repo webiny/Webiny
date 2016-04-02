@@ -1,0 +1,35 @@
+
+
+// Statistics table
+.stats-table{
+  width: 100%;
+  tbody{
+    tr{
+      color: $lightFontColor;
+      font-size: 14px;
+      td{
+        padding: 5px 5px 5px 5px;
+        vertical-align: middle;
+      }
+      .item-name{
+        width: 70%;
+      }
+      .item-value{
+        width:15%;
+        text-align: center;
+      }
+      &:nth-child(1){
+        color: $importantColor;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.scrollable{
+  clear: both;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  //fixed height needed
+}

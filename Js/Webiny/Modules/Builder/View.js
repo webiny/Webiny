@@ -13,16 +13,16 @@ class View extends Webiny.Ui.Component {
             return child;
         }
 
-        const config = this.props.config;
-        let props = _.clone(child.props);
-        if (child.props.ui && _.has(config, child.props.ui)) {
-            props.key = index;
-            if (props.ui && _.has(config, props.ui)) {
-                props = _.merge({}, props, config[props.ui]);
-            }
+        let props = _.omit(child.props, ['children']);
+        if (props.ui && _.has(this.props.config, props.ui)) {
+            props = _.merge({key: index}, props, this.props.config[props.ui]);
         }
 
-        return React.cloneElement(child, props, this.prepareChildren(props && props.children));
+        if (React.Children.toArray(child.props.children).length) {
+            return React.cloneElement(child, props, this.prepareChildren(child.props && child.props.children));
+        }
+
+        return child;
     }
 
     /**
@@ -34,13 +34,12 @@ class View extends Webiny.Ui.Component {
         if (typeof children !== 'object' || children === null) {
             return children;
         }
-        return React.Children.map(children, this.prepareChild, this);
+        return React.Children.map(children, this.prepareChild);
     }
 
     render() {
-        const content = this.prepareChildren(this.props.children);
         return (
-            <webiny-view>{content}</webiny-view>
+            <webiny-view>{this.prepareChildren(this.props.children)}</webiny-view>
         );
     }
 }

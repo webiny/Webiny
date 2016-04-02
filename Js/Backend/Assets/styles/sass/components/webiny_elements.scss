@@ -1,0 +1,385 @@
+/** General **/
+
+/** /General **/
+
+/** Icons **/
+
+.icon {
+  &.icon-lg {
+    font-size: 1.4em;
+  }
+  &.icon-2x {
+    font-size: 2em;
+  }
+  &.icon-3x {
+    font-size: 3em;
+  }
+  &.icon-4x {
+    font-size: 4em;
+  }
+  &.icon-danger {
+    color: #CC3300;
+  }
+  &.icon-success {
+    color: #3FBFB0;
+  }
+  &.icon-info {
+    color: #3F89BF;
+  }
+  &.icon-warning {
+    color: #FAA32E;
+  }
+}
+
+/** /Icons **/
+
+/** Alerts **/
+
+.alert {
+  background: #CC3300;
+  border-radius: 0;
+  padding: 15px 10px 10px 45px;
+  border: none;
+  position: relative;
+  font-size: 16px;
+  color: #fff;
+  line-height: 125%;
+  overflow: hidden;
+  font-weight: 300;
+  strong {
+    font-weight: 600;
+  }
+  a {
+    text-decoration: underline;
+    color: #fff;
+  }
+  button.close {
+    margin: 0 5px 0 5px;
+  }
+  &.alert-danger {
+    background: #CC3300;
+  }
+  &.alert-success {
+    background: #3FBFB0;
+  }
+  &.alert-info {
+    background: #3F89BF;
+  }
+  &.alert-warning {
+    background: #FAA32E;
+  }
+  span.icon {
+    font-size: 26px;
+    color: #fff;
+    position: absolute;
+    left: 5px;
+    top: 10px;
+  }
+}
+
+/** /Alerts **/
+
+/** Labels **/
+
+.label, .label-default {
+  border-radius: 0;
+  font-weight: normal;
+  font-size: 90%;
+  display: inline-block;
+  background-color: #ebebeb;
+  color: #fff;
+}
+
+.label {
+  &.label-default {
+    color: #333;
+  }
+  &.label-primary {
+    background: #FA5723;
+  }
+  &.label-danger {
+    background: #CC3300;
+  }
+  &.label-success {
+    background: #3FBFB0;
+  }
+  &.label-info {
+    background: #3F89BF;
+  }
+  &.label-warning {
+    background: #FAA32E;
+  }
+}
+
+/** /Labels **/
+
+/** Badges **/
+
+.badge, .badge-default {
+  border-radius: 100px;
+  padding: 4px 5px;
+  color: #fff;
+  background-color: #ebebeb;
+  font-weight: normal;
+}
+
+.badge {
+  &.badge-default {
+    color: #333;
+  }
+  &.badge-primary {
+    background: #FA5723;
+  }
+  &.badge-danger {
+    background: #CC3300;
+  }
+  &.badge-success {
+    background: #3FBFB0;
+  }
+  &.badge-info {
+    background: #3F89BF;
+  }
+  &.badge-warning {
+    background: #FAA32E;
+  }
+}
+
+/** /Badges **/
+
+/** Porlets **/
+
+.porlet {
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  background-color: #fff;
+  border-radius: 0;
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.04);
+  border: 1px solid #E8E8E8;
+  &.porlet-primary {
+    background: #FA5723;
+    border-color: #ED4005;
+  }
+  &.porlet-success {
+    background: #3FBFB0;
+    border-color: #2E8B80;
+  }
+  .porlet-header {
+    padding: 10px;
+    margin: 0 10px;
+    border-bottom: 1px solid #eee;
+  }
+  &.porlet-header-primary .porlet-header {
+    background: #FA5723;
+    border-bottom: none;
+    margin: 0;
+    padding: 10px 20px;
+  }
+  &.porlet-header-success .porlet-header {
+    border-bottom: none;
+    margin: 0;
+    padding: 10px 20px;
+    background: #3FBFB0;
+  }
+  .porlet-header {
+    .porlet-actions {
+      float: right;
+      color: #333;
+      padding-top: 5px;
+    }
+    h3 {
+      font-weight: 300;
+      font-size: 1.4em;
+      margin: 0;
+      padding: 0;
+      border-bottom: none;
+    }
+  }
+  &.porlet-header-primary .porlet-header h3, &.porlet-header-success .porlet-header h3, &.porlet-primary .porlet-header h3, &.porlet-success .porlet-header h3 {
+    color: #fff;
+  }
+  .porlet-body {
+    padding: 10px;
+    margin: 0 10px;
+    p {
+      margin-bottom: 0;
+      font-weight: 300;
+    }
+  }
+  &.porlet-primary .porlet-body, &.porlet-success .porlet-body {
+    color: #fff;
+    p {
+      color: #fff;
+    }
+  }
+}
+
+/** /Porlets **/
+
+/** Tiles **/
+
+.tile {
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  background-color: #fff;
+  border-radius: 0;
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.04);
+  border: 1px solid #E8E8E8;
+  &.tile-primary {
+    background: #FA5723;
+    border-color: #ED4005;
+  }
+  &.tile-success {
+    background: #3FBFB0;
+    border-color: #2E8B80;
+  }
+  .tile-header {
+    font-size: 1.3em;
+    font-weight: 200;
+    text-transform: uppercase;
+    color: #333;
+    overflow: hidden;
+    border-bottom: 1px solid #eee;
+    padding: 5px;
+  }
+  &.tile-primary {
+    .tile-header {
+      color: #fff;
+      border-color: #ED4005;
+    }
+    .tile-content {
+      color: #fff;
+      border-color: #ED4005;
+      p, h1, h2, h3, h4, h5 {
+        color: #fff;
+        border-color: #ED4005;
+      }
+    }
+  }
+  &.tile-success {
+    .tile-header {
+      color: #fff;
+      border-color: #ED4005;
+    }
+    .tile-content {
+      color: #fff;
+      border-color: #ED4005;
+      p, h1, h2, h3, h4, h5 {
+        color: #fff;
+        border-color: #ED4005;
+      }
+    }
+    .tile-header {
+      border-color: #2E8B80;
+    }
+    .tile-content {
+      border-color: #2E8B80;
+      p, h1, h2, h3, h4, h5 {
+        border-color: #2E8B80;
+      }
+    }
+  }
+  .tile-header {
+    .ico, .title {
+      float: left;
+      padding: 5px;
+    }
+  }
+  .tile-content {
+    padding: 10px;
+    h1, h2, h3, h4, h5 {
+      padding: 0;
+      margin: 0;
+      border-bottom: none;
+    }
+  }
+}
+
+/** /Tiles **/
+
+/** Navigation **/
+
+.navbar-default {
+  background-color: #fff;
+  border: none;
+  margin: 0 0 5px 0;
+  min-height: 0;
+}
+
+.container-fluid {
+  padding: 0;
+}
+
+/** /Navigation **/
+
+/** Pagination **/
+
+.pagination {
+  margin: 0 0 0 -10px;
+  li {
+    margin-right: 2px;
+    display: inline-block;
+    &.prev a {
+      color: #333;
+    }
+    a:hover {
+      background: #ECECEC;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+      color: #fa5722;
+    }
+    &.active a {
+      background: #ECECEC;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+      color: #fa5722;
+      &:hover {
+        background: #ECECEC;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        color: #fa5722;
+      }
+    }
+    span.icon {
+      width: 12px;
+      float: left;
+      transform: rotate(90deg);
+      -webkit-transform: rotate(90deg);
+      margin-top: -4px;
+      clear: none;
+    }
+    &.next span.icon {
+      transform: rotate(-90deg);
+      -webkit-transform: rotate(-90deg);
+      margin-top: 4px;
+    }
+    span {
+      float: left;
+      clear: none;
+    }
+    > {
+      a, span {
+        border: none;
+      }
+    }
+    &.prev span {
+      float: left;
+      margin-right: 5px;
+      border: none;
+      clear: none;
+    }
+    a {
+      display: block;
+      font-size: 14px;
+      color: #787878;
+      padding: 8px;
+    }
+    &.next a {
+      padding-bottom: 4px;
+    }
+  }
+}
+
+/** /Pagination **/

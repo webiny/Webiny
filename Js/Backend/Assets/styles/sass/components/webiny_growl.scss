@@ -1,0 +1,111 @@
+.jGrowl {
+  z-index: 9999;
+  color: #ffffff;
+  position: fixed;
+}
+.jGrowl.top-left {
+  left: 0;
+  top: 55px;
+}
+.jGrowl.top-right {
+  right: 0;
+  top: 55px;
+}
+.jGrowl.bottom-left {
+  left: 0;
+  bottom: 55px;
+}
+.jGrowl.bottom-right {
+  right: 0;
+  bottom:55px;
+}
+.jGrowl.center {
+  top: 0;
+  width: 50%;
+  left: 25%;
+}
+.jGrowl.center .jGrowl-notification,
+.jGrowl.center .jGrowl-closer {
+  margin-left: auto;
+  margin-right: auto;
+}
+.jGrowl-notification {
+  background: #3F89BF;
+  border: none;
+  font-size: 15px;
+  color: #fff;
+  line-height: 125%;
+  font-weight: 300;
+  border-radius: 0;
+  zoom: 1;
+  width: 250px;
+  padding: 10px;
+  margin: 10px;
+  text-align: left;
+  display: none;
+  word-break: break-all;
+  min-height: 40px;
+}
+
+.jGrowl-notification.danger {
+  background: #CC3300;
+}
+
+.jGrowl-notification.success {
+  background: #3FBFB0;
+}
+
+.jGrowl-notification.warning {
+  background: #FAA32E;
+}
+
+.jGrowl-notification .ui-state-highlight,
+.jGrowl-notification .ui-widget-content .ui-state-highlight,
+.jGrowl-notification .ui-widget-header .ui-state-highlight {
+  border: 1px solid #000;
+  background: #000;
+  color: #fff;
+}
+.jGrowl-notification .jGrowl-header {
+  font-weight: 600;
+  font-size: .85em;
+}
+.jGrowl-notification .jGrowl-close {
+  background-color: transparent;
+  color: inherit;
+  border: none;
+  z-index: 99;
+  float: right;
+  font-weight: bold;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+.jGrowl-closer {
+  background-color: transparent;
+  color: #FA5723;
+  zoom: 1;
+  width: 250px;
+  padding: 10px;
+  margin: 10px;
+  display: none;
+  word-break: break-all;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 600;
+  text-align: center;
+}
+.jGrowl-closer .ui-state-highlight,
+.jGrowl-closer .ui-widget-content .ui-state-highlight,
+.jGrowl-closer .ui-widget-header .ui-state-highlight {
+  border: 1px solid #000;
+  background: #000;
+  color: #fff;
+}
+/** Hide jGrowl when printing **/
+@media print {
+  .jGrowl {
+    display: none;
+  }
+}

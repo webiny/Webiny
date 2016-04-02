@@ -95,6 +95,12 @@ Services:
     EntityFlowExecuteStaticMethod:
         Class: \Apps\Core\Php\Dispatchers\Flows\ExecuteStaticMethodFlow
         Tags: [entity-dispatcher-flow]
+
     SmartyExtension:
         Class: \Apps\Core\Php\View\SmartyExtension
         Tags: [Smarty.Extension]
+
+    AnalyticsDb:
+        Class: \Webiny\AnalyticsDb\AnalyticsDb
+        Arguments:
+            Mongo: @Mongo.Webiny

@@ -1,0 +1,107 @@
+.modal.modal-wizard {
+  .modal-dialog {
+    width: 95%;
+  }
+  .modal-header {
+    border-bottom: 2px solid #ccc;
+  }
+  .modal-body {
+    margin-top: 30px;
+  }
+  .modal-footer a {
+    font-size: 1.2em;
+    display: inline-block;
+    padding: 15px 20px;
+  }
+}
+
+.modal-wizard-steps {
+  margin-top: -15px;
+  position: relative;
+  height: 70px;
+  border-bottom: 2px solid #ccc;
+  > ul {
+    position: absolute;
+    top: -1px;
+    padding: 0;
+    margin: 0;
+    margin-left: 0;
+    margin-right: 3px;
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    > li {
+      list-style: none;
+      display: table-cell;
+      position: relative;
+      color: #393939;
+      cursor: default;
+      height: 70px;
+      padding-left: 35px;
+      vertical-align: middle;
+      background: #FFFFFF;
+      margin-left: -3px;
+      text-transform: uppercase;
+      font-weight: 500;
+      &.complete {
+        color: #666;
+        background: #F0F0F0;
+        cursor: pointer;
+        &:hover {
+          background: #d6d6d6;
+        }
+      }
+      &.active {
+        background: #3FBFB0;
+        color: #fff;
+        margin-left: -2px;
+      }
+      > span.chevron {
+        position: absolute;
+        top: -1px;
+        right: -16px;
+        z-index: 1;
+        display: block;
+        border: 36px solid transparent;
+        border-right: 0;
+        border-left: 16px solid #d6d6d6;
+      }
+      &.complete > span.chevron {
+        border-left-color: #aaa;
+      }
+      &.active > span.chevron {
+        border-left-color: #3FBFB0;
+      }
+      > span.chevron:after {
+        position: absolute;
+        top: -34px;
+        right: 1px;
+        display: block;
+        border: 34px solid transparent;
+        border-right: 0;
+        border-left: 15px solid #FFFFFF;
+        content: "";
+      }
+      &.complete {
+        &:before {
+          content: '\e818';
+          font-family: "fontello";
+          color: #3FBFB0;
+          padding-right: 5px;
+        }
+        > span.chevron:after {
+          border-left: 15px solid #F0F0F0;
+        }
+        &:hover > span.chevron:after {
+          border-left: 15px solid #d6d6d6;
+        }
+      }
+      &.active > span.chevron:after {
+        border-left: 15px solid #3FBFB0;
+      }
+      &:last-child span.chevron {
+        display: none;
+      }
+    }
+  }
+}

@@ -3,11 +3,16 @@ const Ui = Webiny.Ui.Components;
 
 class Action extends Webiny.Ui.Component {
 
-    render() {
+}
+
+Action.defaultProps = {
+    renderer: function renderer() {
         return (
-            <webiny-list-actions>{this.props.children}</webiny-list-actions>
+            <li>
+                <a tabIndex="-1" href="javascript:void(0);">{this.props.label}</a>
+            </li>
         );
     }
-}
+};
 
 export default Action;

@@ -1,5 +1,5 @@
 import Webiny from 'Webiny';
-import FormContainer from './FormContainer';
+import Container from './Container';
 import Form from './Form';
 import Renderer from './Renderer';
 
@@ -8,8 +8,7 @@ class Module extends Webiny.Module {
     constructor(app) {
         super(app);
         _.assign(Form.defaultProps, Renderer);
-        Webiny.Ui.Components.FormContainer = FormContainer;
-        Webiny.Ui.Components.Form = Form;
+        Webiny.Ui.Components.Form = {Container, Form}
     }
 }
 
