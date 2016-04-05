@@ -66,8 +66,6 @@ class ServiceDispatcher extends AbstractApiDispatcher
             throw new ApiException('You don\'t have an EXECUTE permission on ' . $serviceClass, 'WBY-AUTHORIZATION');
         }
 
-        $result = $serviceMethod($params);
-
-        return new ApiResponse($result);
+        return new ApiResponse($serviceMethod($params));
     }
 }
