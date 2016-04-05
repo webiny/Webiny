@@ -15,7 +15,16 @@ Actions.defaultProps = {
                     <span className="caret"></span>
                 </button>
                 <ul className="dropdown-menu">
-                    {this.props.children}
+                    {React.Children.map(this.props.children, child => {
+                        return (
+                            <li>
+                                {React.cloneElement(child, {
+                                    data: this.props.data,
+                                    actions: this.props.actions
+                                })}
+                            </li>
+                        );
+                    })}
                 </ul>
             </div>
         );

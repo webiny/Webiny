@@ -1,6 +1,9 @@
 import Webiny from 'Webiny';
 import ApiDataSource from './DataSource/Api';
 import StaticDataSource from './DataSource/Static';
+import updateAction from './Actions/Update';
+import deleteAction from './Actions/Delete';
+import executeAction from './Actions/Execute';
 const Ui = Webiny.Ui.Components;
 
 class Container extends Webiny.Ui.Component {
@@ -58,7 +61,10 @@ class Container extends Webiny.Ui.Component {
             'setSearchQuery',
             'getSearchQuery',
             'loadData',
-            'prepare'
+            'prepare',
+            'onRecordUpdate',
+            'onRecordDelete',
+            'onRecordExecute'
         );
     }
 
@@ -79,7 +85,7 @@ class Container extends Webiny.Ui.Component {
         this.dataSource.setSearchQuery(this.searchQuery).setSearchFields(this.searchFields).setSearchOperator(this.searchOperator);
 
         return this.dataSource.getData().then(data => {
-            return this.setState({
+            this.setState({
                 list: data.list,
                 meta: data.meta,
                 sorters: this.sorters,
@@ -90,6 +96,7 @@ class Container extends Webiny.Ui.Component {
                 searchOperator: this.searchOperator,
                 searchFields: this.searchFields
             });
+            return data;
         });
     }
 
@@ -198,6 +205,20 @@ class Container extends Webiny.Ui.Component {
         return this.searchQuery;
     }
 
+    onRecordUpdate(id, attributes) {
+        return this.dataSource.update(id, attributes).then(this.loadData);
+    }
+
+    onRecordDelete(id) {
+        console.log("DELETE", id);
+        return;
+        this.dataSource.delete(id).then(this.loadData);
+    }
+
+    onRecordExecute(httpMethod, method, body, query) {
+        return this.dataSource.execute(httpMethod, method, body, query);
+    }
+
     tableProps(tableProps) {
         // Pass relevant props from Container to Table
         _.each(this.props, (value, name) => {
@@ -205,9 +226,17 @@ class Container extends Webiny.Ui.Component {
                 tableProps[name] = value;
             }
         });
-        tableProps.data = this.state.list;
-        tableProps.sorters = this.state.sorters;
-        tableProps.onSort = this.setSorters;
+        _.assign(tableProps, {
+            data: this.state.list,
+            sorters: this.state.sorters,
+            onSort: this.setSorters,
+            actions: {
+                update: updateAction(this.onRecordUpdate), //(id, data) => () => this.onRecordUpdate(id, data),
+                delete: deleteAction(this.onRecordDelete),
+                execute: executeAction(this.onRecordExecute)
+            }
+
+        });
 
         return tableProps;
     }

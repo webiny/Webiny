@@ -52,6 +52,11 @@ class Table extends Webiny.Ui.Component {
                     const headerProps = _.omit(rowChild.props, 'renderer');
                     headerProps.sortable = headerProps.sort || false;
                     headerProps.sorted = this.tempProps.sorters[headerProps.name] || 0;
+                    headerProps.children = React.Children.map(rowChild.props.children, child => {
+                        if (child.type === Ui.List.Table.FieldInfo) {
+                            return child;
+                        }
+                    });
                     this.headers.push(headerProps);
                 }
 
@@ -75,10 +80,14 @@ class Table extends Webiny.Ui.Component {
 
     renderRow(data, index) {
         const props = _.omit(this.rowElement.props, ['children']);
-        props.table = this;
-        props.key = index;
-        props.data = data;
-        props.sorters = _.clone(this.props.sorters);
+        _.assign(props, {
+            table: this,
+            key: index,
+            data: data,
+            sorters: _.clone(this.props.sorters),
+            actions: this.props.actions
+        });
+
         return React.cloneElement(this.rowElement, props, this.rowElement.props.children);
     }
 

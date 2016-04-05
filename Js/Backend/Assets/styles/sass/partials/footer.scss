@@ -69,7 +69,6 @@ footer {
     position: absolute;
     border: none;
     padding: 0;
-    width: 100%;
     .btn {
       &:hover {
         border: none;
@@ -148,9 +147,6 @@ footer {
       z-index: 1900;
       position: relative;
       padding-bottom: 20px;
-    }
-    .feedback-wrap {
-      width: 100%;
     }
   }
   footer .developer-mode {

@@ -58,10 +58,10 @@ Login.defaultProps = {
     api: '/core/users',
     renderer: function renderer() {
         return (
-            <Ui.FormContainer ui="loginForm" {...this.getConfig.call(this)}>
+            <Ui.Form.Container ui="loginForm" {...this.getConfig.call(this)}>
                 <div className="container">
                     <div className="sign-in-holder">
-                        <Ui.Form className="form-signin" layout={false}>
+                        <Ui.Form.Form className="form-signin" layout={false}>
                             <fields>
                                 <a href="#" className="logo">
                                     <img src={Webiny.Assets('Core.Backend', 'images/logo_orange.png')} width="180" height="58"/>
@@ -87,13 +87,13 @@ Login.defaultProps = {
                                                icon="icon-next"/>
                                 </div>
                             </fields>
-                        </Ui.Form>
+                        </Ui.Form.Form>
 
                         <p className="copyright">Version 0.1 (Beta)</p>
                         <a href="#" className="site">www.webiny.com</a>
                     </div>
                 </div>
-            </Ui.FormContainer>
+            </Ui.Form.Container>
         );
     }
 };

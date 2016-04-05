@@ -8,11 +8,11 @@ class Field extends Webiny.Ui.Component {
         this.bindMethods('getTdClasses');
     }
 
-    getTdClasses() {
-        return this.classSet({
+    getTdClasses(classes = {}) {
+        return this.classSet(_.merge({
             sorted: this.props.sorted !== null,
             'text-left': this.props.align === 'left'
-        });
+        }, classes));
     }
 }
 

@@ -132,6 +132,11 @@ class User extends EntityAbstract
 
             return $user->toArray($this->wRequest()->getFields('*,!password'));
         });
+
+        $this->api('POST', 'call', function () {
+            $data = $this->wRequest()->getRequestData();
+            return $data;
+        });
     }
 
 

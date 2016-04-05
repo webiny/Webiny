@@ -90,7 +90,7 @@ class Base extends Webiny.Ui.FormComponent {
             stepping: this.props.stepping,
             readOnly: this.props.readOnly,
             type: 'text',
-            className: 'form-control datepicker',
+            className: 'form-control',
             valueLink: this.valueLink,
             placeholder: this.props.placeholder
         };
@@ -98,9 +98,11 @@ class Base extends Webiny.Ui.FormComponent {
         return (
             <div className={this.classSet(cssConfig)}>
                 {label}
-                <div className="picker-holder">
+                <div className="input-group date">
                     <input {...props}/>
-                    <span className="icon-calendar icon_c"></span>
+                    <span className="input-group-addon cursor">
+                        <i className="icon-calendar icon_c"></i>
+                    </span>
                 </div>
                 {validationMessage}
             </div>

@@ -36,6 +36,16 @@ class Static extends DataSource {
             list: data.slice(from, from + this.perPage)
         });
     }
+
+    update(id, attributes) {
+        // TODO: update static data source
+        return true;
+    }
+
+    delete(id) {
+        // TODO: delete from static data source
+        return true;
+    }
 }
 
 export default Static;

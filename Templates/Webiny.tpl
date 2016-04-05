@@ -14,7 +14,7 @@
     WebinyBootstrap.run({
         app: 'Core.Backend',
         baseUrl: '/admin',
-        authentication: 'Selecto.Backend'
+        authentication: 'Core.Backend'
     });
 </script>
 </body>

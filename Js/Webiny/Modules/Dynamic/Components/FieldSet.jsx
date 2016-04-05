@@ -10,6 +10,11 @@ class FieldSet extends Webiny.Ui.FormComponent {
         this.rowTemplate = null;
         this.emptyTemplate = null;
 
+        this.actions = {
+            add: index => () => this.addData(index),
+            remove: index => () => this.removeData(index)
+        };
+
         this.bindMethods('parseLayout,registerInputs,registerInput,addData,removeData');
     }
 
@@ -28,13 +33,15 @@ class FieldSet extends Webiny.Ui.FormComponent {
         if (typeof children !== 'object' || children === null) {
             return children;
         }
+
+
         React.Children.map(children, child => {
             if (child.type === Ui.Dynamic.Row) {
                 this.rowTemplate = child.props.children;
             }
 
             if (child.type === Ui.Dynamic.Empty) {
-                this.emptyTemplate = child;
+                this.emptyTemplate = child.props.children;
             }
         });
     }
@@ -56,18 +63,6 @@ class FieldSet extends Webiny.Ui.FormComponent {
     registerInput(child) {
         if (typeof child !== 'object' || child === null) {
             return child;
-        }
-
-        if (child.type === Ui.Dynamic.Add) {
-            const newProps = _.clone(child.props);
-            newProps['onClick'] = this.addData.bind(this, this.currentIndex);
-            return React.cloneElement(child, newProps);
-        }
-
-        if (child.type === Ui.Dynamic.Remove) {
-            const newProps = _.clone(child.props);
-            newProps['onClick'] = this.removeData.bind(this, this.currentIndex);
-            return React.cloneElement(child, newProps);
         }
 
         if (child.props && child.props.name) {
@@ -96,7 +91,7 @@ class FieldSet extends Webiny.Ui.FormComponent {
                         this.currentIndex = i;
                         return (
                             <webiny-dynamic-fieldset-item key={i}>
-                                {this.registerInputs(this.rowTemplate)}
+                                {this.registerInputs(this.rowTemplate(r, i, this.actions))}
                             </webiny-dynamic-fieldset-item>
                         );
                     })}
@@ -106,7 +101,7 @@ class FieldSet extends Webiny.Ui.FormComponent {
 
         return (
             <div className="form-group">
-                {this.registerInputs(this.emptyTemplate)}
+                {this.registerInputs(this.emptyTemplate(this.actions))}
             </div>
         );
 

@@ -10,7 +10,7 @@ class Row extends Webiny.Ui.Component {
         this.actions = null;
         this.data = [];
 
-        this.bindMethods('prepareChildren,prepareChild,renderField,renderActions');
+        this.bindMethods('prepareChildren,prepareChild,renderField');
     }
 
     componentWillMount() {
@@ -32,7 +32,10 @@ class Row extends Webiny.Ui.Component {
         if (child.type === Ui.List.Table.Field || child.type.prototype instanceof Ui.List.Table.Field) {
             this.fields.push(child);
         } else if (child.type === Ui.List.Table.Actions) {
-            this.actions = child;
+            this.actions = React.cloneElement(child, {
+                data: this.props.data,
+                actions: this.props.actions
+            });
         }
     }
 
@@ -48,21 +51,32 @@ class Row extends Webiny.Ui.Component {
 
     renderField(field, i) {
         const props = _.omit(field.props, ['children']);
-        props.data = this.data;
-        props.key = i;
-        props.sorted = this.props.sorters[props.name] || null;
+        _.assign(props, {
+            data: this.data,
+            key: i,
+            sorted: this.props.sorters[props.name] || null,
+            actions: this.props.actions
+        });
 
         // Add field renderer
         const name = _.upperFirst(_.camelCase(field.props.name));
-        if (_.has(this.props, 'field' + name)) {
-            props.renderer = this.props['field' + name];
+        const tableProps = this.props.table.props;
+
+        // See if inline Table.FieldRenderer is present
+        const children = React.Children.map(field.props.children, child => {
+            if (child.type === Ui.List.Table.FieldRenderer && _.isFunction(child.props.children)) {
+                props.renderer = child.props.children;
+                return null;
+            }
+            return child;
+        });
+
+        // If field renderer was passed through props, it overrides the inline renderer
+        if (_.has(tableProps, 'field' + name)) {
+            props.renderer = tableProps['field' + name];
         }
 
-        return React.cloneElement(field, props, field.props.children);
-    }
-
-    renderActions() {
-        return null;
+        return React.cloneElement(field, props, children);
     }
 
     render() {

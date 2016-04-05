@@ -1,5 +1,5 @@
 .container {
-  max-width: 100%;
+	max-width: 100%;
 }
 
 .container-no-padding {
@@ -12,8 +12,4 @@
   background-color: $masterContentBgColor;
   padding-top: 0;
   margin-top: 0;
-}
-
-@for $i from 1 through 5 {
-  .mt#{$i * 5} { margin-top: 5px * $i}
 }

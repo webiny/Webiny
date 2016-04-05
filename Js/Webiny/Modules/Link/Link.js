@@ -50,7 +50,10 @@ class Link extends Webiny.Ui.Component {
 Link.defaultProps = {
     type: null,
     size: null,
-    merge: true
+    merge: true,
+    url: null,
+    route: null,
+    separate: false
 };
 
 export default Link;

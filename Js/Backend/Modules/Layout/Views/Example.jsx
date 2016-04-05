@@ -83,7 +83,7 @@ class Example extends Webiny.Ui.View {
                     <Ui.Panel.Body>
                         <Ui.Tabs.Tabs ui="tabs">
                             <Ui.Tabs.Tab label="First Tab">
-                                <Ui.Form {...firstFormProps}>
+                                <Ui.Form.Form {...firstFormProps}>
                                     <fields>
                                         <Ui.Grid.Row>
                                             <Ui.Grid.Col all={12}>
@@ -91,10 +91,10 @@ class Example extends Webiny.Ui.View {
                                             </Ui.Grid.Col>
                                         </Ui.Grid.Row>
                                     </fields>
-                                </Ui.Form>
+                                </Ui.Form.Form>
                             </Ui.Tabs.Tab>
                             <Ui.Tabs.Tab label="Second tab">
-                                <Ui.Form {...secondFormProps}>
+                                <Ui.Form.Form {...secondFormProps}>
                                     <fields>
                                         <Ui.Grid.Row>
                                             <Ui.Grid.Col all={12}>
@@ -102,10 +102,10 @@ class Example extends Webiny.Ui.View {
                                             </Ui.Grid.Col>
                                         </Ui.Grid.Row>
                                     </fields>
-                                </Ui.Form>
+                                </Ui.Form.Form>
                             </Ui.Tabs.Tab>
                             <Ui.Tabs.Tab label="Third tab">
-                                <Ui.Form {...thirdFormProps}>
+                                <Ui.Form.Form {...thirdFormProps}>
                                     <fields>
                                         <Ui.Grid.Row>
                                             <Ui.Grid.Col all={12}>
@@ -113,7 +113,7 @@ class Example extends Webiny.Ui.View {
                                             </Ui.Grid.Col>
                                         </Ui.Grid.Row>
                                     </fields>
-                                </Ui.Form>
+                                </Ui.Form.Form>
                             </Ui.Tabs.Tab>
                         </Ui.Tabs.Tabs>
                     </Ui.Panel.Body>

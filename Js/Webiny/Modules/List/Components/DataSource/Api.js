@@ -45,6 +45,21 @@ class Api extends DataSource {
             return this.lastLoadedData;
         });
     }
+
+    update(id, attributes) {
+        this.lastRequestFingerprint = null;
+        return this.api.crudUpdate(id, attributes);
+    }
+
+    delete(id) {
+        this.lastRequestFingerprint = null;
+        return this.api.crudDelete(id);
+    }
+
+    execute(httpMethod, method, body, params) {
+        this.lastRequestFingerprint = null;
+        return this.api[_.toLower(httpMethod)](method, params);
+    }
 }
 
 export default Api;

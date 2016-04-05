@@ -56,7 +56,7 @@ Button.defaultProps = {
             props.className
         );
 
-        const icon = this.props.icon ? <Ui.Icon icon={this.props.icon} className="right"/> : null;
+        const icon = this.props.icon ? <Webiny.Ui.Components.Icon icon={this.props.icon} className="right"/> : null;
         return <button {...props} type="button" className={classes}>{props.children || props.label} {icon}</button>;
     }
 };
