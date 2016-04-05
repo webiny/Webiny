@@ -3,9 +3,10 @@ export default function executeAction(callback) {
 
     const exec = function () {
         return callback(config.httpMethod, config.method, config.body, config.query).then(apiResponse => {
-            if (config.done) {
-                config.done(apiResponse.getData());
+            if (config.then) {
+                return config.then(apiResponse);
             }
+            return apiResponse;
         });
     };
 
@@ -20,8 +21,8 @@ export default function executeAction(callback) {
             return exec;
         },
 
-        done: (fn) => {
-            config.done = fn;
+        then: (fn) => {
+            config.then = fn;
             return exec;
         }
     };

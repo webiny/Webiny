@@ -75,23 +75,7 @@ class List extends Webiny.Ui.View {
                             <Table.Field name="createdOn" align="left" label="Created On" sort="createdOn"/>
                             <Table.Actions>
                                 <Table.EditAction route="Users.Form"/>
-                                <Table.ModalAction label="Delete" hide={record => record.enabled}>
-                                    {function (record, actions, modal) {
-                                        return (
-                                            <Ui.Modal.Dialog>
-                                                <Ui.Modal.Header title="Delete confirmation"/>
-                                                <Ui.Modal.Body>
-                                                    <p>Are you sure you want to delete this record?</p>
-                                                </Ui.Modal.Body>
-                                                <Ui.Modal.Footer>
-                                                    <Ui.Button label="No" onClick={modal.hide}/>
-                                                    <Ui.Button label="CALL ME!" onClick={actions.execute('POST', 'call').body({me: 'Pavel'}).done(data => console.log(data))}/>
-                                                    <Ui.Button label="Yes, delete!" onClick={actions.delete(record.id)}/>
-                                                </Ui.Modal.Footer>
-                                            </Ui.Modal.Dialog>
-                                        );
-                                    }}
-                                </Table.ModalAction>
+                                <Table.DeleteAction/>
                             </Table.Actions>
                         </Table.Row>
                         <Table.Footer/>

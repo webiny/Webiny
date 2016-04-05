@@ -210,9 +210,7 @@ class Container extends Webiny.Ui.Component {
     }
 
     onRecordDelete(id) {
-        console.log("DELETE", id);
-        return;
-        this.dataSource.delete(id).then(this.loadData);
+        return this.dataSource.delete(id).then(this.loadData);
     }
 
     onRecordExecute(httpMethod, method, body, query) {

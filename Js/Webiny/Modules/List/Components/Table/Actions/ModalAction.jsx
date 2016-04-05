@@ -26,7 +26,7 @@ class ModalAction extends Webiny.Ui.Component {
 ModalAction.defaultProps = {
     hide: _.noop,
     renderer: function renderer() {
-        if (this.props.hide(this.props.data)) {
+        if (_.isFunction(this.props.hide) && this.props.hide(this.props.data)) {
             return null;
         }
 

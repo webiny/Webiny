@@ -20,6 +20,7 @@ import Actions from './Components/Table/Actions';
 import RouteAction from './Components/Table/Actions/RouteAction';
 import EditAction from './Components/Table/Actions/EditAction';
 import ModalAction from './Components/Table/Actions/ModalAction';
+import DeleteAction from './Components/Table/Actions/DeleteAction';
 import Empty from './Components/Table/Empty';
 
 class Module extends Webiny.Module {
@@ -45,7 +46,8 @@ class Module extends Webiny.Module {
                 Actions,
                 EditAction,
                 RouteAction,
-                ModalAction
+                ModalAction,
+                DeleteAction
             },
             Filters,
             MultiActions,

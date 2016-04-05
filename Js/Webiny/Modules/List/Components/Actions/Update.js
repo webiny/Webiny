@@ -3,15 +3,17 @@ export default function updateAction(callback) {
 
     const exec = function () {
         return callback(config.id, config.data).then(data => {
-            if (config.done) {
-                config.done(data);
+            if (config.then) {
+                return config.then(data);
             }
+
+            return data;
         });
     };
 
     const mixin = {
-        done: (fn) => {
-            config.done = fn;
+        then: (fn) => {
+            config.then = fn;
             return exec;
         }
     };

@@ -57,8 +57,22 @@ class Api extends DataSource {
     }
 
     execute(httpMethod, method, body, params) {
-        this.lastRequestFingerprint = null;
-        return this.api[_.toLower(httpMethod)](method, params);
+        switch (_.lowerCase(httpMethod)) {
+            case 'get':
+                return this.api.get(method, params);
+            case 'post':
+                return this.api.post(method, body, params);
+            case 'patch':
+                return this.api.patch(method, body, params);
+            case 'put':
+                return this.api.put(method, body, params);
+            case 'delete':
+                return this.api.delete(method);
+            case 'head':
+                return this.api.head(method);
+            default:
+                throw new Error('Unable to execute method: ' + httpMethod + ' ' + method);
+        }
     }
 }
 
