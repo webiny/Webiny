@@ -117,8 +117,8 @@ class List extends Webiny.Ui.View {
                 <Ui.Grid.Row>
                     <Ui.List.Container ui="myInlineList" data={data}>
                         <Ui.List.Filters>
-                            <Ui.Button onClick={this.signal('myInlineList:setFilters', {category: null})} label="Show All"/>
-                            <Ui.Button onClick={this.signal('myInlineList:setFilters', {category: 'joinedTeam'})} label="Show Joined Team"/>
+                            <Ui.Button onClick={this.ui('myInlineList:setFilters', {category: null})} label="Show All"/>
+                            <Ui.Button onClick={this.ui('myInlineList:setFilters', {category: 'joinedTeam'})} label="Show Joined Team"/>
                         </Ui.List.Filters>
                         <Table.Table type="striped">
                             <Table.Row>
@@ -140,8 +140,8 @@ class List extends Webiny.Ui.View {
                 <Ui.Grid.Row>
                     <Ui.List.Container ui="myInlineList2" api="/core/files" fields="id,src,name,type,size,createdOn" searchFields="name">
                         <Ui.List.Filters>
-                            <Ui.Button onClick={this.signal('myInlineList2:setFilters', {type: null})} label="Show All"/>
-                            <Ui.Button onClick={this.signal('myInlineList2:setFilters', {type: 'image/png'})} label="Show PNG"/>
+                            <Ui.Button onClick={this.ui('myInlineList2:setFilters', {type: null})} label="Show All"/>
+                            <Ui.Button onClick={this.ui('myInlineList2:setFilters', {type: 'image/png'})} label="Show PNG"/>
                         </Ui.List.Filters>
                         <Table.Table>
                             <Table.Row>

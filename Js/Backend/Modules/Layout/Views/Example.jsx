@@ -51,22 +51,22 @@ class Example extends Webiny.Ui.View {
             data: this.state.model,
             onSubmit: this.submit,
             linkedForms: 'mySecondForm,myThirdForm',
-            onReset: this.signal('tabs:selectTab', 0),
-            onInvalid: this.signal('tabs:selectTab', 0)
+            onReset: this.ui('tabs:selectTab', 0),
+            onInvalid: this.ui('tabs:selectTab', 0)
         };
 
         const secondFormProps = {
             layout: false,
             ui: 'mySecondForm',
             data: this.state.model,
-            onInvalid: this.signal('tabs:selectTab', 1)
+            onInvalid: this.ui('tabs:selectTab', 1)
         };
 
         const thirdFormProps = {
             layout: false,
             ui: 'myThirdForm',
             data: this.state.model,
-            onInvalid: this.signal('tabs:selectTab', 2)
+            onInvalid: this.ui('tabs:selectTab', 2)
         };
 
         return (
@@ -118,9 +118,9 @@ class Example extends Webiny.Ui.View {
                         </Ui.Tabs.Tabs>
                     </Ui.Panel.Body>
                     <Ui.Panel.Footer className="text-right">
-                        <Ui.Button type="default" onClick={this.signal('myForm:cancel')} label="Cancel"/>
-                        <Ui.Button type="secondary" onClick={this.signal('myForm:reset')} label="Reset"/>
-                        <Ui.Button type="primary" onClick={this.signal('myForm:submit')} label="Submit"/>
+                        <Ui.Button type="default" onClick={this.ui('myForm:cancel')} label="Cancel"/>
+                        <Ui.Button type="secondary" onClick={this.ui('myForm:reset')} label="Reset"/>
+                        <Ui.Button type="primary" onClick={this.ui('myForm:submit')} label="Submit"/>
                     </Ui.Panel.Footer>
                 </Ui.Panel.Panel>
             </div>

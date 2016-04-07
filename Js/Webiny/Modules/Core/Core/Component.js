@@ -152,7 +152,10 @@ class Component extends React.Component {
         });
     }
 
-    signal(call, ...params) {
+    ui(call, ...params) {
+        if (call.indexOf(':') < 0) {
+            return UiDispatcher.get(call);
+        }
         return UiDispatcher.createSignal(this, call, params);
     }
 

@@ -72,6 +72,13 @@ button {
 body {
   background: #fff;
   width: 100%;
-  height: 350px;
+  height: 100%;
+  height: 100vh;
   overflow-x: hidden;
+  
+  &.opened-mobile-nav {
+    margin-left: 270px;
+    width: 100%;
+  }
 }
+

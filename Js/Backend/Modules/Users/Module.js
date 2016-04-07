@@ -12,7 +12,7 @@ class Module extends Webiny.Module {
 
         this.registerRoutes(
             new Webiny.Route('Users.Form', '/users/:id', {
-                MasterContent: Views.Form
+                MasterContent: Views.TabForm
             }),
             new Webiny.Route('Users.List', '/users', {
                 MasterContent: Views.List

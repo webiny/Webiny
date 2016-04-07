@@ -1,19 +1,9 @@
-body {
-  background: #fff;
-  width: 100%;
-  height: 350px;
-  overflow-x: hidden;
-  &.opened-mobile-nav {
-    margin-left: 270px;
-    width: 100%;
-  }
-}
-
 .sign-in {
   /*background: #FFFFFF url(../img/bg-login.png) repeat;*/
-  background-color: #F3F3F3;
+  height: 100%;
   padding: 20px;
   text-align: center;
+  background-color: #F3F3F3;
   a, p {
     color: #FA5A28;
   }
@@ -21,48 +11,24 @@ body {
     display: block;
     margin-bottom: 8px;
   }
-}
-
-.sign-in-holder {
-  form {
-    background-color: #ffffff;
-    padding: 50px 100px 50px 100px;
-    overflow: hidden;
-  }
-  &.password-rec a.logo {
+  h2 {
     margin-bottom: 25px;
+    font-weight: 300;
+    font-size: 24px;
+    position: relative;
+    text-align: center;
+    display: inline-block;
+    letter-spacing: -0.1px;
+    color: #FA5A28;
   }
-}
 
-.sign-in h2 {
-  margin-bottom: 25px;
-  font-weight: 300;
-  font-size: 24px;
-  position: relative;
-  text-align: center;
-  display: inline-block;
-  letter-spacing: -0.1px;
-  color: #FA5A28;
-}
-
-.sign-in-holder.password-rec h2 {
-  margin-bottom: 10px;
-  font-size: 26px;
-}
-
-.sign-in p.desc {
-  font-size: 15px;
-  color: #FA5A28;
-  line-height: 120%;
-  font-weight: 300;
-  margin-bottom: 20px;
-}
-
-.sign-in-holder {
-  position: relative;
-}
-
-.sign-in {
+  p.desc {
+    font-size: 15px;
+    color: #FA5A28;
+    line-height: 120%;
+    font-weight: 300;
+    margin-bottom: 20px;
+  }
   h2 span {
     display: inline-block;
     background: url(../img/icons.png) no-repeat -46px -3px;
@@ -73,7 +39,6 @@ body {
   }
   label.chk {
     margin-bottom: 25px;
-    float: left;
   }
   .input-holder {
     position: relative;
@@ -137,20 +102,26 @@ body {
     }
   }
   span.remember {
-    font-size: 22px;
+    display: inline-block;
+    vertical-align: top;
+    
     color: #FA5A28;
+    font-size: 22px;
     font-weight: 300;
-    float: left;
-    cursor: pointer;
     line-height: 115%;
+    
+    cursor: pointer;
   }
   a.info {
-    background: url(../img/icons.png) no-repeat -46px -40px;
+    position: relative;
+
+    display: inline-block;
+    vertical-align: top;
     width: 18px;
     height: 18px;
-    float: left;
     margin: 5px 0 0 5px;
-    position: relative;
+
+    background: url(../img/icons.png) no-repeat -46px -40px;
   }
   span.info .notification {
     display: block;
@@ -168,14 +139,28 @@ body {
   }
   .form-footer {
     margin-top: 25px;
+
+    .remember-wrapper {
+      display: block;
+      float: none;
+      clear: both;
+      text-align: center;
+    }
+
+    .submit-wrapper {
+      display: block;
+      float: none;
+      clear: both;
+    }
   }
   .alert {
     padding-bottom: 15px;
   }
-  p.copyright {
-    font-size: 14px;
-    margin: 0;
+  .copyright {
     clear: both;
+    margin-top: 40px;
+    margin-bottom: 0;
+    font-size: 14px;
   }
   a.site {
     font-size: 14px;
@@ -194,6 +179,26 @@ body {
       border-bottom: 1px solid #fff;
     }
   }
+}
+
+.sign-in-holder {
+  position: relative;
+  margin: 50px auto;
+  max-width: 640px;
+
+  form {
+    background-color: #ffffff;
+    padding: 50px 40px;
+    overflow: hidden;
+  }
+  &.password-rec a.logo {
+    margin-bottom: 25px;
+  }
+}
+
+.password-rec h2 {
+  margin-bottom: 10px;
+  font-size: 26px;
 }
 
 /* -------------- loader3 -------------- */
@@ -287,14 +292,18 @@ body {
 
 
 @media (min-width: 768px) {
+  .sign-in-holder {
+    form {
+      padding: 50px 100px 40px;
+    }
+  }
+  .sign-in-holder.password-rec h2 {
+    margin-bottom: 010px;
+    font-size: 35px;
+  }
+
   .sign-in {
     padding: 0;
-  }
-  .sign-in-holder {
-    padding: 50px 150px 40px 150px;
-    margin: 20px 0 0 0;
-  }
-  .sign-in {
     h2 {
       font-size: 28px;
       margin-bottom: 41px;
@@ -302,15 +311,25 @@ body {
         margin-right: 9px;
       }
     }
+    .form-footer {
+      text-align: left;
+
+      .remember-wrapper {
+        display: inline-block;
+      }
+      .submit-wrapper {
+        display: inline-block;
+        float: right;
+      }
+    }
     .btn-primary {
-      float: right;
       text-align: left;
       padding-left: 25px;
       width: inherit;
       padding-right: 52px;
     }
     label.chk {
-      margin-top: 8px;
+      margin-top: 15px;
     }
     a.info {
       margin: 13px 0 0 5px;
@@ -324,12 +343,6 @@ body {
     .input-holder.success span.not {
       top: 43px;
     }
-  }
-  .sign-in-holder.password-rec h2 {
-    margin-bottom: 010px;
-    font-size: 35px;
-  }
-  .sign-in {
     p.desc {
       font-size: 18px;
       color: #FA5A28;
@@ -345,14 +358,14 @@ body {
 }
 
 @media (min-width: 992px) {
+  .sign-in-holder.password-rec h2 {
+    margin-bottom: 010px;
+    font-size: 35px;
+  }
+
   .sign-in {
     padding: 0;
-  }
-  .sign-in-holder {
-    padding: 80px 250px 40px 250px;
-    margin: 40px 100px 0 100px;
-  }
-  .sign-in {
+  
     h2 {
       font-size: 28px;
       margin-bottom: 41px;
@@ -361,14 +374,10 @@ body {
       }
     }
     .btn-primary {
-      float: right;
       text-align: left;
       padding-left: 25px;
       width: inherit;
       padding-right: 52px;
-    }
-    label.chk {
-      margin-top: 8px;
     }
     a.info {
       margin: 13px 0 0 5px;
@@ -381,12 +390,6 @@ body {
         top: 43px;
       }
     }
-  }
-  .sign-in-holder.password-rec h2 {
-    margin-bottom: 010px;
-    font-size: 35px;
-  }
-  .sign-in {
     p.desc {
       font-size: 18px;
       color: #FA5A28;
@@ -402,18 +405,17 @@ body {
 }
 
 @media (min-width: 1200px) {
+  .sign-in-holder.password-rec h2 {
+    margin-bottom: 010px;
+    font-size: 35px;
+  }
+
   .sign-in {
     .input-holder.success span.not {
       background: url("../img/icons.png") no-repeat scroll 1px 2px rgba(0, 0, 0, 0);
     }
     padding: 0;
-  }
-  .sign-in-holder {
-    margin: auto;
-    /*padding: 100px 210px 40px 210px;
-    margin: 40px 150px 0 150px;*/
-  }
-  .sign-in {
+  
     h2 {
       font-size: 28px;
       margin-bottom: 41px;
@@ -428,9 +430,6 @@ body {
       padding-right: 52px;
       width: inherit;
     }
-    label.chk {
-      margin-top: 15px;
-    }
     a.info {
       margin: 20px 0 0 5px;
     }
@@ -442,25 +441,14 @@ body {
         top: 43px;
       }
     }
-  }
-  .sign-in-holder.password-rec h2 {
-    margin-bottom: 010px;
-    font-size: 35px;
-  }
-  .sign-in {
-    p {
-      &.desc {
-        font-size: 18px;
-        color: #FA5A28;
-        line-height: 120%;
-        font-weight: 300;
-      }
-      &.copyright {
-        margin-top: 196px;
-        display: block;
-        clear: both;
-      }
+    
+    .desc {
+      font-size: 18px;
+      color: #FA5A28;
+      line-height: 120%;
+      font-weight: 300;
     }
+    
     .input-holder {
       &.success span.not, &.error span.not {
         top: 42px;

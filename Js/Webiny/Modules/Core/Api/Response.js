@@ -27,6 +27,13 @@ class ApiResponse {
         return null;
     }
 
+    getCode(){
+        if (this.data && 'code' in this.data) {
+            return this.data.code;
+        }
+        return null;
+    }
+
     getMeta(key) {
         if (this.data && 'meta' in this.data) {
             return key ? _.get(this.data.meta, key) : this.data.meta;

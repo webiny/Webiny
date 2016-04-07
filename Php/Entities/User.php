@@ -59,6 +59,9 @@ class User extends EntityAbstract
         ])->setToArrayDefault();
 
         $this->attr('avatar')->smart(new FileAttribute())->setTags('user', 'avatar');
+        $this->attr('gravatar')->dynamic(function(){
+            return md5($this->email);
+        });
         $this->attr('firstName')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('lastName')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('password')->char()->onSet(function ($password) {
@@ -136,7 +139,7 @@ class User extends EntityAbstract
         $this->api('POST', 'call', function () {
             $data = $this->wRequest()->getRequestData();
             return $data;
-        });
+        })->setBodyValidators(['credits' => 'required,gt:100']);
     }
 
 

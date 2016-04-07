@@ -22,7 +22,7 @@ class FormContainer extends Webiny.Ui.Component {
             }
         }
 
-        this.bindMethods('registerForm,onSubmit,onInvalid,onReset,onCancel,prepareChildren,prepareChild,submit,reset,validate,cancel');
+        this.bindMethods('registerForm,loadData,getData,onSubmit,onInvalid,onReset,onCancel,prepareChildren,prepareChild,submit,reset,validate,cancel');
     }
 
     componentWillMount() {
@@ -33,14 +33,38 @@ class FormContainer extends Webiny.Ui.Component {
             });
         }
 
+        if (this.props.api) {
+            this.loadData();
+        } else if (this.props.data) {
+            this.setState({model: this.props.data});
+        }
+    }
+
+    componentWillReceiveProps(props) {
+        super.componentWillReceiveProps(props);
+        if (props.data) {
+            this.setState({model: props.data});
+        }
+    }
+
+    loadData(id = null) {
         if (this.api) {
-            const id = Webiny.Router.getParams('id');
+            if (!id) {
+                if (this.props.connectToRouter) {
+                    id = Webiny.Router.getParams('id');
+                }
+            }
+
             if (id) {
                 this.api.crudGet(id).then(apiResponse => {
                     this.setState({model: apiResponse.getData()});
                 });
             }
         }
+    }
+
+    getData() {
+        return this.state.model;
     }
 
     submit(e) {
@@ -116,11 +140,11 @@ class FormContainer extends Webiny.Ui.Component {
             if (!props.ui) {
                 props.ui = props.name = this.props.ui + '-' + this.formsCount;
             }
-            props.title = this.props.title;
+            props.title = _.get(props, 'title', this.props.title);
 
             // These callbacks are only passed to the main form
             if (this.formsCount === 1) {
-                props.onSubmit = this.props.onSubmit && this.props.onSubmit.bind(this) || this.onSubmit;
+                props.onSubmit = this.props.onSubmit && this.props.onSubmit || this.onSubmit;
                 props.onReset = this.props.onReset || this.onReset;
                 props.onCancel = this.props.onCancel || this.onCancel;
             }
@@ -170,5 +194,9 @@ class FormContainer extends Webiny.Ui.Component {
         return this.linkedForms;
     }
 }
+
+FormContainer.defaultProps = {
+    connectToRouter: false
+};
 
 export default FormContainer;

@@ -21,7 +21,8 @@
     "react": "https://github.com/reactjs/react-bower.git#v0.14.7",
     "select2": "4.0.0",
     "eonasdan-bootstrap-datetimepicker": "~4.17.37",
-    "filesize": "^3.2.1"
+    "filesize": "^3.2.1",
+    "jGrowl": "jgrowl#~1.4.4"
   },
   "overrides": {
     "system.js": {

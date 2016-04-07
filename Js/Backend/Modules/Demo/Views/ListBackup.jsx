@@ -41,10 +41,10 @@ class List extends Webiny.Ui.View {
                             <Ui.Panel.Panel>
                                 <Ui.Panel.Header title="Static Activities List">
                                     <div className="pull-right" style={{marginTop: '-10px'}}>
-                                        <Ui.Button onClick={this.signal('myInlineList:setFilters', {category: null})}>
+                                        <Ui.Button onClick={this.ui('myInlineList:setFilters', {category: null})}>
                                             Show All
                                         </Ui.Button>
-                                        <Ui.Button onClick={this.signal('myInlineList:setFilters', {category: 'joinedTeam'})}>
+                                        <Ui.Button onClick={this.ui('myInlineList:setFilters', {category: 'joinedTeam'})}>
                                             Show Joined Team
                                         </Ui.Button>
                                     </div>
@@ -67,10 +67,10 @@ class List extends Webiny.Ui.View {
                             <Ui.Panel.Panel>
                                 <Ui.Panel.Header title="Inline File List">
                                     <div className="pull-right" style={{marginTop: '-10px'}}>
-                                        <Ui.Button onClick={this.signal('myInlineList2:setFilters', {type: null})}>
+                                        <Ui.Button onClick={this.ui('myInlineList2:setFilters', {type: null})}>
                                             Show All
                                         </Ui.Button>
-                                        <Ui.Button onClick={this.signal('myInlineList2:setFilters', {type: 'image/png'})}>
+                                        <Ui.Button onClick={this.ui('myInlineList2:setFilters', {type: 'image/png'})}>
                                             Show PNG
                                         </Ui.Button>
                                     </div>
@@ -99,11 +99,11 @@ export default List;
 
 /*<Ui.List.Filters>
  <div className="col-md-6 pull-left filters">
- <Ui.Button type="primary" onClick={this.signal('myList:setFilter', {location: 12})} label="Filter"/>
+ <Ui.Button type="primary" onClick={this.ui('myList:setFilter', {location: 12})} label="Filter"/>
  </div>
  </Ui.List.Filters>
  <Ui.List.MultiActions>
  <div className="col-md-6 pull-right action">
- <Ui.Button type="primary" onClick={this.signal('myList:multiExport')} label="MultiAction"/>
+ <Ui.Button type="primary" onClick={this.ui('myList:multiExport')} label="MultiAction"/>
  </div>
  </Ui.List.MultiActions>*/

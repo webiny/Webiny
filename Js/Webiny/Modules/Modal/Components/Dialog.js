@@ -107,14 +107,20 @@ Dialog.defaultProps = {
     onShown: _.noop,
     closeOnClick: true,
     renderer: function renderer() {
+        const ModalContainer = Webiny.Ui.Dispatcher.get('ModalContainer');
+
+        if(!ModalContainer){
+            return null;
+        }
+
         if (!this.state.isShown) {
-            Webiny.Ui.Dispatcher.get('ModalContainer').setContent(null);
+            ModalContainer.setContent(null);
             return null;
         }
 
         const className = this.classSet({modal: true, 'modal-wizard': this.props.wide});
 
-        Webiny.Ui.Dispatcher.get('ModalContainer').setContent(
+        ModalContainer.setContent(
             <div style={{display: 'block'}}>
                 <div className="modal-backdrop in"></div>
                 <div className={className} tabIndex="-1" style={{display: 'block'}}>

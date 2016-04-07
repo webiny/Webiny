@@ -8,69 +8,58 @@ class List extends Webiny.Ui.View {
     render() {
         return (
             <Webiny.Builder.View na me="core-users-list">
-                <Ui.List.Container ui="myList" api="/core/users" fields="id,enabled,firstName,lastName,email,createdOn">
+                <Ui.Grid.Col all={12}>
+                    <h2>Users</h2>
+                </Ui.Grid.Col>
+                <Ui.List.Container ui="myList" api="/core/users" fields="id,enabled,firstName,lastName,email,createdOn,gravatar">
+                    <Ui.List.FormFilters>
+                        {function (applyFilters, resetFilters) {
+                            return (
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={3}>
+                                        <Ui.Select placeholder="Email" allowClear={true} api="/core/users" name="email"
+                                                   valueAttr="email" textAttr="email"/>
+                                    </Ui.Grid.Col>
+                                    <Ui.Grid.Col all={3}>
+                                        <Ui.Select placeholder="Status" allowClear={true} name="enabled">
+                                            <option value="true">Enabled</option>
+                                            <option value="false">Disabled</option>
+                                        </Ui.Select>
+                                    </Ui.Grid.Col>
+                                    <Ui.Grid.Col all={4}>
+                                        <Ui.Date placeholder="Created On" name="createdOn"/>
+                                    </Ui.Grid.Col>
+                                    <Ui.Grid.Col all={2}>
+                                        <Ui.Button type="primary" label="Filter" onClick={applyFilters()}/>
+                                        <Ui.Button type="secondary" label="Reset" onClick={resetFilters()}/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                            );
+                        }}
+                    </Ui.List.FormFilters>
                     <Table.Table>
                         <Table.Row detailsRenderer={null} onShowDetails={null}>
                             <Table.Field name="firstName" align="left" label="First Name" sort="firstName">
                                 <Table.FieldRenderer>
                                     {function () {
+                                        const r = this.props.data;
                                         return (
                                             <td className={this.getTdClasses()}>
-                                                <strong>{this.props.data.firstName} {this.props.data.lastName}</strong><br/>
-                                                {this.props.data.id}
+                                                <Ui.Gravatar hash={r.gravatar}/>
+
+                                                <div className="list-group">
+                                                    <a href="#" className="list-group-item">
+                                                        <h5 className="list-group-item-heading">{r.firstName} {r.lastName}</h5>
+
+                                                        <p className="list-group-item-text">{r.id}</p>
+                                                    </a>
+                                                </div>
                                             </td>
                                         );
                                     }}
                                 </Table.FieldRenderer>
-                                <Table.FieldInfo title="About first name">
-                                    <div className="table-responsive">
-                                        <table className="table table-simple">
-                                            <thead>
-                                            <tr>
-                                                <th className="text-left">Label</th>
-                                                <th className="text-left">Description</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                                <td><span className="label label-danger">Inactive</span></td>
-                                                <td>The site is currently not active, meaning you can only access the site
-                                                    administration,
-                                                    while the public part of the website is not accessible.
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><span className="label label-warning">Active but not CNAMEd</span></td>
-                                                <td>Both public part and the administration are active,
-                                                    however the public part can only be accessed via the temporary domain.
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><span className="label label-success">Active and CNAMEd</span></td>
-                                                <td>Both public part and the administration are active,
-                                                    and the domain can be accessed via the user domain.
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </Table.FieldInfo>
                             </Table.Field>
-                            <Table.Field name="email" align="left" sort="email" label="Email">
-                                <Table.FieldInfo title="About email">
-                                    <p>
-                                        API Key is used if you wish to make API calls from other websites, or devices, to retrieve
-                                        content
-                                        from a particular site.
-                                        Only requests that have the matching API key will get a proper response.
-                                        <br/><br/>
-                                        The API key is sent via <span className="label label-default">X-Webiny-Api-Key</span> HTTP
-                                        request
-                                        header.
-                                        <br/>
-                                    </p>
-                                </Table.FieldInfo>
-                            </Table.Field>
+                            <Table.Field name="email" align="left" sort="email" label="Email"/>
                             <Table.ToggleField name="enabled" label="Status" sort="enabled"/>
                             <Table.Field name="createdOn" align="left" label="Created On" sort="createdOn"/>
                             <Table.Actions>

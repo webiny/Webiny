@@ -71,13 +71,17 @@ class Container extends Webiny.Ui.Component {
     componentWillMount() {
         super.componentWillMount();
         this.prepare(_.clone(this.props));
-        this.loadData();
+        if (this.props.autoLoad) {
+            this.loadData();
+        }
     }
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
         this.prepare(_.clone(props));
-        this.loadData();
+        if (this.props.autoLoad) {
+            this.loadData();
+        }
     }
 
     loadData() {
@@ -262,7 +266,7 @@ class Container extends Webiny.Ui.Component {
         }
 
         React.Children.map(children, child => {
-            if (child.type === Ui.List.Filters) {
+            if (child.type === Ui.List.Filters || child.type.prototype instanceof Ui.List.Filters) {
                 this.filtersElement = child;
             }
 
@@ -287,8 +291,11 @@ class Container extends Webiny.Ui.Component {
             return element;
         }
 
-        if (element.type === 'filters') {
-            return this.filtersElement;
+        if (element.type === 'filters' && this.filtersElement) {
+            return React.cloneElement(this.filtersElement, {
+                filters: this.state.filters,
+                onFilter: this.setFilters
+            });
         }
 
         if (element.type === 'table') {
@@ -314,12 +321,11 @@ Container.defaultProps = {
     defaultParams: {},
     page: 1,
     perPage: 10,
+    autoLoad: true,
     layout: function () {
         return (
             <div className="col-xs-12">
-                <div className="pull-right" style={{marginTop: '-10px'}}>
-                    <filters/>
-                </div>
+                <filters/>
                 <table/>
                 <pagination/>
             </div>

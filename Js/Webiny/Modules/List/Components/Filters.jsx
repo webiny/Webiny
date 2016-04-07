@@ -3,9 +3,21 @@ const Ui = Webiny.Ui.Components;
 
 class Filters extends Webiny.Ui.Component {
 
+    constructor(props) {
+        super(props);
+
+        this.bindMethods('applyFilters');
+    }
+
+    applyFilters(filters) {
+        this.props.onFilter(filters);
+    }
+
     render() {
+        const applyFilters = filters => () => this.applyFilters(filters);
+        const resetFilters = () => () => this.applyFilters({});
         return (
-            <webiny-list-filters>{this.props.children}</webiny-list-filters>
+            <webiny-list-filters>{this.props.children(applyFilters, resetFilters)}</webiny-list-filters>
         );
     }
 }

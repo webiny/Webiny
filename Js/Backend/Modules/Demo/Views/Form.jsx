@@ -272,7 +272,7 @@ class Form extends Webiny.Ui.View {
                                     </Ui.Form.Form>
                                 </Ui.Tabs.Tab>
                                 <Ui.Tabs.Tab label="Second tab">
-                                    <Ui.Form.Form layout={false} onInvalid={this.signal('tabs:selectTab', 1)}>
+                                    <Ui.Form.Form layout={false} onInvalid={this.ui('tabs:selectTab', 1)}>
                                         <fields>
                                             <Ui.Grid.Row>
                                                 <Ui.Grid.Col all={12}>
@@ -286,9 +286,9 @@ class Form extends Webiny.Ui.View {
                             </Ui.Tabs.Tabs>
                         </Ui.Panel.Body>
                         <Ui.Panel.Footer className="text-right">
-                            <Ui.Button type="default" onClick={this.signal('myForm:cancel')} label="Cancel"/>
-                            <Ui.Button type="secondary" onClick={this.signal('myForm:reset')} label="Reset"/>
-                            <Ui.Button type="primary" onClick={this.signal('myForm:submit')} label="Submit"/>
+                            <Ui.Button type="default" onClick={this.ui('myForm:cancel')} label="Cancel"/>
+                            <Ui.Button type="secondary" onClick={this.ui('myForm:reset')} label="Reset"/>
+                            <Ui.Button type="primary" onClick={this.ui('myForm:submit')} label="Submit"/>
                         </Ui.Panel.Footer>
                     </Ui.Panel.Panel>
                 </Ui.Form.Container>

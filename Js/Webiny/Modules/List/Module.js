@@ -8,6 +8,7 @@ import FieldRenderer from './Components/Table/FieldRenderer';
 import Header from './Components/Table/Header';
 import Footer from './Components/Table/Footer';
 import Filters from './Components/Filters';
+import FormFilters from './Components/FormFilters';
 import Pagination from './Components/Pagination';
 import MultiActions from './Components/MultiActions';
 import DateTimeField from './Components/Table/Fields/DateTimeField';
@@ -17,6 +18,7 @@ import FileSizeField from './Components/Table/Fields/FileSizeField';
 import CaseField from './Components/Table/Fields/CaseField';
 import ToggleField from './Components/Table/Fields/ToggleField';
 import Actions from './Components/Table/Actions';
+import Action from './Components/Table/Actions/Action';
 import RouteAction from './Components/Table/Actions/RouteAction';
 import EditAction from './Components/Table/Actions/EditAction';
 import ModalAction from './Components/Table/Actions/ModalAction';
@@ -44,12 +46,14 @@ class Module extends Webiny.Module {
                 CaseField,
                 ToggleField,
                 Actions,
+                Action,
                 EditAction,
                 RouteAction,
                 ModalAction,
                 DeleteAction
             },
             Filters,
+            FormFilters,
             MultiActions,
             Pagination
         };

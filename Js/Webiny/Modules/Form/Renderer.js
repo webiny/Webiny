@@ -4,9 +4,14 @@ const Ui = Webiny.Ui.Components;
 
 export default {
     layout: function layout() {
+        let title = this.props.title;
+        if(_.isFunction(title)){
+            title = title();
+        }
+
         return (
             <Ui.Panel.Panel>
-                <Ui.Panel.Header title={this.props.title && this.props.title()} icon={this.props.icon}/>
+                <Ui.Panel.Header title={title} icon={this.props.icon}/>
                 <Ui.Panel.Body>
                     <fields/>
                 </Ui.Panel.Body>

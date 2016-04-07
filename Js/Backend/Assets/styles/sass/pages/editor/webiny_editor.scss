@@ -1,6 +1,6 @@
-@import '../variables';
+@import '../../base/variables.scss';
 
-.master-header {
+.master-content__header {
   @media (min-width: 1200px) {
     height: 130px;
   }

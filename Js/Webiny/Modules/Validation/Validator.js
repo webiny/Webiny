@@ -96,7 +96,7 @@ class Validator {
 const formValidator = new Validator();
 
 formValidator.addValidator('required', (value) => {
-    if (!(!value || value === '')) {
+    if (!(!value || value === '' || value === 0)) {
         return true;
     }
     return 'This field is required';

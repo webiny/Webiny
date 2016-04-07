@@ -11,7 +11,7 @@
   &:after {
     position: absolute;
     top: 50%;
-    right: 25px;
+    right: 11px;
     transform: translateY(-50%);
     content: "\e811";
     font-family: "fontello";
@@ -106,6 +106,7 @@
 .select2-results {
   display: block;
   z-index: 9050;
+  padding: 10px 0;
 }
 
 /* line 22, ../scss/_dropdown.scss */
@@ -149,7 +150,6 @@
 
 /* line 55, ../scss/_dropdown.scss */
 .select2-search--dropdown {
-  display: none;
   padding: 7px;
 }
 /* line 59, ../scss/_dropdown.scss */
@@ -251,6 +251,7 @@
 }
 /* line 35, ../scss/theme/default/_single.scss */
 .select2-container--default .select2-selection--single .select2-selection__arrow b {
+  background: url(../../../../assets/img/drop.png) no-repeat top left;
   margin-left: -14px;
   margin-top: -2px;
   position: absolute;
@@ -398,7 +399,6 @@
 .select2-container--default .select2-results > .select2-results__options {
   max-height: 200px;
   overflow-y: auto;
-  padding: 10px;
 }
 /* line 42, ../scss/theme/default/layout.scss */
 .select2-container--default .select2-results__option[role=group] {
@@ -449,7 +449,7 @@
 /* line 88, ../scss/theme/default/layout.scss */
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
   color: $color-primary;
-  background-color: transparent;
+  background-color: #f9f9f9;
 }
 /* line 93, ../scss/theme/default/layout.scss */
 .select2-container--default .select2-results__group {

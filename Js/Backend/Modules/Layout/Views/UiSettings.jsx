@@ -27,7 +27,7 @@ class UiSettings extends Webiny.Ui.Component {
                     </Ui.Form>
                 </Ui.Panel.Body>
                 <Ui.Panel.Footer className="text-right">
-                    <Ui.Button type="primary" onClick={this.signal('myForm:submit')} label="Submit"/>
+                    <Ui.Button type="primary" onClick={this.ui('myForm:submit')} label="Submit"/>
                 </Ui.Panel.Footer>
             </Ui.Panel.Panel>
         );

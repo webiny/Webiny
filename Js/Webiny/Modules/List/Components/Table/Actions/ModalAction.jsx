@@ -30,7 +30,11 @@ ModalAction.defaultProps = {
             return null;
         }
 
-        let modal = this.props.children.call(this, this.props.data, this.props.actions, {hide: this.hideModal});
+        const modalActions = {
+            hide: () => () => this.hideModal()
+        };
+
+        let modal = this.props.children.call(this, this.props.data, this.props.actions, modalActions);
 
         modal = React.cloneElement(modal, {
             show: this.state.showModal,

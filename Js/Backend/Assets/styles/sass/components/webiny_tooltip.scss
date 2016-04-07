@@ -1,9 +1,12 @@
 a.info {
-  float: left;
   position: relative;
+  
+  display: inline-block;
+  vertical-align: top;
   width: 25px;
   height: 25px;
   margin-top: 12px;
+  
   span.icon {
     font-size: 20px;
     color: #999;

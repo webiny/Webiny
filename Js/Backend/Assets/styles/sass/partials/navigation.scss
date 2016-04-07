@@ -1414,7 +1414,11 @@ body.opened-mobile-nav .left-menu-submenu {
   }
   .master-content {
     /*margin-left: 107px;*/
-    padding: 20px 50px 100px 100px;
+    padding: 55px 0 100px 60px;
+    
+    .container-fluid {
+      padding: 0 50px;
+    }
   }
   .master-navigation .navbar-collapse.collapse {
     position: fixed;

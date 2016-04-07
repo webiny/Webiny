@@ -83,7 +83,7 @@ Login.defaultProps = {
                                           description={<span className="info-txt"><a tabIndex="-1" href="#">Forgot your password?</a></span>}/>
 
                                 <div className="form-footer">
-                                    <Ui.Button type="primary" size="large" onClick={this.signal('loginForm:submit')} label="Submit"
+                                    <Ui.Button type="primary" size="large" onClick={this.ui('loginForm:submit')} label="Submit"
                                                icon="icon-next"/>
                                 </div>
                             </fields>

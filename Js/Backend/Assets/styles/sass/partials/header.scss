@@ -1,22 +1,7 @@
-.master-header {
-  padding: 0 30px 0 30px;
-  margin-top: 0;
-  text-align: center;
+.master-content__header {
+  padding: 20px 0;
   h2 {
     display: inline-block;
     border: none;
-  }
-  @media (min-width: 768px) {
-    padding: 0 75px 0 120px;
-  }
-  @media (min-width: 1200px) {
-    height: 92px;
-    text-align: left;
-    clear: left;
-    margin-top: 55px;
-    h2{
-      display: inline-block;
-      margin: 30px 0 0 0;
-    }
   }
 }

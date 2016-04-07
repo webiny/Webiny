@@ -68,7 +68,7 @@ class Form extends Webiny.Ui.Component {
         }
 
         if (this.props.layout) {
-            this.layout = this.props.layout.bind(this)();
+            this.layout = this.props.layout.call(this);
         }
     }
 
@@ -177,7 +177,7 @@ class Form extends Webiny.Ui.Component {
             return this.props.container.linkedForms;
         }
 
-        if(!this.props.container){
+        if(!this.props.container && this.props.linkedForms){
             return _.filter(this.props.linkedForms.split(',')).map(Webiny.Ui.Dispatcher.get);
         }
 
@@ -214,7 +214,7 @@ class Form extends Webiny.Ui.Component {
             });
         }
 
-        this.props.onSubmit(model, this);
+        this.props.onSubmit(model, this.props.container);
     }
 
     reset() {

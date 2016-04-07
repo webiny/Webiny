@@ -22,8 +22,8 @@ DeleteAction.defaultProps = {
                                 <p>{message}</p>
                             </Ui.Modal.Body>
                             <Ui.Modal.Footer>
-                                <Ui.Button label="No" onClick={modal.hide}/>
-                                <Ui.Button label="Yes, delete!" onClick={actions.delete(record.id).then(modal.hide)}/>
+                                <Ui.Button label="No" onClick={modal.hide()}/>
+                                <Ui.Button label="Yes, delete!" onClick={actions.delete(record.id).then(modal.hide())}/>
                             </Ui.Modal.Footer>
                         </Ui.Modal.Dialog>
                     );

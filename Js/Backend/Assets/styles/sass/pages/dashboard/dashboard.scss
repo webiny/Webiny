@@ -1,10 +1,10 @@
-@import '../variables.scss';
+@import '../../base/variables.scss';
 
 .hl-element{
   color: $highlightColor;
 }
 
-  .master-header {
+  .master-content__header {
     text-align: center;
     h2 {
       display: inline-block;
@@ -30,7 +30,7 @@
         height: 45px;
         .form-control {
           border: 1px solid $borderColor;
-          background: $formBgBolor;
+          background: $formBgColor;
           padding: 4px 18px;
         }
         span.icon_c {
@@ -123,7 +123,7 @@
 
 @media (min-width: 768px) and (max-width: 991px) {
 
-  .master-header {
+  .master-content__header {
     text-align: center;
     clear: left;
     h2 {
@@ -147,7 +147,7 @@
         height: 45px;
         .form-control {
           border: 1px solid $borderColor;
-          background: $formBgBolor;
+          background: $formBgColor;
           padding: 4px 18px;
         }
         span.icon_c {
@@ -185,7 +185,7 @@
 
 @media (min-width: 992px) and (max-width: 1199px) {
 
-  .master-header {
+  .master-content__header {
     height: 92px;
     margin-top: 0;
     text-align: left;
@@ -215,7 +215,7 @@
         height: 45px;
         .form-control {
           border: 1px solid $borderColor;
-          background: $formBgBolor;
+          background: $formBgColor;
           padding: 4px 18px;
         }
         span.icon_c {
@@ -250,7 +250,7 @@
 
 @media (min-width: 1200px) {
 
-  .master-header {
+  .master-content__header {
     height: 92px;
     margin-top: 55px;
     text-align: left;
@@ -279,7 +279,7 @@
         height: 45px;
         .form-control {
           border: 1px solid $borderColor;
-          background: $formBgBolor;
+          background: $formBgColor;
           padding: 4px 18px;
         }
         span.icon_c {
