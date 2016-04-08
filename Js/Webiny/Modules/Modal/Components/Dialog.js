@@ -1,8 +1,6 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-let handlersBound = false;
-
 class Dialog extends Webiny.Ui.Component {
 
     constructor(props) {
@@ -25,21 +23,22 @@ class Dialog extends Webiny.Ui.Component {
         this.setState({isShown: props.show});
     }
 
-    componentDidMount() {
-        super.componentDidMount();
-        this.bindHandlers();
+    componentDidUpdate(prevProps, prevState) {
+        super.componentDidUpdate(prevProps, prevState);
+        if (this.state.isShown) {
+            this.bindHandlers();
+        } else {
+            this.unbindHandlers();
+        }
     }
 
     componentWillUnmount() {
         super.componentWillUnmount();
         this.unbindHandlers();
+        Webiny.Ui.Dispatcher.get('ModalContainer').setContent(null);
     }
 
     bindHandlers() {
-        if (handlersBound) {
-            return;
-        }
-
         $('webiny-modal-container').on('keyup.modal', '.modal', e => {
             // Listen for ESC button
             if (e.keyCode === 27) {
@@ -53,22 +52,17 @@ class Dialog extends Webiny.Ui.Component {
                 }
             }
         });
-
-        handlersBound = true;
     }
 
     unbindHandlers() {
         $('webiny-modal-container').off('.modal');
-        handlersBound = false;
     }
 
     hide() {
         this.props.onHide();
-
         this.setState({
             isShown: false
         }, this.props.onHidden);
-
     }
 
     show() {
@@ -83,7 +77,6 @@ class Dialog extends Webiny.Ui.Component {
             return child;
         }
 
-        // Table handles Row and Footer
         if (child.type === Ui.Modal.Header) {
             return React.cloneElement(child, {onClose: this.hide});
         }
@@ -109,7 +102,7 @@ Dialog.defaultProps = {
     renderer: function renderer() {
         const ModalContainer = Webiny.Ui.Dispatcher.get('ModalContainer');
 
-        if(!ModalContainer){
+        if (!ModalContainer) {
             return null;
         }
 

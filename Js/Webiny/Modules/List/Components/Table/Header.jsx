@@ -38,7 +38,7 @@ Header.defaultProps = {
         sortIcon[this.props.sortedDescendingIcon] = this.props.sorted === -1;
         sortIcon[this.props.sortableIcon] = this.props.sorted === 0;
 
-        const icon = this.props.sortable ? <i className={this.classSet(sortIcon)}></i> : null;
+        const icon = this.props.sortable ? <Ui.Icon icon={this.classSet(sortIcon)}/> : null;
 
         let content = this.props.label;
         if (this.props.sortable) {

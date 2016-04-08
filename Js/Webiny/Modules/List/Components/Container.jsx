@@ -155,6 +155,11 @@ class Container extends Webiny.Ui.Component {
 
     setFilters(filters) {
         if (this.props.connectToRouter) {
+            // Need to build a new object with null values to unset filters from URL
+            if(_.isEmpty(filters) && _.keys(this.filters)){
+                filters = _.mapValues(this.filters, () => null);
+            }
+
             filters._page = 1;
             this.goToRoute(filters);
         } else {
@@ -267,7 +272,10 @@ class Container extends Webiny.Ui.Component {
 
         React.Children.map(children, child => {
             if (child.type === Ui.List.Filters || child.type.prototype instanceof Ui.List.Filters) {
-                this.filtersElement = child;
+                this.filtersElement = React.cloneElement(child, {
+                    filters: this.state.filters,
+                    onFilter: this.setFilters
+                });
             }
 
             const props = _.omit(child.props, ['children']);
@@ -292,10 +300,7 @@ class Container extends Webiny.Ui.Component {
         }
 
         if (element.type === 'filters' && this.filtersElement) {
-            return React.cloneElement(this.filtersElement, {
-                filters: this.state.filters,
-                onFilter: this.setFilters
-            });
+            return this.filtersElement;
         }
 
         if (element.type === 'table') {

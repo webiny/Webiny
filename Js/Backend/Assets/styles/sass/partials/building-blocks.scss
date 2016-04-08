@@ -49,12 +49,16 @@
       }
     }
     i{
+      display: inline-block;
+      vertical-align: middle;
+      
       color: $darkIconColor;
       font-size: 19px;
     }
-    i.icon-check-1{
+    i.icon-check-thin {
       color: $darkIconColor;
-      font-size: 17px;
+      font-size: 13px;
+      margin-right: 5px;
     }
   }
   @media(min-width: 768px){
@@ -452,7 +456,7 @@
         p{
           margin: 15px 0 0 0;
           font-size: 14px;
-          padding-left: 40px;
+          padding-left: 50px;
         }
         .task-check{
           &:hover{

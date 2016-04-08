@@ -85,6 +85,9 @@
     td.today:before {
       display: none;
     }
+    td.active {
+      background-color: #337ab7;
+    }
   } 
 
   th {

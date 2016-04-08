@@ -144,6 +144,46 @@ class Form extends Webiny.Ui.View {
             textAttr: 'name'
         };
 
+        const settings = (
+            <Ui.Dynamic.FieldSet name="settings">
+                <Ui.Dynamic.Row>
+                    {function (record, index, actions) {
+                        return (
+                            <Ui.Grid.Row>
+                                <Ui.Grid.Col all={3}>
+                                    <Ui.Input placeholder="Key" name="key" validate="required"/>
+                                </Ui.Grid.Col>
+                                <Ui.Grid.Col all={3}>
+                                    <Ui.Input placeholder="Value" name="value" validate="required"/>
+                                </Ui.Grid.Col>
+                                <Ui.Grid.Col all={3}>
+                                    <Ui.Select {...createdBySelect} label={null}/>
+                                </Ui.Grid.Col>
+                                <Ui.Grid.Col all={3}>
+                                    <div className="btn-group">
+                                        <Ui.Button type="primary" label="Add" onClick={actions.add(index)}/>
+                                        <Ui.Button type="secondary" label="x" onClick={actions.remove(index)}/>
+                                    </div>
+                                </Ui.Grid.Col>
+                            </Ui.Grid.Row>
+                        );
+                    }}
+                </Ui.Dynamic.Row>
+                <Ui.Dynamic.Empty>
+                    {function (actions) {
+                        return (
+                            <Ui.Grid.Row>
+                                <Ui.Grid.Col all={12}>
+                                    <h5>You have not created any settings yet. Click "Add settings" to start creating your settings!</h5>
+                                    <Ui.Button type="primary" label="Add settings" onClick={actions.add(0)}/>
+                                </Ui.Grid.Col>
+                            </Ui.Grid.Row>
+                        )
+                    }}
+                </Ui.Dynamic.Empty>
+            </Ui.Dynamic.FieldSet>
+        );
+
         return (
             <Webiny.Builder.View name="core-users-form" config={this.getConfig()}>
                 <Ui.Form.Container ui="myForm" api="/core/users" fields="id,firstName,lastName,email,userGroups,settings,enabled">
@@ -173,7 +213,8 @@ class Form extends Webiny.Ui.View {
                                                     <Ui.Select {...userGroupSelect}/>
                                                 </Ui.Grid.Col>
                                                 <Ui.Grid.Col all={4}>
-                                                    <Ui.Search validate="required" label="Find user" api="/core/files" searchFields="name" textAttr="name" fields="id,name" name="userQuery"/>
+                                                    <Ui.Search validate="required" label="Find user" api="/core/files" searchFields="name"
+                                                               textAttr="name" fields="id,name" name="userQuery"/>
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
                                             <Ui.Grid.Row>
@@ -234,38 +275,7 @@ class Form extends Webiny.Ui.View {
                                             <Ui.Grid.Row>
                                                 <Ui.Grid.Col all={12}>
                                                     <h4>Settings</h4>
-                                                    <Ui.Dynamic.FieldSet name="settings">
-                                                        <Ui.Dynamic.Row>
-                                                            <Ui.Grid.Row>
-                                                                <Ui.Grid.Col all={3}>
-                                                                    <Ui.Input placeholder="Key" name="key" validate="required"/>
-                                                                </Ui.Grid.Col>
-                                                                <Ui.Grid.Col all={3}>
-                                                                    <Ui.Input placeholder="Value" name="value" validate="required"/>
-                                                                </Ui.Grid.Col>
-                                                                <Ui.Grid.Col all={3}>
-                                                                    <Ui.Select {...createdBySelect} label={null}/>
-                                                                </Ui.Grid.Col>
-                                                                <Ui.Grid.Col all={3}>
-                                                                    <div className="btn-group">
-                                                                        <Ui.Dynamic.Add>
-                                                                            <Ui.Button type="primary" label="Add"/>
-                                                                        </Ui.Dynamic.Add>
-                                                                        <Ui.Dynamic.Remove>
-                                                                            <Ui.Button type="secondary" label="x"/>
-                                                                        </Ui.Dynamic.Remove>
-                                                                    </div>
-                                                                </Ui.Grid.Col>
-                                                            </Ui.Grid.Row>
-                                                        </Ui.Dynamic.Row>
-                                                        <Ui.Dynamic.Empty>
-                                                            <h5>You have not created any settings yet. Click "Add settings" to start
-                                                                creating your settings!</h5>
-                                                            <Ui.Dynamic.Add>
-                                                                <Ui.Button type="primary" label="Add settings"/>
-                                                            </Ui.Dynamic.Add>
-                                                        </Ui.Dynamic.Empty>
-                                                    </Ui.Dynamic.FieldSet>
+                                                    {settings}
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
                                         </fields>

@@ -32,11 +32,11 @@ class Login extends Webiny.Ui.View {
         const onSuccess = this.props.onSuccess;
         const tokenName = this.props.tokenName;
         return {
-            onSubmit(model){
-                this.setState({error: null, model});
+            onSubmit(model, container){
+                container.setState({error: null, model});
                 return new Webiny.Api.Entity(api).post('login', model).then(apiResponse => {
                     if (apiResponse.isError()) {
-                        return this.setState({error: apiResponse.getError()});
+                        return container.setState({error: apiResponse.getError()});
                     }
 
                     const data = apiResponse.getData();

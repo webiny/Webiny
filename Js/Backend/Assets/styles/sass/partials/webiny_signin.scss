@@ -326,7 +326,6 @@
       text-align: left;
       padding-left: 25px;
       width: inherit;
-      padding-right: 52px;
     }
     label.chk {
       margin-top: 15px;
@@ -339,6 +338,9 @@
     }
     input {
       height: 57px;
+    }
+    span.icon {
+      top: 35px;
     }
     .input-holder.success span.not {
       top: 43px;
@@ -372,12 +374,6 @@
       span {
         margin-right: 9px;
       }
-    }
-    .btn-primary {
-      text-align: left;
-      padding-left: 25px;
-      width: inherit;
-      padding-right: 52px;
     }
     a.info {
       margin: 13px 0 0 5px;
@@ -425,10 +421,6 @@
     }
     .btn-primary {
       float: right;
-      text-align: left;
-      padding-left: 25px;
-      padding-right: 52px;
-      width: inherit;
     }
     a.info {
       margin: 20px 0 0 5px;
