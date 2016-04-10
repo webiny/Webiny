@@ -58,7 +58,7 @@ Login.defaultProps = {
     api: '/entities/core/users',
     renderer: function renderer() {
         return (
-            <Ui.Form.Container ui="loginForm" {...this.getConfig.call(this)}>
+            <Ui.Form.ApiContainer ui="loginForm" {...this.getConfig.call(this)}>
                 <div className="container">
                     <div className="sign-in-holder">
                         <Ui.Form.Form className="form-signin" layout={false}>
@@ -93,7 +93,7 @@ Login.defaultProps = {
                         <a href="#" className="site">www.webiny.com</a>
                     </div>
                 </div>
-            </Ui.Form.Container>
+            </Ui.Form.ApiContainer>
         );
     }
 };

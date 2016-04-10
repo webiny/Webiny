@@ -10,8 +10,11 @@ class Main extends Webiny.Ui.View {
         return (
             <div className="master minimized">
                 <Webiny.Ui.Components.Placeholder name="Header"/>
-                <div className="master-content container-fluid master-content--no-background">
-                    <Webiny.Ui.Components.Placeholder name="MasterContent"/>
+
+                <div className="master-content master-content--no-background">
+                    <div className="container-fluid">
+                        <Webiny.Ui.Components.Placeholder name="MasterContent"/>
+                    </div>
                 </div>
                 <Webiny.Ui.Components.Modal.Container ui="ModalContainer"/>
                 <Components.Footer/>
