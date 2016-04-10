@@ -9,7 +9,7 @@ class Form extends Webiny.Ui.View {
 
     render() {
         const containerProps = {
-            api: '/core/users',
+            api: '/entities/core/users',
             fields: 'id,firstName,lastName,email,userGroups,settings,enabled',
             title: 'Users form',
             connectToRouter: true,
@@ -23,7 +23,7 @@ class Form extends Webiny.Ui.View {
 
         return (
             <Webiny.Builder.View name="core-users-form">
-                <Ui.Form.Container ui="myForm" {...containerProps}>
+                <Ui.Form.ApiContainer ui="myForm" {...containerProps}>
                     {/*<Ui.Data api="/brands/analytics">
                      {(data, filter) => <Stats title="New Brands" data={data.newBrands} onChange={newVal => filter({date: newVal})()}/>}
                      </Ui.Data>*/}
@@ -59,7 +59,7 @@ class Form extends Webiny.Ui.View {
                                         </Ui.Form.Form>
                                     </Ui.Tabs.Tab>
                                     <Ui.Tabs.Tab label="Files" onClick={this.ui('files:loadData')}>
-                                        <Ui.List.Container ui="files" autoLoad={false} api="/core/files" fields="id,name,type,size">
+                                        <Ui.List.ApiContainer ui="files" autoLoad={false} api="/entities/core/files" fields="id,name,type,size">
                                             <Table.Table>
                                                 <Table.Row>
                                                     <Table.Field name="name" align="left" label="Name"/>
@@ -68,7 +68,7 @@ class Form extends Webiny.Ui.View {
                                                 </Table.Row>
                                             </Table.Table>
                                             <Ui.List.Pagination size="small"/>
-                                        </Ui.List.Container>
+                                        </Ui.List.ApiContainer>
                                     </Ui.Tabs.Tab>
                                 </Ui.Tabs.Tabs>
                             </Ui.Panel.Body>
@@ -78,7 +78,7 @@ class Form extends Webiny.Ui.View {
                             </Ui.Panel.Footer>
                         </Ui.Panel.Panel>
                     </Ui.Grid.Col>
-                </Ui.Form.Container>
+                </Ui.Form.ApiContainer>
             </Webiny.Builder.View>
         );
     }

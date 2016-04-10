@@ -37,9 +37,9 @@ class List extends Webiny.Ui.View {
             <Webiny.Builder.View name="core-users-list" config={this.getConfig()}>
                 <Ui.Grid.Row>
                     <Ui.Grid.Col all={12}>
-                        <Ui.List.Container ui="myList" api="/core/users" fields="id,enabled,firstName,lastName,email,createdOn">
+                        <Ui.List.ApiContainer ui="myList" api="/entities/core/users" fields="id,enabled,firstName,lastName,email,createdOn">
                             <Table.Table>
-                                <Table.Row detailsRenderer={null} onShowDetails={null}>
+                                <Table.Row>
                                     <Table.Field name="firstName" align="left" label="First Name" sort="firstName">
                                         <Table.FieldRenderer>
                                             {function () {
@@ -109,25 +109,25 @@ class List extends Webiny.Ui.View {
                                     </Table.CaseField>
                                     <Table.Field name="createdOn" align="left" label="Created On" sort="createdOn"/>
                                     <Table.Actions>
-                                        <Table.Action label="Edit" route="Users.Form" params="id"/>
-                                        <Table.Action label="Delete" route="Users.Form" params="id"/>
+                                        <Table.EditAction route="Demo.Form"/>
+                                        <Table.DeleteAction/>
                                     </Table.Actions>
                                 </Table.Row>
                                 <Table.Footer/>
                             </Table.Table>
                             <Ui.List.Pagination/>
-                        </Ui.List.Container>
+                        </Ui.List.ApiContainer>
                     </Ui.Grid.Col>
                 </Ui.Grid.Row>
                 <Ui.Grid.Row>
                     <Ui.Grid.Col all={12}>
-                        <Ui.List.Container ui="myInlineList" data={data}>
+                        <Ui.List.StaticContainer ui="myInlineList" data={data}>
                             <Ui.List.Filters>
                                 {function (apply, reset) {
                                     return (
                                         <Ui.Grid.Row>
                                             <Ui.Grid.Col all={12}>
-                                                <Ui.Button onClick={apply({category: null})} label="Show All"/>
+                                                <Ui.Button onClick={reset()} label="Show All"/>
                                                 <Ui.Button onClick={apply({category: 'joinedTeam'})} label="Show Joined Team"/>
                                             </Ui.Grid.Col>
                                         </Ui.Grid.Row>
@@ -149,13 +149,13 @@ class List extends Webiny.Ui.View {
                                 <Table.Footer/>
                             </Table.Table>
                             <Ui.List.Pagination/>
-                        </Ui.List.Container>
+                        </Ui.List.StaticContainer>
                     </Ui.Grid.Col>
                 </Ui.Grid.Row>
                 <Ui.Grid.Row>
                     <Ui.Grid.Col all={12}>
-                        <Ui.List.Container ui="myInlineList2" api="/core/files" fields="id,src,name,type,size,createdOn"
-                                           searchFields="name" connectToRouter={true}>
+                        <Ui.List.ApiContainer ui="myInlineList2" api="/entities/core/files" fields="id,src,name,type,size,createdOn"
+                                           searchFields="name">
                             <Ui.List.Filters>
                                 {function (apply, reset) {
                                     return (
@@ -178,7 +178,7 @@ class List extends Webiny.Ui.View {
                                 <Table.Footer/>
                             </Table.Table>
                             <Ui.List.Pagination size="small"/>
-                        </Ui.List.Container>
+                        </Ui.List.ApiContainer>
                     </Ui.Grid.Col>
                 </Ui.Grid.Row>
             </Webiny.Builder.View>

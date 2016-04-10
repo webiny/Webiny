@@ -1,6 +1,6 @@
 const actions = {
     loadCms: () => {
-        const api = new Webiny.Api.Service('/services/core/apps');
+        const api = new Webiny.Api.Endpoint('/services/core/apps');
         return api.get('/Cms.Backend').then(res => {
             const config = res.getData();
             return WebinyBootstrap.includeApp(config.name, config).then(appInstance => {

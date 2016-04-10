@@ -1,12 +1,10 @@
 import Webiny from 'Webiny';
-import ApiDataSource from './DataSource/Api';
-import StaticDataSource from './DataSource/Static';
 import updateAction from './Actions/Update';
 import deleteAction from './Actions/Delete';
 import executeAction from './Actions/Execute';
 const Ui = Webiny.Ui.Components;
 
-class Container extends Webiny.Ui.Component {
+class BaseContainer extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);
@@ -33,22 +31,9 @@ class Container extends Webiny.Ui.Component {
         this.searchOperator = props.searchOperator || 'or';
         this.searchFields = props.searchFields || null;
 
-        this.dataSource = null;
-
         this.filtersElement = null;
         this.tableElement = null;
         this.paginationElement = null;
-
-        if (props.api) {
-            this.dataSource = new ApiDataSource(props.api, props.defaultParams);
-            if (props.fields) {
-                this.dataSource.setFields(props.fields);
-            }
-        }
-
-        if (props.data) {
-            this.dataSource = new StaticDataSource(props.data, props.defaultParams);
-        }
 
         this.bindMethods(
             'prepareList',
@@ -63,45 +48,20 @@ class Container extends Webiny.Ui.Component {
             'loadData',
             'prepare',
             'onRecordUpdate',
-            'onRecordDelete',
-            'onRecordExecute'
+            'onRecordDelete'
         );
     }
 
     componentWillMount() {
         super.componentWillMount();
-        this.prepare(_.clone(this.props));
-        if (this.props.autoLoad) {
-            this.loadData();
-        }
     }
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        this.prepare(_.clone(props));
-        if (this.props.autoLoad) {
-            this.loadData();
-        }
     }
 
-    loadData() {
-        this.dataSource.setSorters(this.sorters).setFilters(this.filters).setPage(this.page).setPerPage(this.perPage);
-        this.dataSource.setSearchQuery(this.searchQuery).setSearchFields(this.searchFields).setSearchOperator(this.searchOperator);
-
-        return this.dataSource.getData().then(data => {
-            this.setState({
-                list: data.list,
-                meta: data.meta,
-                sorters: this.sorters,
-                filters: this.filters,
-                page: this.page,
-                perPage: this.perPage,
-                searchQuery: this.searchQuery,
-                searchOperator: this.searchOperator,
-                searchFields: this.searchFields
-            });
-            return data;
-        });
+    loadData(){
+        throw new Error('Implement loadData method in your list container class!');
     }
 
     prepare(props) {
@@ -156,7 +116,7 @@ class Container extends Webiny.Ui.Component {
     setFilters(filters) {
         if (this.props.connectToRouter) {
             // Need to build a new object with null values to unset filters from URL
-            if(_.isEmpty(filters) && _.keys(this.filters)){
+            if (_.isEmpty(filters) && _.keys(this.filters)) {
                 filters = _.mapValues(this.filters, () => null);
             }
 
@@ -215,19 +175,15 @@ class Container extends Webiny.Ui.Component {
     }
 
     onRecordUpdate(id, attributes) {
-        return this.dataSource.update(id, attributes).then(this.loadData);
+        throw new Error('Implement onRecordUpdate method in your list container class!');
     }
 
     onRecordDelete(id) {
-        return this.dataSource.delete(id).then(this.loadData);
-    }
-
-    onRecordExecute(httpMethod, method, body, query) {
-        return this.dataSource.execute(httpMethod, method, body, query);
+        throw new Error('Implement onRecordDelete method in your list container class!');
     }
 
     tableProps(tableProps) {
-        // Pass relevant props from Container to Table
+        // Pass relevant props from BaseContainer to Table
         _.each(this.props, (value, name) => {
             if (_.startsWith(name, 'field') && name !== 'fields' || _.startsWith(name, 'action')) {
                 tableProps[name] = value;
@@ -251,11 +207,11 @@ class Container extends Webiny.Ui.Component {
     paginationProps(paginationProps) {
         _.assign(paginationProps, {
             onPageChange: this.setPage,
-            totalPages: this.dataSource.getTotalPages(),
             currentPage: this.state.page,
             perPage: this.state.perPage,
-            count: this.state.list.length,
-            totalCount: this.state.meta.totalCount
+            count: _.get(this.state.list, 'length', 0),
+            totalCount: _.get(this.state.meta, 'totalCount', 0),
+            totalPages: _.get(this.state.meta, 'totalPages', 0)
         });
 
         return paginationProps;
@@ -321,12 +277,11 @@ class Container extends Webiny.Ui.Component {
     }
 }
 
-Container.defaultProps = {
+BaseContainer.defaultProps = {
     connectToRouter: false,
     defaultParams: {},
     page: 1,
     perPage: 10,
-    autoLoad: true,
     layout: function () {
         return (
             <div className="col-xs-12">
@@ -359,4 +314,4 @@ Container.defaultProps = {
     }
 };
 
-export default Container;
+export default BaseContainer;

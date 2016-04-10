@@ -34,7 +34,7 @@ class Login extends Webiny.Ui.View {
         return {
             onSubmit(model, container){
                 container.setState({error: null, model});
-                return new Webiny.Api.Entity(api).post('login', model).then(apiResponse => {
+                return new Webiny.Api.Endpoint(api).post('login', model).then(apiResponse => {
                     if (apiResponse.isError()) {
                         return container.setState({error: apiResponse.getError()});
                     }
@@ -55,7 +55,7 @@ class Login extends Webiny.Ui.View {
 }
 
 Login.defaultProps = {
-    api: '/core/users',
+    api: '/entities/core/users',
     renderer: function renderer() {
         return (
             <Ui.Form.Container ui="loginForm" {...this.getConfig.call(this)}>

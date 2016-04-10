@@ -1,5 +1,6 @@
 import Webiny from 'Webiny';
-import Container from './Components/Container';
+import ApiContainer from './Components/ApiContainer';
+import StaticContainer from './Components/StaticContainer';
 import Table from './Components/Table/Table';
 import Row from './Components/Table/Row';
 import Field from './Components/Table/Field';
@@ -29,7 +30,8 @@ class Module extends Webiny.Module {
 
     init() {
         Webiny.Ui.Components.List = {
-            Container,
+            ApiContainer,
+            StaticContainer,
             Table: {
                 Table,
                 Header,

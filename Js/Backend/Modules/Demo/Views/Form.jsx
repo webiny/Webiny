@@ -56,20 +56,20 @@ class Form extends Webiny.Ui.View {
                  * Custom OPTIONS loader for form combo boxes (ONLY DATA)
                  * @returns {Promise<TResult>|Promise.<T>}
                  */
-                optionsUserGroup: function optionsUserGroup() {
+                /*optionsUserGroup: function optionsUserGroup() {
                     let apiParams = {
                         _perPage: 100,
-                        _fields: 'id,name,tag'
+                        fields: 'id,name,tag'
                     };
 
-                    return new Webiny.Api.Entity('/core/user-groups').crudList(apiParams).then(apiResponse => {
+                    return new Webiny.Api.Endpoint('/entities/core/user-groups').crudList(apiParams).then(apiResponse => {
                         return {
                             data: apiResponse.getData().list,
                             valueAttr: 'id',
                             textAttr: 'name'
                         };
                     });
-                },
+                },*/
 
                 /**
                  * Custom OPTION renderer (ONLY RENDERING)
@@ -88,12 +88,12 @@ class Form extends Webiny.Ui.View {
                     selected: function selectedOptionRenderer(item) {
                         return item.name;
                     }
-                },
-
-                loadData: function () {
-                    const id = Webiny.Router.getParams('id');
-                    return this.api.crudGet(id).then(apiResponse => apiResponse.getData());
                 }
+
+                /*loadData: function () {
+                    const id = Webiny.Router.getParams('id');
+                    return this.api.execute('GET', id).then(apiResponse => apiResponse.getData());
+                }*/
             },
             // List config
             invoiceList: {
@@ -109,7 +109,10 @@ class Form extends Webiny.Ui.View {
             label: 'User group',
             name: 'userGroup',
             placeholder: 'Select user group',
-            allowClear: true
+            allowClear: true,
+            api: '/entities/core/user-groups',
+            fields: 'tag,name',
+            perPage: 2
         };
 
         const userGroupsSelect = {
@@ -117,8 +120,9 @@ class Form extends Webiny.Ui.View {
             name: 'nestedGroups',
             placeholder: 'Select user groups',
             allowClear: true,
-            api: '/core/user-groups',
-            apiParams: this.apiParams({_fields: 'tag,name', _perPage: 2}),
+            api: '/entities/core/user-groups',
+            fields: 'tag,name',
+            perPage: 2,
             valueAttr: 'tag',
             textAttr: 'name'
         };
@@ -128,20 +132,10 @@ class Form extends Webiny.Ui.View {
             name: 'createdBy',
             placeholder: 'Select user',
             allowClear: true,
-            api: '/core/users',
-            apiParams: this.apiParams({_fields: 'id,email'}),
+            api: '/entities/core/users',
+            fields: 'id,email',
             valueAttr: 'id',
             textAttr: 'email'
-        };
-
-        const fileSelect = {
-            label: 'File',
-            name: 'file',
-            placeholder: 'Select file',
-            api: '/core/files',
-            apiParams: this.apiParams({_fields: 'id,name', _perPage: 100}),
-            valueAttr: 'id',
-            textAttr: 'name'
         };
 
         const settings = (
@@ -186,7 +180,7 @@ class Form extends Webiny.Ui.View {
 
         return (
             <Webiny.Builder.View name="core-users-form" config={this.getConfig()}>
-                <Ui.Form.Container ui="myForm" api="/core/users" fields="id,firstName,lastName,email,userGroups,settings,enabled">
+                <Ui.Form.ApiContainer ui="myForm" api="/entities/core/users" fields="id,firstName,lastName,email,userGroups,settings,enabled,userQuery" connectToRouter={true}>
                     <Ui.Panel.Panel>
                         <Ui.Panel.Header title="Webiny Form"/>
                         <Ui.Panel.Body>
@@ -213,8 +207,7 @@ class Form extends Webiny.Ui.View {
                                                     <Ui.Select {...userGroupSelect}/>
                                                 </Ui.Grid.Col>
                                                 <Ui.Grid.Col all={4}>
-                                                    <Ui.Search validate="required" label="Find user" api="/core/files" searchFields="name"
-                                                               textAttr="name" fields="id,name" name="userQuery"/>
+                                                    <Ui.Search validate="required" name="userQuery" textAttr="name" label="Find file" api="/entities/core/files" fields="name" searchFields="name"/>
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
                                             <Ui.Grid.Row>
@@ -249,7 +242,7 @@ class Form extends Webiny.Ui.View {
                                                 </Ui.Grid.Col>
                                                 <Ui.Grid.Col all={6}>
                                                     <Ui.CheckboxGroup {...userGroupsSelect} label="User groups (API)">
-                                                        <Ui.CheckboxGroup className="mt5" api="/core/users" textAttr="email"/>
+                                                        <Ui.CheckboxGroup className="mt5" api="/entities/core/users" textAttr="email"/>
                                                     </Ui.CheckboxGroup>
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
@@ -264,7 +257,7 @@ class Form extends Webiny.Ui.View {
                                                     </Ui.RadioGroup>
                                                 </Ui.Grid.Col>
                                                 <Ui.Grid.Col all={6}>
-                                                    <Ui.RadioGroup label="User (API)" name="user" api="/core/users" textAttr="email"/>
+                                                    <Ui.RadioGroup label="User (API)" name="user" api="/entities/core/users" textAttr="email"/>
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
                                             <Ui.Grid.Row>
@@ -301,7 +294,7 @@ class Form extends Webiny.Ui.View {
                             <Ui.Button type="primary" onClick={this.ui('myForm:submit')} label="Submit"/>
                         </Ui.Panel.Footer>
                     </Ui.Panel.Panel>
-                </Ui.Form.Container>
+                </Ui.Form.ApiContainer>
             </Webiny.Builder.View>
         );
     }

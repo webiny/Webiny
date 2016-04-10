@@ -11,13 +11,13 @@ class List extends Webiny.Ui.View {
                 <Ui.Grid.Col all={12}>
                     <h2>Users</h2>
                 </Ui.Grid.Col>
-                <Ui.List.Container ui="myList" api="/core/users" fields="id,enabled,firstName,lastName,email,createdOn,gravatar">
+                <Ui.List.ApiContainer ui="myList" api="/entities/core/users" fields="id,enabled,firstName,lastName,email,createdOn,gravatar" connectToRouter={true}>
                     <Ui.List.FormFilters>
                         {function (applyFilters, resetFilters) {
                             return (
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={3}>
-                                        <Ui.Select placeholder="Email" allowClear={true} api="/core/users" name="email"
+                                        <Ui.Select placeholder="Email" allowClear={true} api="/entities/core/users" name="email"
                                                    valueAttr="email" textAttr="email"/>
                                     </Ui.Grid.Col>
                                     <Ui.Grid.Col all={3}>
@@ -70,7 +70,7 @@ class List extends Webiny.Ui.View {
                         <Table.Footer/>
                     </Table.Table>
                     <Ui.List.Pagination/>
-                </Ui.List.Container>
+                </Ui.List.ApiContainer>
             </Webiny.Builder.View>
         );
     }

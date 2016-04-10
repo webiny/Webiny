@@ -6,7 +6,7 @@ app.setInitialElement(React.createElement(Container));
 app.beforeRender(() => {
     const authenticationApp = WebinyBootstrap.config.authentication || 'Core.Backend';
     // Load other backend apps
-    const api = new Webiny.Api.Service('/core/apps');
+    const api = new Webiny.Api.Endpoint('/services/core/apps');
     return api.get('/backend').then(res => {
         let apps = Q();
         _.forIn(res.getData(), config => {

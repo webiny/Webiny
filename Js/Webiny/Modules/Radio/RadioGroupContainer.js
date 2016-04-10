@@ -13,16 +13,12 @@ class RadioGroupContainer extends Webiny.Ui.Component {
         this.lastUsedSource = null;
 
         this.bindMethods('prepareOptions,renderOptions');
+        Webiny.Mixins.ApiComponent.extend(this);
     }
 
     componentDidMount() {
         super.componentDidMount();
         this.prepareOptions(this.props);
-    }
-
-    componentWillReceiveProps(props) {
-        super.componentWillReceiveProps();
-        this.prepareOptions(props);
     }
 
     prepareOptions(props) {
@@ -51,14 +47,8 @@ class RadioGroupContainer extends Webiny.Ui.Component {
             }
         }
 
-        if (props.api) {
-            const sourceFingerprint = props.api + JSON.stringify(props.apiParams || {});
-            if (this.lastUsedSource === sourceFingerprint) {
-                return;
-            }
-
-            this.lastUsedSource = sourceFingerprint;
-            return new Webiny.Api.Entity(props.api).crudList(props.apiParams || {}).then(apiResponse => {
+        if (this.api) {
+            return this.api.execute().then(apiResponse => {
                 const options = this.renderOptions(apiResponse.getData().list, props.valueAttr, props.textAttr);
                 this.setState({options});
             });

@@ -6,9 +6,10 @@ class Form extends Webiny.Ui.View {
 
     render() {
         const containerProps = {
-            api: '/core/users',
+            api: '/entities/core/users',
             fields: 'id,firstName,lastName,email,userGroups,settings,enabled',
             title: 'Users form',
+            connectToRouter: true,
             onSubmitSuccess: () => {
                 Webiny.Router.goToRoute('Users.List')
             },
@@ -19,7 +20,7 @@ class Form extends Webiny.Ui.View {
 
         return (
             <Webiny.Builder.View name="core-users-form">
-                <Ui.Form.Container ui="myForm" {...containerProps}>
+                <Ui.Form.ApiContainer ui="myForm" {...containerProps}>
                     <Ui.Form.Form>
                         <fields>
                             <Ui.Grid.Row>
@@ -45,7 +46,7 @@ class Form extends Webiny.Ui.View {
                             <Ui.Button type="primary" onClick={this.ui('myForm:submit')} label="Submit"/>
                         </actions>
                     </Ui.Form.Form>
-                </Ui.Form.Container>
+                </Ui.Form.ApiContainer>
             </Webiny.Builder.View>
         );
     }

@@ -54,7 +54,7 @@ class Module extends Webiny.Module {
     }
 
     getUser(routerEvent) {
-        return new Webiny.Api.Entity(this.getUserEntity()).get('/me', {_fields: this.getUserFields()}).then(apiResponse => {
+        return new Webiny.Api.Endpoint('/entities' + this.getUserEntity()).get('/me', {_fields: this.getUserFields()}).then(apiResponse => {
             return this.onVerifyUser(routerEvent, apiResponse);
         });
     }

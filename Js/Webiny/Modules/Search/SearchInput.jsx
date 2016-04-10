@@ -1,11 +1,7 @@
 import Webiny from 'Webiny';
 import styles from './Styles';
 
-/**
- * TODO: This component should be broken into SearchContainer and Search, just like Select.
- * SearchContainer should do the API stuff, and Search should only render what's passed to it.
- */
-class Search extends Webiny.Ui.FormComponent {
+class SearchInput extends Webiny.Ui.FormComponent {
 
     constructor(props) {
         super(props);
@@ -13,100 +9,38 @@ class Search extends Webiny.Ui.FormComponent {
         _.assign(this.state, {
             search: '',
             selected: null,
-            options: [],
-            loading: false
+            options: []
         });
 
-        this.selectedId = null;
-        this.api = null;
-        this.delay = null;
-
-        if (props.api) {
-            if (props.api instanceof Webiny.Api.Entity) {
-                this.api = props.api;
-            } else {
-                this.api = new Webiny.Api.Entity(props.api, props.fields);
-            }
-        }
-
         this.bindMethods(
-            'setInitialData',
             'inputChanged',
             'selectItem',
             'selectCurrent',
             'onKeyUp',
             'onBlur',
             'renderPreview',
-            'loadOptions',
             'getSearchInput'
         );
     }
 
-    setInitialData(props) {
-        let value = props.valueLink.value;
-        if (value) {
-            if (_.isPlainObject(value)) {
-                value = value.id;
-            }
-
-            // If we only got an ID...
-            this.selectedId = value;
-            this.api.crudGet(value).then(apiResponse => {
-                var data = apiResponse.getData();
-                this.selectItem(data)
-            });
-        } else {
-            this.selectedId = null;
-            //this.setState({search: ''});
-        }
-    }
-
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        let id = props.valueLink.value;
-        if (id && _.isPlainObject(id)) {
-            id = id.id;
-        }
-        if (id != this.selectedId) {
-            this.setInitialData(props);
-        }
-    }
-
-    componentWillMount() {
-        super.componentWillMount();
-        this.setInitialData(this.props);
-    }
-
-    shouldComponentUpdate() {
-        return true;
+        this.setState({
+            options: props.options,
+            search: this.renderPreview(props.selected)
+        });
     }
 
     renderPreview(item) {
+        if (!item) {
+            return null;
+        }
         return this.props.selectedRenderer.call(this, item);
-    }
-
-    loadOptions() {
-        clearTimeout(this.delay);
-
-        this.delay = setTimeout(() => {
-            if (_.isEmpty(this.state.search)) {
-                return;
-            }
-
-            this.setState({loading: true});
-            this.api.crudList({
-                _searchFields: this.props.searchFields,
-                _searchOperator: this.props.operator,
-                _searchQuery: this.state.search
-            }).then(apiResponse => {
-                const data = apiResponse.getData().list;
-                this.setState({options: data, loading: false});
-            });
-        }, 500);
     }
 
     inputChanged(e) {
         this.setState({search: e.target.value});
+        this.props.onSearch(e.target.value);
     }
 
     onKeyUp(e) {
@@ -117,7 +51,7 @@ class Search extends Webiny.Ui.FormComponent {
                 if (_.isEmpty(this.state.search) || this.props.valueLink.value) {
                     this.reset();
                 } else {
-                    this.loadOptions();
+                    this.inputChanged(e);
                 }
                 break;
             case 'ArrowDown':
@@ -134,8 +68,11 @@ class Search extends Webiny.Ui.FormComponent {
             case 'Escape':
                 this.onBlur();
                 break;
+            case 'ArrowLeft':
+            case 'ArrowRight':
+                break;
             default:
-                this.loadOptions();
+                this.inputChanged(e);
                 break;
         }
     }
@@ -150,12 +87,11 @@ class Search extends Webiny.Ui.FormComponent {
     }
 
     selectItem(item) {
-        this.selectedId = item[this.props.valueAttr];
         this.setState({
             search: this.renderPreview(item),
             options: []
         });
-        this.props.valueLink.requestChange(this.selectedId);
+        this.props.valueLink.requestChange(item[this.props.valueAttr]);
         this.props.onSelect(item);
         setTimeout(this.validate, 10);
     }
@@ -211,7 +147,6 @@ class Search extends Webiny.Ui.FormComponent {
     }
 
     reset() {
-        clearTimeout(this.delay);
         this.setState({
             selected: null,
             search: '',
@@ -256,7 +191,7 @@ class Search extends Webiny.Ui.FormComponent {
         });
 
         let dropdownMenu = null;
-        if (this.state.options.length) {
+        if (this.state.options.length > 0) {
             dropdownMenu = (
                 <span style={styles.dropdownMenu}>
 					<div className="tt-dataset-states">{options}</div>
@@ -266,8 +201,8 @@ class Search extends Webiny.Ui.FormComponent {
 
         // Create search input
         const iconClass = {
-            'icon-search': !this.state.loading,
-            'animate-spin icon-network': this.state.loading
+            'icon-search': !this.props.loading,
+            'animate-spin icon-network': this.props.loading
         };
 
         return (
@@ -280,7 +215,7 @@ class Search extends Webiny.Ui.FormComponent {
     }
 }
 
-Search.defaultProps = {
+SearchInput.defaultProps = {
     optionRenderer: function (item) {
         let content = {__html: item[this.props.textAttr].replace(/\s+/g, '&nbsp;')};
         return <div dangerouslySetInnerHTML={content}></div>
@@ -288,11 +223,11 @@ Search.defaultProps = {
     selectedRenderer: function (item) {
         return item[this.props.textAttr];
     },
-    operator: 'or',
     valueAttr: 'id',
     textAttr: 'name',
     onSelect: _.noop,
     onReset: _.noop,
+    onSearch: _.noop,
     placeholder: 'Type to search',
     renderer: function renderer() {
         const input = this.getSearchInput();
@@ -327,4 +262,4 @@ Search.defaultProps = {
     }
 };
 
-export default Search;
+export default SearchInput;

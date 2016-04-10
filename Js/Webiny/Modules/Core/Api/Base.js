@@ -9,7 +9,7 @@ function sanitize(string) {
 	return _.trimStart(string, '/ ');
 }
 
-class BaseService {
+class Base {
 
 	constructor(url) {
 		this.url = url.toLowerCase();
@@ -44,4 +44,4 @@ class BaseService {
 	}
 }
 
-export default BaseService;
+export default Base;

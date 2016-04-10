@@ -27,7 +27,7 @@ class AddCreditsModal extends Webiny.Ui.Component {
      */
     addCredits(model, container) {
         this.setState({model, error: false});
-        const api = new Webiny.Api.Entity('/core/users');
+        const api = new Webiny.Api.Endpoint('/entities/core/users');
         return api.post('call', model).then(ar => {
             if (ar.isError() && ar.getCode() === 'WBY-ENTITY-API-METHOD-VALIDATION') {
                 return this.setState({error: ar.getData().credits});
@@ -64,7 +64,7 @@ class AddCreditsModal extends Webiny.Ui.Component {
             <Ui.Modal.Dialog show={this.state.isShown} onHide={this.hide}>
                 <Ui.Modal.Header title="Add credits"/>
                 <Ui.Modal.Body>
-                    <Ui.Form.Container data={this.state.model} ui="addCreditsForm" onSubmit={this.addCredits}>
+                    <Ui.Form.StaticContainer data={this.state.model} ui="addCreditsForm" onSubmit={this.addCredits}>
                         <Ui.Form.Form layout={false}>
                             <fields>
                                 <Ui.Grid.Row>
@@ -75,7 +75,7 @@ class AddCreditsModal extends Webiny.Ui.Component {
                                 </Ui.Grid.Row>
                             </fields>
                         </Ui.Form.Form>
-                    </Ui.Form.Container>
+                    </Ui.Form.StaticContainer>
                 </Ui.Modal.Body>
                 <Ui.Modal.Footer>
                     <Ui.Button label="Cancel" onClick={this.ui('addCreditsModal:hide')}/>

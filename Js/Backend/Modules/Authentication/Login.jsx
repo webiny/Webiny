@@ -4,7 +4,7 @@ class Login extends Webiny.Ui.View {
 
     render() {
         return (
-            <Webiny.Ui.Views.Login api="/core/users" onSuccess="Dashboard" tokenName="webiny-token"/>
+            <Webiny.Ui.Views.Login api="/entities/core/users" onSuccess="Dashboard" tokenName="webiny-token"/>
         );
     }
 }

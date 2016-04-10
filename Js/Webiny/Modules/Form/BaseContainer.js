@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-class FormContainer extends Webiny.Ui.Component {
+class BaseContainer extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);
@@ -14,53 +14,19 @@ class FormContainer extends Webiny.Ui.Component {
         this.formsCount = 0;
         this.linkedForms = [];
 
-        if (props.api) {
-            if (props.api instanceof Webiny.Api.Entity) {
-                this.api = props.api;
-            } else {
-                this.api = new Webiny.Api.Entity(props.api, props.fields);
-            }
-        }
-
         this.bindMethods('registerForm,loadData,getData,onSubmit,onInvalid,onReset,onCancel,prepareChildren,prepareChild,submit,reset,validate,cancel');
     }
 
     componentWillMount() {
         super.componentWillMount();
-        if (this.props.loadData) {
-            return this.props.loadData.call(this).then(data => {
-                this.setState({model: data});
-            });
-        }
-
-        if (this.props.api) {
-            this.loadData();
-        } else if (this.props.data) {
-            this.setState({model: this.props.data});
-        }
     }
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        if (props.data) {
-            this.setState({model: props.data});
-        }
     }
 
     loadData(id = null) {
-        if (this.api) {
-            if (!id) {
-                if (this.props.connectToRouter) {
-                    id = Webiny.Router.getParams('id');
-                }
-            }
-
-            if (id) {
-                this.api.crudGet(id).then(apiResponse => {
-                    this.setState({model: apiResponse.getData()});
-                });
-            }
-        }
+        throw new Error('Implement loadData method in your form container class!');
     }
 
     getData() {
@@ -88,21 +54,7 @@ class FormContainer extends Webiny.Ui.Component {
     }
 
     onSubmit(model) {
-        console.log("Form Container [ON SUBMIT]", model);
-        this.setState({model: _.assign({}, this.state.model, model)}, () => {
-            this.api.crudUpdate(this.state.model.id, this.state.model).then(ar => {
-                const onSubmitSuccess = this.props.onSubmitSuccess;
-                if (!ar.isError() && onSubmitSuccess) {
-                    if (_.isFunction(onSubmitSuccess)) {
-                        return onSubmitSuccess.bind(this)(ar);
-                    }
-
-                    if (_.isString(onSubmitSuccess)) {
-                        Webiny.Router.goToRoute(onSubmitSuccess);
-                    }
-                }
-            });
-        });
+        throw new Error('Implement onSubmit method in your form container class!');
     }
 
     onInvalid() {
@@ -128,7 +80,7 @@ class FormContainer extends Webiny.Ui.Component {
         if (child.type === Ui.Form.Form) {
             this.formsCount++;
 
-            // Pass relevant props from FormContainer to Form
+            // Pass relevant props from BaseContainer to Form
             _.each(this.props, (value, name) => {
                 if (_.startsWith(name, 'render') || _.startsWith(name, 'option') || _.startsWith(name, 'onChange') || name == 'title') {
                     props[name] = value;
@@ -195,8 +147,4 @@ class FormContainer extends Webiny.Ui.Component {
     }
 }
 
-FormContainer.defaultProps = {
-    connectToRouter: false
-};
-
-export default FormContainer;
+export default BaseContainer;

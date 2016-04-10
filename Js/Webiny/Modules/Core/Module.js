@@ -3,6 +3,7 @@ import WebinyModule from './Core/Module';
 import App from './Core/App';
 import Component from './Core/Component';
 import FormComponent from './Core/FormComponent';
+import ApiComponent from './Core/ApiComponent';
 import Injector from './Core/Injector';
 import Model from './Core/Model';
 import View from './Core/View';
@@ -13,8 +14,7 @@ import Route from './Router/Route';
 import Http from './Http/Http';
 import Tools from './Tools';
 import Console from './Console';
-import Service from './Api/Service';
-import Entity from './Api/Entity';
+import Endpoint from './Api/Endpoint';
 import Settings from './Ui/Settings';
 import Menu from './Ui/Menu';
 import Hide from './Ui/Hide';
@@ -30,6 +30,9 @@ class Module extends WebinyModule {
 			App,
 			Module: WebinyModule,
             Modules: {},
+            Mixins: {
+                ApiComponent
+            },
 			Ui: {
 				Component,
                 Components: {
@@ -54,8 +57,7 @@ class Module extends WebinyModule {
             Cookies, // from js-cookies
 			Http,
 			Api: {
-				Service,
-				Entity
+				Endpoint
 			}
 		});
 	}

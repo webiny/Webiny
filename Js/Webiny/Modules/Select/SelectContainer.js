@@ -13,6 +13,7 @@ class SelectContainer extends Webiny.Ui.Component {
         this.lastUsedSource = null;
 
         this.bindMethods('prepareOptions,renderOptions');
+        Webiny.Mixins.ApiComponent.extend(this);
     }
 
     componentDidMount() {
@@ -72,14 +73,8 @@ class SelectContainer extends Webiny.Ui.Component {
             }
         }
 
-        if (props.api) {
-            const sourceFingerprint = props.api + JSON.stringify(props.apiParams || {});
-            if (this.lastUsedSource === sourceFingerprint) {
-                return;
-            }
-
-            this.lastUsedSource = sourceFingerprint;
-            new Webiny.Api.Entity(props.api).crudList(props.apiParams || {}).then(apiResponse => {
+        if (this.api) {
+            return this.api.execute().then(apiResponse => {
                 this.setState({options: this.renderOptions(props, apiResponse.getData().list, props.valueAttr, props.textAttr)});
             });
         }
