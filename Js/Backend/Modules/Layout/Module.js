@@ -13,7 +13,7 @@ class Module extends Webiny.Module {
         );
 
 
-        this.registerMenus(
+        /*this.registerMenus(
             new Menu('Dashboard', 'Dashboard', 'icon-gauge'),
             new Menu('Content', [
                 new Menu('Posts', null).setAction('Add post', null, 'icon-plus-circled'),
@@ -22,7 +22,7 @@ class Module extends Webiny.Module {
                     new Menu('View all pages', null)
                 ])
             ], 'icon-browser')
-        );
+        );*/
 
         this.registerRoutes(
             new Webiny.Route('Dashboard', '/', {

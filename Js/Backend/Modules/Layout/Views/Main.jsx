@@ -5,7 +5,10 @@ import Webiny from 'Webiny';
  */
 class Main extends Webiny.Ui.View {
 
-    render() {
+}
+
+Main.defaultProps = {
+    renderer: function renderer() {
         const Components = Webiny.Apps.Core.Backend.Layout.Components;
         return (
             <div className="master minimized">
@@ -21,6 +24,6 @@ class Main extends Webiny.Ui.View {
             </div>
         );
     }
-}
+};
 
 export default Main;

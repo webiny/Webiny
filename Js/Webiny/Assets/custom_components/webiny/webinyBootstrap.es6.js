@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
 
 // Find Webiny app or components and run them
-function runWebiny(meta) {
+function runWebiny() {
     const config = WebinyBootstrap.config;
     const appElement = document.querySelector('webiny-app');
     if (appElement) {
@@ -10,13 +10,13 @@ function runWebiny(meta) {
         Webiny.Router.setBaseUrl(config.baseUrl);
         WebinyBootstrap.includeApp(appName).then(app => {
             // Filter modules
-            const modules = meta[appName].modules;
-            if (appName !== authenticationApp) {
+            const modules = app.config.modules;
+            if (app.config.name !== authenticationApp) {
                 delete modules['Authentication'];
             }
-            app.addModules(modules);
-            _.set(Webiny.Apps, appName, app);
-            app.run(appElement);
+            app.instance.addModules(modules);
+            _.set(Webiny.Apps, app.config.name, app.instance);
+            app.instance.run(appElement);
         });
     }
 }
@@ -41,7 +41,7 @@ class WebinyBootstrapClass {
 
         // First we need to import Core/Webiny
         this.includeApp('Core.Webiny').then(app => {
-            app.addModules(this.meta['Core.Webiny'].modules).run().then(() => {
+            app.instance.addModules(this.meta['Core.Webiny'].modules).run().then(() => {
                 runWebiny(this.meta);
             });
         });
@@ -69,16 +69,34 @@ class WebinyBootstrapClass {
         });
 
         return Q.all(assets).then(() => {
-            return this.import(meta.name).then(m => m.default);
+            return this.import(meta.name).then(m => {
+                return {
+                    instance: m.default,
+                    config: meta
+                };
+            });
         });
     }
 
-
+    /**
+     * Include app
+     * @param appName
+     * @param object|boolean meta If true, will load modules and run the app
+     * @returns {*}
+     */
+    // TODO: add autoinitialize flag
     includeApp(appName, meta) {
-        if (!meta) {
+        if (!meta || meta === true) {
             return axios({url: _apiUrl + '/services/core/apps/' + appName}).then(res => {
                 this.meta[appName] = res.data.data;
-                return this.loadAssets(this.meta[appName]);
+                return this.loadAssets(this.meta[appName]).then(app => {
+                    if (meta === true) {
+                        app.instance.addModules(app.config.modules);
+                        _.set(Webiny.Apps, app.config.name, app.instance);
+                        return app.instance.run();
+                    }
+                    return app;
+                });
             });
         }
         this.meta[appName] = meta;

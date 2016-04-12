@@ -13,7 +13,7 @@ DeleteAction.defaultProps = {
         const message = this.props.message;
 
         return (
-            <Ui.List.Table.ModalAction {..._.pick(this.props, 'data', 'actions','label','hide')}>
+            <Ui.List.Table.ModalAction {..._.pick(this.props, 'data', 'actions', 'label', 'hide')}>
                 {function (record, actions, modal) {
                     return (
                         <Ui.Modal.Dialog>
@@ -22,8 +22,12 @@ DeleteAction.defaultProps = {
                                 <p>{message}</p>
                             </Ui.Modal.Body>
                             <Ui.Modal.Footer>
-                                <Ui.Button label="No" onClick={modal.hide()}/>
-                                <Ui.Button label="Yes, delete!" onClick={actions.delete(record.id).then(modal.hide())}/>
+                                <div className="btn-holder">
+                                    <Ui.Button type="secondary" label="No" onClick={modal.hide()}/>
+                                </div>
+                                <div className="btn-holder-right">
+                                    <Ui.Button type="primary" label="Yes, delete!" onClick={actions.delete(record.id).then(modal.hide())} icon="icon-check"/>
+                                </div>
                             </Ui.Modal.Footer>
                         </Ui.Modal.Dialog>
                     );

@@ -200,10 +200,9 @@ class SearchInput extends Webiny.Ui.FormComponent {
         }
 
         // Create search input
-        const iconClass = {
-            'icon-search': !this.props.loading,
-            'animate-spin icon-network': this.props.loading
-        };
+        const iconClass = {};
+        iconClass[this.props.inputIcon] = !this.props.loading;
+        iconClass[this.props.loadingIcon] = this.props.loading;
 
         return (
             <div className="twitter-typeahead" style={styles.outerSpan}>
@@ -228,6 +227,8 @@ SearchInput.defaultProps = {
     onSelect: _.noop,
     onReset: _.noop,
     onSearch: _.noop,
+    inputIcon: 'icon-search',
+    loadingIcon: 'animate-spin icon-network',
     placeholder: 'Type to search',
     renderer: function renderer() {
         const input = this.getSearchInput();

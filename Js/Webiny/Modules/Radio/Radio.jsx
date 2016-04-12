@@ -5,7 +5,7 @@ class Radio extends Webiny.Ui.FormComponent {
     constructor() {
         super();
 
-        this.bindMethods('onChange');
+        this.bindMethods('onChange,isChecked');
     }
 
     componentWillMount() {
@@ -13,7 +13,11 @@ class Radio extends Webiny.Ui.FormComponent {
         this.id = Webiny.Tools.createUID();
     }
 
-    render() {
+    onChange() {
+        this.props.onChange(this.props.stateKey);
+    }
+
+    isChecked() {
         let state = this.props.stateKey;
 
         if (state === "false") {
@@ -22,20 +26,9 @@ class Radio extends Webiny.Ui.FormComponent {
             state = true;
         }
 
-        const checked = state === this.props.state;
-        const css = this.classSet('radio-custom mt10', this.props.className, 'col-sm-' + this.props.grid);
-
-        return (
-            <div className={css}>
-                <input type="radio" disabled={this.props.disabled} onChange={this.onChange} checked={checked} id={this.id}/>
-                <label htmlFor={this.id}>{this.props.label}</label>
-            </div>
-        );
+        return state === this.props.state;
     }
 
-    onChange() {
-        this.props.onChange(this.props.stateKey);
-    }
 
     shouldComponentUpdate(props) {
         let update = super.shouldComponentUpdate(props);
@@ -60,7 +53,26 @@ class Radio extends Webiny.Ui.FormComponent {
 Radio.defaultProps = {
     disabled: false,
     label: '',
-    className: ''
+    className: '',
+    renderer: function renderer() {
+        let state = this.props.stateKey;
+
+        if (state === "false") {
+            state = false;
+        } else if (state === "true") {
+            state = true;
+        }
+
+        const checked = state === this.props.state;
+        const css = this.classSet('radio-custom mt10', this.props.className, 'col-sm-' + this.props.grid);
+
+        return (
+            <div className={css}>
+                <input type="radio" disabled={this.props.disabled} onChange={this.onChange} checked={checked} id={this.id}/>
+                <label htmlFor={this.id}>{this.props.label}</label>
+            </div>
+        );
+    }
 };
 
 export default Radio;

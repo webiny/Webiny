@@ -29,10 +29,12 @@ class Tools {
 
     getAppsSettings() {
         const settings = [];
-        _.each(Webiny.Apps, app => {
-            _.each(app.Backend.modules, module => {
-                _.each(module.settings, s => {
-                    settings.push(s);
+        _.each(Webiny.Apps, jsApps => {
+            _.each(jsApps, app => {
+                _.each(app.modules, module => {
+                    _.each(module.settings, s => {
+                        settings.push(s);
+                    });
                 });
             });
         });
@@ -41,10 +43,12 @@ class Tools {
 
     getAppsMenus() {
         const menus = {};
-        _.each(Webiny.Apps, app => {
-            _.each(app.Backend.modules, module => {
-                _.each(module.menus, menu => {
-                    menus[menu.key] = menu;
+        _.each(Webiny.Apps, jsApps => {
+            _.each(jsApps, app => {
+                _.each(app.modules, module => {
+                    _.each(module.menus, menu => {
+                        menus[menu.key] = menu;
+                    });
                 });
             });
         });

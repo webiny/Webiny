@@ -49,14 +49,12 @@ class Footer extends Webiny.Ui.Component {
             </li>
         );
     }
+}
 
-    render() {
+Footer.defaultProps = {
+    renderer: function renderer() {
         return (
             <footer>
-                <div className="developer-mode">
-                    <span>Developer mode</span>
-                    {/* <w-switch-button bind={this.state.developerMode} bind-change={this.toggleDeveloperMode}/> */}
-                </div>
                 <ul className="links">
                     {this.state.links.map(this.renderLink)}
                 </ul>
@@ -72,6 +70,6 @@ class Footer extends Webiny.Ui.Component {
             </footer>
         );
     }
-}
+};
 
 export default Footer;

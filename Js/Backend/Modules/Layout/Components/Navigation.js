@@ -141,8 +141,10 @@ class Navigation extends Webiny.Ui.Component {
             </li>
         );
     }
+}
 
-    render() {
+Navigation.defaultProps = {
+    renderer: function renderer() {
         const Layout = Webiny.Apps.Core.Backend.Layout.Components;
 
         const menus = Webiny.Tools.getAppsMenus();
@@ -168,6 +170,6 @@ class Navigation extends Webiny.Ui.Component {
             </div>
         );
     }
-}
+};
 
 export default Navigation;
