@@ -1,5 +1,5 @@
 #Webiny/Core
-vendor/
+/vendor/
 
 #PHPStorm
 .idea/
