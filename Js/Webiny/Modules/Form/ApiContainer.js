@@ -41,7 +41,22 @@ class ApiContainer extends BaseContainer {
     onSubmit(model) {
         console.log("Form Container [ON SUBMIT]", model);
         this.setState({model: _.assign({}, this.state.model, model)}, () => {
-            this.api.execute('PATCH', this.state.model.id, this.state.model).then(ar => {
+            if(Webiny.Router.getParams('id')){
+                return this.api.execute('PATCH', this.state.model.id, this.state.model).then(ar => {
+                    const onSubmitSuccess = this.props.onSubmitSuccess;
+                    if (!ar.isError() && onSubmitSuccess) {
+                        if (_.isFunction(onSubmitSuccess)) {
+                            return onSubmitSuccess.bind(this)(ar);
+                        }
+
+                        if (_.isString(onSubmitSuccess)) {
+                            Webiny.Router.goToRoute(onSubmitSuccess);
+                        }
+                    }
+                });
+            }
+
+            this.api.execute('POST', '/', this.state.model).then(ar => {
                 const onSubmitSuccess = this.props.onSubmitSuccess;
                 if (!ar.isError() && onSubmitSuccess) {
                     if (_.isFunction(onSubmitSuccess)) {

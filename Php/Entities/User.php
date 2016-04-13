@@ -5,6 +5,7 @@ use Apps\Core\Php\DevTools\Authorization\AuthorizationTrait;
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Entity\Attributes\FileAttribute;
 use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Mongo\Index\SingleIndex;
@@ -70,7 +71,7 @@ class User extends EntityAbstract
             }
         });
 
-        $this->attr('enabled')->boolean()->setDefaultValue(true)->setValidators('required');
+        $this->attr('enabled')->boolean()->setDefaultValue(true);
         $userGroup = '\Apps\Core\Php\Entities\UserGroup';
         $this->attr('groups')->many2many('User2Group')->setEntity($userGroup)->setValidators('minLength:1')->onSet(function ($groups) {
             // If not mongo Ids - load groups by tags
