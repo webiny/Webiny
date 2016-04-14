@@ -73,7 +73,7 @@ class FieldSet extends Webiny.Ui.FormComponent {
 
             return React.cloneElement(child, newProps);
         }
-        return React.cloneElement(child, child.props, this.registerInputs(child.props && child.props.children));
+        return React.cloneElement(child, _.omit(child.props, ['key', 'ref']), this.registerInputs(child.props && child.props.children));
     }
 
     registerInputs(children) {

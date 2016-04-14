@@ -14,7 +14,7 @@ class LinkState {
     }
 
     __getValue(key) {
-        return _.get(this.component.state, key);
+        return _.get(this.component.state, key, '');
     }
 
     __createStateKeySetter() {

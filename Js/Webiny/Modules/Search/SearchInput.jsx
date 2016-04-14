@@ -25,10 +25,15 @@ class SearchInput extends Webiny.Ui.FormComponent {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        this.setState({
-            options: props.options,
-            search: this.renderPreview(props.selected)
-        });
+        const newState = {
+            options: props.options
+        };
+
+        if (props.selected) {
+            newState['selected'] = this.renderPreview(props.selected);
+        }
+
+        this.setState(newState);
     }
 
     renderPreview(item) {
@@ -168,7 +173,7 @@ class SearchInput extends Webiny.Ui.FormComponent {
             style: styles.ttInput,
             onKeyDown: this.onKeyUp,
             onBlur: this.onBlur,
-            value: this.state.search,
+            value: this.state.search || '',
             onChange: this.inputChanged,
             disabled: this.props.disabled
         };

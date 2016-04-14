@@ -234,7 +234,7 @@ class BaseContainer extends Webiny.Ui.Component {
                 });
             }
 
-            const props = _.omit(child.props, ['children']);
+            const props = _.omit(child.props, ['children', 'key', 'ref']);
             if (child.type === Ui.List.Table.Table) {
                 this.tableElement = React.cloneElement(child, this.tableProps(props), child.props.children);
             }
@@ -268,7 +268,7 @@ class BaseContainer extends Webiny.Ui.Component {
         }
 
         if (element.props && element.props.children) {
-            return React.cloneElement(element, element.props, React.Children.map(element.props.children, item => {
+            return React.cloneElement(element, _.omit(element.props, ['key', 'ref']), React.Children.map(element.props.children, item => {
                 return this.replacePlaceholders(item);
             }));
         }

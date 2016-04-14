@@ -91,7 +91,7 @@ class Form extends Webiny.Ui.Component {
         }
 
         if (element.props && element.props.children) {
-            return React.cloneElement(element, element.props, React.Children.map(element.props.children, item => {
+            return React.cloneElement(element, _.omit(element.props, ['key', 'ref']), React.Children.map(element.props.children, item => {
                 return this.replacePlaceholders(item);
             }));
         }
@@ -141,7 +141,7 @@ class Form extends Webiny.Ui.Component {
             }
             return React.cloneElement(input, newProps, input.props && input.props.children);
         }
-        return React.cloneElement(input, input.props, this.registerInputs(input.props && input.props.children));
+        return React.cloneElement(input, _.omit(input.props, ['key', 'ref']), this.registerInputs(input.props && input.props.children));
     }
 
     /**

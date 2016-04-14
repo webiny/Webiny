@@ -2,10 +2,6 @@ import Webiny from 'Webiny';
 
 class Input extends Webiny.Ui.FormComponent {
 
-    constructor(props) {
-        super(props);
-    }
-
     onKeyDown(e) {
         switch (e.key) {
             case 'Enter':
@@ -48,7 +44,8 @@ Input.defaultProps = {
             readOnly: this.props.readOnly,
             type: this.props.type,
             className: 'form-control',
-            valueLink: this.props.valueLink,
+            value: this.props.valueLink.value || '',
+            onChange: this.onChange,
             placeholder: this.props.placeholder,
             onKeyUp: this.props.onKeyUp || null,
             onKeyDown: this.props.onKeyDown || this.onKeyDown.bind(this)

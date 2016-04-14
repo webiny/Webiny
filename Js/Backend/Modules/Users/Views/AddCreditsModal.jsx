@@ -66,7 +66,7 @@ class AddCreditsModal extends Webiny.Ui.Component {
                 <Ui.Modal.Body>
                     <Ui.Form.ApiContainer ui="addCreditsForm" api="/entities/core/users"
                                           fields="id,firstName,lastName,email,userGroups,settings,enabled,userQuery" connectToRouter={true}>
-                        <Ui.Tabs.Tabs ui="tabs" position="left">
+                        <Ui.Tabs.Tabs ui="myTabs" position="left">
                             <Ui.Tabs.Tab label="First Tab">
                                 <Ui.Form.Form layout={false}>
                                     <fields>
@@ -83,7 +83,7 @@ class AddCreditsModal extends Webiny.Ui.Component {
                                 </Ui.Form.Form>
                             </Ui.Tabs.Tab>
                             <Ui.Tabs.Tab label="Second tab" icon="icon-columns">
-                                <Ui.Form.Form layout={false} onInvalid={this.ui('tabs:selectTab', 1)}>
+                                <Ui.Form.Form layout={false} onInvalid={this.ui('modalTabs:selectTab', 1)}>
                                     <fields>
                                         <Ui.Grid.Row>
                                             <Ui.Grid.Col all={12}>

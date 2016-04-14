@@ -24,7 +24,8 @@ class Textarea extends Webiny.Ui.FormComponent {
             onBlur: this.validate,
             disabled: this.props.disabled,
             className: 'form-control',
-            valueLink: this.props.valueLink,
+            value: this.props.valueLink.value || '',
+            onChange: this.onChange,
             placeholder: this.props.placeholder,
             style: this.props.style
         };

@@ -21,11 +21,6 @@ class SelectContainer extends Webiny.Ui.Component {
         this.prepareOptions(this.props);
     }
 
-    componentWillReceiveProps(props) {
-        super.componentWillReceiveProps();
-        this.prepareOptions(props);
-    }
-
     prepareOptions(props) {
         const options = [];
         if (props.children) {

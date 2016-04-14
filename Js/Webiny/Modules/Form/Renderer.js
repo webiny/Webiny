@@ -32,7 +32,6 @@ export default {
             autoComplete: 'off',
             className: this.classSet(css, this.props.className),
             onSubmit: this.submit,
-            ref: this.props.name,
             name: this.props.name
         };
 

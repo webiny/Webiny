@@ -10,7 +10,7 @@ class FormComponent extends Component {
             validationMessage: null
         };
 
-        this.bindMethods('isRequired', 'validate', 'getValue', 'hasValue');
+        this.bindMethods('isRequired', 'validate', 'getValue', 'hasValue', 'onChange');
     }
 
     componentWillMount() {
@@ -62,6 +62,10 @@ class FormComponent extends Component {
 
     isRequired() {
         return this.props.validate && this.props.validate.indexOf('required') > -1;
+    }
+
+    onChange(e) {
+        this.props.valueLink.requestChange(e.target.value);
     }
 }
 

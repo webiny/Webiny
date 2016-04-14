@@ -9,7 +9,7 @@ class Base extends Webiny.Ui.FormComponent {
             selectedValue: null
         });
 
-        this.bindMethods('onChangeSelectedValue');
+        this.bindMethods('onChangeSelectedValue,onChange');
 
         this.valueLink = this.bindTo('selectedValue', this.onChangeSelectedValue);
     }
@@ -67,6 +67,10 @@ class Base extends Webiny.Ui.FormComponent {
         }
         this.props.valueLink.requestChange(sel);
     }
+
+    onChange(e) {
+        this.valueLink.requestChange(e.target.value);
+    }
 }
 
 Base.defaultProps = {
@@ -95,7 +99,8 @@ Base.defaultProps = {
             readOnly: this.props.readOnly,
             type: 'text',
             className: 'form-control',
-            valueLink: this.valueLink,
+            value: this.valueLink.value || '',
+            onChange: this.onChange,
             placeholder: this.props.placeholder
         };
 

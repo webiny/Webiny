@@ -83,7 +83,7 @@ class SearchContainer extends Webiny.Ui.Component {
     }
 
     render() {
-        const props = _.clone(this.props);
+        const props = _.omit(this.props, ['key', 'ref']);
         _.assign(props, {
             loading: this.state.loading,
             options: this.state.options,
@@ -101,7 +101,7 @@ class SearchContainer extends Webiny.Ui.Component {
 }
 
 SearchContainer.defaultProps = {
-    _searchOperator: 'or',
+    searchOperator: 'or',
     valueAttr: 'id',
     textAttr: 'name',
     onSelect: _.noop,
