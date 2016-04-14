@@ -40,6 +40,7 @@ class Base extends Webiny.Ui.FormComponent {
             format: this.props.inputFormat,
             stepping: this.props.stepping,
             keepOpen: false,
+            debug: this.props.debug || false,
             minDate: this.props.minDate ? new Date(this.props.minDate) : false,
             viewMode: this.props.viewMode
         }).on('dp.change', e => {
@@ -66,8 +67,11 @@ class Base extends Webiny.Ui.FormComponent {
         }
         this.props.valueLink.requestChange(sel);
     }
+}
 
-    render() {
+Base.defaultProps = {
+    debug: false,
+    renderer: function renderer() {
         const cssConfig = {
             'form-group': true,
             'error': this.state.isValid === false,
@@ -108,7 +112,6 @@ class Base extends Webiny.Ui.FormComponent {
             </div>
         );
     }
-
-}
+};
 
 export default Base;

@@ -215,7 +215,7 @@ class Form extends Webiny.Ui.View {
                                                     <Ui.DateTime label="Date & Time" name="datetime"/>
                                                 </Ui.Grid.Col>
                                                 <Ui.Grid.Col all={4}>
-                                                    <Ui.Date label="Date" name="date"/>
+                                                    <Ui.Date label="Date" name="date" debug={true}/>
                                                 </Ui.Grid.Col>
                                                 <Ui.Grid.Col all={4}>
                                                     <Ui.Time label="Time" name="time"/>

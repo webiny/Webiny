@@ -1,18 +1,18 @@
 import Webiny from 'Webiny';
 
-class Select extends Webiny.Ui.FormComponent {
+class SelectInput extends Webiny.Ui.FormComponent {
 
     constructor(props) {
         super(props);
 
         this.select2 = null;
         this.options = null;
-        this.bindMethods('prepareOptions,getConfig,getValue,triggerChange,getSelect2Element');
+        this.bindMethods('getConfig,getValue,triggerChange,getSelect2InputElement');
     }
 
     componentDidMount() {
         super.componentDidMount();
-        this.select2 = this.getSelect2Element().select2(this.getConfig(this.props));
+        this.select2 = this.getSelect2InputElement().select2(this.getConfig(this.props));
         this.select2.on('select2:select', e => {
             this.triggerChange(e.target.value);
         });
@@ -26,7 +26,7 @@ class Select extends Webiny.Ui.FormComponent {
         super.componentWillReceiveProps(props);
         if (!this.options || !_.isEqual(props.options, this.options)) {
             this.select2.html('');
-            this.getSelect2Element().select2(this.getConfig(props));
+            this.getSelect2InputElement().select2(this.getConfig(props));
         }
     }
 
@@ -49,7 +49,7 @@ class Select extends Webiny.Ui.FormComponent {
         this.select2.val('').trigger('change');
     }
 
-    getSelect2Element() {
+    getSelect2InputElement() {
         return $(ReactDOM.findDOMNode(this)).find('select');
     }
 
@@ -114,35 +114,9 @@ class Select extends Webiny.Ui.FormComponent {
 
         return config;
     }
-
-    prepareOptions(props) {
-        this.options = [];
-        if (props.children) {
-            React.Children.map(props.children, child => {
-                let option = child.props.children;
-                if (!_.isString(option)) {
-                    option = ReactDOMServer.renderToStaticMarkup(option);
-                }
-
-                this.options.push({
-                    id: child.props.value,
-                    text: option
-                });
-            });
-        }
-
-        if (props.options) {
-            _.each(props.options, (value, key) => {
-                this.options.push({
-                    id: key,
-                    text: value
-                });
-            });
-        }
-    }
 }
 
-Select.defaultProps = {
+SelectInput.defaultProps = {
     allowClear: false,
     placeholder: null,
     changed: _.noop,
@@ -177,4 +151,4 @@ Select.defaultProps = {
     }
 };
 
-export default Select;
+export default SelectInput;

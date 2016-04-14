@@ -11,7 +11,8 @@ Date.defaultProps = {
     inputFormat: 'YYYY-MM-DD',
     modelFormat: 'YYYY-MM-DD',
     component: 'date',
-    viewMode: 'days'
+    viewMode: 'days',
+    renderer: BaseDateTime.defaultProps.renderer
 };
 
 export default Date;

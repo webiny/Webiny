@@ -1,5 +1,5 @@
 import Webiny from 'Webiny';
-import Select from './Select';
+import SelectInput from './SelectInput';
 
 class SelectContainer extends Webiny.Ui.Component {
 
@@ -94,7 +94,7 @@ class SelectContainer extends Webiny.Ui.Component {
 
     render() {
         return (
-            <Select {...this.props} options={this.state.options}/>
+            <SelectInput {...this.props} options={this.state.options}/>
         );
     }
 }

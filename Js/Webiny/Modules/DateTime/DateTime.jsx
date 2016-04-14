@@ -11,7 +11,8 @@ DateTime.defaultProps = {
     inputFormat: 'YYYY-MM-DD HH:mm:ss',
     modelFormat: 'YYYY-MM-DD HH:mm:ss',
     minDate: false,
-    component: 'datetime'
+    component: 'datetime',
+    renderer: BaseDateTime.defaultProps.renderer
 };
 
 export default DateTime;

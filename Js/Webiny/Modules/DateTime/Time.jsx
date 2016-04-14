@@ -11,7 +11,8 @@ Time.defaultProps = {
     inputFormat: 'HH:mm',
     modelFormat: 'HH:mm:ss',
     component: 'time',
-	stepping: 15
+	stepping: 15,
+    renderer: BaseDateTime.defaultProps.renderer
 };
 
 export default Time;

@@ -3,7 +3,20 @@ const Ui = Webiny.Ui.Components;
 
 export class Tab extends Webiny.Ui.Component {
 
-    render() {
+}
+
+Tab.defaultProps = {
+    label: 'Tab',
+    alwaysRender: true,
+    disabled: false,
+    onClick: _.noop,
+    icon: null,
+    // The following props are passed from Tabs component
+    render: 'tab', // tab or content,
+    active: false,
+    index: null,
+    parent: null,
+    renderer: function renderer() {
         const onClick = (e) => {
             this.props.onClick(this, this.props.index, e);
             if (!e.isDefaultPrevented()) {
@@ -42,19 +55,6 @@ export class Tab extends Webiny.Ui.Component {
 
         return null;
     }
-}
-
-Tab.defaultProps = {
-    label: 'Tab',
-    alwaysRender: true,
-    disabled: false,
-    onClick: _.noop,
-    icon: null,
-    // The following props are passed from Tabs component
-    render: 'tab', // tab or content,
-    active: false,
-    index: null,
-    parent: null
 };
 
 export class Tabs extends Webiny.Ui.Component {
@@ -84,8 +84,11 @@ export class Tabs extends Webiny.Ui.Component {
         }
         this.setState({selected});
     }
+}
 
-    render() {
+Tabs.defaultProps = {
+    position: 'top', // top, left
+    renderer: function renderer() {
         const tabsContainerCss = this.classSet({
             'tabs': true,
             'tabs--navigation-top': this.props.position === 'top',
@@ -119,8 +122,4 @@ export class Tabs extends Webiny.Ui.Component {
             </div>
         );
     }
-}
-
-Tabs.defaultProps = {
-    position: 'top' // top, left
 };

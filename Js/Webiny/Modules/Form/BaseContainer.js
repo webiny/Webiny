@@ -62,11 +62,16 @@ class BaseContainer extends Webiny.Ui.Component {
     }
 
     onReset() {
-        console.log("Form Container [ON RESET]");
+        this.props.onReset();
     }
 
     onCancel() {
         console.log("Form Container [ON CANCEL]");
+        if (_.isString(this.props.onCancel)) {
+            Webiny.Router.goToRoute(this.props.onCancel)
+        } else if (_.isFunction(this.props.onCancel)) {
+            this.props.onCancel();
+        }
     }
 
     prepareChild(child, index) {
@@ -96,9 +101,9 @@ class BaseContainer extends Webiny.Ui.Component {
 
             // These callbacks are only passed to the main form
             if (this.formsCount === 1) {
-                props.onSubmit = this.props.onSubmit && this.props.onSubmit || this.onSubmit;
-                props.onReset = this.props.onReset || this.onReset;
-                props.onCancel = this.props.onCancel || this.onCancel;
+                props.onSubmit = this.onSubmit;
+                props.onReset = this.onReset;
+                props.onCancel = this.onCancel;
             }
 
             // onInvalid callback requires special handling and is passed to ALL linked forms
