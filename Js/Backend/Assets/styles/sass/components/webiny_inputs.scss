@@ -1,9 +1,5 @@
-.form-group {
-  min-height: 72px;
-}
-
 label, .form-group label, label.control-label {
-  font-size: 16px;
+  font-size: 17px;
   color: #393939;
   clear: left;
   cursor: pointer;
@@ -13,6 +9,16 @@ label, .form-group label, label.control-label {
   label span.mandat {
     color: #CC3300;
     margin-left: 2px;
+  }
+}
+
+.form-group--inline-label {
+  .control-label {
+    display: inline-block;
+  }
+
+  .select2-container {
+    width: auto !important;
   }
 }
 
@@ -156,6 +162,7 @@ textarea.form-control {
       font-style: normal;
       font-weight: normal;
       speak: none;
+      pointer-events: none;
     }
   }
   .picker-holder {
@@ -261,7 +268,8 @@ form {
     opacity: 1;
   }
 }
-.choose-file .fileUpload {
+
+.fileUpload {
   position: absolute;
   z-index: 1;
   top: 3px;

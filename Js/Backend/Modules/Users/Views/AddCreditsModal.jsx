@@ -64,22 +64,42 @@ class AddCreditsModal extends Webiny.Ui.Component {
             <Ui.Modal.Dialog show={this.state.isShown} onHide={this.hide}>
                 <Ui.Modal.Header title="Add credits"/>
                 <Ui.Modal.Body>
-                    <Ui.Form.StaticContainer data={this.state.model} ui="addCreditsForm" onSubmit={this.addCredits}>
-                        <Ui.Form.Form layout={false}>
-                            <fields>
-                                <Ui.Grid.Row>
-                                    {error}
-                                    <Ui.Grid.Col all={12}>
-                                        <Ui.Input label="Credits" name="credits" validate="required"/>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-                            </fields>
-                        </Ui.Form.Form>
-                    </Ui.Form.StaticContainer>
+                    <Ui.Form.ApiContainer ui="addCreditsForm" api="/entities/core/users"
+                                          fields="id,firstName,lastName,email,userGroups,settings,enabled,userQuery" connectToRouter={true}>
+                        <Ui.Tabs.Tabs ui="tabs" position="left">
+                            <Ui.Tabs.Tab label="First Tab">
+                                <Ui.Form.Form layout={false}>
+                                    <fields>
+                                        <Ui.Grid.Row>
+                                            <Ui.Grid.Col all={12}>
+                                                <Ui.Input label="Email" name="email" validate="required,email"/>
+                                            </Ui.Grid.Col>
+                                            <Ui.Grid.Col all={12}>
+                                                <Ui.Search validate="required" name="userQuery" textAttr="name" label="Find file"
+                                                           api="/entities/core/files" fields="name" searchFields="name"/>
+                                            </Ui.Grid.Col>
+                                        </Ui.Grid.Row>
+                                    </fields>
+                                </Ui.Form.Form>
+                            </Ui.Tabs.Tab>
+                            <Ui.Tabs.Tab label="Second tab" icon="icon-columns">
+                                <Ui.Form.Form layout={false} onInvalid={this.ui('tabs:selectTab', 1)}>
+                                    <fields>
+                                        <Ui.Grid.Row>
+                                            <Ui.Grid.Col all={12}>
+                                                <Ui.Input label="First name" name="firstName" validate="required"/>
+                                                <Ui.Input label="Last name" name="lastName" validate="required"/>
+                                            </Ui.Grid.Col>
+                                        </Ui.Grid.Row>
+                                    </fields>
+                                </Ui.Form.Form>
+                            </Ui.Tabs.Tab>
+                        </Ui.Tabs.Tabs>
+                    </Ui.Form.ApiContainer>
                 </Ui.Modal.Body>
                 <Ui.Modal.Footer>
-                    <Ui.Button label="Cancel" onClick={this.ui('addCreditsModal:hide')}/>
-                    <Ui.Button label="Add credits" onClick={this.ui('addCreditsForm:submit')}/>
+                    <Ui.Button type="secondary" label="Cancel" onClick={this.ui('addCreditsModal:hide')}/>
+                    <Ui.Button type="primary" label="Add credits" onClick={this.ui('addCreditsForm:submit')}/>
                 </Ui.Modal.Footer>
             </Ui.Modal.Dialog>
         );

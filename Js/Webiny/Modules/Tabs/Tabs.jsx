@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+const Ui = Webiny.Ui.Components;
 
 export class Tab extends Webiny.Ui.Component {
 
@@ -13,9 +14,13 @@ export class Tab extends Webiny.Ui.Component {
         const active = {active: this.props.active};
         const tabSelectorClass = this.classSet(active, this.props.disabled ? 'disabled' : '');
 
+        const icon = this.props.icon ? <Ui.Icon icon={'left '+this.props.icon}/> : null;
         let label = this.props.label;
         if (_.isString(this.props.label)) {
-            label = <a href="javascript:void(0);">{this.props.label}</a>;
+            label = <a href="javascript:void(0);">
+                {this.props.label}
+                {icon}
+            </a>;
         }
 
         if (this.props.render === 'tab') {
@@ -44,7 +49,7 @@ Tab.defaultProps = {
     alwaysRender: true,
     disabled: false,
     onClick: _.noop,
-
+    icon: null,
     // The following props are passed from Tabs component
     render: 'tab', // tab or content,
     active: false,
@@ -81,16 +86,10 @@ export class Tabs extends Webiny.Ui.Component {
     }
 
     render() {
-        const css = this.classSet('tabs', this.props.className);
-        const tabsCss = this.classSet({
-            'nav': true,
-            'nav-tabs': this.props.position === 'top',
-            'nav-tabs nav-stacked col-md-2': this.props.position === 'left'
-        });
-
-        const contentCss = this.classSet({
-            'tab-content': true,
-            'col-md-10': this.props.position === 'left'
+        const tabsContainerCss = this.classSet({
+            'tabs': true,
+            'tabs--navigation-top': this.props.position === 'top',
+            'tabs--navigation-left': this.props.position === 'left'
         });
 
         const tabsHeader = [];
@@ -111,15 +110,12 @@ export class Tabs extends Webiny.Ui.Component {
             tabsContent.push(React.cloneElement(child, props, child.props.children));
         });
 
-        const style = {};
-        if (this.props.position === 'top') {
-            style.overflow = 'visible';
-        }
-
         return (
-            <div className={css}>
-                <ul className={tabsCss}>{tabsHeader}</ul>
-                <div className={contentCss} style={style}>{tabsContent}</div>
+            <div className={tabsContainerCss}>
+                <div className="tabs__body">
+                    <ul className="tabs__navigation nav nav-tabs">{tabsHeader}</ul>
+                    <div className="tabs__panes">{tabsContent}</div>
+                </div>
             </div>
         );
     }

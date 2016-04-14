@@ -2,7 +2,7 @@
  * Tabs
  */
 
-ul.nav.nav-tabs {
+/* ul.nav.nav-tabs {
   background-color: #F0F0F0;
   border: 1px solid #E8E8E8;
   padding: 0;
@@ -56,7 +56,7 @@ ul.nav.nav-tabs {
   .tab-pane {
     clear: both;
   }
-}
+} */
 
 /**
  * Tabs end
@@ -89,4 +89,141 @@ ul.nav.nav-tabs {
 
 .panel-title > a:hover {
   color: #FA5723;
+}
+
+
+
+
+.tab-pane {
+  padding: 20px;
+  
+  background-color: #fff;
+}
+
+.options-section{
+  margin-bottom: 20px;
+  .options-header{
+    height: 75px;
+    text-align: left;
+    border-bottom: 3px solid red;
+    margin-bottom: 10px;
+    .options-title{
+      display: inline-block;
+      margin-top: 35px;
+      font-weight: 600;
+    }
+    .search-container{
+      display: inline-block;
+      float: right;
+      margin: 15px 0 0 0;
+      min-height: 35px;
+      label{
+        font-size: 14px;
+        vertical-align: middle;
+        min-height: 10px;
+        margin-right: 10px;
+      }
+      .selectize{
+        display: inline-block;
+      }
+      .selectize-control{
+        width: 250px;
+      }
+    }
+  }
+  .options-content{
+    .layout-options{
+      .form-group{
+        display: inline-block;
+        vertical-align: top;
+        margin: 15px 20px 0 0;
+        width: 100%;
+      }
+    }
+    .data-options{
+      
+    }
+  }
+
+  .control-label {
+    font-size: 13px;
+  }
+}
+
+.form-group--keywords {
+  .control-label {
+    float: left;
+    margin-top: 12px;
+  }
+
+  .fileUpload {
+    position: relative;
+    float: right;
+    clear: right;
+  }
+}
+
+.keyword-container{
+  position: relative;
+
+  clear: both;
+  border: 1px solid $borderColor;
+  padding: 10px;
+  padding-right: 85px;
+
+  background-color: $formBgColor;
+
+  .keyword-block{
+    position: relative;
+    display: inline-block;
+    margin: 2px 0;
+    padding: 8px 35px 8px 15px;
+    background-color: $highlightColor;
+    border-radius: 20px;
+    p{
+      margin: 0;
+      
+      color: white;
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .icon {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      color: rgba(255,255,255, 0.5);
+    }
+  }
+  .keyword-input{
+    width: 250px;
+    background-color: $formBgColor;
+  }
+  .remove-keyword{
+    position: absolute;
+    top: 23px;
+    right: 10px;
+    cursor: pointer;
+    p{
+      margin: 0;
+
+      font-size: 10px;
+      line-height: 1;
+      text-transform: uppercase;
+
+      i{
+        height: 8px;
+        font-size: 12px;
+        color: $importantColor;
+        vertical-align: middle;
+
+        &:before {
+          margin-top: -2px;
+          height: 8px;
+          vertical-align: top;
+        }
+      }
+    }
+  }
 }

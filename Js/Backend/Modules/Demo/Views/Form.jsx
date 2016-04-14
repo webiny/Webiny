@@ -188,7 +188,7 @@ class Form extends Webiny.Ui.View {
                                 <h3>Conditional title (<Ui.Value value={'myForm-1.state.model.email'}/>)</h3>
                             </Ui.Hide>
                             <Ui.Tabs.Tabs ui="tabs">
-                                <Ui.Tabs.Tab label="First Tab">
+                                <Ui.Tabs.Tab label="First Tab" icon="icon-gauge">
                                     <Ui.Form.Form layout={false}>
                                         <fields>
                                             <Ui.Grid.Row>
@@ -274,7 +274,7 @@ class Form extends Webiny.Ui.View {
                                         </fields>
                                     </Ui.Form.Form>
                                 </Ui.Tabs.Tab>
-                                <Ui.Tabs.Tab label="Second tab">
+                                <Ui.Tabs.Tab label="Second tab" icon="icon-columns">
                                     <Ui.Form.Form layout={false} onInvalid={this.ui('tabs:selectTab', 1)}>
                                         <fields>
                                             <Ui.Grid.Row>

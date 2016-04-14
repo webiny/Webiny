@@ -18,6 +18,7 @@
     font-style: normal;
     font-weight: normal;
     speak: none;
+    pointer-events: none;
   }
 }
 .admin-dash .select2-container {
@@ -235,6 +236,8 @@
 .select2-container--default .select2-selection--single .select2-selection__clear {
   cursor: pointer;
   float: right;
+  margin-right: 20px;
+  margin-left: 20px;
   font-weight: bold;
 }
 /* line 21, ../scss/theme/default/_single.scss */
