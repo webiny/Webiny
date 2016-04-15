@@ -17,7 +17,7 @@ class Table extends Webiny.Ui.Component {
     componentWillMount() {
         super.componentWillMount();
         this.tempProps = this.props;
-        this.prepareChildren(this.props.children)
+        this.prepareChildren(this.props.children);
     }
 
     componentWillReceiveProps(props) {
@@ -52,9 +52,9 @@ class Table extends Webiny.Ui.Component {
                     const headerProps = _.omit(rowChild.props, 'renderer');
                     headerProps.sortable = headerProps.sort || false;
                     headerProps.sorted = this.tempProps.sorters[headerProps.name] || 0;
-                    headerProps.children = React.Children.map(rowChild.props.children, child => {
-                        if (child.type === Ui.List.Table.FieldInfo) {
-                            return child;
+                    headerProps.children = React.Children.map(rowChild.props.children, ch => {
+                        if (ch.type === Ui.List.Table.FieldInfo) {
+                            return ch;
                         }
                     });
                     this.headers.push(headerProps);
@@ -83,7 +83,7 @@ class Table extends Webiny.Ui.Component {
         _.assign(props, {
             table: this,
             key: index,
-            data: data,
+            data,
             sorters: _.clone(this.props.sorters),
             actions: this.props.actions
         });
@@ -94,7 +94,9 @@ class Table extends Webiny.Ui.Component {
     renderHeader(header, i) {
         header.key = i;
         header.onSort = this.onSort;
-        return <Ui.List.Table.Header {...header}/>
+        return (
+            <Ui.List.Table.Header {...header}/>
+        );
     }
 }
 

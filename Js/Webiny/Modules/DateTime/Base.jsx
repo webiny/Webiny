@@ -17,7 +17,7 @@ class Base extends Webiny.Ui.FormComponent {
     setValue() {
         let newValue = this.props.valueLink.value;
 
-        if (this.props.component != 'time') {
+        if (this.props.component !== 'time') {
             newValue = moment(newValue, this.props.modelFormat);
             newValue = newValue.isValid() ? newValue.format(this.props.inputFormat) : '';
         }
@@ -46,7 +46,7 @@ class Base extends Webiny.Ui.FormComponent {
         }).on('dp.change', e => {
             let newValue = this.input.val() || null;
 
-            if (newValue && this.props.component != 'time') {
+            if (newValue && this.props.component !== 'time') {
                 newValue = e.date.format(this.props.inputFormat);
             }
             this.valueLink.requestChange(newValue);
@@ -62,7 +62,7 @@ class Base extends Webiny.Ui.FormComponent {
 
     onChangeSelectedValue(sel) {
         sel = sel || null;
-        if (sel && this.props.component != 'time') {
+        if (sel && this.props.component !== 'time') {
             sel = moment(sel, this.props.inputFormat).format(this.props.modelFormat);
         }
         this.props.valueLink.requestChange(sel);

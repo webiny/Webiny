@@ -1,6 +1,4 @@
-import Webiny from 'Webiny';
 import BaseContainer from './BaseContainer';
-const Ui = Webiny.Ui.Components;
 
 class StaticContainer extends BaseContainer {
 
@@ -64,7 +62,7 @@ StaticContainer.defaultProps = {
     defaultParams: {},
     page: 1,
     perPage: 10,
-    layout: function () {
+    layout: function layout() {
         return (
             <div className="col-xs-12">
                 <filters/>

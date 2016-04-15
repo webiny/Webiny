@@ -5,7 +5,7 @@ const Ui = Webiny.Ui.Components;
 export default {
     layout: function layout() {
         let title = this.props.title;
-        if(_.isFunction(title)){
+        if (_.isFunction(title)) {
             title = title();
         }
 

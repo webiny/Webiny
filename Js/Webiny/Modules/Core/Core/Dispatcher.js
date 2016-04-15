@@ -1,5 +1,3 @@
-import Webiny from 'Webiny';
-
 class Dispatcher {
 
     constructor() {
@@ -13,7 +11,7 @@ class Dispatcher {
         }
 
         // Execute before change callbacks in a chain
-        let callbacksChain = Q(data).then(data => data);
+        let callbacksChain = Q(data).then(res => res);
 
         this.listeners[event].forEach(listener => {
             callbacksChain = callbacksChain.then(listener.listener).catch(e => console.error(e));

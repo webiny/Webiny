@@ -6,7 +6,13 @@ class Module extends Webiny.Module {
         return 'webiny-token';
     }
 
-    onForbidden(routerEvent, apiResponse) {
+    /**
+     * Triggerred when user is not authenticated
+     *
+     * @param routerEvent
+     * @param apiResponse
+     */
+    onForbidden() {
         Q.all([
             Webiny.Dispatcher.dispatch('Logout')
         ]).then(() => {
@@ -18,7 +24,7 @@ class Module extends Webiny.Module {
         localStorage.loginRedirect = window.location.href;
         routerEvent.stop();
 
-        var isLoginRoute = routerEvent.route.name === 'Login';
+        const isLoginRoute = routerEvent.route.name === 'Login';
 
         if (!isLoginRoute) {
             routerEvent.goToRoute('Login', {logout: 'not'});
@@ -32,9 +38,8 @@ class Module extends Webiny.Module {
         if (!_.find(data.groups, {tag: 'administrators'})) {
             Webiny.Cookies.remove(this.getCookieName());
             return this.goToLogin(routerEvent);
-        } else {
-            Webiny.Model.set('User', data);
         }
+        Webiny.Model.set('User', data);
 
         return routerEvent;
     }
@@ -63,7 +68,7 @@ class Module extends Webiny.Module {
         localStorage.loginRedirect = window.location.href;
         routerEvent.stop();
 
-        var isLoginRoute = routerEvent.route.name == 'Login';
+        const isLoginRoute = routerEvent.route.name === 'Login';
 
         if (!isLoginRoute) {
             routerEvent.goToRoute('Login');
@@ -96,7 +101,7 @@ class Module extends Webiny.Module {
 
     checkUser(routerEvent) {
         if (Webiny.Model.get('User')) {
-            return;
+            return false;
         }
 
         const token = Webiny.Cookies.get(this.getCookieName());

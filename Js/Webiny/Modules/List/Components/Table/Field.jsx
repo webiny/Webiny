@@ -2,17 +2,17 @@ import Webiny from 'Webiny';
 
 class Field extends Webiny.Ui.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.bindMethods('getTdClasses');
     }
 
     getTdClasses(classes = {}) {
-        return this.classSet(_.merge({
+        return this.classSet({
             sorted: this.props.sorted !== null,
             'text-left': this.props.align === 'left'
-        }, this.props.className, classes));
+        }, this.props.className, classes);
     }
 }
 

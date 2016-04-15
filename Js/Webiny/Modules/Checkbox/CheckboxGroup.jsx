@@ -1,5 +1,4 @@
 import BaseCheckboxGroup from './BaseCheckboxGroup';
-import Checkbox from './Checkbox';
 
 class CheckboxGroup extends BaseCheckboxGroup {
 

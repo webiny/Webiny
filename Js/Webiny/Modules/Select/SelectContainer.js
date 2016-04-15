@@ -42,30 +42,30 @@ class SelectContainer extends Webiny.Ui.Component {
             // Possible scenarios: function, object with key:value pairs
             if (_.isFunction(props.options)) {
                 if (props.options === this.lastUsedSource) {
-                    return;
+                    return null;
                 }
                 this.lastUsedSource = props.options;
 
-                return Q(props.options()).then(options => {
-                    const valueAttr = options.valueAttr || props.valueAttr;
-                    const textAttr = options.textAttr || props.textAttr;
+                return Q(props.options()).then(opts => {
+                    const valueAttr = opts.valueAttr || props.valueAttr;
+                    const textAttr = opts.textAttr || props.textAttr;
 
-                    if (_.isPlainObject(options)) {
-                        options = options.data;
+                    if (_.isPlainObject(opts)) {
+                        opts = opts.data;
                     }
-                    
-                    this.setState({options: this.renderOptions(props, options, valueAttr, textAttr)});
-                });
-            } else {
-                _.each(props.options, (value, key) => {
-                    options.push({
-                        id: key,
-                        text: value
-                    });
-                });
 
-                return this.setState({options});
+                    this.setState({options: this.renderOptions(props, opts, valueAttr, textAttr)});
+                });
             }
+
+            _.each(props.options, (value, key) => {
+                options.push({
+                    id: key,
+                    text: value
+                });
+            });
+
+            return this.setState({options});
         }
 
         if (this.api) {

@@ -119,7 +119,7 @@ class Form extends Webiny.Ui.Component {
 
         if (input.props && input.props.name) {
             // Add onChange callback to valueLink
-            let name = _.upperFirst(_.camelCase(input.props.name));
+            const name = _.upperFirst(_.camelCase(input.props.name));
             const callback = _.get(this.props, 'onChange' + name, _.noop);
             newProps['valueLink'] = this.bindTo(input.props.name, callback.bind(this));
 
@@ -177,7 +177,7 @@ class Form extends Webiny.Ui.Component {
             return this.props.container.linkedForms;
         }
 
-        if(!this.props.container && this.props.linkedForms){
+        if (!this.props.container && this.props.linkedForms) {
             return _.filter(this.props.linkedForms.split(',')).map(Webiny.Ui.Dispatcher.get);
         }
 

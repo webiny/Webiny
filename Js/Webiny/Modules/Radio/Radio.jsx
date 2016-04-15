@@ -20,9 +20,9 @@ class Radio extends Webiny.Ui.FormComponent {
     isChecked() {
         let state = this.props.stateKey;
 
-        if (state === "false") {
+        if (state === 'false') {
             state = false;
-        } else if (state === "true") {
+        } else if (state === 'true') {
             state = true;
         }
 
@@ -40,7 +40,7 @@ class Radio extends Webiny.Ui.FormComponent {
             ];
 
             keys.forEach(key => {
-                if (_.get(this.props, key) != _.get(props, key)) {
+                if (_.get(this.props, key) !== _.get(props, key)) {
                     update = true;
                 }
             });
@@ -57,9 +57,9 @@ Radio.defaultProps = {
     renderer: function renderer() {
         let state = this.props.stateKey;
 
-        if (state === "false") {
+        if (state === 'false') {
             state = false;
-        } else if (state === "true") {
+        } else if (state === 'true') {
             state = true;
         }
 

@@ -1,6 +1,4 @@
-import Webiny from 'Webiny';
 import BaseContainer from './BaseContainer';
-const Ui = Webiny.Ui.Components;
 
 class StaticContainer extends BaseContainer {
 
@@ -26,9 +24,13 @@ class StaticContainer extends BaseContainer {
         }
     }
 
+    /* eslint-disable */
+
     loadData(id = null) {
         // Doesn't do anything
     }
+
+    /* eslint-enable */
 
     onSubmit(model) {
         this.props.onSubmit(model);

@@ -30,11 +30,9 @@ class BaseRadioGroup extends Webiny.Ui.FormComponent {
             });
         } else {
             React.Children.map(children, (child) => {
-                var value = child.props.value;
-
                 options.push({
                     label: child.props.children,
-                    key: value
+                    key: child.props.value
                 });
             });
         }
@@ -43,9 +41,9 @@ class BaseRadioGroup extends Webiny.Ui.FormComponent {
     }
 
     onChange(newValue) {
-        if (newValue === "false") {
+        if (newValue === 'false') {
             newValue = false;
-        } else if (newValue === "true") {
+        } else if (newValue === 'true') {
             newValue = true;
         }
         this.props.valueLink.requestChange(newValue, this.validate);
@@ -59,7 +57,7 @@ class BaseRadioGroup extends Webiny.Ui.FormComponent {
         const items = [];
         _.forEach(this.state.options, (item, key) => {
             const props = {
-                key: key,
+                key,
                 grid: item.grid || this.props.grid,
                 label: item.label,
                 stateKey: item.key,

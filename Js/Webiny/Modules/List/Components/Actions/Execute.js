@@ -1,7 +1,7 @@
 export default function executeAction(callback) {
     const config = {};
 
-    const exec = function () {
+    const exec = function exec() {
         return callback(config.httpMethod, config.method, config.body, config.query).then(apiResponse => {
             if (config.then) {
                 return config.then(apiResponse);

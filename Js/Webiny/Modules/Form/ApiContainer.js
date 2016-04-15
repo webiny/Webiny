@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
 import BaseContainer from './BaseContainer';
-const Ui = Webiny.Ui.Components;
 
 class ApiContainer extends BaseContainer {
 
@@ -39,9 +38,9 @@ class ApiContainer extends BaseContainer {
     }
 
     onSubmit(model) {
-        console.log("Form Container [ON SUBMIT]", model);
+        console.log('Form Container [ON SUBMIT]', model);
         this.setState({model: _.assign({}, this.state.model, model)}, () => {
-            if(Webiny.Router.getParams('id')){
+            if (Webiny.Router.getParams('id')) {
                 return this.api.execute('PATCH', this.state.model.id, this.state.model).then(ar => {
                     const onSubmitSuccess = this.props.onSubmitSuccess;
                     if (!ar.isError() && onSubmitSuccess) {

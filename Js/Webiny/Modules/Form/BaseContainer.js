@@ -25,9 +25,13 @@ class BaseContainer extends Webiny.Ui.Component {
         super.componentWillReceiveProps(props);
     }
 
+    /* eslint-disable */
+
     loadData(id = null) {
         throw new Error('Implement loadData method in your form container class!');
     }
+
+    /* eslint-enable */
 
     getData() {
         return this.state.model;
@@ -53,12 +57,15 @@ class BaseContainer extends Webiny.Ui.Component {
         return this.mainForm.cancel();
     }
 
+    /* eslint-disable */
     onSubmit(model) {
         throw new Error('Implement onSubmit method in your form container class!');
     }
 
+    /* eslint-enable */
+
     onInvalid() {
-        console.log("Form Container [ON INVALID]");
+        console.log('Form Container [ON INVALID]');
     }
 
     onReset() {
@@ -66,9 +73,9 @@ class BaseContainer extends Webiny.Ui.Component {
     }
 
     onCancel() {
-        console.log("Form Container [ON CANCEL]");
+        console.log('Form Container [ON CANCEL]');
         if (_.isString(this.props.onCancel)) {
-            Webiny.Router.goToRoute(this.props.onCancel)
+            Webiny.Router.goToRoute(this.props.onCancel);
         } else if (_.isFunction(this.props.onCancel)) {
             this.props.onCancel();
         }
@@ -87,7 +94,7 @@ class BaseContainer extends Webiny.Ui.Component {
 
             // Pass relevant props from BaseContainer to Form
             _.each(this.props, (value, name) => {
-                if (_.startsWith(name, 'render') || _.startsWith(name, 'option') || _.startsWith(name, 'onChange') || name == 'title') {
+                if (_.startsWith(name, 'render') || _.startsWith(name, 'option') || _.startsWith(name, 'onChange') || name === 'title') {
                     props[name] = value;
                 }
             });
@@ -111,7 +118,11 @@ class BaseContainer extends Webiny.Ui.Component {
             const invalidCallback = props.onInvalid;
             props.onInvalid = () => {
                 invalidCallback();
-                this.props.onInvalid && this.props.onInvalid.call(this) || this.onInvalid();
+                if (this.props.onInvalid) {
+                    this.props.onInvalid.call(this);
+                } else {
+                    this.onInvalid();
+                }
             };
 
             return React.cloneElement(child, props);

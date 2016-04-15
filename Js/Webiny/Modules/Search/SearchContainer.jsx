@@ -29,7 +29,7 @@ class SearchContainer extends Webiny.Ui.Component {
         if (id && _.isPlainObject(id)) {
             id = id.id;
         }
-        if (id != this.selectedId) {
+        if (id !== this.selectedId) {
             this.setInitialData(props);
         }
 

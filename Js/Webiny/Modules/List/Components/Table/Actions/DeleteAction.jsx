@@ -14,7 +14,13 @@ DeleteAction.defaultProps = {
 
         return (
             <Ui.List.Table.ModalAction {..._.pick(this.props, 'data', 'actions', 'label', 'hide')}>
-                {function (record, actions, modal) {
+                {function render(record, actions, modal) {
+                    const submitProps = {
+                        type: 'primary',
+                        label: 'Yes, delete!',
+                        onClick: actions.delete(record.id).then(modal.hide()),
+                        icon: 'icon-check'
+                    };
                     return (
                         <Ui.Modal.Dialog>
                             <Ui.Modal.Header title="Delete confirmation"/>
@@ -26,7 +32,7 @@ DeleteAction.defaultProps = {
                                     <Ui.Button type="secondary" label="No" onClick={modal.hide()}/>
                                 </div>
                                 <div className="btn-holder-right">
-                                    <Ui.Button type="primary" label="Yes, delete!" onClick={actions.delete(record.id).then(modal.hide())} icon="icon-check"/>
+                                    <Ui.Button {...submitProps}/>
                                 </div>
                             </Ui.Modal.Footer>
                         </Ui.Modal.Dialog>

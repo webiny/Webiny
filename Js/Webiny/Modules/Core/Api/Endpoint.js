@@ -1,4 +1,3 @@
-import Webiny from 'Webiny';
 import Base from './Base';
 
 // TODO: add TTL to cached results
@@ -63,7 +62,7 @@ class Endpoint extends Base {
             params = this.params;
         }
 
-        //console.log('%c[Endpoint][Execute]: %c' + httpMethod + ':' + this.url + method, 'color: #666; font-weight: bold', 'color: blue; font-weight: bold');
+        // console.log('%c[Endpoint][Execute]: %c' + httpMethod + ':' + this.url + method, 'color: #666; font-weight: bold', 'color: blue; font-weight: bold');
 
         let request = null;
         switch (_.lowerCase(httpMethod)) {

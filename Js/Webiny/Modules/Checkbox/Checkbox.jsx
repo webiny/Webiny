@@ -51,7 +51,7 @@ Checkbox.defaultProps = {
         if (this.props.children) {
             children = React.Children.map(this.props.children, (child, key) => {
                 const newProps = {
-                    key: key,
+                    key,
                     form: this.props.form || null,
                     onChange: this.childChanged,
                     stateKey: this.props.stateKey,

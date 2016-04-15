@@ -4,12 +4,12 @@ const UiD = Webiny.Ui.Dispatcher;
 
 class Login extends Webiny.Ui.View {
 
-    componentWillMount(){
+    componentWillMount() {
         super.componentWillMount();
 
         // If already logged in - execute onSuccess
         if (!_.isEmpty(Webiny.Model.get('User'))) {
-            if(_.isFunction(this.props.onSuccess)){
+            if (_.isFunction(this.props.onSuccess)) {
                 return this.props.onSuccess();
             }
 
@@ -32,7 +32,7 @@ class Login extends Webiny.Ui.View {
         const onSuccess = this.props.onSuccess;
         const tokenName = this.props.tokenName;
         return {
-            onSubmit(model, container){
+            onSubmit(model, container) {
                 container.setState({error: null, model});
                 return new Webiny.Api.Endpoint(api).post('login', model).then(apiResponse => {
                     if (apiResponse.isError()) {
@@ -57,6 +57,15 @@ class Login extends Webiny.Ui.View {
 Login.defaultProps = {
     api: '/entities/core/users',
     renderer: function renderer() {
+        const passwordProps = {
+            type: 'password',
+            name: 'password',
+            placeholder: 'Password',
+            label: 'Password *',
+            validate: 'required,password',
+            description: <span className="info-txt"><a tabIndex="-1" href="#">Forgot your password?</a></span>
+        };
+
         return (
             <Ui.Form.ApiContainer api={this.props.api} ui="loginForm" {...this.getConfig.call(this)}>
                 <div className="container">
@@ -79,12 +88,11 @@ Login.defaultProps = {
 
                                 <div className="clear"></div>
                                 <Ui.Input name="username" placeholder="Enter email" label="Email address *" validate="required,email"/>
-                                <Ui.Input name="password" placeholder="Password" label="Password *" validate="required,password"
-                                          description={<span className="info-txt"><a tabIndex="-1" href="#">Forgot your password?</a></span>}/>
+                                <Ui.Input {...passwordProps}/>
 
                                 <div className="form-footer">
                                     <div className="submit-wrapper">
-                                        <Ui.Button type="primary" size="large" onClick={this.ui('loginForm:submit')}icon="icon-next">
+                                        <Ui.Button type="primary" size="large" onClick={this.ui('loginForm:submit')} icon="icon-next">
                                             <span>Submit</span>
                                         </Ui.Button>
                                     </div>

@@ -1,4 +1,3 @@
-import Webiny from 'Webiny';
 import Field from './../Field';
 
 class TimeField extends Field {

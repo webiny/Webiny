@@ -27,41 +27,40 @@ class CheckboxGroupContainer extends Webiny.Ui.Component {
             // Possible scenarios: function, object with key:value pairs
             if (_.isFunction(props.options)) {
                 if (props.options === this.lastUsedSource) {
-                    return;
+                    return null;
                 }
                 this.lastUsedSource = props.options;
 
-                return Q(props.options()).then(options => {
-                    const valueAttr = options.valueAttr || props.valueAttr;
-                    const textAttr = options.textAttr || props.textAttr;
+                return Q(props.options()).then(opts => {
+                    const valueAttr = opts.valueAttr || props.valueAttr;
+                    const textAttr = opts.textAttr || props.textAttr;
 
-                    if (_.isPlainObject(options)) {
-                        options = options.data;
+                    if (_.isPlainObject(opts)) {
+                        opts = opts.data;
                     }
-                    
-                    this.setState({options: this.renderOptions(options, valueAttr, textAttr)});
+
+                    this.setState({options: this.renderOptions(opts, valueAttr, textAttr)});
                 });
-            } else {
-                return this.setState({options: props.options});
             }
+
+            return this.setState({options: props.options});
         }
 
         if (this.api) {
             return this.api.execute().then(apiResponse => {
-                const options = this.renderOptions(apiResponse.getData().list, props.valueAttr, props.textAttr);
-                this.setState({options});
+                const opts = this.renderOptions(apiResponse.getData().list, props.valueAttr, props.textAttr);
+                this.setState({opts});
             });
         }
 
         if (props.children) {
             React.Children.map(props.children, child => {
-                if(child.type === 'checkbox'){
+                if (child.type === 'checkbox') {
                     options[child.props.value] = child.props.children;
                 }
             });
             return this.setState({options});
         }
-
     }
 
     renderOptions(data, valueAttr, textAttr) {

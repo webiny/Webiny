@@ -85,7 +85,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
 
         let selectedRenderer = renderer;
         if (_.isFunction(props.selectedRenderer)) {
-            selectedRenderer = function selectedRenderer(item) {
+            selectedRenderer = function preview(item) {
                 if (item.data) {
                     let option = props.selectedRenderer(item.data);
                     if (!_.isString(option)) {
@@ -144,7 +144,7 @@ SelectInput.defaultProps = {
         return (
             <div className={this.classSet(cssConfig)}>
                 {label}
-                <select style={{'width':'100%'}}/>
+                <select style={{'width': '100%'}}/>
                 {validationMessage}
             </div>
         );

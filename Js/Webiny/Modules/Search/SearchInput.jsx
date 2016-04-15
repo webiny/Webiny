@@ -117,7 +117,7 @@ class SearchInput extends Webiny.Ui.FormComponent {
         }
 
         this.setState({
-            selected: selected,
+            selected,
             search: this.renderPreview(this.state.options[selected])
         });
     }
@@ -137,7 +137,7 @@ class SearchInput extends Webiny.Ui.FormComponent {
         }
 
         this.setState({
-            selected: selected,
+            selected,
             search: this.renderPreview(this.state.options[selected])
         });
     }
@@ -185,10 +185,15 @@ class SearchInput extends Webiny.Ui.FormComponent {
                 'search-item-selected': index === this.state.selected,
                 'col-sm-12': true
             };
+
+            const linkProps = {
+                onMouseDown: () => this.selectItem(item),
+                onMouseOver: () => this.setState({selected: index, search: this.renderPreview(item)})
+            };
+
             return (
                 <div key={index} className={this.classSet(itemClasses)} style={{padding: 10}}>
-                    <a href="javascript:" onMouseDown={() => {this.selectItem(item)}}
-                       onMouseOver={() => {this.setState({selected: index, search: this.renderPreview(item)});}}>
+                    <a href="javascript:void(0)" {...linkProps}>
                         {this.props.optionRenderer.call(this, item)}
                     </a>
                 </div>
@@ -220,11 +225,11 @@ class SearchInput extends Webiny.Ui.FormComponent {
 }
 
 SearchInput.defaultProps = {
-    optionRenderer: function (item) {
-        let content = {__html: item[this.props.textAttr].replace(/\s+/g, '&nbsp;')};
-        return <div dangerouslySetInnerHTML={content}></div>
+    optionRenderer: function optionRenderer(item) {
+        const content = {__html: item[this.props.textAttr].replace(/\s+/g, '&nbsp;')};
+        return <div dangerouslySetInnerHTML={content}></div>;
     },
-    selectedRenderer: function (item) {
+    selectedRenderer: function selectedRenderer(item) {
         return item[this.props.textAttr];
     },
     valueAttr: 'id',

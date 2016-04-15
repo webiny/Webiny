@@ -1,4 +1,3 @@
-import Webiny from 'Webiny';
 import Field from './../Field';
 
 class CaseField extends Field {
@@ -30,7 +29,7 @@ CaseField.defaultProps = {
         }
 
         if (this.props.includeTd) {
-            return <td className={this.getTdClasses()}>{content}</td>
+            return <td className={this.getTdClasses()}>{content}</td>;
         }
 
         return content;

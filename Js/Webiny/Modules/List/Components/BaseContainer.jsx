@@ -60,7 +60,7 @@ class BaseContainer extends Webiny.Ui.Component {
         super.componentWillReceiveProps(props);
     }
 
-    loadData(){
+    loadData() {
         throw new Error('Implement loadData method in your list container class!');
     }
 
@@ -174,6 +174,7 @@ class BaseContainer extends Webiny.Ui.Component {
         return this.searchQuery;
     }
 
+    /* eslint-disable */
     onRecordUpdate(id, attributes) {
         throw new Error('Implement onRecordUpdate method in your list container class!');
     }
@@ -181,6 +182,8 @@ class BaseContainer extends Webiny.Ui.Component {
     onRecordDelete(id) {
         throw new Error('Implement onRecordDelete method in your list container class!');
     }
+
+    /* eslint-enable */
 
     tableProps(tableProps) {
         // Pass relevant props from BaseContainer to Table
@@ -194,7 +197,7 @@ class BaseContainer extends Webiny.Ui.Component {
             sorters: this.state.sorters,
             onSort: this.setSorters,
             actions: {
-                update: updateAction(this.onRecordUpdate), //(id, data) => () => this.onRecordUpdate(id, data),
+                update: updateAction(this.onRecordUpdate), // (id, data) => () => this.onRecordUpdate(id, data),
                 delete: deleteAction(this.onRecordDelete),
                 execute: executeAction(this.onRecordExecute)
             }
@@ -282,7 +285,7 @@ BaseContainer.defaultProps = {
     defaultParams: {},
     page: 1,
     perPage: 10,
-    layout: function () {
+    layout: function layout() {
         return (
             <div className="col-xs-12">
                 <filters/>
@@ -294,7 +297,7 @@ BaseContainer.defaultProps = {
     renderer: function renderer() {
         this.prepareList(this.props.children);
 
-        const layout = this.props.layout.bind(this)();
+        const layout = this.props.layout.call(this);
 
         if (React.Children.toArray(layout.props.children).length) {
             const render = [];

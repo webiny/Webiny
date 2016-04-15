@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
 
 class Container extends Webiny.Ui.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -11,13 +11,13 @@ class Container extends Webiny.Ui.Component {
         this.bindMethods('setContent');
     }
 
-    setContent(content){
+    setContent(content) {
         setTimeout(() => this.setState({content}), 10);
     }
 
     componentDidUpdate() {
         super.componentDidUpdate();
-        if(this.state.content){
+        if (this.state.content) {
             // Need to focus on .modal to reduce scope of events (keyup and click in Modal.Dialog)
             $('.modal').focus();
         }

@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
-const UiD = Webiny.Ui.Dispatcher;
 
 class Form extends Webiny.Ui.View {
 
@@ -11,10 +10,10 @@ class Form extends Webiny.Ui.View {
             title: 'Users form',
             connectToRouter: true,
             onSubmitSuccess: () => {
-                Webiny.Router.goToRoute('Users.List')
+                Webiny.Router.goToRoute('Users.List');
             },
             onCancel: () => {
-                Webiny.Router.goToRoute('Users.List')
+                Webiny.Router.goToRoute('Users.List');
             }
         };
 

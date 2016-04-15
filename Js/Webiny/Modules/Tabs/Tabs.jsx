@@ -27,13 +27,15 @@ Tab.defaultProps = {
         const active = {active: this.props.active};
         const tabSelectorClass = this.classSet(active, this.props.disabled ? 'disabled' : '');
 
-        const icon = this.props.icon ? <Ui.Icon icon={'left '+this.props.icon}/> : null;
+        const icon = this.props.icon ? <Ui.Icon icon={'left ' + this.props.icon}/> : null;
         let label = this.props.label;
         if (_.isString(this.props.label)) {
-            label = <a href="javascript:void(0);">
-                {this.props.label}
-                {icon}
-            </a>;
+            label = (
+                <a href="javascript:void(0);">
+                    {this.props.label}
+                    {icon}
+                </a>
+            );
         }
 
         if (this.props.render === 'tab') {

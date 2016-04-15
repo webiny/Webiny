@@ -1,10 +1,9 @@
 import Webiny from 'Webiny';
 import BaseContainer from './BaseContainer';
-const Ui = Webiny.Ui.Components;
 
 class ApiContainer extends BaseContainer {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.bindMethods('onRecordExecute');
 
@@ -77,7 +76,7 @@ ApiContainer.defaultProps = {
     page: 1,
     perPage: 10,
     autoLoad: true,
-    layout: function () {
+    layout: function layout() {
         return (
             <div className="col-xs-12">
                 <filters/>

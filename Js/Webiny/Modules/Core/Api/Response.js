@@ -27,7 +27,7 @@ class ApiResponse {
         return null;
     }
 
-    getCode(){
+    getCode() {
         if (this.data && 'code' in this.data) {
             return this.data.code;
         }

@@ -1,4 +1,3 @@
-import Webiny from 'Webiny';
 import RouterEvent from './RouterEvent';
 import Utils from './RouterUtils';
 
@@ -251,7 +250,7 @@ class Router {
     sortersToString(sorters) {
         const sort = [];
         _.each(sorters, (value, field) => {
-            if (value == 1) {
+            if (value === 1) {
                 sort.push(field);
             } else {
                 sort.push('-' + field);

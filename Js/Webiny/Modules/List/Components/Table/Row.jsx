@@ -15,7 +15,7 @@ class Row extends Webiny.Ui.Component {
 
     componentWillMount() {
         super.componentWillMount();
-        this.prepareChildren(this.props.children)
+        this.prepareChildren(this.props.children);
     }
 
     componentWillReceiveProps(props) {

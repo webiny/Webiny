@@ -25,7 +25,7 @@ class AddCreditsModal extends Webiny.Ui.Component {
      * @param container Form container instance that handled the forms
      * @returns {*}
      */
-    addCredits(model, container) {
+    addCredits(model) {
         this.setState({model, error: false});
         const api = new Webiny.Api.Endpoint('/entities/core/users');
         return api.post('call', model).then(ar => {
@@ -60,12 +60,29 @@ class AddCreditsModal extends Webiny.Ui.Component {
             );
         }
 
+        const formProps = {
+            ui: 'addCreditsForm',
+            api: '/entities/core/users',
+            fields: 'id,firstName,lastName,email,userGroups,settings,enabled,userQuery',
+            connectToRouter: true
+        };
+
+        const searchProps = {
+            validate: 'required',
+            name: 'userQuery',
+            textAttr: 'name',
+            label: 'Find file',
+            api: '/entities/core/files',
+            fields: 'name',
+            searchFields: 'name'
+        };
+
         return (
             <Ui.Modal.Dialog show={this.state.isShown} onHide={this.hide}>
                 <Ui.Modal.Header title="Add credits"/>
                 <Ui.Modal.Body>
-                    <Ui.Form.ApiContainer ui="addCreditsForm" api="/entities/core/users"
-                                          fields="id,firstName,lastName,email,userGroups,settings,enabled,userQuery" connectToRouter={true}>
+                    {error}
+                    <Ui.Form.ApiContainer {...formProps}>
                         <Ui.Tabs.Tabs ui="myTabs" position="left">
                             <Ui.Tabs.Tab label="First Tab">
                                 <Ui.Form.Form layout={false}>
@@ -75,8 +92,7 @@ class AddCreditsModal extends Webiny.Ui.Component {
                                                 <Ui.Input label="Email" name="email" validate="required,email"/>
                                             </Ui.Grid.Col>
                                             <Ui.Grid.Col all={12}>
-                                                <Ui.Search validate="required" name="userQuery" textAttr="name" label="Find file"
-                                                           api="/entities/core/files" fields="name" searchFields="name"/>
+                                                <Ui.Search {...searchProps}/>
                                             </Ui.Grid.Col>
                                         </Ui.Grid.Row>
                                     </fields>

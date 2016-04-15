@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Webiny from 'Webiny';
 import data from './data';
 const Ui = Webiny.Ui.Components;
@@ -41,16 +42,6 @@ class List extends Webiny.Ui.View {
                             <Table.Table>
                                 <Table.Row>
                                     <Table.Field name="firstName" align="left" label="First Name" sort="firstName">
-                                        <Table.FieldRenderer>
-                                            {function () {
-                                                return (
-                                                    <td className={this.getTdClasses()}>
-                                                        <strong>{this.props.data.firstName} {this.props.data.lastName}</strong><br/>
-                                                        {this.props.data.id}
-                                                    </td>
-                                                );
-                                            }}
-                                        </Table.FieldRenderer>
                                         <Table.FieldInfo title="About first name">
                                             <div className="table-responsive">
                                                 <table className="table table-simple">
@@ -101,9 +92,6 @@ class List extends Webiny.Ui.View {
                                         </Table.FieldInfo>
                                     </Table.Field>
                                     <Table.CaseField name="enabled" align="left" label="Status" sort="enabled">
-                                        <Table.FieldInfo title="About status">
-                                            Enabled/Disabled
-                                        </Table.FieldInfo>
                                         <case value={true}>Enabled</case>
                                         <case value={false}>Disabled</case>
                                     </Table.CaseField>

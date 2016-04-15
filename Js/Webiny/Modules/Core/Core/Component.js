@@ -95,15 +95,15 @@ class Component extends React.Component {
         this.__listeners.push(stopListening);
     }
 
-    classSet() {
+    classSet(...classObjects) {
         let classes = [];
 
-        _.forIn(arguments, classObject => {
+        _.forIn(classObjects, classObject => {
             if (!classObject) {
                 return;
             }
 
-            if (typeof classObject === 'string') {
+            if (_.isString(classObject)) {
                 classes = classes.concat(classObject.split(' '));
                 return;
             }

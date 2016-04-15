@@ -1,7 +1,6 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 const Table = Ui.List.Table;
-const UiD = Webiny.Ui.Dispatcher;
 
 class List extends Webiny.Ui.View {
 
@@ -16,6 +15,15 @@ List.defaultProps = {
             searchFields: 'firstName,lastName,email'
         };
 
+        const selectProps = {
+            placeholder: 'Email',
+            allowClear: true,
+            api: '/entities/core/users',
+            name: 'email',
+            valueAttr: 'email',
+            textAttr: 'email'
+        };
+
         return (
             <Webiny.Builder.View na me="core-users-list">
                 <Ui.Grid.Col all={12}>
@@ -23,12 +31,11 @@ List.defaultProps = {
                 </Ui.Grid.Col>
                 <Ui.List.ApiContainer ui="myList" {...listProps}>
                     <Ui.List.FormFilters>
-                        {function (applyFilters, resetFilters) {
+                        {(applyFilters, resetFilters) => {
                             return (
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={3}>
-                                        <Ui.Select placeholder="Email" allowClear={true} api="/entities/core/users" name="email"
-                                                   valueAttr="email" textAttr="email"/>
+                                        <Ui.Select {...selectProps}/>
                                     </Ui.Grid.Col>
                                     <Ui.Grid.Col all={3}>
                                         <Ui.Select placeholder="Status" allowClear={true} name="enabled">

@@ -104,7 +104,6 @@ class FieldSet extends Webiny.Ui.FormComponent {
                 {this.registerInputs(this.emptyTemplate(this.actions))}
             </div>
         );
-
     }
 }
 

@@ -1,7 +1,7 @@
 export default function deleteAction(callback) {
     const config = {};
 
-    const exec = function () {
+    const exec = function exec() {
         return callback(config.id).then(data => {
             if (config.then) {
                 return config.then(data);

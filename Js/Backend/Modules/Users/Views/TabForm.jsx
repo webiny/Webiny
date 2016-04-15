@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
-const UiD = Webiny.Ui.Dispatcher;
 const Table = Ui.List.Table;
 
 import AddCreditsModal from './AddCreditsModal';
@@ -14,19 +13,19 @@ class Form extends Webiny.Ui.View {
             title: 'Users form',
             connectToRouter: true,
             onSubmitSuccess: () => {
-                Webiny.Router.goToRoute('Users.List')
+                Webiny.Router.goToRoute('Users.List');
             },
             onCancel: () => {
-                Webiny.Router.goToRoute('Users.List')
+                Webiny.Router.goToRoute('Users.List');
             }
         };
 
         return (
             <Webiny.Builder.View name="core-users-form">
                 <Ui.Form.ApiContainer ui="myForm" {...containerProps}>
-                    {/*<Ui.Data api="/brands/analytics">
+                    {/* <Ui.Data api="/brands/analytics">
                      {(data, filter) => <Stats title="New Brands" data={data.newBrands} onChange={newVal => filter({date: newVal})()}/>}
-                     </Ui.Data>*/}
+                     </Ui.Data> */}
                     <Ui.Grid.Col all={12}>
                         <Ui.Panel.Panel>
                             <Ui.Panel.Header title="Users Form"/>
@@ -46,7 +45,8 @@ class Form extends Webiny.Ui.View {
                                                         <Ui.Input label="Email" name="email" validate="required,email"/>
                                                     </Ui.Grid.Col>
                                                     <Ui.Grid.Col all={12}>
-                                                        <Ui.Button type="primary" label="Add credits" onClick={this.ui('addCreditsModal:show')}/>
+                                                        <Ui.Button type="primary" label="Add credits"
+                                                                   onClick={this.ui('addCreditsModal:show')}/>
                                                         <AddCreditsModal ui="addCreditsModal"/>
                                                     </Ui.Grid.Col>
                                                 </Ui.Grid.Row>
@@ -59,7 +59,8 @@ class Form extends Webiny.Ui.View {
                                         </Ui.Form.Form>
                                     </Ui.Tabs.Tab>
                                     <Ui.Tabs.Tab label="Files" onClick={this.ui('files:loadData')}>
-                                        <Ui.List.ApiContainer ui="files" autoLoad={false} api="/entities/core/files" fields="id,name,type,size">
+                                        <Ui.List.ApiContainer ui="files" autoLoad={false} api="/entities/core/files"
+                                                              fields="id,name,type,size">
                                             <Table.Table>
                                                 <Table.Row>
                                                     <Table.Field name="name" align="left" label="Name"/>
