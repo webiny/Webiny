@@ -58,7 +58,7 @@ Login.defaultProps = {
     api: '/entities/core/users',
     renderer: function renderer() {
         return (
-            <Ui.Form.ApiContainer ui="loginForm" {...this.getConfig.call(this)}>
+            <Ui.Form.ApiContainer api={this.props.api} ui="loginForm" {...this.getConfig.call(this)}>
                 <div className="container">
                     <div className="sign-in-holder">
                         <Ui.Form.Form className="form-signin" layout={false}>

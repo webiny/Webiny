@@ -29,6 +29,4 @@ backend.beforeRender(() => {
     });
 });
 
-Webiny.Console.setEnabled(true);
-
 export default backend;

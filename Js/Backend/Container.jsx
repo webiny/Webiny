@@ -13,8 +13,6 @@ class Container extends Webiny.Ui.View {
     componentWillMount() {
         Webiny.Router.start(window.location.pathname).then(() => {
             this.setState({loading: false});
-        }, (e) => {
-            console.error(e);
         });
     }
 

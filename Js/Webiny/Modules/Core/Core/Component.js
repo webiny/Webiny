@@ -179,7 +179,21 @@ class Component extends React.Component {
 
     render() {
         if (this.props.renderer) {
-            return this.props.renderer.bind(this)(this);
+            try {
+                return this.props.renderer.call(this);
+            } catch (e) {
+                console.error('[RENDER ERROR][' + this.getClassName() + ']', e);
+                return (
+                    <div className="porlet porlet-primary">
+                        <div className="porlet-header">
+                            <h3>[RENDER ERROR] in component `{this.getClassName()}`</h3>
+                        </div>
+                        <div className="porlet-body">
+                            <pre>{e.stack}</pre>
+                        </div>
+                    </div>
+                );
+            }
         }
 
         console.warn('Component ' + this.getClassName() + ' has no renderer!');

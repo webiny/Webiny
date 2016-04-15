@@ -136,7 +136,7 @@ class List extends Basic {
         this.listen('Webiny.Ui.Components.Table.Action.MultiAction', data => {
             const methodName = 'multiAction' + _.capitalize(data.action);
             if (!_.isFunction(this[methodName])) {
-                return Webiny.Console.warn('MultiAction method \'' + methodName + '\' not defined.');
+                return console.warn('MultiAction method \'' + methodName + '\' not defined.');
             }
             return this[methodName](data.selected, data.value);
         });
@@ -144,7 +144,7 @@ class List extends Basic {
         this.listen('Webiny.Ui.Components.Table.Action.Menu', data => {
             const methodName = 'menuAction' + _.capitalize(data.action);
             if (!_.isFunction(this[methodName])) {
-                return Webiny.Console.warn('MenuAction method \'' + methodName + '\' not defined.');
+                return console.warn('MenuAction method \'' + methodName + '\' not defined.');
             }
             return this[methodName](data.data);
         });

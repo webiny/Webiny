@@ -7,16 +7,16 @@ class Dispatcher {
     }
 
     dispatch(event, data) {
-        Webiny.Console.info('%c[Dispatch]: ' + event, 'color: #1918DE; font-weight: bold', data);
+        console.info('%c[Dispatch]: ' + event, 'color: #1918DE; font-weight: bold', data);
         if (!this.listeners.hasOwnProperty(event)) {
             return Q(null);
         }
 
         // Execute before change callbacks in a chain
-        let callbacksChain = Q(data);
+        let callbacksChain = Q(data).then(data => data);
 
         this.listeners[event].forEach(listener => {
-            callbacksChain = callbacksChain.then(listener.listener);
+            callbacksChain = callbacksChain.then(listener.listener).catch(e => console.error(e));
         });
 
         return callbacksChain;

@@ -23,7 +23,7 @@ class Router {
             this.activeRoute = matchedRoute;
             Utils.routeWillChange(matchedRoute, this.routeWillChange).then(() => {
                 Utils.renderRoute(matchedRoute);
-            }, Utils.exceptionHandler);
+            }).catch(Utils.exceptionHandler);
         });
     }
 
@@ -46,7 +46,7 @@ class Router {
         this.beforeStart.forEach(callback => {
             beforeStartChain = beforeStartChain.then(() => {
                 return callback(routerEvent);
-            });
+            }).catch(Utils.exceptionHandler);
         });
 
         beforeStartChain = beforeStartChain.then(event => {
@@ -149,7 +149,6 @@ class Router {
     getRoute(name) {
         const route = _.find(this.routes, ['name', name]);
         if (!route) {
-            Webiny.Console.error('Route with name: ' + name + ' does not exist.');
             return false;
         }
         return route;
@@ -158,7 +157,6 @@ class Router {
     getRouteByPattern(pattern) {
         const route = _.find(this.routes, ['pattern', pattern]);
         if (!route) {
-            Webiny.Console.error('Route with pattern: ' + pattern + ' does not exist.');
             return false;
         }
         return route;
@@ -179,12 +177,11 @@ class Router {
         }
 
         if (!route) {
-            console.error('Route by name: ' + name + ' does not exist.');
             return null;
         }
 
         if (route === this.activeRoute && _.isEqual(params, this.activeRoute.getParams())) {
-            Webiny.Console.warn('Route will not change!');
+            console.warn('Route will not change!');
             return null;
         }
         return this.goToUrl(route.getHref(params, null, merge));

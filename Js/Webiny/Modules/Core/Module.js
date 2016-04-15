@@ -13,7 +13,6 @@ import Router from './Router/Router';
 import Route from './Router/Route';
 import Http from './Http/Http';
 import Tools from './Tools';
-import Console from './Console';
 import Endpoint from './Api/Endpoint';
 import Settings from './Ui/Settings';
 import Menu from './Ui/Menu';
@@ -53,7 +52,6 @@ class Module extends WebinyModule {
 			Route,
 			Dispatcher,
 			Tools,
-			Console: Console.init(),
             Cookies, // from js-cookies
 			Http,
 			Api: {

@@ -5,7 +5,10 @@ const UiD = Webiny.Ui.Dispatcher;
 
 class List extends Webiny.Ui.View {
 
-    render() {
+}
+
+List.defaultProps = {
+    renderer: function render() {
         const listProps = {
             api: '/entities/core/users',
             fields: 'id,enabled,firstName,lastName,email,createdOn,gravatar',
@@ -65,6 +68,6 @@ class List extends Webiny.Ui.View {
             </Webiny.Builder.View>
         );
     }
-}
+};
 
 export default List;
