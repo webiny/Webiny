@@ -12,7 +12,7 @@ class Field extends Webiny.Ui.Component {
         return this.classSet(_.merge({
             sorted: this.props.sorted !== null,
             'text-left': this.props.align === 'left'
-        }, classes));
+        }, this.props.className, classes));
     }
 }
 
