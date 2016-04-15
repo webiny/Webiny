@@ -16,7 +16,7 @@ CaseField.defaultProps = {
                 return;
             }
             const value = child.props.value;
-            if (_.isFunction(value) && value(this.props.data) === true || value === this.props.data[this.props.name]) {
+            if (_.isFunction(value) && value(this.props.data) === true || value === _.get(this.props.data, this.props.name)) {
                 content = child.props.children;
             }
         });

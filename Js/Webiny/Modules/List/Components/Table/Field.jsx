@@ -19,7 +19,7 @@ class Field extends Webiny.Ui.Component {
 Field.defaultProps = {
     renderer: function renderer() {
         return (
-            <td className={this.getTdClasses()}>{this.props.data[this.props.name]}</td>
+            <td className={this.getTdClasses()}>{_.get(this.props.data, this.props.name)}</td>
         );
     }
 };

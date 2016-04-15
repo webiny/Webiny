@@ -13,13 +13,13 @@ ToggleField.defaultProps = {
             onChange: newValue => {
                 if (_.isNull(this.props.onChange)) {
                     const attributes = {};
-                    attributes[this.props.name] = newValue;
+                    _.set(attributes, this.props.name, newValue);
                     this.props.actions.update(this.props.data.id, attributes)();
                 } else {
                     this.props.onChange(newValue);
                 }
             },
-            value: this.props.data[this.props.name],
+            value: _.get(this.props.data, this.props.name),
             disabled: this.props.disabled
         };
 
