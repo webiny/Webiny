@@ -28,11 +28,6 @@ class ApiComponent {
             config.params = verifiedParams;
             _.each(apiParams, v => config['_' + v] = context.props[v]);
             context.api = new ApiEndpoint(context.props.api, config);
-
-            context.setApiParams = (params) => {
-                context.api.setParams.call(context.api, params);
-                return context;
-            };
         }
     }
 }

@@ -1,5 +1,7 @@
 import Webiny from 'Webiny';
 import Validator from './../Validation/Validator';
+import DelayedValueLink from './DelayedValueLink';
+const Ui = Webiny.Ui.Components;
 
 class Form extends Webiny.Ui.Component {
 
@@ -14,6 +16,7 @@ class Form extends Webiny.Ui.Component {
         this.fields = [];
         this.actions = [];
         this.layout = null;
+        this.watches = {};
 
         this.bindMethods('submit', 'reset', 'cancel', 'attachToForm', 'attachValidators', 'detachFromForm', 'validateInput', 'validate');
     }
@@ -38,6 +41,12 @@ class Form extends Webiny.Ui.Component {
 
     bindTo(name, callback = _.noop) {
         return super.bindTo('model.' + name, callback);
+    }
+
+    watch(name, callback) {
+        const watches = _.get(this.watches, name, []);
+        watches.push(callback);
+        _.set(this.watches, name, watches);
     }
 
     /**
@@ -121,7 +130,16 @@ class Form extends Webiny.Ui.Component {
             // Add onChange callback to valueLink
             const name = _.upperFirst(_.camelCase(input.props.name));
             const callback = _.get(this.props, 'onChange' + name, _.noop);
-            newProps['valueLink'] = this.bindTo(input.props.name, callback.bind(this));
+
+            // Input changed callback, triggered on each input change
+            const changeCallback = function inputChanged(newValue) {
+                callback.bind(this, newValue);
+                // See if there is a watch registered for changed input
+                const watches = _.get(this.watches, input.props.name, []);
+                _.map(watches, w => w(newValue));
+            };
+
+            newProps['valueLink'] = this.bindTo(input.props.name, changeCallback.bind(this));
 
             // Add input renderer
             if (_.has(this.props, 'render' + name)) {
@@ -138,6 +156,14 @@ class Form extends Webiny.Ui.Component {
                 const selectRenderers = this.props['optionRenderer' + name];
                 newProps.optionRenderer = selectRenderers.option || null;
                 newProps.selectedRenderer = selectRenderers.selected || null;
+            }
+
+            if (input.type === Ui.Textarea || input.type === Ui.Input) {
+                return (
+                    <DelayedValueLink>
+                        {React.cloneElement(input, newProps, input.props && input.props.children)}
+                    </DelayedValueLink>
+                );
             }
             return React.cloneElement(input, newProps, input.props && input.props.children);
         }

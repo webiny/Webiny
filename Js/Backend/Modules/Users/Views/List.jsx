@@ -16,12 +16,10 @@ List.defaultProps = {
         };
 
         const statusProps = {
+            ui: 'statusFilter',
             placeholder: 'Status',
             allowClear: true,
-            name: 'enabled',
-            onChange: val => {
-                this.ui('emailFilter').setApiParams({enabled: val}).prepareOptions();
-            }
+            name: 'enabled'
         };
 
         const selectProps = {
@@ -31,7 +29,12 @@ List.defaultProps = {
             api: '/entities/core/users',
             name: 'email',
             valueAttr: 'email',
-            textAttr: 'email'
+            textAttr: 'email',
+            filterBy: 'enabled'
+            // filterBy: ['enabled', 'enabled'], // first value is name of the input to watch, second is name of the field to filter by
+            /* filterBy: ['enabled', newVal => { // first value is name of the input to watch, second is a custom function that returns a filters object
+                return {enabled: newVal};
+            }] */
         };
 
         return (

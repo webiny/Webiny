@@ -12,13 +12,46 @@ class SelectContainer extends Webiny.Ui.Component {
 
         this.lastUsedSource = null;
 
-        this.bindMethods('prepareOptions,renderOptions');
+        this.bindMethods('prepareOptions,renderOptions,setFilters,watchForChange');
         Webiny.Mixins.ApiComponent.extend(this);
     }
 
     componentDidMount() {
         super.componentDidMount();
         this.prepareOptions(this.props);
+        if (this.props.filterBy) {
+            this.watchForChange();
+        }
+    }
+
+    watchForChange() {
+        // Assume the most basic form of filtering (single string)
+        let name = this.props.filterBy;
+        let field = this.props.filterBy;
+
+        // Check if filterBy is defined as array (0 => name of the input to watch, 1 => filter by field)
+        if (_.isArray(this.props.filterBy)) {
+            name = this.props.filterBy[0];
+            field = this.props.filterBy[1];
+        }
+
+        this.props.form.watch(name, val => {
+            // If filter is a function, it needs to return a filter object created from new value
+            if (_.isFunction(field)) {
+                this.setFilters(field(val));
+            } else {
+                // If filter is a string, create a filter object using that string as field name
+                const filters = {};
+                filters[field] = val;
+                this.setFilters(filters);
+            }
+        });
+    }
+
+    setFilters(filters) {
+        this.api.setParams(filters);
+        this.prepareOptions();
+        return this;
     }
 
     prepareOptions(props = null) {
