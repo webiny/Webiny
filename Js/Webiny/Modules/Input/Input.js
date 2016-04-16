@@ -1,66 +1,17 @@
 import Webiny from 'Webiny';
 
-class Input extends Webiny.Ui.FormComponent {
+class Input extends Webiny.Ui.Component {
 
-    onKeyDown(e) {
-        switch (e.key) {
-            case 'Enter':
-                this.props.onEnter(e);
-                break;
-            default:
-                break;
-        }
+    onChange(e) {
+        this.props.valueLink.requestChange(e.target.value);
+    }
+
+    render() {
+        const props = _.omit(this.props, 'valueLink');
+        props.value = this.props.valueLink.value || '';
+        props.onChange = this.onChange.bind(this);
+        return <input {...props}/>;
     }
 }
-
-Input.defaultProps = {
-    onEnter: _.noop,
-    renderer: function renderer() {
-        const cssConfig = {
-            'form-group': true,
-            'error': this.state.isValid === false,
-            'success': this.state.isValid === true
-        };
-
-        let label = null;
-        if (this.props.label) {
-            label = <label className="control-label">{this.props.label}</label>;
-        }
-
-        let validationIcon = null;
-        let validationMessage = null;
-        if (this.state.isValid === true) {
-            validationIcon = <span className="icon icon-good"></span>;
-        }
-
-        if (this.state.isValid === false) {
-            validationIcon = <span className="icon icon-bad"></span>;
-            validationMessage = <span className="help-block">{this.state.validationMessage}</span>;
-        }
-
-        const props = {
-            onBlur: this.validate,
-            disabled: this.props.disabled,
-            readOnly: this.props.readOnly,
-            type: this.props.type,
-            className: 'form-control',
-            value: this.props.valueLink.value || '',
-            onChange: this.onChange,
-            placeholder: this.props.placeholder,
-            onKeyUp: this.props.onKeyUp || null,
-            onKeyDown: this.props.onKeyDown || this.onKeyDown.bind(this)
-        };
-
-        return (
-            <div className={this.classSet(cssConfig)}>
-                {label}
-                {this.props.description}
-                <input {...props}/>
-                {validationMessage}
-                {validationIcon}
-            </div>
-        );
-    }
-};
 
 export default Input;

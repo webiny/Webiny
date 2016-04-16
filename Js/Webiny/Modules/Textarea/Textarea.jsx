@@ -1,42 +1,16 @@
 import Webiny from 'Webiny';
 
-class Textarea extends Webiny.Ui.FormComponent {
+class Textarea extends Webiny.Ui.Component {
+
+    onChange(e) {
+        this.props.valueLink.requestChange(e.target.value);
+    }
 
     render() {
-        const cssConfig = {
-            'form-group': true,
-            'error': this.state.isValid === false,
-            'success': this.state.isValid === true
-        };
-
-        let label = null;
-        if (this.props.label) {
-            label = <label key="label" className="control-label">{this.props.label}</label>;
-        }
-
-        let validationMessage = null;
-
-        if (this.state.isValid === false) {
-            validationMessage = <span className="help-block">{this.state.validationMessage}</span>;
-        }
-
-        const props = {
-            onBlur: this.validate,
-            disabled: this.props.disabled,
-            className: 'form-control',
-            value: this.props.valueLink.value || '',
-            onChange: this.onChange,
-            placeholder: this.props.placeholder,
-            style: this.props.style
-        };
-
-        return (
-            <div className={this.classSet(cssConfig)}>
-                {label}
-                <textarea {...props}/>
-                {validationMessage}
-            </div>
-        );
+        const props = _.omit(this.props, 'valueLink');
+        props.value = this.props.valueLink.value || '';
+        props.onChange = this.onChange.bind(this);
+        return <textarea {...props}/>;
     }
 }
 

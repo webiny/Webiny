@@ -1,7 +1,5 @@
 import Webiny from 'Webiny';
 import Validator from './../Validation/Validator';
-import DelayedValueLink from './DelayedValueLink';
-const Ui = Webiny.Ui.Components;
 
 class Form extends Webiny.Ui.Component {
 
@@ -156,14 +154,6 @@ class Form extends Webiny.Ui.Component {
                 const selectRenderers = this.props['optionRenderer' + name];
                 newProps.optionRenderer = selectRenderers.option || null;
                 newProps.selectedRenderer = selectRenderers.selected || null;
-            }
-
-            if (input.type === Ui.Textarea || input.type === Ui.Input) {
-                return (
-                    <DelayedValueLink>
-                        {React.cloneElement(input, newProps, input.props && input.props.children)}
-                    </DelayedValueLink>
-                );
             }
             return React.cloneElement(input, newProps, input.props && input.props.children);
         }
@@ -331,6 +321,7 @@ class Form extends Webiny.Ui.Component {
     }
 
     render() {
+        console.log("FORM RE-RENDER");
         this.prepareForm(this.props.children);
         return super.render();
     }

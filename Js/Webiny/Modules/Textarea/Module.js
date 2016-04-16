@@ -1,10 +1,10 @@
 import Webiny from 'Webiny';
-import Textarea from './Textarea';
+import TextareaContainer from './TextareaContainer';
 
 class Module extends Webiny.Module {
 
     init() {
-        Webiny.Ui.Components.Textarea = Textarea;
+        Webiny.Ui.Components.Textarea = TextareaContainer;
     }
 }
 

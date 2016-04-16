@@ -39,7 +39,7 @@ class DelayedValueLink extends Webiny.Ui.Component {
 }
 
 DelayedValueLink.defaultProps = {
-    delay: 200
+    delay: 400
 };
 
 export default DelayedValueLink;
