@@ -49,8 +49,8 @@ class CheckboxGroupContainer extends Webiny.Ui.Component {
         if (this.api) {
             return this.api.execute().then(apiResponse => {
                 const opts = this.renderOptions(apiResponse.getData().list, props.valueAttr, props.textAttr);
-                this.setState({opts});
-            });
+				this.setState({options: opts});
+			});
         }
 
         if (props.children) {
