@@ -4,7 +4,7 @@ const container = {};
  * UiDispatcher class keeps references to instances of React components globally, no matter the app or module.
  *
  * It allows us to expose public UI API and let developers implement different interactions between modules.
- * Every component that has a 'name' attribute on it will automatically register itself on 'componentWillMount'
+ * Every component that has a 'ui' attribute on it will automatically register itself on 'componentWillMount'
  * and unregister on 'componentWillUnmount' events.
  */
 class UiDispatcher {
@@ -51,11 +51,12 @@ class UiDispatcher {
     createSignal(_this, call, params) {
         return function executeSignal() {
             let callable = null;
+            let component = null;
             if (_.isFunction(call)) {
                 callable = call;
             } else {
                 const [name, method] = call.split(':');
-                const component = name === 'this' ? _this : _.get(container, name);
+                component = name === 'this' ? _this : _.get(container, name);
 
                 callable = component[method];
             }

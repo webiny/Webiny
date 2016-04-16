@@ -55,7 +55,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
 
     getValue() {
         const value = this.props.valueLink ? this.props.valueLink.value : this.props.selectedValue;
-        if (!value) {
+        if (value === null || value === undefined) {
             return value;
         }
 
@@ -71,7 +71,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
             }
             this.props.valueLink.requestChange(value);
         }
-        this.props.changed(value);
+        this.props.onChange(value);
     }
 
     getConfig(props) {
@@ -119,7 +119,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
 SelectInput.defaultProps = {
     allowClear: false,
     placeholder: null,
-    changed: _.noop,
+    onChange: _.noop,
     selectedValue: '',
     minimumResultsForSearch: 15,
     multiple: false,

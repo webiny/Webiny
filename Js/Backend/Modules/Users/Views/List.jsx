@@ -15,7 +15,17 @@ List.defaultProps = {
             searchFields: 'firstName,lastName,email'
         };
 
+        const statusProps = {
+            placeholder: 'Status',
+            allowClear: true,
+            name: 'enabled',
+            onChange: val => {
+                this.ui('emailFilter').setApiParams({enabled: val}).prepareOptions();
+            }
+        };
+
         const selectProps = {
+            ui: 'emailFilter',
             placeholder: 'Email',
             allowClear: true,
             api: '/entities/core/users',
@@ -34,19 +44,16 @@ List.defaultProps = {
                         {(applyFilters, resetFilters) => {
                             return (
                                 <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={3}>
-                                        <Ui.Select {...selectProps}/>
-                                    </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={3}>
-                                        <Ui.Select placeholder="Status" allowClear={true} name="enabled">
+                                    <Ui.Grid.Col all={4}>
+                                        <Ui.Select {...statusProps}>
                                             <option value="true">Enabled</option>
                                             <option value="false">Disabled</option>
                                         </Ui.Select>
                                     </Ui.Grid.Col>
                                     <Ui.Grid.Col all={4}>
-                                        <Ui.Date placeholder="Created On" name="createdOn"/>
+                                        <Ui.Select {...selectProps}/>
                                     </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={2}>
+                                    <Ui.Grid.Col all={4}>
                                         <Ui.Button type="primary" label="Filter" onClick={applyFilters()}/>
                                         <Ui.Button type="secondary" label="Reset" onClick={resetFilters()}/>
                                     </Ui.Grid.Col>

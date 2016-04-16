@@ -21,7 +21,11 @@ class SelectContainer extends Webiny.Ui.Component {
         this.prepareOptions(this.props);
     }
 
-    prepareOptions(props) {
+    prepareOptions(props = null) {
+        if (!props) {
+            props = this.props;
+        }
+
         const options = [];
         if (props.children) {
             React.Children.map(props.children, child => {
@@ -89,7 +93,7 @@ class SelectContainer extends Webiny.Ui.Component {
 
     render() {
         return (
-            <SelectInput {...this.props} options={this.state.options}/>
+            <SelectInput {..._.omit(this.props, ['ui'])} options={this.state.options}/>
         );
     }
 }
