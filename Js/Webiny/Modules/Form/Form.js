@@ -207,7 +207,7 @@ class Form extends Webiny.Ui.Component {
         if (!mainFormValid) {
             return this.props.onInvalid(this);
         }
-        const model = this.getData();
+        const model = _.merge({}, this.props.defaultData, this.getData());
         // Validate linked forms
         const forms = this.getLinkedForms();
         if (forms.length) {

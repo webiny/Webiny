@@ -29,9 +29,9 @@ class DelayedValueLink extends Webiny.Ui.Component {
         }
     }
 
-    applyValue(value) {
+    applyValue(value, callback = _.noop) {
         clearTimeout(this.delay);
-        this.realValueLink.requestChange(value);
+        this.realValueLink.requestChange(value, callback);
     }
 
     changed() {
@@ -44,13 +44,18 @@ class DelayedValueLink extends Webiny.Ui.Component {
         const props = _.omit(this.props.children.props, ['valueLink']);
         props.valueLink = this.bindTo('value', this.changed);
         const realOnKeyDown = props.onKeyDown || _.noop;
+        const realOnBlur = props.onBlur || _.noop;
+
+        // Need to apply value if input lost focus
+        props.onBlur = (e) => {
+            this.applyValue(e.target.value, realOnBlur);
+        };
 
         // Need to listen for TAB key to apply new value immediately, without delay. Otherwise validation will be triggered with old value.
         props.onKeyDown = (e) => {
             if (e.key === 'Tab') {
-                this.applyValue(e.target.value);
+                this.applyValue(e.target.value, realOnKeyDown);
             }
-            realOnKeyDown(e);
         };
 
         return React.cloneElement(this.props.children, props);

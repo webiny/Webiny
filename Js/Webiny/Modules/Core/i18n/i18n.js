@@ -3,4 +3,4 @@ export default function i18n(key, defaultValue) {
         'webiny.core.statusFilter.placeholder': 'My Status'
     };
     return _.get(translations, key, defaultValue);
-};
+}
