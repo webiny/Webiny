@@ -16,23 +16,42 @@ class DelayedValueLink extends Webiny.Ui.Component {
 
         this.delay = null;
         this.state = {
-            value: ''
+            value: props.children.props.valueLink.value
         };
 
-        this.bindMethods('changed');
+        this.bindMethods('applyValue,changed');
+    }
+
+    componentWillReceiveProps(props) {
+        super.componentWillReceiveProps(props);
+        if (!this.delay) {
+            this.setState({value: props.children.props.valueLink.value});
+        }
+    }
+
+    applyValue(value) {
+        clearTimeout(this.delay);
+        this.realValueLink.requestChange(value);
     }
 
     changed() {
         clearTimeout(this.delay);
-        this.delay = setTimeout(() => {
-            this.realValueLink.requestChange(this.state.value);
-        }, this.props.delay);
+        this.delay = setTimeout(() => this.applyValue(this.state.value), this.props.delay);
     }
 
     render() {
         this.realValueLink = this.props.children.props.valueLink;
         const props = _.omit(this.props.children.props, ['valueLink']);
         props.valueLink = this.bindTo('value', this.changed);
+        const realOnKeyDown = props.onKeyDown || _.noop;
+
+        // Need to listen for TAB key to apply new value immediately, without delay. Otherwise validation will be triggered with old value.
+        props.onKeyDown = (e) => {
+            if (e.key === 'Tab') {
+                this.applyValue(e.target.value);
+            }
+            realOnKeyDown(e);
+        };
 
         return React.cloneElement(this.props.children, props);
     }
