@@ -5,7 +5,6 @@ use Apps\Core\Php\DevTools\Authorization\AuthorizationTrait;
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Entity\Attributes\FileAttribute;
 use Apps\Core\Php\DevTools\Entity\EntityAbstract;
-use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Mongo\Index\SingleIndex;
