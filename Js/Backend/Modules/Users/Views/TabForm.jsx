@@ -43,7 +43,10 @@ class Form extends Webiny.Ui.View {
                                                         <Ui.Input label="Last name" name="lastName" validate="required"/>
                                                     </Ui.Grid.Col>
                                                     <Ui.Grid.Col all={12}>
-                                                        <Ui.Input label="Email" name="email" validate="required,email"/>
+                                                        <Ui.Input label="Email" name="email" validate="required,email" description="Your email"/>
+                                                    </Ui.Grid.Col>
+                                                    <Ui.Grid.Col all={12}>
+                                                        <Ui.Textarea label="Notes" name="notes" description="User notes"/>
                                                     </Ui.Grid.Col>
                                                     <Ui.Grid.Col all={12}>
                                                         <Ui.Button type="primary" label="Add credits"

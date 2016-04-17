@@ -16,7 +16,7 @@ class AddCreditsModal extends Webiny.Ui.Component {
             }
         };
 
-        this.bindMethods('addCredits,show,hide');
+        this.bindMethods('addCredits,show,hide,generateSlug');
     }
 
     /**
@@ -33,6 +33,15 @@ class AddCreditsModal extends Webiny.Ui.Component {
             }
 
             this.hide();
+        });
+    }
+
+    generateSlug(value) {
+        console.log("GENERATE SLUG", value);
+        const api = new Webiny.Api.Endpoint('/entities/core/users');
+
+        return api.post('call', {data: value}).then(ar => {
+            this.setState({error: 'Neki glupi error!'});
         });
     }
 
@@ -88,7 +97,7 @@ class AddCreditsModal extends Webiny.Ui.Component {
                                     <fields>
                                         <Ui.Grid.Row>
                                             <Ui.Grid.Col all={12}>
-                                                <Ui.Input label="Email" name="email" validate="required,email"/>
+                                                <Ui.Input label="Email" name="email" validate="required,email" onBlur={this.generateSlug} description="Enter your email or you will be fired!"/>
                                             </Ui.Grid.Col>
                                             <Ui.Grid.Col all={12}>
                                                 <Ui.Search {...searchProps}/>

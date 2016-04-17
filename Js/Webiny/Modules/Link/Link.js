@@ -23,6 +23,12 @@ class Link extends Webiny.Ui.Component {
             props.target = '_blank';
         }
 
+        const alignClasses = {
+            normal: '',
+            left: 'pull-left',
+            right: 'pull-right'
+        };
+
         const sizeClasses = {
             normal: '',
             large: 'btn-lg',
@@ -41,6 +47,10 @@ class Link extends Webiny.Ui.Component {
 
         if (this.props.size) {
             classes[sizeClasses[this.props.size]] = true;
+        }
+
+        if (this.props.align) {
+            classes[alignClasses[props.align]] = true;
         }
 
         return <a {...props} className={this.classSet(classes)}>{this.props.children}</a>;

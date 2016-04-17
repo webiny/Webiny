@@ -39,6 +39,7 @@ TextareaContainer.defaultProps = {
                 <Webiny.Ui.Components.DelayedValueLink>
                     <Textarea {...props}/>
                 </Webiny.Ui.Components.DelayedValueLink>
+                <span className="help-block">{this.props.description}</span>
                 {validationMessage}
             </div>
         );

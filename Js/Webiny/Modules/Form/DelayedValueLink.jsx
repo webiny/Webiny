@@ -48,13 +48,17 @@ class DelayedValueLink extends Webiny.Ui.Component {
 
         // Need to apply value if input lost focus
         props.onBlur = (e) => {
-            this.applyValue(e.target.value, realOnBlur);
+            e.persist();
+            this.applyValue(e.target.value, () => realOnBlur(e));
         };
 
         // Need to listen for TAB key to apply new value immediately, without delay. Otherwise validation will be triggered with old value.
         props.onKeyDown = (e) => {
+            e.persist();
             if (e.key === 'Tab') {
-                this.applyValue(e.target.value, realOnKeyDown);
+                this.applyValue(e.target.value, () => realOnKeyDown(e));
+            } else {
+                realOnKeyDown(e);
             }
         };
 
