@@ -13,12 +13,14 @@ import Router from './Router/Router';
 import Route from './Router/Route';
 import Http from './Http/Http';
 import Tools from './Tools';
+import i18n from './i18n/i18n';
 import Endpoint from './Api/Endpoint';
 import Settings from './Ui/Settings';
 import Menu from './Ui/Menu';
 import Hide from './Ui/Hide';
 import Show from './Ui/Show';
 import Value from './Ui/Value';
+
 
 class Module extends WebinyModule {
 
@@ -52,6 +54,7 @@ class Module extends WebinyModule {
 			Route,
 			Dispatcher,
 			Tools,
+            i18n,
             Cookies, // from js-cookies
 			Http,
 			Api: {

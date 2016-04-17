@@ -17,7 +17,7 @@ List.defaultProps = {
 
         const statusProps = {
             ui: 'statusFilter',
-            placeholder: 'Status',
+            placeholder: Webiny.i18n('webiny.core.statusFilter.placeholder', 'Status'),
             allowClear: true,
             name: 'enabled'
         };
