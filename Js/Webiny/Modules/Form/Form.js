@@ -321,7 +321,6 @@ class Form extends Webiny.Ui.Component {
     }
 
     render() {
-        console.log("FORM RE-RENDER");
         this.prepareForm(this.props.children);
         return super.render();
     }

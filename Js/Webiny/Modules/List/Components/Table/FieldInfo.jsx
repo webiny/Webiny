@@ -6,19 +6,15 @@ class FieldInfo extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            showInfo: false
-        };
-
         this.bindMethods('showInfo,hideInfo');
     }
 
     showInfo() {
-        this.setState({showInfo: true});
+        this.refs.dialog.show();
     }
 
     hideInfo() {
-        this.setState({showInfo: false});
+        this.refs.dialog.hide();
     }
 }
 
@@ -31,7 +27,7 @@ FieldInfo.defaultProps = {
         );
 
         const modal = (
-            <Ui.Modal.Dialog show={this.state.showInfo} onHide={this.hideInfo}>
+            <Ui.Modal.Dialog ref="dialog">
                 <Ui.Modal.Header title={this.props.title}/>
                 <Ui.Modal.Body children={this.props.children}/>
                 <Ui.Modal.Footer>

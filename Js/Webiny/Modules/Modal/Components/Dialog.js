@@ -13,16 +13,6 @@ class Dialog extends Webiny.Ui.Component {
         this.bindMethods('show,hide,bindHandlers,unbindHandlers,prepareChildren,prepareChild');
     }
 
-    componentWillMount() {
-        super.componentWillMount();
-        this.setState({isShown: this.props.show});
-    }
-
-    componentWillReceiveProps(props) {
-        super.componentWillReceiveProps(props);
-        this.setState({isShown: props.show});
-    }
-
     componentDidUpdate(prevProps, prevState) {
         super.componentDidUpdate(prevProps, prevState);
         if (this.state.isShown) {

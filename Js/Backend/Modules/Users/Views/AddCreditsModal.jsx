@@ -10,7 +10,6 @@ class AddCreditsModal extends Webiny.Ui.Component {
 
         this.state = {
             error: false,
-            isShown: false,
             extraData: {},
             model: {
                 credits: 0
@@ -38,11 +37,11 @@ class AddCreditsModal extends Webiny.Ui.Component {
     }
 
     hide() {
-        this.setState({isShown: false});
+        this.refs.dialog.hide();
     }
 
     show() {
-        this.setState({isShown: true});
+        this.refs.dialog.show();
     }
 
     render() {
@@ -78,7 +77,7 @@ class AddCreditsModal extends Webiny.Ui.Component {
         };
 
         return (
-            <Ui.Modal.Dialog show={this.state.isShown} onHide={this.hide}>
+            <Ui.Modal.Dialog ref="dialog">
                 <Ui.Modal.Header title="Add credits"/>
                 <Ui.Modal.Body>
                     {error}

@@ -10,17 +10,12 @@ class ModalAction extends Webiny.Ui.Component {
             showModal: false
         };
 
-        this.bindMethods('showModal,hideModal');
+        this.bindMethods('showModal');
     }
 
     showModal() {
-        this.setState({showModal: true});
+        this.refs.dialog.show();
     }
-
-    hideModal() {
-        this.setState({showModal: false});
-    }
-
 }
 
 ModalAction.defaultProps = {
@@ -31,19 +26,14 @@ ModalAction.defaultProps = {
         }
 
         const modalActions = {
-            hide: () => () => this.hideModal()
+            hide: () => () => this.refs.dialog.hide()
         };
 
-        let modal = this.props.children.call(this, this.props.data, this.props.actions, modalActions);
-
-        modal = React.cloneElement(modal, {
-            show: this.state.showModal,
-            onHide: this.hideModal
-        });
+        const modal = this.props.children.call(this, this.props.data, this.props.actions, modalActions);
 
         return (
             <Ui.Link onClick={this.showModal}>
-                {modal}
+                {React.cloneElement(modal, {ref: 'dialog'})}
                 {this.props.label}
             </Ui.Link>
         );
