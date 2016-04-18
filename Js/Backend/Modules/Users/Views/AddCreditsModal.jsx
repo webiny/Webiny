@@ -16,6 +16,14 @@ class AddCreditsModal extends Webiny.Ui.Component {
             }
         };
 
+        Webiny.Tools.Validator.addValidator('cronFrequency', (val) => {
+            const api = new Webiny.Api.Endpoint('/entities/core/users');
+
+            return api.post('call', {mask: val}).then(ar => {
+                throw new Error('Message');
+            });
+        });
+
         this.bindMethods('addCredits,show,hide,generateSlug');
     }
 
@@ -97,7 +105,7 @@ class AddCreditsModal extends Webiny.Ui.Component {
                                     <fields>
                                         <Ui.Grid.Row>
                                             <Ui.Grid.Col all={12}>
-                                                <Ui.Input label="Email" name="email" validate="required,email" onBlur={this.generateSlug} description="Enter your email or you will be fired!"/>
+                                                <Ui.Input label="Email" name="email" validate="cronFrequency" description="Enter your email or you will be fired!"/>
                                             </Ui.Grid.Col>
                                             <Ui.Grid.Col all={12}>
                                                 <Ui.Search {...searchProps}/>

@@ -28,12 +28,8 @@ DeleteAction.defaultProps = {
                                 <p>{message}</p>
                             </Ui.Modal.Body>
                             <Ui.Modal.Footer>
-                                <div className="btn-holder">
-                                    <Ui.Button type="secondary" label="No" onClick={modal.hide()}/>
-                                </div>
-                                <div className="btn-holder-right">
-                                    <Ui.Button {...submitProps}/>
-                                </div>
+                                <Ui.Button type="secondary" label="No" onClick={modal.hide()}/>
+                                <Ui.Button {...submitProps}/>
                             </Ui.Modal.Footer>
                         </Ui.Modal.Dialog>
                     );

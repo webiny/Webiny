@@ -21,6 +21,19 @@ class Form extends Webiny.Ui.View {
             }
         };
 
+        const deleteConfirmProps = {
+            ui: 'deleteConfirm',
+            title: 'You need you to confirm this action',
+            message: 'Do you really want to delete this record?',
+            confirm: 'Yes, very!',
+            cancel: 'Nope',
+            onConfirm: modal => {
+                const model = this.ui('myForm').getData();
+                console.log(model);
+                modal.hide();
+            }
+        };
+
         return (
             <Webiny.Builder.View name="core-users-form">
                 <Ui.Form.ApiContainer ui="myForm" {...containerProps}>
@@ -29,6 +42,8 @@ class Form extends Webiny.Ui.View {
                      </Ui.Data> */}
                     <Ui.Grid.Col all={12}>
                         <Ui.Panel.Panel>
+                            <Ui.Modal.Confirmation {...deleteConfirmProps}/>
+                            <Ui.Button type="primary" label="Delete user" align="right" onClick={this.ui('deleteConfirm:show')}/>
                             <Ui.Panel.Header title="Users Form"/>
                             <Ui.Panel.Body>
                                 <Ui.Tabs.Tabs ui="tabs">

@@ -2,6 +2,8 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 const UiD = Webiny.Ui.Dispatcher;
+
+
 class Form extends Webiny.Ui.View {
 
     getConfig() {

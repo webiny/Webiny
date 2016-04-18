@@ -179,7 +179,7 @@ class Form extends Webiny.Ui.Component {
      *
      * @returns {{}}
      */
-    getData() {
+    getModel() {
         const model = {};
         _.each(this.inputs, (input, name) => {
             _.set(model, name, _.get(this.state.model, name));
@@ -207,7 +207,7 @@ class Form extends Webiny.Ui.Component {
         if (!mainFormValid) {
             return this.props.onInvalid(this);
         }
-        const model = _.merge({}, this.props.defaultData, this.getData());
+        const model = _.merge({}, this.props.defaultData, this.getModel());
         // Validate linked forms
         const forms = this.getLinkedForms();
         if (forms.length) {
@@ -249,6 +249,22 @@ class Form extends Webiny.Ui.Component {
 
     cancel() {
         this.props.onCancel();
+    }
+
+    /**
+     * Get current form data including data from linked forms
+     * @returns {Object|*}
+     */
+    getData() {
+        const model = _.merge({}, this.props.defaultData, this.getModel());
+        const forms = this.getLinkedForms();
+        if (forms.length) {
+            _.each(forms, form => {
+                _.merge(model, form.getData());
+            });
+        }
+
+        return model;
     }
 
     isValid() {
