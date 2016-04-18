@@ -14,7 +14,7 @@ Empty.defaultProps = {
             </div>
         </div>
     ),
-    renderer: function renderer() {
+    renderer() {
         if (this.props.children) {
             return <webiny-list-empty>{this.props.children}</webiny-list-empty>;
         }

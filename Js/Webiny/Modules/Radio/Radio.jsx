@@ -54,7 +54,7 @@ Radio.defaultProps = {
     disabled: false,
     label: '',
     className: '',
-    renderer: function renderer() {
+    renderer() {
         let state = this.props.stateKey;
 
         if (state === 'false') {

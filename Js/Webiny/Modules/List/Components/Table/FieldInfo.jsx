@@ -19,7 +19,7 @@ class FieldInfo extends Webiny.Ui.Component {
 }
 
 FieldInfo.defaultProps = {
-    renderer: function renderer() {
+    renderer() {
         const info = (
             <a onClick={this.showInfo} href="javascript:void(0);">
                 <span className="icon icon-info"></span>

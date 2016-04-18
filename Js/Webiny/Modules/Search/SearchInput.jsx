@@ -240,7 +240,7 @@ SearchInput.defaultProps = {
     inputIcon: 'icon-search',
     loadingIcon: 'animate-spin icon-network',
     placeholder: 'Type to search',
-    renderer: function renderer() {
+    renderer() {
         const input = this.getSearchInput();
 
         let label = null;

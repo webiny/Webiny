@@ -28,7 +28,7 @@ class SwitchButton extends Webiny.Ui.Component {
 
 SwitchButton.defaultProps = {
     style: {},
-    renderer: function renderer() {
+    renderer() {
         let value = this.props.value || null;
         if (this.props.valueLink) {
             value = this.props.valueLink.value;

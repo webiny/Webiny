@@ -8,7 +8,7 @@ class Main extends Webiny.Ui.View {
 }
 
 Main.defaultProps = {
-    renderer: function renderer() {
+    renderer() {
         const Components = Webiny.Apps.Core.Backend.Layout.Components;
         return (
             <div className="master minimized">

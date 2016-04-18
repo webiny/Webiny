@@ -6,7 +6,7 @@ class TextareaContainer extends Webiny.Ui.FormComponent {
 }
 
 TextareaContainer.defaultProps = {
-    renderer: function renderer() {
+    renderer() {
         const cssConfig = {
             'form-group': true,
             'error': this.state.isValid === false,

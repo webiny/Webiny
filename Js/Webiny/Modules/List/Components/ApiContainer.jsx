@@ -85,7 +85,7 @@ ApiContainer.defaultProps = {
             </div>
         );
     },
-    renderer: function renderer() {
+    renderer() {
         this.prepareList(this.props.children);
 
         const layout = this.props.layout.bind(this)();

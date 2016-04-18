@@ -16,7 +16,7 @@ class InputContainer extends Webiny.Ui.FormComponent {
 
 InputContainer.defaultProps = {
     onEnter: _.noop,
-    renderer: function renderer() {
+    renderer() {
         const cssConfig = {
             'form-group': true,
             'error': this.state.isValid === false,

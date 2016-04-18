@@ -7,7 +7,7 @@ class EditAction extends Webiny.Ui.Component {
 
 EditAction.defaultProps = {
     label: 'Edit',
-    renderer: function renderer() {
+    renderer() {
         let route = this.props.route;
         if (_.isFunction(route)) {
             route = route(this.props.data);

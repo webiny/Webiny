@@ -22,7 +22,7 @@ class DomainPicker extends Webiny.Ui.Component {
 }
 
 DomainPicker.defaultProps = {
-    renderer: function renderer() {
+    renderer() {
         return (
             <div className="domain-picker">
                 <div className="dropdown">

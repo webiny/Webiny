@@ -21,7 +21,7 @@ export default {
             </Ui.Panel.Panel>
         );
     },
-    renderer: function renderer() {
+    renderer() {
         const loader = this.props.showLoader ? null : null;
         const css = this.props.layout === 'horizontal' ? 'form-horizontal' : '';
 
