@@ -7,7 +7,7 @@ class Module extends Webiny.Module {
     }
 
     /**
-     * Triggered when user is not authenticated
+     * Triggerred when user is not authenticated
      *
      * @param routerEvent
      * @param apiResponse
@@ -55,7 +55,7 @@ class Module extends Webiny.Module {
     }
 
     getUserFields() {
-        return '*,groups.tag,!password';
+        return '*,groups.tag';
     }
 
     getUser(routerEvent) {
