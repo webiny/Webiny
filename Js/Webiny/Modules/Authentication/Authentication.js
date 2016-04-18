@@ -55,7 +55,7 @@ class Module extends Webiny.Module {
     }
 
     getUserFields() {
-        return '*,role[id,name],groups.tag,phone,mobilePhone';
+        return '*,groups.tag';
     }
 
     getUser(routerEvent) {
