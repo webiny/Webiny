@@ -94,7 +94,7 @@ Base.defaultProps = {
 
         const props = {
             onBlur: this.validate,
-            disabled: this.props.disabled,
+            disabled: this.isDisabled(),
             stepping: this.props.stepping,
             readOnly: this.props.readOnly,
             type: 'text',

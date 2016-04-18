@@ -61,7 +61,7 @@ class BaseRadioGroup extends Webiny.Ui.FormComponent {
                 grid: item.grid || this.props.grid,
                 label: item.label,
                 stateKey: item.key,
-                disabled: this.props.disabled,
+                disabled: this.isDisabled(),
                 state: this.props.valueLink.value,
                 onChange: this.onChange
             };

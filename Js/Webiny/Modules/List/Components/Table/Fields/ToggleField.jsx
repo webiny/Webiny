@@ -20,7 +20,7 @@ ToggleField.defaultProps = {
                 }
             },
             value: _.get(this.props.data, this.props.name),
-            disabled: this.props.disabled
+            disabled: this.isDisabled()
         };
 
         return (

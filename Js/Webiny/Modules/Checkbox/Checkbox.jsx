@@ -56,7 +56,7 @@ Checkbox.defaultProps = {
                     onChange: this.childChanged,
                     stateKey: this.props.stateKey,
                     state: this.props.state,
-                    disabled: this.props.disabled
+                    disabled: this.isDisabled()
                 };
                 return React.cloneElement(child, newProps, child.props.children);
             });
@@ -66,7 +66,7 @@ Checkbox.defaultProps = {
 
         const checkboxProps = {
             id,
-            disabled: this.props.disabled,
+            disabled: this.isDisabled(),
             type: 'checkbox',
             onChange: this.onChange,
             checked: !_.isNull(value) && value !== false && value !== undefined

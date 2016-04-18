@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
-const t = Webiny.i18n;
 
 class Confirmation extends Webiny.Ui.Component {
 

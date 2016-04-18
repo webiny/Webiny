@@ -41,7 +41,7 @@ InputContainer.defaultProps = {
 
         const props = {
             onBlur: this.validate,
-            disabled: this.props.disabled,
+            disabled: this.isDisabled(),
             readOnly: this.props.readOnly,
             type: this.props.type,
             className: 'form-control',

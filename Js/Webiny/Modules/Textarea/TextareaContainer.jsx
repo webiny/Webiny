@@ -26,7 +26,7 @@ TextareaContainer.defaultProps = {
 
         const props = {
             onBlur: this.validate,
-            disabled: this.props.disabled,
+            disabled: this.isDisabled(),
             className: 'form-control',
             valueLink: this.props.valueLink,
             placeholder: this.props.placeholder,

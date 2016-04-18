@@ -75,7 +75,7 @@ class BaseCheckboxGroup extends Webiny.Ui.FormComponent {
                 grid: item.grid || this.props.grid,
                 label: item.label,
                 children,
-                disabled: this.props.disabled,
+                disabled: this.isDisabled(),
                 state: this.state.data[item.key],
                 onChange: this.onChange
             };
