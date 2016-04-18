@@ -232,13 +232,13 @@ class Form extends Webiny.Ui.View {
                                                 {/* CHECKBOXES */}
                                                 <Ui.Grid.Col all={6}>
                                                     <Ui.CheckboxGroup label="Roles (Static)" name="roles" grid={12}>
-                                                        <checkbox value="Admin">Admin&nbsp;management</checkbox>
-                                                        <checkbox value="Billing">Billing</checkbox>
-                                                        <checkbox value="Booking">Bookings</checkbox>
-                                                        <checkbox value="Cms">Cms</checkbox>
-                                                        <checkbox value="Coupon">Coupon&nbsp;management</checkbox>
-                                                        <checkbox value="Crm">CRM</checkbox>
-                                                        <checkbox value="Dashboard">Dashboard</checkbox>
+                                                        <option value="Admin">Admin&nbsp;management</option>
+                                                        <option value="Billing">Billing</option>
+                                                        <option value="Booking">Bookings</option>
+                                                        <option value="Cms">Cms</option>
+                                                        <option value="Coupon">Coupon&nbsp;management</option>
+                                                        <option value="Crm">CRM</option>
+                                                        <option value="Dashboard">Dashboard</option>
                                                         <validator name="minLength">Please select at least 2 options</validator>
                                                     </Ui.CheckboxGroup>
                                                 </Ui.Grid.Col>
@@ -252,10 +252,10 @@ class Form extends Webiny.Ui.View {
                                                 {/* RADIO */}
                                                 <Ui.Grid.Col all={6}>
                                                     <Ui.RadioGroup label="Roles (static)" name="access" grid={12} validate="required">
-                                                        <checkbox value="Admin">Admin</checkbox>
-                                                        <checkbox value="Billing">Billing</checkbox>
-                                                        <checkbox value="Crm">CRM</checkbox>
-                                                        <checkbox value="Dashboard">Dashboard</checkbox>
+                                                        <option value="Admin">Admin</option>
+                                                        <option value="Billing">Billing</option>
+                                                        <option value="Crm">CRM</option>
+                                                        <option value="Dashboard">Dashboard</option>
                                                     </Ui.RadioGroup>
                                                 </Ui.Grid.Col>
                                                 <Ui.Grid.Col all={6}>

@@ -175,7 +175,7 @@ class SearchInput extends Webiny.Ui.FormComponent {
             onBlur: this.onBlur,
             value: this.state.search || '',
             onChange: this.inputChanged,
-            disabled: this.props.disabled
+            disabled: this.isDisabled()
         };
 
         // Render option

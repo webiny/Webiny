@@ -33,8 +33,18 @@ class BaseContainer extends Webiny.Ui.Component {
 
     /* eslint-enable */
 
-    getData() {
-        return _.merge({}, this.state.model, this.mainForm.getData());
+    /**
+     * Get form container data, or data key value
+     * @param key
+     * @returns {*}
+     */
+    getData(key = null) {
+        const data = _.merge({}, this.state.model, this.mainForm.getData());
+        if (key) {
+            return _.get(data, key);
+        }
+
+        return data;
     }
 
     submit(e) {

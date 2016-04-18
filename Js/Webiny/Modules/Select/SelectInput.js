@@ -99,7 +99,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
         }
 
         const config = {
-            disabled: props.disabled,
+            disabled: this.isDisabled(props),
             minimumResultsForSearch: props.minimumResultsForSearch,
             placeholder: this.props.placeholder,
             allowClear: props.allowClear,

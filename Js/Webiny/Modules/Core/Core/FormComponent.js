@@ -10,7 +10,7 @@ class FormComponent extends Component {
             validationMessage: null
         };
 
-        this.bindMethods('isRequired', 'validate', 'getValue', 'hasValue', 'onChange');
+        this.bindMethods('isRequired', 'validate', 'getValue', 'hasValue', 'onChange', 'isDisabled');
     }
 
     componentWillMount() {
@@ -66,6 +66,22 @@ class FormComponent extends Component {
 
     onChange(e) {
         this.props.valueLink.requestChange(e.target.value);
+    }
+
+    isDisabled(props = this.props) {
+        let disabled = props.disabledBy;
+        if (_.isFunction(disabled)) {
+            return disabled(props.form.props.container.getData());
+        }
+
+        if (_.isString(disabled)) {
+            const falsy = _.startsWith(disabled, '!');
+            disabled = _.trimStart(disabled, '!');
+            const value = !!props.form.props.container.getData(disabled);
+            return falsy ? value === false : value === true
+        }
+
+        return this.props.disabled;
     }
 }
 

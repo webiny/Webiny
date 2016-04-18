@@ -9,7 +9,7 @@ EditAction.defaultProps = {
     label: 'Edit',
     renderer: function renderer() {
         let route = this.props.route;
-        if(_.isFunction(route)){
+        if (_.isFunction(route)) {
             route = route(this.props.data);
         }
 

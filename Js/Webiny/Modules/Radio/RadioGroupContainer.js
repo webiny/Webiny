@@ -55,7 +55,7 @@ class RadioGroupContainer extends Webiny.Ui.Component {
 
         if (props.children) {
             React.Children.map(props.children, child => {
-                if (child.type === 'checkbox') {
+                if (child.type === 'option') {
                     options[child.props.value] = child.props.children;
                 }
             });
