@@ -3,8 +3,8 @@ const Ui = Webiny.Ui.Components;
 
 function insertKey(data = []) {
     _.each(data || [], (v, i) => {
-        if(!_.has(data[i], '$key')){
-            data[i]['$key'] = Webiny.Tools.createUID()
+        if (!_.has(data[i], '$key')) {
+            data[i]['$key'] = Webiny.Tools.createUID();
         }
     });
     return data;
