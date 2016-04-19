@@ -79,7 +79,7 @@ class BaseContainer extends Webiny.Ui.Component {
     }
 
     onReset() {
-        this.props.onReset();
+        this.props.onReset && this.props.onReset();
     }
 
     onCancel() {

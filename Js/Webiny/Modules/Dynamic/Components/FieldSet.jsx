@@ -105,7 +105,7 @@ class FieldSet extends Webiny.Ui.FormComponent {
                     {this.state.model.map((r, i) => {
                         this.currentIndex = i;
                         return (
-                            <webiny-dynamic-fieldset-row key={r['$key']} id={r['$key']}>
+                            <webiny-dynamic-fieldset-row key={r['$key']}>
                                 {this.registerInputs(this.rowTemplate(r, i, this.actions))}
                             </webiny-dynamic-fieldset-row>
                         );
