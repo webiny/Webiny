@@ -123,7 +123,7 @@ SelectInput.defaultProps = {
     selectedValue: '',
     minimumResultsForSearch: 15,
     multiple: false,
-    renderer: function renderer() {
+    renderer() {
         const cssConfig = {
             'form-group': true,
             'error': this.state.isValid === false,

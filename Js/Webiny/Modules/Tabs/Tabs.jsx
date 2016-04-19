@@ -16,7 +16,7 @@ Tab.defaultProps = {
     active: false,
     index: null,
     parent: null,
-    renderer: function renderer() {
+    renderer() {
         const onClick = (e) => {
             this.props.onClick(this, this.props.index, e);
             if (!e.isDefaultPrevented()) {
@@ -90,7 +90,7 @@ export class Tabs extends Webiny.Ui.Component {
 
 Tabs.defaultProps = {
     position: 'top', // top, left
-    renderer: function renderer() {
+    renderer() {
         const tabsContainerCss = this.classSet({
             'tabs': true,
             'tabs--navigation-top': this.props.position === 'top',

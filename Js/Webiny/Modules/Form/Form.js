@@ -202,35 +202,51 @@ class Form extends Webiny.Ui.Component {
 
     submit(e) {
         e.preventDefault();
-        const mainFormValid = this.validate();
-
-        if (!mainFormValid) {
-            return this.props.onInvalid(this);
-        }
-        const model = _.merge({}, this.props.defaultData, this.getModel());
-        // Validate linked forms
-        const forms = this.getLinkedForms();
-        if (forms.length) {
-            let valid = true;
-            _.each(forms, form => {
-                if (!form.validate()) {
-                    if (valid) {
-                        form.props.onInvalid(form);
-                    }
-                    valid = false;
-                }
-            });
-
-            if (!valid) {
+        // Validate main form first
+        return this.validate().then(mainFormValid => {
+            if (!mainFormValid) {
+                this.props.onInvalid(this);
                 return false;
             }
 
-            _.each(forms, form => {
-                _.merge(model, form.getData());
-            });
-        }
+            // Now proceed to validation of linked forms, if any.
+            const model = _.merge({}, this.props.defaultData, this.getModel());
 
-        this.props.onSubmit(model, this.props.container);
+            // Validate linked forms
+            const forms = this.getLinkedForms();
+            if (forms.length) {
+                let valid = true;
+
+                // Forms must be validated in a queue because we may have async validators
+                let chain = Q();
+                _.each(forms, form => {
+                    chain = chain.then(() => {
+                        return form.validate().then(formValid => {
+                            if (formValid) {
+                                _.merge(model, form.getData());
+                                return true;
+                            }
+
+                            valid = false;
+                            form.props.onInvalid(form);
+                            return false;
+                        });
+                    });
+                });
+
+                return chain.then(() => {
+                    if (valid) {
+                        this.props.onSubmit(model, this.props.container);
+                        return true;
+                    }
+                    return false;
+                });
+            }
+
+            // If no linked forms are present...
+            this.props.onSubmit(model, this.props.container);
+            return true;
+        });
     }
 
     reset() {
@@ -298,7 +314,7 @@ class Form extends Webiny.Ui.Component {
                 const isValid = component.getValue() === null ? null : true;
                 component.setState({isValid});
             }
-            return component.getValue();
+            return true; //component.getValue();
         }).catch(validationError => {
             // Set custom error message if defined
             const validator = validationError.validator;
@@ -312,7 +328,7 @@ class Form extends Webiny.Ui.Component {
                 validationMessage: validationError.message
             });
 
-            return null;
+            return false;
         });
     }
 
@@ -320,20 +336,28 @@ class Form extends Webiny.Ui.Component {
         let allIsValid = true;
 
         const inputs = this.inputs;
+        // Inputs must be validated in a queue because we may have async validators
+        let chain = Q();
         Object.keys(inputs).forEach(name => {
             const cmp = inputs[name].component;
             const hasValidators = inputs[name] && inputs[name].validators;
-            const shouldValidate = (!cmp.hasValue() && cmp.isRequired()) || (cmp.hasValue() && cmp.state.isValid === false);
+            const shouldValidate = (!cmp.hasValue() && cmp.isRequired()) || (cmp.hasValue() && cmp.state.isValid !== true);
 
             if (hasValidators && shouldValidate) {
                 if (cmp.state.isValid === false || cmp.state.isValid === null) {
-                    this.validateInput(cmp);
-                    allIsValid = false;
+                    chain = chain.then(() => {
+                        return this.validateInput(cmp).then(isValid => {
+                            if (!isValid) {
+                                allIsValid = false;
+                            }
+                            return allIsValid;
+                        });
+                    });
                 }
             }
         });
 
-        return allIsValid;
+        return chain;
     }
 
     render() {

@@ -9,7 +9,7 @@ DeleteAction.defaultProps = {
     label: 'Delete',
     message: 'Are you sure you want to delete this record?',
     hide: _.noop,
-    renderer: function renderer() {
+    renderer() {
         const message = this.props.message;
 
         return (

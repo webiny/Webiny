@@ -6,7 +6,7 @@ class Header extends Webiny.Ui.Component {
 
 Header.defaultProps = {
     onClose: _.noop,
-    renderer: function renderer() {
+    renderer() {
         return (
             <div className="modal-header">
                 <h4>{this.props.title}</h4>

@@ -25,7 +25,7 @@ class Actions extends Webiny.Ui.Component {
 
 Actions.defaultProps = {
     label: 'More',
-    renderer: function renderer() {
+    renderer() {
         return (
             <div className="dropdown balloon">
                 <button className="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">

@@ -75,7 +75,7 @@ class Base extends Webiny.Ui.FormComponent {
 
 Base.defaultProps = {
     debug: false,
-    renderer: function renderer() {
+    renderer() {
         const cssConfig = {
             'form-group': true,
             'error': this.state.isValid === false,

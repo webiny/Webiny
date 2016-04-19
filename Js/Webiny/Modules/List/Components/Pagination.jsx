@@ -81,7 +81,7 @@ Pagination.defaultProps = {
     count: 0,
     totalCount: 0,
     size: 'large', // large or small
-    renderer: function renderer() {
+    renderer() {
         if (!this.props.count) {
             return null;
         }

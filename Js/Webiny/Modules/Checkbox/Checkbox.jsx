@@ -40,7 +40,7 @@ Checkbox.defaultProps = {
     label: '',
     grid: 3,
     className: '',
-    renderer: function renderer() {
+    renderer() {
         const id = this.id;
         const value = _.get(this.props, 'valueLink.value') || this.props.state;
 

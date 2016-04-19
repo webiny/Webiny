@@ -6,7 +6,7 @@ class CaseField extends Field {
 
 CaseField.defaultProps = {
     includeTd: true,
-    renderer: function renderer() {
+    renderer() {
         let content = null;
         let defaultContent = null;
         _.each(React.Children.toArray(this.props.children), child => {

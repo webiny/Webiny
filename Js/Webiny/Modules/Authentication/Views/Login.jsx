@@ -56,7 +56,7 @@ class Login extends Webiny.Ui.View {
 
 Login.defaultProps = {
     api: '/entities/core/users',
-    renderer: function renderer() {
+    renderer() {
         const passwordProps = {
             type: 'password',
             name: 'password',

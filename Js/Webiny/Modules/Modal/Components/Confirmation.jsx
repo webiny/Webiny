@@ -47,7 +47,7 @@ Confirmation.defaultProps = {
     cancel: 'No',
     onConfirm: _.noop,
     onCancel: null,
-    renderer: function renderer() {
+    renderer() {
         return (
             <Ui.Modal.Dialog ref="dialog">
                 <Ui.Modal.Header title={this.props.title}/>

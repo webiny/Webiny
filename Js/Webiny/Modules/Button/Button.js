@@ -23,7 +23,7 @@ Button.defaultProps = {
     size: 'normal',
     type: 'default',
     icon: null,
-    renderer: function renderer() {
+    renderer() {
         const props = _.clone(this.props);
 
         if (!this.state.enabled) {

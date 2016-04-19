@@ -103,7 +103,7 @@ class Table extends Webiny.Ui.Component {
 Table.defaultProps = {
     data: [],
     type: 'simple',
-    renderer: function renderer() {
+    renderer() {
         const className = this.classSet([
             'table',
             'table-' + this.props.type

@@ -27,7 +27,7 @@ class Header extends Webiny.Ui.Component {
 }
 
 Header.defaultProps = {
-    renderer: function renderer() {
+    renderer() {
         const classes = this.classSet({
             sorted: this.props.sorted && this.props.sorted !== 0,
             'text-left': this.props.align === 'left'

@@ -8,7 +8,7 @@ class ToggleField extends Field {
 
 ToggleField.defaultProps = {
     onChange: null,
-    renderer: function renderer() {
+    renderer() {
         const props = {
             onChange: newValue => {
                 if (_.isNull(this.props.onChange)) {

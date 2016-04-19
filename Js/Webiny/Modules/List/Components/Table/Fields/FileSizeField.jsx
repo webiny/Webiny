@@ -5,7 +5,7 @@ class FileSizeField extends Field {
 }
 
 FileSizeField.defaultProps = {
-    renderer: function renderer() {
+    renderer() {
         return (
             <td className={this.getTdClasses()}>{filesize(_.get(this.props.data, this.props.name))}</td>
         );
