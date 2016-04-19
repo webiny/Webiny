@@ -2,7 +2,11 @@ import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
 function insertKey(data = []) {
-    _.each(data || [], (v, i) => data[i]['$key'] = Webiny.Tools.createUID());
+    _.each(data || [], (v, i) => {
+        if(!_.has(data[i], '$key')){
+            data[i]['$key'] = Webiny.Tools.createUID()
+        }
+    });
     return data;
 }
 
@@ -71,9 +75,15 @@ class FieldSet extends Webiny.Ui.FormComponent {
         }
 
         if (child.props && child.props.name) {
-            const newProps = _.clone(child.props);
-            newProps['valueLink'] = this.bindTo('model.' + this.currentIndex + '.' + child.props.name, () => {
-                this.props.valueLink.requestChange(this.state.model);
+            const newProps = _.assign({}, child.props, {
+                attachToForm: this.props.attachToForm,
+                attachValidators: this.props.attachValidators,
+                detachFromForm: this.props.detachFromForm,
+                validateInput: this.props.validateInput,
+                form: this.props.form,
+                valueLink: this.bindTo('model.' + this.currentIndex + '.' + child.props.name, () => {
+                    this.props.valueLink.requestChange(this.state.model);
+                })
             });
 
             return React.cloneElement(child, newProps);
@@ -95,7 +105,7 @@ class FieldSet extends Webiny.Ui.FormComponent {
                     {this.state.model.map((r, i) => {
                         this.currentIndex = i;
                         return (
-                            <webiny-dynamic-fieldset-row key={r['$key']}>
+                            <webiny-dynamic-fieldset-row key={r['$key']} id={r['$key']}>
                                 {this.registerInputs(this.rowTemplate(r, i, this.actions))}
                             </webiny-dynamic-fieldset-row>
                         );
