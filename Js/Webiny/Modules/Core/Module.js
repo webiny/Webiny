@@ -3,6 +3,7 @@ import WebinyModule from './Core/Module';
 import App from './Core/App';
 import Component from './Core/Component';
 import FormComponent from './Core/FormComponent';
+import ModalComponent from './Core/ModalComponent';
 import ApiComponent from './Core/ApiComponent';
 import Injector from './Core/Injector';
 import Model from './Core/Model';
@@ -43,6 +44,7 @@ class Module extends WebinyModule {
                 },
 				Dispatcher: UiDispatcher,
                 FormComponent,
+                ModalComponent,
                 Menu,
                 Settings,
 				View,
