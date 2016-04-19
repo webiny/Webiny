@@ -27,6 +27,18 @@ class Tools {
         return null;
     }
 
+    removeKeys(collection, excludeKeys = ['$key']) {
+        function omitFn(value) {
+            if (value && typeof value === 'object') {
+                excludeKeys.forEach(key => {
+                    delete value[key];
+                });
+            }
+        }
+
+        return _.cloneDeepWith(collection, omitFn);
+    }
+
     getAppsSettings() {
         const settings = [];
         _.each(Webiny.Apps, jsApps => {

@@ -68,7 +68,7 @@ class BaseContainer extends Webiny.Ui.Component {
     }
 
     /* eslint-disable */
-    onSubmit(model) {
+    onSubmit(data) {
         throw new Error('Implement onSubmit method in your form container class!');
     }
 
@@ -119,7 +119,7 @@ class BaseContainer extends Webiny.Ui.Component {
 
             // These callbacks are only passed to the main form
             if (this.formsCount === 1) {
-                props.onSubmit = this.props.onSubmit || this.onSubmit;
+                props.onSubmit = this.onSubmit;
                 props.onReset = this.onReset;
                 props.onCancel = this.onCancel;
             }
