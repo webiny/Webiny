@@ -145,7 +145,7 @@ class Form extends Webiny.Ui.View {
                 <Ui.Dynamic.Row>
                     {function (record, index, actions) {
                         return (
-                            <Ui.Grid.Row>
+                            <Ui.Grid.Row key={index}>
                                 <Ui.Grid.Col all={3}>
                                     <Ui.Input placeholder="Key" name="key" validate="required"/>
                                 </Ui.Grid.Col>

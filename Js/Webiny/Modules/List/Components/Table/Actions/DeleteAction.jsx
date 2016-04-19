@@ -15,23 +15,14 @@ DeleteAction.defaultProps = {
         return (
             <Ui.List.Table.ModalAction {..._.pick(this.props, 'data', 'actions', 'label', 'hide')}>
                 {function render(record, actions, modal) {
-                    const submitProps = {
-                        type: 'primary',
-                        label: 'Yes, delete!',
-                        onClick: actions.delete(record.id).then(modal.hide()),
-                        icon: 'icon-check'
+                    const props = {
+                        title: 'Delete confirmation',
+                        confirm: 'Yes, delete!',
+                        message,
+                        onConfirm: actions.delete(record.id).then(modal.hide())
                     };
                     return (
-                        <Ui.Modal.Dialog>
-                            <Ui.Modal.Header title="Delete confirmation"/>
-                            <Ui.Modal.Body>
-                                <p>{message}</p>
-                            </Ui.Modal.Body>
-                            <Ui.Modal.Footer>
-                                <Ui.Button type="secondary" label="No" onClick={modal.hide()}/>
-                                <Ui.Button {...submitProps}/>
-                            </Ui.Modal.Footer>
-                        </Ui.Modal.Dialog>
+                        <Ui.Modal.Confirmation {...props}/>
                     );
                 }}
             </Ui.List.Table.ModalAction>

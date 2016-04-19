@@ -59,7 +59,7 @@ class User extends EntityAbstract
         ])->setToArrayDefault();
 
         $this->attr('avatar')->smart(new FileAttribute())->setTags('user', 'avatar');
-        $this->attr('gravatar')->dynamic(function(){
+        $this->attr('gravatar')->dynamic(function () {
             return md5($this->email);
         });
         $this->attr('firstName')->char()->setValidators('required')->setToArrayDefault();
@@ -69,7 +69,6 @@ class User extends EntityAbstract
                 return $this->wAuth()->createPasswordHash($password);
             }
         });
-
         $this->attr('enabled')->boolean()->setDefaultValue(true);
         $userGroup = '\Apps\Core\Php\Entities\UserGroup';
         $this->attr('groups')->many2many('User2Group')->setEntity($userGroup)->setValidators('minLength:1')->onSet(function ($groups) {
@@ -77,7 +76,13 @@ class User extends EntityAbstract
             if (is_array($groups)) {
                 foreach ($groups as $i => $group) {
                     if (!$this->wDatabase()->isId($group)) {
-                        $groups[$i] = UserGroup::findOne(['tag' => $group]);
+                        if (is_string($group)) {
+                            $groups[$i] = UserGroup::findOne(['tag' => $group]);
+                        } elseif (isset($group['id'])) {
+                            $groups[$i] = $group['id'];
+                        } elseif (isset($group['tag'])) {
+                            $groups[$i] = UserGroup::findOne(['tag' => $group['tag']]);
+                        }
                     }
                 }
             }
@@ -138,6 +143,7 @@ class User extends EntityAbstract
 
         $this->api('POST', 'call', function () {
             $data = $this->wRequest()->getRequestData();
+
             return $data;
         })->setBodyValidators(['credits' => 'required,gt:100']);
     }

@@ -1,28 +1,20 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-class Confirmation extends Webiny.Ui.Component {
+class Confirmation extends Webiny.Ui.ModalComponent {
 
     constructor(props) {
         super(props);
 
-        this.bindMethods('renderContent,show,hide,onCancel,onConfirm');
-    }
-
-    hide() {
-        this.refs.dialog.hide();
-    }
-
-    show() {
-        this.refs.dialog.show();
+        this.bindMethods('renderContent,onCancel,onConfirm');
     }
 
     onCancel() {
         if (_.isFunction(this.props.onCancel)) {
-            this.props.onCancel(this);
-        } else {
-            this.hide();
+            return this.props.onCancel(this);
         }
+
+        this.hide();
     }
 
     onConfirm() {

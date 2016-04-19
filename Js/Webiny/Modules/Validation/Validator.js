@@ -27,7 +27,7 @@ class Validator {
         const validate = validators.split(',');
         validators = {};
         validate.forEach(v => {
-            const validator = v.split(':');
+            const validator = _.trim(v).split(':');
             const vName = validator.shift();
             validators[vName] = validator;
         });

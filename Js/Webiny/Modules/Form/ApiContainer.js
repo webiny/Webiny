@@ -16,7 +16,7 @@ class ApiContainer extends BaseContainer {
             });
         }
 
-        this.loadData();
+        this.loadData(this.props.id);
     }
 
     componentWillReceiveProps(props) {
@@ -37,13 +37,18 @@ class ApiContainer extends BaseContainer {
         }
     }
 
-    onSubmit(model) {
-        console.log('Form Container [ON SUBMIT]', model);
-        const newModel = _.assign({}, this.state.model, model);
-        this.setState({model: newModel});
+    onSubmit(data) {
+        // Merge initial Container data with new data received from all forms
+        const newData = _.assign({}, this.state.model, data);
+        this.setState({model: Webiny.Tools.removeKeys(newData)});
 
-        if (Webiny.Router.getParams('id')) {
-            return this.api.execute('PATCH', newModel.id, newModel).then(ar => {
+        // If onSubmit was passed through props, execute it. Otherwise proceed with default behaviour.
+        if (this.props.onSubmit) {
+            return this.props.onSubmit(newData, this);
+        }
+
+        if (newData.id) {
+            return this.api.execute('PATCH', newData.id, newData).then(ar => {
                 const onSubmitSuccess = this.props.onSubmitSuccess;
                 if (!ar.isError() && onSubmitSuccess) {
                     if (_.isFunction(onSubmitSuccess)) {
@@ -57,7 +62,7 @@ class ApiContainer extends BaseContainer {
             });
         }
 
-        return this.api.execute('POST', '/', newModel).then(ar => {
+        return this.api.execute('POST', '/', newData).then(ar => {
             const onSubmitSuccess = this.props.onSubmitSuccess;
             if (!ar.isError() && onSubmitSuccess) {
                 if (_.isFunction(onSubmitSuccess)) {

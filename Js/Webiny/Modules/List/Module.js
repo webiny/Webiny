@@ -24,6 +24,7 @@ import RouteAction from './Components/Table/Actions/RouteAction';
 import EditAction from './Components/Table/Actions/EditAction';
 import ModalAction from './Components/Table/Actions/ModalAction';
 import DeleteAction from './Components/Table/Actions/DeleteAction';
+import EditModalAction from './Components/Table/Actions/EditModalAction';
 import Empty from './Components/Table/Empty';
 
 class Module extends Webiny.Module {
@@ -52,7 +53,8 @@ class Module extends Webiny.Module {
                 EditAction,
                 RouteAction,
                 ModalAction,
-                DeleteAction
+                DeleteAction,
+                EditModalAction
             },
             Filters,
             FormFilters,

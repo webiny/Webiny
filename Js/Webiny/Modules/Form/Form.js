@@ -177,6 +177,8 @@ class Form extends Webiny.Ui.Component {
      * Form may receive data through props that is not handled by any of form input elements,
      * so we only return the data handled by form input elements.
      *
+     * This method also clears data of any system keys that are used for React optimization, like $key
+     *
      * @returns {{}}
      */
     getModel() {
@@ -184,6 +186,22 @@ class Form extends Webiny.Ui.Component {
         _.each(this.inputs, (input, name) => {
             _.set(model, name, _.get(this.state.model, name));
         });
+
+        return Webiny.Tools.removeKeys(model);
+    }
+
+    /**
+     * Get current form data including data from linked forms
+     * @returns {Object|*}
+     */
+    getData() {
+        const model = _.merge({}, this.props.defaultData, this.getModel());
+        const forms = this.getLinkedForms();
+        if (forms.length) {
+            _.each(forms, form => {
+                _.merge(model, form.getData());
+            });
+        }
 
         return model;
     }
@@ -267,22 +285,6 @@ class Form extends Webiny.Ui.Component {
         this.props.onCancel();
     }
 
-    /**
-     * Get current form data including data from linked forms
-     * @returns {Object|*}
-     */
-    getData() {
-        const model = _.merge({}, this.props.defaultData, this.getModel());
-        const forms = this.getLinkedForms();
-        if (forms.length) {
-            _.each(forms, form => {
-                _.merge(model, form.getData());
-            });
-        }
-
-        return model;
-    }
-
     isValid() {
         return this.$isValid;
     }
@@ -314,7 +316,7 @@ class Form extends Webiny.Ui.Component {
                 const isValid = component.getValue() === null ? null : true;
                 component.setState({isValid});
             }
-            return true; //component.getValue();
+            return component.getValue();
         }).catch(validationError => {
             // Set custom error message if defined
             const validator = validationError.validator;
@@ -337,7 +339,7 @@ class Form extends Webiny.Ui.Component {
 
         const inputs = this.inputs;
         // Inputs must be validated in a queue because we may have async validators
-        let chain = Q();
+        let chain = Q(allIsValid).then(valid => valid);
         Object.keys(inputs).forEach(name => {
             const cmp = inputs[name].component;
             const hasValidators = inputs[name] && inputs[name].validators;

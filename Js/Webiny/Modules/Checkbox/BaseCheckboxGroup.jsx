@@ -142,7 +142,11 @@ class BaseCheckboxGroup extends Webiny.Ui.FormComponent {
         if (value) {
             if (_.isArray(value)) {
                 Webiny.Tools.keys(value).forEach(key => {
-                    data[value[key]] = true;
+                    if (_.isPlainObject(value[key])) {
+                        data[value[key][this.props.valueAttr]] = true;
+                    } else {
+                        data[value[key]] = true;
+                    }
                 });
             } else {
                 data = value;
@@ -156,7 +160,8 @@ class BaseCheckboxGroup extends Webiny.Ui.FormComponent {
 BaseCheckboxGroup.defaultProps = {
     disabled: false,
     label: '',
-    grid: 12
+    grid: 12,
+    valueAttr: 'id'
 };
 
 export default BaseCheckboxGroup;
