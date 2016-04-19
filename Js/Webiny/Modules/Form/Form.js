@@ -205,6 +205,7 @@ class Form extends Webiny.Ui.Component {
         // Validate main form first
         return this.validate().then(mainFormValid => {
             if (!mainFormValid) {
+                console.log("MAIN FORM NOT VALID");
                 this.props.onInvalid(this);
                 return false;
             }
@@ -337,7 +338,7 @@ class Form extends Webiny.Ui.Component {
 
         const inputs = this.inputs;
         // Inputs must be validated in a queue because we may have async validators
-        let chain = Q();
+        let chain = Q(allIsValid).then(valid => valid);
         Object.keys(inputs).forEach(name => {
             const cmp = inputs[name].component;
             const hasValidators = inputs[name] && inputs[name].validators;
@@ -348,6 +349,7 @@ class Form extends Webiny.Ui.Component {
                     chain = chain.then(() => {
                         return this.validateInput(cmp).then(isValid => {
                             if (!isValid) {
+                                console.log("INVALID INPUT", name, cmp.getValue());
                                 allIsValid = false;
                             }
                             return allIsValid;

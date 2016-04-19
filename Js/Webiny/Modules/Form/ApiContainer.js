@@ -16,7 +16,7 @@ class ApiContainer extends BaseContainer {
             });
         }
 
-        this.loadData();
+        this.loadData(this.props.id);
     }
 
     componentWillReceiveProps(props) {
@@ -42,7 +42,7 @@ class ApiContainer extends BaseContainer {
         const newModel = _.assign({}, this.state.model, model);
         this.setState({model: newModel});
 
-        if (Webiny.Router.getParams('id')) {
+        if (newModel.id) {
             return this.api.execute('PATCH', newModel.id, newModel).then(ar => {
                 const onSubmitSuccess = this.props.onSubmitSuccess;
                 if (!ar.isError() && onSubmitSuccess) {

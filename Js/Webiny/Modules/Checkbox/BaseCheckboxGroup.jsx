@@ -48,6 +48,7 @@ class BaseCheckboxGroup extends Webiny.Ui.FormComponent {
             partialState = Object.keys(partialState);
         }
 
+        console.log("NEW STATE", partialState);
         // Notify main form of a new checkbox group state
         if (this.props.valueLink) {
             this.props.valueLink.requestChange(partialState, this.validate);
@@ -142,7 +143,11 @@ class BaseCheckboxGroup extends Webiny.Ui.FormComponent {
         if (value) {
             if (_.isArray(value)) {
                 Webiny.Tools.keys(value).forEach(key => {
-                    data[value[key]] = true;
+                    if (_.isPlainObject(value[key])) {
+                        data[value[key][this.props.valueAttr]] = true;
+                    } else {
+                        data[value[key]] = true;
+                    }
                 });
             } else {
                 data = value;
@@ -156,7 +161,8 @@ class BaseCheckboxGroup extends Webiny.Ui.FormComponent {
 BaseCheckboxGroup.defaultProps = {
     disabled: false,
     label: '',
-    grid: 12
+    grid: 12,
+    valueAttr: 'id'
 };
 
 export default BaseCheckboxGroup;
