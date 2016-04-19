@@ -349,7 +349,6 @@ class Form extends Webiny.Ui.Component {
                     chain = chain.then(() => {
                         return this.validateInput(cmp).then(isValid => {
                             if (!isValid) {
-                                console.log("INVALID INPUT", name, cmp.getValue());
                                 allIsValid = false;
                             }
                             return allIsValid;
