@@ -11,8 +11,9 @@ Header.defaultProps = {
             icon = <span className="panel-icon"><i className={this.props.icon}></i></span>;
         }
 
+        const classes = this.classSet('panel-header panel-header--gray-bg', this.props.className);
         return (
-            <div className="panel-header" style={this.props.style || null}>
+            <div className={classes} style={this.props.style || null}>
                 {icon} {this.props.title}
                 {this.props.children}
             </div>
