@@ -79,7 +79,7 @@ class BaseContainer extends Webiny.Ui.Component {
     }
 
     onReset() {
-        this.props.onReset();
+        this.props.onReset && this.props.onReset();
     }
 
     onCancel() {
@@ -119,7 +119,18 @@ class BaseContainer extends Webiny.Ui.Component {
 
             // These callbacks are only passed to the main form
             if (this.formsCount === 1) {
-                props.onSubmit = this.onSubmit;
+                // On form submit...
+                props.onSubmit = data => {
+                    // Merge initial Container data with new data received from all forms
+                    const newData = _.assign({}, this.state.model, data);
+                    this.setState({model: Webiny.Tools.removeKeys(newData)});
+
+                    // If onSubmit was passed through props, execute it. Otherwise proceed with default behaviour.
+                    if (this.props.onSubmit) {
+                        return this.props.onSubmit(newData, this);
+                    }
+                    return this.onSubmit(newData);
+                };
                 props.onReset = this.onReset;
                 props.onCancel = this.onCancel;
             }
