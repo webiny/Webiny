@@ -51,7 +51,7 @@ class Table extends Webiny.Ui.Component {
                 if (rowChild.type === Ui.List.Table.Field || rowChild.type.prototype instanceof Ui.List.Table.Field) {
                     const headerProps = _.omit(rowChild.props, 'renderer');
                     headerProps.sortable = headerProps.sort || false;
-                    headerProps.sorted = this.tempProps.sorters[headerProps.name] || 0;
+                    headerProps.sorted = this.tempProps.sorters[headerProps.sort] || 0;
                     headerProps.children = React.Children.map(rowChild.props.children, ch => {
                         if (ch.type === Ui.List.Table.FieldInfo) {
                             return ch;
