@@ -18,6 +18,18 @@ class ApiContainer extends BaseContainer {
         }
     }
 
+    componentDidMount() {
+        super.componentDidMount();
+        if (this.props.autoRefresh && _.isNumber(this.props.autoRefresh)) {
+            this.autoRefresh = setInterval(this.loadData, 1000 * this.props.autoRefresh);
+        }
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        clearInterval(this.autoRefresh);
+    }
+
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
         this.prepare(_.clone(props));
@@ -76,6 +88,7 @@ ApiContainer.defaultProps = {
     page: 1,
     perPage: 10,
     autoLoad: true,
+    autoRefresh: null,
     layout: function layout() {
         return (
             <div className="col-xs-12">

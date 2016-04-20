@@ -22,7 +22,7 @@ class Header extends Webiny.Ui.Component {
                 sort = 0;
         }
 
-        this.props.onSort(this.props.name, sort);
+        this.props.onSort(this.props.sort, sort);
     }
 }
 

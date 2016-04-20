@@ -15,7 +15,6 @@ class ApiComponent {
                 'fieldsDepth'
             ];
 
-            // TODO: if params contain reserved names (ones from apiParams), add a _ prefix to them
             const config = _.pick(context.props, ['method', 'httpMethod', 'body']);
             const verifiedParams = {};
             _.each(context.props.params || {}, (v, k) => {
