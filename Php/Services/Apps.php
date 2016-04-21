@@ -62,7 +62,7 @@ class Apps extends AbstractService
             // If all apps are required we need to fetch meta only for versions currently enabled
             $apps = ['Core' => null];
             foreach ($this->wConfig()->get('Apps')->toArray() as $enabledApp => $version) {
-                $apps[$enabledApp] = str_replace('.', '_', $version);
+                $apps[$enabledApp] = $version != 'root' ? str_replace('.', '_', $version) : false;
             }
         } else {
             // If specific app is given, fetch only one meta.json of the active app version
@@ -71,10 +71,11 @@ class Apps extends AbstractService
                 $key = $appName . '/' . $jsApp;
             } else {
                 $version = $this->wConfig()->get('Apps.' . $appName);
-                $key = $appName . '/' . str_replace('.', '_', $version) . '/' . $jsApp;
+                $version = $version != 'root' ? str_replace('.', '_', $version) . '/' : '';
+                $key = $appName . '/' . $version . $jsApp;
             }
             $meta = new File($key . '/meta.json', $storage);
-            
+
             return json_decode($meta->getContents(), true);
         }
 
