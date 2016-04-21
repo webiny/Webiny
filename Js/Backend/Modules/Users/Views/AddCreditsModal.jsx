@@ -19,7 +19,7 @@ class AddCreditsModal extends Webiny.Ui.Component {
         Webiny.Tools.Validator.addValidator('cronFrequency', (val) => {
             const api = new Webiny.Api.Endpoint('/entities/core/users');
 
-            return api.post('call', {mask: val}).then(ar => {
+            return api.post('call', {mask: val}).then(() => {
                 throw new Error('Message');
             });
         });
@@ -45,10 +45,9 @@ class AddCreditsModal extends Webiny.Ui.Component {
     }
 
     generateSlug(value) {
-        console.log("GENERATE SLUG", value);
         const api = new Webiny.Api.Endpoint('/entities/core/users');
 
-        return api.post('call', {data: value}).then(ar => {
+        return api.post('call', {data: value}).then(() => {
             this.setState({error: 'Neki glupi error!'});
         });
     }
