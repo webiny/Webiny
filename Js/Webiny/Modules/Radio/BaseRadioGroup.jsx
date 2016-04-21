@@ -13,6 +13,9 @@ class BaseRadioGroup extends Webiny.Ui.FormComponent {
 
     componentWillMount() {
         super.componentWillMount();
+        if ((this.props.valueLink.value === undefined || this.props.valueLink.value === null) && _.has(this.props, 'defaultValue')) {
+            this.props.valueLink.requestChange(this.props.defaultValue);
+        }
         this.registerOptions(this.props.items, this.props.children);
     }
 

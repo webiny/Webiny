@@ -195,7 +195,7 @@ class Form extends Webiny.Ui.Component {
      * @returns {Object|*}
      */
     getData() {
-        const model = _.merge({}, this.props.defaultData, this.getModel());
+        const model = this.getModel();
         const forms = this.getLinkedForms();
         if (forms.length) {
             _.each(forms, form => {
@@ -228,7 +228,7 @@ class Form extends Webiny.Ui.Component {
             }
 
             // Now proceed to validation of linked forms, if any.
-            const model = _.merge({}, this.props.defaultData, this.getModel());
+            const model = this.getModel();
 
             // Validate linked forms
             const forms = this.getLinkedForms();

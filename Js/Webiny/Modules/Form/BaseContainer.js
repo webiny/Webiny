@@ -19,6 +19,7 @@ class BaseContainer extends Webiny.Ui.Component {
 
     componentWillMount() {
         super.componentWillMount();
+        this.setState({model: _.merge({}, this.props.defaultModel || {})});
     }
 
     componentWillReceiveProps(props) {
@@ -112,7 +113,7 @@ class BaseContainer extends Webiny.Ui.Component {
             });
 
             props.data = this.state.model;
-            props.defaultData = this.props.defaultModel || {};
+
             props.container = this;
             if (!props.ui) {
                 props.ui = props.name = this.props.ui + '-' + this.formsCount;
