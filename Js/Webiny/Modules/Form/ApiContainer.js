@@ -32,6 +32,9 @@ class ApiContainer extends BaseContainer {
 
         if (id) {
             return this.api.execute(this.api.httpMethod, id).then(apiResponse => {
+                if (this.props.prepareLoadedData) {
+                    return this.setState({model: this.props.prepareLoadedData(apiResponse.getData())});
+                }
                 this.setState({model: apiResponse.getData()});
             });
         }

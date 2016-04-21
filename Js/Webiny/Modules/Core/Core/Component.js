@@ -130,10 +130,11 @@ class Component extends React.Component {
      *
      * @param key
      * @param callback
+     * @param defaultValue
      * @returns {{value: *, requestChange: *}}
      */
-    bindTo(key, callback = _.noop) {
-        const ls = new LinkState(this, key, callback);
+    bindTo(key, callback = _.noop, defaultValue = null) {
+        const ls = new LinkState(this, key, callback, defaultValue);
         return ls.create();
     }
 

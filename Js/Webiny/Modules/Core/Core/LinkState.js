@@ -1,9 +1,10 @@
 class LinkState {
 
-    constructor(component, key, callback) {
+    constructor(component, key, callback, defaultValue) {
         this.component = component;
         this.key = key;
         this.callback = callback;
+        this.defaultValue = defaultValue;
     }
 
     create() {
@@ -14,7 +15,7 @@ class LinkState {
     }
 
     __getValue(key) {
-        return _.get(this.component.state, key);
+        return _.get(this.component.state, key, this.defaultValue);
     }
 
     __createStateKeySetter() {

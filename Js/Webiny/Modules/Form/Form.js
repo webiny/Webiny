@@ -37,8 +37,8 @@ class Form extends Webiny.Ui.Component {
         super.componentWillUpdate(newProps, newState);
     }
 
-    bindTo(name, callback = _.noop) {
-        return super.bindTo('model.' + name, callback);
+    bindTo(name, callback = _.noop, defaultValue = null) {
+        return super.bindTo('model.' + name, callback, defaultValue);
     }
 
     watch(name, callback) {
@@ -137,7 +137,7 @@ class Form extends Webiny.Ui.Component {
                 _.map(watches, w => w(newValue));
             };
 
-            newProps['valueLink'] = this.bindTo(input.props.name, changeCallback.bind(this));
+            newProps['valueLink'] = this.bindTo(input.props.name, changeCallback.bind(this), input.props.defaultValue);
 
             // Add input renderer
             if (_.has(this.props, 'render' + name)) {
