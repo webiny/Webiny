@@ -78,7 +78,12 @@ class PackageScanner
                     continue;
                 }
                 $version = str_replace('.', '_', $version);
-                $appPath = $this->wConfig()->get('Application.AbsolutePath') . 'Apps/' . $name . '/' . $version;
+                if ($version != 'root') {
+                    $version = '/' . $version;
+                } else {
+                    $version = '';
+                }
+                $appPath = $this->wConfig()->get('Application.AbsolutePath') . 'Apps/' . $name . $version;
                 $this->wClassLoader()->appendLibrary('Apps\\' . $name . '\\', $appPath);
                 $configPath = $key . '/' . $version . '/' . $object . '.yaml';
             }

@@ -2,13 +2,16 @@ import Webiny from 'Webiny';
 
 class Footer extends Webiny.Ui.Component {
 
-    render() {
+}
+
+Footer.defaultProps = {
+    renderer() {
         return (
             <tfoot>
-                <tr></tr>
+            <tr></tr>
             </tfoot>
         );
     }
-}
+};
 
 export default Footer;

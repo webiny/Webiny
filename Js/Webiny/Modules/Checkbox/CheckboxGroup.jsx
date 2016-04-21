@@ -2,7 +2,10 @@ import BaseCheckboxGroup from './BaseCheckboxGroup';
 
 class CheckboxGroup extends BaseCheckboxGroup {
 
-	render() {
+}
+
+CheckboxGroup.defaultProps = _.merge({}, BaseCheckboxGroup.defaultProps, {
+    renderer() {
         const cssConfig = {
             'form-group': true,
             'error': this.state.isValid === false,
@@ -19,16 +22,16 @@ class CheckboxGroup extends BaseCheckboxGroup {
             validationMessage = <span className="help-block">{this.state.validationMessage}</span>;
         }
 
-		return (
-			<div className={this.classSet({disabled: this.props.disabled}, this.props.className)}>
-				<div className={this.classSet(cssConfig)}>{label}
-					<div className="clearfix"></div>
-					{this.getOptions()}
-				</div>
+        return (
+            <div className={this.classSet({disabled: this.props.disabled}, this.props.className)}>
+                <div className={this.classSet(cssConfig)}>{label}
+                    <div className="clearfix"></div>
+                    {this.getOptions()}
+                </div>
                 {validationMessage}
-			</div>
-		);
-	}
-}
+            </div>
+        );
+    }
+});
 
 export default CheckboxGroup;

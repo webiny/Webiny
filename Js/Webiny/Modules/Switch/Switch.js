@@ -3,7 +3,10 @@ import SwitchButton from './SwitchButton';
 
 class Switch extends Webiny.Ui.FormComponent {
 
-    render() {
+}
+
+Switch.defaultProps = {
+    renderer() {
         return (
             <div className="form-group">
                 <label className="control-label">{this.props.label}</label>
@@ -13,7 +16,6 @@ class Switch extends Webiny.Ui.FormComponent {
             </div>
         );
     }
-
-}
+};
 
 export default Switch;

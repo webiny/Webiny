@@ -15,11 +15,13 @@ class Row extends Webiny.Ui.Component {
 
     componentWillMount() {
         super.componentWillMount();
+        this.data = _.clone(this.props.data);
         this.prepareChildren(this.props.children);
     }
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
+        this.data = _.clone(props.data);
         this.prepareChildren(props.children);
     }
 
@@ -78,9 +80,10 @@ class Row extends Webiny.Ui.Component {
 
         return React.cloneElement(field, props, children);
     }
+}
 
-    render() {
-        this.data = _.clone(this.props.data);
+Row.defaultProps = {
+    renderer() {
         return (
             <tr>
                 {this.fields.map(this.renderField)}
@@ -88,6 +91,6 @@ class Row extends Webiny.Ui.Component {
             </tr>
         );
     }
-}
+};
 
 export default Row;

@@ -10,7 +10,7 @@ function insertKey(data = []) {
     return data;
 }
 
-class FieldSet extends Webiny.Ui.FormComponent {
+class Fieldset extends Webiny.Ui.FormComponent {
 
     constructor(props) {
         super(props);
@@ -97,8 +97,10 @@ class FieldSet extends Webiny.Ui.FormComponent {
         }
         return React.Children.map(children, this.registerInput);
     }
+}
 
-    render() {
+Fieldset.defaultProps = {
+    renderer() {
         if (this.state.model.length) {
             return (
                 <div className="form-group">
@@ -120,6 +122,6 @@ class FieldSet extends Webiny.Ui.FormComponent {
             </div>
         );
     }
-}
+};
 
-export default FieldSet;
+export default Fieldset;

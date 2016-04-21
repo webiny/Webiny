@@ -2,7 +2,11 @@ import Component from './../Core/Component';
 
 class Show extends Component {
 
-    render() {
+}
+
+Show.defaultProps = {
+    if: false,
+    renderer() {
         let show = false;
         if (_.isFunction(this.props.if)) {
             show = this.props.if();
@@ -21,10 +25,6 @@ class Show extends Component {
 
         return <webiny-show>{this.props.children}</webiny-show>;
     }
-}
-
-Show.defaultProps = {
-    if: false
 };
 
 export default Show;

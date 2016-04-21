@@ -141,7 +141,7 @@ class Form extends Webiny.Ui.View {
         };
 
         const settings = (
-            <Ui.Dynamic.FieldSet name="settings">
+            <Ui.Dynamic.Fieldset name="settings">
                 <Ui.Dynamic.Row>
                     {function (record, index, actions) {
                         return (
@@ -177,7 +177,7 @@ class Form extends Webiny.Ui.View {
                         )
                     }}
                 </Ui.Dynamic.Empty>
-            </Ui.Dynamic.FieldSet>
+            </Ui.Dynamic.Fieldset>
         );
 
         return (

@@ -3,7 +3,10 @@ import Component from './../Core/Component';
 
 class Value extends Component {
 
-    render() {
+}
+
+Value.defaultProps = {
+    renderer() {
         let value = null;
         if (_.isFunction(this.props.value)) {
             value = this.props.value();
@@ -16,6 +19,6 @@ class Value extends Component {
         }
         return null;
     }
-}
+};
 
 export default Value;

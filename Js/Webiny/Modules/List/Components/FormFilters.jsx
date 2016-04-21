@@ -3,7 +3,10 @@ const Ui = Webiny.Ui.Components;
 
 class FormFilters extends Filters {
 
-    render() {
+}
+
+FormFilters.defaultProps = {
+    renderer() {
         const applyFilters = () => (e) => this.refs.form.submit(e);
         const resetFilters = () => () => this.applyFilters({});
 
@@ -17,6 +20,6 @@ class FormFilters extends Filters {
             </webiny-list-filters>
         );
     }
-}
+};
 
 export default FormFilters;

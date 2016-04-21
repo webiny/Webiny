@@ -2,7 +2,10 @@ import BaseRadioGroup from './BaseRadioGroup';
 
 class RadioGroup extends BaseRadioGroup {
 
-    render() {
+}
+
+RadioGroup.defaultProps = {
+    renderer() {
         const items = this.getOptions();
         const classes = this.classSet({'form-group': true, disabled: this.isDisabled()});
 
@@ -25,6 +28,6 @@ class RadioGroup extends BaseRadioGroup {
             </div>
         );
     }
-}
+};
 
 export default RadioGroup;

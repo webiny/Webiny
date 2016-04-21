@@ -2,7 +2,12 @@ import Component from './../Core/Component';
 
 class Hide extends Component {
 
-    render() {
+}
+
+Hide.defaultProps = {
+    if: false,
+    return: null,
+    renderer() {
         let hide = false;
         if (_.isFunction(this.props.if)) {
             hide = this.props.if();
@@ -21,11 +26,6 @@ class Hide extends Component {
 
         return <webiny-hide>{this.props.children}</webiny-hide>;
     }
-}
-
-Hide.defaultProps = {
-    if: false,
-    return: null
 };
 
 export default Hide;

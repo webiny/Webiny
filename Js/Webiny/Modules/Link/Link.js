@@ -2,7 +2,16 @@ import Webiny from 'Webiny';
 
 class Link extends Webiny.Ui.Component {
 
-    render() {
+}
+
+Link.defaultProps = {
+    type: null,
+    size: null,
+    merge: true,
+    url: null,
+    route: null,
+    separate: false,
+    renderer() {
         const props = _.clone(this.props);
 
         props.href = null;
@@ -55,15 +64,6 @@ class Link extends Webiny.Ui.Component {
 
         return <a {...props} className={this.classSet(classes)}>{this.props.children}</a>;
     }
-}
-
-Link.defaultProps = {
-    type: null,
-    size: null,
-    merge: true,
-    url: null,
-    route: null,
-    separate: false
 };
 
 export default Link;

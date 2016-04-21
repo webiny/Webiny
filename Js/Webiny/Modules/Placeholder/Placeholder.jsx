@@ -17,8 +17,10 @@ class Placeholder extends Webiny.Ui.Component {
             this.props.onDidUpdate();
         }
     }
+}
 
-    render() {
+Placeholder.defaultProps = {
+    renderer() {
         if (!Webiny.Router.getActiveRoute()) {
             return null;
         }
@@ -49,6 +51,6 @@ class Placeholder extends Webiny.Ui.Component {
             <rad-placeholder>{cmps}</rad-placeholder>
         );
     }
-}
+};
 
 export default Placeholder;
