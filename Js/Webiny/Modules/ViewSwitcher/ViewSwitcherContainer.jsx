@@ -33,18 +33,21 @@ class ViewSwitcherContainer extends Webiny.Ui.Component {
                 params = [];
             }
 
-            const view = this.views[name];
-            if (!view) {
+            const nextView = this.views[name];
+            if (!nextView) {
                 console.warn("Warning: view '" + name + "' was not found in ViewContainer!");
                 return;
             }
 
-            if (view.props.modal) {
-                view.show(params);
-            } else {
-                // TODO: hide current view
-                view.show(params);
+            if (!nextView.props.modal) {
+                // Hide all currently shown views
+                _.each(this.views, view => {
+                    if (view.isShown()) {
+                        view.hide();
+                    }
+                });
             }
+            nextView.show(params);
         };
     }
 
