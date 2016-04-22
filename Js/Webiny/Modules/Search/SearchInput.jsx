@@ -176,7 +176,7 @@ class SearchInput extends Webiny.Ui.FormComponent {
             style: styles.ttInput,
             onKeyDown: this.onKeyUp,
             onBlur: this.onBlur,
-            value: this.state.search || '',
+            value: this.state.search || this.state.selected || '',
             onChange: this.inputChanged,
             disabled: this.isDisabled()
         };

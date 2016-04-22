@@ -38,7 +38,7 @@ Growl.defaultProps = {
         }
 
         if (this.props.children) {
-            messages = React.Children.toArray();
+            messages = React.Children.toArray(this.props.children);
         }
 
         return (
