@@ -100,8 +100,9 @@ class Fieldset extends Webiny.Ui.FormComponent {
 }
 
 Fieldset.defaultProps = {
+    defaultValue: [],
 	renderer() {
-		if (this.state.model.length) {
+		if (this.state.model && this.state.model.length) {
 			return (
 				<div className="form-group">
                     {this.state.model.map((r, i) => {
