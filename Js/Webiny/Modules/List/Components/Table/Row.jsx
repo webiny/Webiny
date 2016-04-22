@@ -68,6 +68,7 @@ class Row extends Webiny.Ui.Component {
         const children = React.Children.map(field.props.children, child => {
             if (child.type === Ui.List.Table.FieldRenderer && _.isFunction(child.props.children)) {
                 props.renderer = child.props.children;
+                props.renderer.bindArgs = [props.data];
                 return null;
             }
             return child;

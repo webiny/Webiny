@@ -180,7 +180,13 @@ class Component extends React.Component {
     render() {
         if (this.props.renderer) {
             try {
-                return this.props.renderer.call(this);
+                // Here we prepare renderer parameters in case any were attached to the function itself using `bindArgs`
+                let params = [this];
+                if (this.props.renderer.bindArgs) {
+                    params = params.concat(this.props.renderer.bindArgs);
+                }
+                params.push(this);
+                return this.props.renderer.call(...params);
             } catch (e) {
                 console.error('[RENDER ERROR][' + this.getClassName() + ']', e);
                 return (

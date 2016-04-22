@@ -12,6 +12,7 @@ Main.defaultProps = {
         const Components = Webiny.Apps.Core.Backend.Layout.Components;
         return (
             <div className="master minimized">
+                <Webiny.Ui.Components.Growl.Container ui="GrowlContainer"/>
                 <Webiny.Ui.Components.Placeholder name="Header"/>
 
                 <div className="master-content master-content--no-background">

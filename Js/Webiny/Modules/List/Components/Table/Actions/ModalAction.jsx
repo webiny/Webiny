@@ -27,8 +27,8 @@ ModalAction.defaultProps = {
 
         const modalActions = {
             hide: () => () => {
-                if(this.refs.dialog){
-                    this.refs.dialog.hide()
+                if (this.refs.dialog) {
+                    this.refs.dialog.hide();
                 }
             }
         };
