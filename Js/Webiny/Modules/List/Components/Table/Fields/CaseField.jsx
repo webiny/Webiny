@@ -25,7 +25,7 @@ CaseField.defaultProps = {
         }
 
         if (_.isFunction(content)) {
-            content = content.call(this);
+            content = content.call(this, this.props.data);
         }
 
         if (this.props.includeTd) {
