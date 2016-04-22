@@ -58,6 +58,9 @@ class UiDispatcher {
                 const [name, method] = call.split(':');
                 component = name === 'this' ? _this : _.get(container, name);
 
+                if (!component) {
+                    return null;
+                }
                 callable = component[method];
             }
 
