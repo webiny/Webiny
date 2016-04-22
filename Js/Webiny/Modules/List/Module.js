@@ -18,6 +18,7 @@ import TimeField from './Components/Table/Fields/TimeField';
 import FileSizeField from './Components/Table/Fields/FileSizeField';
 import CaseField from './Components/Table/Fields/CaseField';
 import ToggleField from './Components/Table/Fields/ToggleField';
+import TimeAgoField from './Components/Table/Fields/TimeAgoField';
 import Actions from './Components/Table/Actions';
 import Action from './Components/Table/Actions/Action';
 import RouteAction from './Components/Table/Actions/RouteAction';
@@ -48,6 +49,7 @@ class Module extends Webiny.Module {
                 FileSizeField,
                 CaseField,
                 ToggleField,
+                TimeAgoField,
                 Actions,
                 Action,
                 EditAction,

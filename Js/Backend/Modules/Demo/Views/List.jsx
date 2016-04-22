@@ -96,6 +96,8 @@ class List extends Webiny.Ui.View {
                                         <case value={false}>Disabled</case>
                                     </Table.CaseField>
                                     <Table.Field name="createdOn" align="left" label="Created On" sort="createdOn"/>
+                                    <Table.DateTimeField name="createdOn" align="left" label="Created On" sort="createdOn"/>
+                                    <Table.TimeAgoField name="createdOn" align="left" label="Created On" sort="createdOn"/>
                                     <Table.Actions>
                                         <Table.EditAction route="Demo.Form"/>
                                         <Table.DeleteAction/>

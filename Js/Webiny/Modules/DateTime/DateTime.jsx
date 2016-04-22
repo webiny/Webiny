@@ -9,8 +9,9 @@ DateTime.defaultProps = {
     readOnly: false,
     placeholder: '',
     inputFormat: 'YYYY-MM-DD HH:mm:ss',
-    modelFormat: moment.ISO_8601,
+    modelFormat: 'YYYY-MM-DDTHH:mm:ssZ',
     minDate: false,
+    showTime: true,
     component: 'datetime',
     renderer: BaseDateTime.defaultProps.renderer
 };
