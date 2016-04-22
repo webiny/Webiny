@@ -12,6 +12,8 @@ class SearchInput extends Webiny.Ui.FormComponent {
             options: []
         });
 
+        this.warned = false;
+
         this.bindMethods(
             'inputChanged',
             'selectItem',
@@ -19,7 +21,8 @@ class SearchInput extends Webiny.Ui.FormComponent {
             'onKeyUp',
             'onBlur',
             'renderPreview',
-            'getSearchInput'
+            'getSearchInput',
+            'fetchValue'
         );
     }
 
@@ -222,15 +225,28 @@ class SearchInput extends Webiny.Ui.FormComponent {
             </div>
         );
     }
+
+    fetchValue(item) {
+        let value = _.get(item, this.props.textAttr);
+        if (!value) {
+            if (!this.warned) {
+                console.warn("Warning: Item attribute '" + this.props.textAttr + "' was not found in the results of '"+this.props.name+"' component.\nMissing or misspelled 'fields' parameter?");
+                this.warned = true;
+            }
+            value = item.id;
+        }
+        return value;
+    }
 }
 
 SearchInput.defaultProps = {
     optionRenderer: function optionRenderer(item) {
-        const content = {__html: item[this.props.textAttr].replace(/\s+/g, '&nbsp;')};
+        const value = this.fetchValue(item);
+        const content = {__html: value.replace(/\s+/g, '&nbsp;')};
         return <div dangerouslySetInnerHTML={content}></div>;
     },
     selectedRenderer: function selectedRenderer(item) {
-        return item[this.props.textAttr];
+        return this.fetchValue(item);
     },
     valueAttr: 'id',
     textAttr: 'name',
