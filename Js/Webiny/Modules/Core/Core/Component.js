@@ -95,10 +95,10 @@ class Component extends React.Component {
         this.__listeners.push(stopListening);
     }
 
-    classSet() {
+    classSet(...sets) {
         let classes = [];
 
-        _.forIn(arguments, classObject => {
+        _.forIn(sets, classObject => {
             if (!classObject) {
                 return;
             }
@@ -138,13 +138,12 @@ class Component extends React.Component {
         return ls.create();
     }
 
-    bindMethods() {
-        let args = arguments;
-        if (arguments.length === 1 && _.isString(arguments[0])) {
-            args = arguments[0].split(',').map(x => x.trim());
+    bindMethods(...methods) {
+        if (methods.length === 1 && _.isString(methods[0])) {
+            methods = methods[0].split(',').map(x => x.trim());
         }
 
-        _.forEach(args, (name) => {
+        _.forEach(methods, (name) => {
             if (name in this) {
                 this[name] = this[name].bind(this);
             } else {
