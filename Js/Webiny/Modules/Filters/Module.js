@@ -1,11 +1,11 @@
 import Webiny from 'Webiny';
-import Filters from './Filters';
+import Filter from './Filter';
 
 class Module extends Webiny.Module {
 
     constructor(app) {
         super(app);
-        Webiny.Tools.Filters = Filters;
+        Webiny.Tools.Filter = Filter;
     }
 }
 
