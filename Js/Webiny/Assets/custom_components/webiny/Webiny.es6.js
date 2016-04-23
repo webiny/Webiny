@@ -2,7 +2,9 @@ const Webiny = {
     Apps: {},
     Assets: (appName, path) => {
         const env = WebinyBootstrap.env;
-        return '/build/' + env + '/' + appName.replace('.', '/') + '/' + path;
+        const app = _.get(Webiny.Apps, appName);
+        const appPath = app.meta.version ? appName.replace('.', '/' + app.meta.version + '/') : appName.replace('.', '/');
+        return '/build/' + env + '/' + appPath + '/' + path;
     },
     Configure: (path, config) => {
         let target = Webiny.Apps;

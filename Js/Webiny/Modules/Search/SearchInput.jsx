@@ -230,7 +230,8 @@ class SearchInput extends Webiny.Ui.FormComponent {
         let value = _.get(item, this.props.textAttr);
         if (!value) {
             if (!this.warned) {
-                console.warn("Warning: Item attribute '" + this.props.textAttr + "' was not found in the results of '"+this.props.name+"' component.\nMissing or misspelled 'fields' parameter?");
+                console.warn(`Warning: Item attribute '${this.props.textAttr}' was not found in the results of '${this.props.name}'
+                component.\nMissing or misspelled 'fields' parameter?`);
                 this.warned = true;
             }
             value = item.id;

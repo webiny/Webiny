@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-import Growl from './Growl';
 
 class GrowlContainer extends Webiny.Ui.Component {
 

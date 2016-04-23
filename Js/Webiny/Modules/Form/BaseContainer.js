@@ -14,7 +14,22 @@ class BaseContainer extends Webiny.Ui.Component {
         this.formsCount = 0;
         this.linkedForms = [];
 
-        this.bindMethods('registerForm,loadData,getData,onSubmit,onInvalid,onReset,onCancel,prepareChildren,prepareChild,submit,reset,validate,cancel');
+        this.bindMethods(
+            'registerForm',
+            'loadData',
+            'getData',
+            'onSubmit',
+            'onInvalid',
+            'onReset',
+            'onCancel',
+            'getContent',
+            'prepareChildren',
+            'prepareChild',
+            'submit',
+            'reset',
+            'validate',
+            'cancel'
+        );
     }
 
     componentWillMount() {
@@ -24,6 +39,12 @@ class BaseContainer extends Webiny.Ui.Component {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
+        this.formsCount = 0;
+    }
+
+    componentWillUpdate(nextProps, nextState) {
+        super.componentWillUpdate(nextProps, nextState);
+        this.formsCount = 0;
     }
 
     /* eslint-disable */
@@ -106,7 +127,7 @@ class BaseContainer extends Webiny.Ui.Component {
             this.formsCount++;
 
             // Pass relevant props from BaseContainer to Form
-            _.each(this.props, (value, name) => {
+            _.each(_.omit(this.props, ['renderer']), (value, name) => {
                 if (_.startsWith(name, 'render') || _.startsWith(name, 'option') || _.startsWith(name, 'onChange') || name === 'title') {
                     props[name] = value;
                 }
@@ -163,6 +184,18 @@ class BaseContainer extends Webiny.Ui.Component {
         return React.Children.map(children, this.prepareChild);
     }
 
+    getContent() {
+        const children = this.props.children;
+        let content = null;
+        if (_.isFunction(children)) {
+            content = this.prepareChildren(children.call(this, this.state.model, this));
+        } else {
+            content = this.prepareChildren(children);
+        }
+
+        return content;
+    }
+
     registerForm(form) {
         if (!this.mainForm) {
             this.mainForm = form;
@@ -174,18 +207,17 @@ class BaseContainer extends Webiny.Ui.Component {
         return this;
     }
 
-    render() {
-        this.formsCount = 0;
-
-        const content = this.prepareChildren(this.props.children);
-        return (
-            <webiny-form-container>{content}</webiny-form-container>
-        );
-    }
-
     getLinkedForms() {
         return this.linkedForms;
     }
 }
+
+BaseContainer.defaultProps = {
+    renderer() {
+        return (
+            <webiny-form-container>{this.getContent()}</webiny-form-container>
+        );
+    }
+};
 
 export default BaseContainer;

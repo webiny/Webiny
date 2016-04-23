@@ -14,6 +14,7 @@ function runWebiny() {
             if (app.config.name !== authenticationApp) {
                 delete modules['Authentication'];
             }
+            app.instance.meta = app.config;
             app.instance.addModules(modules);
             _.set(Webiny.Apps, app.config.name, app.instance);
             app.instance.run(appElement);

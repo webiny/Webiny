@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
 import InfoGrowl from './Components/InfoGrowl';
 import DangerGrowl from './Components/DangerGrowl';
