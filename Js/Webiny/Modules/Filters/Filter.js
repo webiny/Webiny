@@ -1,4 +1,4 @@
-const filters = {};
+const registeredFilters = {};
 
 const parseFilters = function parseFilters(filters) {
 	if (!filters) {
@@ -15,7 +15,7 @@ const parseFilters = function parseFilters(filters) {
 };
 
 const getFilter = function getFilter(filter) {
-	return filters[filter];
+	return registeredFilters[filter];
 };
 
 const Filter = function Filter(value, filtersToApply) {
@@ -26,8 +26,8 @@ const Filter = function Filter(value, filtersToApply) {
 };
 
 Filter.addFilter = function addFilter(name, callable) {
-	if (!_.has(filters[name])) {
-		filters[name] = callable;
+	if (!_.has(registeredFilters[name])) {
+		registeredFilters[name] = callable;
 	}
 	return this;
 };
