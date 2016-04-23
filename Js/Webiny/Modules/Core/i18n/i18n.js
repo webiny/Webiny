@@ -10,15 +10,15 @@ i18n.price = function price(value) {
 	return accounting.formatMoney(value, '£');
 };
 
-i18n.date = function price(value) {
+i18n.date = function date(value) {
 	return moment(value).format('DD/MMM/YY');
 };
 
-i18n.time = function price(value) {
+i18n.time = function time(value) {
 	return moment(value).format('HH:mm');
 };
 
-i18n.datetime = function price(value) {
+i18n.datetime = function datetime(value) {
 	return moment(value).format('DD/MMM/YY HH:mm');
 };
 
