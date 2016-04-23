@@ -2,9 +2,9 @@ import Webiny from 'Webiny';
 
 class Menu {
 
-    constructor(label, route = null, icon = '') {
+    constructor(label, route = null, icon = '', key = '') {
         Object.assign(this, {label, route, icon});
-        this.key = Webiny.Tools.toSlug(label);
+        this.key = key ? key : Webiny.Tools.toSlug(label);
         this.action = null;
     }
 
