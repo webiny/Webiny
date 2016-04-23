@@ -184,26 +184,31 @@ class BaseContainer extends Webiny.Ui.Component {
         return React.Children.map(children, this.prepareChild);
     }
 
-    getContent() {
+    /**
+     * Get ApiContainer content
+     * @param params Optional params to pass to content render function
+     * @returns {*}
+     */
+    getContent(...params) {
         const children = this.props.children;
-        let content = null;
         if (_.isFunction(children)) {
-            content = this.prepareChildren(children.call(this, this.state.model, this));
-        } else {
-            content = this.prepareChildren(children);
+            if (params.length === 0) {
+                params = [this, this.state.model, this];
+            } else {
+                params.unshift(this);
+                params.push(this);
+            }
+            return this.prepareChildren(children.call(...params));
         }
-
-        return content;
+        return this.prepareChildren(children);
     }
 
     registerForm(form) {
         if (!this.mainForm) {
             this.mainForm = form;
-
             return this;
         }
         this.linkedForms.push(form);
-
         return this;
     }
 

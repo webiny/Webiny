@@ -208,7 +208,7 @@ class Form extends Webiny.Ui.Component {
 
     getLinkedForms() {
         if (this.props.container && this === this.props.container.mainForm) {
-            return this.props.container.linkedForms;
+            return this.props.container.getLinkedForms();
         }
 
         if (!this.props.container && this.props.linkedForms) {
