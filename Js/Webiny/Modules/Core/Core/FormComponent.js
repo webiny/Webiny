@@ -75,7 +75,7 @@ class FormComponent extends Component {
         }
 
         if (_.isString(disabled)) {
-            const falsy = _.startsWith(disabled, '!');
+            const falsy = disabled.startsWith('!');
             disabled = _.trimStart(disabled, '!');
             const value = !!props.form.props.container.getData(disabled);
             return falsy ? value === false : value === true;

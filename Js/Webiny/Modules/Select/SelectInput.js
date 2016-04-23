@@ -26,8 +26,9 @@ class SelectInput extends Webiny.Ui.FormComponent {
         super.componentWillReceiveProps(props);
         if (!this.options || !_.isEqual(props.options, this.options)) {
             this.select2.html('');
-            this.getSelect2InputElement().select2(this.getConfig(props));
         }
+
+        this.getSelect2InputElement().select2(this.getConfig(props));
     }
 
     componentDidUpdate() {
