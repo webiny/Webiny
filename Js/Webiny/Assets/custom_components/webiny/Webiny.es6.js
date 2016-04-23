@@ -1,10 +1,11 @@
 const Webiny = {
     Apps: {},
     Assets: (appName, path) => {
-        const env = WebinyBootstrap.env;
         const app = _.get(Webiny.Apps, appName);
-        const appPath = app.meta.version ? appName.replace('.', '/' + app.meta.version + '/') : appName.replace('.', '/');
-        return '/build/' + env + '/' + appPath + '/' + path;
+        if (!app) {
+            console.warn('Warning: attempting to access assets of a missing app "' + appName + '". (' + path + ')');
+        }
+        return _.get(app, 'meta.assets.path', '') + '/' + _.trimStart(path, '/');
     },
     Configure: (path, config) => {
         let target = Webiny.Apps;
@@ -14,9 +15,9 @@ const Webiny = {
         }
 
         const props = _.get(target, path + '.defaultProps');
-        _.forIn(config, (value, key) => {
-            props[key] = value;
-        });
+        if (props) {
+            _.merge(props, config);
+        }
     },
     Ui: {}
 };
