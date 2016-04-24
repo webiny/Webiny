@@ -37,8 +37,8 @@ class StaticContainer extends BaseContainer {
     }
 }
 
-StaticContainer.defaultProps = {
+StaticContainer.defaultProps = _.merge({}, BaseContainer.defaultProps, {
     connectToRouter: false
-};
+});
 
 export default StaticContainer;
