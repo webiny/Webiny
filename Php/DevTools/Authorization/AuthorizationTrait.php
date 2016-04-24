@@ -3,6 +3,7 @@ namespace Apps\Core\Php\DevTools\Authorization;
 
 use Apps\Core\Php\Entities\User;
 use Apps\Core\Php\Entities\UserGroup;
+use Webiny\Component\Entity\EntityCollection;
 
 /**
  * Trait AuthorizationTrait
@@ -13,6 +14,11 @@ trait AuthorizationTrait
      * @return User
      */
     protected abstract function getUserToAuthorize();
+
+    /**
+     * @return EntityCollection
+     */
+    protected abstract function getUserGroups();
 
     public function canCreate($class)
     {
@@ -54,7 +60,7 @@ trait AuthorizationTrait
         $user = $this->getUserToAuthorize();
         $groups = [UserGroup::findOne(['tag' => 'public'])];
         if ($user) {
-            foreach ($user->groups as $group) {
+            foreach ($user->getUserGroups() as $group) {
                 $groups[] = $group;
             }
         }

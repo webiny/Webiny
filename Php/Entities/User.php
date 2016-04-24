@@ -46,6 +46,12 @@ class User extends EntityAbstract
         return $this;
     }
 
+    protected function getUserGroups()
+    {
+        return $this->groups;
+    }
+
+
     /**
      * This method is called during instantiation to build entity structure
      * @return void
