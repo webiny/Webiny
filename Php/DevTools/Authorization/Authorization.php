@@ -4,6 +4,7 @@ namespace Apps\Core\Php\DevTools\Authorization;
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\Entities\User;
 use Apps\Core\Php\RequestHandlers\ApiException;
+use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Security\Security;
 use Webiny\Component\Security\SecurityTrait;
 use Webiny\Component\StdLib\SingletonTrait;
@@ -126,9 +127,19 @@ class Authorization
         return $this;
     }
 
+    /**
+     * @return User
+     */
     protected function getUserToAuthorize()
     {
         return $this->getUser();
     }
 
+    /**
+     * @return EntityCollection
+     */
+    protected function getUserGroups()
+    {
+        return $this->getUserToAuthorize()->getUserGroups();
+    }
 }
