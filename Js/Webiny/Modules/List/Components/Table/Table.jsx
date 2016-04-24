@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import SelectAll from './SelectAll';
 const Ui = Webiny.Ui.Components;
 
 class Table extends Webiny.Ui.Component {
@@ -31,8 +32,12 @@ class Table extends Webiny.Ui.Component {
         this.prepareChildren(props.children);
     }
 
-    selectAll(select) {
-        console.log("SELECT ALL", select);
+    selectAll(selected) {
+        const data = selected ? this.props.data : [];
+        this.setState({
+            selectAll: selected,
+            selectedData: data
+        }, () => this.props.onSelect(this.state.selectedData));
     }
 
     onSelect(index, selected) {
@@ -40,13 +45,14 @@ class Table extends Webiny.Ui.Component {
         if (selected) {
             selectedData[index] = this.props.data[index];
         } else {
-            selectedData.splice(index, 1);
+            delete selectedData[index];
         }
         this.setState({selectedData});
         this.props.onSelect(_.compact(selectedData));
     }
 
     onSort(name, sort) {
+        this.selectAll(false);
         const sorters = _.clone(this.props.sorters);
         if (sort !== 0) {
             sorters[name] = sort;
@@ -105,6 +111,7 @@ class Table extends Webiny.Ui.Component {
             index,
             key: index,
             data,
+            selected: !_.isEmpty(this.state.selectedData[index]),
             sorters: _.clone(this.props.sorters),
             actions: this.props.actions
         });
@@ -128,6 +135,7 @@ class Table extends Webiny.Ui.Component {
 Table.defaultProps = {
     data: [],
     type: 'simple',
+    onSelect: _.noop,
     renderer() {
         const className = this.classSet([
             'table',
@@ -142,7 +150,7 @@ Table.defaultProps = {
         if (this.props.onSelect) {
             selectAll = (
                 <th>
-                    <Ui.Checkbox valueLink={this.bindTo('selectAll', this.selectAll)}/>
+                    <SelectAll value={this.state.selectAll} onChange={this.selectAll}/>
                 </th>
             );
         }

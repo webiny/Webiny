@@ -30,7 +30,11 @@ class Checkbox extends Webiny.Ui.FormComponent {
         if (this.props.valueLink) {
             this.props.valueLink.requestChange(e.target.checked);
         } else {
-            this.props.onChange(this.props.stateKey, e.target.checked);
+            if (this.props.stateKey) {
+                this.props.onChange(this.props.stateKey, e.target.checked);
+            } else {
+                this.props.onChange(e.target.checked);
+            }
         }
     }
 }

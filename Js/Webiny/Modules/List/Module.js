@@ -8,11 +8,14 @@ import FieldInfo from './Components/Table/FieldInfo';
 import FieldRenderer from './Components/Table/FieldRenderer';
 import Header from './Components/Table/Header';
 import Footer from './Components/Table/Footer';
+import SelectAll from './Components/Table/SelectAll';
+import SelectRow from './Components/Table/SelectRow';
 import Filters from './Components/Filters';
 import FormFilters from './Components/FormFilters';
 import Pagination from './Components/Pagination';
 import MultiActions from './Components/MultiActions';
 import MultiAction from './Components/MultiActions/MultiAction';
+import ModalMultiAction from './Components/MultiActions/ModalMultiAction';
 import DateTimeField from './Components/Table/Fields/DateTimeField';
 import DateField from './Components/Table/Fields/DateField';
 import TimeField from './Components/Table/Fields/TimeField';
@@ -44,6 +47,8 @@ class Module extends Webiny.Module {
                 FieldRenderer,
                 Footer,
                 Empty,
+                SelectAll,
+                SelectRow,
                 DateTimeField,
                 DateField,
                 TimeField,
@@ -61,6 +66,7 @@ class Module extends Webiny.Module {
             },
             MultiActions,
             MultiAction,
+            ModalMultiAction,
             Filters,
             FormFilters,
             Pagination

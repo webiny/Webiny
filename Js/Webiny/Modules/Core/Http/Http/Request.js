@@ -6,7 +6,7 @@ class HttpRequest {
         this.url = '';
         this.method = 'get';
         this.headers = {};
-        this.params = null;
+        this.query = null;
         this.data = null;
         this.responseType = 'json';
         this.progress = _.noop;
@@ -30,25 +30,25 @@ class HttpRequest {
         return this;
     }
 
-    getParams() {
-        return this.params;
+    getQuery() {
+        return this.query;
     }
 
     /**
      * Set query parameters
-     * @param params
+     * @param query
      * @returns {Request}
      */
-    setParams(params) {
-        this.params = params;
+    setQuery(query) {
+        this.query = query;
         return this;
     }
 
-    getData() {
+    getBody() {
         return this.data;
     }
 
-    setData(data) {
+    setBody(data) {
         this.data = data;
         return this;
     }
@@ -86,8 +86,8 @@ class HttpRequest {
             url: this.getUrl(),
             method: this.getMethod(),
             headers: this.getHeaders(),
-            params: this.getParams(),
-            data: this.getData(),
+            params: this.getQuery(),
+            data: this.getBody(),
             responseType: this.getResponseType(),
             progress: this.progress
         };

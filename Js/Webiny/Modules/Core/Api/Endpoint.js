@@ -23,27 +23,27 @@ class Endpoint extends Base {
         super(url);
         this.method = config.method || '/';
         this.httpMethod = config.httpMethod || 'GET';
-        this.params = config.params || {};
+        this.query = config.query || {};
         this.body = {};
         if (_.indexOf(['PATCH', 'POST'], this.httpMethod) > -1) {
             this.body = config.body || {};
         }
 
         // Set additional parameters
-        const params = ['_fields', '_page', '_perPage', '_sort', '_searchFields', '_searchQuery', '_searchOperator', '_fieldsDepth'];
-        _.assign(this.params, _.pick(config, params));
+        const query = ['_fields', '_page', '_perPage', '_sort', '_searchFields', '_searchQuery', '_searchOperator', '_fieldsDepth'];
+        _.assign(this.query, _.pick(config, query));
     }
 
-    setParams(params, merge = true) {
+    setQuery(query, merge = true) {
         if (merge) {
-            this.params = _.assign({}, this.params, params);
+            this.query = _.assign({}, this.query, query);
         } else {
-            this.params = params;
+            this.query = query;
         }
         return this;
     }
 
-    execute(httpMethod = null, method = null, body = null, params = null) {
+    execute(httpMethod = null, method = null, body = null, query = null) {
         if (!method) {
             method = this.method || '/';
         }
@@ -58,25 +58,23 @@ class Endpoint extends Base {
             body = this.body;
         }
 
-        if (!params) {
-            params = this.params;
+        if (!query) {
+            query = this.query;
         }
-
-        // console.log('%c[Endpoint][Execute]: %c' + httpMethod + ':' + this.url + method, 'color: #666; font-weight: bold', 'color: blue; font-weight: bold');
 
         let request = null;
         switch (_.lowerCase(httpMethod)) {
             case 'get':
-                request = this.get(method, params);
+                request = this.get(method, query);
                 break;
             case 'post':
-                request = this.post(method, body, params);
+                request = this.post(method, body, query);
                 break;
             case 'patch':
-                request = this.patch(method, body, params);
+                request = this.patch(method, body, query);
                 break;
             case 'put':
-                request = this.put(method, body, params);
+                request = this.put(method, body, query);
                 break;
             case 'delete':
                 request = this.delete(method);

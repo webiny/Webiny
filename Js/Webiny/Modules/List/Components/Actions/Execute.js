@@ -2,7 +2,7 @@ export default function executeAction(callback) {
     const config = {};
 
     const exec = function exec() {
-        return callback(config.httpMethod, config.method, config.body, config.query).then(apiResponse => {
+        return callback(config.httpMethod, config.url, config.body, config.query).then(apiResponse => {
             if (config.then) {
                 return config.then(apiResponse);
             }
@@ -27,9 +27,8 @@ export default function executeAction(callback) {
         }
     };
 
-    return (httpMethod, method) => {
-        config.httpMethod = httpMethod;
-        config.method = method;
+    return (httpMethod, url, body, query) => {
+        _.assign(config, {httpMethod, url, body, query});
         return _.assign(exec, mixin);
     };
 }

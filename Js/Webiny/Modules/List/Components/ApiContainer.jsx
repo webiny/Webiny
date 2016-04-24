@@ -39,7 +39,7 @@ class ApiContainer extends BaseContainer {
     }
 
     loadData() {
-        const params = _.assign({}, this.filters, {
+        const query = _.assign({}, this.filters, {
             _sort: Webiny.Router.sortersToString(this.sorters),
             _perPage: this.perPage,
             _page: this.page,
@@ -48,7 +48,7 @@ class ApiContainer extends BaseContainer {
             _searchOperator: this.searchOperator
         });
 
-        return this.api.execute(null, null, null, _.assign({}, this.api.params, params)).then(apiResponse => {
+        return this.api.execute(null, null, null, _.assign({}, this.api.query, query)).then(apiResponse => {
             let data = null;
             if (!apiResponse.isError()) {
                 data = apiResponse.getData();

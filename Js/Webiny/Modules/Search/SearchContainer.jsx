@@ -75,7 +75,7 @@ class SearchContainer extends Webiny.Ui.Component {
             }
 
             this.setState({loading: true});
-            this.api.setParams({_searchQuery: this.state.search}).execute().then(apiResponse => {
+            this.api.setQuery({_searchQuery: this.state.search}).execute().then(apiResponse => {
                 const data = apiResponse.getData();
                 this.setState({options: _.get(data, 'list', data), loading: false});
             });

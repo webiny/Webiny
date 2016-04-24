@@ -41,7 +41,7 @@ const Http = {
      */
     get(url, params = {}, options = {}) {
         const http = new HttpRequest();
-        http.setUrl(url).setMethod('get').setParams(params);
+        http.setUrl(url).setMethod('get').setQuery(params);
         return execute(http, options);
     },
 
@@ -59,19 +59,19 @@ const Http = {
 
     post(url, data = {}, params = {}, options = {}) {
         const http = new HttpRequest();
-        http.setUrl(url).setMethod('post').setData(data).setParams(params);
+        http.setUrl(url).setMethod('post').setBody(data).setQuery(params);
         return execute(http, options);
     },
 
     put(url, data = {}, params = {}, options = {}) {
         const http = new HttpRequest();
-        http.setUrl(url).setMethod('put').setData(data).setParams(params);
+        http.setUrl(url).setMethod('put').setBody(data).setQuery(params);
         return execute(http, options);
     },
 
     patch(url, data = {}, params = {}, options = {}) {
         const http = new HttpRequest();
-        http.setUrl(url).setMethod('patch').setData(data).setParams(params);
+        http.setUrl(url).setMethod('patch').setBody(data).setQuery(params);
         return execute(http, options);
     },
 

@@ -20,12 +20,13 @@ class Container extends Webiny.Ui.Component {
         if (this.state.content) {
             // Need to focus on .modal to reduce scope of events (keyup and click in Modal.Dialog)
             $('.modal').focus();
+            $('webiny-modal-container').fadeIn(100);
         }
     }
 
     render() {
         return (
-            <webiny-modal-container>{this.state.content}</webiny-modal-container>
+            <webiny-modal-container style={{display: 'none'}}>{this.state.content}</webiny-modal-container>
         );
     }
 }

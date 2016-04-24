@@ -1,10 +1,11 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-class ModalAction extends Webiny.Ui.Component {
+class ModalMultiAction extends Webiny.Ui.Component {
+
 }
 
-ModalAction.defaultProps = {
+ModalMultiAction.defaultProps = {
     hide: _.noop,
     renderer() {
         if (_.isFunction(this.props.hide) && this.props.hide(this.props.data)) {
@@ -13,9 +14,7 @@ ModalAction.defaultProps = {
 
         const modalActions = {
             hide: () => () => {
-                if (this.refs.dialog) {
-                    this.refs.dialog.hide();
-                }
+                this.refs.dialog.hide();
             }
         };
 
@@ -30,4 +29,4 @@ ModalAction.defaultProps = {
     }
 };
 
-export default ModalAction;
+export default ModalMultiAction;

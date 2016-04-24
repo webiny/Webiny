@@ -14,7 +14,7 @@ Link.defaultProps = {
     renderer() {
         const props = _.clone(this.props);
 
-        props.href = null;
+        props.href = 'javascript:void(0)';
 
         if (!props.disabled) {
             if (props.url) {
@@ -24,7 +24,7 @@ Link.defaultProps = {
                 if (_.isString(route)) {
                     route = route === 'current' ? Webiny.Router.getActiveRoute() : Webiny.Router.getRoute(route);
                 }
-                props.href = route === null ? '#' : route.getHref(props.params, null, this.props.merge);
+                props.href = route === null ? 'javascript:void(0)' : route.getHref(props.params, null, this.props.merge);
             }
         }
 

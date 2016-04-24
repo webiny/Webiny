@@ -1,3 +1,12 @@
+/**
+ * This function serves as a configuration interface for the actual callback that will be execute when this function is invoked.
+ * It's greatest benefit is that you can pass it to, for example, onClick callbacks, and it will be executed only when onClick is triggered.
+ *
+ * <Ui.Button onClick={actions.execute('GET', 'profile').then(this.showProfile)}/>
+ *
+ * @param callback
+ * @returns {Function}
+ */
 export default function updateAction(callback) {
     const config = {};
 

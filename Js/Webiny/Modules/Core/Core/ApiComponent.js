@@ -4,7 +4,7 @@ class ApiComponent {
 
     static extend(context) {
         if (context.props.api) {
-            const apiParams = [
+            const apiQuery = [
                 'fields',
                 'page',
                 'perPage',
@@ -16,16 +16,16 @@ class ApiComponent {
             ];
 
             const config = _.pick(context.props, ['method', 'httpMethod', 'body']);
-            const verifiedParams = {};
+            const verifiedQuery = {};
             _.each(context.props.params || {}, (v, k) => {
-                if (apiParams.indexOf(k) > -1) {
-                    verifiedParams['_' + k] = v;
+                if (apiQuery.indexOf(k) > -1) {
+                    verifiedQuery['_' + k] = v;
                 } else {
-                    verifiedParams[k] = v;
+                    verifiedQuery[k] = v;
                 }
             });
-            config.params = verifiedParams;
-            _.each(apiParams, v => config['_' + v] = context.props[v]);
+            config.params = verifiedQuery;
+            _.each(apiQuery, v => config['_' + v] = context.props[v]);
             context.api = new ApiEndpoint(context.props.api, config);
         }
     }

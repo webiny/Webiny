@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import SelectRow from './SelectRow';
 const Ui = Webiny.Ui.Components;
 
 class Row extends Webiny.Ui.Component {
@@ -14,7 +15,7 @@ class Row extends Webiny.Ui.Component {
         this.actions = null;
         this.data = [];
 
-        this.bindMethods('prepareChildren,prepareChild,renderField,onSelect');
+        this.bindMethods('prepareChildren,prepareChild,renderField');
     }
 
     componentWillMount() {
@@ -27,10 +28,6 @@ class Row extends Webiny.Ui.Component {
         super.componentWillReceiveProps(props);
         this.data = _.clone(props.data);
         this.prepareChildren(props.children);
-    }
-
-    onSelect(selected) {
-        this.props.onSelect(this.props.index, selected);
     }
 
     prepareChild(child) {
@@ -97,7 +94,7 @@ Row.defaultProps = {
         if (this.props.onSelect) {
             select = (
                 <td>
-                    <Ui.Checkbox valueLink={this.bindTo('selected', this.onSelect)}/>
+                    <SelectRow value={this.props.selected} onChange={value => this.props.onSelect(this.props.index, value)}/>
                 </td>
             );
         }

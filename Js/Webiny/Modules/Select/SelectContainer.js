@@ -49,7 +49,7 @@ class SelectContainer extends Webiny.Ui.Component {
     }
 
     setFilters(filters) {
-        this.api.setParams(filters);
+        this.api.setQuery(filters);
         this.prepareOptions();
         return this;
     }
