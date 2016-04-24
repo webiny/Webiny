@@ -6,11 +6,15 @@ class Row extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            selected: false
+        };
+
         this.fields = [];
         this.actions = null;
         this.data = [];
 
-        this.bindMethods('prepareChildren,prepareChild,renderField');
+        this.bindMethods('prepareChildren,prepareChild,renderField,onSelect');
     }
 
     componentWillMount() {
@@ -23,6 +27,10 @@ class Row extends Webiny.Ui.Component {
         super.componentWillReceiveProps(props);
         this.data = _.clone(props.data);
         this.prepareChildren(props.children);
+    }
+
+    onSelect(selected) {
+        this.props.onSelect(this.props.index, selected);
     }
 
     prepareChild(child) {
@@ -85,8 +93,18 @@ class Row extends Webiny.Ui.Component {
 
 Row.defaultProps = {
     renderer() {
+        let select = null;
+        if (this.props.onSelect) {
+            select = (
+                <td>
+                    <Ui.Checkbox valueLink={this.bindTo('selected', this.onSelect)}/>
+                </td>
+            );
+        }
+
         return (
             <tr>
+                {select}
                 {this.fields.map(this.renderField)}
                 {this.actions ? <td>{this.actions}</td> : null}
             </tr>

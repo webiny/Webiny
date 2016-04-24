@@ -82,43 +82,9 @@ class ApiContainer extends BaseContainer {
     }
 }
 
-ApiContainer.defaultProps = {
-    connectToRouter: false,
-    defaultParams: {},
-    page: 1,
-    perPage: 10,
+ApiContainer.defaultProps = _.merge({}, BaseContainer.defaultProps, {
     autoLoad: true,
-    autoRefresh: null,
-    layout: function layout() {
-        return (
-            <div className="col-xs-12">
-                <filters/>
-                <table/>
-                <pagination/>
-            </div>
-        );
-    },
-    renderer() {
-        this.prepareList(this.props.children);
-
-        const layout = this.props.layout.bind(this)();
-
-        if (React.Children.toArray(layout.props.children).length) {
-            const render = [];
-            React.Children.map(layout, (item, index) => {
-                render.push(React.cloneElement(this.replacePlaceholders(item), {key: index}));
-            });
-            return <webiny-list>{render}</webiny-list>;
-        }
-
-        const layoutProps = {
-            filters: this.filtersElement,
-            table: this.tableElement,
-            pagination: this.paginationElement,
-            container: this
-        };
-        return React.cloneElement(layout, layoutProps);
-    }
-};
+    autoRefresh: null
+});
 
 export default ApiContainer;

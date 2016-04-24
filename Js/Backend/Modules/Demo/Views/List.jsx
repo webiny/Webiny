@@ -33,6 +33,10 @@ class List extends Webiny.Ui.View {
         };
     }
 
+    log(data, actions) {
+        console.log("MULTI ACTION LOG", data);
+    }
+
     render() {
         return (
             <Webiny.Builder.View name="core-users-list" config={this.getConfig()}>
@@ -106,6 +110,20 @@ class List extends Webiny.Ui.View {
                                 <Table.Footer/>
                             </Table.Table>
                             <Ui.List.Pagination/>
+                            <Ui.List.MultiActions>
+                                <Ui.List.MultiAction label="Log selected" onAction={this.log}/>
+                                <Ui.List.MultiAction label="Delete">
+                                    {rows => {
+                                        const props = {
+                                            message: 'Delete ' + rows.length + ' records?',
+                                            onConfirm: this.delete
+                                        };
+                                        return (
+                                            <Ui.Modal.Confirmation {...props}/>
+                                        );
+                                    }}
+                                </Ui.List.MultiAction>
+                            </Ui.List.MultiActions>
                         </Ui.List.ApiContainer>
                     </Ui.Grid.Col>
                 </Ui.Grid.Row>
@@ -145,7 +163,7 @@ class List extends Webiny.Ui.View {
                 <Ui.Grid.Row>
                     <Ui.Grid.Col all={12}>
                         <Ui.List.ApiContainer ui="myInlineList2" api="/entities/core/files" fields="id,src,name,type,size,createdOn"
-                                           searchFields="name">
+                                              searchFields="name">
                             <Ui.List.Filters>
                                 {function (apply, reset) {
                                     return (

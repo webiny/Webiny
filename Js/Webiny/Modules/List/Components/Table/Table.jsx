@@ -11,19 +11,39 @@ class Table extends Webiny.Ui.Component {
         this.emptyElement = null;
         this.headers = [];
 
-        this.bindMethods('prepareChildren,prepareChild,renderRow,renderHeader,onSort');
+        this.state = {
+            selectAll: false,
+            selectedData: []
+        };
+
+        this.bindMethods('prepareChildren,prepareChild,renderRow,renderHeader,onSort,onSelect,selectAll');
     }
 
     componentWillMount() {
         super.componentWillMount();
-        this.tempProps = this.props;
+        this.tempProps = this.props; // assign props to tempProps to be accessible without passing through method args
         this.prepareChildren(this.props.children);
     }
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        this.tempProps = props;
+        this.tempProps = props; // assign props to tempProps to be accessible without passing through method args
         this.prepareChildren(props.children);
+    }
+
+    selectAll(select) {
+        console.log("SELECT ALL", select);
+    }
+
+    onSelect(index, selected) {
+        const selectedData = this.state.selectedData;
+        if (selected) {
+            selectedData[index] = this.props.data[index];
+        } else {
+            selectedData.splice(index, 1);
+        }
+        this.setState({selectedData});
+        this.props.onSelect(_.compact(selectedData));
     }
 
     onSort(name, sort) {
@@ -82,11 +102,16 @@ class Table extends Webiny.Ui.Component {
         const props = _.omit(this.rowElement.props, ['children']);
         _.assign(props, {
             table: this,
+            index,
             key: index,
             data,
             sorters: _.clone(this.props.sorters),
             actions: this.props.actions
         });
+
+        if (this.props.onSelect) {
+            props.onSelect = this.onSelect;
+        }
 
         return React.cloneElement(this.rowElement, props, this.rowElement.props.children);
     }
@@ -113,10 +138,20 @@ Table.defaultProps = {
             return this.emptyElement;
         }
 
+        let selectAll = null;
+        if (this.props.onSelect) {
+            selectAll = (
+                <th>
+                    <Ui.Checkbox valueLink={this.bindTo('selectAll', this.selectAll)}/>
+                </th>
+            );
+        }
+
         return (
             <table className={className}>
                 <thead>
                 <tr>
+                    {selectAll}
                     {this.headers.map(this.renderHeader)}
                 </tr>
                 </thead>

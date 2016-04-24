@@ -106,6 +106,7 @@ class SelectContainer extends Webiny.Ui.Component {
         }
 
         if (this.api) {
+            // TODO: on unmount - abort api request (when new HTTP is implemented)
             return this.api.execute().then(apiResponse => {
                 this.setState({options: this.renderOptions(props, apiResponse.getData().list, props.valueAttr, props.textAttr)});
             });

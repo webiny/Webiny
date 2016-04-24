@@ -18,7 +18,8 @@ class BaseContainer extends Webiny.Ui.Component {
             perPage: props.perPage,
             searchQuery: null,
             searchOperator: props.searchOperator || 'or',
-            searchFields: props.searchFields || null
+            searchFields: props.searchFields || null,
+            selectedData: []
         };
 
         // Temporary properties used for loading data
@@ -34,6 +35,7 @@ class BaseContainer extends Webiny.Ui.Component {
         this.filtersElement = null;
         this.tableElement = null;
         this.paginationElement = null;
+        this.multiActionsElement = null;
 
         this.bindMethods(
             'prepareList',
@@ -48,7 +50,8 @@ class BaseContainer extends Webiny.Ui.Component {
             'loadData',
             'prepare',
             'onRecordUpdate',
-            'onRecordDelete'
+            'onRecordDelete',
+            'onSelect'
         );
     }
 
@@ -183,6 +186,10 @@ class BaseContainer extends Webiny.Ui.Component {
         throw new Error('Implement onRecordDelete method in your list container class!');
     }
 
+    onSelect(data) {
+        this.setState({selectedData: data})
+    }
+
     /* eslint-enable */
 
     tableProps(tableProps) {
@@ -220,6 +227,19 @@ class BaseContainer extends Webiny.Ui.Component {
         return paginationProps;
     }
 
+    multiActionsProps(multiActionsProps) {
+        _.assign(multiActionsProps, {
+            data: this.state.selectedData,
+            actions: {
+                update: updateAction(this.onRecordUpdate),
+                delete: deleteAction(this.onRecordDelete),
+                execute: executeAction(this.onRecordExecute)
+            }
+        });
+
+        return multiActionsProps;
+    }
+
     /**
      * @private
      * @param children
@@ -245,7 +265,16 @@ class BaseContainer extends Webiny.Ui.Component {
             if (child.type === Ui.List.Pagination) {
                 this.paginationElement = React.cloneElement(child, this.paginationProps(props), child.props.children);
             }
+            if (child.type === Ui.List.MultiActions) {
+                this.multiActionsElement = React.cloneElement(child, this.multiActionsProps(props), child.props.children);
+            }
         }, this);
+
+        // If MultiActions are present, pass an onSelect callback to Table which will tell Table to allow selection
+        // and execute onSelect callback when selection is changed
+        if (this.multiActionsElement) {
+            this.tableElement = React.cloneElement(this.tableElement, {onSelect: this.onSelect})
+        }
     }
 
     /**
@@ -268,6 +297,10 @@ class BaseContainer extends Webiny.Ui.Component {
 
         if (element.type === 'pagination') {
             return this.paginationElement;
+        }
+
+        if (element.type === 'multi-actions') {
+            return this.multiActionsElement;
         }
 
         if (element.props && element.props.children) {
@@ -311,8 +344,10 @@ BaseContainer.defaultProps = {
             filters: this.filtersElement,
             table: this.tableElement,
             pagination: this.paginationElement,
+            multiActions: this.multiActionsElement,
             container: this
         };
+
         return React.cloneElement(layout, layoutProps);
     }
 };
