@@ -37,7 +37,11 @@ class Table extends Webiny.Ui.Component {
         this.setState({
             selectAll: selected,
             selectedData: data
-        }, () => this.props.onSelect(this.state.selectedData));
+        }, () => {
+            if (this.props.onSelect) {
+                this.props.onSelect(this.state.selectedData);
+            }
+        });
     }
 
     onSelect(index, selected) {
@@ -135,7 +139,7 @@ class Table extends Webiny.Ui.Component {
 Table.defaultProps = {
     data: [],
     type: 'simple',
-    onSelect: _.noop,
+    onSelect: null,
     renderer() {
         const className = this.classSet([
             'table',
