@@ -19,7 +19,7 @@ class BaseContainer extends Webiny.Ui.Component {
             searchQuery: null,
             searchOperator: props.searchOperator || 'or',
             searchFields: props.searchFields || null,
-            selectedData: []
+            selectedData: new Set()
         };
 
         // Temporary properties used for loading data
@@ -190,6 +190,15 @@ class BaseContainer extends Webiny.Ui.Component {
         this.setState({selectedData: data})
     }
 
+    getContainerActions() {
+        return {
+            reload: () => this.loadData(),
+            update: updateAction(this.onRecordUpdate), // (id, data) => () => this.onRecordUpdate(id, data),
+            delete: deleteAction(this.onRecordDelete),
+            execute: executeAction(this.onRecordExecute)
+        };
+    }
+
     /* eslint-enable */
 
     tableProps(tableProps) {
@@ -200,15 +209,11 @@ class BaseContainer extends Webiny.Ui.Component {
             }
         });
         _.assign(tableProps, {
-            data: this.state.list,
+            data: _.clone(this.state.list),
             sorters: this.state.sorters,
             onSort: this.setSorters,
-            actions: {
-                update: updateAction(this.onRecordUpdate), // (id, data) => () => this.onRecordUpdate(id, data),
-                delete: deleteAction(this.onRecordDelete),
-                execute: executeAction(this.onRecordExecute)
-            }
-
+            actions: this.getContainerActions(),
+            selectedData: this.state.selectedData
         });
 
         return tableProps;
@@ -230,11 +235,7 @@ class BaseContainer extends Webiny.Ui.Component {
     multiActionsProps(multiActionsProps) {
         _.assign(multiActionsProps, {
             data: this.state.selectedData,
-            actions: {
-                update: updateAction(this.onRecordUpdate),
-                delete: deleteAction(this.onRecordDelete),
-                execute: executeAction(this.onRecordExecute)
-            }
+            actions: this.getContainerActions()
         });
 
         return multiActionsProps;

@@ -14,7 +14,7 @@ class Table extends Webiny.Ui.Component {
 
         this.state = {
             selectAll: false,
-            selectedData: []
+            selectedData: props.selectedData
         };
 
         this.bindMethods('prepareChildren,prepareChild,renderRow,renderHeader,onSort,onSelect,selectAll');
@@ -28,12 +28,19 @@ class Table extends Webiny.Ui.Component {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
+        this.setState({selectedData: props.selectedData});
         this.tempProps = props; // assign props to tempProps to be accessible without passing through method args
         this.prepareChildren(props.children);
     }
 
     selectAll(selected) {
-        const data = selected ? this.props.data : [];
+        let data = this.state.selectedData;
+        if (selected) {
+            data = new Set(this.props.data);
+        } else {
+            data.clear();
+        }
+
         this.setState({
             selectAll: selected,
             selectedData: data
@@ -44,15 +51,15 @@ class Table extends Webiny.Ui.Component {
         });
     }
 
-    onSelect(index, selected) {
+    onSelect(data, selected) {
         const selectedData = this.state.selectedData;
         if (selected) {
-            selectedData[index] = this.props.data[index];
+            selectedData.add(data);
         } else {
-            delete selectedData[index];
+            selectedData.delete(data);
         }
         this.setState({selectedData});
-        this.props.onSelect(_.compact(selectedData));
+        this.props.onSelect(selectedData);
     }
 
     onSort(name, sort) {
@@ -115,7 +122,7 @@ class Table extends Webiny.Ui.Component {
             index,
             key: index,
             data,
-            selected: !_.isEmpty(this.state.selectedData[index]),
+            selected: this.state.selectedData.has(data),
             sorters: _.clone(this.props.sorters),
             actions: this.props.actions
         });
@@ -140,6 +147,7 @@ Table.defaultProps = {
     data: [],
     type: 'simple',
     onSelect: null,
+    selectedData: new Set(),
     renderer() {
         const className = this.classSet([
             'table',

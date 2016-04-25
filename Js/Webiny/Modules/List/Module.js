@@ -16,6 +16,7 @@ import Pagination from './Components/Pagination';
 import MultiActions from './Components/MultiActions';
 import MultiAction from './Components/MultiActions/MultiAction';
 import ModalMultiAction from './Components/MultiActions/ModalMultiAction';
+import DeleteMultiAction from './Components/MultiActions/DeleteMultiAction';
 import DateTimeField from './Components/Table/Fields/DateTimeField';
 import DateField from './Components/Table/Fields/DateField';
 import TimeField from './Components/Table/Fields/TimeField';
@@ -67,6 +68,7 @@ class Module extends Webiny.Module {
             MultiActions,
             MultiAction,
             ModalMultiAction,
+            DeleteMultiAction,
             Filters,
             FormFilters,
             Pagination

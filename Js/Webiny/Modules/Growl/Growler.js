@@ -25,7 +25,7 @@ const Growler = function Growler(element) {
 };
 
 _.assign(Growler, {
-    info(message, title = false, sticky = false, ttl = 3000) {
+    info(message, title = 'Info', sticky = false, ttl = 3000) {
         const growler = getGrowler();
 
         if (!growler) {
@@ -35,7 +35,7 @@ _.assign(Growler, {
         growler.addGrowl(<InfoGrowl {...{message, title, sticky, ttl}}/>);
     },
 
-    success(message, title = false, sticky = false, ttl = 3000) {
+    success(message, title = 'Success', sticky = false, ttl = 3000) {
         const growler = getGrowler();
 
         if (!growler) {
@@ -45,7 +45,7 @@ _.assign(Growler, {
         growler.addGrowl(<SuccessGrowl {...{message, title, sticky, ttl}}/>);
     },
 
-    danger(message, title = false, sticky = false, ttl = 3000) {
+    danger(message, title = 'Danger', sticky = false, ttl = 3000) {
         const growler = getGrowler();
 
         if (!growler) {
@@ -55,7 +55,7 @@ _.assign(Growler, {
         growler.addGrowl(<DangerGrowl {...{message, title, sticky, ttl}}/>);
     },
 
-    warning(message, title = false, sticky = false, ttl = 3000) {
+    warning(message, title = 'Warning', sticky = false, ttl = 3000) {
         const growler = getGrowler();
 
         if (!growler) {

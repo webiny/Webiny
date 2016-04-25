@@ -152,6 +152,10 @@ class User extends EntityAbstract
 
             return $data;
         })->setBodyValidators(['credits' => 'required,gt:100']);
+
+        $this->api('POST', 'delete', function () {
+            return true;
+        })->setBodyValidators(['ids' => 'required,gte:1']);
     }
 
 
