@@ -15,7 +15,7 @@ class DeleteMultiAction extends Webiny.Ui.Component {
     delete(modalActions) {
         this.props.actions.execute('POST', 'delete').body({ids: _.map(this.props.data, 'id')}).then(res => {
             if (!res.isError()) {
-                Webiny.Growl.success(this.props.data.length + ' records deleted successfully!');
+                Webiny.Growl.success(this.props.data.size + ' records deleted successfully!');
                 this.props.actions.reload();
             } else {
                 Webiny.Growl.danger(res.getError(), 'Delete failed', true);

@@ -2,20 +2,20 @@ import Base from './Base';
 
 // TODO: add TTL to cached results
 /*
-const lastUsedSource = {};
-const lastResult = {};
+ const lastUsedSource = {};
+ const lastResult = {};
 
-function hash(string) {
-    let hash = 0, i, chr, len;
-    if (string.length === 0) return hash;
-    for (i = 0, len = string.length; i < len; i++) {
-        chr = string.charCodeAt(i);
-        hash = ((hash << 5) - hash) + chr;
-        hash |= 0; // Convert to 32bit integer
-    }
-    return hash;
-}
-*/
+ function hash(string) {
+ let hash = 0, i, chr, len;
+ if (string.length === 0) return hash;
+ for (i = 0, len = string.length; i < len; i++) {
+ chr = string.charCodeAt(i);
+ hash = ((hash << 5) - hash) + chr;
+ hash |= 0; // Convert to 32bit integer
+ }
+ return hash;
+ }
+ */
 
 class Endpoint extends Base {
 
@@ -32,6 +32,21 @@ class Endpoint extends Base {
         // Set additional parameters
         const query = ['_fields', '_page', '_perPage', '_sort', '_searchFields', '_searchQuery', '_searchOperator', '_fieldsDepth'];
         _.assign(this.query, _.pick(config, query));
+    }
+
+    setMethod(method) {
+        this.method = method;
+        return this;
+    }
+
+    setHttpMethod(httpMethod) {
+        this.httpMethod = httpMethod;
+        return this;
+    }
+
+    setBody(body) {
+        this.body = body;
+        return this;
     }
 
     setQuery(query, merge = true) {

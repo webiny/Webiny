@@ -10,42 +10,49 @@ class SelectContainer extends Webiny.Ui.Component {
             options: []
         };
 
+        this.unwatch = _.noop;
         this.lastUsedSource = null;
 
-        this.bindMethods('prepareOptions,renderOptions,setFilters,watchForChange');
+        this.bindMethods('prepareOptions,renderOptions,setFilters,applyFilter');
         Webiny.Mixins.ApiComponent.extend(this);
+        Webiny.Mixins.FilterableComponent.extend(this);
     }
 
     componentDidMount() {
         super.componentDidMount();
-        this.prepareOptions(this.props);
-        if (this.props.filterBy) {
-            this.watchForChange();
+        if (!this.props.filterBy) {
+            this.prepareOptions(this.props);
         }
+     }
+
+    componentWillUnmount(){
+        super.componentWillUnmount();
+        this.unwatch();
     }
 
-    watchForChange() {
-        // Assume the most basic form of filtering (single string)
-        let name = this.props.filterBy;
-        let field = this.props.filterBy;
-
-        // Check if filterBy is defined as array (0 => name of the input to watch, 1 => filter by field)
-        if (_.isArray(this.props.filterBy)) {
-            name = this.props.filterBy[0];
-            field = this.props.filterBy[1];
+    applyFilter(newValue, name, filter, loadIfEmpty) {
+        this.props.valueLink.requestChange(null);
+        if (newValue === null) {
+            this.setState({options: []});
+            if (!loadIfEmpty) {
+                return;
+            }
         }
 
-        this.props.form.watch(name, val => {
-            // If filter is a function, it needs to return a filter object created from new value
-            if (_.isFunction(field)) {
-                this.setFilters(field(val));
+        // If filter is a function, it needs to return a config for api created using new value
+        if (_.isFunction(filter)) {
+            const config = filter(newValue, this.api);
+            if (config) {
+                this.setFilters(config);
             } else {
-                // If filter is a string, create a filter object using that string as field name
-                const filters = {};
-                filters[field] = val;
-                this.setFilters(filters);
+                this.prepareOptions();
             }
-        });
+        } else {
+            // If filter is a string, create a filter object using that string as field name
+            const filters = {};
+            filters[filter] = newValue;
+            this.setFilters(filters);
+        }
     }
 
     setFilters(filters) {

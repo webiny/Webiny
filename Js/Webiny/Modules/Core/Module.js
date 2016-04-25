@@ -5,6 +5,7 @@ import Component from './Core/Component';
 import FormComponent from './Core/FormComponent';
 import ModalComponent from './Core/ModalComponent';
 import ApiComponent from './Core/ApiComponent';
+import FilterableComponent from './Core/FilterableComponent';
 import Injector from './Core/Injector';
 import Model from './Core/Model';
 import View from './Core/View';
@@ -33,7 +34,8 @@ class Module extends WebinyModule {
 			Module: WebinyModule,
             Modules: {},
             Mixins: {
-                ApiComponent
+                ApiComponent,
+                FilterableComponent
             },
 			Ui: {
 				Component,

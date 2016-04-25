@@ -42,9 +42,12 @@ class Form extends Webiny.Ui.Component {
     }
 
     watch(name, callback) {
-        const watches = _.get(this.watches, name, []);
-        watches.push(callback);
+        const watches = _.get(this.watches, name, new Set());
+        watches.add(callback);
         _.set(this.watches, name, watches);
+        return () => {
+            this.watches[name].delete(callback);
+        };
     }
 
     /**
@@ -58,11 +61,12 @@ class Form extends Webiny.Ui.Component {
 
         React.Children.map(children, child => {
             if (child.type === 'fields') {
-                this.fields = this.registerInputs(child.props.children);
+                const fields = _.isFunction(child.props.children) ? child.props.children(this.state.model, this) : child.props.children;
+                this.fields = this.registerInputs(fields);
             }
 
             if (child.type === 'actions') {
-                this.actions = child.props.children;
+                this.actions = _.isFunction(child.props.children) ? child.props.children(this.state.model, this) : child.props.children;
             }
         }, this);
 
@@ -133,8 +137,8 @@ class Form extends Webiny.Ui.Component {
             const changeCallback = function inputChanged(newValue) {
                 callback.bind(this, newValue);
                 // See if there is a watch registered for changed input
-                const watches = _.get(this.watches, input.props.name, []);
-                _.map(watches, w => w(newValue));
+                const watches = _.get(this.watches, input.props.name, new Set());
+                _.map(Array.from(watches), w => w(newValue));
             };
 
             newProps['valueLink'] = this.bindTo(input.props.name, changeCallback.bind(this), input.props.defaultValue);

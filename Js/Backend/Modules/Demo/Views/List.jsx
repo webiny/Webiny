@@ -131,16 +131,14 @@ class List extends Webiny.Ui.View {
                     <Ui.Grid.Col all={12}>
                         <Ui.List.StaticContainer ui="myInlineList" data={data}>
                             <Ui.List.Filters>
-                                {function (apply, reset) {
-                                    return (
-                                        <Ui.Grid.Row>
-                                            <Ui.Grid.Col all={12}>
-                                                <Ui.Button onClick={reset()} label="Show All"/>
-                                                <Ui.Button onClick={apply({category: 'joinedTeam'})} label="Show Joined Team"/>
-                                            </Ui.Grid.Col>
-                                        </Ui.Grid.Row>
-                                    );
-                                }}
+                                {(apply, reset) => (
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={12}>
+                                            <Ui.Button onClick={reset()} label="Show All"/>
+                                            <Ui.Button onClick={apply({category: 'joinedTeam'})} label="Show Joined Team"/>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                )}
                             </Ui.List.Filters>
                             <Table.Table type="striped">
                                 <Table.Row>
@@ -165,16 +163,14 @@ class List extends Webiny.Ui.View {
                         <Ui.List.ApiContainer ui="myInlineList2" api="/entities/core/files" fields="id,src,name,type,size,createdOn"
                                               searchFields="name">
                             <Ui.List.Filters>
-                                {function (apply, reset) {
-                                    return (
-                                        <Ui.Grid.Row>
-                                            <Ui.Grid.Col all={12}>
-                                                <Ui.Button onClick={reset()} label="Show All"/>
-                                                <Ui.Button onClick={apply({type: 'image/png'})} label="Show PNG"/>
-                                            </Ui.Grid.Col>
-                                        </Ui.Grid.Row>
-                                    );
-                                }}
+                                {(apply, reset) => (
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={12}>
+                                            <Ui.Button onClick={reset()} label="Show All"/>
+                                            <Ui.Button onClick={apply({type: 'image/png'})} label="Show PNG"/>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                )}
                             </Ui.List.Filters>
                             <Table.Table>
                                 <Table.Row>
