@@ -28,8 +28,8 @@ class BaseRadioGroup extends Webiny.Ui.FormComponent {
         const options = [];
 
         if (items) {
-            _.each(items, (label, key) => {
-                options.push({label, key});
+            _.each(items, item => {
+                options.push({label: item.text, key: item.id});
             });
         } else {
             React.Children.map(children, (child) => {

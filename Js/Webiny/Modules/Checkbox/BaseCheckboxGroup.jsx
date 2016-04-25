@@ -86,7 +86,7 @@ class BaseCheckboxGroup extends Webiny.Ui.FormComponent {
     }
 
     /**
-     * Parse <checkbox> tags or use {items} object to build checkboxes
+     * Parse <option> tags or use {items} object to build checkboxes
      * @param items
      * @param children
      */
@@ -94,30 +94,30 @@ class BaseCheckboxGroup extends Webiny.Ui.FormComponent {
         const checkboxes = [];
 
         if (items) {
-            _.each(items, (label, key) => {
+            _.each(items, item => {
                 checkboxes.push({
-                    key,
-                    label,
-                    bind: 'data.' + key
+                    key: item.id,
+                    label: item.text,
+                    bind: 'data.' + item.id
                 });
             });
+        } else if (children) {
+            React.Children.map(children, (child) => {
+                if (child.type === 'option') {
+                    const key = child.props.value;
+
+                    checkboxes.push({
+                        key,
+                        label: child.props.children,
+                        bind: 'data.' + key
+                    });
+                }
+
+                if (child.type === Ui.CheckboxGroup && !this.checkboxChildren.length) {
+                    this.checkboxChildren.push(child);
+                }
+            });
         }
-
-        React.Children.map(children, (child) => {
-            if (child.type === 'checkbox' && !items) {
-                const key = child.props.value;
-
-                checkboxes.push({
-                    key,
-                    label: child.props.children,
-                    bind: 'data.' + key
-                });
-            }
-
-            if (child.type === Ui.CheckboxGroup && !this.checkboxChildren.length) {
-                this.checkboxChildren.push(child);
-            }
-        });
 
         this.setState({options: checkboxes});
     }

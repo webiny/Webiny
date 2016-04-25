@@ -224,8 +224,15 @@ class Form extends Webiny.Ui.View {
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
                                             <Ui.Grid.Row>
-                                                <Ui.Grid.Col all={12}>
+                                                <Ui.Grid.Col all={4}>
                                                     <Ui.Switch label="Enabled" name="enabled"/>
+                                                </Ui.Grid.Col>
+                                                <Ui.Grid.Col all={4}>
+                                                    <Ui.Select name="staticSelect" label="Static select">
+                                                        <option value="yes">Yes</option>
+                                                        <option value="no">No</option>
+                                                        <option value="maybe"><strong>Maybe</strong></option>
+                                                    </Ui.Select>
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
                                             <Ui.Grid.Row>

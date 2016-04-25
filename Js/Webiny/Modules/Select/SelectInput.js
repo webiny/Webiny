@@ -7,7 +7,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
 
         this.select2 = null;
         this.options = null;
-        this.bindMethods('getConfig,getValue,triggerChange,getSelect2InputElement');
+        this.bindMethods('getConfig,getValue,triggerChange,getSelect2InputElement,itemRenderer');
     }
 
     componentDidMount() {
@@ -22,20 +22,18 @@ class SelectInput extends Webiny.Ui.FormComponent {
         this.select2.val(this.getValue()).trigger('change');
     }
 
-    componentWillReceiveProps(props) {
-        super.componentWillReceiveProps(props);
-        if (!this.options || !_.isEqual(props.options, this.options)) {
-            this.select2.html('');
-        }
-
-        this.getSelect2InputElement().select2(this.getConfig(props));
-    }
-
     componentDidUpdate() {
         super.componentDidUpdate();
         const possibleValues = _.map(this.options, 'id');
         const value = this.getValue();
         const inPossibleValues = possibleValues.indexOf(value) > -1;
+
+        if (!this.options || !_.isEqual(this.props.options, this.options)) {
+            this.select2.html('');
+            this.getSelect2InputElement().select2(this.getConfig(this.props));
+        }
+
+        $(ReactDOM.findDOMNode(this)).find('select').prop('disabled', !!this.isDisabled());
 
         if (value !== null && !inPossibleValues && possibleValues.length > 0) {
             this.triggerChange(null);
@@ -65,52 +63,62 @@ class SelectInput extends Webiny.Ui.FormComponent {
 
     triggerChange(value) {
         if (this.props.valueLink) {
-            if (this.props.multiple) {
-                const newValue = this.props.valueLink.value;
-                newValue.push(value);
-                value = newValue;
-            }
             this.props.valueLink.requestChange(value);
         }
         this.props.onChange(value);
     }
 
-    getConfig(props) {
-        const renderer = function renderer(item) {
-            // If HTML - convert to jQuery object
-            if (item.text.indexOf('<') === 0) {
-                return $(item.text);
-            }
-            return item.text;
-        };
-
-        let selectedRenderer = renderer;
-        if (_.isFunction(props.selectedRenderer)) {
-            selectedRenderer = function preview(item) {
-                if (item.data) {
-                    let option = props.selectedRenderer(item.data);
-                    if (!_.isString(option)) {
-                        option = $(ReactDOMServer.renderToStaticMarkup(option));
-                    }
-                    return option;
-                }
-
-                return item.text || '';
-            };
+    getOptionText(text) {
+        if (!text) {
+            return '';
         }
 
+        if (text.startsWith('<')) {
+            return $(text);
+        }
+
+        return text || '';
+    }
+
+    /**
+     * This will be triggered twice due to a bug in Select2 (https://github.com/select2/select2/pull/4306)
+     * @param item
+     * @param type optionRenderer || selectedRenderer
+     * @returns {*}
+     */
+    itemRenderer(item, type) {
+        let text = item.text;
+        if(_.isFunction(this.props[type]) && item.data){
+            text = this.props[type].call(this, item.data || {});
+        }
+
+        if (!_.isString(text)) {
+            text = ReactDOMServer.renderToStaticMarkup(text);
+        }
+
+        return this.getOptionText(text);
+    }
+
+    getConfig(props) {
         const config = {
             disabled: this.isDisabled(props),
             minimumResultsForSearch: props.minimumResultsForSearch,
-            placeholder: this.props.placeholder,
+            placeholder: props.placeholder,
             allowClear: props.allowClear,
-            templateResult: renderer,
-            templateSelection: selectedRenderer,
-            multiple: props.multiple
+            templateResult: item => this.itemRenderer(item, 'optionRenderer'),
+            templateSelection: item => this.itemRenderer(item, 'selectedRenderer')
         };
 
         if (!this.options || !_.isEqual(props.options, this.options)) {
-            config['data'] = this.options = props.options;
+            // Prepare options
+            const options = [];
+            _.each(props.options, option => {
+                if (React.isValidElement(option.text)) {
+                    option.text = ReactDOMServer.renderToStaticMarkup(option.text);
+                }
+                options.push(option);
+            });
+            config['data'] = this.options = options;
         }
 
         return config;
@@ -123,7 +131,6 @@ SelectInput.defaultProps = {
     onChange: _.noop,
     selectedValue: '',
     minimumResultsForSearch: 15,
-    multiple: false,
     renderer() {
         const cssConfig = {
             'form-group': true,
