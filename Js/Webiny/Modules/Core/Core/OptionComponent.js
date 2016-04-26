@@ -105,7 +105,7 @@ class OptionComponent extends Component {
 
     renderOptions(props, data) {
         return _.map(data, option => {
-            const id = option[props.valueAttr || 'id'];
+            const id = _.isPlainObject(option) ? option[props.valueAttr || 'id'] : option;
             const text = this.renderOptionText(props, option);
             // Add data to option so we can run it through selectedRenderer when item selection changes
             return {id, text, data: option};
