@@ -22,7 +22,8 @@
     "select2": "4.0.0",
     "eonasdan-bootstrap-datetimepicker": "~4.17.37",
     "filesize": "^3.2.1",
-    "jGrowl": "jgrowl#~1.4.4"
+    "jGrowl": "jgrowl#~1.4.4",
+    "bootstrap-daterangepicker": "~2.1.19"
   },
   "overrides": {
     "system.js": {
