@@ -1,6 +1,6 @@
 class LinkState {
 
-    constructor(component, key, callback, defaultValue) {
+    constructor(component, key, callback, defaultValue = null) {
         this.component = component;
         this.key = key;
         this.callback = callback;

@@ -55,6 +55,9 @@ class ApiContainer extends BaseContainer {
             let data = null;
             if (!apiResponse.isError()) {
                 data = apiResponse.getData();
+                if (this.props.prepareLoadedData) {
+                    data.list = this.props.prepareLoadedData(data.list);
+                }
                 this.setState({
                     list: data.list,
                     meta: data.meta,
@@ -87,7 +90,8 @@ class ApiContainer extends BaseContainer {
 
 ApiContainer.defaultProps = _.merge({}, BaseContainer.defaultProps, {
     autoLoad: true,
-    autoRefresh: null
+    autoRefresh: null,
+    prepareLoadedData: null
 });
 
 export default ApiContainer;
