@@ -62,6 +62,14 @@ class SelectInput extends Webiny.Ui.FormComponent {
     }
 
     triggerChange(value) {
+        if (this.props.useDataAsValue && value) {
+            const selectedOption = _.find(this.options, {id: value});
+            if (!selectedOption.data) {
+                console.warn('Warning: attempting to use item data but data is not present in option items!');
+            } else {
+                value = selectedOption.data;
+            }
+        }
         if (this.props.valueLink) {
             this.props.valueLink.requestChange(value);
         }
@@ -88,7 +96,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
      */
     itemRenderer(item, type) {
         let text = item.text;
-        if(_.isFunction(this.props[type]) && item.data){
+        if (_.isFunction(this.props[type]) && item.data) {
             text = this.props[type].call(this, item.data || {});
         }
 
@@ -131,6 +139,7 @@ SelectInput.defaultProps = {
     onChange: _.noop,
     selectedValue: '',
     minimumResultsForSearch: 15,
+    useDataAsValue: false,
     renderer() {
         const cssConfig = {
             'form-group': true,

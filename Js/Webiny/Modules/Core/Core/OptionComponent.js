@@ -50,7 +50,7 @@ class OptionComponent extends Component {
         } else {
             // If filter is a string, create a filter object using that string as field name
             const filters = {};
-            filters[filter] = newValue;
+            filters[filter] = _.isObject(newValue) ? newValue.id : newValue;
             this.setFilters(filters);
         }
     }
