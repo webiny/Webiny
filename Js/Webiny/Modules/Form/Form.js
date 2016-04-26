@@ -42,9 +42,9 @@ class Form extends Webiny.Ui.Component {
     }
 
     watch(name, callback) {
-        const watches = _.get(this.watches, name, new Set());
+        const watches = this.watches[name] || new Set();
         watches.add(callback);
-        _.set(this.watches, name, watches);
+        this.watches[name] = watches;
         return () => {
             this.watches[name].delete(callback);
         };
@@ -137,7 +137,7 @@ class Form extends Webiny.Ui.Component {
             const changeCallback = function inputChanged(newValue) {
                 callback.bind(this, newValue);
                 // See if there is a watch registered for changed input
-                const watches = _.get(this.watches, input.props.name, new Set());
+                const watches = this.watches[input.props.name] || new Set();
                 _.map(Array.from(watches), w => w(newValue));
             };
 
