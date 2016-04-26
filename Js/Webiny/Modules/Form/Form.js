@@ -268,7 +268,7 @@ class Form extends Webiny.Ui.Component {
             // If no linked forms are present...
             this.props.onSubmit(model, this.props.container);
             return true;
-        });
+        }).catch(e => console.error(e));
     }
 
     reset() {
