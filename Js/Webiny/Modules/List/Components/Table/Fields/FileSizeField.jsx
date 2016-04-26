@@ -4,12 +4,12 @@ class FileSizeField extends Field {
 
 }
 
-FileSizeField.defaultProps = {
+FileSizeField.defaultProps = _.merge({}, Field.defaultProps, {
     renderer() {
         return (
             <td className={this.getTdClasses()}>{filesize(_.get(this.props.data, this.props.name))}</td>
         );
     }
-};
+});
 
 export default FileSizeField;

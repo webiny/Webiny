@@ -6,7 +6,7 @@ class ToggleField extends Field {
 
 }
 
-ToggleField.defaultProps = {
+ToggleField.defaultProps = _.merge({}, Field.defaultProps, {
     onChange: null,
     renderer() {
         const props = {
@@ -29,6 +29,6 @@ ToggleField.defaultProps = {
             </td>
         );
     }
-};
+});
 
 export default ToggleField;

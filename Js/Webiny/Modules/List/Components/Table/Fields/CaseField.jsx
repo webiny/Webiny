@@ -4,7 +4,7 @@ class CaseField extends Field {
 
 }
 
-CaseField.defaultProps = {
+CaseField.defaultProps = _.merge({}, Field.defaultProps, {
     includeTd: true,
     renderer() {
         let content = null;
@@ -34,6 +34,6 @@ CaseField.defaultProps = {
 
         return content;
     }
-};
+});
 
 export default CaseField;

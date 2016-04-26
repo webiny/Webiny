@@ -4,12 +4,12 @@ class TimeAgoField extends Field {
 
 }
 
-TimeAgoField.defaultProps = {
+TimeAgoField.defaultProps = _.merge({}, Field.defaultProps, {
 	renderer() {
 		return (
 			<td className={this.getTdClasses()}>{moment(this.props.data[this.props.name]).fromNow()}</td>
 		);
 	}
-};
+});
 
 export default TimeAgoField;
