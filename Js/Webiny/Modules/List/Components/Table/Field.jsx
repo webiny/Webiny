@@ -9,14 +9,20 @@ class Field extends Webiny.Ui.Component {
     }
 
     getTdClasses(classes = {}) {
-        return this.classSet({
-            sorted: this.props.sorted !== null,
-            'text-left': this.props.align === 'left'
-        }, this.props.className, classes);
+        const coreClasses = {};
+        coreClasses[this.props.sortedClass] = this.props.sorted !== null;
+        coreClasses[this.props.alignLeftClass] = this.props.align === 'left';
+        coreClasses[this.props.alignRightClass] = this.props.align === 'right';
+        coreClasses[this.props.alignCenterClass] = this.props.align === 'center';
+        return this.classSet(coreClasses, this.props.className, classes);
     }
 }
 
 Field.defaultProps = {
+    sortedClass: 'sorted',
+    alignLeftClass: 'text-left',
+    alignRightClass: 'text-right',
+    alignCenterClass: 'text-center',
     renderer() {
         return (
             <td className={this.getTdClasses()}>{_.get(this.props.data, this.props.name)}</td>
