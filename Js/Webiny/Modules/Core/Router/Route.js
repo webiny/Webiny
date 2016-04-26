@@ -131,6 +131,17 @@ class Route {
         return this.paramValues;
     }
 
+    getQueryParams(name = null) {
+        const queryParams = _.omit(this.getParams(), this.paramNames);
+        if (name) {
+            if (_.isUndefined(queryParams[name])) {
+                return null;
+            }
+            return queryParams[name];
+        }
+        return queryParams;
+    }
+
     setParams(params = false) {
         params = params === false ? this.getParams() : params;
         Router.goToRoute(this.getName(), params);

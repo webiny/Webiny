@@ -72,7 +72,7 @@ class BaseContainer extends Webiny.Ui.Component {
         this.filters = {};
 
         if (props.connectToRouter) {
-            const params = Webiny.Router.getParams();
+            const params = Webiny.Router.getQueryParams();
             const urlSort = params._sort || '';
             urlSort.split(',').map(sorter => {
                 if (sorter === '') {

@@ -165,6 +165,10 @@ class Router {
         return this.activeRoute.getParams(param);
     }
 
+    getQueryParams(param) {
+        return this.activeRoute.getQueryParams(param);
+    }
+
     getHref(params = {}) {
         return this.getActiveRoute().getHref(params);
     }
