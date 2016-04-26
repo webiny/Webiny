@@ -53,33 +53,35 @@ class ApiContainer extends BaseContainer {
     onSubmit(data) {
         this.showLoading();
         if (data.id) {
-            return this.api.execute('PATCH', data.id, data).then(ar => {
+            return this.api.execute('PATCH', data.id, data).then(apiResponse => {
                 this.hideLoading();
                 const onSubmitSuccess = this.props.onSubmitSuccess;
-                if (!ar.isError() && onSubmitSuccess) {
+                if (!apiResponse.isError() && onSubmitSuccess) {
                     if (_.isFunction(onSubmitSuccess)) {
-                        return onSubmitSuccess.bind(this)(ar);
+                        return onSubmitSuccess.bind(this)(apiResponse);
                     }
 
                     if (_.isString(onSubmitSuccess)) {
                         Webiny.Router.goToRoute(onSubmitSuccess);
                     }
                 }
+                return apiResponse;
             });
         }
 
-        return this.api.execute('POST', '/', data).then(ar => {
+        return this.api.execute('POST', '/', data).then(apiResponse => {
             this.hideLoading();
             const onSubmitSuccess = this.props.onSubmitSuccess;
-            if (!ar.isError() && onSubmitSuccess) {
+            if (!apiResponse.isError() && onSubmitSuccess) {
                 if (_.isFunction(onSubmitSuccess)) {
-                    return onSubmitSuccess.bind(this)(ar);
+                    return onSubmitSuccess.bind(this)(apiResponse);
                 }
 
                 if (_.isString(onSubmitSuccess)) {
                     Webiny.Router.goToRoute(onSubmitSuccess);
                 }
             }
+            return apiResponse;
         });
     }
 }
