@@ -20,7 +20,7 @@ class OptionComponent extends Component {
 
     componentDidMount() {
         super.componentDidMount();
-        if (!this.props.filterBy) {
+        if (!this.props.filterBy || this.props.valueLink.value !== null) {
             this.prepareOptions(this.props);
         }
     }

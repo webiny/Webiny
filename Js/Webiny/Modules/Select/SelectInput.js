@@ -29,8 +29,11 @@ class SelectInput extends Webiny.Ui.FormComponent {
         const inPossibleValues = possibleValues.indexOf(value) > -1;
 
         if (!this.options || !_.isEqual(this.props.options, this.options)) {
-            this.select2.html('');
+            this.select2.empty();
             this.getSelect2InputElement().select2(this.getConfig(this.props));
+            setTimeout(() => {
+                this.select2.val(this.getValue()).trigger('change');
+            }, 100);
         }
 
         $(ReactDOM.findDOMNode(this)).find('select').prop('disabled', !!this.isDisabled());
