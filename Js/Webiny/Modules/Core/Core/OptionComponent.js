@@ -43,7 +43,7 @@ class OptionComponent extends Component {
         // If filter is a function, it needs to return a config for api created using new value
         if (_.isFunction(filter)) {
             const config = filter(newValue, this.api);
-            if (config) {
+            if (_.isPlainObject(config)) {
                 this.setFilters(config);
             } else {
                 this.prepareOptions();
@@ -84,7 +84,19 @@ class OptionComponent extends Component {
             const query = {};
             if (this.props.filterBy) {
                 // Get current value of the field that filters current field
-                query[this.$filterField] = _.get(this.props.form.state.model, this.$filterName);
+                let filter = null;
+                const filteredByValue = _.get(this.props.form.state.model, this.$filterName);
+                if (_.isFunction(this.$filterField)) {
+                    filter = this.$filterField(filteredByValue, this.api);
+                    if (_.isPlainObject(filter)) {
+                        _.merge(query, filter);
+                    }
+                }
+
+                if (_.isString(this.$filterField)) {
+                    query[this.$filterField] = filteredByValue;
+                }
+
                 this.api.setQuery(query)
             }
 
