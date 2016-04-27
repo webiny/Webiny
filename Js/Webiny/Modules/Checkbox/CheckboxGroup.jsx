@@ -23,7 +23,7 @@ CheckboxGroup.defaultProps = _.merge({}, BaseCheckboxGroup.defaultProps, {
         }
 
         return (
-            <div className={this.classSet({disabled: this.props.disabled}, this.props.className)}>
+            <div className={this.classSet({disabled: this.isDisabled()}, this.props.className)}>
                 <div className={this.classSet(cssConfig)}>{label}
                     <div className="clearfix"></div>
                     {this.getOptions()}
