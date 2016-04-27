@@ -26,6 +26,10 @@ class FilterableComponent {
                 loadIfEmpty = context.props.filterBy.loadIfEmpty;
             }
 
+            context.$filterName = name;
+            context.$filterField = filter;
+            context.$filterLoadIfEmpty = loadIfEmpty;
+
             context.unwatch = context.props.form.watch(name, newValue => context.applyFilter(newValue, name, filter, loadIfEmpty));
         }
     }

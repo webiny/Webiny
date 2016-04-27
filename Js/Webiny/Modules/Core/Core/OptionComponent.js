@@ -10,7 +10,6 @@ class OptionComponent extends Component {
             options: []
         };
 
-        this.unwatch = _.noop;
         this.lastUsedSource = null;
 
         this.bindMethods('prepareOptions,renderOptions,setFilters,applyFilter');
@@ -27,7 +26,9 @@ class OptionComponent extends Component {
 
     componentWillUnmount() {
         super.componentWillUnmount();
-        this.unwatch();
+        if (this.$unwatch) {
+            this.$unwatch();
+        }
     }
 
     applyFilter(newValue, name, filter, loadIfEmpty) {
@@ -80,6 +81,13 @@ class OptionComponent extends Component {
 
         if (this.api) {
             // TODO: on unmount - abort api request (when new HTTP is implemented)
+            const query = {};
+            if (this.props.filterBy) {
+                // Get current value of the field that filters current field
+                query[this.$filterField] = _.get(this.props.form.state.model, this.$filterName);
+                this.api.setQuery(query)
+            }
+
             return this.api.execute().then(apiResponse => {
                 let data = apiResponse.getData();
                 if (_.isPlainObject(data) && this.api.method === '/') {
