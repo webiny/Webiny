@@ -107,7 +107,8 @@ Tabs.defaultProps = {
                 key: index,
                 index,
                 active,
-                parent: this
+                parent: this,
+                renderIf: child.props.renderIf || true
             };
             props.render = 'tab';
             tabsHeader.push(React.cloneElement(child, props, child.props.children));

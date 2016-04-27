@@ -178,6 +178,13 @@ class Component extends React.Component {
     }
 
     render() {
+        if (_.has(this.props, 'renderIf')) {
+            const renderIf = _.isFunction(this.props.renderIf) ? this.props.renderIf() : this.props.renderIf;
+            if (!renderIf) {
+                return null;
+            }
+        }
+
         if (this.props.renderer) {
             try {
                 // Here we prepare renderer parameters in case any were attached to the function itself using `bindArgs`
@@ -206,7 +213,5 @@ class Component extends React.Component {
         return null;
     }
 }
-
-Component.defaultProps = {};
 
 export default Component;
