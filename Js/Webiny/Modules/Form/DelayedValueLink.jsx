@@ -31,11 +31,13 @@ class DelayedValueLink extends Webiny.Ui.Component {
 
     applyValue(value, callback = _.noop) {
         clearTimeout(this.delay);
+        this.delay = null;
         this.realValueLink.requestChange(value, callback);
     }
 
     changed() {
         clearTimeout(this.delay);
+        this.delay = null;
         this.delay = setTimeout(() => this.applyValue(this.state.value), this.props.delay);
     }
 

@@ -18,6 +18,7 @@ class Growl extends Webiny.Ui.Component {
     componentWillUnmount() {
         super.componentWillUnmount();
         clearTimeout(this.closeDelay);
+        this.closeDelay = null;
     }
 
     close() {
