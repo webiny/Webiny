@@ -99,7 +99,7 @@ class SearchInput extends Webiny.Ui.FormComponent {
             search: this.renderPreview(item),
             options: []
         });
-        this.props.valueLink.requestChange(item[this.props.valueAttr]);
+        this.props.valueLink.requestChange(this.props.useDataAsValue ? item : item[this.props.valueAttr]);
         this.props.onSelect(item);
         setTimeout(this.validate, 10);
     }
@@ -257,6 +257,7 @@ SearchInput.defaultProps = {
     inputIcon: 'icon-search',
     loadingIcon: 'animate-spin icon-network',
     placeholder: 'Type to search',
+    useDataAsValue: false,
     renderer() {
         const input = this.getSearchInput();
 
