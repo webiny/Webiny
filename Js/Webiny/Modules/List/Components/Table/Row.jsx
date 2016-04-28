@@ -15,7 +15,7 @@ class Row extends Webiny.Ui.Component {
         this.actions = null;
         this.data = [];
 
-        this.bindMethods('prepareChildren,prepareChild,renderField');
+        this.bindMethods('prepareChildren,prepareChild,renderField,onClick');
     }
 
     componentWillMount() {
@@ -88,10 +88,20 @@ class Row extends Webiny.Ui.Component {
 
         return React.cloneElement(field, props, children);
     }
+
+    onClick() {
+        const onClick = this.props.onClick;
+        if (_.isString(onClick) && onClick === 'toggleRowDetails') {
+            this.props.actions.toggleRowDetails(this.props.index)();
+        } else if (_.isFunction(onClick)) {
+            onClick.call(this, this.props.data, this);
+        }
+    }
 }
 
 Row.defaultProps = {
     className: null,
+    onClick: _.noop,
     renderer() {
         let select = null;
         if (this.props.onSelect) {
@@ -103,7 +113,7 @@ Row.defaultProps = {
         }
 
         return (
-            <tr className={this.classSet(this.props.className)}>
+            <tr className={this.classSet(this.props.className)} onClick={this.onClick}>
                 {select}
                 {this.fields.map(this.renderField)}
                 {this.actions ? <td>{this.actions}</td> : null}

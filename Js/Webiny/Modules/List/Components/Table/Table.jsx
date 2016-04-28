@@ -19,7 +19,18 @@ class Table extends Webiny.Ui.Component {
             expandedRows: []
         };
 
-        this.bindMethods('prepareChildren,prepareChild,renderRow,renderHeader,onSort,onSelect,selectAll,showRowDetails,hideRowDetails');
+        this.bindMethods(
+            'prepareChildren',
+            'prepareChild',
+            'renderRow',
+            'renderHeader',
+            'onSort',
+            'onSelect',
+            'selectAll',
+            'showRowDetails',
+            'hideRowDetails',
+            'toggleRowDetails'
+        );
     }
 
     componentWillMount() {
@@ -116,7 +127,6 @@ class Table extends Webiny.Ui.Component {
     showRowDetails(rowIndex) {
         return () => {
             this.state.expandedRows.push(rowIndex);
-            console.log("SHOW DETAILS", rowIndex);
             this.setState({expandedRows: this.state.expandedRows});
         }
     }
@@ -124,8 +134,17 @@ class Table extends Webiny.Ui.Component {
     hideRowDetails(rowIndex) {
         return () => {
             this.state.expandedRows.splice(this.state.expandedRows.indexOf(rowIndex), 1);
-            console.log("HIDE DETAILS", rowIndex);
             this.setState({expandedRows: this.state.expandedRows});
+        };
+    }
+
+    toggleRowDetails(rowIndex) {
+        return () => {
+            if (this.state.expandedRows.indexOf(rowIndex) > -1) {
+                this.hideRowDetails(rowIndex)();
+            } else {
+                this.showRowDetails(rowIndex)();
+            }
         };
     }
 
@@ -149,7 +168,8 @@ class Table extends Webiny.Ui.Component {
             sorters: _.clone(this.props.sorters),
             actions: _.assign({}, this.props.actions, {
                 showRowDetails: this.showRowDetails,
-                hideRowDetails: this.hideRowDetails
+                hideRowDetails: this.hideRowDetails,
+                toggleRowDetails: this.toggleRowDetails
             })
         });
 
