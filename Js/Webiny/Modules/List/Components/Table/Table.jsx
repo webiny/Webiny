@@ -194,6 +194,8 @@ Table.defaultProps = {
     type: 'simple',
     onSelect: null,
     selectedRows: new Set(),
+    sorters: {},
+    showHeader: true,
     renderer() {
         const className = this.classSet([
             'table',
@@ -215,20 +217,27 @@ Table.defaultProps = {
 
         const rows = [];
         this.props.data.map((data, index) => {
-            rows.push(this.renderRow(data, index, this.rowElement, index));
+            rows.push(this.renderRow(data, index, this.rowElement, data.id || index));
             if (this.rowDetailsElement) {
-                rows.push(this.renderRow(data, index, this.rowDetailsElement, 'details-' + index));
+                rows.push(this.renderRow(data, index, this.rowDetailsElement, 'details-' + (data.id || index)));
             }
         });
 
-        return (
-            <table className={className}>
+        let header = null;
+        if (this.props.showHeader) {
+            header = (
                 <thead>
                 <tr>
                     {selectAll}
                     {this.headers.map(this.renderHeader)}
                 </tr>
                 </thead>
+            );
+        }
+
+        return (
+            <table className={className}>
+                {header}
                 <tbody>{rows}</tbody>
             </table>
         );

@@ -26,7 +26,7 @@ class ApiComponent {
             });
             config.query = verifiedQuery;
             _.each(apiQuery, v => config['_' + v] = context.props[v]);
-            context.api = new ApiEndpoint(context.props.api, config);
+            context.api = _.isFunction(context.props.api) ? context.props.api.call(context, context) : new ApiEndpoint(context.props.api, config);
         }
     }
 }
