@@ -312,6 +312,29 @@ class BaseContainer extends Webiny.Ui.Component {
 
         return element;
     }
+
+    /**
+     * Get ApiContainer content
+     * @param params Optional params to pass to content render function
+     * @returns {*}
+     */
+    getContent(...params) {
+        const children = this.props.children;
+        if (_.isFunction(children)) {
+            if (params.length === 0) {
+                params = [this, this.state.model, this];
+            } else {
+                params.unshift(this);
+                params.push(this);
+            }
+            const content = children.call(...params);
+            if (_.isArray(content)) {
+                return content;
+            }
+            return content.props.children;
+        }
+        return children;
+    }
 }
 
 BaseContainer.defaultProps = {
@@ -329,7 +352,7 @@ BaseContainer.defaultProps = {
         );
     },
     renderer() {
-        this.prepareList(this.props.children);
+        this.prepareList(this.getContent());
 
         const layout = this.props.layout.call(this);
 
