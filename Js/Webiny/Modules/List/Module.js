@@ -3,6 +3,7 @@ import ApiContainer from './Components/ApiContainer';
 import StaticContainer from './Components/StaticContainer';
 import Table from './Components/Table/Table';
 import Row from './Components/Table/Row';
+import RowDetails from './Components/Table/RowDetails';
 import Field from './Components/Table/Field';
 import FieldInfo from './Components/Table/FieldInfo';
 import FieldRenderer from './Components/Table/FieldRenderer';
@@ -24,6 +25,7 @@ import FileSizeField from './Components/Table/Fields/FileSizeField';
 import CaseField from './Components/Table/Fields/CaseField';
 import ToggleField from './Components/Table/Fields/ToggleField';
 import TimeAgoField from './Components/Table/Fields/TimeAgoField';
+import RowDetailsField from './Components/Table/Fields/RowDetailsField';
 import Actions from './Components/Table/Actions';
 import Action from './Components/Table/Actions/Action';
 import RouteAction from './Components/Table/Actions/RouteAction';
@@ -43,6 +45,7 @@ class Module extends Webiny.Module {
                 Table,
                 Header,
                 Row,
+                RowDetails,
                 Field,
                 FieldInfo,
                 FieldRenderer,
@@ -57,6 +60,7 @@ class Module extends Webiny.Module {
                 CaseField,
                 ToggleField,
                 TimeAgoField,
+                RowDetailsField,
                 Actions,
                 Action,
                 EditAction,

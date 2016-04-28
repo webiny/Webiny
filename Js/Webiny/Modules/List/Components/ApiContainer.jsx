@@ -39,9 +39,9 @@ class ApiContainer extends BaseContainer {
     }
 
     loadData() {
-        const selectedData = this.state.selectedData;
-        selectedData.clear();
-        this.setState({selectedData});
+        const selectedRows = this.state.selectedRows;
+        selectedRows.clear();
+        this.setState({selectedRows});
         const query = _.assign({}, this.filters, {
             _sort: Webiny.Router.sortersToString(this.sorters),
             _perPage: this.perPage,

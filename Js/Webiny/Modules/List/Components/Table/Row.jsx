@@ -62,7 +62,9 @@ class Row extends Webiny.Ui.Component {
             data: this.data,
             key: i,
             sorted: this.props.sorters[props.name] || null,
-            actions: this.props.actions
+            actions: this.props.actions,
+            rowIndex: this.props.index,
+            rowDetailsExpanded: this.props.expanded
         });
 
         // Add field renderer
@@ -89,6 +91,7 @@ class Row extends Webiny.Ui.Component {
 }
 
 Row.defaultProps = {
+    className: null,
     renderer() {
         let select = null;
         if (this.props.onSelect) {
@@ -100,7 +103,7 @@ Row.defaultProps = {
         }
 
         return (
-            <tr>
+            <tr className={this.classSet(this.props.className)}>
                 {select}
                 {this.fields.map(this.renderField)}
                 {this.actions ? <td>{this.actions}</td> : null}

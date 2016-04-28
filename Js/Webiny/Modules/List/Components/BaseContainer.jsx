@@ -19,7 +19,7 @@ class BaseContainer extends Webiny.Ui.Component {
             searchQuery: null,
             searchOperator: props.searchOperator || 'or',
             searchFields: props.searchFields || null,
-            selectedData: new Set()
+            selectedRows: new Set()
         };
 
         // Temporary properties used for loading data
@@ -187,7 +187,7 @@ class BaseContainer extends Webiny.Ui.Component {
     }
 
     onSelect(data) {
-        this.setState({selectedData: data})
+        this.setState({selectedRows: data})
     }
 
     getContainerActions() {
@@ -213,7 +213,7 @@ class BaseContainer extends Webiny.Ui.Component {
             sorters: this.state.sorters,
             onSort: this.setSorters,
             actions: this.getContainerActions(),
-            selectedData: this.state.selectedData
+            selectedRows: this.state.selectedRows
         });
 
         return tableProps;
@@ -234,7 +234,7 @@ class BaseContainer extends Webiny.Ui.Component {
 
     multiActionsProps(multiActionsProps) {
         _.assign(multiActionsProps, {
-            data: this.state.selectedData,
+            data: this.state.selectedRows,
             actions: this.getContainerActions()
         });
 

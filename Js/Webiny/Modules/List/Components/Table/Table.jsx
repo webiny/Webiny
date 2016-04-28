@@ -8,16 +8,18 @@ class Table extends Webiny.Ui.Component {
         super(props);
 
         this.rowElement = null;
+        this.rowDetailsElement = null;
         this.footerElement = null;
         this.emptyElement = null;
         this.headers = [];
 
         this.state = {
             selectAll: false,
-            selectedData: props.selectedData
+            selectedRows: props.selectedRows,
+            expandedRows: []
         };
 
-        this.bindMethods('prepareChildren,prepareChild,renderRow,renderHeader,onSort,onSelect,selectAll');
+        this.bindMethods('prepareChildren,prepareChild,renderRow,renderHeader,onSort,onSelect,selectAll,showRowDetails,hideRowDetails');
     }
 
     componentWillMount() {
@@ -28,13 +30,13 @@ class Table extends Webiny.Ui.Component {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        this.setState({selectedData: props.selectedData});
+        this.setState({selectedRows: props.selectedRows});
         this.tempProps = props; // assign props to tempProps to be accessible without passing through method args
         this.prepareChildren(props.children);
     }
 
     selectAll(selected) {
-        let data = this.state.selectedData;
+        let data = this.state.selectedRows;
         if (selected) {
             data = new Set(this.props.data);
         } else {
@@ -43,27 +45,28 @@ class Table extends Webiny.Ui.Component {
 
         this.setState({
             selectAll: selected,
-            selectedData: data
+            selectedRows: data
         }, () => {
             if (this.props.onSelect) {
-                this.props.onSelect(this.state.selectedData);
+                this.props.onSelect(this.state.selectedRows);
             }
         });
     }
 
     onSelect(data, selected) {
-        const selectedData = this.state.selectedData;
+        const selectedRows = this.state.selectedRows;
         if (selected) {
-            selectedData.add(data);
+            selectedRows.add(data);
         } else {
-            selectedData.delete(data);
+            selectedRows.delete(data);
         }
-        this.setState({selectedData});
-        this.props.onSelect(selectedData);
+        this.setState({selectedRows});
+        this.props.onSelect(selectedRows);
     }
 
     onSort(name, sort) {
         this.selectAll(false);
+        this.setState({expandedRows: []});
         const sorters = _.clone(this.props.sorters);
         if (sort !== 0) {
             sorters[name] = sort;
@@ -105,7 +108,25 @@ class Table extends Webiny.Ui.Component {
             this.footerElement = child;
         } else if (child.type === Ui.List.Table.Empty) {
             this.emptyElement = child;
+        } else if (child.type === Ui.List.Table.RowDetails) {
+            this.rowDetailsElement = child;
         }
+    }
+
+    showRowDetails(rowIndex) {
+        return () => {
+            this.state.expandedRows.push(rowIndex);
+            console.log("SHOW DETAILS", rowIndex);
+            this.setState({expandedRows: this.state.expandedRows});
+        }
+    }
+
+    hideRowDetails(rowIndex) {
+        return () => {
+            this.state.expandedRows.splice(this.state.expandedRows.indexOf(rowIndex), 1);
+            console.log("HIDE DETAILS", rowIndex);
+            this.setState({expandedRows: this.state.expandedRows});
+        };
     }
 
     prepareChildren(children) {
@@ -115,23 +136,28 @@ class Table extends Webiny.Ui.Component {
         return React.Children.map(children, this.prepareChild);
     }
 
-    renderRow(data, index) {
-        const props = _.omit(this.rowElement.props, ['children']);
+    renderRow(data, index, element, key) {
+        const props = _.omit(element.props, ['children']);
         _.assign(props, {
             table: this,
             index,
-            key: index,
+            key,
             data,
-            selected: this.state.selectedData.has(data),
+            fieldsCount: this.headers.length,
+            expanded: this.state.expandedRows.indexOf(index) > -1,
+            selected: this.state.selectedRows.has(data),
             sorters: _.clone(this.props.sorters),
-            actions: this.props.actions
+            actions: _.assign({}, this.props.actions, {
+                showRowDetails: this.showRowDetails,
+                hideRowDetails: this.hideRowDetails
+            })
         });
 
         if (this.props.onSelect) {
             props.onSelect = this.onSelect;
         }
 
-        return React.cloneElement(this.rowElement, props, this.rowElement.props.children);
+        return React.cloneElement(element, props, element.props.children);
     }
 
     renderHeader(header, i) {
@@ -147,7 +173,7 @@ Table.defaultProps = {
     data: [],
     type: 'simple',
     onSelect: null,
-    selectedData: new Set(),
+    selectedRows: new Set(),
     renderer() {
         const className = this.classSet([
             'table',
@@ -167,6 +193,14 @@ Table.defaultProps = {
             );
         }
 
+        const rows = [];
+        this.props.data.map((data, index) => {
+            rows.push(this.renderRow(data, index, this.rowElement, index));
+            if (this.rowDetailsElement) {
+                rows.push(this.renderRow(data, index, this.rowDetailsElement, 'details-' + index));
+            }
+        });
+
         return (
             <table className={className}>
                 <thead>
@@ -175,9 +209,7 @@ Table.defaultProps = {
                     {this.headers.map(this.renderHeader)}
                 </tr>
                 </thead>
-                <tbody>
-                {this.props.data.map(this.renderRow)}
-                </tbody>
+                <tbody>{rows}</tbody>
             </table>
         );
     }
