@@ -29,17 +29,8 @@ class CrudListFlow extends AbstractFlow
         $sorter = $this->wRequest()->getSortFields();
 
         $entities = $entity->find($filters, $sorter, $this->wRequest()->getPerPage(), $this->wRequest()->getPage());
-        $response = [
-            'meta' => [
-                'totalCount'  => $entities->totalCount(),
-                'totalPages'  => ceil($entities->totalCount() / $this->wRequest()->getPerPage()),
-                'perPage'     => $this->wRequest()->getPerPage(),
-                'currentPage' => $this->wRequest()->getPage()
-            ],
-            'list' => $entities->toArray($this->wRequest()->getFields(), $this->wRequest()->getFieldsDepth())
-        ];
-
-        return $response;
+        $formatter = new CrudListFormatter($entities);
+        return $formatter->format($this->wRequest()->getFields());
     }
 
     public function canHandle($httpMethod, $params)
