@@ -45,21 +45,24 @@ trait ParamsInjectorTrait
         }
 
         $index = 0;
-        foreach ($methodParams as $mp) {
+        $injectedParams = [];
+        foreach ($methodParams as $pName => $mp) {
             if ($mp['class']) {
-                $requestedValue = $params[$index];
+                $requestedValue = $params[$pName];
                 $paramValue = call_user_func_array([$mp['class'], 'findById'], [$requestedValue]);
                 if ($mp['required'] && $paramValue === null) {
                     $data = [];
                     $data[$mp['name']] = $mp['class'] . ' with ID `' . $requestedValue . '` was not found!';
                     throw new ApiException('Invalid parameters', 'WBY-PARAMS_INJECTOR-2', 400, $data);
                 }
-                $params[$index] = $paramValue;
+                $injectedParams[] = $paramValue;
+            } else {
+                $injectedParams[] = $params[$pName];
             }
 
             $index++;
         }
 
-        return $params;
+        return $injectedParams;
     }
 }

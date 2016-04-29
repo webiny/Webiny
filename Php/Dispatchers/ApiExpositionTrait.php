@@ -8,6 +8,7 @@
 
 namespace Apps\Core\Php\Dispatchers;
 
+use Webiny\Component\Router\Route\Route;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
 /**
@@ -26,11 +27,11 @@ trait ApiExpositionTrait
 
     /**
      * @param $httpMethod
-     * @param $entityMethod
+     * @param $url
      *
-     * @return ApiMethod
+     * @return MatchedApiMethod
      */
-    public function getApiMethod($httpMethod, $entityMethod)
+    public function getApiMethod($httpMethod, $url)
     {
         if (!$this->apiMethods) {
             $this->apiMethods = new ArrayObject();
@@ -38,7 +39,24 @@ trait ApiExpositionTrait
 
         $httpMethod = strtolower($httpMethod);
 
-        return $this->apiMethods->keyNested($entityMethod . '.' . $httpMethod);
+        $methods = $this->apiMethods->key($httpMethod);
+        /* @var $method ApiMethod */
+        foreach ($methods as $pattern => $method) {
+            $route = new Route($pattern, null, $method->getRouteOptions());
+            $compiled = $route->compile();
+            $regex = $compiled->getRegex();
+
+            if (preg_match($regex, $url, $matches)) {
+                $params = [];
+                foreach ($compiled->getVariables() as $index => $v) {
+                    $params[$v['name']] = $matches[$index + 1];
+                }
+
+                return new MatchedApiMethod($method, $params);
+            }
+        }
+
+        return null;
     }
 
     public function getApiMethods()
@@ -54,19 +72,20 @@ trait ApiExpositionTrait
      * Expose API method
      *
      * @param string   $httpMethod
-     * @param string   $entityMethod
+     * @param string   $pattern
      * @param callable $callable
      *
      * @return ApiMethod
      */
-    public function api($httpMethod, $entityMethod, $callable)
+    public function api($httpMethod, $pattern, $callable)
     {
         if (!$this->apiMethods) {
             $this->apiMethods = new ArrayObject();
         }
 
+        $pattern = trim($pattern, '/');
         $httpMethod = strtolower($httpMethod);
-        $apiMethod = $this->apiMethods->keyNested($entityMethod . '.' . $httpMethod, new ApiMethod($httpMethod, $entityMethod), true);
+        $apiMethod = $this->apiMethods->keyNested($httpMethod . '.' . $pattern, new ApiMethod($httpMethod, $pattern), true);
         $apiMethod->addCallback($callable);
 
         return $apiMethod;

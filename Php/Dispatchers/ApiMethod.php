@@ -25,17 +25,28 @@ class ApiMethod
     use ParamsInjectorTrait, StdLibTrait, DevToolsTrait;
 
     private $httpMethod;
-    private $methodName;
+    private $pattern;
     private $callbacks = [];
     private $bodyValidators;
+    private $routeOptions = [];
 
     function __construct($httpMethod, $methodName, $callable = null)
     {
         $this->httpMethod = $httpMethod;
-        $this->methodName = $methodName;
+        $this->pattern = $methodName;
         if ($callable) {
             $this->callbacks = [$callable];
         }
+    }
+
+    public function getPattern()
+    {
+        return $this->pattern;
+    }
+
+    public function getRouteOptions()
+    {
+        return $this->routeOptions;
     }
 
     public function __invoke($params, $bindTo = null)
@@ -64,6 +75,13 @@ class ApiMethod
     public function addCallback($callable)
     {
         array_unshift($this->callbacks, $callable);
+
+        return $this;
+    }
+
+    public function setRouteOptions($options)
+    {
+        $this->routeOptions = $options;
 
         return $this;
     }
@@ -135,7 +153,7 @@ class ApiMethod
         }
 
         if (count($errors)) {
-            $message = 'Invalid arguments provided to method `' . $this->httpMethod . '.' . $this->methodName . '`';
+            $message = 'Invalid arguments provided to method `' . $this->httpMethod . '.' . $this->pattern . '`';
             throw new ApiMethodException($message, 'WBY-ENTITY-API-METHOD-VALIDATION', 404, $errors);
         }
     }
