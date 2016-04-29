@@ -33,15 +33,15 @@ class File extends EntityAbstract
      */
     protected function entityStructure()
     {
-        $this->attr('name')->char()->setRequired();
-        $this->attr('title')->char();
-        $this->attr('size')->integer();
-        $this->attr('type')->char();
-        $this->attr('ext')->char();
-        $this->attr('src')->char();
-        $this->attr('tags')->arr();
-        $this->attr('ref')->char();
-        $this->attr('order')->integer()->setDefaultValue(0);
+        $this->attr('name')->char()->setRequired()->setToArrayDefault();
+        $this->attr('title')->char()->setToArrayDefault();
+        $this->attr('size')->integer()->setToArrayDefault();
+        $this->attr('type')->char()->setToArrayDefault();
+        $this->attr('ext')->char()->setToArrayDefault();
+        $this->attr('src')->char()->setToArrayDefault();
+        $this->attr('tags')->arr()->setToArrayDefault();
+        $this->attr('ref')->char()->setToArrayDefault();
+        $this->attr('order')->integer()->setDefaultValue(0)->setToArrayDefault();
     }
 
     /**

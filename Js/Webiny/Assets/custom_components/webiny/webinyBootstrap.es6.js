@@ -22,6 +22,26 @@ function runWebiny() {
     }
 }
 
+function formatAjaxResponse(jqXhr) {
+    return {
+        data: jqXhr.responseJSON,
+        status: jqXhr.status,
+        statusText: jqXhr.statusText
+    };
+}
+
+function request(config) {
+    return new Promise(resolve => {
+        $.ajax(config)
+            .done((data, textStatus, jqXhr) => {
+                resolve(formatAjaxResponse(jqXhr));
+            })
+            .fail(jqXhr => {
+                resolve(formatAjaxResponse(jqXhr));
+            });
+    });
+}
+
 class WebinyBootstrapClass {
 
     constructor() {
@@ -85,10 +105,15 @@ class WebinyBootstrapClass {
      * @param object|boolean meta If true, will load modules and run the app
      * @returns {*}
      */
-    // TODO: add autoinitialize flag
     includeApp(appName, meta) {
         if (!meta || meta === true) {
-            return axios({url: _apiUrl + '/services/core/apps/' + appName}).then(res => {
+            const config = {
+                url: _apiUrl + '/services/core/apps/' + appName,
+                dataType: 'json',
+                contentType: 'application/json;charset=UTF-8',
+                processData: false
+            };
+            return request(config).then(res => {
                 this.meta[appName] = res.data.data;
                 return this.loadAssets(this.meta[appName]).then(app => {
                     if (meta === true) {

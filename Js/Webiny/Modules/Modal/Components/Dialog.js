@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import DialogHolder from './DialogHolder';
 const Ui = Webiny.Ui.Components;
 
 class Dialog extends Webiny.Ui.Component {
@@ -52,14 +53,14 @@ class Dialog extends Webiny.Ui.Component {
         this.props.onHide();
         this.setState({
             isShown: false
-        }, this.props.onHidden);
+        });
     }
 
     show() {
         this.props.onShow();
         this.setState({
             isShown: true
-        }, this.props.onShown);
+        });
     }
 
     prepareChild(child) {
@@ -104,16 +105,18 @@ Dialog.defaultProps = {
         const className = this.classSet({modal: true, 'modal-wizard': this.props.wide});
 
         ModalContainer.setContent(
-            <div style={{display: 'block'}}>
-                <div className="modal-backdrop in"></div>
-                <div className={className} tabIndex="-1" style={{display: 'block'}}>
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            {this.prepareChildren(this.props.children)}
+            <DialogHolder onShown={this.props.onShown} onHidden={this.props.onHidden}>
+                <div style={{display: 'block'}}>
+                    <div className="modal-backdrop in"></div>
+                    <div className={className} tabIndex="-1" style={{display: 'block'}}>
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                {this.prepareChildren(this.props.children)}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </DialogHolder>
         );
 
         return null;

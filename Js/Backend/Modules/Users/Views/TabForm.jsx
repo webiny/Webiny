@@ -10,7 +10,7 @@ class Form extends Webiny.Ui.View {
     render() {
         const containerProps = {
             api: '/entities/core/users',
-            fields: 'id,firstName,lastName,email,userGroups,settings,enabled',
+            fields: 'id,firstName,lastName,email,userGroups,settings,enabled,avatar',
             title: 'Users form',
             connectToRouter: true,
             onSubmitSuccess: () => {
@@ -51,6 +51,18 @@ class Form extends Webiny.Ui.View {
                                         <Ui.Form.Form layout={false} onInvalid={this.ui('tabs:selectTab', 0)}>
                                             <fields>
                                                 <Ui.Grid.Row>
+                                                    <Ui.Files.Avatar name="avatar"
+                                                        cropper={{
+                                                            title: 'Crop your avatar',
+                                                            config: {
+                                                                aspectRatio: 1,
+                                                                autoCropArea: 1,
+                                                                guides: false,
+                                                                strict: true,
+                                                                width: 400,
+                                                                height: 400,
+                                                                cropBoxResizable: false
+                                                            }}}/>
                                                     <Ui.Grid.Col all={6}>
                                                         <Ui.Input label="First name" name="firstName" validate="required"/>
                                                     </Ui.Grid.Col>
@@ -58,7 +70,8 @@ class Form extends Webiny.Ui.View {
                                                         <Ui.Input label="Last name" name="lastName" validate="required"/>
                                                     </Ui.Grid.Col>
                                                     <Ui.Grid.Col all={12}>
-                                                        <Ui.Input label="Email" name="email" validate="required,email" description="Your email"/>
+                                                        <Ui.Input label="Email" name="email" validate="required,email"
+                                                                  description="Your email"/>
                                                     </Ui.Grid.Col>
                                                     <Ui.Grid.Col all={12}>
                                                         <Ui.Textarea label="Notes" name="notes" description="User notes"/>

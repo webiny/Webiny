@@ -57,7 +57,7 @@ class FileAttribute extends Many2OneAttribute
         parent::setValue($value, $fromDb);
 
         // If new files is being assigned and there is an existing file - delete the existing file
-        if (!$fromDb && $currentValue->id != $this->getValue()->id) {
+        if (!$fromDb && $currentValue && $currentValue->id != $this->getValue()->id) {
             $currentValue->delete();
         }
 
