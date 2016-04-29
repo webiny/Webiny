@@ -2,6 +2,7 @@
 namespace Apps\Core\Php\Services;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\DevTools\Services\AbstractService;
 use Apps\Core\Php\Dispatchers\ApiExpositionTrait;
 use Webiny\Component\StdLib\StdLibTrait;
@@ -75,8 +76,11 @@ class Apps extends AbstractService
                 $key = $appName . '/' . $version . $jsApp;
             }
             $meta = new File($key . '/meta.json', $storage);
+            if ($meta->exists()) {
+                return json_decode($meta->getContents(), true);
+            }
 
-            return json_decode($meta->getContents(), true);
+            throw new AppException('App ' . $app . ' was not found!');
         }
 
         // Fetch meta.json of each active app
