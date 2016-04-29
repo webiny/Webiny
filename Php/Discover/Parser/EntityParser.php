@@ -3,10 +3,13 @@ namespace Apps\Core\Php\Discover\Parser;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\DevTools\Exceptions\AppException;
+use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\Attribute\AttributeAbstract;
 use Webiny\Component\Entity\Attribute\AttributeType;
 use Webiny\Component\Mongo\MongoTrait;
 use Webiny\Component\StdLib\StdLibTrait;
+use Webiny\Component\StdLib\StdObject\StdObjectException;
 use Webiny\Component\Storage\File\File;
 
 class EntityParser
@@ -39,7 +42,7 @@ class EntityParser
             'array'    => '',
             'date'     => $this->datetime()->format('Y-m-d'),
             'datetime' => $this->datetime()->format('Y-m-d H:i:s'),
-            'id'       => (string) $this->mongo()->id(),
+            'id'       => (string)$this->mongo()->id(),
             'boolean'  => true,
             'string'   => ''
         ];
@@ -108,55 +111,63 @@ class EntityParser
         $entity = new $this->class;
 
         /* @var $attr AttributeAbstract */
+
         foreach ($entity->getAttributes() as $name => $attr) {
-            $validators = [];
-            foreach ($attr->getValidators() as $v) {
-                $parts = $this->str($v)->explode(':');
-                $key = $parts[0];
-                $validators[$key] = $parts->slice(1, null, false);
-            }
-
-            if ($attr->isRequired()) {
-                $attribute = ['type' => '', 'value' => ''];
-
-                switch (true) {
-                    case $this->isInstanceOf($attr, AttributeType::OBJECT):
-                        $attribute['type'] = 'object';
-                        $attribute['value'] = $this->defaultValues['object'];
-                        break;
-                    case $this->isInstanceOf($attr, AttributeType::ARR):
-                        $attribute['type'] = 'array';
-                        $attribute['value'] = $this->defaultValues['array'];
-                        break;
-                    case $this->isInstanceOf($attr, AttributeType::DATE):
-                        $attribute['type'] = 'date';
-                        $attribute['value'] = $this->defaultValues['date'];
-                        break;
-                    case $this->isInstanceOf($attr, AttributeType::DATE_TIME):
-                        $attribute['type'] = 'datetime';
-                        $attribute['value'] = $this->defaultValues['datetime'];
-                        break;
-                    case $this->isInstanceOf($attr, AttributeType::MANY2ONE):
-                        $attribute['type'] = 'string';
-                        $attribute['value'] = $this->defaultValues['id'];
-                        break;
-                    case $this->isInstanceOf($attr, AttributeType::BOOLEAN):
-                        $attribute['type'] = 'boolean';
-                        $attribute['value'] = $this->defaultValues['boolean'];
-                        break;
-                    case $this->isInstanceOf($attr, AttributeType::CHAR):
-                        $value = '';
-                        if (array_key_exists('in', $validators)) {
-                            $value = $validators['in']->implode('|')->val();
-                        }
-                        $attribute['type'] = 'string';
-                        $attribute['value'] = $value;
-                        break;
-                    default:
-                        $attribute['type'] = 'string';
-                        $attribute['value'] = '';
+            try {
+                $validators = [];
+                foreach ($attr->getValidators() as $v) {
+                    if (!is_string($v)) {
+                        continue;
+                    }
+                    $parts = $this->str($v)->explode(':');
+                    $key = $parts[0];
+                    $validators[$key] = $parts->slice(1, null, false);
                 }
-                $required[$name] = $attribute;
+
+                if ($attr->isRequired()) {
+                    $attribute = ['type' => '', 'value' => ''];
+
+                    switch (true) {
+                        case $this->isInstanceOf($attr, AttributeType::OBJECT):
+                            $attribute['type'] = 'object';
+                            $attribute['value'] = $this->defaultValues['object'];
+                            break;
+                        case $this->isInstanceOf($attr, AttributeType::ARR):
+                            $attribute['type'] = 'array';
+                            $attribute['value'] = $this->defaultValues['array'];
+                            break;
+                        case $this->isInstanceOf($attr, AttributeType::DATE):
+                            $attribute['type'] = 'date';
+                            $attribute['value'] = $this->defaultValues['date'];
+                            break;
+                        case $this->isInstanceOf($attr, AttributeType::DATE_TIME):
+                            $attribute['type'] = 'datetime';
+                            $attribute['value'] = $this->defaultValues['datetime'];
+                            break;
+                        case $this->isInstanceOf($attr, AttributeType::MANY2ONE):
+                            $attribute['type'] = 'string';
+                            $attribute['value'] = $this->defaultValues['id'];
+                            break;
+                        case $this->isInstanceOf($attr, AttributeType::BOOLEAN):
+                            $attribute['type'] = 'boolean';
+                            $attribute['value'] = $this->defaultValues['boolean'];
+                            break;
+                        case $this->isInstanceOf($attr, AttributeType::CHAR):
+                            $value = '';
+                            if (array_key_exists('in', $validators)) {
+                                $value = $validators['in']->implode('|')->val();
+                            }
+                            $attribute['type'] = 'string';
+                            $attribute['value'] = $value;
+                            break;
+                        default:
+                            $attribute['type'] = 'string';
+                            $attribute['value'] = '';
+                    }
+                    $required[$name] = $attribute;
+                }
+            } catch (StdObjectException $e) {
+                throw new AppException('Failed to read required attributes at ' . $name . ', in ' . get_class($entity));
             }
         }
 
@@ -193,10 +204,10 @@ class EntityParser
                 $this->headerAuthorizationToken
             ],
             'tests'      => [
-                'var jsonData = JSON.parse(responseBody);',
-                'tests["Status code is 200"] = responseCode.code === 200;',
-                'tests["Meta exists"] = jsonData.data !== undefined && jsonData.data.meta instanceof Object;',
-                'tests["List exists"] = jsonData.data !== undefined && jsonData.data.list instanceof Array;'
+                'var jsonData = JSON . parse(responseBody);',
+                'tests["Status code is 200"] = responseCode . code === 200;',
+                'tests["Meta exists"] = jsonData . data !== undefined && jsonData . data . meta instanceof Object;',
+                'tests["List exists"] = jsonData . data !== undefined && jsonData . data . list instanceof Array;'
             ]
         ];
     }
@@ -272,7 +283,7 @@ class EntityParser
             foreach ($httpMethods as $httpMethod => $config) {
                 $config = $this->arr($config);
                 $definition = [
-                    'path'        => $this->url . $config['url'],
+                    'path'        => $this->url . '/' . $name, //$config['url'],
                     'name'        => $config->key('name'),
                     'description' => $config->key('description', '', true),
                     'method'      => strtoupper($httpMethod),
@@ -303,7 +314,7 @@ class EntityParser
                     ];
                 }
 
-                $methods[$name . '.' . $httpMethod] = $definition;
+                $methods[$name . ' . ' . $httpMethod] = $definition;
             }
         }
 
@@ -316,6 +327,7 @@ class EntityParser
      * @param $class
      *
      * @return array
+     * @throws AppException
      * @throws \Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObjectException
      * @throws \Webiny\Component\StdLib\StdObject\StringObject\StringObjectException
      */
@@ -336,6 +348,10 @@ class EntityParser
         $classFile = $this->wApps($classPath[1])->getPath(false) . '/' . $classPath->slice(2)->implode('\\')->replace('\\', '/');
 
         $classFile = new File($classFile . '.php', $storage);
+        if (!$classFile->exists()) {
+            return [];
+        }
+
         $classContents = $classFile->getContents();
         $classLines = $this->str($classContents)->explode("\n");
 
@@ -360,7 +376,10 @@ class EntityParser
             }
 
             if ($code->startsWith('$this->api(')) {
-                $match = $code->match('\'(\w+)\',\s?\'(\w+)\'');
+                $match = $code->match('\'(\w+)\',\s?\'([\w+-{}/]+)\'');
+                if (!$match) {
+                    throw new AppException('Failed to parse API method definition: `' . $code->val() . '`', 'WBY-DISCOVER-FAILED');
+                }
                 $httpMethod = strtolower($match->keyNested('1.0'));
                 $methodName = $match->keyNested('2.0');
                 if ($methodName) {

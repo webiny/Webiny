@@ -50,6 +50,7 @@ class Apps extends AbstractService
      * @param null $app
      *
      * @return array|mixed
+     * @throws AppException
      */
     public function getAppsMeta($app = null)
     {
