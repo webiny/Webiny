@@ -46,6 +46,8 @@ trait ApiExpositionTrait
             $compiled = $route->compile();
             $regex = $compiled->getRegex();
 
+            $regex = str_replace('[\w-]', '[\w-\.]', $regex);
+
             if (preg_match($regex, $url, $matches)) {
                 $params = [];
                 foreach ($compiled->getVariables() as $index => $v) {

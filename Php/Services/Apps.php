@@ -17,7 +17,7 @@ class Apps extends AbstractService
 {
     function __construct()
     {
-        $this->api('get', 'index', function ($appName = null) {
+        $this->api('get', '{appName}', function ($appName = null) {
             return $this->index($appName);
         });
     }

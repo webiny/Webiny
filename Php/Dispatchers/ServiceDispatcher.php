@@ -28,7 +28,7 @@ class ServiceDispatcher extends AbstractApiDispatcher
         $request = $this->parseUrl($event->getUrl()->replace('/services', ''));
         $httpMethod = strtolower($this->wRequest()->getRequestMethod());
 
-        $params = $request['params'];
+        $url = join('/', $request['params']);
 
         $serviceClass = '\\Apps\\' . $request['app'] . '\\Php\\Services\\' . $request['class'];
         if (!class_exists($serviceClass)) {
@@ -40,32 +40,20 @@ class ServiceDispatcher extends AbstractApiDispatcher
             throw new ApiException('Services must use `ApiExpositionTrait` to expose public API!', 'WBY-SD-INVALID_SERVICE');
         }
 
-        $method = 'index';
-        $possibleMethod = null;
-        if (isset($params[0])) {
-            $possibleMethod = $params[0];
-        }
+        /* @var $matchedServiceMethod MatchedApiMethod */
+        $matchedServiceMethod = $service->getApiMethod($httpMethod, $url);
 
-        // Check if method exists
-        /* @var $serviceMethod ApiMethod */
-        $serviceMethod = $service->getApiMethod($httpMethod, $method);
-        $possibleServiceMethod = $possibleMethod ? $service->getApiMethod($httpMethod, $possibleMethod) : null;
-
-        if ($possibleServiceMethod) {
-            array_shift($params);
-            $method = $possibleMethod;
-            $serviceMethod = $possibleServiceMethod;
-        }
-
-        if (!$serviceMethod) {
+        if (!$matchedServiceMethod) {
             $message = 'No applicable methods are exposed in ' . $serviceClass;
             throw new ApiException($message, 'WBY-SD-NO_METHODS_EXPOSED', 404);
         }
 
-        if (!$this->wAuth()->canExecute($serviceClass, $method)) {
+        if (!$this->wAuth()->canExecute($serviceClass, $url)) {
             throw new ApiException('You don\'t have an EXECUTE permission on ' . $serviceClass, 'WBY-AUTHORIZATION');
         }
 
-        return new ApiResponse($serviceMethod($params));
+        $apiMethod = $matchedServiceMethod->getApiMethod();
+
+        return new ApiResponse($apiMethod($matchedServiceMethod->getParams()));
     }
 }
