@@ -141,7 +141,6 @@ class HttpRequest {
     }
 
     abort() {
-        console.log("ABORTING REQUEST");
         this.request.abort();
     }
 }

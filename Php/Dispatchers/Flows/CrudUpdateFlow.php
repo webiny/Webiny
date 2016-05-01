@@ -38,7 +38,7 @@ class CrudUpdateFlow extends AbstractFlow
                 $entity->populate($data);
                 $entity->save();
 
-                return $entity->toArray($this->wRequest()->getFields(), $this->wRequest()->getFieldsDepth());
+                return $entity->toArray($this->wRequest()->getFields());
             } catch (EntityException $e) {
                 throw new ApiException($e->getMessage(), 'WBY-ED-CRUD_UPDATE_FLOW-1', 422, $e->getInvalidAttributes());
             }

@@ -39,7 +39,7 @@ class CrudCreateFlow extends AbstractFlow
             }
         }
 
-        return $entity->toArray($this->wRequest()->getFields(), $this->wRequest()->getFieldsDepth());
+        return $entity->toArray($this->wRequest()->getFields());
     }
 
     public function canHandle($httpMethod, $params)

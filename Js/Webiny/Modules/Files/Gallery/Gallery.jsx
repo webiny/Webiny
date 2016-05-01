@@ -17,6 +17,7 @@ class Gallery extends ImageComponent {
 
         this.bindMethods(
             'saveImage',
+            'cancelUpload',
             'applyCropping',
             'onCropperHidden',
             'filesChanged',
@@ -81,10 +82,9 @@ class Gallery extends ImageComponent {
             _.set(state, 'images.' + index, image);
         } else {
             image.order = state.images.length;
-            state.images.push(image);
         }
 
-        this.uploader.upload(image, (percentage) => {
+        image.jobId = this.uploader.upload(image, (percentage) => {
             const newState = this.state;
             newState.images[this.getImageIndex(image)].progress = percentage;
             this.setState({images: state.images});
@@ -93,9 +93,25 @@ class Gallery extends ImageComponent {
             newImage.key = image.key;
             newState.images[this.getImageIndex(image)] = newImage;
             this.props.valueLink.requestChange(state.images);
+        }, (apiResponse, failedImage, jobId) => {
+            if (apiResponse.isAborted()) {
+                const state = this.state;
+                state.images.splice(_.findIndex(state.images, {jobId}), 1);
+                this.setState({images: state.images});
+            }
         });
 
+        state.images.push(image);
         this.setState({images: state.images, cropImage: null});
+    }
+
+    cancelUpload(image){
+        if(!this.uploader.isInProgress(image.jobId)){
+            const state = this.state;
+            state.images.splice(_.findIndex(state.images, {jobId: image.jobId}), 1);
+            this.setState({images: state.images});
+        }
+        this.uploader.abort(image.jobId);
     }
 
     applyCropping(newImage) {
@@ -328,6 +344,7 @@ Gallery.defaultProps = {
                                     this.deleteImage(item, index)
                                 }
                             },
+                            onCancelUpload: () => this.cancelUpload(item),
                             onDragStart: this.onImageDragStart,
                             onDragEnd: this.onImageDragEnd,
                             onDragOver: this.onImageDragOver
