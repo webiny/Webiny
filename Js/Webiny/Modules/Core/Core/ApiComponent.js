@@ -16,6 +16,7 @@ class ApiComponent {
             ];
 
             const config = _.pick(context.props, ['httpMethod', 'url', 'body', 'defaultBody']);
+
             const verifiedQuery = {};
             _.each(context.props.query || {}, (v, k) => {
                 if (apiQuery.indexOf(k) > -1) {
@@ -24,7 +25,6 @@ class ApiComponent {
                     verifiedQuery[k] = v;
                 }
             });
-
             config.query = verifiedQuery;
 
             const verifiedDefaultQuery = {};
@@ -35,15 +35,20 @@ class ApiComponent {
                     verifiedDefaultQuery[k] = v;
                 }
             });
-
             config.defaultQuery = verifiedDefaultQuery;
-            _.each(apiQuery, v => config['_' + v] = context.props[v]);
 
-            //console.log("CONFIG", config);
+            _.each(apiQuery, v => {
+                if (_.has(context.props, v)) {
+                    config.query['_' + v] = context.props[v];
+                }
+            });
 
-            // In case any of these query params are set through props, assign them to query params (we only want these for initial Endpoint setup)
-            const query = ['_fields', '_page', '_perPage', '_sort', '_searchFields', '_searchQuery', '_searchOperator', '_fieldsDepth'];
-            _.merge(config.query, _.pick(config, query));
+            // _fields must be in the defaultQuery
+            if (_.has(config.query, '_fields')) {
+                config.defaultQuery['_fields'] = config.query._fields;
+                delete config.query._fields;
+            }
+
             context.api = _.isFunction(context.props.api) ? context.props.api.call(context, context) : new ApiEndpoint(context.props.api, config);
         }
     }

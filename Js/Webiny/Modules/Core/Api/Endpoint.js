@@ -4,6 +4,7 @@ class Endpoint extends Base {
 
     constructor(baseUrl, config = {}) {
         super(baseUrl);
+        console.info('%c[New Endpoint]: ' + baseUrl, 'color: #1918DE; font-weight: bold', config);
         // URL is a relative part of request, containing entity/service action
         this.url = config.url || '/';
         // GET, POST, PATCH, PUT, DELETE, HEAD
@@ -52,14 +53,14 @@ class Endpoint extends Base {
     }
 
     getRequestQuery(query = null) {
-        return _.merge({}, this.defaultQuery, query || this.query);
+        return _.omitBy(_.merge({}, this.defaultQuery, query || this.query), value => _.isNull(value) || _.isUndefined(value));
     }
 
     getRequestBody(body = null) {
         return _.merge({}, this.defaultBody, body || this.body);
     }
 
-    get(url = '', query = {}, config = {}) {
+    get(url = '', query = null, config = {}) {
         return super.get(url, this.getRequestQuery(query), config);
     }
 
@@ -71,15 +72,15 @@ class Endpoint extends Base {
         return super.head(url, config);
     }
 
-    post(url = '', body = {}, query = {}, config = {}) {
+    post(url = '', body = null, query = null, config = {}) {
         return super.post(url, this.getRequestBody(body), this.getRequestQuery(query), config);
     }
 
-    patch(url = '', body = {}, query = {}, config = {}) {
+    patch(url = '', body = null, query = null, config = {}) {
         return super.patch(url, this.getRequestBody(body), this.getRequestQuery(query), config);
     }
 
-    put(url = '', body = {}, query = {}, config = {}) {
+    put(url = '', body = null, query = null, config = {}) {
         return super.put(url, this.getRequestBody(body), this.getRequestQuery(query), config);
     }
 
