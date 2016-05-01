@@ -19,10 +19,10 @@ class FilesAttribute extends One2ManyAttribute
     /**
      * @inheritDoc
      */
-    public function __construct($attribute, EntityAbstract $entity)
+    public function __construct()
     {
-        parent::__construct($attribute, $entity, 'ref');
-        $this->setEntity('\Apps\Core\Php\Entities\File');
+        parent::__construct(null, null, 'ref');
+        $this->setEntity('\Apps\Core\Php\Entities\File')->setSorter('order');
     }
 
 }

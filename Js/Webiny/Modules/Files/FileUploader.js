@@ -41,9 +41,9 @@ class FileUploader {
         };
 
         if (image.id) {
-            this.request = this.api.patch(image.id, image, {}, {progress: progressHandler}).then(uploadDone);
+            this.request = this.api.setBody(image).execute('PATCH', image.id, null, {}, {progress: progressHandler}).then(uploadDone);
         } else {
-            this.request = this.api.post('', image, {}, {progress: progressHandler}).then(uploadDone);
+            this.request = this.api.setBody(image).execute('POST', '/', null, {}, {progress: progressHandler}).then(uploadDone);
         }
     }
 }

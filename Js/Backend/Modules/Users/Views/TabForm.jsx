@@ -7,10 +7,13 @@ import AddCreditsModal from './AddCreditsModal';
 
 class Form extends Webiny.Ui.View {
 
-    render() {
+}
+
+Form.defaultProps = {
+    renderer() {
         const containerProps = {
             api: '/entities/core/users',
-            fields: 'id,firstName,lastName,email,userGroups,settings,enabled,avatar',
+            fields: 'id,firstName,lastName,email,userGroups,settings,enabled,avatar,gallery',
             title: 'Users form',
             connectToRouter: true,
             onSubmitSuccess: () => {
@@ -51,18 +54,6 @@ class Form extends Webiny.Ui.View {
                                         <Ui.Form.Form layout={false} onInvalid={this.ui('tabs:selectTab', 0)}>
                                             <fields>
                                                 <Ui.Grid.Row>
-                                                    <Ui.Files.Avatar name="avatar"
-                                                        cropper={{
-                                                            title: 'Crop your avatar',
-                                                            config: {
-                                                                aspectRatio: 1,
-                                                                autoCropArea: 1,
-                                                                guides: false,
-                                                                strict: true,
-                                                                width: 400,
-                                                                height: 400,
-                                                                cropBoxResizable: false
-                                                            }}}/>
                                                     <Ui.Grid.Col all={6}>
                                                         <Ui.Input label="First name" name="firstName" validate="required"/>
                                                     </Ui.Grid.Col>
@@ -70,7 +61,9 @@ class Form extends Webiny.Ui.View {
                                                         <Ui.Input label="Last name" name="lastName" validate="required"/>
                                                     </Ui.Grid.Col>
                                                     <Ui.Grid.Col all={12}>
-                                                        <Ui.Input label="Email" name="email" validate="required,email"
+                                                        <Ui.Input label="Email"
+                                                                  name="email"
+                                                                  validate="required,email"
                                                                   description="Your email"/>
                                                     </Ui.Grid.Col>
                                                     <Ui.Grid.Col all={12}>
@@ -91,8 +84,53 @@ class Form extends Webiny.Ui.View {
                                         </Ui.Form.Form>
                                     </Ui.Tabs.Tab>
                                     <Ui.Tabs.Tab label="Files" onClick={this.ui('files:loadData')}>
+                                        <Ui.Form.Form layout={false}>
+                                            <fields>
+                                                <Ui.Files.Avatar name="avatar"
+                                                                 cropper={{
+                                                                title: 'Crop your avatar',
+                                                                config: {
+                                                                    aspectRatio: 1,
+                                                                    autoCropArea: 1,
+                                                                    guides: false,
+                                                                    strict: true,
+                                                                    width: 400,
+                                                                    height: 400,
+                                                                    cropBoxResizable: false
+                                                                }}}/>
+                                                <Ui.Files.Gallery
+                                                    defaultBody={{ref: Webiny.Router.getParams('id')}}
+                                                    name="gallery"
+                                                    newCropper={{
+                                                         title: 'Crop your new image',
+                                                         action: 'Upload image',
+                                                         config: {
+                                                             closeOnClick: false,
+                                                             autoCropArea: 0.7,
+                                                             guides: false,
+                                                             strict: true,
+                                                             mouseWheelZoom: false,
+                                                             touchDragZoom: false
+                                                         }
+                                                         }}
+                                                    editCropper={{
+                                                         title: 'Edit your image',
+                                                         action: 'Save changes',
+                                                         config: {
+                                                             closeOnClick: true,
+                                                             autoCropArea: 1,
+                                                             guides: false,
+                                                             strict: true,
+                                                             mouseWheelZoom: false,
+                                                             touchDragZoom: false
+                                                         }
+                                                     }}/>
+                                            </fields>
+                                        </Ui.Form.Form>
+
+                                        <h2>Files list</h2>
                                         <Ui.List.ApiContainer ui="files" autoLoad={false} api="/entities/core/files"
-                                                              fields="id,name,type,size">
+                                                              fields="id,name,type,size" perPage={3}>
                                             <Table.Table>
                                                 <Table.Row>
                                                     <Table.Field name="name" align="left" label="Name"/>
@@ -115,6 +153,6 @@ class Form extends Webiny.Ui.View {
             </Webiny.Builder.View>
         );
     }
-}
+};
 
 export default Form;

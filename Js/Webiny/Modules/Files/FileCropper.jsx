@@ -5,6 +5,7 @@ class FileCropper extends Webiny.Ui.ModalComponent {
 
     constructor(props) {
         super(props);
+        this.initialData = null;
         this.bindMethods('applyCropping');
     }
 
@@ -19,7 +20,10 @@ class FileCropper extends Webiny.Ui.ModalComponent {
             };
         }
 
-        model.src = this.cropper.cropper('getCroppedCanvas', options).toDataURL();
+        if (!_.isEqual(this.initialData, this.cropper.cropper('getData'))) {
+            model.src = this.cropper.cropper('getCroppedCanvas', options).toDataURL();
+        }
+
         this.props.onCrop(model);
     }
 
@@ -32,7 +36,27 @@ class FileCropper extends Webiny.Ui.ModalComponent {
         this.show();
     }
 
-    render() {
+    componentDidUpdate(prevProps) {
+        super.componentDidUpdate();
+        if (!prevProps.image && this.props.image) {
+            return this.show();
+        }
+
+        if (prevProps.image && !this.props.image) {
+            return this.hide();
+        }
+    }
+}
+
+FileCropper.defaultProps = {
+    config: {},
+    title: 'Crop image',
+    action: 'Apply cropping',
+    closeOnClick: false,
+    onCrop: _.noop,
+    onShown: _.noop,
+    onHidden: _.noop,
+    renderer() {
         const props = this.props;
 
         var modalProps = {
@@ -50,6 +74,7 @@ class FileCropper extends Webiny.Ui.ModalComponent {
                             heigt: data.height
                         });
                     }
+                    this.initialData = this.cropper.cropper('getData');
                 });
             },
             onHidden: () => {
@@ -62,7 +87,7 @@ class FileCropper extends Webiny.Ui.ModalComponent {
         };
 
         let cacheBust = '';
-        if (props.image.modifiedOn && props.image.src.indexOf('data:') == -1) {
+        if (props.image && props.image.modifiedOn && props.image.src.indexOf('data:') == -1) {
             cacheBust = '?ts=' + moment(props.image.modifiedOn).format('X');
         }
 
@@ -71,8 +96,8 @@ class FileCropper extends Webiny.Ui.ModalComponent {
                 <Ui.Modal.Header title={props.title}/>
                 <Ui.Modal.Body>
                     {props.children}
-                    <div className="col-xs-12">
-                        <img className="img-cropper" width="100%" src={props.image.src+cacheBust}/>
+                    <div className="col-xs-12 no-padding">
+                        <img className="img-cropper" width="100%" src={props.image && props.image.src+cacheBust}/>
                     </div>
                     <div className="clearfix"></div>
                 </Ui.Modal.Body>
@@ -83,16 +108,6 @@ class FileCropper extends Webiny.Ui.ModalComponent {
             </Ui.Modal.Dialog>
         );
     }
-}
-
-FileCropper.defaultProps = {
-    config: {},
-    title: 'Crop image',
-    action: 'Apply cropping',
-    closeOnClick: false,
-    onCrop: _.noop,
-    onShown: _.noop,
-    onHidden: _.noop
 };
 
 /**

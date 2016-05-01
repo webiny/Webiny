@@ -11,6 +11,8 @@ class Dialog extends Webiny.Ui.Component {
             isShown: false
         };
 
+        this.clickStartedOnBackdrop = false;
+
         this.bindMethods('show,hide,bindHandlers,unbindHandlers,prepareChildren,prepareChild');
     }
 
@@ -35,13 +37,16 @@ class Dialog extends Webiny.Ui.Component {
             if (e.keyCode === 27) {
                 this.hide();
             }
-        }).on('click.modal', '.modal', e => {
+        }).on('mousedown.modal', '.modal', e => {
             // Catch backdrop click
             if ($(e.target).hasClass('modal')) {
-                if (this.props.closeOnClick) {
-                    this.hide();
-                }
+                this.clickStartedOnBackdrop = true;
             }
+        }).on('click.modal', '.modal', () => {
+            if (this.clickStartedOnBackdrop && this.props.closeOnClick) {
+                this.hide();
+            }
+            this.clickStartedOnBackdrop = false;
         });
     }
 

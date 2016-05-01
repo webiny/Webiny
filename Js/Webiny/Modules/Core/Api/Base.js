@@ -12,35 +12,31 @@ function sanitize(string) {
 class Base {
 
 	constructor(url) {
-		this.url = url.toLowerCase();
+		this.baseUrl = url.toLowerCase();
 	}
 
-    setUrl(url) {
-        this.url = url;
-    }
-
-	get(action = '', data = {}, config = {}) {
-		return Http.get(_apiUrl + this.url + '/' + sanitize(action), data, config).then(handleResponse).catch(handleResponse);
+	get(url = '', body = {}, config = {}) {
+		return Http.get(_apiUrl + this.baseUrl + '/' + sanitize(url), body, config).then(handleResponse).catch(handleResponse);
 	}
 
-	delete(action = '', config = {}) {
-        return Http.delete(_apiUrl + this.url + '/' + sanitize(action), config).then(handleResponse).catch(handleResponse);
+	delete(url = '', config = {}) {
+        return Http.delete(_apiUrl + this.baseUrl + '/' + sanitize(url), config).then(handleResponse).catch(handleResponse);
 	}
 
-	head(action = '', config = {}) {
-		return Http.head(_apiUrl + this.url + '/' + sanitize(action), config).then(handleResponse).catch(handleResponse);
+	head(url = '', config = {}) {
+		return Http.head(_apiUrl + this.baseUrl + '/' + sanitize(url), config).then(handleResponse).catch(handleResponse);
 	}
 
-	post(action = '', data = {}, params = {}, config = {}) {
-        return Http.post(_apiUrl + this.url + '/' + sanitize(action), data, params, config).then(handleResponse).catch(handleResponse);
+	post(url = '', body = {}, query = {}, config = {}) {
+        return Http.post(_apiUrl + this.baseUrl + '/' + sanitize(url), body, query, config).then(handleResponse).catch(handleResponse);
 	}
 
-	put(action = '', data = {}, params = {}, config = {}) {
-		return Http.put(_apiUrl + this.url + '/' + sanitize(action), data, params, config).then(handleResponse).catch(handleResponse);
+	put(url = '', body = {}, query = {}, config = {}) {
+		return Http.put(_apiUrl + this.baseUrl + '/' + sanitize(url), body, query, config).then(handleResponse).catch(handleResponse);
 	}
 
-	patch(action = '', data = {}, params = {}, config = {}) {
-        return Http.patch(_apiUrl + this.url + '/' + sanitize(action), data, params, config).then(handleResponse).catch(handleResponse);
+	patch(url = '', body = {}, query = {}, config = {}) {
+        return Http.patch(_apiUrl + this.baseUrl + '/' + sanitize(url), body, query, config).then(handleResponse).catch(handleResponse);
 	}
 }
 

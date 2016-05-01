@@ -53,7 +53,7 @@ class ApiContainer extends BaseContainer {
     onSubmit(data) {
         this.showLoading();
         if (data.id) {
-            return this.api.execute('PATCH', data.id, data).then(apiResponse => {
+            return this.api.patch(data.id, data).then(apiResponse => {
                 this.hideLoading();
                 const onSubmitSuccess = this.props.onSubmitSuccess;
                 if (!apiResponse.isError() && onSubmitSuccess) {
@@ -69,7 +69,7 @@ class ApiContainer extends BaseContainer {
             });
         }
 
-        return this.api.execute('POST', '/', data).then(apiResponse => {
+        return this.api.post('/', data).then(apiResponse => {
             this.hideLoading();
             const onSubmitSuccess = this.props.onSubmitSuccess;
             if (!apiResponse.isError() && onSubmitSuccess) {

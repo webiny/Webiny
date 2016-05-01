@@ -51,7 +51,7 @@ class ApiContainer extends BaseContainer {
             _searchOperator: this.searchOperator
         });
 
-        return this.api.execute(null, null, null, _.assign({}, this.api.query, query)).then(apiResponse => {
+        return this.api.setQuery(query).execute().then(apiResponse => {
             let data = null;
             if (!apiResponse.isError()) {
                 data = apiResponse.getData();
@@ -83,8 +83,8 @@ class ApiContainer extends BaseContainer {
         return this.api.delete(id).then(this.loadData);
     }
 
-    onRecordExecute(httpMethod, method, body, query) {
-        return this.api.execute(httpMethod, method, body, query);
+    onRecordExecute(httpMethod, url, body = null, query = null, config = {}) {
+        return this.api.execute(httpMethod, url, body, query, config);
     }
 }
 

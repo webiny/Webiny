@@ -30,24 +30,24 @@ class Api
             return false;
         }
 
-        header("Access-Control-Allow-Origin: *");
-        $this->apiEvent = new ApiEvent();
-
-        $apiUrl = $this->apiEvent->getUrl();
-        if ($apiUrl->startsWith('/discover')) {
-            $app = $apiUrl->replace('/discover/', '')->pascalCase()->val();
-            $appParser = new AppParser($app);
-            $docs = new Postman();
-
-            return new ApiRawResponse($docs->generate($appParser));
-        }
-
-        $events = [
-            'Core.Api.Before',
-            'Core.Api.Request'
-        ];
-
         try {
+            header("Access-Control-Allow-Origin: *");
+            $this->apiEvent = new ApiEvent();
+
+            $apiUrl = $this->apiEvent->getUrl();
+            if ($apiUrl->startsWith('/discover')) {
+                $app = $apiUrl->replace('/discover/', '')->pascalCase()->val();
+                $appParser = new AppParser($app);
+                $docs = new Postman();
+
+                return new ApiRawResponse($docs->generate($appParser));
+            }
+
+            $events = [
+                'Core.Api.Before',
+                'Core.Api.Request'
+            ];
+
             foreach ($events as $event) {
                 $response = $this->wEvents()->fire($event, $this->apiEvent, $this->apiResponse, 1);
                 if ($response) {
