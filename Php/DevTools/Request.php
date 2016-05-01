@@ -111,11 +111,6 @@ class Request extends \Webiny\Component\Http\Request
         return static::restGetFields($default);
     }
 
-    public static function getFieldsDepth($default = 1)
-    {
-        return static::restGetFieldsDepth($default);
-    }
-
     public static function getFilter($name, $default = null)
     {
         return static::restGetFilter($name, $default);

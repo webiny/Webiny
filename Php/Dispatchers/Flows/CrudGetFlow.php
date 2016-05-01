@@ -29,7 +29,7 @@ class CrudGetFlow extends AbstractFlow
         try {
             $entity = $entity->findById($id);
             if ($entity) {
-                return $entity->toArray($this->wRequest()->getFields(), $this->wRequest()->getFieldsDepth());
+                return $entity->toArray($this->wRequest()->getFields());
             }
         } catch (\MongoException $e) {
             throw new \Exception('Database error', $e->getMessage(), $e->getCode(), 400);
