@@ -39,7 +39,7 @@ class ApiComponent {
             config.defaultQuery = verifiedDefaultQuery;
             _.each(apiQuery, v => config['_' + v] = context.props[v]);
 
-            console.log("CONFIG", config);
+            //console.log("CONFIG", config);
 
             // In case any of these query params are set through props, assign them to query params (we only want these for initial Endpoint setup)
             const query = ['_fields', '_page', '_perPage', '_sort', '_searchFields', '_searchQuery', '_searchOperator', '_fieldsDepth'];
