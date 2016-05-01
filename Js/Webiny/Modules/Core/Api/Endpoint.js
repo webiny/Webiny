@@ -60,31 +60,31 @@ class Endpoint extends Base {
         return _.merge({}, this.defaultBody, body || this.body);
     }
 
-    get(url = '', query = null, config = {}) {
-        return super.get(url, this.getRequestQuery(query), config);
+    get(url = '', query = null) {
+        return super.get(url, this.getRequestQuery(query), this.config);
     }
 
-    delete(url = '', config = {}) {
-        return super.delete(url, config);
+    delete(url = '') {
+        return super.delete(url, this.config);
     }
 
-    head(url = '', config = {}) {
-        return super.head(url, config);
+    head(url = '') {
+        return super.head(url, this.config);
     }
 
-    post(url = '', body = null, query = null, config = {}) {
-        return super.post(url, this.getRequestBody(body), this.getRequestQuery(query), config);
+    post(url = '', body = null, query = null) {
+        return super.post(url, this.getRequestBody(body), this.getRequestQuery(query), this.config);
     }
 
-    patch(url = '', body = null, query = null, config = {}) {
-        return super.patch(url, this.getRequestBody(body), this.getRequestQuery(query), config);
+    patch(url = '', body = null, query = null) {
+        return super.patch(url, this.getRequestBody(body), this.getRequestQuery(query), this.config);
     }
 
-    put(url = '', body = null, query = null, config = {}) {
-        return super.put(url, this.getRequestBody(body), this.getRequestQuery(query), config);
+    put(url = '', body = null, query = null) {
+        return super.put(url, this.getRequestBody(body), this.getRequestQuery(query), this.config);
     }
 
-    execute(httpMethod = null, url = null, body = null, query = null, config = {}) {
+    execute(httpMethod = null, url = null, body = null, query = null) {
         if (!url) {
             url = this.url || '/';
         }
@@ -98,22 +98,22 @@ class Endpoint extends Base {
         let request = null;
         switch (_.lowerCase(httpMethod)) {
             case 'get':
-                request = this.get(url, query, config);
+                request = this.get(url, query);
                 break;
             case 'post':
-                request = this.post(url, body, query, config);
+                request = this.post(url, body, query);
                 break;
             case 'patch':
-                request = this.patch(url, body, query, config);
+                request = this.patch(url, body, query);
                 break;
             case 'put':
-                request = this.put(url, body, query, config);
+                request = this.put(url, body, query);
                 break;
             case 'delete':
-                request = this.delete(url, config);
+                request = this.delete(url);
                 break;
             case 'head':
-                request = this.head(url, config);
+                request = this.head(url);
                 break;
             default:
                 throw new Error('Unable to execute url: ' + httpMethod + ' ' + url);

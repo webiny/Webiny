@@ -8,8 +8,12 @@ class ApiResponse {
         this.data = httpResponse.getData();
     }
 
+    isAborted() {
+        return this.response.statusText === 'abort';
+    }
+
     isError() {
-        return 'code' in this.data;
+        return this.data && 'code' in this.data;
     }
 
     isSuccess() {

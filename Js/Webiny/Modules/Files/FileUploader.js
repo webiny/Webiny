@@ -11,8 +11,21 @@ class FileUploader {
         if (!progress) {
             progress = _.noop;
         }
-        this.pending.push({file, progress, done, error});
+        const id = Webiny.Tools.createUID();
+        this.pending.push({id, file, progress, done, error});
         this.process();
+        return id;
+    }
+
+    abort(id) {
+        if (this.inProgress && this.inProgress.id === id) {
+            this.request.abort();
+        }
+        this.pending.splice(_.findIndex(this.pending, {id}), 1);
+    }
+
+    isInProgress(id) {
+        return this.inProgress && this.inProgress.id === id;
     }
 
     process() {
@@ -31,19 +44,20 @@ class FileUploader {
         const error = this.inProgress.error || _.noop;
 
         const uploadDone = (apiResponse) => {
+            const jobId = this.inProgress.id;
             this.inProgress = null;
-            if (!apiResponse.isError()) {
+            if (!apiResponse.isError() && !apiResponse.isAborted()) {
                 done(apiResponse.getData());
             } else {
-                error(apiResponse);
+                error(apiResponse, image, jobId);
             }
             this.process();
         };
 
         if (image.id) {
-            this.request = this.api.setBody(image).execute('PATCH', image.id, null, {}, {progress: progressHandler}).then(uploadDone);
+            this.request = this.api.setBody(image).setConfig({progress: progressHandler}).patch(image.id).then(uploadDone);
         } else {
-            this.request = this.api.setBody(image).execute('POST', '/', null, {}, {progress: progressHandler}).then(uploadDone);
+            this.request = this.api.setBody(image).setConfig({progress: progressHandler}).post('/').then(uploadDone);
         }
     }
 }
