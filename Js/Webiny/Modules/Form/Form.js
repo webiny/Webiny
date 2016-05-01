@@ -61,7 +61,7 @@ class Form extends Webiny.Ui.Component {
 
         React.Children.map(children, child => {
             if (child.type === 'fields') {
-                const fields = _.isFunction(child.props.children) ? child.props.children(this.state.model, this) : child.props.children;
+                const fields = _.isFunction(child.props.children) ? child.props.children.call(this, this.state.model, this) : child.props.children;
                 this.fields = this.registerInputs(fields);
             }
 

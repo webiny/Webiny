@@ -105,8 +105,8 @@ class Gallery extends ImageComponent {
         this.setState({images: state.images, cropImage: null});
     }
 
-    cancelUpload(image){
-        if(!this.uploader.isInProgress(image.jobId)){
+    cancelUpload(image) {
+        if (!this.uploader.isInProgress(image.jobId)) {
             const state = this.state;
             state.images.splice(_.findIndex(state.images, {jobId: image.jobId}), 1);
             this.setState({images: state.images});
@@ -199,7 +199,7 @@ class Gallery extends ImageComponent {
     }
 
     onImageDragStart(e) {
-        this.dragged = $(e.currentTarget).closest('.file')[0];
+        this.dragged = $(e.currentTarget).closest('[data-role="image"]')[0];
         e.dataTransfer.setDragImage(this.dragged, 10, 50);
         // Firefox requires calling dataTransfer.setData for the drag to properly work
         e.dataTransfer.setData('text/html', this.dragged);
@@ -238,7 +238,7 @@ class Gallery extends ImageComponent {
         }
         e.preventDefault();
         this.dragged.style.display = 'none';
-        const over = $(e.target).closest('.file')[0];
+        const over = $(e.target).closest('[data-role="image"]')[0];
         if (!over || $(over).hasClass('placeholder')) {
             return;
         }
@@ -259,7 +259,7 @@ class Gallery extends ImageComponent {
         }
     }
 
-    getCropper() {
+    getCropper(children = null) {
         let cropper = this.props.newCropper;
         if (this.state.cropImage && this.state.cropImage.id) {
             cropper = this.props.editCropper;
@@ -272,7 +272,7 @@ class Gallery extends ImageComponent {
                 onCrop={this.applyCropping}
                 config={cropper.config}
                 image={this.state.cropImage}>
-                <Ui.Input label="Title" placeholder="Type in an image title" valueLink={this.bindTo('cropImage.title')}/>
+                {children}
             </Ui.Files.FileCropper>
         );
     }
@@ -358,7 +358,9 @@ Gallery.defaultProps = {
                         ref="reader"
                         sizeLimit={this.props.sizeLimit}
                         onChange={this.filesChanged}/>
-                    {this.getCropper()}
+                    {this.getCropper(
+                        <Ui.Input label="Title" placeholder="Type in an image title" valueLink={this.bindTo('cropImage.title')}/>
+                    )}
                 </div>
                 <Ui.Modal.Confirmation {...confirmationProps}/>
             </div>
