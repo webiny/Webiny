@@ -5,9 +5,13 @@ class RadioGroup extends BaseRadioGroup {
 }
 
 RadioGroup.defaultProps = {
+    disabledClass: 'disabled',
     renderer() {
         const items = this.getOptions();
-        const classes = this.classSet({'form-group': true, disabled: this.isDisabled()});
+        const classes = {'form-group': true};
+        if (this.isDisabled()) {
+            classes[this.props.disabledClass] = true;
+        }
 
         let validationMessage = null;
         if (this.state.isValid === false) {
