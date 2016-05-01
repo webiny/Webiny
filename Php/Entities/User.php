@@ -4,6 +4,7 @@ namespace Apps\Core\Php\Entities;
 use Apps\Core\Php\DevTools\Authorization\AuthorizationTrait;
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Entity\Attributes\FileAttribute;
+use Apps\Core\Php\DevTools\Entity\Attributes\FilesAttribute;
 use Apps\Core\Php\DevTools\Entity\EntityAbstract;
 use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\EntityCollection;
@@ -65,6 +66,7 @@ class User extends EntityAbstract
         ])->setToArrayDefault();
 
         $this->attr('avatar')->smart(new FileAttribute())->setTags('user', 'avatar');
+        $this->attr('gallery')->smart(new FilesAttribute());
         $this->attr('gravatar')->dynamic(function () {
             return md5($this->email);
         });

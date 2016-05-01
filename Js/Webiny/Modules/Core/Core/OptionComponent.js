@@ -102,7 +102,7 @@ class OptionComponent extends Component {
 
             return this.api.execute().then(apiResponse => {
                 let data = apiResponse.getData();
-                if (_.isPlainObject(data) && this.api.method === '/') {
+                if (_.isPlainObject(data) && this.api.url === '/') {
                     data = data.list;
                 }
 

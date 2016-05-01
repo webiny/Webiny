@@ -1,41 +1,33 @@
 import Base from './Base';
 
-// TODO: add TTL to cached results
-/*
- const lastUsedSource = {};
- const lastResult = {};
-
- function hash(string) {
- let hash = 0, i, chr, len;
- if (string.length === 0) return hash;
- for (i = 0, len = string.length; i < len; i++) {
- chr = string.charCodeAt(i);
- hash = ((hash << 5) - hash) + chr;
- hash |= 0; // Convert to 32bit integer
- }
- return hash;
- }
- */
-
 class Endpoint extends Base {
 
-    constructor(url, config = {}) {
-        super(url);
-        this.method = config.method || '/';
+    constructor(baseUrl, config = {}) {
+        super(baseUrl);
+        // URL is a relative part of request, containing entity/service action
+        this.url = config.url || '/';
+        // GET, POST, PATCH, PUT, DELETE, HEAD
         this.httpMethod = config.httpMethod || 'GET';
+        // initial query params that will be sent with every request until they is changed by component, using setQuery() method or via request arguments
         this.query = config.query || {};
-        this.body = {};
-        if (_.indexOf(['PATCH', 'POST'], this.httpMethod) > -1) {
-            this.body = config.body || {};
-        }
+        // defaultQuery are query params that will ALWAYS be appended to all requests using this Endpoint
+        // NOTE: these can not be changed after initialization
+        this.defaultQuery = config.defaultQuery || {};
+        // initial body payload that will be sent with every request until it is changed by component, using setBody() method or via request arguments
+        this.body = config.body || {};
+        // defaultBody are body params that will ALWAYS be appended to all requests containing body using this Endpoint
+        // NOTE: these can not be changed after initialization
+        this.defaultBody = config.defaultBody || {};
+        // config contains optional request parameters, like `progress` handler
+        this.config = {};
 
-        // Set additional parameters
-        const query = ['_fields', '_page', '_perPage', '_sort', '_searchFields', '_searchQuery', '_searchOperator', '_fieldsDepth'];
-        _.assign(this.query, _.pick(config, query));
+        if (_.indexOf(['PATCH', 'POST'], this.httpMethod) === -1) {
+            this.body = null;
+        }
     }
 
-    setMethod(method) {
-        this.method = method;
+    setUrl(url) {
+        this.url = url;
         return this;
     }
 
@@ -49,56 +41,81 @@ class Endpoint extends Base {
         return this;
     }
 
-    setQuery(query, merge = true) {
-        if (merge) {
-            this.query = _.assign({}, this.query, query);
-        } else {
-            this.query = query;
-        }
+    setQuery(query) {
+        this.query = query;
         return this;
     }
 
-    execute(httpMethod = null, method = null, body = null, query = null) {
-        if (!method) {
-            method = this.method || '/';
+    setConfig(config) {
+        this.config = config;
+        return this;
+    }
+
+    getRequestQuery(query = null) {
+        return _.merge({}, this.defaultQuery, query || this.query);
+    }
+
+    getRequestBody(body = null) {
+        return _.merge({}, this.defaultBody, body || this.body);
+    }
+
+    get(url = '', query = {}, config = {}) {
+        return super.get(url, this.getRequestQuery(query), config);
+    }
+
+    delete(url = '', config = {}) {
+        return super.delete(url, config);
+    }
+
+    head(url = '', config = {}) {
+        return super.head(url, config);
+    }
+
+    post(url = '', body = {}, query = {}, config = {}) {
+        return super.post(url, this.getRequestBody(body), this.getRequestQuery(query), config);
+    }
+
+    patch(url = '', body = {}, query = {}, config = {}) {
+        return super.patch(url, this.getRequestBody(body), this.getRequestQuery(query), config);
+    }
+
+    put(url = '', body = {}, query = {}, config = {}) {
+        return super.put(url, this.getRequestBody(body), this.getRequestQuery(query), config);
+    }
+
+    execute(httpMethod = null, url = null, body = null, query = null, config = {}) {
+        if (!url) {
+            url = this.url || '/';
         }
 
-        method = method.replace(/\/\/+/g, '/');
+        url = url.replace(/\/\/+/g, '/');
 
         if (!httpMethod) {
             httpMethod = this.httpMethod;
         }
 
-        if (!body) {
-            body = this.body;
-        }
-
-        if (!query) {
-            query = this.query;
-        }
-
         let request = null;
         switch (_.lowerCase(httpMethod)) {
             case 'get':
-                request = this.get(method, query);
+                request = this.get(url, query, config);
                 break;
             case 'post':
-                request = this.post(method, body, query);
+                request = this.post(url, body, query, config);
                 break;
             case 'patch':
-                request = this.patch(method, body, query);
+                request = this.patch(url, body, query, config);
                 break;
             case 'put':
-                request = this.put(method, body, query);
+                request = this.put(url, body, query, config);
                 break;
             case 'delete':
-                request = this.delete(method);
+                request = this.delete(url, config);
                 break;
             case 'head':
-                request = this.head(method);
+                request = this.head(url, config);
                 break;
             default:
-                throw new Error('Unable to execute method: ' + httpMethod + ' ' + method);
+                throw new Error('Unable to execute url: ' + httpMethod + ' ' + url);
         }
 
         return request;

@@ -20,6 +20,13 @@ class File extends EntityAbstract
 
     protected static $entityCollection = 'Files';
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->getAttribute('modifiedOn')->setToArrayDefault();
+    }
+
+
     protected static function entityIndexes()
     {
         return [

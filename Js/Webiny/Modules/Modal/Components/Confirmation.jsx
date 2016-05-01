@@ -6,6 +6,7 @@ class Confirmation extends Webiny.Ui.ModalComponent {
     constructor(props) {
         super(props);
 
+        this.data = [];
         this.bindMethods('renderContent,onCancel,onConfirm');
     }
 
@@ -13,13 +14,14 @@ class Confirmation extends Webiny.Ui.ModalComponent {
         if (_.isFunction(this.props.onCancel)) {
             return this.props.onCancel(this);
         }
-
         this.hide();
     }
 
     onConfirm() {
         if (_.isFunction(this.props.onConfirm)) {
-            this.props.onConfirm(this);
+            const data = _.clone(this.data);
+            data.push(this);
+            this.props.onConfirm(...data);
         }
     }
 
@@ -28,8 +30,12 @@ class Confirmation extends Webiny.Ui.ModalComponent {
         if (!content) {
             content = this.props.children;
         }
-
         return content;
+    }
+
+    setData(...data) {
+        this.data = data;
+        return this;
     }
 }
 
