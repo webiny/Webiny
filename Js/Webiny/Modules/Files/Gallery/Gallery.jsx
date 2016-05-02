@@ -264,6 +264,11 @@ class Gallery extends ImageComponent {
         if (this.state.cropImage && this.state.cropImage.id) {
             cropper = this.props.editCropper;
         }
+
+        if (!cropper) {
+            return null;
+        }
+
         return (
             <Ui.Files.FileCropper
                 title={cropper.title}

@@ -56,7 +56,7 @@ class SearchInput extends Webiny.Ui.FormComponent {
 
         switch (this.key) {
             case 'Backspace':
-                if (_.isEmpty(this.state.search) || this.props.valueLink.value) {
+                if (_.isEmpty(this.state.search) || _.get(this.props, 'valueLink.value')) {
                     this.reset();
                 } else {
                     this.inputChanged(e);
@@ -79,6 +79,9 @@ class SearchInput extends Webiny.Ui.FormComponent {
             case 'ArrowLeft':
             case 'ArrowRight':
                 break;
+            case 'Tab':
+                this.onBlur();
+                break;
             default:
                 this.inputChanged(e);
                 break;
@@ -87,7 +90,7 @@ class SearchInput extends Webiny.Ui.FormComponent {
 
     onBlur() {
         const state = {options: []};
-        if (!this.props.valueLink.value) {
+        if (!_.get(this.props, 'valueLink.value')) {
             state['search'] = '';
             state['selected'] = null;
         }
@@ -95,13 +98,18 @@ class SearchInput extends Webiny.Ui.FormComponent {
     }
 
     selectItem(item) {
+        const search = this.props.valueLink ? this.renderPreview(item) : '';
         this.setState({
-            search: this.renderPreview(item),
+            selected: null,
+            search,
             options: []
         });
-        this.props.valueLink.requestChange(this.props.useDataAsValue ? item : item[this.props.valueAttr]);
+
+        if (this.props.valueLink) {
+            this.props.valueLink.requestChange(this.props.useDataAsValue ? item : item[this.props.valueAttr]);
+            setTimeout(this.validate, 10);
+        }
         this.props.onSelect(item);
-        setTimeout(this.validate, 10);
     }
 
     selectNext() {
@@ -160,7 +168,11 @@ class SearchInput extends Webiny.Ui.FormComponent {
             search: '',
             options: []
         });
-        this.props.valueLink.requestChange(null);
+
+        if (this.props.valueLink) {
+            this.props.valueLink.requestChange(null);
+        }
+
         this.props.onReset();
     }
 
