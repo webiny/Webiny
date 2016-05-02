@@ -136,7 +136,7 @@ class OptionComponent extends Component {
         if (props.optionRenderer) {
             return props.optionRenderer(option);
         } else if (_.isPlainObject(option)) {
-            return option[props.textAttr];
+            return _.get(option, props.textAttr);
         } else if (_.isString(option)) {
             return option;
         }
