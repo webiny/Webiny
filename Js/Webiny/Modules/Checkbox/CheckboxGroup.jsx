@@ -5,12 +5,17 @@ class CheckboxGroup extends BaseCheckboxGroup {
 }
 
 CheckboxGroup.defaultProps = _.merge({}, BaseCheckboxGroup.defaultProps, {
+    disabledClass: 'disabled',
     renderer() {
         const cssConfig = {
             'form-group': true,
             'error': this.state.isValid === false,
             'success': this.state.isValid === true
         };
+
+        if (this.isDisabled()) {
+            cssConfig[this.props.disabledClass] = true;
+        }
 
         let label = null;
         if (this.props.label) {
@@ -23,7 +28,7 @@ CheckboxGroup.defaultProps = _.merge({}, BaseCheckboxGroup.defaultProps, {
         }
 
         return (
-            <div className={this.classSet({disabled: this.isDisabled()}, this.props.className)}>
+            <div className={this.classSet(this.props.className)}>
                 <div className={this.classSet(cssConfig)}>{label}
                     <div className="clearfix"></div>
                     {this.getOptions()}
