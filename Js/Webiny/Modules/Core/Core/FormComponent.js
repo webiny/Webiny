@@ -7,7 +7,8 @@ class FormComponent extends Component {
 
         this.state = {
             isValid: null,
-            validationMessage: null
+            validationMessage: null,
+            validationResults: {}
         };
 
         this.bindMethods('isRequired', 'validate', 'getValue', 'hasValue', 'onChange', 'isDisabled');
@@ -40,8 +41,16 @@ class FormComponent extends Component {
 
     validate() {
         if (this.props.validateInput) {
-            this.props.validateInput(this).then(this.props.onBlur || _.noop);
+            this.props.validateInput(this).then(validationResult => {
+                if (this.props.onBlur) {
+                    this.props.onBlur.call(null, validationResult, this);
+                }
+            });
         }
+    }
+
+    isValid() {
+        return this.state.isValid;
     }
 
     hasValue() {

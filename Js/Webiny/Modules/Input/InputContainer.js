@@ -51,13 +51,18 @@ InputContainer.defaultProps = {
             onKeyDown: this.props.onKeyDown || this.onKeyDown.bind(this)
         };
 
+        let description = this.props.description;
+        if (_.isFunction(description)) {
+            description = description(this);
+        }
+
         return (
             <div className={this.classSet(cssConfig)}>
                 {label}
                 <Webiny.Ui.Components.DelayedValueLink>
                     <Input {...props}/>
                 </Webiny.Ui.Components.DelayedValueLink>
-                <span className="help-block">{this.props.description}</span>
+                <span className="help-block">{description}</span>
                 {validationMessage}
                 {validationIcon}
             </div>

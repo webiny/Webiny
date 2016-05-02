@@ -11,8 +11,7 @@ class ApiComponent {
                 'sort',
                 'searchFields',
                 'searchQuery',
-                'searchOperator',
-                'fieldsDepth'
+                'searchOperator'
             ];
 
             const config = _.pick(context.props, ['httpMethod', 'url', 'body', 'defaultBody']);

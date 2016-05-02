@@ -19,13 +19,14 @@ class Field extends Webiny.Ui.Component {
 }
 
 Field.defaultProps = {
+    default: '-',
     sortedClass: 'sorted',
     alignLeftClass: 'text-left',
     alignRightClass: 'text-right',
     alignCenterClass: 'text-center',
     renderer() {
         return (
-            <td className={this.getTdClasses()}>{_.get(this.props.data, this.props.name)}</td>
+            <td className={this.getTdClasses()}>{_.get(this.props.data, this.props.name, this.props.default)}</td>
         );
     }
 };

@@ -315,12 +315,12 @@ class Form extends Webiny.Ui.Component {
         const hasValidators = Webiny.Tools.keys(validators).length;
         const messages = this.inputs[component.props.name].messages;
         // Validate input
-        return Q(Validator.validate(component.getValue(), validators, this.inputs)).then(() => {
+        return Q(Validator.validate(component.getValue(), validators, this.inputs)).then(validationResults => {
             if (hasValidators) {
                 const isValid = component.getValue() === null ? null : true;
-                component.setState({isValid});
+                component.setState({isValid, validationResults});
             }
-            return component.getValue();
+            return validationResults;
         }).catch(validationError => {
             // Set custom error message if defined
             const validator = validationError.validator;
@@ -331,7 +331,8 @@ class Form extends Webiny.Ui.Component {
             // Set component state to reflect validation error
             component.setState({
                 isValid: false,
-                validationMessage: validationError.message
+                validationMessage: validationError.message,
+                validationResults: false
             });
 
             return false;
@@ -352,8 +353,8 @@ class Form extends Webiny.Ui.Component {
             if (hasValidators && shouldValidate) {
                 if (cmp.state.isValid === false || cmp.state.isValid === null) {
                     chain = chain.then(() => {
-                        return this.validateInput(cmp).then(isValid => {
-                            if (!isValid) {
+                        return this.validateInput(cmp).then(validationResult => {
+                            if (validationResult === false) {
                                 allIsValid = false;
                             }
                             return allIsValid;

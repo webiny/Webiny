@@ -61,16 +61,26 @@ class Validator {
         }
         const _this = this;
         let chain = Q({valid: true});
-        Object.keys(validators).forEach(v => {
-            const args = _.clone(validators[v]);
+        const results = {};
+        Object.keys(validators).forEach(validatorName => {
+            const args = _.clone(validators[validatorName]);
             this.parseArgs(args, formInputs);
             args.unshift(value);
             chain = chain.then(function validationLink() {
-                return Q.when(_this.getValidator(v)(...args)).then(valid => {
-                    if (valid !== true) {
-                        throw new ValidationError(valid, v);
+                let validator = _this.getValidator(validatorName)(...args);
+                // In case it's an instance of Http.Request, attach an error handler to catch validation error
+                // This is required because Http.Request is not a Promise itself, but only a wrapper around it
+                if (validator instanceof Webiny.Http.Request) {
+                    validator = validator.catch(e => e);
+                }
+                return Q.when(validator).then(result => {
+                    if (result instanceof Error) {
+                        throw result;
                     }
-                    return valid;
+                    results[validatorName] = result;
+                    return results;
+                }).catch(e => {
+                    throw new ValidationError(e.message, validatorName, value);
                 });
             });
         });
@@ -99,14 +109,14 @@ formValidator.addValidator('required', (value) => {
     if (!(!value || value === '' || value === 0)) {
         return true;
     }
-    return 'This field is required';
+    throw new ValidationError('This field is required');
 });
 
 formValidator.addValidator('eq', (value, equalTo) => {
     if (!value || value === equalTo) {
         return true;
     }
-    return 'This field must be equal to ' + equalTo;
+    throw new ValidationError('This field must be equal to ' + equalTo);
 });
 
 formValidator.addValidator('minLength', (value, length) => {
@@ -116,7 +126,7 @@ formValidator.addValidator('minLength', (value, length) => {
     if (value.length && value.length >= length) {
         return true;
     }
-    return 'This field requires at least ' + length + ' characters';
+    throw new ValidationError('This field requires at least ' + length + ' characters');
 });
 
 formValidator.addValidator('maxLength', (value, length) => {
@@ -127,14 +137,14 @@ formValidator.addValidator('maxLength', (value, length) => {
     if (value.length && value.length <= length) {
         return true;
     }
-    return 'This field requires ' + length + ' characters at most';
+    throw new ValidationError('This field requires ' + length + ' characters at most');
 });
 
 formValidator.addValidator('gt', (value, min) => {
     if (!value || parseFloat(value) > parseFloat(min)) {
         return true;
     }
-    return 'This field needs to be greater than ' + min;
+    throw new ValidationError('This field needs to be greater than ' + min);
 });
 
 formValidator.addValidator('lt', (value, max) => {
@@ -142,14 +152,14 @@ formValidator.addValidator('lt', (value, max) => {
         return true;
     }
 
-    return 'This field needs to be less than ' + max;
+    throw new ValidationError('This field needs to be less than ' + max)
 });
 
 formValidator.addValidator('gte', (value, min) => {
     if (!value || parseFloat(value) >= parseFloat(min)) {
         return true;
     }
-    return 'This field needs to be greater than or equal to ' + min;
+    throw new ValidationError('This field needs to be greater than or equal to ' + min);
 });
 
 formValidator.addValidator('lte', (value, max) => {
@@ -157,7 +167,7 @@ formValidator.addValidator('lte', (value, max) => {
         return true;
     }
 
-    return 'This field needs to be less than or equal to ' + max;
+    throw new ValidationError('This field needs to be less than or equal to ' + max);
 });
 
 formValidator.addValidator('number', (value) => {
@@ -165,7 +175,7 @@ formValidator.addValidator('number', (value) => {
     if (!value || (re.test(value))) {
         return true;
     }
-    return 'This field needs to be a number';
+    throw new ValidationError('This field needs to be a number');
 });
 
 formValidator.addValidator('integer', (value) => {
@@ -173,7 +183,7 @@ formValidator.addValidator('integer', (value) => {
     if (!value || (re.test(value))) {
         return true;
     }
-    return 'This field needs to be an integer';
+    throw new ValidationError('This field needs to be an integer');
 });
 
 formValidator.addValidator('email', (value) => {
@@ -181,7 +191,7 @@ formValidator.addValidator('email', (value) => {
     if (!value || (value.length && re.test(value))) {
         return true;
     }
-    return 'Please enter a valid email address';
+    throw new ValidationError('Please enter a valid email address');
 });
 
 formValidator.addValidator('password', (value) => {
@@ -191,7 +201,7 @@ formValidator.addValidator('password', (value) => {
 
     const test = value.match(/^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d).*$/);
     if (test === null) {
-        return 'Password must contain at least 8 characters, minimum one letter and one number';
+        throw new ValidationError('Password must contain at least 8 characters, minimum one letter and one number');
     }
     return true;
 });
@@ -200,7 +210,7 @@ formValidator.addValidator('phone', (value) => {
     if (!value || value.match(/^[-+0-9()\s]+$/)) {
         return true;
     }
-    return 'Please enter a valid phone number';
+    throw new ValidationError('Please enter a valid phone number');
 });
 
 
@@ -210,7 +220,7 @@ formValidator.addValidator('url', (value) => {
         return true;
     }
 
-    return 'Please enter a valid URL';
+    throw new ValidationError('Please enter a valid URL');
 });
 
 formValidator.addValidator('creditCard', (value) => {
@@ -219,7 +229,7 @@ formValidator.addValidator('creditCard', (value) => {
     }
 
     if (value.length < 12) {
-        return 'Credit card number too short';
+        throw new ValidationError('Credit card number too short');
     }
 
     if (/[^0-9-\s]+/.test(value)) return 'Credit card number invalid';
@@ -246,7 +256,11 @@ formValidator.addValidator('creditCard', (value) => {
         bEven = !bEven;
     }
 
-    return (nCheck % 10) === 0 ? true : 'Credit card number invalid';
+    if ((nCheck % 10) === 0) {
+        return true;
+    }
+
+    throw new ValidationError('Credit card number invalid');
 });
 
 formValidator.addValidator('creditCardExpiration', (value) => {
@@ -254,7 +268,7 @@ formValidator.addValidator('creditCardExpiration', (value) => {
         return true;
     }
 
-    return 'Please select month and year';
+    throw new ValidationError('Please select month and year');
 });
 
 export default formValidator;
