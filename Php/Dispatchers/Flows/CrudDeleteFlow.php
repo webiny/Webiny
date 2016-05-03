@@ -30,7 +30,7 @@ class CrudDeleteFlow extends AbstractFlow
         $entity = $entity->findById($id);
         if ($entity) {
             try {
-                $entity->delete();
+                //$entity->delete();
             } catch (EntityException $e) {
                 throw new ApiException('Failed to delete entity!', $e->getMessage(), $e->getCode(), 400);
             }

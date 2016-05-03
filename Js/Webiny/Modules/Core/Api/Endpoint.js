@@ -41,7 +41,6 @@ class Endpoint extends Base {
     }
 
     setQuery(query) {
-        console.log("SET QUERY", query);
         this.tmpQuery = _.omitBy(query, v => _.isNull(v) || _.isUndefined(v));
         return this;
     }
@@ -60,7 +59,6 @@ class Endpoint extends Base {
     }
 
     get(url = '', query = null) {
-        console.log("GET", this.getRequestQuery(query));
         return super.get(url, this.getRequestQuery(query), this.config);
     }
 
