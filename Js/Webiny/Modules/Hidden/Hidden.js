@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
 
-class Hidden extends Webiny.Ui.Component {
+class Hidden extends Webiny.Ui.FormComponent {
 }
 
 Hidden.defaultProps = {
