@@ -13,8 +13,8 @@ ModalMultiAction.defaultProps = {
         }
 
         const modalActions = {
-            hide: () => () => {
-                this.refs.dialog.hide();
+            hide: () => {
+                setTimeout(this.refs.dialog.hide)
             }
         };
 

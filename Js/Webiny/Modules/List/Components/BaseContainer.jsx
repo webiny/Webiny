@@ -1,7 +1,4 @@
 import Webiny from 'Webiny';
-import updateAction from './Actions/Update';
-import deleteAction from './Actions/Delete';
-import executeAction from './Actions/Execute';
 const Ui = Webiny.Ui.Components;
 
 class BaseContainer extends Webiny.Ui.Component {
@@ -49,8 +46,8 @@ class BaseContainer extends Webiny.Ui.Component {
             'getSearchQuery',
             'loadData',
             'prepare',
-            'onRecordUpdate',
-            'onRecordDelete',
+            'recordUpdate',
+            'recordDelete',
             'onSelect'
         );
     }
@@ -178,13 +175,15 @@ class BaseContainer extends Webiny.Ui.Component {
     }
 
     /* eslint-disable */
-    onRecordUpdate(id, attributes) {
-        throw new Error('Implement onRecordUpdate method in your list container class!');
+    recordUpdate(id, attributes) {
+        throw new Error('Implement recordUpdate method in your list container class!');
     }
 
-    onRecordDelete(id) {
-        throw new Error('Implement onRecordDelete method in your list container class!');
+    recordDelete(id) {
+        throw new Error('Implement recordDelete method in your list container class!');
     }
+
+    /* eslint-enable */
 
     onSelect(data) {
         this.setState({selectedRows: data})
@@ -192,14 +191,11 @@ class BaseContainer extends Webiny.Ui.Component {
 
     getContainerActions() {
         return {
-            reload: () => this.loadData(),
-            update: updateAction(this.onRecordUpdate), // (id, data) => () => this.onRecordUpdate(id, data),
-            delete: deleteAction(this.onRecordDelete),
-            execute: executeAction(this.onRecordExecute)
+            reload: this.loadData,
+            update: this.recordUpdate,
+            delete: this.recordDelete
         };
     }
-
-    /* eslint-enable */
 
     tableProps(tableProps) {
         // Pass relevant props from BaseContainer to Table

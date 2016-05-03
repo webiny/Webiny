@@ -66,6 +66,7 @@ List.defaultProps = {
                     </Ui.List.FormFilters>
                     <Table.Table>
                         <Table.Row detailsRenderer={null} onShowDetails={null}>
+                            <Table.Field name="id" label="ID"/>
                             <Table.Field name="firstName" label="First Name" sort="firstName"/>
                             <Table.Field name="email" sort="email" label="Email"/>
                             <Table.CaseField name="enabled" label="Status" sort="enabled">

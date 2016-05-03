@@ -5,7 +5,6 @@ class ApiContainer extends BaseContainer {
 
     constructor(props) {
         super(props);
-        this.bindMethods('onRecordExecute');
 
         Webiny.Mixins.ApiComponent.extend(this);
     }
@@ -75,16 +74,18 @@ class ApiContainer extends BaseContainer {
         });
     }
 
-    onRecordUpdate(id, attributes) {
+    getContainerActions(){
+        const actions = super.getContainerActions();
+        actions.api = this.api;
+        return actions;
+    }
+
+    recordUpdate(id, attributes) {
         return this.api.patch(id, attributes).then(this.loadData);
     }
 
-    onRecordDelete(id) {
+    recordDelete(id) {
         return this.api.delete(id).then(this.loadData);
-    }
-
-    onRecordExecute(httpMethod, url, body = null, query = null, config = {}) {
-        return this.api.execute(httpMethod, url, body, query, config);
     }
 }
 

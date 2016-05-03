@@ -48,11 +48,11 @@ class StaticContainer extends BaseContainer {
         });
     }
 
-    onRecordUpdate(id, attributes) {
+    recordUpdate(id, attributes) {
         return this.api.patch(id, attributes).then(this.loadData);
     }
 
-    onRecordDelete(id) {
+    recordDelete(id) {
         return this.api.delete(id).then(this.loadData);
     }
 }

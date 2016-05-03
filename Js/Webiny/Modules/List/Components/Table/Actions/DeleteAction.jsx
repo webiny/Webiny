@@ -20,7 +20,7 @@ DeleteAction.defaultProps = {
                         title: this.props.title,
                         confirm: 'Yes, delete!',
                         message,
-                        onConfirm: actions.delete(record.id).then(modal.hide())
+                        onConfirm: () => actions.delete(record.id).then(modal.hide())
                     };
                     return (
                         <Ui.Modal.Confirmation {...props}/>
