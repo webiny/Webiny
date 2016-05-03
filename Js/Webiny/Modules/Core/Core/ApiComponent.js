@@ -14,10 +14,10 @@ class ApiComponent {
                 'searchOperator'
             ];
 
-            const config = _.pick(context.props, ['httpMethod', 'url', 'body', 'defaultBody']);
+            const config = _.pick(context.props, ['httpMethod', 'url', 'body']);
 
             const verifiedQuery = {};
-            _.each(context.props.query || {}, (v, k) => {
+            _.each(_.merge({}, context.props.query, context.props.defaultQuery), (v, k) => {
                 if (apiQuery.indexOf(k) > -1) {
                     verifiedQuery['_' + k] = v;
                 } else {
@@ -26,27 +26,11 @@ class ApiComponent {
             });
             config.query = verifiedQuery;
 
-            const verifiedDefaultQuery = {};
-            _.each(context.props.defaultQuery || {}, (v, k) => {
-                if (apiQuery.indexOf(k) > -1) {
-                    verifiedDefaultQuery['_' + k] = v;
-                } else {
-                    verifiedDefaultQuery[k] = v;
-                }
-            });
-            config.defaultQuery = verifiedDefaultQuery;
-
             _.each(apiQuery, v => {
                 if (_.has(context.props, v)) {
                     config.query['_' + v] = context.props[v];
                 }
             });
-
-            // _fields must be in the defaultQuery
-            if (_.has(config.query, '_fields')) {
-                config.defaultQuery['_fields'] = config.query._fields;
-                delete config.query._fields;
-            }
 
             context.api = _.isFunction(context.props.api) ? context.props.api.call(context, context) : new ApiEndpoint(context.props.api, config);
         }

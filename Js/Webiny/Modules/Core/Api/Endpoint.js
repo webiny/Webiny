@@ -11,16 +11,14 @@ class Endpoint extends Base {
         this.httpMethod = config.httpMethod || 'GET';
         // initial query params that will be sent with every request until they is changed by component, using setQuery() method or via request arguments
         this.query = config.query || {};
-        // defaultQuery are query params that will ALWAYS be appended to all requests using this Endpoint
-        // NOTE: these can not be changed after initialization
-        this.defaultQuery = config.defaultQuery || {};
         // initial body payload that will be sent with every request until it is changed by component, using setBody() method or via request arguments
         this.body = config.body || {};
-        // defaultBody are body params that will ALWAYS be appended to all requests containing body using this Endpoint
-        // NOTE: these can not be changed after initialization
-        this.defaultBody = config.defaultBody || {};
         // config contains optional request parameters, like `progress` handler
         this.config = {};
+
+        // These two properties hold temporary values that can be changed between requests
+        this.tmpQuery = {};
+        this.tmpBody = {};
 
         if (_.indexOf(['PATCH', 'POST'], this.httpMethod) === -1) {
             this.body = null;
@@ -38,12 +36,13 @@ class Endpoint extends Base {
     }
 
     setBody(body) {
-        this.body = body;
+        this.tmpBody = _.omitBy(body, v => _.isNull(v) || _.isUndefined(v));
         return this;
     }
 
     setQuery(query) {
-        this.query = query;
+        console.log("SET QUERY", query);
+        this.tmpQuery = _.omitBy(query, v => _.isNull(v) || _.isUndefined(v));
         return this;
     }
 
@@ -53,14 +52,15 @@ class Endpoint extends Base {
     }
 
     getRequestQuery(query = null) {
-        return _.omitBy(_.merge({}, this.defaultQuery, query || this.query), value => _.isNull(value) || _.isUndefined(value));
+        return _.omitBy(_.merge({}, this.query, query || this.tmpQuery), value => _.isNull(value) || _.isUndefined(value));
     }
 
     getRequestBody(body = null) {
-        return _.merge({}, this.defaultBody, body || this.body);
+        return _.omitBy(_.merge({}, this.body, body || this.tmpBody), value => _.isNull(value) || _.isUndefined(value));
     }
 
     get(url = '', query = null) {
+        console.log("GET", this.getRequestQuery(query));
         return super.get(url, this.getRequestQuery(query), this.config);
     }
 

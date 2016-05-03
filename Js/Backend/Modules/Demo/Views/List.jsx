@@ -42,7 +42,7 @@ class List extends Webiny.Ui.View {
             <Webiny.Builder.View name="core-users-list" config={this.getConfig()}>
                 <Ui.Grid.Row>
                     <Ui.Grid.Col all={12}>
-                        <Ui.List.ApiContainer ui="myList" api="/entities/core/users" fields="id,enabled,firstName,lastName,email,createdOn">
+                        <Ui.List.ApiContainer connectToRouter={true} ui="myList" api="/entities/core/users" query={{enabled:  true}} sort="email" fields="id,enabled,firstName,lastName,email,createdOn" searchFields="name,email">
                             <Table.Table>
                                 <Table.Row>
                                     <Table.Field name="firstName" align="left" label="First Name" sort="firstName">
@@ -124,64 +124,6 @@ class List extends Webiny.Ui.View {
                                     }}
                                 </Ui.List.MultiAction>
                             </Ui.List.MultiActions>
-                        </Ui.List.ApiContainer>
-                    </Ui.Grid.Col>
-                </Ui.Grid.Row>
-                <Ui.Grid.Row>
-                    <Ui.Grid.Col all={12}>
-                        <Ui.List.StaticContainer ui="myInlineList" data={data}>
-                            <Ui.List.Filters>
-                                {(apply, reset) => (
-                                    <Ui.Grid.Row>
-                                        <Ui.Grid.Col all={12}>
-                                            <Ui.Button onClick={reset()} label="Show All"/>
-                                            <Ui.Button onClick={apply({category: 'joinedTeam'})} label="Show Joined Team"/>
-                                        </Ui.Grid.Col>
-                                    </Ui.Grid.Row>
-                                )}
-                            </Ui.List.Filters>
-                            <Table.Table type="striped">
-                                <Table.Row>
-                                    <Table.Field name="category" align="left" sort="category" label="Category"/>
-                                    <Table.DateTimeField name="createdOn" align="left" label="Created On" sort="createdOn.$date"
-                                                         format="DD/MMM/YY HH:mm"/>
-                                    <Table.DateField name="createdOn" align="left" label="Date"/>
-                                    <Table.TimeField name="createdOn" align="left" label="Time"/>
-                                    <Table.Actions>
-                                        <Table.Action label="Edit" route="Users.Form" params="id"/>
-                                        <Table.Action label="Delete" route="Users.Form" params="id"/>
-                                    </Table.Actions>
-                                </Table.Row>
-                                <Table.Footer/>
-                            </Table.Table>
-                            <Ui.List.Pagination/>
-                        </Ui.List.StaticContainer>
-                    </Ui.Grid.Col>
-                </Ui.Grid.Row>
-                <Ui.Grid.Row>
-                    <Ui.Grid.Col all={12}>
-                        <Ui.List.ApiContainer ui="myInlineList2" api="/entities/core/files" fields="id,src,name,type,size,createdOn"
-                                              searchFields="name">
-                            <Ui.List.Filters>
-                                {(apply, reset) => (
-                                    <Ui.Grid.Row>
-                                        <Ui.Grid.Col all={12}>
-                                            <Ui.Button onClick={reset()} label="Show All"/>
-                                            <Ui.Button onClick={apply({type: 'image/png'})} label="Show PNG"/>
-                                        </Ui.Grid.Col>
-                                    </Ui.Grid.Row>
-                                )}
-                            </Ui.List.Filters>
-                            <Table.Table>
-                                <Table.Row>
-                                    <Table.Field name="name" align="left" label="Name"/>
-                                    <Table.Field name="type" align="left" label="Type" sort="type"/>
-                                    <Table.FileSizeField name="size" align="left" label="Size" sort="size"/>
-                                </Table.Row>
-                                <Table.Empty/>
-                                <Table.Footer/>
-                            </Table.Table>
-                            <Ui.List.Pagination size="small"/>
                         </Ui.List.ApiContainer>
                     </Ui.Grid.Col>
                 </Ui.Grid.Row>
