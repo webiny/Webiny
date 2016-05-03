@@ -38,7 +38,12 @@ class Data extends Webiny.Ui.Component {
 }
 
 Data.defaultProps = {
+    waitForData: true,
     renderer() {
+        if (this.props.waitForData && !this.state.data) {
+            return null;
+        }
+
         return _.isFunction(this.props.children) ? this.props.children(this.state.data, this.filter) : null;
     }
 };
