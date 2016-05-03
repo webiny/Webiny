@@ -319,7 +319,7 @@ class BaseContainer extends Webiny.Ui.Component {
      * @returns {*}
      */
     getContent(...params) {
-        const children = this.props.children;
+        let children = this.props.children;
         if (_.isFunction(children)) {
             if (params.length === 0) {
                 params = [this, this.state.model, this];
@@ -332,6 +332,8 @@ class BaseContainer extends Webiny.Ui.Component {
                 return content;
             }
             return content.props.children;
+        } else {
+            children = React.Children.toArray(children);
         }
         return children;
     }

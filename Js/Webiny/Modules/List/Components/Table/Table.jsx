@@ -217,9 +217,9 @@ Table.defaultProps = {
 
         const rows = [];
         this.props.data.map((data, index) => {
-            rows.push(this.renderRow(data, index, this.rowElement, data.id || index));
+            rows.push(this.renderRow(data, data.id || index, this.rowElement, data.id || index));
             if (this.rowDetailsElement) {
-                rows.push(this.renderRow(data, index, this.rowDetailsElement, 'details-' + (data.id || index)));
+                rows.push(this.renderRow(data, data.id || index, this.rowDetailsElement, 'details-' + (data.id || index)));
             }
         });
 
