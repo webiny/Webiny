@@ -24,12 +24,23 @@ class ApiContainer extends BaseContainer {
         super.componentWillReceiveProps(props);
     }
 
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        if (this.request) {
+            this.request.abort();
+        }
+    }
+
     showLoading() {
         this.setState({loading: true});
     }
 
     hideLoading() {
         this.setState({loading: false});
+    }
+
+    isLoading() {
+        return this.state.loading;
     }
 
     loadData(id = null) {
@@ -41,7 +52,10 @@ class ApiContainer extends BaseContainer {
 
         if (id) {
             this.showLoading();
-            return this.api.execute(this.api.httpMethod, id).then(apiResponse => {
+            return this.request = this.api.execute(this.api.httpMethod, id).then(apiResponse => {
+                if (apiResponse.isAborted()) {
+                    return;
+                }
                 if (this.props.prepareLoadedData) {
                     return this.setState({model: this.props.prepareLoadedData(apiResponse.getData()), loading: false});
                 }

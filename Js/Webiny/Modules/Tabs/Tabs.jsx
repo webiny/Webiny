@@ -64,7 +64,9 @@ export class Tabs extends Webiny.Ui.Component {
     constructor() {
         super();
         this.tabs = [];
-        this.state = {};
+        this.state = {
+            selected: 0
+        };
 
         this.bindMethods('selectTab');
     }
@@ -75,7 +77,7 @@ export class Tabs extends Webiny.Ui.Component {
 
     componentWillMount() {
         super.componentWillMount();
-        this.setState({selected: Webiny.Router.getParams('tab', this.props.selected) || 0});
+        this.setState({selected: Webiny.Router.getParams('tab') || this.props.selected || 0});
     }
 
     componentWillReceiveProps(props) {

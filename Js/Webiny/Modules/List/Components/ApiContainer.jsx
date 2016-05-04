@@ -27,6 +27,9 @@ class ApiContainer extends BaseContainer {
     componentWillUnmount() {
         super.componentWillUnmount();
         clearInterval(this.autoRefresh);
+        if (this.request) {
+            this.request.abort();
+        }
     }
 
     componentWillReceiveProps(props) {
@@ -50,9 +53,9 @@ class ApiContainer extends BaseContainer {
             _searchOperator: this.searchOperator
         });
 
-        return this.api.setQuery(query).execute().then(apiResponse => {
+        return this.request = this.api.setQuery(query).execute().then(apiResponse => {
             let data = null;
-            if (!apiResponse.isError()) {
+            if (!apiResponse.isError() && !apiResponse.isAborted()) {
                 data = apiResponse.getData();
                 if (this.props.prepareLoadedData) {
                     data.list = this.props.prepareLoadedData(data.list);
@@ -74,7 +77,7 @@ class ApiContainer extends BaseContainer {
         });
     }
 
-    getContainerActions(){
+    getContainerActions() {
         const actions = super.getContainerActions();
         actions.api = this.api;
         return actions;

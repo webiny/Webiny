@@ -22,10 +22,21 @@ class Data extends Webiny.Ui.Component {
 
     componentDidMount() {
         super.componentDidMount();
-        this.api.execute().then(this.setData);
+        this.request = this.api.execute().then(this.setData);
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        if (this.request) {
+            this.request.abort();
+        }
     }
 
     setData(apiResponse) {
+        if (apiResponse.isAborted()) {
+            return;
+        }
+
         if (apiResponse.isError()) {
             return Webiny.Growl.info(apiResponse.getError(), 'Could not fetch data');
         }
@@ -33,7 +44,7 @@ class Data extends Webiny.Ui.Component {
     }
 
     filter(filters = {}) {
-        this.api.setQuery(filters).execute().then(this.setData);
+        this.request = this.api.setQuery(filters).execute().then(this.setData);
     }
 }
 

@@ -29,6 +29,10 @@ class OptionComponent extends Component {
         if (this.$unwatch) {
             this.$unwatch();
         }
+
+        if (this.request) {
+            this.request.abort();
+        }
     }
 
     applyFilter(newValue, name, filter, loadIfEmpty) {
@@ -80,8 +84,6 @@ class OptionComponent extends Component {
         }
 
         if (this.api) {
-            // TODO: on unmount - abort api request (when new HTTP is implemented)
-            const query = {};
             if (this.props.filterBy) {
                 // Get current value of the field that filters current field
                 let filter = null;
@@ -97,10 +99,14 @@ class OptionComponent extends Component {
                     query[this.$filterField] = filteredByValue;
                 }
 
-                this.api.setQuery(query)
+                this.api.setQuery(query);
             }
 
-            return this.api.execute().then(apiResponse => {
+            return this.request = this.api.execute().then(apiResponse => {
+                if(apiResponse.isAborted()){
+                    return;
+                }
+
                 let data = apiResponse.getData();
                 if (_.isPlainObject(data) && this.api.url === '/') {
                     data = data.list;
