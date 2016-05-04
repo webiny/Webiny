@@ -48,7 +48,8 @@ InputContainer.defaultProps = {
             valueLink: this.props.valueLink,
             placeholder: this.props.placeholder,
             onKeyUp: this.props.onKeyUp || null,
-            onKeyDown: this.props.onKeyDown || this.onKeyDown.bind(this)
+            onKeyDown: this.props.onKeyDown || this.onKeyDown.bind(this),
+            onEnter: this.props.onEnter
         };
 
         let description = this.props.description;

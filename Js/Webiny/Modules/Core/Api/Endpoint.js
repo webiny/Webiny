@@ -41,7 +41,7 @@ class Endpoint extends Base {
     }
 
     setQuery(query) {
-        this.tmpQuery = _.omitBy(query, v => _.isNull(v) || _.isUndefined(v));
+        this.tmpQuery = _.pickBy(query, (v, k) => !(_.isNull(v) || _.isUndefined(v)) || !_.has(this.query, k));
         return this;
     }
 

@@ -44,13 +44,13 @@ class ApiContainer extends BaseContainer {
         const selectedRows = this.state.selectedRows;
         selectedRows.clear();
         this.setState({selectedRows});
-        const query = _.assign({}, this.filters, {
-            _sort: Webiny.Router.sortersToString(this.sorters),
-            _perPage: this.perPage,
-            _page: this.page,
-            _searchQuery: this.searchQuery,
-            _searchFields: this.searchFields,
-            _searchOperator: this.searchOperator
+        const query = _.assign({}, this.state.filters, {
+            _sort: Webiny.Router.sortersToString(this.state.sorters),
+            _perPage: this.state.perPage,
+            _page: this.state.page,
+            _searchQuery: this.state.searchQuery,
+            _searchFields: this.state.searchFields,
+            _searchOperator: this.state.searchOperator
         });
 
         return this.request = this.api.setQuery(query).execute().then(apiResponse => {
@@ -60,17 +60,7 @@ class ApiContainer extends BaseContainer {
                 if (this.props.prepareLoadedData) {
                     data.list = this.props.prepareLoadedData(data.list);
                 }
-                this.setState({
-                    list: data.list,
-                    meta: data.meta,
-                    sorters: this.sorters,
-                    filters: this.filters,
-                    page: this.page,
-                    perPage: this.perPage,
-                    searchQuery: this.searchQuery,
-                    searchOperator: this.searchOperator,
-                    searchFields: this.searchFields
-                });
+                this.setState(data);
             }
 
             return data;

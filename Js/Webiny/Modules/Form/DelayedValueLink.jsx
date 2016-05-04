@@ -59,6 +59,8 @@ class DelayedValueLink extends Webiny.Ui.Component {
             e.persist();
             if (e.key === 'Tab') {
                 this.applyValue(e.target.value, () => realOnKeyDown(e));
+            } else if (e.key === 'Enter' && props.onEnter !== _.noop) {
+                this.applyValue(e.target.value, () => realOnKeyDown(e));
             } else {
                 realOnKeyDown(e);
             }

@@ -84,6 +84,7 @@ class OptionComponent extends Component {
         }
 
         if (this.api) {
+            const query = {};
             if (this.props.filterBy) {
                 // Get current value of the field that filters current field
                 let filter = null;
@@ -103,7 +104,7 @@ class OptionComponent extends Component {
             }
 
             return this.request = this.api.execute().then(apiResponse => {
-                if(apiResponse.isAborted()){
+                if (apiResponse.isAborted()) {
                     return;
                 }
 

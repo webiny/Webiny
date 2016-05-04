@@ -223,7 +223,10 @@ class Form extends Webiny.Ui.Component {
     }
 
     submit(e) {
-        e.preventDefault();
+        if (e && e.preventDefault) {
+            e.preventDefault();
+        }
+
         // Validate main form first
         return this.validate().then(mainFormValid => {
             if (!mainFormValid) {

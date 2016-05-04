@@ -19,16 +19,6 @@ class BaseContainer extends Webiny.Ui.Component {
             selectedRows: new Set()
         };
 
-        // Temporary properties used for loading data
-        // When data is finished loading, they are assigned to state
-        this.sorters = {};
-        this.filters = {};
-        this.page = props.page;
-        this.perPage = props.perPage;
-        this.searchQuery = null;
-        this.searchOperator = props.searchOperator || 'or';
-        this.searchFields = props.searchFields || null;
-
         this.filtersElement = null;
         this.tableElement = null;
         this.paginationElement = null;
@@ -65,8 +55,10 @@ class BaseContainer extends Webiny.Ui.Component {
     }
 
     prepare(props) {
-        this.sorters = {};
-        this.filters = {};
+        const state = {
+            sorters: {},
+            filters: {}
+        };
 
         if (props.connectToRouter) {
             const params = Webiny.Router.getQueryParams();
@@ -76,38 +68,39 @@ class BaseContainer extends Webiny.Ui.Component {
                     return;
                 }
                 if (_.startsWith(sorter, '-')) {
-                    this.sorters[_.trimStart(sorter, '-')] = -1;
+                    state.sorters[_.trimStart(sorter, '-')] = -1;
                 } else {
-                    this.sorters[sorter] = 1;
+                    state.sorters[sorter] = 1;
                 }
             });
 
             // Get limit and page
-            this.page = params._page || props.page || 1;
-            this.perPage = params._perPage || props.perPage || 10;
-            this.searchQuery = params._searchQuery || null;
+            state.page = params._page || props.page || 1;
+            state.perPage = params._perPage || props.perPage || 10;
+            state.searchQuery = params._searchQuery || null;
 
             // Get filters
             _.each(params, (value, name) => {
                 if (!_.startsWith('_', name)) {
-                    this.filters[name] = value;
+                    state.filters[name] = value;
                 }
             });
         } else {
-            this.sorters = props.sorters || {};
-            this.filters = props.filters || {};
-            this.page = props.page || 1;
-            this.perPage = props.perPage || 10;
+            state.sorters = props.sorters || {};
+            state.filters = props.filters || {};
+            state.page = props.page || 1;
+            state.perPage = props.perPage || 10;
         }
+
+        _.assign(this.state, state);
+        this.setState(this.state);
     }
 
     setSorters(sorters) {
         if (this.props.connectToRouter) {
             this.goToRoute({_sort: Webiny.Router.sortersToString(sorters), _page: 1});
         } else {
-            this.page = 1;
-            this.sorters = sorters;
-            this.loadData();
+            this.setState({page: 1, sorters}, this.loadData);
         }
 
         return this;
@@ -116,16 +109,14 @@ class BaseContainer extends Webiny.Ui.Component {
     setFilters(filters) {
         if (this.props.connectToRouter) {
             // Need to build a new object with null values to unset filters from URL
-            if (_.isEmpty(filters) && _.keys(this.filters)) {
-                filters = _.mapValues(this.filters, () => null);
+            if (_.isEmpty(filters) && _.keys(this.state.filters)) {
+                filters = _.mapValues(this.state.filters, () => null);
             }
 
             filters._page = 1;
             this.goToRoute(filters);
         } else {
-            this.page = 1;
-            this.filters = filters;
-            this.loadData();
+            this.setState({page: 1, filters}, this.loadData);
         }
 
         return this;
@@ -135,8 +126,7 @@ class BaseContainer extends Webiny.Ui.Component {
         if (this.props.connectToRouter) {
             this.goToRoute({_page: page});
         } else {
-            this.page = page;
-            this.loadData();
+            this.setState({page}, this.loadData);
         }
 
         return this;
@@ -146,9 +136,7 @@ class BaseContainer extends Webiny.Ui.Component {
         if (this.props.connectToRouter) {
             this.goToRoute({_perPage: perPage});
         } else {
-            this.page = 1;
-            this.perPage = perPage;
-            this.loadData();
+            this.setState({page, perPage}, this.loadData);
         }
 
         return this;
@@ -158,9 +146,7 @@ class BaseContainer extends Webiny.Ui.Component {
         if (this.props.connectToRouter) {
             this.goToRoute({_searchQuery: query});
         } else {
-            this.page = 1;
-            this.searchQuery = query;
-            this.loadData();
+            this.setState({page: 1, searchQuery: query}, this.loadData);
         }
 
         return this;
