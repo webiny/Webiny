@@ -96,7 +96,6 @@ Dialog.defaultProps = {
     onShown: _.noop,
     closeOnClick: true,
     renderer() {
-        return null;
         const ModalContainer = Webiny.Ui.Dispatcher.get('ModalContainer');
 
         if (!ModalContainer) {
