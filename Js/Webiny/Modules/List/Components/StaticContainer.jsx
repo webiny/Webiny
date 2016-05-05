@@ -2,96 +2,98 @@ import BaseContainer from './BaseContainer';
 
 class StaticContainer extends BaseContainer {
 
-    componentWillMount() {
-        super.componentWillMount();
-        this.prepare(_.clone(this.props));
-        this.loadData();
-    }
+	componentWillMount() {
+		super.componentWillMount();
+		this.prepare(_.clone(this.props));
+		this.loadData();
+	}
 
-    componentWillReceiveProps(props) {
-        super.componentWillReceiveProps(props);
-        this.prepare(_.clone(props));
-        this.loadData();
-    }
+	componentWillReceiveProps(props) {
+		super.componentWillReceiveProps(props);
+		this.prepare(_.clone(props));
+		this.loadData();
+	}
 
-    loadData() {
-        let data = _.isEmpty(this.state.filters) ? this.props.data : _.filter(this.props.data, this.state.filters);
-        const fields = [];
-        const order = [];
-        _.each(this.state.sorters, (sort, field) => {
-            fields.push(field);
-            order.push(sort === 1 ? 'asc' : 'desc');
-        });
-        data = _.orderBy(data, fields, order);
+	loadData() {
+		let data = _.isEmpty(this.state.filters) ? this.props.data : _.filter(this.props.data, this.state.filters);
+		const fields = [];
+		const order = [];
+		_.each(this.state.sorters, (sort, field) => {
+			fields.push(field);
+			order.push(sort === 1 ? 'asc' : 'desc');
+		});
+		data = _.orderBy(data, fields, order);
 
-        const meta = {
-            currentPage: this.state.page,
-            perPage: this.state.perPage,
-            totalCount: data.length,
-            totalPages: Math.ceil(data.length / this.state.perPage)
-        };
+		const meta = {
+			currentPage: this.state.page,
+			perPage: this.state.perPage,
+			totalCount: data.length,
+			totalPages: Math.ceil(data.length / this.state.perPage)
+		};
 
-        this.totalPages = meta.totalPages;
+		this.totalPages = meta.totalPages;
 
-        const from = (this.state.page - 1) * this.state.perPage;
+		const from = (this.state.page - 1) * this.state.perPage;
 
-        this.setState({
-            list: data.slice(from, from + this.state.perPage),
-            meta,
-            sorters: this.state.sorters,
-            filters: this.state.filters,
-            page: this.state.page,
-            perPage: this.state.perPage,
-            searchQuery: this.state.searchQuery,
-            searchOperator: this.state.searchOperator,
-            searchFields: this.state.searchFields
-        });
-    }
+		this.setState({
+			list: data.slice(from, from + this.state.perPage),
+			meta,
+			sorters: this.state.sorters,
+			filters: this.state.filters,
+			page: this.state.page,
+			perPage: this.state.perPage,
+			searchQuery: this.state.searchQuery,
+			searchOperator: this.state.searchOperator,
+			searchFields: this.state.searchFields
+		});
 
-    recordUpdate(id, attributes) {
-        return this.api.patch(id, attributes).then(this.loadData);
-    }
+		console.log('data.slice(from, from + this.state.perPage):', data.slice(from, from + this.state.perPage));
+	}
 
-    recordDelete(id) {
-        return this.api.delete(id).then(this.loadData);
-    }
+	recordUpdate(id, attributes) {
+		return this.api.patch(id, attributes).then(this.loadData);
+	}
+
+	recordDelete(id) {
+		return this.api.delete(id).then(this.loadData);
+	}
 }
 
 StaticContainer.defaultProps = {
-    connectToRouter: false,
-    defaultParams: {},
-    page: 1,
-    perPage: 10,
-    layout: function layout() {
-        return (
-            <div className="col-xs-12">
-                <filters/>
-                <table/>
-                <pagination/>
-            </div>
-        );
-    },
-    renderer() {
-        this.prepareList(this.props.children);
+	connectToRouter: false,
+	defaultParams: {},
+	page: 1,
+	perPage: 10,
+	layout: function layout() {
+		return (
+			<div className="col-xs-12">
+				<filters/>
+				<table/>
+				<pagination/>
+			</div>
+		);
+	},
+	renderer() {
+		this.prepareList(this.props.children);
 
-        const layout = this.props.layout.bind(this)();
+		const layout = this.props.layout.bind(this)();
 
-        if (React.Children.toArray(layout.props.children).length) {
-            const render = [];
-            React.Children.map(layout, (item, index) => {
-                render.push(React.cloneElement(this.replacePlaceholders(item), {key: index}));
-            });
-            return <webiny-list>{render}</webiny-list>;
-        }
+		if (React.Children.toArray(layout.props.children).length) {
+			const render = [];
+			React.Children.map(layout, (item, index) => {
+				render.push(React.cloneElement(this.replacePlaceholders(item), {key: index}));
+			});
+			return <webiny-list>{render}</webiny-list>;
+		}
 
-        const layoutProps = {
-            filters: this.filtersElement,
-            table: this.tableElement,
-            pagination: this.paginationElement,
-            container: this
-        };
-        return React.cloneElement(layout, layoutProps);
-    }
+		const layoutProps = {
+			filters: this.filtersElement,
+			table: this.tableElement,
+			pagination: this.paginationElement,
+			container: this
+		};
+		return React.cloneElement(layout, layoutProps);
+	}
 };
 
 export default StaticContainer;
