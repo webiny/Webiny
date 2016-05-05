@@ -15,36 +15,36 @@ class StaticContainer extends BaseContainer {
     }
 
     loadData() {
-        let data = _.isEmpty(this.filters) ? this.props.data : _.filter(this.props.data, this.filters);
+        let data = _.isEmpty(this.state.filters) ? this.props.data : _.filter(this.props.data, this.state.filters);
         const fields = [];
         const order = [];
-        _.each(this.sorters, (sort, field) => {
+        _.each(this.state.sorters, (sort, field) => {
             fields.push(field);
             order.push(sort === 1 ? 'asc' : 'desc');
         });
         data = _.orderBy(data, fields, order);
 
         const meta = {
-            currentPage: this.page,
-            perPage: this.perPage,
+            currentPage: this.state.page,
+            perPage: this.state.perPage,
             totalCount: data.length,
-            totalPages: Math.ceil(data.length / this.perPage)
+            totalPages: Math.ceil(data.length / this.state.perPage)
         };
 
         this.totalPages = meta.totalPages;
 
-        const from = (this.page - 1) * this.perPage;
+        const from = (this.state.page - 1) * this.state.perPage;
 
         this.setState({
-            list: data.slice(from, from + this.perPage),
+            list: data.slice(from, from + this.state.perPage),
             meta,
-            sorters: this.sorters,
-            filters: this.filters,
-            page: this.page,
-            perPage: this.perPage,
-            searchQuery: this.searchQuery,
-            searchOperator: this.searchOperator,
-            searchFields: this.searchFields
+            sorters: this.state.sorters,
+            filters: this.state.filters,
+            page: this.state.page,
+            perPage: this.state.perPage,
+            searchQuery: this.state.searchQuery,
+            searchOperator: this.state.searchOperator,
+            searchFields: this.state.searchFields
         });
     }
 
