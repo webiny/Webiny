@@ -209,9 +209,7 @@ Table.defaultProps = {
         let selectAll = null;
         if (this.props.onSelect) {
             selectAll = (
-                <th>
-                    <SelectAll value={this.state.selectAll} onChange={this.selectAll}/>
-                </th>
+                <SelectAll value={this.state.selectAll} onChange={this.selectAll}/>
             );
         }
 

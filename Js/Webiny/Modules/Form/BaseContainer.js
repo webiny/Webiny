@@ -142,22 +142,20 @@ class BaseContainer extends Webiny.Ui.Component {
             props.title = _.get(props, 'title', this.props.title);
 
             // These callbacks are only passed to the main form
-            if (this.formsCount === 1) {
-                // On form submit...
-                props.onSubmit = data => {
-                    // Merge initial Container data with new data received from all forms
-                    const newData = _.assign({}, this.state.model, data);
-                    this.setState({model: Webiny.Tools.removeKeys(newData)});
+            // On form submit...
+            props.onSubmit = data => {
+                // Merge initial Container data with new data received from all forms
+                const newData = _.assign({}, this.state.model, data);
+                this.setState({model: Webiny.Tools.removeKeys(newData)});
 
-                    // If onSubmit was passed through props, execute it. Otherwise proceed with default behaviour.
-                    if (this.props.onSubmit) {
-                        return this.props.onSubmit(newData, this);
-                    }
-                    return this.onSubmit(newData);
-                };
-                props.onReset = this.onReset;
-                props.onCancel = this.onCancel;
-            }
+                // If onSubmit was passed through props, execute it. Otherwise proceed with default behaviour.
+                if (this.props.onSubmit) {
+                    return this.props.onSubmit(newData, this);
+                }
+                return this.onSubmit(newData);
+            };
+            props.onReset = this.onReset;
+            props.onCancel = this.onCancel;
 
             // onInvalid callback requires special handling and is passed to ALL linked forms
             // We need to call the invalid callback defined on the form itself + the one passed via props

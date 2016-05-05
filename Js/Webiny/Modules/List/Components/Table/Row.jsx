@@ -106,9 +106,7 @@ Row.defaultProps = {
         let select = null;
         if (this.props.onSelect) {
             select = (
-                <td>
-                    <SelectRow value={this.props.selected} onChange={value => this.props.onSelect(this.props.data, value)}/>
-                </td>
+                <SelectRow value={this.props.selected} onChange={value => this.props.onSelect(this.props.data, value)}/>
             );
         }
 
