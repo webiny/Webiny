@@ -5,3 +5,4 @@ Assets:
             '../../': ''
             '/font/': '/fonts/'
             '/img/': '/images/'
+            'jGrowl': 'growl'

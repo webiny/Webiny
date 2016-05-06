@@ -1,13 +1,13 @@
 /* When we reach the final version of Master Layout - merge these changes into core files */
 
-.tray-bin.step-3 .file {
+.tray-bin .file {
   float: left;
   display: block;
   width: 163px;
   margin: 5px;
 }
 
-.tray-bin.step-3 .file-name {
+.tray-bin .file-name {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

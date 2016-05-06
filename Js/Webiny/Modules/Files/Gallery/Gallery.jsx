@@ -312,7 +312,7 @@ Gallery.defaultProps = {
 
         const css = {
             'tray-bin': true,
-            'step-3': this.state.images.length > 0
+            'tray-bin--empty': !this.state.images.length
         };
 
         /*let errors = null;
