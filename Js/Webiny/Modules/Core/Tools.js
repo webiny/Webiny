@@ -1,3 +1,5 @@
+import Webiny from 'Webiny';
+
 class Tools {
 
     createUID() {

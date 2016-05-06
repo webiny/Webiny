@@ -1,5 +1,5 @@
 import Webiny from 'Webiny';
-import styles from './Styles';
+const Ui = Webiny.Ui.Components;
 
 class SearchInput extends Webiny.Ui.FormComponent {
 
@@ -21,7 +21,6 @@ class SearchInput extends Webiny.Ui.FormComponent {
             'onKeyUp',
             'onBlur',
             'renderPreview',
-            'getSearchInput',
             'fetchValue'
         );
     }
@@ -31,6 +30,10 @@ class SearchInput extends Webiny.Ui.FormComponent {
         const newState = {
             options: props.options
         };
+
+        if(!props.options.length){
+            delete newState['options'];
+        }
 
         if (props.selected) {
             newState['selected'] = this.renderPreview(props.selected);
@@ -89,6 +92,7 @@ class SearchInput extends Webiny.Ui.FormComponent {
     }
 
     onBlur() {
+        return;
         const state = {options: []};
         if (!_.get(this.props, 'valueLink.value')) {
             state['search'] = '';
@@ -176,68 +180,6 @@ class SearchInput extends Webiny.Ui.FormComponent {
         this.props.onReset();
     }
 
-    getSearchInput() {
-        const inputProps = {
-            type: 'text',
-            readOnly: this.props.readOnly || false,
-            className: 'form-control typeahead tt-input',
-            placeholder: this.props.placeholder,
-            autoComplete: 'off',
-            spellCheck: 'false',
-            dir: 'auto',
-            style: styles.ttInput,
-            onKeyDown: this.onKeyUp,
-            onBlur: this.onBlur,
-            value: this.state.search || this.state.selected || '',
-            onChange: this.inputChanged,
-            disabled: this.isDisabled()
-        };
-
-        // Render option
-        const options = this.state.options.map((item, index) => {
-            const itemClasses = {
-                'search-item': true,
-                'search-item-selected': index === this.state.selected,
-                'col-sm-12': true
-            };
-
-            const linkProps = {
-                onMouseDown: () => this.selectItem(item),
-                onMouseOver: () => this.setState({selected: index, search: this.renderPreview(item)})
-            };
-
-            return (
-                <div key={index} className={this.classSet(itemClasses)} style={{padding: 10}}>
-                    <a href="javascript:void(0)" {...linkProps}>
-                        {this.props.optionRenderer.call(this, item)}
-                    </a>
-                </div>
-            );
-        });
-
-        let dropdownMenu = null;
-        if (this.state.options.length > 0) {
-            dropdownMenu = (
-                <span style={styles.dropdownMenu}>
-					<div className="tt-dataset-states">{options}</div>
-				</span>
-            );
-        }
-
-        // Create search input
-        const iconClass = {};
-        iconClass[this.props.inputIcon] = !this.props.loading;
-        iconClass[this.props.loadingIcon] = this.props.loading;
-
-        return (
-            <div className="twitter-typeahead" style={styles.outerSpan}>
-                <input {...inputProps}/>
-                <span className={this.classSet(iconClass)} style={styles.icon}></span>
-                {dropdownMenu}
-            </div>
-        );
-    }
-
     fetchValue(item) {
         let value = _.get(item, this.props.textAttr);
         if (!value) {
@@ -267,12 +209,68 @@ SearchInput.defaultProps = {
     onReset: _.noop,
     onSearch: _.noop,
     inputIcon: 'icon-search',
-    loadingIcon: 'animate-spin icon-network',
+    loadingIcon: 'icon-search',
     placeholder: 'Type to search',
     useDataAsValue: false,
-    renderer() {
-        const input = this.getSearchInput();
+    renderOption(item, index) {
+        const itemClasses = {
+            selected: index === this.state.selected
+        };
 
+        const linkProps = {
+            onMouseDown: () => this.selectItem(item),
+            onMouseOver: () => this.setState({selected: index, search: this.renderPreview(item)})
+        };
+
+        return (
+            <li key={index} className={this.classSet(itemClasses)} {...linkProps}>
+                <a href="javascript:void(0)">
+                    {this.props.optionRenderer.call(this, item)}
+                </a>
+            </li>
+        );
+    },
+    renderSearchInput() {
+        const inputProps = {
+            type: 'text',
+            readOnly: this.props.readOnly || false,
+            placeholder: this.props.placeholder,
+            autoComplete: 'off',
+            spellCheck: 'false',
+            dir: 'auto',
+            onKeyDown: this.onKeyUp,
+            onBlur: this.onBlur,
+            value: this.state.search || this.state.selected || '',
+            onChange: this.inputChanged,
+            disabled: this.isDisabled()
+        };
+
+        // Render option
+        const options = this.state.options.map(this.props.renderOption.bind(this));
+
+        let dropdownMenu = null;
+        if (this.state.options.length > 0) {
+            dropdownMenu = (
+                <div className="autosuggest">
+                    <div className="plain-search">
+                        <ul>{options}</ul>
+                    </div>
+                </div>
+            );
+        }
+
+        // Create search input
+        return (
+            <div className="search">
+                <Ui.Link className="btn">
+                    <Ui.Icon icon={this.props.loading ? this.props.loadingIcon : this.props.inputIcon}/>
+                </Ui.Link>
+                <input {...inputProps}/>
+                {dropdownMenu}
+            </div>
+        );
+    },
+    renderer() {
         let label = null;
         if (this.props.label) {
             label = <label className="control-label">{this.props.label}</label>;
@@ -280,22 +278,22 @@ SearchInput.defaultProps = {
 
         let validationMessage = null;
         let validationIcon = null;
-        if (this.state.isValid === false) {
+        if (!this.isValid()) {
             validationMessage = <span className="help-block">{this.state.validationMessage}</span>;
             validationIcon = <span className="icon icon-bad"></span>;
         }
 
         const cssConfig = {
             'form-group': true,
-            'error': this.state.isValid === false,
-            'success': this.state.isValid === true
+            'search-container': true,
+            'error': !this.isValid(),
+            'success': this.isValid()
         };
 
         return (
             <div className={this.classSet(cssConfig)}>
                 {label}
-                <div className="clearfix"/>
-                {input}
+                {this.props.renderSearchInput.call(this)}
                 {validationIcon}
                 {validationMessage}
             </div>

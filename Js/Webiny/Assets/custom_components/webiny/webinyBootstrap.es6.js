@@ -57,7 +57,7 @@ class WebinyBootstrapClass {
         this.env = window.WebinyEnvironment;
         window._apiUrl = '/api';
         if (this.env === 'development') {
-            window.Webiny = Webiny;
+            window.$Webiny = Webiny;
         }
 
         // First we need to import Core/Webiny

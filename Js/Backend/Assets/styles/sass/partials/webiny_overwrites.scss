@@ -1,25 +1,4 @@
 @media (min-width: 768px) {
-  /*
-   * Fieldset
-   */
-  .dashboard-content {
-    fieldset legend {
-      padding: 20px;
-    }
-    .fieldset_inner, .fieldset_header {
-      padding: 0px 15px;
-    }
-    fieldset .fieldset_footer {
-      padding: 10px;
-      .btn-primary {
-        padding: 5px;
-        font-size: 16px;
-        span {
-          margin: 5px 8px 0px 10px;
-        }
-      }
-    }
-  }
   .pull-right-lg {
     float: right;
   }

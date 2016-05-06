@@ -5,56 +5,149 @@
 * negative margin added to counter parent tray padding
 */
 .tray-bin {
-    position: relative;
-    min-height: 285px;
-    margin: 0 0 20px 0;
-    padding: 7px;
-    padding-top: 101px;
+  position: relative;
+  min-height: 285px;
+  margin: 0 0 20px 0;
+  padding: 15px 12px;
 
+  background-color: $formBgColor;
+  border: 2px dashed $borderColor;
+  border-radius: 3px;
+
+  .main-text {
+    color: #dadada;
+    font-size: 17px;
     text-align: center;
 
-    background-color: $formBgColor;
-    border: 2px dashed $borderColor;
-    border-radius: 3px;
+    &:before {
+      content: "\e83c";
+      display: block;
+      margin-bottom: 10px;
 
-    .main-text {
-      color: #dadada;
-      font-size: 17px;
+      color: #eee;
+      font-family: 'fontello';
+      font-size: 71px;
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1em;
+    }
+  }
+
+  .file {
+    position: relative;
+    display: inline-block;
+    padding: 14px;
+    margin-bottom: 15px;
+    border: 1px solid #e8e8e8;
+    overflow: hidden;
+
+    text-align: left;
+
+    background: #fff;
+
+    .file-name {
+      margin-top: 5px;
+      
+      color: #313131;
+      font-size: 15px;
+      text-overflow: ellipsis;
+    }
+
+    .file-edit {
+      position: absolute;
+      top: 20px;
+      right: 45px;
+
+      display: block;
+      width: 23px;
+      height: 23px;
+      padding: 4px;
+      border-radius: 50%;
+
+      text-align: center;
+      
+      background-color: #fff;
 
       &:before {
-        content: "\e83c";
-        display: block;
-        margin-bottom: 10px;
+        content: "\e83b";
+        display: inline-block;
+        vertical-align: top;
 
-        color: #eee;
+        color: #6f6f6f;
+        font-size: 12px;
         font-family: 'fontello';
-        font-size: 71px;
+        font-style: normal;
+        font-weight: normal;
+        line-height: 1.4em;
+      }
+    }
+
+    .file-size {
+      color: #868695;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+
+    .file-remove {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+
+      display: block;
+      width: 23px;
+      height: 23px;
+      padding: 4px;
+      border-radius: 50%;
+
+      text-align: center;
+      
+      background-color: #fff;
+
+      &:before {
+        content: "\e82b";
+        display: inline-block;
+        vertical-align: top;
+
+        color: $color-primary;
+        font-family: 'fontello';
         font-style: normal;
         font-weight: normal;
         line-height: 1em;
       }
     }
+  }
 
   .txt_b {
     display: none;
   }
 }
+
+.tray-bin--empty {
+  padding-top: 101px;
+  text-align: center;
+}
+
 .tray-bin.progress {
   background: #fff;
   padding: 85px 75px 35px 75px;
   text-align: center;
   border: none;
+
+  p {
+    font-size: 15px;
+    color: #767676;
+  }
 }
-tray-bin.progress p {
-  font-size: 15px;
-  color: #767676;
-}
+
+.tray-bin.progress 
+
 .tray-bin.progress .progress {
   height: 6px;
   display: inline-block;
   width: 80%;
   float: left;
 }
+
 .tray-bin.progress  a.cancel {
   float: left;
   width: 20px;
@@ -77,101 +170,13 @@ tray-bin.progress p {
   border: none;
 }
 
-.tray-bin.step-3 {
-  padding: 15px 7px;
-}
-
-.tray-bin.step-3 .file {
-  position: relative;
-  display: inline-block;
-  padding: 14px;
-  margin-bottom: 15px;
-  border: 1px solid #e8e8e8;
-  overflow: hidden;
-  text-align: left;
-  background: #fff;
-}
-
-.tray-bin.step-3 .file {
-  .file-edit {
-    position: absolute;
-    top: 20px;
-    right: 45px;
-
-    display: block;
-    width: 23px;
-    height: 23px;
-    padding: 4px;
-    border-radius: 50%;
-
-    text-align: center;
-    
-    background-color: #fff;
-
-    &:before {
-      content: "\e83b";
-      display: inline-block;
-      vertical-align: top;
-
-      color: #6f6f6f;
-      font-size: 12px;
-      font-family: 'fontello';
-      font-style: normal;
-      font-weight: normal;
-      line-height: 1.4em;
-    }
-  }
-
-  .file-remove {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-
-    display: block;
-    width: 23px;
-    height: 23px;
-    padding: 4px;
-    border-radius: 50%;
-
-    text-align: center;
-    
-    background-color: #fff;
-
-    &:before {
-      content: "\e82b";
-      display: inline-block;
-      vertical-align: top;
-
-      color: $color-primary;
-      font-family: 'fontello';
-      font-style: normal;
-      font-weight: normal;
-      line-height: 1em;
-    }
-  }
-}
-
-.tray-bin.step-3 .file-name {
-  margin-top: 5px;
-  
-  color: #313131;
-  font-size: 15px;
-}
-
-.tray-bin.step-3 .file-size {
-  color: #868695;
-  font-size: 14px;
-  text-transform: uppercase;
-}
-
-
 @media (min-width: 300px) and (max-width: 900px) {
-  .tray-bin.step-3 i.icon-doc-icon {
+  .tray-bin i.icon-doc-icon {
    float: none;
    margin-bottom: 10px;
  }
 }
-.tray-bin.step-3  span {
+.tray-bin  span {
   font-size: 15px;
   font-family: 'Roboto Condensed', sans-serif;
   color: #767676;
@@ -179,37 +184,37 @@ tray-bin.progress p {
   display: block;
   text-align: left;
 }
-.tray-bin.step-3 .cancel {
+.tray-bin .cancel {
   position: absolute;
   top: 39%;
   right: 25px;
 }
-.tray-bin.step-3 .option {
+.tray-bin .option {
   background: #ebeef2;
   padding: 25px 25px 20px 25px;
   overflow: hidden;
   margin-left: 5px;
   margin-bottom: 15px;
 }
-.tray-bin.step-3 .option.active {
+.tray-bin .option.active {
   background: #faef89;
 }
-.tray-bin.step-3 .btn {
+.tray-bin .btn {
   -webkit-border-radius: 0px;
   -moz-border-radius: 0px;
   border-radius: 0px;
   font-weight: bold;
   font-size: 19px;
 }
-.tray-bin.step-3 .option.sec {
+.tray-bin .option.sec {
   margin-right: 5px;
 }
-.tray-bin.step-3 .option .checkbox-custom {
+.tray-bin .option .checkbox-custom {
   float: left;
   font-size: 14px;
   margin-bottom: 0px;
 }
-.tray-bin.step-3 .option .price {
+.tray-bin .option .price {
   float: right;
   color: #293846;
   font-family: 'Roboto Condensed', sans-serif;
@@ -219,18 +224,18 @@ tray-bin.progress p {
   margin-top: 10px;
   margin-bottom: 0px;
 }
-.tray-bin.step-3 .option .price span {
+.tray-bin .option .price span {
   font-size: 18px;
   float: left;
   margin-right: 3px;
 }
-.tray-bin.step-3 .cancel span {
+.tray-bin .cancel span {
   float: left;
   font-size: 15px;
   font-family: 'Roboto Condensed', sans-serif;
   color: #767676;
 }
-.tray-bin.step-3 .cancel i {
+.tray-bin .cancel i {
   width: 20px;
   height: 20px;
   background: #F3594F none repeat scroll 0% 0%;

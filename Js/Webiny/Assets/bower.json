@@ -1,58 +1,58 @@
 {
-    "name": "webiny/core",
-    "version": "0.1.0",
-    "authors": "Webiny",
-    "private": true,
-    "dependencies": {
-        "accounting": "~0.3.2",
-        "blueimp-md5": "~1.1.1",
-        "bootstrap": "~3.3.5",
-        "cropper": "~0.11.1",
-        "history.js": "~1.8.0",
-        "lodash": "4.6.1",
-        "moment": "~2.10.6",
-        "q": "1.0.1",
-        "summernote": "git://github.com/Pavel910/summernote.git#develop",
-        "system.js": "~0.18.4",
-        "jquery-ui": "~1.11.4",
-        "js-cookie": "~2.0.4",
-        "bottlejs": "~1.2.1",
-        "baobab": "~2.2.1",
-        "react": "https://github.com/reactjs/react-bower.git",
-        "select2": "4.0.0",
-        "eonasdan-bootstrap-datetimepicker": "~4.17.37",
-        "filesize": "^3.2.1",
-        "c3": "~0.4.10",
-        "jGrowl": "jgrowl#~1.4.4",
-        "bootstrap-daterangepicker": "~2.1.19"
+  "name": "webiny/core",
+  "version": "0.1.0",
+  "authors": "Webiny",
+  "private": true,
+  "dependencies": {
+    "accounting": "~0.3.2",
+    "blueimp-md5": "~1.1.1",
+    "bootstrap": "~3.3.5",
+    "cropper": "~0.11.1",
+    "history.js": "~1.8.0",
+    "lodash": "4.6.1",
+    "moment": "~2.10.6",
+    "q": "1.0.1",
+    "summernote": "git://github.com/Pavel910/summernote.git#develop",
+    "system.js": "~0.18.4",
+    "jquery-ui": "~1.11.4",
+    "js-cookie": "~2.0.4",
+    "bottlejs": "~1.2.1",
+    "baobab": "~2.2.1",
+    "react": "https://github.com/reactjs/react-bower.git",
+    "select2": "4.0.0",
+    "eonasdan-bootstrap-datetimepicker": "~4.17.37",
+    "filesize": "^3.2.1",
+    "c3": "~0.4.10",
+    "jGrowl": "jgrowl#~1.4.4",
+    "bootstrap-daterangepicker": "~2.1.19"
+  },
+  "overrides": {
+    "system.js": {
+      "main": "dist/system.js"
     },
-    "overrides": {
-        "system.js": {
-            "main": "dist/system.js"
-        },
-        "react": {
-            "main": [
-                "react.js",
-                "react-dom.js",
-                "react-dom-server.js"
-            ]
-        },
-        "history.js": {
-            "main": "scripts/bundled-uncompressed/html5/native.history.js"
-        },
-        "filesize": {
-            "main": "lib/filesize.js"
-        },
-        "select2": {
-            "main": [
-                "dist/js/select2.js",
-                "dist/css/select2.min.css"
-            ]
-        },
-        "bootstrap-daterangepicker": {
-            "main": [
-                "daterangepicker.js"
-            ]
-        }
+    "react": {
+      "main": [
+        "react.js",
+        "react-dom.js",
+        "react-dom-server.js"
+      ]
+    },
+    "history.js": {
+      "main": "scripts/bundled-uncompressed/html5/native.history.js"
+    },
+    "filesize": {
+      "main": "lib/filesize.js"
+    },
+    "select2": {
+      "main": [
+        "dist/js/select2.js",
+        "dist/css/select2.min.css"
+      ]
+    },
+    "bootstrap-daterangepicker": {
+      "main": [
+        "daterangepicker.js"
+      ]
     }
+  }
 }

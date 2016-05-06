@@ -32,8 +32,8 @@ Tab.defaultProps = {
         if (_.isString(this.props.label)) {
             label = (
                 <a href="javascript:void(0);">
-                    {this.props.label}
                     {icon}
+                    {this.props.label}
                 </a>
             );
         }

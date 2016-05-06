@@ -9,9 +9,12 @@
 
 .master-content {
   width: 100%;
-  background-color: $masterContentBgColor;
   padding-top: 0;
   margin-top: 0;
+
+  @media (min-width: 768px) {
+    background-color: $masterContentBgColor;
+  }
 }
 
 .text-right {

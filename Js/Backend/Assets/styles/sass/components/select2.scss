@@ -6,7 +6,7 @@
   position: relative;
   vertical-align: middle;
   width: 100% !important;
-  z-index: 1050;
+  z-index: 3000;
 
   &:after {
     position: absolute;
@@ -254,7 +254,6 @@
 }
 /* line 35, ../scss/theme/default/_single.scss */
 .select2-container--default .select2-selection--single .select2-selection__arrow b {
-  /*background: url(../../../../assets/img/drop.png) no-repeat top left;*/
   margin-left: -14px;
   margin-top: -2px;
   position: absolute;
@@ -263,11 +262,6 @@
   display: block;
   top: 50%;
   border:none;
-}
-.drop-yellow .select2-container--default .select2-selection--single .select2-selection__arrow b,
-.drop-green .select2-container--default .select2-selection--single .select2-selection__arrow b,
-.drop-blue .select2-container--default .select2-selection--single .select2-selection__arrow b {
-  background: url(../../../../assets/img/drop_d.png) no-repeat top left;
 }
 /* line 56, ../scss/theme/default/_single.scss */
 .select2-container--default[dir="rtl"] .select2-selection--single .select2-selection__clear {

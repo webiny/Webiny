@@ -50,7 +50,7 @@ class FormComponent extends Component {
     }
 
     isValid() {
-        return this.state.isValid;
+        return this.state.isValid !== false;
     }
 
     hasValue() {

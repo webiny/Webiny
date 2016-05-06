@@ -1,3 +1,4 @@
+import Webiny from 'Webiny';
 import Filters from './Filters';
 const Ui = Webiny.Ui.Components;
 

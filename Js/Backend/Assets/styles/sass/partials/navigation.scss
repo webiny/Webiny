@@ -302,9 +302,21 @@ body.opened-mobile-nav .master-navigation .navbar-collapse {
 
 .dashboard-content {
   clear: both;
-  padding: 0 10px;
+  padding: 30px 10px;
   .holder {
     margin-bottom: 25px;
+  }
+
+  @media (min-width: 768px) {
+    padding: 30px 50px 0;
+  }
+
+  @media (min-width: 992px) {
+    padding: 65px 50px 0;
+  }
+
+  @media (min-width: 1200px) {
+    padding: 20px 50px 0;
   }
 }
 
@@ -788,7 +800,7 @@ body.opened-mobile-nav .left-menu-submenu {
       width: 110px;
       display: none;
       margin-top: 123px;
-      z-index: 1600;
+      z-index: 6000;
       .shield {
         height: 100%;
         position: fixed;
@@ -827,7 +839,6 @@ body.opened-mobile-nav .left-menu-submenu {
     min-width: 90%;
     width: 100%;
     background: $masterContentBgColor;
-    padding: 65px;
     -webkit-transition: width 0.5s;
     /* Safari */
     transition: width 0.5s;
@@ -840,7 +851,7 @@ body.opened-mobile-nav .left-menu-submenu {
   .master-navigation {
     .navbar {
       margin-bottom: 0;
-      z-index: 1900;
+      z-index: 19000;
     }
     .navbar-header {
       .domain-picker {
@@ -1088,182 +1099,7 @@ body.opened-mobile-nav .left-menu-submenu {
       height: 55px;
       position: relative;
       z-index: 1700;
-      .search {
-        width: 289px;
-        float: left;
-        padding: 6px 0 0 3px;
-        margin-right: 10px;
-        position: relative;
-        &:hover .autosuggest {
-          display: block;
-        }
-        .autosuggest {
-          width: 457px;
-          position: absolute;
-          top: 47px;
-          left: 3px;
-          background: #fff;
-          z-index: 5000;
-          box-shadow: 0 10px 12px rgba(0, 0, 0, 0.176);
-          text-align: center;
-          display: none;
-          .functions {
-            background: #F2F2F2;
-            padding: 25px;
-            overflow: hidden;
-            ul {
-              clear: both;
-              margin-bottom: 5px;
-              overflow: hidden;
-              margin-left: -5px;
-              li {
-                float: left;
-                font-size: 13px;
-                color: #505050;
-                list-style: none;
-                padding-left: 0;
-                span.icon.icon-caret-down {
-                  fill: #666;
-                  float: left;
-                  margin: 0 0 0 0;
-                  transform: rotate(-90deg);
-                  font-size: 9px;
-                }
-                a {
-                  font-size: 13px;
-                  color: #505050;
-                  padding: 3px 5px;
-                  &:hover {
-                    background: #3FBFB0;
-                    -webkit-border-radius: 3px;
-                    -moz-border-radius: 3px;
-                    border-radius: 3px;
-                    color: #fff;
-                    text-decoration: none;
-                  }
-                }
-              }
-            }
-            &.sec {
-              background: #F8F8F8;
-              h2 {
-                font-size: 13px;
-                color: #F95015;
-                margin-bottom: 10px;
-                font-weight: 600;
-                text-align: left;
-              }
-            }
-          }
-          .plain-search {
-            padding: 25px;
-            overflow: hidden;
-            ul {
-              margin-bottom: 0;
-              li {
-                margin-bottom: 10px;
-                clear: both;
-                overflow: hidden;
-                padding-left: 0;
-                list-style: none;
-                span.icon {
-                  float: left;
-                  margin-right: 5px;
-                  color: #E3E3E3;
-                  font-size: 25px;
-                }
-                a {
-                  float: left;
-                  font-size: 14px;
-                  color: #333;
-                  font-weight: 600;
-                  &:hover {
-                    text-decoration: underline;
-                  }
-                  &.url {
-                    float: left;
-                    font-size: 12px;
-                    color: #838383;
-                  }
-                }
-              }
-            }
-          }
-          a.all {
-            border: 1px solid #E0E0E0;
-            -webkit-border-radius: 54px;
-            -moz-border-radius: 54px;
-            border-radius: 54px;
-            padding: 10px 15px;
-            text-align: center;
-            text-transform: uppercase;
-            font-weight: 600;
-            color: #393939;
-            font-size: 12px;
-            display: inline-block;
-            margin: 20px 0 0 0;
-            &:hover {
-              color: #f95015;
-            }
-          }
-          .footer {
-            background: #F2F2F2;
-            padding: 15px 15px 10px 15px;
-            overflow: hidden;
-            p {
-              font-size: 13px;
-              color: #414141;
-              float: left;
-              margin-right: 35px;
-              margin-bottom: 0;
-              span {
-                float: left;
-                margin-right: 6px;
-                &.icon {
-                  font-size: 16px;
-                  color: #8D8D8D;
-                  float: left;
-                }
-              }
-              &.enter {
-                font-size: 13px;
-                color: #414141;
-                float: right;
-                margin-right: 7px;
-              }
-            }
-          }
-        }
-        input {
-          width: 234px;
-          height: 41px;
-          float: left;
-          background: #fff;
-          color: #333;
-          line-height: 156%;
-          padding: 0 0 0 8px;
-        }
-        a.btn {
-          width: 41px;
-          height: 41px;
-          float: left;
-          background: #fff;
-          -webkit-border-radius: 0;
-          -moz-border-radius: 0;
-          border-radius: 0;
-          margin-left: -5px;
-          padding: 0;
-          span.icon {
-            font-size: 17px;
-            color: #333;
-            margin-top: 5px;
-            line-height: 230%;
-            &:hover {
-              color: #f95d2b;
-            }
-          }
-        }
-      }
+      
       .quicklinks {
         padding: 19px 0 0 0;
         span.icon {
@@ -1410,15 +1246,11 @@ body.opened-mobile-nav .left-menu-submenu {
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 1900;
+    z-index: 19000;
   }
   .master-content {
     /*margin-left: 107px;*/
     padding: 55px 0 100px 60px;
-    
-    .container-fluid {
-      padding: 0 50px;
-    }
   }
   .master-navigation .navbar-collapse.collapse {
     position: fixed;

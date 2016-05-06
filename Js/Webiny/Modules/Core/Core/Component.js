@@ -52,7 +52,9 @@ class Component extends React.Component {
 
         // Release data cursors
         _.forEach(this.__cursors, cursor => {
-            cursor.release();
+            if (cursor && cursor.tree) {
+                cursor.release();
+            }
         });
         this.__cursors = [];
 
@@ -165,6 +167,8 @@ class Component extends React.Component {
             func(e.data.currentData, e.data.previousData, e);
         });
         this.__cursors.push(cursor);
+        // Execute callback with initial data
+        func(cursor.get());
         return cursor;
     }
 

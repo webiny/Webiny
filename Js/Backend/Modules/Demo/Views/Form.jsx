@@ -202,13 +202,13 @@ class Form extends Webiny.Ui.View {
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
                                             <Ui.Grid.Row>
-                                                <Ui.Grid.Col all={4}>
+                                                <Ui.Grid.Col all={3}>
                                                     <Ui.Input label="Email" name="email" validate="required,email"/>
                                                 </Ui.Grid.Col>
-                                                <Ui.Grid.Col all={4}>
+                                                <Ui.Grid.Col all={3}>
                                                     <Ui.Select {...userGroupSelect}/>
                                                 </Ui.Grid.Col>
-                                                <Ui.Grid.Col all={4}>
+                                                <Ui.Grid.Col all={6}>
                                                     <Ui.Search validate="required" name="userQuery" textAttr="name" label="Find file" api="/entities/core/files" fields="name" searchFields="name"/>
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>

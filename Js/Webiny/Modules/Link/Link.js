@@ -11,6 +11,7 @@ Link.defaultProps = {
 	url: null,
 	route: null,
 	separate: false,
+    className: '',
 	renderer() {
 		const props = _.clone(this.props);
 
@@ -49,9 +50,7 @@ Link.defaultProps = {
 		};
 
 		const classes = {};
-		if (this.props.className) {
-			classes[this.props.className] = true;
-		}
+
 		classes.btn = this.props.type || this.props.size;
 		if (this.props.type) {
 			classes['btn'] = true;
@@ -65,6 +64,10 @@ Link.defaultProps = {
 		if (this.props.align) {
 			classes[alignClasses[props.align]] = true;
 		}
+
+        if (this.props.className) {
+            classes[this.props.className] = true;
+        }
 
 		return <a {...props} className={this.classSet(classes)}>{this.props.children}</a>;
 	}

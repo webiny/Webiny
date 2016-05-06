@@ -1,7 +1,11 @@
 .master-content__header {
-  padding: 20px 0;
+  padding: 20px 50px;
   h2 {
     display: inline-block;
     border: none;
   }
+}
+
+.master-content__header--with-bg {
+	background-color: #fff;
 }

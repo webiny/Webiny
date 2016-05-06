@@ -1,3 +1,4 @@
+import Webiny from 'Webiny';
 import ValidationError from './ValidationError';
 
 class Validator {

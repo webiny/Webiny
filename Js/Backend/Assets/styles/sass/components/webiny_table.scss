@@ -21,7 +21,7 @@ table.table {
       z-index: 10;
     }
     .dropdown-menu {
-      z-index: 9;
+      z-index: 11;
     }
   }
   thead th, tfoot td {
@@ -247,9 +247,6 @@ table.table {
     .form-group {
       min-height: 0;
       margin-bottom: 5px;
-    }
-    label {
-      padding-top: 5px;
     }
   }
 }

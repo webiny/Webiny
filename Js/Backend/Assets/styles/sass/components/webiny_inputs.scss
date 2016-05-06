@@ -70,7 +70,7 @@ textarea.form-control {
   &.success input.form-control {
     border: 1px solid #3FBFB0;
   }
-  span.icon {
+  > span.icon {
     position: absolute;
     top: 28px;
     z-index: 500;
@@ -88,7 +88,6 @@ textarea.form-control {
 
   &.success span.icon {
     color: #3FBFB0;
-    top: 27px;
     right: -4px;
   }
 
@@ -190,6 +189,20 @@ textarea.form-control {
   }
 }
 
+.input-group {
+  width: 100%;
+
+  .icon {
+    position: absolute;
+    top: 50% !important;
+    transform: translateY(-50%);
+    right: -6px;
+    z-index: 500;
+    
+    font-size: 41px;
+    line-height: 98%;
+  }
+}
 
 form {
   &.form-sm {
