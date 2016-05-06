@@ -31,6 +31,10 @@ class Dialog extends Webiny.Ui.Component {
         Webiny.Ui.Dispatcher.get('ModalContainer').setContent(null);
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return !_.isEqual(nextProps, this.props) || !_.isEqual(nextState, this.state);
+    }
+
     bindHandlers() {
         $('webiny-modal-container').on('keyup.modal', '.modal', e => {
             // Listen for ESC button

@@ -60,12 +60,14 @@ InputContainer.defaultProps = {
         return (
             <div className={this.classSet(cssConfig)}>
                 {label}
-                <Webiny.Ui.Components.DelayedValueLink>
-                    <Input {...props}/>
-                </Webiny.Ui.Components.DelayedValueLink>
+                <div className="input-group">
+                    <Webiny.Ui.Components.DelayedValueLink>
+                        <Input {...props}/>
+                    </Webiny.Ui.Components.DelayedValueLink>
+                    {validationIcon}
+                </div>
                 <span className="help-block">{description}</span>
                 {validationMessage}
-                {validationIcon}
             </div>
         );
     }
