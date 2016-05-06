@@ -31,10 +31,6 @@ class SearchInput extends Webiny.Ui.FormComponent {
             options: props.options
         };
 
-        if(!props.options.length){
-            delete newState['options'];
-        }
-
         if (props.selected) {
             newState['selected'] = this.renderPreview(props.selected);
         }
@@ -92,7 +88,6 @@ class SearchInput extends Webiny.Ui.FormComponent {
     }
 
     onBlur() {
-        return;
         const state = {options: []};
         if (!_.get(this.props, 'valueLink.value')) {
             state['search'] = '';
