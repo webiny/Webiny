@@ -234,7 +234,6 @@ SearchInput.defaultProps = {
             spellCheck: 'false',
             dir: 'auto',
             onKeyDown: this.onKeyUp,
-            onBlur: this.onBlur,
             value: this.state.search || this.state.selected || '',
             onChange: this.inputChanged,
             disabled: this.isDisabled()
