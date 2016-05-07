@@ -43,7 +43,7 @@ class RouterUtils {
      */
     renderRoute(route) {
         return Dispatcher.dispatch('RenderRoute', route).then(() => {
-            document.title = route.getTitle() || route.getPattern();
+            document.title = Webiny.Router.getTitlePattern().replace('%s', route.getTitle() || route.getPattern());
             return route;
         });
     }

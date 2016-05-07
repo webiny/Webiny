@@ -7,7 +7,9 @@ function runWebiny() {
     if (appElement) {
         const appName = config.app;
         const authenticationApp = config.authentication || 'Core.Backend';
-        Webiny.Router.setBaseUrl(config.baseUrl);
+        Webiny.Router.setBaseUrl(config.router.baseUrl);
+        Webiny.Router.setTitlePattern(config.router.title);
+        Webiny.Router.setDefaultRoute(config.router.defaultRoute);
         WebinyBootstrap.includeApp(appName).then(app => {
             // Filter modules
             const modules = app.config.modules;

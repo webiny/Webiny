@@ -13,6 +13,7 @@ class Router {
         this.routes = [];
         this.defaultComponents = {};
         this.defaultRoute = null; // If router didn't match anything, it will reroute here
+        this.titlePattern = '{title}';
         this.activeRoute = null;
         this.beforeStart = [];
         this.routeWillChange = [];
@@ -224,6 +225,20 @@ class Router {
         return this;
     }
 
+    setTitlePattern(pattern) {
+        this.titlePattern = pattern;
+        return this;
+    }
+
+    getTitlePattern() {
+        return this.titlePattern;
+    }
+
+    /**
+     * Route name
+     * @param route
+     * @returns {Router}
+     */
     setDefaultRoute(route) {
         this.defaultRoute = route;
         return this;

@@ -13,7 +13,11 @@
 <script>
     WebinyBootstrap.run({
         app: 'Core.Backend',
-        baseUrl: '/admin',
+        router: {
+            baseUrl: '/admin',
+            title: '%s | Webiny',
+            defaultRoute: 'Users.List'
+        },
         authentication: 'Core.Backend'
     });
 </script>
