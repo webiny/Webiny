@@ -136,7 +136,7 @@ class Component extends React.Component {
      * @returns {{value: *, requestChange: *}}
      */
     bindTo(key, callback = _.noop, defaultValue = null) {
-        const ls = new LinkState(this, key, callback, defaultValue);
+        const ls = new LinkState(this, key, callback, _.clone(defaultValue));
         return ls.create();
     }
 
