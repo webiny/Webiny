@@ -4,6 +4,12 @@ const UiD = Webiny.Ui.Dispatcher;
 
 class Login extends Webiny.Ui.View {
 
+    constructor(props) {
+        super(props);
+
+        this.bindMethods('submit,onSubmit,onSubmitSuccess,renderForm');
+    }
+
     componentWillMount() {
         super.componentWillMount();
 
@@ -26,6 +32,22 @@ class Login extends Webiny.Ui.View {
         super.componentWillUnmount();
         $('body').removeClass('sign-in');
     }
+
+    renderForm() {
+        return this.props.renderForm.call(this);
+    }
+
+    submit() {
+        this.ui('loginForm').submit();
+    }
+
+    onSubmit(data, container) {
+        this.props.onSubmit.call(this, data, container);
+    }
+
+    onSubmitSuccess(data) {
+        this.props.onSubmitSuccess.call(this, data);
+    }
 }
 
 Login.defaultProps = {
@@ -43,7 +65,7 @@ Login.defaultProps = {
             Webiny.Cookies.set(this.props.cookieName, data.authToken, {expires: 30, path: '/'});
             Webiny.Model.set({User: data.user});
 
-            this.props.onSubmitSuccess.call(this, data);
+            this.onSubmitSuccess(data);
         });
     },
     onSubmitSuccess(data) {
@@ -88,7 +110,7 @@ Login.defaultProps = {
 
                             <div className="form-footer">
                                 <div className="submit-wrapper">
-                                    <Ui.Button type="primary" size="large" onClick={this.ui('loginForm:submit')} icon="icon-next">
+                                    <Ui.Button type="primary" size="large" onClick={this.submit} icon="icon-next">
                                         <span>Submit</span>
                                     </Ui.Button>
                                 </div>
@@ -104,8 +126,8 @@ Login.defaultProps = {
     },
     renderer() {
         return (
-            <Ui.Form.ApiContainer api={this.props.api} ui="loginForm" onSubmit={this.props.onSubmit.bind(this)}>
-                {this.props.renderForm.call(this)}
+            <Ui.Form.ApiContainer api={this.props.api} ui="loginForm" onSubmit={this.onSubmit}>
+                {this.renderForm}
             </Ui.Form.ApiContainer>
         );
     }
