@@ -1,5 +1,27 @@
 import Base from './Base';
 
+const apiProps = [
+    'fields',
+    'page',
+    'perPage',
+    'sort',
+    'searchFields',
+    'searchQuery',
+    'searchOperator'
+];
+
+function normalizeParams(params) {
+    const verifiedParams = {};
+    _.each(params, (v, k) => {
+        if (apiProps.indexOf(k) > -1) {
+            verifiedParams['_' + k] = v;
+        } else {
+            verifiedParams[k] = v;
+        }
+    });
+    return verifiedParams;
+}
+
 class Endpoint extends Base {
 
     constructor(baseUrl, config = {}) {
@@ -11,6 +33,8 @@ class Endpoint extends Base {
         this.httpMethod = config.httpMethod || 'GET';
         // initial query params that will be sent with every request until they is changed by component, using setQuery() method or via request arguments
         this.query = config.query || {};
+        // Dynamic query is a function that returns query object
+        this.dynamicQuery = config.dynamicQuery || _.noop;
         // initial body payload that will be sent with every request until it is changed by component, using setBody() method or via request arguments
         this.body = config.body || {};
         // config contains optional request parameters, like `progress` handler
@@ -28,6 +52,13 @@ class Endpoint extends Base {
     setUrl(url) {
         this.url = url;
         return this;
+    }
+
+    getUrl() {
+        if (_.isFunction(this.url)) {
+            return this.url();
+        }
+        return this.url;
     }
 
     setHttpMethod(httpMethod) {
@@ -50,16 +81,17 @@ class Endpoint extends Base {
         return this;
     }
 
-    getRequestQuery(query = null) {
-        return _.omitBy(_.merge({}, this.query, query || this.tmpQuery), value => _.isNull(value) || _.isUndefined(value));
+    getQuery(query = null) {
+        const mergedQuery = normalizeParams(_.merge({}, this.query, this.dynamicQuery()));
+        return _.omitBy(_.merge({}, mergedQuery, query || this.tmpQuery), value => _.isNull(value) || _.isUndefined(value));
     }
 
-    getRequestBody(body = null) {
+    getBody(body = null) {
         return _.omitBy(_.merge({}, this.body, body || this.tmpBody), value => _.isNull(value) || _.isUndefined(value));
     }
 
     get(url = '', query = null) {
-        return super.get(url, this.getRequestQuery(query), this.config);
+        return super.get(url, this.getQuery(query), this.config);
     }
 
     delete(url = '') {
@@ -71,20 +103,20 @@ class Endpoint extends Base {
     }
 
     post(url = '', body = null, query = null) {
-        return super.post(url, this.getRequestBody(body), this.getRequestQuery(query), this.config);
+        return super.post(url, this.getBody(body), this.getQuery(query), this.config);
     }
 
     patch(url = '', body = null, query = null) {
-        return super.patch(url, this.getRequestBody(body), this.getRequestQuery(query), this.config);
+        return super.patch(url, this.getBody(body), this.getQuery(query), this.config);
     }
 
     put(url = '', body = null, query = null) {
-        return super.put(url, this.getRequestBody(body), this.getRequestQuery(query), this.config);
+        return super.put(url, this.getBody(body), this.getQuery(query), this.config);
     }
 
     execute(httpMethod = null, url = null, body = null, query = null) {
         if (!url) {
-            url = this.url || '/';
+            url = this.getUrl() || '/';
         }
 
         url = url.replace(/\/\/+/g, '/');

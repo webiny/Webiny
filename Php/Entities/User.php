@@ -158,21 +158,6 @@ class User extends EntityAbstract
         $this->api('POST', 'delete', function () {
             return true;
         })->setBodyValidators(['ids' => 'required,gte:1']);
-
-        /**
-         * @api.name Get my data
-         * @api.url {id}/my-data/{type}/{date}/{user}
-         */
-        $this->api('GET', '{id}/my-data/{type}/{date}/{user}', function ($type, User $user, $date) {
-            return ['only' => 'my data', 'type' => $type, 'date' => $date, 'user' => $user->toArray()];
-        })->setRouteOptions([
-            'type' => ['Default' => 'private'],
-            'date' => ['Pattern' => 'DDDD-DD-DD']
-        ]);
-
-        $this->api('GET', 'my-data', function () {
-            return ['public' => 'data'];
-        });
     }
 
 
