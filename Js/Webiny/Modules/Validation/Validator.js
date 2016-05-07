@@ -153,7 +153,7 @@ formValidator.addValidator('lt', (value, max) => {
         return true;
     }
 
-    throw new ValidationError('This field needs to be less than ' + max)
+    throw new ValidationError('This field needs to be less than ' + max);
 });
 
 formValidator.addValidator('gte', (value, min) => {
