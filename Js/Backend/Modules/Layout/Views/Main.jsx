@@ -13,11 +13,11 @@ Main.defaultProps = {
         return (
             <div className="master minimized">
                 <Webiny.Ui.Components.Growl.Container ui="GrowlContainer"/>
-                <Webiny.Ui.Components.Placeholder name="Header"/>
+                <Webiny.Ui.Placeholder name="Header"/>
 
                 <div className="master-content master-content--no-background">
                     <div className="container-fluid">
-                        <Webiny.Ui.Components.Placeholder name="MasterContent"/>
+                        <Webiny.Ui.Placeholder name="MasterContent"/>
                     </div>
                 </div>
                 <Webiny.Ui.Components.Modal.Container ui="ModalContainer"/>
