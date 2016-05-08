@@ -18,6 +18,7 @@ class BaseContainer extends Webiny.Ui.Component {
             'registerForm',
             'loadData',
             'getData',
+            'setData',
             'onSubmit',
             'onInvalid',
             'onReset',
@@ -67,6 +68,11 @@ class BaseContainer extends Webiny.Ui.Component {
         }
 
         return data;
+    }
+
+    setData(data) {
+        this.setState({model: data});
+        return this;
     }
 
     submit(e) {

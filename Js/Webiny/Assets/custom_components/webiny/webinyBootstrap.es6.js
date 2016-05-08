@@ -27,7 +27,7 @@ function runWebiny() {
                 app.instance.meta = app.config;
                 app.instance.addModules(modules);
                 _.set(Webiny.Apps, app.config.name, app.instance);
-                app.instance.run(appElement);
+                return app.instance.run(appElement);
             });
         });
     }
@@ -71,10 +71,13 @@ class WebinyBootstrapClass {
             window.$Webiny = Webiny;
         }
 
+        console.groupCollapsed('Bootstrap');
         // First we need to import Core/Webiny
         this.includeApp('Core.Webiny').then(app => {
             app.instance.addModules(this.meta['Core.Webiny'].modules).run().then(() => {
-                runWebiny();
+                runWebiny().then(() => {
+                    console.groupEnd('Bootstrap');
+                });
             });
         });
     }
