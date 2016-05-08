@@ -18,6 +18,8 @@ import Http from './Http/Http';
 import Tools from './Tools';
 import i18n from './i18n/i18n';
 import Endpoint from './Api/Endpoint';
+import RootElement from './Ui/RootElement';
+import Placeholder from './Ui/Placeholder';
 import Settings from './Ui/Settings';
 import Menu from './Ui/Menu';
 import Hide from './Ui/Hide';
@@ -27,47 +29,49 @@ import Value from './Ui/Value';
 
 class Module extends WebinyModule {
 
-	constructor(app) {
-		super(app);
+    constructor(app) {
+        super(app);
 
-		_.merge(Webiny, {
-			App,
-			Module: WebinyModule,
+        _.merge(Webiny, {
+            App,
+            Module: WebinyModule,
             Modules: {},
             Mixins: {
                 ApiComponent,
                 FilterableComponent
             },
-			Ui: {
-				Component,
+            Ui: {
+                RootElement,
+                Placeholder,
+                Component,
                 Components: {
                     Hide,
                     Show,
                     Value
                 },
-				Dispatcher: UiDispatcher,
+                Dispatcher: UiDispatcher,
                 FormComponent,
                 ModalComponent,
                 OptionComponent,
                 Menu,
                 Settings,
-				View,
+                View,
                 Views: {}
-			},
-			Injector,
-			Model,
-			Router,
-			Route,
-			Dispatcher,
-			Tools,
+            },
+            Injector,
+            Model,
+            Router,
+            Route,
+            Dispatcher,
+            Tools,
             i18n,
             Cookies, // from js-cookies
-			Http,
-			Api: {
-				Endpoint
-			}
-		});
-	}
+            Http,
+            Api: {
+                Endpoint
+            }
+        });
+    }
 }
 
 export default Module;

@@ -1,6 +1,8 @@
-import Webiny from 'Webiny';
+import Component from './../Core/Component';
+import View from './../Core/View';
+import Router from './../Router/Router';
 
-class Placeholder extends Webiny.Ui.Component {
+class Placeholder extends Component {
 
     constructor(props) {
         super(props);
@@ -21,16 +23,17 @@ class Placeholder extends Webiny.Ui.Component {
 
 Placeholder.defaultProps = {
     renderer() {
-        if (!Webiny.Router.getActiveRoute()) {
+        if (!Router.getActiveRoute()) {
             return null;
         }
 
-        const route = Webiny.Router.getActiveRoute();
+        const route = Router.getActiveRoute();
+        console.log("ACTIVE ROUTE", route);
         const components = route.getComponents(this.props.name);
 
         let defComponents = [];
         if (!route.skipDefaultComponents()) {
-            defComponents = Webiny.Router.getDefaultComponents(this.props.name);
+            defComponents = Router.getDefaultComponents(this.props.name);
         }
 
         const cmps = [];
