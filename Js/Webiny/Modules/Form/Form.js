@@ -195,6 +195,17 @@ class Form extends Webiny.Ui.Component {
     }
 
     /**
+     * Set form model (merge current model with given model object)
+     * @param model
+     * @returns {Form}
+     */
+    setModel(model) {
+        _.merge(this.state.model, model);
+        this.setState({model: this.state.model});
+        return this;
+    }
+
+    /**
      * Get current form data including data from linked forms
      * @returns {Object|*}
      */
