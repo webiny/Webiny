@@ -1,23 +1,34 @@
 import Webiny from 'Webiny';
 
-// Find Webiny app or components and run them
+// Find Webiny app element and mount the app
 function runWebiny() {
     const config = WebinyBootstrap.config;
     const appElement = document.querySelector('webiny-app');
     if (appElement) {
         const appName = config.app;
         const authenticationApp = config.authentication || 'Core.Backend';
-        Webiny.Router.setBaseUrl(config.baseUrl);
-        WebinyBootstrap.includeApp(appName).then(app => {
-            // Filter modules
-            const modules = app.config.modules;
-            if (app.config.name !== authenticationApp) {
-                delete modules['Authentication'];
-            }
-            app.instance.meta = app.config;
-            app.instance.addModules(modules);
-            _.set(Webiny.Apps, app.config.name, app.instance);
-            app.instance.run(appElement);
+        Webiny.Router.setBaseUrl(config.router.baseUrl);
+        Webiny.Router.setTitlePattern(config.router.title);
+        Webiny.Router.setDefaultRoute(config.router.defaultRoute);
+
+        // Include required apps
+        let boot = Q();
+        _.each(config.require || [], depName => {
+            boot = WebinyBootstrap.includeApp(depName, true);
+        });
+
+        return boot.then(() => {
+            return WebinyBootstrap.includeApp(appName).then(app => {
+                // Filter modules
+                const modules = app.config.modules;
+                if (app.config.name !== authenticationApp) {
+                    delete modules['Authentication'];
+                }
+                app.instance.meta = app.config;
+                app.instance.addModules(modules);
+                _.set(Webiny.Apps, app.config.name, app.instance);
+                app.instance.run(appElement);
+            });
         });
     }
 }
@@ -63,7 +74,7 @@ class WebinyBootstrapClass {
         // First we need to import Core/Webiny
         this.includeApp('Core.Webiny').then(app => {
             app.instance.addModules(this.meta['Core.Webiny'].modules).run().then(() => {
-                runWebiny(this.meta);
+                runWebiny();
             });
         });
     }

@@ -13,9 +13,22 @@ class Router {
         this.routes = [];
         this.defaultComponents = {};
         this.defaultRoute = null; // If router didn't match anything, it will reroute here
+        this.titlePattern = '{title}';
         this.activeRoute = null;
         this.beforeStart = [];
         this.routeWillChange = [];
+    }
+
+    start(url) {
+        url = url || History.getState().data.url;
+        let matchedRoute = Utils.matchRoute(this, url);
+
+        if (!matchedRoute) {
+            const route = _.isString(this.defaultRoute) ? this.getRoute(this.defaultRoute) : this.defaultRoute;
+            url = route.getHref();
+            History.replaceState({url, replace: true}, null, url);
+            return this.start();
+        }
 
         History.Adapter.bind(window, 'statechange', () => {
             const matchedRoute = Utils.matchRoute(this, History.getState().data.url || History.getState().url);
@@ -24,15 +37,6 @@ class Router {
                 Utils.renderRoute(matchedRoute);
             }).catch(Utils.exceptionHandler);
         });
-    }
-
-    start(url) {
-        url = url || History.getState().data.url;
-        let matchedRoute = Utils.matchRoute(this, url);
-
-        if (!matchedRoute) {
-            matchedRoute = this.defaultRoute;
-        }
 
         this.activeRoute = matchedRoute;
 
@@ -57,7 +61,6 @@ class Router {
                 }
             }
         });
-
 
         return beforeStartChain;
     }
@@ -224,6 +227,20 @@ class Router {
         return this;
     }
 
+    setTitlePattern(pattern) {
+        this.titlePattern = pattern;
+        return this;
+    }
+
+    getTitlePattern() {
+        return this.titlePattern;
+    }
+
+    /**
+     * Route name
+     * @param route
+     * @returns {Router}
+     */
     setDefaultRoute(route) {
         this.defaultRoute = route;
         return this;

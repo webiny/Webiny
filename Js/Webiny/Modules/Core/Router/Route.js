@@ -2,22 +2,26 @@ import Router from './Router';
 
 class Route {
 
-    constructor(name, pattern, components, tags = '') {
+    constructor(name, pattern, components, title = '') {
         // Normalize components
         const nComponents = {};
-        _.forIn(components, (cmp, placeholder) => {
-            if (_.isArray(cmp)) {
-                nComponents[placeholder] = cmp;
-            } else {
-                nComponents[placeholder] = [cmp];
-            }
-        });
+        if (!_.isPlainObject(components)) {
+            nComponents['MasterContent'] = _.isArray(components) ? components : [components];
+        } else {
+            _.forIn(components, (cmp, placeholder) => {
+                if (_.isArray(cmp)) {
+                    nComponents[placeholder] = cmp;
+                } else {
+                    nComponents[placeholder] = [cmp];
+                }
+            });
+        }
 
         this.name = name;
         this.module = false;
         this.pattern = pattern;
         this.components = nComponents;
-        this.tags = tags;
+        this.title = title;
         this.regex = null;
         this.paramNames = [];
         this.paramValues = {};
@@ -121,6 +125,10 @@ class Route {
         return this.pattern;
     }
 
+    getTitle() {
+        return this.title;
+    }
+
     getParams(name = null) {
         if (name) {
             if (_.isUndefined(this.paramValues[name])) {
@@ -146,14 +154,6 @@ class Route {
         params = params === false ? this.getParams() : params;
         Router.goToRoute(this.getName(), params);
         return this;
-    }
-
-    getTags() {
-        return this.tags;
-    }
-
-    hasTag(tag) {
-        return _.contains(this.tags, tag);
     }
 
     getComponents(placeholder) {

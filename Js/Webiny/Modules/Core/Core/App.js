@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import RootElement from './../Ui/RootElement';
 
 class App {
 
@@ -6,6 +7,7 @@ class App {
         this.name = name;
         this.modules = [];
         this.onBeforeRender = _.noop;
+        this.element = null;
     }
 
     addModules(modules) {
@@ -13,7 +15,7 @@ class App {
         return this;
     }
 
-    setInitialElement(element) {
+    setRootElement(element) {
         this.element = element;
         return this;
     }
@@ -45,7 +47,7 @@ class App {
 
             return Q(this.onBeforeRender()).then(() => {
                 if (mountPoint) {
-                    ReactDOM.render(this.element, mountPoint);
+                    ReactDOM.render(_.isNull(this.element) ? React.createElement(RootElement) : this.element, mountPoint);
                 }
             });
         });

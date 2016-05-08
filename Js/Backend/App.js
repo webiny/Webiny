@@ -1,8 +1,6 @@
 import Webiny from 'Webiny';
-import Container from 'Core/Backend/Container';
 
 const backend = new Webiny.App('Core.Backend');
-backend.setInitialElement(React.createElement(Container));
 backend.beforeRender(() => {
     const authenticationApp = WebinyBootstrap.config.authentication || 'Core.Backend';
     // Load other backend apps

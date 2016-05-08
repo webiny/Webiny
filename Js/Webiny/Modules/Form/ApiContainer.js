@@ -22,6 +22,9 @@ class ApiContainer extends BaseContainer {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
+        if (props.id !== this.props.id) {
+            this.loadData(props.id);
+        }
     }
 
     componentWillUnmount() {

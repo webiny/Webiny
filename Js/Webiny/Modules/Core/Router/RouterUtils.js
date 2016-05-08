@@ -42,7 +42,10 @@ class RouterUtils {
      * @param route
      */
     renderRoute(route) {
-        return Dispatcher.dispatch('RenderRoute', route);
+        return Dispatcher.dispatch('RenderRoute', route).then(() => {
+            document.title = Webiny.Router.getTitlePattern().replace('%s', route.getTitle() || route.getPattern());
+            return route;
+        });
     }
 
     sanitizeUrl(url) {

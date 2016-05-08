@@ -4,7 +4,7 @@ class ApiComponent {
 
     static extend(context) {
         if (context.props.api) {
-            const apiQuery = [
+            const apiProps = [
                 'fields',
                 'page',
                 'perPage',
@@ -14,25 +14,21 @@ class ApiComponent {
                 'searchOperator'
             ];
 
-            const config = _.pick(context.props, ['httpMethod', 'url', 'body']);
+            const config = _.pick(context.props, ['httpMethod', 'url', 'body', 'query']);
+            if (!config.query || _.isPlainObject(config.query)) {
+                config.query = _.merge({}, config.query, _.pick(context.props, apiProps));
+            } else if (_.isFunction(config.query)) {
+                config.dynamicQuery = config.query;
+                config.query = _.pick(context.props, apiProps);
+            }
 
-            const verifiedQuery = {};
-            _.each(_.merge({}, context.props.query, context.props.defaultQuery), (v, k) => {
-                if (apiQuery.indexOf(k) > -1) {
-                    verifiedQuery['_' + k] = v;
-                } else {
-                    verifiedQuery[k] = v;
-                }
-            });
-            config.query = verifiedQuery;
-
-            _.each(apiQuery, v => {
-                if (_.has(context.props, v)) {
-                    config.query['_' + v] = context.props[v];
-                }
-            });
-
-            context.api = _.isFunction(context.props.api) ? context.props.api.call(context, context) : new ApiEndpoint(context.props.api, config);
+            let api = null;
+            if (_.isFunction(context.props.api)) {
+                api = context.props.api.call(context, context);
+            } else {
+                api = new ApiEndpoint(context.props.api, config);
+            }
+            context.api = api;
         }
     }
 }
