@@ -28,7 +28,6 @@ Placeholder.defaultProps = {
         }
 
         const route = Router.getActiveRoute();
-        console.log("ACTIVE ROUTE", route);
         const components = route.getComponents(this.props.name);
 
         let defComponents = [];
