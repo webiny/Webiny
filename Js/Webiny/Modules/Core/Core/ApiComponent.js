@@ -22,6 +22,8 @@ class ApiComponent {
                 config.query = _.pick(context.props, apiProps);
             }
 
+            config.context = {props: _.omit(context.props, ['children', 'renderer'])};
+
             let api = null;
             if (_.isFunction(context.props.api)) {
                 api = context.props.api.call(context, context);

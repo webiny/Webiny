@@ -1,3 +1,4 @@
+import Webiny from 'Webiny';
 import Base from './Base';
 
 const apiProps = [
@@ -38,7 +39,7 @@ class Endpoint extends Base {
         // initial body payload that will be sent with every request until it is changed by component, using setBody() method or via request arguments
         this.body = config.body || {};
         // config contains optional request parameters, like `progress` handler
-        this.config = {};
+        this.config = config;
 
         // These two properties hold temporary values that can be changed between requests
         this.tmpQuery = {};
@@ -47,6 +48,28 @@ class Endpoint extends Base {
         if (_.indexOf(['PATCH', 'POST'], this.httpMethod) === -1) {
             this.body = null;
         }
+    }
+
+    injectParams(data) {
+        const injected = {};
+        _.each(data, (v, k) => {
+            if (_.isPlainObject(v)) {
+                injected[k] = this.injectParams(v);
+                return;
+            }
+
+            if (_.isString(v) && v.startsWith('@')) {
+                const parts = v.split(':');
+                if (parts[0] === '@props') {
+                    v = _.get(this.config.context.props, parts[1]);
+                }
+                if (parts[0] === '@router') {
+                    v = Webiny.Router.getParams(parts[1]);
+                }
+            }
+            injected[k] = v;
+        });
+        return injected;
     }
 
     setUrl(url) {
@@ -83,7 +106,8 @@ class Endpoint extends Base {
 
     getQuery(query = null) {
         const mergedQuery = normalizeParams(_.merge({}, this.query, this.dynamicQuery()));
-        return _.omitBy(_.merge({}, mergedQuery, query || this.tmpQuery), value => _.isNull(value) || _.isUndefined(value));
+        const data = _.omitBy(_.merge({}, mergedQuery, query || this.tmpQuery), value => _.isNull(value) || _.isUndefined(value));
+        return this.injectParams(data);
     }
 
     getBody(body = null) {

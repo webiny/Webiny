@@ -11,24 +11,32 @@ class RowDetails extends Webiny.Ui.Component {
             loaded: false
         };
 
-        this.bindMethods();
+        this.bindMethods('loadData,isLoading');
 
         Webiny.Mixins.ApiComponent.extend(this);
     }
 
+    isLoading() {
+        return this.state.loading;
+    }
+
+    loadData() {
+        return this.api.execute().then(apiResponse => {
+            this.setState({loading: false});
+            if (apiResponse.isError()) {
+                this.props.actions.hideRowDetails(this.props.index);
+                return Webiny.Growl.danger(apiResponse.getError(), 'Failed to load data', true);
+            }
+            this.setState({data: apiResponse.getData(), loaded: true})
+        });
+    }
+
     componentWillUpdate(nextProps, nextState) {
         super.componentWillUpdate(nextProps, nextState);
-        if (nextProps.expanded && !this.props.expanded && this.props.api && !this.state.loaded) {
+        const newData = !_.isEqual(nextProps.data, this.props.data);
+        if (newData || (nextProps.expanded && !this.props.expanded && this.props.api && !this.state.loaded && !this.isLoading())) {
             this.setState({loading: true});
-            this.api.execute().then(apiResponse => {
-                this.setState({loading: false});
-                if (apiResponse.isError()) {
-                    this.props.actions.hideRowDetails(this.props.index);
-                    return Webiny.Growl.danger(apiResponse.getError(), 'Failed to load data', true);
-                }
-
-                this.setState({data: apiResponse.getData(), loaded: true})
-            });
+            this.loadData();
         }
     }
 }
