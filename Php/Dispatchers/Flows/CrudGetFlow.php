@@ -32,9 +32,9 @@ class CrudGetFlow extends AbstractFlow
                 return $entity->toArray($this->wRequest()->getFields());
             }
         } catch (\MongoException $e) {
-            throw new \Exception('Database error', $e->getMessage(), $e->getCode(), 400);
+            throw new ApiException('Database error: ' . $e->getMessage(), $e->getCode(), 400);
         }
-        throw new \Exception(get_class($entity) . ' with id `' . $id . '` was not found!', 'WBY-ED-CRUD_GET_FLOW-1');
+        throw new ApiException(get_class($entity) . ' with id `' . $id . '` was not found!', 'WBY-ED-CRUD_GET_FLOW-1');
     }
 
     public function canHandle($httpMethod, $params)

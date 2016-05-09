@@ -65,7 +65,7 @@ class SearchContainer extends Webiny.Ui.Component {
 
             // If we only got an ID...
             this.selectedId = value;
-            this.api.setUrl(value).execute().then(apiResponse => {
+            this.api.get(value).then(apiResponse => {
                 this.setState({selected: apiResponse.getData()});
             });
         } else {
