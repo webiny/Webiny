@@ -31,34 +31,10 @@ class User extends EntityAbstract
     protected static $entityCollection = 'Users';
     protected static $entityMask = '{email}';
 
-    protected static function entityIndexes()
+    public function __construct()
     {
-        return [
-            new SingleIndex('email', 'email', false, true)
-        ];
-    }
+        parent::__construct();
 
-    /**
-     * Get user instance for authorization
-     * @return $this
-     */
-    protected function getUserToAuthorize()
-    {
-        return $this;
-    }
-
-    protected function getUserGroups()
-    {
-        return $this->groups;
-    }
-
-
-    /**
-     * This method is called during instantiation to build entity structure
-     * @return void
-     */
-    protected function entityStructure()
-    {
         $this->attr('email')->char()->setValidators('required,email,unique')->onSet(function ($email) {
             return trim(strtolower($email));
         })->setValidationMessages([
@@ -97,10 +73,7 @@ class User extends EntityAbstract
 
             return $groups;
         });
-    }
 
-    protected function entityApi()
-    {
         /**
          * @api.name Login
          * @api.url /login
@@ -160,6 +133,27 @@ class User extends EntityAbstract
         })->setBodyValidators(['ids' => 'required,gte:1']);
     }
 
+
+    protected static function entityIndexes()
+    {
+        return [
+            new SingleIndex('email', 'email', false, true)
+        ];
+    }
+
+    /**
+     * Get user instance for authorization
+     * @return $this
+     */
+    protected function getUserToAuthorize()
+    {
+        return $this;
+    }
+
+    protected function getUserGroups()
+    {
+        return $this->groups;
+    }
 
     public function save()
     {

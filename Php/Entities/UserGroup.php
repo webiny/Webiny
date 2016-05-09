@@ -22,12 +22,10 @@ class UserGroup extends EntityAbstract
     protected static $entityCollection = 'UserGroup';
     protected static $entityMask = '{name}';
 
-    /**
-     * This method is called during instantiation to build entity structure
-     * @return void
-     */
-    protected function entityStructure()
+    public function __construct()
     {
+        parent::__construct();
+
         $this->attr('name')->char()->setValidators('required');
         $this->attr('tag')->char()->setValidators('required,unique')->onSet(function ($tag) {
             return $this->str($tag)->slug()->val();
@@ -35,6 +33,7 @@ class UserGroup extends EntityAbstract
         $this->attr('users')->many2many('User2Group')->setEntity('\Apps\Core\Php\Entities\User');
         $this->attr('permissions')->object();
     }
+
 
     public function checkPermission($item, $permission)
     {
@@ -52,7 +51,5 @@ class UserGroup extends EntityAbstract
         }
 
         return $this->permissions->keyNested($key . '.' . $permission);
-
-        return false;
     }
 }

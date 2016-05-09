@@ -66,11 +66,6 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         return [];
     }
 
-    protected function entityApi()
-    {
-        // Expose your methods to API in this method
-    }
-
     /**
      * Restore entity from archive.
      * Entity is inserted back to original collection(s) with all IDs preserved.
@@ -123,11 +118,6 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
          * Fire event for registering extra attributes
          */
         $this->wEvents()->fire($this->getEventName() . '.Extend', new EntityEvent($this));
-
-        /**
-         * Register entity API methods
-         */
-        $this->entityApi();
     }
 
     public function delete()

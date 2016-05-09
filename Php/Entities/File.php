@@ -24,22 +24,6 @@ class File extends EntityAbstract
     {
         parent::__construct();
         $this->getAttribute('modifiedOn')->setToArrayDefault();
-    }
-
-
-    protected static function entityIndexes()
-    {
-        return [
-            new SingleIndex('ref', 'ref')
-        ];
-    }
-
-    /**
-     * This method is called during instantiation to build entity structure
-     * @return void
-     */
-    protected function entityStructure()
-    {
         $this->attr('name')->char()->setRequired()->setToArrayDefault();
         $this->attr('title')->char()->setToArrayDefault();
         $this->attr('size')->integer()->setToArrayDefault();
@@ -49,6 +33,14 @@ class File extends EntityAbstract
         $this->attr('tags')->arr()->setToArrayDefault();
         $this->attr('ref')->char()->setToArrayDefault();
         $this->attr('order')->integer()->setDefaultValue(0)->setToArrayDefault();
+    }
+
+
+    protected static function entityIndexes()
+    {
+        return [
+            new SingleIndex('ref', 'ref')
+        ];
     }
 
     /**
