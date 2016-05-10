@@ -16,6 +16,8 @@ use Webiny\Component\Entity\EntityAbstract;
  */
 class FilesAttribute extends One2ManyAttribute
 {
+    private $tags = [];
+
     /**
      * @inheritDoc
      */
@@ -37,5 +39,16 @@ class FilesAttribute extends One2ManyAttribute
         $this->tags = $tags;
 
         return $this;
+    }
+
+    public function getValue()
+    {
+        $values = parent::getValue();
+
+        foreach ($values as $value) {
+            $value->tags->merge($this->tags)->unique();
+        }
+
+        return $values;
     }
 }
