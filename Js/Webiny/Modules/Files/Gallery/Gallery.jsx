@@ -131,8 +131,11 @@ class Gallery extends ImageComponent {
         if (files.length === 1) {
             const file = files[0];
             file.key = Webiny.Tools.createUID();
-            this.setState({showCrop: true, cropImage: file});
-            return;
+            if (this.props.newCropper) {
+                return this.setState({showCrop: true, cropImage: file});
+            }
+
+            return this.saveImage(file);
         }
 
         files.map(img => {
@@ -269,8 +272,22 @@ class Gallery extends ImageComponent {
             return null;
         }
 
+        if(cropper.inline){
+            return (
+                <Ui.Files.InlineFileCropper
+                    title={cropper.title}
+                    action={cropper.action}
+                    onHidden={this.onCropperHidden}
+                    onCrop={this.applyCropping}
+                    config={cropper.config}
+                    image={this.state.cropImage}>
+                    {children}
+                </Ui.Files.InlineFileCropper>
+            );
+        }
+
         return (
-            <Ui.Files.FileCropper
+            <Ui.Files.ModalFileCropper
                 title={cropper.title}
                 action={cropper.action}
                 onHidden={this.onCropperHidden}
@@ -278,8 +295,9 @@ class Gallery extends ImageComponent {
                 config={cropper.config}
                 image={this.state.cropImage}>
                 {children}
-            </Ui.Files.FileCropper>
+            </Ui.Files.ModalFileCropper>
         );
+
     }
 }
 

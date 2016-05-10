@@ -58,7 +58,7 @@ InputContainer.defaultProps = {
         }
 
         return (
-            <div className={this.classSet(cssConfig)}>
+            <div className={this.classSet(cssConfig, this.props.className)}>
                 {label}
                 <div className="input-group">
                     <Webiny.Ui.Components.DelayedValueLink>

@@ -3,7 +3,8 @@ import Avatar from './Avatar/Avatar';
 import Gallery from './Gallery/Gallery';
 import Image from './Gallery/Image';
 import FileReader from './FileReader';
-import FileCropper from './FileCropper';
+import InlineFileCropper from './InlineFileCropper';
+import ModalFileCropper from './ModalFileCropper';
 import FileUploader from './FileUploader';
 
 class Module extends Webiny.Module {
@@ -13,7 +14,8 @@ class Module extends Webiny.Module {
             Avatar,
             Gallery,
             FileReader,
-            FileCropper,
+            InlineFileCropper,
+            ModalFileCropper,
             FileUploader
         };
 

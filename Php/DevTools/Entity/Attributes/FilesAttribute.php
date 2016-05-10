@@ -25,4 +25,17 @@ class FilesAttribute extends One2ManyAttribute
         $this->setEntity('\Apps\Core\Php\Entities\File')->setSorter('order');
     }
 
+    /**
+     * Set tags that will always be assigned to the file
+     *
+     * @param $tags
+     *
+     * @return $this
+     */
+    public function setTags(...$tags)
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
 }
