@@ -9,10 +9,6 @@ class Pagination extends Webiny.Ui.Component {
         this.bindMethods('renderPages');
     }
 
-    shouldComponentUpdate(nextProps) {
-        return nextProps.currentPage !== this.props.currentPage || nextProps.totalPages !== this.props.totalPages;
-    }
-
     pageChanged(page) {
         if (page === this.props.currentPage) {
             return;
