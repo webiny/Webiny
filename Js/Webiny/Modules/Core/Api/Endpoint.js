@@ -90,7 +90,7 @@ class Endpoint extends Base {
     }
 
     setBody(body) {
-        this.tmpBody = _.omitBy(body, v => _.isNull(v) || _.isUndefined(v));
+        this.tmpBody = body;
         return this;
     }
 
@@ -111,7 +111,7 @@ class Endpoint extends Base {
     }
 
     getBody(body = null) {
-        return _.omitBy(_.merge({}, this.body, body || this.tmpBody), value => _.isNull(value) || _.isUndefined(value));
+        return _.merge({}, this.body, body || this.tmpBody);
     }
 
     get(url = '', query = null) {
