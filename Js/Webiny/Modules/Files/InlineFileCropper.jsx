@@ -23,7 +23,7 @@ InlineFileCropper.defaultProps = _.merge({}, FileCropper.defaultProps, {
             <webiny-image-cropper>
                 {props.children}
                 <div className="col-xs-12 no-padding">
-                    <img className="img-cropper" width="100%" src={props.image && props.image.src+this.getCacheBust()}/>
+                    <img className="img-cropper" width="100%" src={props.image && props.image.src + this.getCacheBust()}/>
                 </div>
                 <div className="col-xs-12">
                     <Ui.Button type="secondary" className="pull-right ml5" onClick={this.props.onHidden}>Cancel</Ui.Button>

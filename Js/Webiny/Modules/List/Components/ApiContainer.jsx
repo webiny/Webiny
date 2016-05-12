@@ -53,7 +53,7 @@ class ApiContainer extends BaseContainer {
             _searchOperator: this.state.searchOperator
         });
 
-        return this.request = this.api.setQuery(query).execute().then(apiResponse => {
+        this.request = this.api.setQuery(query).execute().then(apiResponse => {
             let data = null;
             if (!apiResponse.isError() && !apiResponse.isAborted()) {
                 data = apiResponse.getData();
@@ -65,6 +65,8 @@ class ApiContainer extends BaseContainer {
 
             return data;
         });
+
+        return this.request;
     }
 
     getContainerActions() {

@@ -30,6 +30,11 @@ class ModalFileCropper extends FileCropper {
         }
     }
 
+    applyCropping() {
+        super.applyCropping();
+        this.hide();
+    }
+
     hide() {
         this.refs.dialog.hide();
     }
@@ -50,7 +55,7 @@ ModalFileCropper.defaultProps = _.merge({}, FileCropper.defaultProps, {
     renderer() {
         const props = this.props;
 
-        var modalProps = {
+        const modalProps = {
             onShown: () => {
                 // Execute callback first
                 props.onShown();
@@ -71,13 +76,12 @@ ModalFileCropper.defaultProps = _.merge({}, FileCropper.defaultProps, {
                 <Ui.Modal.Body>
                     {props.children}
                     <div className="col-xs-12 no-padding">
-                        <img className="img-cropper" width="100%" src={props.image && props.image.src+this.getCacheBust()}/>
+                        <img className="img-cropper" width="100%" src={props.image && props.image.src + this.getCacheBust()}/>
                     </div>
                     <div className="clearfix"></div>
                 </Ui.Modal.Body>
                 <Ui.Modal.Footer>
-                    <Ui.Button type="primary" className="pull-right ml5" data-dismiss="modal"
-                               onClick={this.applyCropping}>{props.action}</Ui.Button>
+                    <Ui.Button type="primary" className="pull-right ml5" onClick={this.applyCropping}>{props.action}</Ui.Button>
                 </Ui.Modal.Footer>
             </Ui.Modal.Dialog>
         );

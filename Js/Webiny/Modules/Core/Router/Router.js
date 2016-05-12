@@ -21,7 +21,7 @@ class Router {
 
     start(url) {
         url = url || History.getState().data.url;
-        let matchedRoute = Utils.matchRoute(this, url);
+        const matchedRoute = Utils.matchRoute(this, url);
 
         if (!matchedRoute) {
             const route = _.isString(this.defaultRoute) ? this.getRoute(this.defaultRoute) : this.defaultRoute;
@@ -31,10 +31,10 @@ class Router {
         }
 
         History.Adapter.bind(window, 'statechange', () => {
-            const matchedRoute = Utils.matchRoute(this, History.getState().data.url || History.getState().url);
-            this.activeRoute = matchedRoute;
-            Utils.routeWillChange(matchedRoute, this.routeWillChange).then(() => {
-                Utils.renderRoute(matchedRoute);
+            const matched = Utils.matchRoute(this, History.getState().data.url || History.getState().url);
+            this.activeRoute = matched;
+            Utils.routeWillChange(matched, this.routeWillChange).then(() => {
+                Utils.renderRoute(matched);
             }).catch(Utils.exceptionHandler);
         });
 

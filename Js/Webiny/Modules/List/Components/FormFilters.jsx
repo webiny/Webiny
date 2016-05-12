@@ -4,7 +4,7 @@ const Ui = Webiny.Ui.Components;
 
 class FormFilters extends Filters {
 
-    shouldComponentUpdate(nextProps, nextState){
+    shouldComponentUpdate(nextProps) {
         return !_.isEqual(nextProps, this.props);
     }
 }

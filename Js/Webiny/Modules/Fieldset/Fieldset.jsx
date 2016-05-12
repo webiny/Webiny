@@ -7,13 +7,13 @@ class Fieldset extends Webiny.Ui.Component {
 Fieldset.defaultProps = {
     renderer() {
         return (
-			<fieldset {...this.props}>
-				{this.props.title && (
-					<legend>{this.props.title}</legend>
-				)}
-				{this.props.children}
-			</fieldset>
-		);
+            <fieldset {...this.props}>
+                {this.props.title && (
+                    <legend>{this.props.title}</legend>
+                )}
+                {this.props.children}
+            </fieldset>
+        );
     }
 };
 

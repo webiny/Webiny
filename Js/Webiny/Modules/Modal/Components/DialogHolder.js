@@ -11,7 +11,7 @@ class DialogHolder extends Webiny.Ui.Component {
         this.props.onShown();
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         super.componentWillUnmount();
         this.props.onHidden();
     }

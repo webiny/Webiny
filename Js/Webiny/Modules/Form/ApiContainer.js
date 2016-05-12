@@ -55,15 +55,17 @@ class ApiContainer extends BaseContainer {
 
         if (id) {
             this.showLoading();
-            return this.request = this.api.execute(this.api.httpMethod, id).then(apiResponse => {
+            this.request = this.api.execute(this.api.httpMethod, id).then(apiResponse => {
                 if (apiResponse.isAborted()) {
                     return;
                 }
                 if (this.props.prepareLoadedData) {
-                    return this.setState({model: this.props.prepareLoadedData(apiResponse.getData()), loading: false});
+                    this.setState({model: this.props.prepareLoadedData(apiResponse.getData()), loading: false});
+                    return;
                 }
                 this.setState({model: apiResponse.getData(), loading: false});
             });
+            return this.request;
         }
     }
 

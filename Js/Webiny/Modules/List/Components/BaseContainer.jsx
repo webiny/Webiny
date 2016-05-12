@@ -137,7 +137,7 @@ class BaseContainer extends Webiny.Ui.Component {
         if (this.props.connectToRouter) {
             this.goToRoute({_perPage: perPage});
         } else {
-            this.setState({page, perPage}, this.loadData);
+            this.setState({page: 1, perPage}, this.loadData);
         }
 
         return this;
@@ -173,7 +173,7 @@ class BaseContainer extends Webiny.Ui.Component {
     /* eslint-enable */
 
     onSelect(data) {
-        this.setState({selectedRows: data})
+        this.setState({selectedRows: data});
     }
 
     getContainerActions() {
@@ -257,7 +257,7 @@ class BaseContainer extends Webiny.Ui.Component {
         // If MultiActions are present, pass an onSelect callback to Table which will tell Table to allow selection
         // and execute onSelect callback when selection is changed
         if (this.multiActionsElement) {
-            this.tableElement = React.cloneElement(this.tableElement, {onSelect: this.onSelect})
+            this.tableElement = React.cloneElement(this.tableElement, {onSelect: this.onSelect});
         }
     }
 
@@ -302,7 +302,7 @@ class BaseContainer extends Webiny.Ui.Component {
      * @returns {*}
      */
     getContent(...params) {
-        let children = this.props.children;
+        const children = this.props.children;
         if (_.isFunction(children)) {
             if (params.length === 0) {
                 params = [this, this.state.list, this];
@@ -315,10 +315,9 @@ class BaseContainer extends Webiny.Ui.Component {
                 return content;
             }
             return content.props.children;
-        } else {
-            children = React.Children.toArray(children);
         }
-        return children;
+
+        return React.Children.toArray(children);
     }
 }
 

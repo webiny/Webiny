@@ -28,8 +28,8 @@ class FileCropper extends Webiny.Ui.Component {
 
     getCacheBust() {
         let cacheBust = '';
-        if (this.props.image && this.props.image.modifiedOn && this.props.image.src.indexOf('data:') == -1) {
-            cacheBust = '?ts=' + moment(props.image.modifiedOn).format('X');
+        if (this.props.image && this.props.image.modifiedOn && this.props.image.src.indexOf('data:') === -1) {
+            cacheBust = '?ts=' + moment(this.props.image.modifiedOn).format('X');
         }
         return cacheBust;
     }
@@ -58,6 +58,7 @@ FileCropper.defaultProps = {
     onCrop: _.noop
 };
 
+/* eslint-disable */
 /**
  * Config options
  * @see https://github.com/fengyuanchen/cropper
@@ -98,5 +99,6 @@ const options = {
     zoomin: React.PropTypes.func,
     zoomout: React.PropTypes.func
 };
+/* eslint-enable */
 
 export default FileCropper;

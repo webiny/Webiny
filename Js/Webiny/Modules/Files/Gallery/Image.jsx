@@ -48,7 +48,7 @@ Image.defaultProps = {
 
         return (
             <div className="file" {...draggable} data-role="image">
-                <img className="file-preview" src={image.src+cacheBust} alt={title} title={title} width="133" height="133"/>
+                <img className="file-preview" src={image.src + cacheBust} alt={title} title={title} width="133" height="133"/>
                 {editBtn}
                 <Ui.Link onClick={this.deleteImage} className="file-remove"/>
                 <span className="file-name">{image.name}</span>

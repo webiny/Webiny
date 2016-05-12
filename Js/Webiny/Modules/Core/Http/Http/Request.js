@@ -1,5 +1,19 @@
-import Webiny from 'Webiny';
 import HttpResponse from './Response';
+
+function formatResponse(jqXhr) {
+    const headers = {};
+    _.filter(jqXhr.getAllResponseHeaders().split('\n')).map(item => {
+        const [key, value] = item.split(': ');
+        headers[key] = value;
+    });
+
+    return {
+        data: jqXhr.responseJSON,
+        status: jqXhr.status,
+        statusText: jqXhr.statusText,
+        headers
+    };
+}
 
 class HttpRequest {
 
@@ -10,8 +24,7 @@ class HttpRequest {
         this.query = null;
         this.body = null;
         this.responseType = 'json';
-        this.progress = (progressEvent) => {
-        };
+        this.progress = _.noop;
     }
 
     getUrl() {
@@ -89,7 +102,7 @@ class HttpRequest {
     }
 
     getRequestObject() {
-        var config = {
+        const config = {
             url: this.getUrl(),
             method: this.getMethod(),
             headers: this.getHeaders(),
@@ -105,7 +118,7 @@ class HttpRequest {
             }
         };
 
-        if (['put', 'post', 'patch'].indexOf(config.method) == -1) {
+        if (['put', 'post', 'patch'].indexOf(config.method) === -1) {
             delete config.data;
         }
 
@@ -117,7 +130,7 @@ class HttpRequest {
      * @returns {Promise}
      */
     send() {
-        this.promise = new Promise((resolve, reject) => {
+        this.promise = new Promise(resolve => {
             this.request = $.ajax(this.getRequestObject())
                 .done((data, textStatus, jqXhr) => {
                     resolve(new HttpResponse(formatResponse(jqXhr)));
@@ -143,22 +156,6 @@ class HttpRequest {
     abort() {
         this.request.abort();
     }
-}
-
-function formatResponse(jqXhr) {
-
-    const headers = {};
-    _.filter(jqXhr.getAllResponseHeaders().split("\n")).map(item => {
-        const [key, value] = item.split(': ');
-        headers[key] = value;
-    });
-
-    return {
-        data: jqXhr.responseJSON,
-        status: jqXhr.status,
-        statusText: jqXhr.statusText,
-        headers: headers
-    };
 }
 
 export default HttpRequest;

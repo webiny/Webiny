@@ -1,59 +1,59 @@
 class Injector {
 
-	constructor() {
-		this.container = new Bottle();
+    constructor() {
+        this.container = new Bottle();
         this.description = 'Injector is a dependency injection micro container based on Bottle: https://github.com/young-steveo/bottlejs';
-	}
+    }
 
-	get(name) {
-		return this.container.container[name];
-	}
+    get(name) {
+        return this.container.container[name];
+    }
 
-	constant(name, value) {
-		this.container.constant(name, value);
+    constant(name, value) {
+        this.container.constant(name, value);
 
-		return this;
-	}
+        return this;
+    }
 
-	decorator(name, func) {
-		this.container.decorator(name, func);
+    decorator(name, func) {
+        this.container.decorator(name, func);
 
-		return this;
-	}
+        return this;
+    }
 
-	digest(services) {
-		this.container.digest(services);
+    digest(services) {
+        this.container.digest(services);
 
-		return this;
-	}
+        return this;
+    }
 
-	factory(name, factory) {
-		this.container.factory(name, factory);
+    factory(name, factory) {
+        this.container.factory(name, factory);
 
-		return this;
-	}
+        return this;
+    }
 
-	middleware(name, func) {
-		this.container.middleware(name, func);
+    middleware(name, func) {
+        this.container.middleware(name, func);
 
-		return this;
-	}
+        return this;
+    }
 
-	provider(name, provider) {
-		this.container.provider(name, provider);
+    provider(name, provider) {
+        this.container.provider(name, provider);
 
-		return this;
-	}
+        return this;
+    }
 
-	service(name, construct, ...dependencies) {
-		this.container.service(name, construct, ...dependencies);
-	}
+    service(name, construct, ...dependencies) {
+        this.container.service(name, construct, ...dependencies);
+    }
 
-	value(name, value) {
-		this.container.value(name, value);
+    value(name, value) {
+        this.container.value(name, value);
 
-		return this;
-	}
+        return this;
+    }
 }
 
 export default new Injector;

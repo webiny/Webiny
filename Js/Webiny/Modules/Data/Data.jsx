@@ -38,7 +38,8 @@ class Data extends Webiny.Ui.Component {
         }
 
         if (apiResponse.isError()) {
-            return Webiny.Growl.info(apiResponse.getError(), 'Could not fetch data', true);
+            Webiny.Growl.info(apiResponse.getError(), 'Could not fetch data', true);
+            return;
         }
         this.setState({data: apiResponse.getData()});
     }

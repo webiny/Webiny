@@ -1,5 +1,3 @@
-import ApiEndpoint from './../Api/Endpoint';
-
 class FilterableComponent {
     static extend(context) {
         if (!context.applyFilter) {

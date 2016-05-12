@@ -5,7 +5,7 @@ class Hidden extends Webiny.Ui.FormComponent {
 
 Hidden.defaultProps = {
     renderer() {
-		return null;
+        return null;
     }
 };
 

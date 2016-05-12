@@ -103,7 +103,7 @@ class OptionComponent extends Component {
                 this.api.setQuery(query);
             }
 
-            return this.request = this.api.execute().then(apiResponse => {
+            this.request = this.api.execute().then(apiResponse => {
                 if (apiResponse.isAborted()) {
                     return;
                 }
@@ -115,6 +115,8 @@ class OptionComponent extends Component {
 
                 this.setState({options: this.renderOptions(props, data)});
             });
+
+            return this.request;
         }
 
         if (props.children) {

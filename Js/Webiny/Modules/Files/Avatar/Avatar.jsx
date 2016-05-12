@@ -62,8 +62,6 @@ Avatar.defaultProps = {
             imageSrc = model.src;
         }
 
-        const name = _.get(model, 'name', '');
-
         const imageAction = (
             <button type="button" className="btn btn-primary btn-block upload" onClick={this.getFiles}>Upload</button>
         );
@@ -77,12 +75,11 @@ Avatar.defaultProps = {
                     onHidden={this.onCropperHidden}
                     onCrop={this.applyCropping}
                     config={this.props.cropper.config}
-                    image={this.state.cropImage}
-                    />
+                    image={this.state.cropImage}/>
             );
         }
 
-        let props = {
+        const props = {
             onDrop: this.onDrop,
             onDragLeave: this.onDragLeave,
             onDragOver: this.onDragOver,

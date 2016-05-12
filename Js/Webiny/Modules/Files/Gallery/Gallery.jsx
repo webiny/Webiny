@@ -56,7 +56,7 @@ class Gallery extends ImageComponent {
     setupComponent(props) {
         this.dom = ReactDOM.findDOMNode(this);
         if (props.valueLink.value) {
-            let images = props.valueLink.value.map(img => {
+            const images = props.valueLink.value.map(img => {
                 img.key = Webiny.Tools.createUID();
                 return img;
             });
@@ -78,7 +78,7 @@ class Gallery extends ImageComponent {
         const index = this.getImageIndex(image);
         const state = this.state;
         image.progress = 0;
-        if (index != null) {
+        if (index !== null) {
             _.set(state, 'images.' + index, image);
         } else {
             image.order = state.images.length;
@@ -95,9 +95,9 @@ class Gallery extends ImageComponent {
             this.props.valueLink.requestChange(state.images);
         }, (apiResponse, failedImage, jobId) => {
             if (apiResponse.isAborted()) {
-                const state = this.state;
-                state.images.splice(_.findIndex(state.images, {jobId}), 1);
-                this.setState({images: state.images});
+                const images = this.state.images;
+                images.splice(_.findIndex(images, {jobId}), 1);
+                this.setState({images});
             }
         });
 
@@ -222,7 +222,7 @@ class Gallery extends ImageComponent {
         }
 
         this.dragged.style.display = 'inline-block';
-        if (this.dragged.parentNode == placeholder.parentNode) {
+        if (this.dragged.parentNode === placeholder.parentNode) {
             this.dragged.parentNode.removeChild(placeholder);
         }
         this.dragged = null;
@@ -255,8 +255,7 @@ class Gallery extends ImageComponent {
         if (relX > width) {
             this.nodePlacement = 'after';
             parent.insertBefore(placeholder, over.nextElementSibling);
-        }
-        else if (relX < width) {
+        } else if (relX < width) {
             this.nodePlacement = 'before';
             parent.insertBefore(placeholder, over);
         }
@@ -272,7 +271,7 @@ class Gallery extends ImageComponent {
             return null;
         }
 
-        if(cropper.inline){
+        if (cropper.inline) {
             return (
                 <Ui.Files.InlineFileCropper
                     title={cropper.title}
@@ -297,7 +296,6 @@ class Gallery extends ImageComponent {
                 {children}
             </Ui.Files.ModalFileCropper>
         );
-
     }
 }
 
@@ -333,12 +331,12 @@ Gallery.defaultProps = {
             'tray-bin--empty': !this.state.images.length
         };
 
-        /*let errors = null;
+        /* let errors = null;
          if (this.state.errors) {
          errors = this.state.errors.map((err, index) => {
          return <div key={index}><strong>{err.name}</strong> {err.message}</div>;
          });
-         }*/
+         } */
 
         const confirmationProps = {
             ref: 'confirm',
@@ -364,7 +362,7 @@ Gallery.defaultProps = {
                                 if (this.props.confirmDelete) {
                                     this.refs.confirm.setData(item, index).show();
                                 } else {
-                                    this.deleteImage(item, index)
+                                    this.deleteImage(item, index);
                                 }
                             },
                             onCancelUpload: () => this.cancelUpload(item),
