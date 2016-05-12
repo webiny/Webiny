@@ -38,7 +38,8 @@ class BaseContainer extends Webiny.Ui.Component {
             'prepare',
             'recordUpdate',
             'recordDelete',
-            'onSelect'
+            'onSelect',
+            'getContent'
         );
     }
 
@@ -304,7 +305,7 @@ class BaseContainer extends Webiny.Ui.Component {
         let children = this.props.children;
         if (_.isFunction(children)) {
             if (params.length === 0) {
-                params = [this, this.state.model, this];
+                params = [this, this.state.list, this];
             } else {
                 params.unshift(this);
                 params.push(this);

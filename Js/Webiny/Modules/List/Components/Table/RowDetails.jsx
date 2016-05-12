@@ -27,7 +27,7 @@ class RowDetails extends Webiny.Ui.Component {
                 this.props.actions.hideRowDetails(this.props.index);
                 return Webiny.Growl.danger(apiResponse.getError(), 'Failed to load data', true);
             }
-            this.setState({data: apiResponse.getData(), loaded: true})
+            this.setState({data: apiResponse.getData(), loaded: true});
         });
     }
 

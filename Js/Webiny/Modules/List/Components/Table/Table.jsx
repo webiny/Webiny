@@ -128,7 +128,7 @@ class Table extends Webiny.Ui.Component {
         return () => {
             this.state.expandedRows.push(rowIndex);
             this.setState({expandedRows: this.state.expandedRows});
-        }
+        };
     }
 
     hideRowDetails(rowIndex) {
