@@ -71,7 +71,7 @@ Avatar.defaultProps = {
         let cropper = null;
         if (this.props.cropper && this.state.showCrop) {
             cropper = (
-                <Ui.Files.FileCropper
+                <Ui.Files.ModalFileCropper
                     title={this.props.cropper.title}
                     action={this.props.cropper.action}
                     onHidden={this.onCropperHidden}
