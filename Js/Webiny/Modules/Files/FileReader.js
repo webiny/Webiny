@@ -2,79 +2,79 @@ import Webiny from 'Webiny';
 
 class FileReader extends Webiny.Ui.Component {
 
-    constructor(props) {
-        super(props);
+	constructor(props) {
+		super(props);
 
-        this.bindMethods('onChange', 'getFiles', 'readFiles');
-    }
+		this.bindMethods('onChange', 'getFiles', 'readFiles');
+	}
 
-    getFiles() {
-        ReactDOM.findDOMNode(this).click();
-    }
+	getFiles() {
+		ReactDOM.findDOMNode(this).click();
+	}
 
-    onChange(e) {
-        this.readFiles(e.target.files);
-    }
+	onChange(e) {
+		this.readFiles(e.target.files);
+	}
 
-    readFiles(files) {
-        const output = [];
-        const errors = [];
-        let loadedFiles = 0;
+	readFiles(files) {
+		const output = [];
+		const errors = [];
+		let loadedFiles = 0;
 
-        _.each(files, file => {
-            const reader = new window.FileReader();
+		_.each(files, file => {
+			const reader = new window.FileReader();
 
-            reader.onload = ((f) => {
-                return (e) => {
-                    loadedFiles++;
-                    const data = {
-                        name: f.name,
-                        size: f.size,
-                        type: f.type
-                    };
+			reader.onload = ((f) => {
+				return (e) => {
+					loadedFiles++;
+					const data = {
+						name: f.name,
+						size: f.size,
+						type: f.type
+					};
 
-                    let errorMessage = null;
-                    if (this.props.accept.length && this.props.accept.indexOf(file.type) === -1) {
-                        errorMessage = 'Unsupported file type (' + file.type + ')';
-                    } else if (this.props.sizeLimit < file.size) {
-                        errorMessage = 'File is too big';
-                    }
+					let errorMessage = null;
+					if (this.props.accept.length && this.props.accept.indexOf(file.type) === -1) {
+						errorMessage = 'Unsupported file type (' + file.type + ')';
+					} else if (this.props.sizeLimit < file.size) {
+						errorMessage = 'File is too big';
+					}
 
-                    if (!errorMessage) {
-                        data.src = e.target.result;
-                        output.push(data);
-                    } else {
-                        data.message = errorMessage;
-                        errors.push(data);
-                    }
+					if (!errorMessage) {
+						data.src = e.target.result;
+						output.push(data);
+					} else {
+						data.message = errorMessage;
+						errors.push(data);
+					}
 
 
-                    if (loadedFiles === files.length) {
-                        this.props.onChange.apply(this, this.props.multiple ? [output, errors] : [output[0] || null, errors[0] || null]);
-                        ReactDOM.findDOMNode(this).value = null;
-                    }
-                };
-            })(file);
+					if (loadedFiles === files.length) {
+						this.props.onChange.apply(this, this.props.multiple ? [output, errors] : [output[0] || null, errors[0] || null]);
+						ReactDOM.findDOMNode(this).value = null;
+					}
+				};
+			})(file);
 
-            reader.readAsDataURL(file);
-        });
-    }
+			reader.readAsDataURL(file);
+		});
+	}
 }
 
 FileReader.defaultProps = {
-    accept: '',
-    multiple: false,
-    sizeLimit: 2097152, // 10485760
-    renderer() {
-        return (
-            <input
-                accept={this.props.accept}
-                style={{display: 'none'}}
-                type="file"
-                multiple={this.props.multiple}
-                onChange={this.onChange}/>
-        );
-    }
+	accept: '',
+	multiple: false,
+	sizeLimit: 2097152, // 10485760
+	renderer() {
+		return (
+			<input
+				accept={this.props.accept}
+				style={{display: 'none'}}
+				type="file"
+				multiple={this.props.multiple}
+				onChange={this.onChange}/>
+		);
+	}
 };
 
 export default FileReader;
