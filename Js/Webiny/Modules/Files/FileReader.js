@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
 class FileReader extends Webiny.Ui.Component {
 
@@ -35,7 +34,7 @@ class FileReader extends Webiny.Ui.Component {
                     };
 
                     let errorMessage = null;
-                    if (this.props.accept.length && this.props.accept.indexOf(file.type) == -1) {
+                    if (this.props.accept.length && this.props.accept.indexOf(file.type) === -1) {
                         errorMessage = 'Unsupported file type (' + file.type + ')';
                     } else if (this.props.sizeLimit < file.size) {
                         errorMessage = 'File is too big';
@@ -50,7 +49,7 @@ class FileReader extends Webiny.Ui.Component {
                     }
 
 
-                    if (loadedFiles == files.length) {
+                    if (loadedFiles === files.length) {
                         this.props.onChange.apply(this, this.props.multiple ? [output, errors] : [output[0] || null, errors[0] || null]);
                         ReactDOM.findDOMNode(this).value = null;
                     }
@@ -68,11 +67,12 @@ FileReader.defaultProps = {
     sizeLimit: 2097152, // 10485760
     renderer() {
         return (
-            <input accept={this.props.accept}
-                   style={{display: 'none'}}
-                   type="file"
-                   multiple={this.props.multiple}
-                   onChange={this.onChange}/>
+            <input
+                accept={this.props.accept}
+                style={{display: 'none'}}
+                type="file"
+                multiple={this.props.multiple}
+                onChange={this.onChange}/>
         );
     }
 };
