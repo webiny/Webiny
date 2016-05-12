@@ -131,11 +131,13 @@ class Form extends Webiny.Ui.Component {
         if (input.props && input.props.name) {
             // Add onChange callback to valueLink
             const name = _.upperFirst(_.camelCase(input.props.name));
-            const callback = _.get(this.props, 'onChange' + name, _.noop);
+
+            // Callback can be set on Container (which will pass it to Form), on Form or on input itself
+            const callback = _.get(input.props, 'onChange', _.get(this.props, 'onChange' + name, _.noop));
 
             // Input changed callback, triggered on each input change
             const changeCallback = function inputChanged(newValue) {
-                callback.bind(this, newValue);
+                callback.call(this, newValue, input);
                 // See if there is a watch registered for changed input
                 const watches = this.watches[input.props.name] || new Set();
                 _.map(Array.from(watches), w => w(newValue));
