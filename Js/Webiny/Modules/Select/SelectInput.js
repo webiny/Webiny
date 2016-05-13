@@ -76,7 +76,6 @@ class SelectInput extends Webiny.Ui.FormComponent {
         if (this.props.valueLink) {
             this.props.valueLink.requestChange(value);
         }
-        this.props.onChange(value);
     }
 
     getOptionText(text) {
