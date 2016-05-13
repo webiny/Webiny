@@ -91,6 +91,12 @@ class WebinyBootstrapClass {
                 return;
             }
 
+
+            if (vendors.test(item)) {
+                this.includeScript(item);
+                return;
+            }
+
             assets.push(this.import(item));
         });
 
@@ -152,6 +158,12 @@ class WebinyBootstrapClass {
         if (typeof file !== 'undefined') {
             document.getElementsByTagName('head')[0].appendChild(file);
         }
+    }
+
+    includeScript(filename) {
+        const file = document.createElement('script');
+        file.setAttribute('src', filename);
+        document.head.appendChild(file);
     }
 }
 
