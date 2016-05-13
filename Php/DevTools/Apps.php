@@ -16,7 +16,7 @@ use Webiny\Component\StdLib\SingletonTrait;
  * This class holds all the registered apps
  *
  */
-class Apps
+class Apps implements \IteratorAggregate
 {
     use SingletonTrait;
 
@@ -32,5 +32,10 @@ class Apps
         $this->apps = $apps;
 
         return $this;
+    }
+
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->apps);
     }
 }
