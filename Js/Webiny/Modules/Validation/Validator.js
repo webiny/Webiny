@@ -124,7 +124,7 @@ formValidator.addValidator('minLength', (value, length) => {
     if (_.isObject(value)) {
         value = Webiny.Tools.keys(value);
     }
-    if (value.length && value.length >= length) {
+    if (!value || (value.length && value.length >= length)) {
         return true;
     }
     throw new ValidationError('This field requires at least ' + length + ' characters');
@@ -135,7 +135,7 @@ formValidator.addValidator('maxLength', (value, length) => {
         value = Webiny.Tools.keys(value);
     }
 
-    if (value.length && value.length <= length) {
+    if (!value || (value.length && value.length <= length)) {
         return true;
     }
     throw new ValidationError('This field requires ' + length + ' characters at most');
