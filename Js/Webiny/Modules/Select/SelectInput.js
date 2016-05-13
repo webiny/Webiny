@@ -12,18 +12,19 @@ class SelectInput extends Webiny.Ui.FormComponent {
 
     componentDidMount() {
         super.componentDidMount();
-        this.select2 = this.getSelect2InputElement().select2(this.getConfig(this.props));
-        this.select2.on('select2:select', e => {
-            this.triggerChange(e.target.value);
-        });
-        this.select2.on('select2:unselect', () => {
-            this.triggerChange('');
-        });
-        this.select2.val(this.getValue()).trigger('change');
+        if (!this.isRendered()) {
+            return;
+        }
+        this.instantiate();
     }
 
     componentDidUpdate() {
         super.componentDidUpdate();
+        if (!this.isRendered()) {
+            this.select2 = null;
+            return;
+        }
+        this.instantiate();
         const possibleValues = _.map(this.options, 'id');
         const value = this.getValue();
         const inPossibleValues = possibleValues.indexOf(value) > -1;
@@ -51,6 +52,19 @@ class SelectInput extends Webiny.Ui.FormComponent {
         this.select2.val('').trigger('change');
     }
 
+    instantiate() {
+        if (!this.select2) {
+            this.select2 = this.getSelect2InputElement().select2(this.getConfig(this.props));
+            this.select2.on('select2:select', e => {
+                this.triggerChange(e.target.value);
+            });
+            this.select2.on('select2:unselect', () => {
+                this.triggerChange('');
+            });
+            this.select2.val(this.getValue()).trigger('change');
+        }
+    }
+
     getSelect2InputElement() {
         return $(ReactDOM.findDOMNode(this)).find('select');
     }
@@ -75,6 +89,8 @@ class SelectInput extends Webiny.Ui.FormComponent {
         }
         if (this.props.valueLink) {
             this.props.valueLink.requestChange(value);
+        } else {
+            this.props.onChange(value);
         }
     }
 
@@ -119,7 +135,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
             templateSelection: item => this.itemRenderer(item, 'selectedRenderer')
         };
 
-        if (!this.options || !_.isEqual(props.options, this.options)) {
+        if (!this.options || !_.isEqual(props.options, this.options) || !this.select2) {
             // Prepare options
             const options = [];
             _.each(props.options, option => {
