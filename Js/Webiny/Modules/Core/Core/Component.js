@@ -10,7 +10,7 @@ class Component extends React.Component {
 
         this.__listeners = [];
         this.__cursors = [];
-        this.bindMethods('bindTo');
+        this.bindMethods('bindTo,isRendered');
     }
 
     componentWillMount() {
@@ -73,6 +73,13 @@ class Component extends React.Component {
             _.set(state, key, value);
             return super.setState(state, callback);
         }
+    }
+
+    isRendered() {
+        if (_.has(this.props, 'renderIf')) {
+            return _.isFunction(this.props.renderIf) ? this.props.renderIf() : this.props.renderIf;
+        }
+        return true;
     }
 
     onRouteChanged(callback) {
@@ -182,11 +189,8 @@ class Component extends React.Component {
     }
 
     render() {
-        if (_.has(this.props, 'renderIf')) {
-            const renderIf = _.isFunction(this.props.renderIf) ? this.props.renderIf() : this.props.renderIf;
-            if (!renderIf) {
-                return null;
-            }
+        if (!this.isRendered()) {
+            return null;
         }
 
         if (this.props.renderer) {
