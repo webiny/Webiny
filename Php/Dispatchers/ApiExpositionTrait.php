@@ -38,10 +38,17 @@ trait ApiExpositionTrait
         }
 
         $httpMethod = strtolower($httpMethod);
-
         $methods = $this->apiMethods->key($httpMethod);
+
+        if ($url === '' && isset($methods['/'])) {
+            return new MatchedApiMethod($methods['/'], []);
+        }
+
         /* @var $method ApiMethod */
         foreach ($methods as $pattern => $method) {
+            if ($pattern === '/') {
+                continue;
+            }
             $route = new Route($pattern, null, $method->getRouteOptions());
             $compiled = $route->compile();
             $regex = $compiled->getRegex();
@@ -85,7 +92,7 @@ trait ApiExpositionTrait
             $this->apiMethods = new ArrayObject();
         }
 
-        $pattern = trim($pattern, '/');
+        $pattern = $pattern != '/' ? trim($pattern, '/') : '/';
         $httpMethod = strtolower($httpMethod);
         $apiMethod = $this->apiMethods->keyNested($httpMethod . '.' . $pattern, new ApiMethod($httpMethod, $pattern), true);
         $apiMethod->addCallback($callable);
