@@ -188,6 +188,26 @@ class Component extends React.Component {
         return params;
     }
 
+    /**
+     * Method for a more convenient use of i18n module - this will automatically generate a complete namespace for the label
+     * If this method is called without parameters, it will return Webiny.i18n module, from which you can use other functions as well
+     * @param label
+     * @param namespace
+     * @returns {*}
+     */
+    i18n(label, namespace = false) {
+        if (!label) {
+            return Webiny.i18n;
+        }
+
+        if (!namespace) {
+            const module = _.get(Webiny.Router.getActiveRoute(), 'module.name');
+            const app = _.get(Webiny.Router.getActiveRoute(), 'module.app.name');
+            namespace = `${app}.${module}.${this.getClassName()}`;
+        }
+        return Webiny.i18n(namespace + md5(label), label);
+    }
+
     render() {
         if (!this.isRendered()) {
             return null;

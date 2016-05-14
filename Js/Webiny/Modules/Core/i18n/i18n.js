@@ -6,8 +6,9 @@ const i18n = function i18n(key, defaultValue) {
 };
 
 // Following methods are plain-simple for now - let's make them smarter in the near future
-i18n.price = function price(value) {
-    return accounting.formatMoney(value, '£');
+i18n.price = function price(value, currency = '£') {
+    const currencySymbols = {gbp: '£', usd: '$', eur: '€'}; // Plain simple for now
+    return accounting.formatMoney(value, _.get(currencySymbols, currency, currency));
 };
 
 i18n.date = function date(value) {
