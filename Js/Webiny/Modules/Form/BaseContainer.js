@@ -129,7 +129,7 @@ class BaseContainer extends Webiny.Ui.Component {
         const props = _.clone(child.props);
         props.key = index;
         // Pass model, container, ui and callbacks to each form you encounter
-        if (child.type === Ui.Form.Form) {
+        if (child.type === Ui.Form.Form || child.type.prototype instanceof Ui.Form.Form) {
             this.formsCount++;
 
             // Pass relevant props from BaseContainer to Form

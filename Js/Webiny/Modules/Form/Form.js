@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+const Ui = Webiny.Ui.Components;
 import Validator from './../Validation/Validator';
 
 class Form extends Webiny.Ui.Component {
@@ -16,7 +17,18 @@ class Form extends Webiny.Ui.Component {
         this.layout = null;
         this.watches = {};
 
-        this.bindMethods('submit', 'reset', 'cancel', 'attachToForm', 'attachValidators', 'detachFromForm', 'validateInput', 'validate');
+        this.bindMethods(
+            'submit',
+            'reset',
+            'cancel',
+            'attachToForm',
+            'attachValidators',
+            'detachFromForm',
+            'validateInput',
+            'validate',
+            'prepareLayout',
+            'parseFieldsAndActions'
+        );
     }
 
     componentWillMount() {
@@ -54,7 +66,7 @@ class Form extends Webiny.Ui.Component {
      * @private
      * @param children
      */
-    prepareForm(children) {
+    parseFieldsAndActions(children) {
         if (typeof children !== 'object' || children === null) {
             return;
         }
@@ -69,7 +81,9 @@ class Form extends Webiny.Ui.Component {
                 this.actions = _.isFunction(child.props.children) ? child.props.children(this.state.model, this) : child.props.children;
             }
         }, this);
+    }
 
+    prepareLayout() {
         if (this.props.layout === false) {
             this.layout = (
                 <layout>
@@ -384,7 +398,21 @@ class Form extends Webiny.Ui.Component {
     }
 
     render() {
-        this.prepareForm(this.props.children);
+        if (!this.props.children) {
+            if (_.isFunction(this.renderFields)) {
+                const fields = this.renderFields.call(this, this.state.model, this);
+                this.fields = this.registerInputs(fields);
+            }
+
+            if (_.isFunction(this.renderActions)) {
+                this.actions = this.renderActions.call(this, this.state.model, this);
+            }
+        } else {
+            this.parseFieldsAndActions(this.props.children);
+        }
+
+        this.prepareLayout();
+
         return super.render();
     }
 }
@@ -396,7 +424,51 @@ Form.defaultProps = {
     onCancel: _.noop,
     onInvalid: _.noop,
     showLoader: true,
-    linkedForms: null
+    linkedForms: null,
+    layout() {
+        let title = this.props.title;
+        if (_.isFunction(title)) {
+            title = title();
+        }
+
+        return (
+            <Ui.Panel.Panel>
+                <Ui.Panel.Header title={title} icon={this.props.icon}/>
+                <Ui.Panel.Body>
+                    <fields/>
+                </Ui.Panel.Body>
+                <Ui.Panel.Footer className="text-right">
+                    <actions/>
+                </Ui.Panel.Footer>
+            </Ui.Panel.Panel>
+        );
+    },
+    renderer() {
+        const loader = this.props.showLoader ? null : null;
+        const css = this.props.layout === 'horizontal' ? 'form-horizontal' : '';
+
+        const render = [];
+
+        const formProps = {
+            id: this.props.id,
+            autoComplete: 'off',
+            className: this.classSet(css, this.props.className),
+            onSubmit: this.submit,
+            name: this.props.name
+        };
+
+        React.Children.map(this.layout, (item, index) => {
+            render.push(React.cloneElement(this.replacePlaceholders(item), {key: index}));
+        });
+
+        return (
+            <form {...formProps}>
+                {loader}
+                {render}
+                <button style={{position: 'absolute', left: '-5000px'}} type="submit"></button>
+            </form>
+        );
+    }
 };
 
 export default Form;
