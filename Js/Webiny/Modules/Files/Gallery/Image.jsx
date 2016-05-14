@@ -43,16 +43,16 @@ Image.defaultProps = {
 
         let editBtn = null;
         if (!_.has(image, 'progress')) {
-            editBtn = <Ui.Link onClick={this.editImage} className="file-edit"/>;
+            editBtn = <Ui.Link onClick={this.editImage} className="tray-bin__file-edit"/>;
         }
 
         return (
-            <div className="file" {...draggable} data-role="image">
-                <img className="file-preview" src={image.src + cacheBust} alt={title} title={title} width="133" height="133"/>
+            <div className="tray-bin__file" {...draggable} data-role="image">
+                <img className="tray-bin__file-preview" src={image.src + cacheBust} alt={title} title={title} width="133" height="133"/>
                 {editBtn}
-                <Ui.Link onClick={this.deleteImage} className="file-remove"/>
-                <span className="file-name">{image.name}</span>
-                <span className="file-size">{_.has(image, 'progress') ? image.progress + '%' : filesize(image.size)}</span>
+                <Ui.Link onClick={this.deleteImage} className="tray-bin__file-remove"/>
+                <span className="tray-bin__file-name">{image.name}</span>
+                <span className="tray-bin__file-size">{_.has(image, 'progress') ? image.progress + '%' : filesize(image.size)}</span>
             </div>
         );
     }

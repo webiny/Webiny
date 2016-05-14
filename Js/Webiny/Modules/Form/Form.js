@@ -25,9 +25,7 @@ class Form extends Webiny.Ui.Component {
             'attachValidators',
             'detachFromForm',
             'validateInput',
-            'validate',
-            'prepareLayout',
-            'parseFieldsAndActions'
+            'validate'
         );
     }
 
@@ -60,41 +58,6 @@ class Form extends Webiny.Ui.Component {
         return () => {
             this.watches[name].delete(callback);
         };
-    }
-
-    /**
-     * @private
-     * @param children
-     */
-    parseFieldsAndActions(children) {
-        if (typeof children !== 'object' || children === null) {
-            return;
-        }
-
-        React.Children.map(children, child => {
-            if (child.type === 'fields') {
-                const fields = _.isFunction(child.props.children) ? child.props.children.call(this, this.state.model, this) : child.props.children;
-                this.fields = this.registerInputs(fields);
-            }
-
-            if (child.type === 'actions') {
-                this.actions = _.isFunction(child.props.children) ? child.props.children(this.state.model, this) : child.props.children;
-            }
-        }, this);
-    }
-
-    prepareLayout() {
-        if (this.props.layout === false) {
-            this.layout = (
-                <layout>
-                    <fields/>
-                </layout>
-            );
-        }
-
-        if (this.props.layout) {
-            this.layout = this.props.layout.call(this);
-        }
     }
 
     /**
@@ -397,22 +360,44 @@ class Form extends Webiny.Ui.Component {
         return chain;
     }
 
-    render() {
-        if (!this.props.children) {
-            if (_.isFunction(this.renderFields)) {
-                const fields = this.renderFields.call(this, this.state.model, this);
+    renderFields() {
+        React.Children.map(this.props.children, child => {
+            if (child.type === 'fields') {
+                const fields = _.isFunction(child.props.children) ? child.props.children.call(this, this.state.model, this) : child.props.children;
                 this.fields = this.registerInputs(fields);
             }
+        }, this);
 
-            if (_.isFunction(this.renderActions)) {
-                this.actions = this.renderActions.call(this, this.state.model, this);
+        return this.fields;
+    }
+
+    renderActions() {
+        React.Children.map(this.props.children, child => {
+            if (child.type === 'actions') {
+                this.actions = _.isFunction(child.props.children) ? child.props.children(this.state.model, this) : child.props.children;
             }
-        } else {
-            this.parseFieldsAndActions(this.props.children);
+        }, this);
+
+        return this.actions;
+    }
+
+    renderLayout() {
+        if (this.props.layout) {
+            return this.props.layout.call(this);
         }
 
-        this.prepareLayout();
+        return (
+            <layout>
+                <fields/>
+            </layout>
+        );
+    }
 
+    render() {
+        const fields = this.renderFields.call(this, this.state.model, this);
+        this.fields = this.registerInputs(fields);
+        this.actions = this.renderActions.call(this, this.state.model, this);
+        this.layout = this.renderLayout();
         return super.render();
     }
 }

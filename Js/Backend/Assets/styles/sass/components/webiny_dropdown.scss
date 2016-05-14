@@ -28,6 +28,11 @@
         border-bottom: 2px solid #9A9A9A;
       }
       > .caret {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+
         margin-left: 5px;
       }
     }

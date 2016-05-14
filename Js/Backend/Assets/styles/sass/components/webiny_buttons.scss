@@ -116,20 +116,20 @@ button.btn {
   }
   &.btn-success {
     background: #3FBFB0;
-    border: 1px solid #2E8B80;
+    border: 1px solid #3FBFB0;
     &.preloading {
       &:hover, &:active, &:focus {
         background: #3FBFB0;
-        border: 1px solid #2E8B80;
+        border: 1px solid #3FBFB0;
       }
     }
     &:hover {
       background: #32988B;
     }
     &:active, &.active {
+      border: 1px solid #32988B;
+      
       background: #32988B;
-      -webkit-box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.9);
-      -moz-box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.9);
       box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.9);
     }
   }

@@ -5,7 +5,7 @@ import ImageComponent from './../Base/ImageComponent';
 import Image from './Image';
 
 const placeholder = document.createElement('div');
-placeholder.className = 'placeholder';
+placeholder.className = 'tray-bin__file placeholder';
 placeholder.textContent = 'Drop here';
 
 class Gallery extends ImageComponent {
