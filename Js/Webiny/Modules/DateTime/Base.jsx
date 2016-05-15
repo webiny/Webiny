@@ -63,7 +63,8 @@ class Base extends Webiny.Ui.FormComponent {
     onChangeSelectedValue(sel) {
         sel = sel || null;
         if (sel && this.props.component !== 'time') {
-            sel = moment(sel, this.props.inputFormat).format(this.props.modelFormat);
+            const format = this.props.withTimezone ? 'YYYY-MM-DDTHH:mm:ssZ' : this.props.modelFormat;
+            sel = moment(sel, this.props.inputFormat).format(format);
         }
         this.props.valueLink.requestChange(sel);
     }
@@ -75,6 +76,7 @@ class Base extends Webiny.Ui.FormComponent {
 
 Base.defaultProps = {
     debug: false,
+    withTimezone: true,
     renderer() {
         const cssConfig = {
             'form-group': true,

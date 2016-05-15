@@ -4,7 +4,7 @@ class Date extends BaseDateTime {
 
 }
 
-Date.defaultProps = {
+Date.defaultProps = _.merge({}, BaseDateTime.defaultProps, {
     disabled: false,
     readOnly: false,
     placeholder: '',
@@ -12,7 +12,8 @@ Date.defaultProps = {
     modelFormat: 'YYYY-MM-DD',
     component: 'date',
     viewMode: 'days',
+    withTimezone: false,
     renderer: BaseDateTime.defaultProps.renderer
-};
+});
 
 export default Date;

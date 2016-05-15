@@ -4,7 +4,7 @@ class Time extends BaseDateTime {
 
 }
 
-Time.defaultProps = {
+Time.defaultProps = _.merge({}, BaseDateTime.defaultProps, {
     disabled: false,
     readOnly: false,
     placeholder: '',
@@ -12,7 +12,7 @@ Time.defaultProps = {
     modelFormat: 'HH:mm:ss',
     component: 'time',
     stepping: 15,
-    renderer: BaseDateTime.defaultProps.renderer
-};
+    withTimezone: false
+});
 
 export default Time;

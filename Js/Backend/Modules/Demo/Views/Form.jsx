@@ -236,6 +236,11 @@ class Form extends Webiny.Ui.View {
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
                                             <Ui.Grid.Row>
+                                                <Ui.Grid.Col all={12}>
+                                                    <Ui.Tags name="tags" placeholder="Add tag" label="Tags"/>
+                                                </Ui.Grid.Col>
+                                            </Ui.Grid.Row>
+                                            <Ui.Grid.Row>
                                                 {/* CHECKBOXES */}
                                                 <Ui.Grid.Col all={6}>
                                                     <Ui.CheckboxGroup label="Roles (Static)" name="roles" grid={12}>
