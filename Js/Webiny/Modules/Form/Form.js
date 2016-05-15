@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+const Ui = Webiny.Ui.Components;
 import Validator from './../Validation/Validator';
 
 class Form extends Webiny.Ui.Component {
@@ -16,7 +17,16 @@ class Form extends Webiny.Ui.Component {
         this.layout = null;
         this.watches = {};
 
-        this.bindMethods('submit', 'reset', 'cancel', 'attachToForm', 'attachValidators', 'detachFromForm', 'validateInput', 'validate');
+        this.bindMethods(
+            'submit',
+            'reset',
+            'cancel',
+            'attachToForm',
+            'attachValidators',
+            'detachFromForm',
+            'validateInput',
+            'validate'
+        );
     }
 
     componentWillMount() {
@@ -48,39 +58,6 @@ class Form extends Webiny.Ui.Component {
         return () => {
             this.watches[name].delete(callback);
         };
-    }
-
-    /**
-     * @private
-     * @param children
-     */
-    prepareForm(children) {
-        if (typeof children !== 'object' || children === null) {
-            return;
-        }
-
-        React.Children.map(children, child => {
-            if (child.type === 'fields') {
-                const fields = _.isFunction(child.props.children) ? child.props.children.call(this, this.state.model, this) : child.props.children;
-                this.fields = this.registerInputs(fields);
-            }
-
-            if (child.type === 'actions') {
-                this.actions = _.isFunction(child.props.children) ? child.props.children(this.state.model, this) : child.props.children;
-            }
-        }, this);
-
-        if (this.props.layout === false) {
-            this.layout = (
-                <layout>
-                    <fields/>
-                </layout>
-            );
-        }
-
-        if (this.props.layout) {
-            this.layout = this.props.layout.call(this);
-        }
     }
 
     /**
@@ -383,8 +360,44 @@ class Form extends Webiny.Ui.Component {
         return chain;
     }
 
+    renderFields() {
+        React.Children.map(this.props.children, child => {
+            if (child.type === 'fields') {
+                const fields = _.isFunction(child.props.children) ? child.props.children.call(this, this.state.model, this) : child.props.children;
+                this.fields = this.registerInputs(fields);
+            }
+        }, this);
+
+        return this.fields;
+    }
+
+    renderActions() {
+        React.Children.map(this.props.children, child => {
+            if (child.type === 'actions') {
+                this.actions = _.isFunction(child.props.children) ? child.props.children(this.state.model, this) : child.props.children;
+            }
+        }, this);
+
+        return this.actions;
+    }
+
+    renderLayout() {
+        if (this.props.layout) {
+            return this.props.layout.call(this);
+        }
+
+        return (
+            <layout>
+                <fields/>
+            </layout>
+        );
+    }
+
     render() {
-        this.prepareForm(this.props.children);
+        const fields = this.renderFields.call(this, this.state.model, this);
+        this.fields = this.registerInputs(fields);
+        this.actions = this.renderActions.call(this, this.state.model, this);
+        this.layout = this.renderLayout();
         return super.render();
     }
 }
@@ -396,7 +409,51 @@ Form.defaultProps = {
     onCancel: _.noop,
     onInvalid: _.noop,
     showLoader: true,
-    linkedForms: null
+    linkedForms: null,
+    layout() {
+        let title = this.props.title;
+        if (_.isFunction(title)) {
+            title = title();
+        }
+
+        return (
+            <Ui.Panel.Panel>
+                <Ui.Panel.Header title={title} icon={this.props.icon}/>
+                <Ui.Panel.Body>
+                    <fields/>
+                </Ui.Panel.Body>
+                <Ui.Panel.Footer className="text-right">
+                    <actions/>
+                </Ui.Panel.Footer>
+            </Ui.Panel.Panel>
+        );
+    },
+    renderer() {
+        const loader = this.props.showLoader ? null : null;
+        const css = this.props.layout === 'horizontal' ? 'form-horizontal' : '';
+
+        const render = [];
+
+        const formProps = {
+            id: this.props.id,
+            autoComplete: 'off',
+            className: this.classSet(css, this.props.className),
+            onSubmit: this.submit,
+            name: this.props.name
+        };
+
+        React.Children.map(this.layout, (item, index) => {
+            render.push(React.cloneElement(this.replacePlaceholders(item), {key: index}));
+        });
+
+        return (
+            <form {...formProps}>
+                {loader}
+                {render}
+                <button style={{position: 'absolute', left: '-5000px'}} type="submit"></button>
+            </form>
+        );
+    }
 };
 
 export default Form;

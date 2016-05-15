@@ -1,39 +1,76 @@
 /*===============================================
- C. Tray Bin
+  Tray Bin
  ================================================= */
-/* tray bin - great for organizing buttons and links
-* negative margin added to counter parent tray padding
-*/
-.tray-bin {
-  position: relative;
-  min-height: 285px;
-  margin: 0 0 20px 0;
-  padding: 15px 12px;
 
-  background-color: $formBgColor;
-  border: 2px dashed $borderColor;
-  border-radius: 3px;
+ .tray-bin {
+    position: relative;
+    min-height: 285px;
+    margin: 0 0 20px 0;
+    padding: 15px 12px;
 
-  .main-text {
+    background-color: $formBgColor;
+    border: 2px dashed $borderColor;
+    border-radius: 3px;
+
+    .txt_b {
+        display: none;
+    }
+
+    span {
+        font-family: 'Roboto Condensed', sans-serif;
+        margin-bottom: 3px;
+        display: block;
+    }
+
+    .btn {
+        border-radius: 0px;
+        font-weight: bold;
+        font-size: 19px;
+    }
+}
+
+.tray-bin__main-text {
     color: #dadada;
     font-size: 17px;
     text-align: center;
 
     &:before {
-      content: "\e83c";
-      display: block;
-      margin-bottom: 10px;
+        content: "\e83c";
+        display: block;
+        margin-bottom: 10px;
 
-      color: #eee;
-      font-family: 'fontello';
-      font-size: 71px;
-      font-style: normal;
-      font-weight: normal;
-      line-height: 1em;
+        color: #eee;
+        font-family: 'fontello';
+        font-size: 71px;
+        font-style: normal;
+        font-weight: normal;
+        line-height: 1em;
     }
-  }
+}
 
-  .file {
+.tray-bin__option {
+    background: #ebeef2;
+    padding: 25px 25px 20px 25px;
+    overflow: hidden;
+    margin-left: 5px;
+    margin-bottom: 15px;
+
+    .checkbox-custom {
+        float: left;
+        font-size: 14px;
+        margin-bottom: 0px;
+    }
+}
+
+.tray-bin__option--active {
+    background: #faef89;
+}
+
+.tray-bin__option--sec {
+    margin-right: 5px;
+}
+
+.tray-bin__file {
     position: relative;
     display: inline-block;
     padding: 14px;
@@ -44,31 +81,32 @@
     text-align: left;
 
     background: #fff;
+}
 
-    .file-name {
-      margin-top: 5px;
-      
-      color: #313131;
-      font-size: 15px;
-      text-overflow: ellipsis;
-    }
+.tray-bin__file-name {
+    margin-top: 5px;
 
-    .file-edit {
-      position: absolute;
-      top: 20px;
-      right: 45px;
+    color: #313131;
+    font-size: 15px;
+    text-overflow: ellipsis;
+}
 
-      display: block;
-      width: 23px;
-      height: 23px;
-      padding: 4px;
-      border-radius: 50%;
+.tray-bin__file-edit {
+    position: absolute;
+    top: 20px;
+    right: 45px;
 
-      text-align: center;
-      
-      background-color: #fff;
+    display: block;
+    width: 23px;
+    height: 23px;
+    padding: 4px;
+    border-radius: 50%;
 
-      &:before {
+    text-align: center;
+
+    background-color: #fff;
+
+    &:before {
         content: "\e83b";
         display: inline-block;
         vertical-align: top;
@@ -79,31 +117,31 @@
         font-style: normal;
         font-weight: normal;
         line-height: 1.4em;
-      }
     }
+}
 
-    .file-size {
-      color: #868695;
-      font-size: 14px;
-      text-transform: uppercase;
-    }
+.tray-bin__file-size {
+    color: #868695;
+    font-size: 14px;
+    text-transform: uppercase;
+}
 
-    .file-remove {
-      position: absolute;
-      top: 20px;
-      right: 20px;
+.tray-bin__file-remove {
+    position: absolute;
+    top: 20px;
+    right: 20px;
 
-      display: block;
-      width: 23px;
-      height: 23px;
-      padding: 4px;
-      border-radius: 50%;
+    display: block;
+    width: 23px;
+    height: 23px;
+    padding: 4px;
+    border-radius: 50%;
 
-      text-align: center;
-      
-      background-color: #fff;
+    text-align: center;
 
-      &:before {
+    background-color: #fff;
+
+    &:before {
         content: "\e82b";
         display: inline-block;
         vertical-align: top;
@@ -113,193 +151,143 @@
         font-style: normal;
         font-weight: normal;
         line-height: 1em;
-      }
     }
-  }
+}
 
-  .txt_b {
-    display: none;
-  }
+.tray-bin__cancel {
+    position: absolute;
+    top: 39%;
+    right: 25px;
+
+    span {
+        float: left;
+        font-size: 15px;
+        font-family: 'Roboto Condensed', sans-serif;
+        color: #767676;
+    }
+
+    i {
+        width: 20px;
+        height: 20px;
+        background: #F3594F none repeat scroll 0% 0%;
+        margin-left: 8px;
+        border-radius: 60px;
+        padding: 0px;
+        line-height: 195%;
+        float: left;
+        font-size: 10px;
+        color: #FFF;
+    }
 }
 
 .tray-bin--empty {
-  padding-top: 101px;
-  text-align: center;
+    padding-top: 101px;
+    text-align: center;
 }
 
-.tray-bin.progress {
-  background: #fff;
-  padding: 85px 75px 35px 75px;
-  text-align: center;
-  border: none;
+.tray-bin--progress {
+    background: #fff;
+    padding: 85px 75px 35px 75px;
+    text-align: center;
+    border: none;
 
-  p {
-    font-size: 15px;
-    color: #767676;
-  }
-}
+    p {
+        font-size: 15px;
+        color: #767676;
+    }
 
-.tray-bin.progress 
+    .progress {
+        height: 6px;
+        display: inline-block;
+        width: 80%;
+        float: left;
+    }
 
-.tray-bin.progress .progress {
-  height: 6px;
-  display: inline-block;
-  width: 80%;
-  float: left;
-}
+    .cancel {
+        float: left;
+        width: 20px;
+        height: 20px;
+        background: #F3594F;
+        margin-left: 8px;
+        border-radius: 60px;
+        padding: 0px 0px 0px 0px;
+        line-height: 130%;
+        margin-top: -4px;
 
-.tray-bin.progress  a.cancel {
-  float: left;
-  width: 20px;
-  height: 20px;
-  background: #F3594F;
-  margin-left: 8px;
-  -webkit-border-radius: 60px;
-  -moz-border-radius: 60px;
-  border-radius: 60px;
-  padding: 0px 0px 0px 0px;
-  line-height: 130%;
-  margin-top: -4px;
-}
-.tray-bin.progress  a.cancel i {
-  font-size: 10px;
-  color: #fff;
+        i {
+            font-size: 10px;
+            color: #fff;
+        }
+    }
 }
 
-.tray-bin.finished {
-  border: none;
+.tray-bin--finished {
+    border: none;
+    background: #fff;
+    text-align: center;
+    padding: 45px 0px 0px 0px;
+
+    p {
+        font-size: 15px;
+        color: #767676;
+        margin-bottom: 25px;
+    }
+
+    button {
+        width: 26%;
+        display: inline-block;
+    }
+
+    .done {
+        background: #fff;
+        width: 108px;
+        height: 108px;
+        display: inline-block;
+        border: 3px solid #71D199;
+        text-align: center;
+        font-size: 15px;
+        color: #71D199;
+        margin: 15px 0px 15px 0px;
+        border-radius: 80px;
+
+        i {
+            font-size: 35px;
+            color: #71D199;
+            display: block;
+            margin-top: 24px;
+        }
+
+        span {
+            display: block;
+            text-transform: uppercase;
+        }
+    }
 }
 
-@media (min-width: 300px) and (max-width: 900px) {
-  .tray-bin i.icon-doc-icon {
-   float: none;
-   margin-bottom: 10px;
- }
+.tray-bin--stretch {
+    border-left: 0;
+    border-right: 0;
 }
-.tray-bin  span {
-  font-size: 15px;
-  font-family: 'Roboto Condensed', sans-serif;
-  color: #767676;
-  margin-bottom: 3px;
-  display: block;
-  text-align: left;
-}
-.tray-bin .cancel {
-  position: absolute;
-  top: 39%;
-  right: 25px;
-}
-.tray-bin .option {
-  background: #ebeef2;
-  padding: 25px 25px 20px 25px;
-  overflow: hidden;
-  margin-left: 5px;
-  margin-bottom: 15px;
-}
-.tray-bin .option.active {
-  background: #faef89;
-}
-.tray-bin .btn {
-  -webkit-border-radius: 0px;
-  -moz-border-radius: 0px;
-  border-radius: 0px;
-  font-weight: bold;
-  font-size: 19px;
-}
-.tray-bin .option.sec {
-  margin-right: 5px;
-}
-.tray-bin .option .checkbox-custom {
-  float: left;
-  font-size: 14px;
-  margin-bottom: 0px;
-}
-.tray-bin .option .price {
-  float: right;
-  color: #293846;
-  font-family: 'Roboto Condensed', sans-serif;
-  font-weight: bold;
-  font-size: 13px;
-  line-height: 69%;
-  margin-top: 10px;
-  margin-bottom: 0px;
-}
-.tray-bin .option .price span {
-  font-size: 18px;
-  float: left;
-  margin-right: 3px;
-}
-.tray-bin .cancel span {
-  float: left;
-  font-size: 15px;
-  font-family: 'Roboto Condensed', sans-serif;
-  color: #767676;
-}
-.tray-bin .cancel i {
-  width: 20px;
-  height: 20px;
-  background: #F3594F none repeat scroll 0% 0%;
-  margin-left: 8px;
-  border-radius: 60px;
-  padding: 0px;
-  line-height: 195%;
-  float: left;
-  font-size: 10px;
-  color: #FFF;
-}
-.tray-bin.finished {
-  background: #fff;
-  text-align: center;
-  padding: 45px 0px 0px 0px;
-}
-.tray-bin.finished span.done {
-  background: #fff;
-  width: 108px;
-  height: 108px;
-  display: inline-block;
-  border: 3px solid #71D199;
-  text-align: center;
-  font-size: 15px;
-  color: #71D199;
-  margin: 15px 0px 15px 0px;
-  -webkit-border-radius: 80px;
-  -moz-border-radius: 80px;
-  border-radius: 80px;
-}
-.tray-bin.finished span.done i {
-  font-size: 35px;
-  color: #71D199;
-  display: block;
-  margin-top: 24px;
-}
-.tray-bin.finished span.done span {
-  display: block;
-  text-transform: uppercase;
-}
-.tray-bin.finished p {
-  font-size: 15px;
-  color: #767676;
-  margin-bottom: 25px;
-}
-.tray-bin.finished button {
-  width: 26%;
-  display: inline-block;
-}
-.tray-bin.stretch {
-  border-left: 0;
-  border-right: 0;
-}
+
 /*If navbar has a contextual bg we make menu links white*/
-.tray-bin div[class*='col-'] {
-  padding-left: 5px;
-  padding-right: 5px;
-}
+// .tray-bin div[class*='col-'] {
+//   padding-left: 5px;
+//   padding-right: 5px;
+// }
+
 /*traybin divider text. Used primarily in li navs*/
-.tray-bin .nav-label {
-  text-align: center;
-  font-size: 12px;
-  color: #999999;
-  padding-left: 5px;
-  margin-top: 20px;
-  margin-bottom: 10px;
-}
+// .tray-bin .nav-label {
+//   text-align: center;
+//   font-size: 12px;
+//   color: #999999;
+//   padding-left: 5px;
+//   margin-top: 20px;
+//   margin-bottom: 10px;
+// }
+
+// @media (min-width: 300px) and (max-width: 900px) {
+//   .tray-bin i.icon-doc-icon {
+//    float: none;
+//    margin-bottom: 10px;
+//  }
+// }

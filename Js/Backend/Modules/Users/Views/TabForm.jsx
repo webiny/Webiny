@@ -3,7 +3,7 @@ import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 const Table = Ui.List.Table;
 
-import AddCreditsModal from './AddCreditsModal';
+import MyForm from './MyForm';
 
 class Form extends Webiny.Ui.View {
 
@@ -40,9 +40,6 @@ Form.defaultProps = {
         return (
             <Webiny.Builder.View name="core-users-form">
                 <Ui.Form.ApiContainer ui="myForm" {...containerProps}>
-                    {/* <Ui.Data api="/brands/analytics">
-                     {(data, filter) => <Stats title="New Brands" data={data.newBrands} onChange={newVal => filter({date: newVal})()}/>}
-                     </Ui.Data> */}
                     <Ui.Grid.Col all={12}>
                         <Ui.Panel.Panel>
                             <Ui.Modal.Confirmation {...deleteConfirmProps}/>
@@ -51,53 +48,24 @@ Form.defaultProps = {
                             <Ui.Panel.Body>
                                 <Ui.Tabs.Tabs ui="tabs">
                                     <Ui.Tabs.Tab label="General">
-                                        <Ui.Form.Form layout={false} onInvalid={this.ui('tabs:selectTab', 0)}>
-                                            <fields>
-                                                <Ui.Grid.Row>
-                                                    <Ui.Grid.Col all={6}>
-                                                        <Ui.Input label="First name" name="firstName" validate="required"/>
-                                                    </Ui.Grid.Col>
-                                                    <Ui.Grid.Col all={6}>
-                                                        <Ui.Input label="Last name" name="lastName" validate="required"/>
-                                                    </Ui.Grid.Col>
-                                                    <Ui.Grid.Col all={12}>
-                                                        <Ui.Input label="Email"
-                                                                  name="email"
-                                                                  validate="required,email"
-                                                                  description="Your email"/>
-                                                    </Ui.Grid.Col>
-                                                    <Ui.Grid.Col all={12}>
-                                                        <Ui.Textarea label="Notes" name="notes" description="User notes"/>
-                                                    </Ui.Grid.Col>
-                                                    <Ui.Grid.Col all={12}>
-                                                        <Ui.Button type="primary" label="Add credits"
-                                                                   onClick={this.ui('addCreditsModal:show')}/>
-                                                        <AddCreditsModal ui="addCreditsModal"/>
-                                                    </Ui.Grid.Col>
-                                                </Ui.Grid.Row>
-                                                <Ui.Grid.Row>
-                                                    <Ui.Grid.Col all={12}>
-                                                        <Ui.Switch label="Enabled" name="enabled"/>
-                                                    </Ui.Grid.Col>
-                                                </Ui.Grid.Row>
-                                            </fields>
-                                        </Ui.Form.Form>
+                                        <MyForm layout={false}/>
                                     </Ui.Tabs.Tab>
                                     <Ui.Tabs.Tab label="Files" onClick={this.ui('files:loadData')}>
                                         <Ui.Form.Form layout={false}>
                                             <fields>
-                                                <Ui.Files.Avatar name="avatar"
-                                                                 cropper={{
-                                                                title: 'Crop your avatar',
-                                                                config: {
-                                                                    aspectRatio: 1,
-                                                                    autoCropArea: 1,
-                                                                    guides: false,
-                                                                    strict: true,
-                                                                    width: 400,
-                                                                    height: 400,
-                                                                    cropBoxResizable: false
-                                                                }}}/>
+                                                <Ui.Files.Avatar
+                                                    name="avatar"
+                                                    cropper={{
+                                                        title: 'Crop your avatar',
+                                                        config: {
+                                                            aspectRatio: 1,
+                                                            autoCropArea: 1,
+                                                            guides: false,
+                                                            strict: true,
+                                                            width: 400,
+                                                            height: 400,
+                                                            cropBoxResizable: false
+                                                        }}}/>
                                                 <Ui.Files.Gallery
                                                     defaultBody={{ref: Webiny.Router.getParams('id')}}
                                                     name="gallery"

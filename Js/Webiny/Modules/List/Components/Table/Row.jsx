@@ -13,14 +13,13 @@ class Row extends Webiny.Ui.Component {
 
         this.fields = [];
         this.actions = null;
-        this.data = [];
+        this.data = props.data;
 
         this.bindMethods('prepareChildren,prepareChild,renderField,onClick');
     }
 
     componentWillMount() {
         super.componentWillMount();
-        this.data = _.clone(this.props.data);
         this.prepareChildren(this.props.children);
     }
 
@@ -40,7 +39,7 @@ class Row extends Webiny.Ui.Component {
             this.fields.push(child);
         } else if (child.type === Ui.List.Table.Actions) {
             this.actions = React.cloneElement(child, {
-                data: this.props.data,
+                data: this.data,
                 actions: this.props.actions
             });
         }
@@ -94,7 +93,7 @@ class Row extends Webiny.Ui.Component {
         if (_.isString(onClick) && onClick === 'toggleRowDetails') {
             this.props.actions.toggleRowDetails(this.props.index)();
         } else if (_.isFunction(onClick)) {
-            onClick.call(this, this.props.data, this);
+            onClick.call(this, this.data, this);
         }
     }
 }
@@ -106,7 +105,7 @@ Row.defaultProps = {
         let select = null;
         if (this.props.onSelect) {
             select = (
-                <SelectRow value={this.props.selected} onChange={value => this.props.onSelect(this.props.data, value)}/>
+                <SelectRow value={this.props.selected} onChange={value => this.props.onSelect(this.data, value)}/>
             );
         }
 
