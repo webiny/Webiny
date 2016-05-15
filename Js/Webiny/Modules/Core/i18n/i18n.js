@@ -1,8 +1,31 @@
-const i18n = function i18n(key, defaultValue) {
+function replaceVariables(text, values) {
+
+    const re = /(\{.*?\})/g;
+    let m;
+    const variables = [];
+
+    // Collect variables
+    while ((m = re.exec(text)) !== null) {
+        if (m.index === re.lastIndex) {
+            re.lastIndex++;
+        }
+        variables.push(_.trim(m[0], '{}'));
+    }
+
+    variables.forEach(variable => {
+        text = text.replace(`{${variable}}`, values[variable]);
+    });
+
+    return text;
+}
+
+const i18n = function i18n(key, text, variables, options = {}) {
     const translations = {
         'webiny.core.statusFilter.placeholder': 'My Status'
     };
-    return _.get(translations, key, defaultValue);
+
+    const output = _.get(translations, key, text);
+    return replaceVariables(output, variables, options);
 };
 
 // Following methods are plain-simple for now - let's make them smarter in the near future
