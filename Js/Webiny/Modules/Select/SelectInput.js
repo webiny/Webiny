@@ -7,7 +7,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
 
         this.select2 = null;
         this.options = null;
-        this.bindMethods('getConfig,getValue,triggerChange,getSelect2InputElement,itemRenderer');
+        this.bindMethods('getConfig,getValue,triggerChange,getSelect2InputElement,itemRenderer,getSelectedData');
     }
 
     componentDidMount() {
@@ -76,6 +76,15 @@ class SelectInput extends Webiny.Ui.FormComponent {
         }
 
         return _.isObject(value) ? value.id : '' + value;
+    }
+
+    getSelectedData() {
+        if (this.props.useDataAsValue) {
+            return this.props.valueLink.value;
+        }
+
+        const selectedOption = _.find(this.options, {id: this.props.valueLink.value});
+        return selectedOption.data;
     }
 
     triggerChange(value) {

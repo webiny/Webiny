@@ -114,7 +114,7 @@ class Form extends Webiny.Ui.Component {
 
             // Input changed callback, triggered on each input change
             const changeCallback = function inputChanged(newValue) {
-                callback.call(this, newValue, input);
+                callback.call(this, newValue, this.inputs[input.props.name].component);
                 // See if there is a watch registered for changed input
                 const watches = this.watches[input.props.name] || new Set();
                 _.map(Array.from(watches), w => w(newValue));

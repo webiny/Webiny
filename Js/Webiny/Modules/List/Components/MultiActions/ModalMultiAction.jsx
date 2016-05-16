@@ -20,8 +20,14 @@ ModalMultiAction.defaultProps = {
 
         const modal = this.props.children.call(this, this.props.data, this.props.actions, modalActions);
 
+        const onAction = () => {
+            if (this.props.data.size) {
+                this.refs.dialog.show();
+            }
+        };
+
         return (
-            <Ui.Link onClick={() => this.refs.dialog.show()}>
+            <Ui.Link onClick={onAction}>
                 {React.cloneElement(modal, {ref: 'dialog'})}
                 {this.props.label}
             </Ui.Link>

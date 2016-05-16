@@ -59,19 +59,19 @@ class Form extends Webiny.Ui.View {
                  * @returns {Promise<TResult>|Promise.<T>}
                  */
                 /*optionsUserGroup: function optionsUserGroup() {
-                    let apiParams = {
-                        _perPage: 100,
-                        fields: 'id,name,tag'
-                    };
+                 let apiParams = {
+                 _perPage: 100,
+                 fields: 'id,name,tag'
+                 };
 
-                    return new Webiny.Api.Endpoint('/entities/core/user-groups').crudList(apiParams).then(apiResponse => {
-                        return {
-                            data: apiResponse.getData().list,
-                            valueAttr: 'id',
-                            textAttr: 'name'
-                        };
-                    });
-                },*/
+                 return new Webiny.Api.Endpoint('/entities/core/user-groups').crudList(apiParams).then(apiResponse => {
+                 return {
+                 data: apiResponse.getData().list,
+                 valueAttr: 'id',
+                 textAttr: 'name'
+                 };
+                 });
+                 },*/
 
                 /**
                  * Custom OPTION renderer (ONLY RENDERING)
@@ -93,9 +93,9 @@ class Form extends Webiny.Ui.View {
                 }
 
                 /*loadData: function () {
-                    const id = Webiny.Router.getParams('id');
-                    return this.api.execute('GET', id).then(apiResponse => apiResponse.getData());
-                }*/
+                 const id = Webiny.Router.getParams('id');
+                 return this.api.execute('GET', id).then(apiResponse => apiResponse.getData());
+                 }*/
             },
             // List config
             invoiceList: {
@@ -113,8 +113,11 @@ class Form extends Webiny.Ui.View {
             placeholder: 'Select user group',
             allowClear: true,
             api: '/entities/core/user-groups',
-            fields: 'tag,name',
-            perPage: 2
+            fields: 'tag,name,id,createdOn',
+            perPage: 2,
+            onChange: (value, input) => {
+                console.log(value, input.getSelectedData());
+            }
         };
 
         const userGroupsSelect = {
@@ -182,7 +185,8 @@ class Form extends Webiny.Ui.View {
 
         return (
             <Webiny.Builder.View name="core-users-form" config={this.getConfig()}>
-                <Ui.Form.ApiContainer ui="myForm" api="/entities/core/users" fields="id,firstName,lastName,email,userGroups,settings,enabled,userQuery" connectToRouter={true}>
+                <Ui.Form.ApiContainer ui="myForm" api="/entities/core/users"
+                                      fields="id,firstName,lastName,email,userGroups,settings,enabled,userQuery" connectToRouter={true}>
                     <Ui.Panel.Panel>
                         <Ui.Panel.Header title="Webiny Form"/>
                         <Ui.Panel.Body>
@@ -209,7 +213,15 @@ class Form extends Webiny.Ui.View {
                                                     <Ui.Select {...userGroupSelect}/>
                                                 </Ui.Grid.Col>
                                                 <Ui.Grid.Col all={6}>
-                                                    <Ui.Search validate="required" name="userQuery" textAttr="name" label="Find file" api="/entities/core/files" fields="name" searchFields="name"/>
+                                                    <Ui.Search
+                                                        validate="required"
+                                                        name="userQuery"
+                                                        textAttr="name"
+                                                        label="Find file"
+                                                        api="/entities/core/files"
+                                                        fields="name,id,createdOn,ref"
+                                                        searchFields="name"
+                                                        onChange={(value, input) => console.log(value, input.getSelectedData())}/>
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
                                             <Ui.Grid.Row>
@@ -271,7 +283,8 @@ class Form extends Webiny.Ui.View {
                                                     </Ui.RadioGroup>
                                                 </Ui.Grid.Col>
                                                 <Ui.Grid.Col all={6}>
-                                                    <Ui.RadioGroup label="User (API)" name="user" api="/entities/core/users" textAttr="email"/>
+                                                    <Ui.RadioGroup label="User (API)" name="user" api="/entities/core/users"
+                                                                   textAttr="email"/>
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
                                             <Ui.Grid.Row>
