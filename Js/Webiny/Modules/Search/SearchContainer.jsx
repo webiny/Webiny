@@ -17,7 +17,8 @@ class SearchContainer extends Webiny.Ui.Component {
 
         this.bindMethods(
             'setInitialData',
-            'loadOptions'
+            'loadOptions',
+            'getSelectedData'
         );
 
         Webiny.Mixins.ApiComponent.extend(this);
@@ -50,6 +51,10 @@ class SearchContainer extends Webiny.Ui.Component {
     componentWillMount() {
         super.componentWillMount();
         this.setInitialData(this.props);
+    }
+
+    getSelectedData() {
+        return this.refs.input.getSelectedData();
     }
 
     setInitialData(props) {
@@ -93,6 +98,7 @@ class SearchContainer extends Webiny.Ui.Component {
     render() {
         const props = _.omit(this.props, ['key', 'ref']);
         _.assign(props, {
+            ref: 'input',
             loading: this.state.loading,
             options: this.state.options,
             onSearch: this.loadOptions,

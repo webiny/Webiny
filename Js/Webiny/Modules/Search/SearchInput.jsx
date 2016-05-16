@@ -9,6 +9,7 @@ class SearchInput extends Webiny.Ui.FormComponent {
         _.assign(this.state, {
             search: '',
             selected: null,
+            selectedData: null,
             options: []
         });
 
@@ -21,7 +22,8 @@ class SearchInput extends Webiny.Ui.FormComponent {
             'onKeyUp',
             'onBlur',
             'renderPreview',
-            'fetchValue'
+            'fetchValue',
+            'getSelectedData'
         );
     }
 
@@ -36,6 +38,14 @@ class SearchInput extends Webiny.Ui.FormComponent {
         }
 
         this.setState(newState);
+    }
+
+    getSelectedData() {
+        if (this.props.useDataAsValue) {
+            return this.props.valueLink.value;
+        }
+
+        return this.state.selectedData;
     }
 
     renderPreview(item) {
@@ -101,14 +111,15 @@ class SearchInput extends Webiny.Ui.FormComponent {
         this.setState({
             selected: null,
             search,
-            options: []
+            options: [],
+            selectedData: item
+        }, () => {
+            if (this.props.valueLink) {
+                this.props.valueLink.requestChange(this.props.useDataAsValue ? item : item[this.props.valueAttr]);
+                setTimeout(this.validate, 10);
+            }
+            this.props.onSelect(item);
         });
-
-        if (this.props.valueLink) {
-            this.props.valueLink.requestChange(this.props.useDataAsValue ? item : item[this.props.valueAttr]);
-            setTimeout(this.validate, 10);
-        }
-        this.props.onSelect(item);
     }
 
     selectNext() {
@@ -165,7 +176,8 @@ class SearchInput extends Webiny.Ui.FormComponent {
         this.setState({
             selected: null,
             search: '',
-            options: []
+            options: [],
+            selectedData: null
         });
 
         if (this.props.valueLink) {
