@@ -25,7 +25,7 @@ class Row extends Webiny.Ui.Component {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        this.data = _.clone(props.data);
+        this.data = props.data;
         this.prepareChildren(props.children);
     }
 
