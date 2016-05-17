@@ -168,6 +168,10 @@ class SearchInput extends Webiny.Ui.FormComponent {
             return;
         }
 
+        if (this.state.selected === null) {
+            return;
+        }
+
         const current = this.state.options[this.state.selected];
         this.selectItem(current);
     }
@@ -178,13 +182,13 @@ class SearchInput extends Webiny.Ui.FormComponent {
             search: '',
             options: [],
             selectedData: null
+        }, () => {
+            if (this.props.valueLink) {
+                this.props.valueLink.requestChange(null);
+            }
+
+            this.props.onReset();
         });
-
-        if (this.props.valueLink) {
-            this.props.valueLink.requestChange(null);
-        }
-
-        this.props.onReset();
     }
 
     fetchValue(item) {

@@ -80,7 +80,12 @@ class ApiContainer extends BaseContainer {
     }
 
     recordDelete(id) {
-        return this.api.delete(id).then(this.loadData);
+        return this.api.delete(id).then(apiResponse => {
+            if (!apiResponse.isError()) {
+                this.loadData();
+            }
+            return apiResponse;
+        });
     }
 }
 
