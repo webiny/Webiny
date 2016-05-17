@@ -40,7 +40,7 @@ InputContainer.defaultProps = {
         }
 
         const props = {
-            onBlur: this.validate,
+            onBlur: this.props.validateInput ? this.validate : this.props.onBlur,
             disabled: this.isDisabled(),
             readOnly: this.props.readOnly,
             type: this.props.type,
