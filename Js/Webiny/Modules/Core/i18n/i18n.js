@@ -1,17 +1,18 @@
 function replaceVariables(text, values) {
-
     const re = /(\{.*?\})/g;
-    let m;
+    let m = re.exec(text);
     const variables = [];
 
     // Collect variables
-    while ((m = re.exec(text)) !== null) {
+    while (m !== null) {
         if (m.index === re.lastIndex) {
             re.lastIndex++;
         }
         variables.push(_.trim(m[0], '{}'));
+        m = re.exec(text);
     }
 
+    // Replace variables
     variables.forEach(variable => {
         text = text.replace(`{${variable}}`, values[variable]);
     });
