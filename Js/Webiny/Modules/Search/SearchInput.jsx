@@ -123,8 +123,9 @@ class SearchInput extends Webiny.Ui.FormComponent {
 
         if (this.props.valueLink) {
             this.preventBlur = true;
-            return this.requestChange(this.props.useDataAsValue ? item : item[this.props.valueAttr], () => {
+            return this.requestChange(this.props.useDataAsValue ? item : item[this.props.valueAttr], (value) => {
                 this.setState(newState, () => {
+                    this.props.valueLink.requestChange(value);
                     setTimeout(this.validate, 10);
                     this.props.onSelect(item);
                     this.preventBlur = false;

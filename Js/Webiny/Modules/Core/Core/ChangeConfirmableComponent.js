@@ -2,10 +2,21 @@ import Webiny from 'Webiny';
 
 class ChangeConfirmableComponent {
     static extend(context) {
-        context.requestChange = (value, callback) => {
+        /**
+         * Request change and process confirmation settings
+         *
+         * @param value New value being set
+         * @param onConfirm Callback for confirmation
+         * @param onCancel Callback for cancellation (onConfirm is used if this one is not set)
+         */
+        context.requestChange = (value, onConfirm, onCancel = null) => {
+            if (!onCancel) {
+                onCancel = onConfirm;
+            }
+
             const msg = context.props.confirmation && context.props.confirmation.message(value, context.props.valueLink.value);
             if (!msg) {
-                context.props.valueLink.requestChange(value, callback);
+                onConfirm(value);
                 return;
             }
 
@@ -21,11 +32,11 @@ class ChangeConfirmableComponent {
                 message: msg,
                 onCancel: () => {
                     value = context.props.confirmation.onCancel(context);
-                    context.props.valueLink.requestChange(value || null, callback);
+                    onCancel(value || null);
                     ReactDOM.unmountComponentAtNode(dialogElement);
                 },
                 onConfirm: () => {
-                    context.props.valueLink.requestChange(value, callback);
+                    onConfirm(value);
                     setTimeout(() => {
                         ReactDOM.unmountComponentAtNode(dialogElement);
                     }, 50);
