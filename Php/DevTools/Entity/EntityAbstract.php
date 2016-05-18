@@ -235,7 +235,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
                 ];
             }
 
-            if (array_key_exists($fName, $attributes) && $attributes[$fName] instanceof DateTimeAttribute && $fValue) {
+            if (array_key_exists($fName, $attributes) && $attributes[$fName] instanceof DateTimeAttribute && is_string($fValue)) {
                 $fValue = [
                     '$gte' => self::datetime($fValue)->setTime(0, 0, 0)->getMongoDate(),
                     '$lte' => self::datetime($fValue)->setTime(23, 59, 59)->getMongoDate()
