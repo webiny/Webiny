@@ -175,12 +175,21 @@ class Form extends Webiny.Ui.Component {
 
     /**
      * Set form model (merge current model with given model object)
-     * @param model
+     * @param key object or string key
+     * @param value callable or value (if key is a string)
+     * @param callback callable (if key is a string)
      * @returns {Form}
      */
-    setModel(model) {
-        _.merge(this.state.model, model);
-        this.setState({model: this.state.model});
+    setModel(key, value = null, callback = null) {
+        if (_.isObject(key)) {
+            _.merge(this.state.model, key);
+            this.setState({model: this.state.model}, value);
+        }
+
+        if (_.isString(key)) {
+            _.set(this.state.model, key, value);
+            this.setState({model: this.state.model}, callback);
+        }
         return this;
     }
 
