@@ -251,8 +251,12 @@ class Form extends Webiny.Ui.Component {
                                 return true;
                             }
 
+                            // Only call onInvalid if this is the first form to be invalid
+                            if (valid) {
+                                form.props.onInvalid(form);
+                            }
+
                             valid = false;
-                            form.props.onInvalid(form);
                             return false;
                         });
                     });
