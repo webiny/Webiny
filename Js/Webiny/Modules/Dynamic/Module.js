@@ -6,8 +6,7 @@ import Empty from './Components/Empty';
 
 class Module extends Webiny.Module {
 
-    constructor(app) {
-        super(app);
+    init() {
         Webiny.Ui.Components.Dynamic = {
             Fieldset,
             Row,

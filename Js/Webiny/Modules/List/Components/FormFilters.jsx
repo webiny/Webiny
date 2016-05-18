@@ -4,8 +4,18 @@ const Ui = Webiny.Ui.Components;
 
 class FormFilters extends Filters {
 
+    constructor(props) {
+        super(props);
+
+        this.bindMethods('getFilters');
+    }
+
     shouldComponentUpdate(nextProps) {
         return !_.isEqual(nextProps, this.props);
+    }
+
+    getFilters() {
+        return this.refs.form.getModel();
     }
 }
 
