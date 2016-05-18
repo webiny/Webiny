@@ -26,7 +26,7 @@ class CrudListFlow extends AbstractFlow
             throw new ApiException('You don\'t have a READ permission on ' . get_class($entity), 'WBY-AUTHORIZATION', 401);
         }
 
-        $filters = $this->buildFilters($entity, $this->wRequest()->getFilters());
+        $filters = $this->wRequest()->getFilters();
         $sorter = $this->wRequest()->getSortFields();
 
         $entities = $entity->find($filters, $sorter, $this->wRequest()->getPerPage(), $this->wRequest()->getPage());
@@ -38,21 +38,5 @@ class CrudListFlow extends AbstractFlow
     public function canHandle($httpMethod, $params)
     {
         return $httpMethod === 'GET' && count($params) === 0;
-    }
-
-    protected function buildFilters(EntityAbstract $entity, $filters)
-    {
-        return $filters;
-        $builtFilters = [];
-        $attributes = $entity->getAttributes()->val();
-        foreach ($filters as $fName => $fValue) {
-            if (array_key_exists($fName, $attributes) && $attributes[$fName] instanceof DateTimeAttribute) {
-                $builtFilters[$fName] = [
-                    '$gte' => $this->datetime()
-                ];
-            } else {
-                $builtFilters[$fName] = $fName;
-            }
-        }
     }
 }

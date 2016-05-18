@@ -172,6 +172,13 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         return $save;
     }
 
+    public static function find(array $conditions = [], array $order = [], $limit = 0, $page = 0)
+    {
+        $conditions = self::prepareFilters($conditions);
+
+        return parent::find($conditions, $order, $limit, $page);
+    }
+
     /**
      * @param $id
      *
@@ -213,6 +220,32 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         }
 
         return $data;
+    }
+
+    protected static function prepareFilters($filters)
+    {
+        $builtFilters = [];
+        $entity = new static;
+        $attributes = $entity->getAttributes()->val();
+        foreach ($filters as $fName => $fValue) {
+            // Construct an $in statement only if filter value is index-based
+            if (is_array($fValue) && !count(array_filter(array_keys($fValue), 'is_string')) > 0) {
+                $fValue = [
+                    '$in' => $fValue
+                ];
+            }
+
+            if (array_key_exists($fName, $attributes) && $attributes[$fName] instanceof DateTimeAttribute && $fValue) {
+                $fValue = [
+                    '$gte' => self::datetime($fValue)->setTime(0, 0, 0)->getMongoDate(),
+                    '$lte' => self::datetime($fValue)->setTime(23, 59, 59)->getMongoDate()
+                ];
+            }
+
+            $builtFilters[$fName] = $fValue;
+        }
+
+        return $builtFilters;
     }
 
     private function getEventName()
