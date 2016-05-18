@@ -13,7 +13,7 @@ use Webiny\Component\Entity\EntityCollection;
 
 interface CsvExportableInterface
 {
-    public function getCsvHeader(EntityCollection $entities);
+    public function getCsvHeader();
 
-    public function getCsvData(EntityCollection $entities);
+    public function getCsvData();
 }

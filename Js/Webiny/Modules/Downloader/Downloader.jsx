@@ -5,6 +5,7 @@ class Downloader extends Webiny.Ui.Component {
         super(props);
 
         this.state = {};
+        this.downloaded = true;
 
         this.bindMethods('download');
     }
@@ -17,13 +18,14 @@ class Downloader extends Webiny.Ui.Component {
     }
 
     download(httpMethod, url, ids = null, filters = null) {
-        this.setState({httpMethod, url, ids, filters});
+        this.downloaded = false;
+        this.setState({httpMethod, url, ids, filters: _.pickBy(filters, f => !_.isUndefined(f))});
     }
 }
 
 Downloader.defaultProps = {
     renderer() {
-        if (!this.state.httpMethod) {
+        if (this.downloaded) {
             return null;
         }
 
@@ -32,8 +34,12 @@ Downloader.defaultProps = {
             action = _apiUrl + action;
         }
 
+        let filters = null;
         if (this.state.filters && !this.state.ids) {
-            action += '?' + jQuery.param(this.state.filters);
+            filters = [];
+            _.each(this.state.filters, (value, name) => {
+                filters.push(<input type="hidden" name={name} value={value} key={name}/>);
+            });
         }
 
         let ids = null;
@@ -48,9 +54,12 @@ Downloader.defaultProps = {
             authorization = <input type="hidden" name="Authorization" value={Webiny.Cookies.get('webiny-token')}/>;
         }
 
+        this.downloaded = true;
+
         return (
             <form ref="downloader" action={action} method={this.state.httpMethod} target="_blank">
                 {ids}
+                {filters}
                 {authorization}
                 <input type="hidden" name="XDEBUG_SESSION_START" value="PHPSTORM"/>
             </form>

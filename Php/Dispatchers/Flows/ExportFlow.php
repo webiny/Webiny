@@ -14,8 +14,10 @@ use Apps\Core\Php\DevTools\Entity\Export\PdfExportableInterface;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\Dispatchers\AbstractFlow;
 use Apps\Core\Php\RequestHandlers\ApiException;
+use League\Csv\Writer;
 use mikehaertl\wkhtmlto\Pdf;
 use PHPZip\Zip\Stream\ZipStream;
+use SplTempFileObject;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Storage\File\File;
 
@@ -38,9 +40,13 @@ class ExportFlow extends AbstractFlow
             $entities = $entity->find($filters, $sorter, $this->wRequest()->getPerPage(), $this->wRequest()->getPage());
             if ($params[1] === 'csv') {
                 $this->exportCsv($entity, $entities);
+
+                return true;
             }
             if ($params[1] === 'pdf') {
                 $this->exportListPdf($entity, $entities);
+
+                return true;
             }
             throw new ApiException('No export method was triggered!');
         } else {
@@ -72,6 +78,20 @@ class ExportFlow extends AbstractFlow
         if (!$entity instanceof CsvExportableInterface) {
             throw new ApiException(get_class($entity) . ' must implement CsvExportableInterface');
         }
+
+        //the CSV file will be created into a temporary File
+        $writer = Writer::createFromFileObject(new SplTempFileObject());
+        $writer->setDelimiter(";");
+        $writer->setNewline("\r\n");
+        $writer->setEncodingFrom("utf-8");
+        $writer->insertOne($entity->getCsvHeader());
+
+        /* @var $ent CsvExportableInterface */
+        foreach ($entities as $ent) {
+            $writer->insertOne($ent->getCsvData());
+        }
+
+        die($writer->output($entity::getEntityCollection() . '-' . date('Ymd') . '.csv'));
     }
 
     protected function exportListPdf(EntityAbstract $entity, EntityCollection $entities)
