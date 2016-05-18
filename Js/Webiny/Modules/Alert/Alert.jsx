@@ -8,7 +8,6 @@ class Alert extends Webiny.Ui.Component {
 }
 
 Alert.defaultProps = {
-    size: 'normal',
     type: 'info',
     icon: 'info',
     title: null,

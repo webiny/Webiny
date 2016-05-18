@@ -25,13 +25,14 @@ class Editor extends Webiny.Ui.FormComponent {
         this.mdEditor = new SimpleMDE(mdConfig);
 
         this.mdEditor.codemirror.on('change', () => {
-            this.props.valueLink.requestChange(this.mdEditor.value());
+            this.props.valueLink.requestChange(this.mdEditor.codemirror.getValue());
         });
     }
 
     componentWillReceiveProps(props) {
-        if (this.mdEditor.value() !== props.valueLink.value) {
-            this.mdEditor.value(props.valueLink.value);
+        if (this.mdEditor.codemirror.getValue() !== props.valueLink.value) {
+            // the "+ ''" sort a strange with splitLines method within CodeMirror
+            this.mdEditor.codemirror.setValue(props.valueLink.value + '');
         }
     }
 
@@ -41,10 +42,6 @@ class Editor extends Webiny.Ui.FormComponent {
 
     getTextareaElement() {
         return $(ReactDOM.findDOMNode(this)).find('textarea')[0];
-    }
-
-    onChange(e) {
-        this.props.valueLink.requestChange(e.target.value);
     }
 }
 
