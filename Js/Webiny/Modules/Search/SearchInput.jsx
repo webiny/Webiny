@@ -33,7 +33,8 @@ class SearchInput extends Webiny.Ui.FormComponent {
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
         const newState = {
-            options: props.options
+            options: props.options,
+            selected: ''
         };
 
         if (props.selected) {
