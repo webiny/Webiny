@@ -40,7 +40,7 @@ class ExecuteMethodFlow extends AbstractFlow
             throw new ApiException($message, 'WBY-AUTHORIZATION', 401);
         }
 
-        $id = isset($params['id']) ? $params['id'] : null;
+        $id = $params['id'] ?? null;
 
         $bindTo = null;
         if ($id) {
