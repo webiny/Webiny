@@ -39,7 +39,7 @@ class Request extends \Webiny\Component\Http\Request
             }
 
             if (!$this->str($fName)->startsWith('_') && !in_array($fName, $this->skipFilters)) {
-                if (strtolower($fValue) === 'true' || strtolower($fValue) == 'false') {
+                if (is_string($fValue) && (strtolower($fValue) === 'true' || strtolower($fValue) == 'false')) {
                     $fValue = StdObjectWrapper::toBool($fValue);
                 }
                 if (is_numeric($fValue)) {

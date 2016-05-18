@@ -25,7 +25,7 @@ class ErrorHandler
         }
 
         $error = [
-            'type'    => isset($this->codes[$errorCode]) ? $this->codes[$errorCode] : 'notice',
+            'type'    => $this->codes[$errorCode] ?? 'notice',
             'message' => $errorMessage,
             'file'    => $errorFile,
             'line'    => $errorLine,

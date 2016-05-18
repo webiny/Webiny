@@ -75,7 +75,7 @@ class File extends EntityAbstract
 
         $content = $this->str(isset($data['src']) ? $data['src'] : '');
         $newContent = $content->startsWith('data:');
-        $newName = isset($data['name']) ? $data['name'] : $this->name;
+        $newName = $data['name'] ?? $this->name;
         if ($this->exists()) {
             if ($newContent) {
                 // Delete current file

@@ -14,6 +14,9 @@ class SearchInput extends Webiny.Ui.FormComponent {
         });
 
         this.warned = false;
+        this.preventBlur = false;
+
+        Webiny.Mixins.ChangeConfirmableComponent.extend(this);
 
         this.bindMethods(
             'inputChanged',
@@ -30,7 +33,8 @@ class SearchInput extends Webiny.Ui.FormComponent {
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
         const newState = {
-            options: props.options
+            options: props.options,
+            selected: ''
         };
 
         if (props.selected) {
@@ -98,6 +102,10 @@ class SearchInput extends Webiny.Ui.FormComponent {
     }
 
     onBlur() {
+        if (this.preventBlur) {
+            return;
+        }
+
         const state = {options: []};
         if (!_.get(this.props, 'valueLink.value')) {
             state['search'] = '';
@@ -107,17 +115,26 @@ class SearchInput extends Webiny.Ui.FormComponent {
     }
 
     selectItem(item) {
-        const search = this.props.valueLink ? this.renderPreview(item) : '';
-        this.setState({
+        const newState = {
             selected: null,
-            search,
+            search: '',
             options: [],
             selectedData: item
-        }, () => {
-            if (this.props.valueLink) {
-                this.props.valueLink.requestChange(this.props.useDataAsValue ? item : item[this.props.valueAttr]);
-                setTimeout(this.validate, 10);
-            }
+        };
+
+        if (this.props.valueLink) {
+            this.preventBlur = true;
+            return this.requestChange(this.props.useDataAsValue ? item : item[this.props.valueAttr], (value) => {
+                this.setState(newState, () => {
+                    this.props.valueLink.requestChange(value);
+                    setTimeout(this.validate, 10);
+                    this.props.onSelect(item);
+                    this.preventBlur = false;
+                });
+            });
+        }
+
+        return this.setState(newState, () => {
             this.props.onSelect(item);
         });
     }

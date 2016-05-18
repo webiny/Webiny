@@ -139,7 +139,7 @@ class BaseContainer extends Webiny.Ui.Component {
                 }
             });
 
-            props.data = this.state.model;
+            props.data = _.clone(this.state.model);
 
             props.container = this;
             if (!props.ui) {
@@ -197,7 +197,7 @@ class BaseContainer extends Webiny.Ui.Component {
         const children = this.props.children;
         if (_.isFunction(children)) {
             if (params.length === 0) {
-                params = [this, this.state.model, this];
+                params = [this, _.clone(this.state.model), this];
             } else {
                 params.unshift(this);
                 params.push(this);

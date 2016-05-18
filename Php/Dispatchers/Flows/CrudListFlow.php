@@ -11,6 +11,7 @@ namespace Apps\Core\Php\Dispatchers\Flows;
 use Apps\Core\Php\DevTools\Entity\EntityAbstract;
 use Apps\Core\Php\Dispatchers\AbstractFlow;
 use Apps\Core\Php\RequestHandlers\ApiException;
+use Webiny\Component\Entity\Attribute\DateTimeAttribute;
 
 /**
  * Class CrudListFlow
@@ -30,6 +31,7 @@ class CrudListFlow extends AbstractFlow
 
         $entities = $entity->find($filters, $sorter, $this->wRequest()->getPerPage(), $this->wRequest()->getPage());
         $formatter = new CrudListFormatter($entities);
+
         return $formatter->format($this->wRequest()->getFields());
     }
 

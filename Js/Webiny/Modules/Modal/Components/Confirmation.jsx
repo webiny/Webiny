@@ -23,6 +23,7 @@ class Confirmation extends Webiny.Ui.ModalComponent {
             data.push(this);
             this.props.onConfirm(...data);
         }
+        this.hide();
     }
 
     renderContent() {

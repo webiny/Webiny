@@ -10,8 +10,6 @@ class OptionComponent extends Component {
             options: []
         };
 
-        this.lastUsedSource = null;
-
         this.bindMethods('prepareOptions,renderOptions,setFilters,applyFilter');
         Webiny.Mixins.ApiComponent.extend(this);
         Webiny.Mixins.FilterableComponent.extend(this);

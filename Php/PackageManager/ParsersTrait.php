@@ -78,7 +78,7 @@ trait ParsersTrait
             $callback = $this->str($callback)->replace('/', '\\');
             $priority = 300;
         } else {
-            $priority = isset($callback['Priority']) ? $callback['Priority'] : 300;
+            $priority = $callback['Priority'] ?? 300;
             $callback = $this->str($callback['Handler'])->replace('/', '\\');
         }
 
