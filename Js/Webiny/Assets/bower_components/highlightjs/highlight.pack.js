@@ -1,4 +1,4 @@
-/*! highlight.js v9.2.0 | BSD3 License | git.io/hljslicense */
+/*! highlight.js v9.3.0 | BSD3 License | git.io/hljslicense */
 (function(factory) {
 
   // Find the global object for export to both the browser and web workers.
@@ -221,7 +221,7 @@
         }
         mode.keywords = compiled_keywords;
       }
-      mode.lexemesRe = langRe(mode.lexemes || /\b\w+\b/, true);
+      mode.lexemesRe = langRe(mode.lexemes || /\w+/, true);
 
       if (parent) {
         if (mode.beginKeywords) {
@@ -513,10 +513,7 @@
       value: escape(text)
     };
     var second_best = result;
-    languageSubset.forEach(function(name) {
-      if (!getLanguage(name)) {
-        return;
-      }
+    languageSubset.filter(getLanguage).forEach(function(name) {
       var current = highlight(name, text, false);
       current.language = name;
       if (current.relevance > second_best.relevance) {
@@ -700,7 +697,7 @@
     contains: [hljs.BACKSLASH_ESCAPE]
   };
   hljs.PHRASAL_WORDS_MODE = {
-    begin: /\b(a|an|the|are|I|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|like)\b/
+    begin: /\b(a|an|the|are|I'm|isn't|don't|doesn't|won't|but|just|should|pretty|simply|enough|gonna|going|wtf|so|such|will|you|your|like)\b/
   };
   hljs.COMMENT = function (begin, end, inherits) {
     var mode = hljs.inherit(
@@ -1361,15 +1358,16 @@ hljs.registerLanguage('xml', function(hljs) {
         relevance: 0
       },
       {
-        begin: '=',
+        begin: /=\s*/,
         relevance: 0,
         contains: [
           {
             className: 'string',
+            endsParent: true,
             variants: [
               {begin: /"/, end: /"/},
               {begin: /'/, end: /'/},
-              {begin: /[^\s\/>]+/}
+              {begin: /[^\s"'=<>`]+/}
             ]
           }
         ]
@@ -4537,16 +4535,19 @@ hljs.registerLanguage('cpp', function(hljs) {
     literal: 'true false nullptr NULL'
   };
 
+  var EXPRESSION_CONTAINS = [
+    CPP_PRIMATIVE_TYPES,
+    hljs.C_LINE_COMMENT_MODE,
+    hljs.C_BLOCK_COMMENT_MODE,
+    NUMBERS,
+    STRINGS
+  ];
+
   return {
     aliases: ['c', 'cc', 'h', 'c++', 'h++', 'hpp'],
     keywords: CPP_KEYWORDS,
     illegal: '</',
-    contains: [
-      CPP_PRIMATIVE_TYPES,
-      hljs.C_LINE_COMMENT_MODE,
-      hljs.C_BLOCK_COMMENT_MODE,
-      NUMBERS,
-      STRINGS,
+    contains: EXPRESSION_CONTAINS.concat([
       PREPROCESSOR,
       {
         begin: '\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<', end: '>',
@@ -4558,9 +4559,22 @@ hljs.registerLanguage('cpp', function(hljs) {
         keywords: CPP_KEYWORDS
       },
       {
-        // Expression keywords prevent 'keyword Name(...) or else if(...)' from
-        // being recognized as a function definition
-        beginKeywords: 'new throw return else',
+        // This mode covers expression context where we can't expect a function
+        // definition and shouldn't highlight anything that looks like one:
+        // `return some()`, `else if()`, `(x*sum(1, 2))`
+        variants: [
+          {begin: /=/, end: /;/},
+          {begin: /\(/, end: /\)/},
+          {beginKeywords: 'new throw return else', end: /;/}
+        ],
+        keywords: CPP_KEYWORDS,
+        contains: EXPRESSION_CONTAINS.concat([
+          {
+            begin: /\(/, end: /\)/,
+            contains: EXPRESSION_CONTAINS.concat(['self']),
+            relevance: 0
+          }
+        ]),
         relevance: 0
       },
       {
@@ -4593,7 +4607,7 @@ hljs.registerLanguage('cpp', function(hljs) {
           PREPROCESSOR
         ]
       }
-    ]
+    ])
   };
 });
 
@@ -4751,6 +4765,7 @@ hljs.registerLanguage('crystal', function(hljs) {
         className: 'regexp',
         contains: [hljs.BACKSLASH_ESCAPE, SUBST],
         variants: [
+          {begin: '//[a-z]*', relevance: 0},
           {begin: '/', end: '/[a-z]*'},
           {begin: '%r\\(', end: '\\)', contains: recursiveParen('\\(', '\\)')},
           {begin: '%r\\[', end: '\\]', contains: recursiveParen('\\[', '\\]')},
@@ -4783,7 +4798,9 @@ hljs.registerLanguage('crystal', function(hljs) {
   var ATTRIBUTE = {
     className: 'meta',
     begin: '@\\[', end: '\\]',
-    relevance: 5
+    contains: [
+      hljs.inherit(hljs.QUOTE_STRING_MODE, {className: 'meta-string'})
+    ]
   };
   var CRYSTAL_DEFAULT_CONTAINS = [
     EXPANSION,
@@ -4856,7 +4873,6 @@ hljs.registerLanguage('crystal', function(hljs) {
     }
   ];
   SUBST.contains = CRYSTAL_DEFAULT_CONTAINS;
-  ATTRIBUTE.contains = CRYSTAL_DEFAULT_CONTAINS;
   EXPANSION.contains = CRYSTAL_DEFAULT_CONTAINS.slice(1); // without EXPANSION
 
   return {
@@ -4868,19 +4884,23 @@ hljs.registerLanguage('crystal', function(hljs) {
 });
 
 hljs.registerLanguage('cs', function(hljs) {
-  var KEYWORDS =
-    // Normal keywords.
-    'abstract as base bool break byte case catch char checked const continue decimal dynamic ' +
-    'default delegate do double else enum event explicit extern false finally fixed float ' +
-    'for foreach goto if implicit in int interface internal is lock long null when ' +
-    'object operator out override params private protected public readonly ref sbyte ' +
-    'sealed short sizeof stackalloc static string struct switch this true try typeof ' +
-    'uint ulong unchecked unsafe ushort using virtual volatile void while async ' +
-    'protected public private internal ' +
-    // Contextual keywords.
-    'ascending descending from get group into join let orderby partial select set value var ' +
-    'where yield';
-  var GENERIC_IDENT_RE = hljs.IDENT_RE + '(<' + hljs.IDENT_RE + '>)?';
+  var KEYWORDS = {
+    keyword:
+      // Normal keywords.
+      'abstract as base bool break byte case catch char checked const continue decimal dynamic ' +
+      'default delegate do double else enum event explicit extern finally fixed float ' +
+      'for foreach goto if implicit in int interface internal is lock long when ' +
+      'object operator out override params private protected public readonly ref sbyte ' +
+      'sealed short sizeof stackalloc static string struct switch this try typeof ' +
+      'uint ulong unchecked unsafe ushort using virtual volatile void while async ' +
+      'protected public private internal ' +
+      // Contextual keywords.
+      'ascending descending from get group into join let orderby partial select set value var ' +
+      'where yield',
+    literal:
+      'null false true'
+  };
+  var TYPE_IDENT_RE = hljs.IDENT_RE + '(<' + hljs.IDENT_RE + '>)?(\\[\\])?';
   return {
     aliases: ['csharp'],
     keywords: KEYWORDS,
@@ -4950,7 +4970,7 @@ hljs.registerLanguage('cs', function(hljs) {
       },
       {
         className: 'function',
-        begin: '(' + GENERIC_IDENT_RE + '\\s+)+' + hljs.IDENT_RE + '\\s*\\(', returnBegin: true, end: /[{;=]/,
+        begin: '(' + TYPE_IDENT_RE + '\\s+)+' + hljs.IDENT_RE + '\\s*\\(', returnBegin: true, end: /[{;=]/,
         excludeEnd: true,
         keywords: KEYWORDS,
         contains: [
@@ -5076,10 +5096,11 @@ hljs.registerLanguage('css', function(hljs) {
                                  // because it doesn’t let it to be parsed as
                                  // a rule set but instead drops parser into
                                  // the default mode which is how it should be.
+        illegal: /:/, // break on Less variables @var: ...
         contains: [
           {
             className: 'keyword',
-            begin: /\S+/
+            begin: /\w+/
           },
           {
             begin: /\s/, endsWithParent: true, excludeEnd: true,
@@ -5412,9 +5433,15 @@ hljs.registerLanguage('markdown', function(hljs) {
       {
         className: 'code',
         variants: [
-          { begin: '`.+?`' },
-          { begin: '^( {4}|\t)', end: '$'
-          , relevance: 0
+          {
+            begin: '^```\w*\s*$', end: '^```\s*$'
+          },
+          {
+            begin: '`.+?`'
+          },
+          {
+            begin: '^( {4}|\t)', end: '$',
+            relevance: 0
           }
         ]
       },
@@ -5799,7 +5826,7 @@ hljs.registerLanguage('dockerfile', function(hljs) {
 
 hljs.registerLanguage('dos', function(hljs) {
   var COMMENT = hljs.COMMENT(
-    /@?rem\b/, /$/,
+    /^\s*@?rem\b/, /$/,
     {
       relevance: 10
     }
@@ -6051,7 +6078,7 @@ hljs.registerLanguage('elixir', function(hljs) {
     FUNCTION,
     {
       className: 'symbol',
-      begin: ':',
+      begin: ':(?!\\s)',
       contains: [STRING, {begin: ELIXIR_METHOD_RE}],
       relevance: 0
     },
@@ -6187,10 +6214,14 @@ hljs.registerLanguage('elm', function(hljs) {
 
 hljs.registerLanguage('ruby', function(hljs) {
   var RUBY_METHOD_RE = '[a-zA-Z_]\\w*[!?=]?|[-+~]\\@|<<|>>|=~|===?|<=>|[<>]=?|\\*\\*|[-/+%^&*~`|]|\\[\\]=?';
-  var RUBY_KEYWORDS =
-    'and false then defined module in return redo if BEGIN retry end for true self when ' +
-    'next until do begin unless END rescue nil else break undef not super class case ' +
-    'require yield alias while ensure elsif or include attr_reader attr_writer attr_accessor';
+  var RUBY_KEYWORDS = {
+    keyword:
+      'and then defined module in return redo if BEGIN retry end for self when ' +
+      'next until do begin unless END rescue else break undef not super class case ' +
+      'require yield alias while ensure elsif or include attr_reader attr_writer attr_accessor',
+    literal:
+      'true false nil'
+  };
   var YARDOCTAG = {
     className: 'doctag',
     begin: '@[A-Za-z]+'
@@ -6275,13 +6306,17 @@ hljs.registerLanguage('ruby', function(hljs) {
       ].concat(COMMENT_MODES)
     },
     {
+      // swallow namespace qualifiers before symbols
+      begin: hljs.IDENT_RE + '::'
+    },
+    {
       className: 'symbol',
       begin: hljs.UNDERSCORE_IDENT_RE + '(\\!|\\?)?:',
       relevance: 0
     },
     {
       className: 'symbol',
-      begin: ':',
+      begin: ':(?!\\s)',
       contains: [STRING, {begin: RUBY_METHOD_RE}],
       relevance: 0
     },
@@ -6292,6 +6327,11 @@ hljs.registerLanguage('ruby', function(hljs) {
     },
     {
       begin: '(\\$\\W)|((\\$|\\@\\@?)(\\w+))' // variables
+    },
+    {
+      className: 'params',
+      begin: /\|/, end: /\|/,
+      keywords: RUBY_KEYWORDS
     },
     { // regexp container
       begin: '(' + hljs.RE_STARTERS_RE + ')\\s*',
@@ -6712,52 +6752,169 @@ hljs.registerLanguage('fsharp', function(hljs) {
 });
 
 hljs.registerLanguage('gams', function (hljs) {
-  var KEYWORDS =
-    'abort acronym acronyms alias all and assign binary card diag display else1 eps eq equation equations file files ' +
-    'for1 free ge gt if inf integer le loop lt maximizing minimizing model models na ne negative no not option ' +
-    'options or ord parameter parameters positive prod putpage puttl repeat sameas scalar scalars semicont semiint ' +
-    'set1 sets smax smin solve sos1 sos2 sum system table then until using variable variables while1 xor yes';
+  var KEYWORDS = {
+    'keyword':
+      'abort acronym acronyms alias all and assign binary card diag display ' +
+      'else eq file files for free ge gt if integer le loop lt maximizing ' +
+      'minimizing model models ne negative no not option options or ord ' +
+      'positive prod put putpage puttl repeat sameas semicont semiint smax ' +
+      'smin solve sos1 sos2 sum system table then until using while xor yes',
+    'literal': 'eps inf na',
+    'built-in':
+      'abs arccos arcsin arctan arctan2 Beta betaReg binomial ceil centropy ' +
+      'cos cosh cvPower div div0 eDist entropy errorf execSeed exp fact ' +
+      'floor frac gamma gammaReg log logBeta logGamma log10 log2 mapVal max ' +
+      'min mod ncpCM ncpF ncpVUpow ncpVUsin normal pi poly power ' +
+      'randBinomial randLinear randTriangle round rPower sigmoid sign ' +
+      'signPower sin sinh slexp sllog10 slrec sqexp sqlog10 sqr sqrec sqrt ' +
+      'tan tanh trunc uniform uniformInt vcPower bool_and bool_eqv bool_imp ' +
+      'bool_not bool_or bool_xor ifThen rel_eq rel_ge rel_gt rel_le rel_lt ' +
+      'rel_ne gday gdow ghour gleap gmillisec gminute gmonth gsecond gyear ' +
+      'jdate jnow jstart jtime errorLevel execError gamsRelease gamsVersion ' +
+      'handleCollect handleDelete handleStatus handleSubmit heapFree ' +
+      'heapLimit heapSize jobHandle jobKill jobStatus jobTerminate ' +
+      'licenseLevel licenseStatus maxExecError sleep timeClose timeComp ' +
+      'timeElapsed timeExec timeStart'
+  };
+  var PARAMS = {
+    className: 'params',
+    begin: /\(/, end: /\)/,
+    excludeBegin: true,
+    excludeEnd: true,
+  };
+  var SYMBOLS = {
+    className: 'symbol',
+    variants: [
+      {begin: /\=[lgenxc]=/},
+      {begin: /\$/},
+    ]
+  };
+  var QSTR = { // One-line quoted comment string
+    className: 'comment',
+    variants: [
+      {begin: '\'', end: '\''},
+      {begin: '"', end: '"'},
+    ],
+    illegal: '\\n',
+    contains: [hljs.BACKSLASH_ESCAPE]
+  };
+  var ASSIGNMENT = {
+    begin: '/',
+    end: '/',
+    keywords: KEYWORDS,
+    contains: [
+      QSTR,
+      hljs.C_LINE_COMMENT_MODE,
+      hljs.C_BLOCK_COMMENT_MODE,
+      hljs.QUOTE_STRING_MODE,
+      hljs.APOS_STRING_MODE,
+      hljs.C_NUMBER_MODE,
+    ],
+  };
+  var DESCTEXT = { // Parameter/set/variable description text
+    begin: /[a-z][a-z0-9_]*(\([a-z0-9_, ]*\))?[ \t]+/,
+    excludeBegin: true,
+    end: '$',
+    endsWithParent: true,
+    contains: [
+      QSTR,
+      ASSIGNMENT,
+      {
+        className: 'comment',
+        begin: /([ ]*[a-z0-9&#*=?@>\\<:\-,()$\[\]_.{}!+%^]+)+/,
+      },
+    ],
+  };
 
   return {
     aliases: ['gms'],
     case_insensitive: true,
     keywords: KEYWORDS,
     contains: [
+      hljs.COMMENT(/^\$ontext/, /^\$offtext/),
       {
-        beginKeywords: 'sets parameters variables equations',
-        end: ';',
+        className: 'meta',
+        begin: '^\\$[a-z0-9]+',
+        end: '$',
+        returnBegin: true,
         contains: [
           {
-            begin: '/',
-            end: '/',
-            contains: [hljs.NUMBER_MODE]
+            className: 'meta-keyword',
+            begin: '^\\$[a-z0-9]+',
           }
         ]
       },
+      hljs.COMMENT('^\\*', '$'),
+      hljs.C_LINE_COMMENT_MODE,
+      hljs.C_BLOCK_COMMENT_MODE,
+      hljs.QUOTE_STRING_MODE,
+      hljs.APOS_STRING_MODE,
+      // Declarations
       {
-        className: 'string',
-        begin: '\\*{3}', end: '\\*{3}'
+        beginKeywords:
+          'set sets parameter parameters variable variables ' +
+          'scalar scalars equation equations',
+        end: ';',
+        contains: [
+          hljs.COMMENT('^\\*', '$'),
+          hljs.C_LINE_COMMENT_MODE,
+          hljs.C_BLOCK_COMMENT_MODE,
+          hljs.QUOTE_STRING_MODE,
+          hljs.APOS_STRING_MODE,
+          ASSIGNMENT,
+          DESCTEXT,
+        ]
       },
-      hljs.NUMBER_MODE,
+      { // table environment
+        beginKeywords: 'table',
+        end: ';',
+        returnBegin: true,
+        contains: [
+          { // table header row
+            beginKeywords: 'table',
+            end: '$',
+            contains: [DESCTEXT],
+          },
+          hljs.COMMENT('^\\*', '$'),
+          hljs.C_LINE_COMMENT_MODE,
+          hljs.C_BLOCK_COMMENT_MODE,
+          hljs.QUOTE_STRING_MODE,
+          hljs.APOS_STRING_MODE,
+          hljs.C_NUMBER_MODE,
+          // Table does not contain DESCTEXT or ASSIGNMENT
+        ]
+      },
+      // Function definitions
       {
-        className: 'number',
-        begin: '\\$[a-zA-Z0-9]+'
-      }
+        className: 'function',
+        begin: /^[a-z][a-z0-9_,\-+' ()$]+\.{2}/,
+        returnBegin: true,
+        contains: [
+              { // Function title
+                className: 'title',
+                begin: /^[a-z][a-z0-9_]+/,
+              },
+              PARAMS,
+              SYMBOLS,
+            ],
+      },
+      hljs.C_NUMBER_MODE,
+      SYMBOLS,
     ]
   };
 });
 
 hljs.registerLanguage('gauss', function(hljs) {
   var KEYWORDS = {
-    keyword: 'and bool break|0 call callexe checkinterrupt clear clearg closeall cls comlog compile ' +
-              'continue create debug declare delete disable dlibrary|10 dllcall do|0 dos ed edit else|0 ' +
-              'elseif enable end endfor|10 endif|10 endp|10 endo|10 errorlog|10 errorlogat expr external fn ' +
-              'for|0 format goto gosub|0 graph if|0 keyword let lib library line load loadarray loadexe ' +
-              'loadf|10 loadk|10 loadm|10 loadp loads loadx local locate loopnextindex lprint lpwidth lshow ' +
+    keyword: 'and bool break call callexe checkinterrupt clear clearg closeall cls comlog compile ' +
+              'continue create debug declare delete disable dlibrary dllcall do dos ed edit else ' +
+              'elseif enable end endfor endif endp endo errorlog errorlogat expr external fn ' +
+              'for format goto gosub graph if keyword let lib library line load loadarray loadexe ' +
+              'loadf loadk loadm loadp loads loadx local locate loopnextindex lprint lpwidth lshow ' +
               'matrix msym ndpclex new not open or output outwidth plot plotsym pop prcsn print ' +
-              'printdos proc|10 push retp|10 return|0 rndcon rndmod rndmult rndseed run save saveall screen ' +
-              'scroll setarray show sparse stop string struct system trace trap|10 threadfor|10 ' +
-              'threadendfor|10 threadbegin|10 threadjoin|10 threadstat|10 threadend|10 until use while winprint',
+              'printdos proc push retp return rndcon rndmod rndmult rndseed run save saveall screen ' +
+              'scroll setarray show sparse stop string struct system trace trap threadfor ' +
+              'threadendfor threadbegin threadjoin threadstat threadend until use while winprint',
     built_in: 'abs acf aconcat aeye amax amean AmericanBinomCall AmericanBinomCall_Greeks AmericanBinomCall_ImpVol ' +
               'AmericanBinomPut AmericanBinomPut_Greeks AmericanBinomPut_ImpVol AmericanBSCall AmericanBSCall_Greeks ' +
               'AmericanBSCall_ImpVol AmericanBSPut AmericanBSPut_Greeks AmericanBSPut_ImpVol amin amult annotationGetDefaults ' +
@@ -6773,16 +6930,16 @@ hljs.registerLanguage('gauss', function(hljs) {
               'complex con cond conj cons ConScore contour conv convertsatostr convertstrtosa corrm corrms corrvc corrx corrxs ' +
               'cos cosh counts countwts crossprd crout croutp csrcol csrlin csvReadM csvReadSA cumprodc cumsumc curve cvtos ' +
               'datacreate datacreatecomplex datalist dataload dataloop dataopen datasave date datestr datestring datestrymd ' +
-              'dayinyr dayofweek dbAddDatabase|10 dbClose|10 dbCommit|10 dbCreateQuery|10 dbExecQuery|10 dbGetConnectOptions|10 dbGetDatabaseName|10 ' +
-              'dbGetDriverName|10 dbGetDrivers|10 dbGetHostName|10 dbGetLastErrorNum|10 dbGetLastErrorText|10 dbGetNumericalPrecPolicy|10 ' +
-              'dbGetPassword|10 dbGetPort|10 dbGetTableHeaders|10 dbGetTables|10 dbGetUserName|10 dbHasFeature|10 dbIsDriverAvailable|10 dbIsOpen|10 ' +
-              'dbIsOpenError|10 dbOpen|10 dbQueryBindValue|10 dbQueryClear|10 dbQueryCols|10 dbQueryExecPrepared|10 dbQueryFetchAllM|10 dbQueryFetchAllSA|10 ' +
-              'dbQueryFetchOneM|10 dbQueryFetchOneSA|10 dbQueryFinish|10 dbQueryGetBoundValue|10 dbQueryGetBoundValues|10 dbQueryGetField|10 ' +
-              'dbQueryGetLastErrorNum|10 dbQueryGetLastErrorText|10 dbQueryGetLastInsertID|10 dbQueryGetLastQuery|10 dbQueryGetPosition|10 ' +
-              'dbQueryIsActive|10 dbQueryIsForwardOnly|10 dbQueryIsNull|10 dbQueryIsSelect|10 dbQueryIsValid|10 dbQueryPrepare|10 dbQueryRows|10 ' +
-              'dbQuerySeek|10 dbQuerySeekFirst|10 dbQuerySeekLast|10 dbQuerySeekNext|10 dbQuerySeekPrevious|10 dbQuerySetForwardOnly|10 ' +
-              'dbRemoveDatabase|10 dbRollback|10 dbSetConnectOptions|10 dbSetDatabaseName|10 dbSetHostName|10 dbSetNumericalPrecPolicy|10 ' +
-              'dbSetPort|10 dbSetUserName|10 dbTransaction|10 DeleteFile delif delrows denseToSp denseToSpRE denToZero design det detl ' +
+              'dayinyr dayofweek dbAddDatabase dbClose dbCommit dbCreateQuery dbExecQuery dbGetConnectOptions dbGetDatabaseName ' +
+              'dbGetDriverName dbGetDrivers dbGetHostName dbGetLastErrorNum dbGetLastErrorText dbGetNumericalPrecPolicy ' +
+              'dbGetPassword dbGetPort dbGetTableHeaders dbGetTables dbGetUserName dbHasFeature dbIsDriverAvailable dbIsOpen ' +
+              'dbIsOpenError dbOpen dbQueryBindValue dbQueryClear dbQueryCols dbQueryExecPrepared dbQueryFetchAllM dbQueryFetchAllSA ' +
+              'dbQueryFetchOneM dbQueryFetchOneSA dbQueryFinish dbQueryGetBoundValue dbQueryGetBoundValues dbQueryGetField ' +
+              'dbQueryGetLastErrorNum dbQueryGetLastErrorText dbQueryGetLastInsertID dbQueryGetLastQuery dbQueryGetPosition ' +
+              'dbQueryIsActive dbQueryIsForwardOnly dbQueryIsNull dbQueryIsSelect dbQueryIsValid dbQueryPrepare dbQueryRows ' +
+              'dbQuerySeek dbQuerySeekFirst dbQuerySeekLast dbQuerySeekNext dbQuerySeekPrevious dbQuerySetForwardOnly ' +
+              'dbRemoveDatabase dbRollback dbSetConnectOptions dbSetDatabaseName dbSetHostName dbSetNumericalPrecPolicy ' +
+              'dbSetPort dbSetUserName dbTransaction DeleteFile delif delrows denseToSp denseToSpRE denToZero design det detl ' +
               'dfft dffti diag diagrv digamma doswin DOSWinCloseall DOSWinOpen dotfeq dotfeqmt dotfge dotfgemt dotfgt dotfgtmt ' +
               'dotfle dotflemt dotflt dotfltmt dotfne dotfnemt draw drop dsCreate dstat dstatmt dstatmtControlCreate dtdate dtday ' +
               'dttime dttodtv dttostr dttoutc dtvnormal dtvtodt dtvtoutc dummy dummybr dummydn eig eigh eighv eigv elapsedTradingDays ' +
@@ -7042,8 +7199,9 @@ hljs.registerLanguage('gherkin', function (hljs) {
     keywords: 'Feature Background Ability Business\ Need Scenario Scenarios Scenario\ Outline Scenario\ Template Examples Given And Then But When',
     contains: [
       {
-        className: 'keyword',
-        begin: '\\*'
+        className: 'symbol',
+        begin: '\\*',
+        relevance: 0
       },
       {
         className: 'meta',
@@ -7353,7 +7511,7 @@ hljs.registerLanguage('groovy', function(hljs) {
                 illegal: ':',
                 contains: [
                     {beginKeywords: 'extends implements'},
-                    hljs.UNDERSCORE_TITLE_MODE,
+                    hljs.UNDERSCORE_TITLE_MODE
                 ]
             },
             hljs.C_NUMBER_MODE,
@@ -7373,7 +7531,7 @@ hljs.registerLanguage('groovy', function(hljs) {
                 // highlight labeled statements
                 className: 'symbol', begin: '^\\s*[A-Za-z0-9_$]+:',
                 relevance: 0
-            },
+            }
         ],
         illegal: /#|<\//
     }
@@ -7703,6 +7861,7 @@ hljs.registerLanguage('haxe', function(hljs) {
 hljs.registerLanguage('hsp', function(hljs) {
   return {
     case_insensitive: true,
+    lexemes: /[\w\._]+/,
     keywords: 'goto gosub return break repeat loop continue wait await dim sdim foreach dimtype dup dupptr end stop newmod delmod mref run exgoto on mcall assert logmes newlab resume yield onexit onerror onkey onclick oncmd exist delete mkdir chdir dirlist bload bsave bcopy memfile if else poke wpoke lpoke getstr chdpm memexpand memcpy memset notesel noteadd notedel noteload notesave randomize noteunsel noteget split strrep setease button chgdisp exec dialog mmload mmplay mmstop mci pset pget syscolor mes print title pos circle cls font sysfont objsize picload color palcolor palette redraw width gsel gcopy gzoom gmode bmpsave hsvcolor getkey listbox chkbox combox input mesbox buffer screen bgscr mouse objsel groll line clrobj boxf objprm objmode stick grect grotate gsquare gradf objimage objskip objenable celload celdiv celput newcom querycom delcom cnvstow comres axobj winobj sendmsg comevent comevarg sarrayconv callfunc cnvwtos comevdisp libptr system hspstat hspver stat cnt err strsize looplev sublev iparam wparam lparam refstr refdval int rnd strlen length length2 length3 length4 vartype gettime peek wpeek lpeek varptr varuse noteinfo instr abs limit getease str strmid strf getpath strtrim sin cos tan atan sqrt double absf expf logf limitf powf geteasef mousex mousey mousew hwnd hinstance hdc ginfo objinfo dirinfo sysinfo thismod __hspver__ __hsp30__ __date__ __time__ __line__ __file__ _debug __hspdef__ and or xor not screen_normal screen_palette screen_hide screen_fixedsize screen_tool screen_frame gmode_gdi gmode_mem gmode_rgb0 gmode_alpha gmode_rgb0alpha gmode_add gmode_sub gmode_pixela ginfo_mx ginfo_my ginfo_act ginfo_sel ginfo_wx1 ginfo_wy1 ginfo_wx2 ginfo_wy2 ginfo_vx ginfo_vy ginfo_sizex ginfo_sizey ginfo_winx ginfo_winy ginfo_mesx ginfo_mesy ginfo_r ginfo_g ginfo_b ginfo_paluse ginfo_dispx ginfo_dispy ginfo_cx ginfo_cy ginfo_intid ginfo_newid ginfo_sx ginfo_sy objinfo_mode objinfo_bmscr objinfo_hwnd notemax notesize dir_cur dir_exe dir_win dir_sys dir_cmdline dir_desktop dir_mydoc dir_tv font_normal font_bold font_italic font_underline font_strikeout font_antialias objmode_normal objmode_guifont objmode_usefont gsquare_grad msgothic msmincho do until while wend for next _break _continue switch case default swbreak swend ddim ldim alloc m_pi rad2deg deg2rad ease_linear ease_quad_in ease_quad_out ease_quad_inout ease_cubic_in ease_cubic_out ease_cubic_inout ease_quartic_in ease_quartic_out ease_quartic_inout ease_bounce_in ease_bounce_out ease_bounce_inout ease_shake_in ease_shake_out ease_shake_inout ease_loop',
     contains: [
       hljs.C_LINE_COMMENT_MODE,
@@ -7717,7 +7876,7 @@ hljs.registerLanguage('hsp', function(hljs) {
         contains: [hljs.BACKSLASH_ESCAPE]
       },
 
-      hljs.COMMENT(';', '$'),
+      hljs.COMMENT(';', '$', {relevance: 0}),
 
       {
         // pre-processor
@@ -7788,7 +7947,6 @@ hljs.registerLanguage('htmlbars', function(hljs) {
   };
 
   return {
-    aliases: ['hbs', 'html.hbs', 'html.handlebars'],
     case_insensitive: true,
     subLanguage: 'xml',
     contains: [
@@ -8063,7 +8221,8 @@ hljs.registerLanguage('java', function(hljs) {
     'false synchronized int abstract float private char boolean static null if const ' +
     'for true while long strictfp finally protected import native final void ' +
     'enum else break transient catch instanceof byte super volatile case assert short ' +
-    'package default double public try this switch continue throws protected public private';
+    'package default double public try this switch continue throws protected public private ' +
+    'module requires exports';
 
   // https://docs.oracle.com/javase/7/docs/technotes/guides/language/underscores-literals.html
   var JAVA_NUMBER_RE = '\\b' +
@@ -8231,7 +8390,7 @@ hljs.registerLanguage('javascript', function(hljs) {
             begin: /</, end: /(\/\w+|\w+\/)>/,
             subLanguage: 'xml',
             contains: [
-              {begin: /<\w+\/>/, skip: true},
+              {begin: /<\w+\s*\/>/, skip: true},
               {begin: /<\w+/, end: /(\/\w+|\w+\/)>/, skip: true, contains: ['self']}
             ]
           }
@@ -8493,16 +8652,83 @@ hljs.registerLanguage('julia', function(hljs) {
 });
 
 hljs.registerLanguage('kotlin', function (hljs) {
-  var KEYWORDS = 'val var get set class trait object open private protected public ' +
-    'final enum if else do while for when break continue throw try catch finally ' +
-    'import package is as in return fun override default companion reified inline volatile transient native ' +
-    'Byte Short Char Int Long Boolean Float Double Void Unit Nothing';
+  var KEYWORDS = {
+    keyword:
+      'abstract as val var vararg get set class object open private protected public noinline ' +
+      'crossinline dynamic final enum if else do while for when throw try catch finally ' +
+      'import package is in fun override companion reified inline ' +
+      'interface annotation data sealed internal infix operator out by constructor super ' +
+      // to be deleted soon
+      'trait volatile transient native default',
+    built_in:
+      'Byte Short Char Int Long Boolean Float Double Void Unit Nothing',
+    literal:
+      'true false null'
+  };
+  var KEYWORDS_WITH_LABEL = {
+    className: 'keyword',
+    begin: /\b(break|continue|return|this)\b/,
+    starts: {
+      contains: [
+        {
+          className: 'symbol',
+          begin: /@\w+/
+        }
+      ]
+    }
+  };
+  var LABEL = {
+    className: 'symbol', begin: hljs.UNDERSCORE_IDENT_RE + '@'
+  };
+
+  // for string templates
+  var SUBST = {
+    className: 'subst',
+    variants: [
+      {begin: '\\$' + hljs.UNDERSCORE_IDENT_RE},
+      {begin: '\\${', end: '}', contains: [hljs.APOS_STRING_MODE, hljs.C_NUMBER_MODE]}
+    ]
+  };
+  var STRING = {
+    className: 'string',
+    variants: [
+      {
+        begin: '"""', end: '"""',
+        contains: [SUBST]
+      },
+      // Can't use built-in modes easily, as we want to use STRING in the meta
+      // context as 'meta-string' and there's no syntax to remove explicitly set
+      // classNames in built-in modes.
+      {
+        begin: '\'', end: '\'',
+        illegal: /\n/,
+        contains: [hljs.BACKSLASH_ESCAPE]
+      },
+      {
+        begin: '"', end: '"',
+        illegal: /\n/,
+        contains: [hljs.BACKSLASH_ESCAPE, SUBST]
+      }
+    ]
+  };
+
+  var ANNOTATION_USE_SITE = {
+    className: 'meta', begin: '@(?:file|property|field|get|set|receiver|param|setparam|delegate)\\s*:(?:\\s*' + hljs.UNDERSCORE_IDENT_RE + ')?'
+  };
+  var ANNOTATION = {
+    className: 'meta', begin: '@' + hljs.UNDERSCORE_IDENT_RE,
+    contains: [
+      {
+        begin: /\(/, end: /\)/,
+        contains: [
+          hljs.inherit(STRING, {className: 'meta-string'})
+        ]
+      }
+    ]
+  };
 
   return {
-    keywords: {
-      keyword: KEYWORDS,
-      literal: 'true false null'
-    },
+    keywords: KEYWORDS,
     contains : [
       hljs.COMMENT(
         '/\\*\\*',
@@ -8517,13 +8743,10 @@ hljs.registerLanguage('kotlin', function (hljs) {
       ),
       hljs.C_LINE_COMMENT_MODE,
       hljs.C_BLOCK_COMMENT_MODE,
-      {
-        className: 'type',
-        begin: /</, end: />/,
-        returnBegin: true,
-        excludeEnd: false,
-        relevance: 0
-      },
+      KEYWORDS_WITH_LABEL,
+      LABEL,
+      ANNOTATION_USE_SITE,
+      ANNOTATION,
       {
         className: 'function',
         beginKeywords: 'fun', end: '[(]|$',
@@ -8546,27 +8769,37 @@ hljs.registerLanguage('kotlin', function (hljs) {
           {
             className: 'params',
             begin: /\(/, end: /\)/,
+            endsParent: true,
             keywords: KEYWORDS,
             relevance: 0,
-            illegal: /\([^\(,\s:]+,/,
             contains: [
               {
-                className: 'type',
-                begin: /:\s*/, end: /\s*[=\)]/, excludeBegin: true, returnEnd: true,
+                begin: /:/, end: /[=,\/]/, endsWithParent: true,
+                contains: [
+                  {className: 'type', begin: hljs.UNDERSCORE_IDENT_RE},
+                  hljs.C_LINE_COMMENT_MODE,
+                  hljs.C_BLOCK_COMMENT_MODE
+                ],
                 relevance: 0
-              }
+              },
+              hljs.C_LINE_COMMENT_MODE,
+              hljs.C_BLOCK_COMMENT_MODE,
+              ANNOTATION_USE_SITE,
+              ANNOTATION,
+              STRING,
+              hljs.C_NUMBER_MODE
             ]
           },
-          hljs.C_LINE_COMMENT_MODE,
           hljs.C_BLOCK_COMMENT_MODE
         ]
       },
       {
         className: 'class',
-        beginKeywords: 'class trait', end: /[:\{(]|$/,
+        beginKeywords: 'class interface trait', end: /[:\{(]|$/, // remove 'trait' when removed from KEYWORDS
         excludeEnd: true,
         illegal: 'extends implements',
         contains: [
+          {beginKeywords: 'public protected internal private constructor'},
           hljs.UNDERSCORE_TITLE_MODE,
           {
             className: 'type',
@@ -8576,13 +8809,12 @@ hljs.registerLanguage('kotlin', function (hljs) {
           {
             className: 'type',
             begin: /[,:]\s*/, end: /[<\(,]|$/, excludeBegin: true, returnEnd: true
-          }
+          },
+          ANNOTATION_USE_SITE,
+          ANNOTATION
         ]
       },
-      {
-        className: 'variable', beginKeywords: 'var val', end: /\s*[=:$]/, excludeEnd: true
-      },
-      hljs.QUOTE_STRING_MODE,
+      STRING,
       {
         className: 'meta',
         begin: "^#!/usr/bin/env", end: '$',
@@ -8820,11 +9052,19 @@ hljs.registerLanguage('less', function(hljs) {
   /* Rule-Level Modes */
 
   var RULE_MODE = {
-    className: 'attribute',
-    begin: INTERP_IDENT_RE, end: ':', excludeEnd: true,
-    contains: [hljs.C_LINE_COMMENT_MODE, hljs.C_BLOCK_COMMENT_MODE],
-    illegal: /\S/,
-    starts: {end: '[;}]', returnEnd: true, contains: VALUE, illegal: '[<=$]'}
+    begin: INTERP_IDENT_RE + '\\s*:', returnBegin: true, end: '[;}]',
+    relevance: 0,
+    contains: [
+      {
+        className: 'attribute',
+        begin: INTERP_IDENT_RE, end: ':', excludeEnd: true,
+        starts: {
+          endsWithParent: true, illegal: '[<=$]',
+          relevance: 0,
+          contains: VALUE
+        }
+      }
+    ]
   };
 
   var AT_RULE_MODE = {
@@ -8852,7 +9092,7 @@ hljs.registerLanguage('less', function(hljs) {
     // then fall into the scary lookahead-discriminator variant.
     // this mode also handles mixin definitions and calls
     variants: [{
-      begin: '[\\.#:&\\[]', end: '[;{}]'  // mixin calls end with ';'
+      begin: '[\\.#:&\\[>]', end: '[;{}]'  // mixin calls end with ';'
       }, {
       begin: INTERP_IDENT_RE + '[^;]*{',
       end: '{'
@@ -8871,6 +9111,7 @@ hljs.registerLanguage('less', function(hljs) {
       IDENT_MODE('selector-class', '\\.' + INTERP_IDENT_RE, 0),
       IDENT_MODE('selector-tag',  '&', 0),
       {className: 'selector-attr', begin: '\\[', end: '\\]'},
+      {className: 'selector-pseudo', begin: /:(:)?[a-zA-Z0-9\_\-\+\(\)"'.]+/},
       {begin: '\\(', end: '\\)', contains: VALUE_WITH_RULESETS}, // argument list of parametric mixins
       {begin: '!important'} // eat !important after mixin call or it will be colored as tag
     ]
@@ -8881,8 +9122,8 @@ hljs.registerLanguage('less', function(hljs) {
     hljs.C_BLOCK_COMMENT_MODE,
     AT_RULE_MODE,
     VAR_RULE_MODE,
-    SELECTOR_MODE,
-    RULE_MODE
+    RULE_MODE,
+    SELECTOR_MODE
   );
 
   return {
@@ -9116,7 +9357,8 @@ hljs.registerLanguage('livecodeserver', function(hljs) {
         contains: [
           TITLE2,
           TITLE1
-        ]
+        ],
+        relevance: 0
       },
       {
         beginKeywords: 'command on', end: '$',
@@ -9147,7 +9389,7 @@ hljs.registerLanguage('livecodeserver', function(hljs) {
       hljs.C_NUMBER_MODE,
       TITLE1
     ].concat(COMMENT_MODES),
-    illegal: ';$|^\\[|^='
+    illegal: ';$|^\\[|^=|&|{'
   };
 });
 
@@ -10514,7 +10756,8 @@ hljs.registerLanguage('perl', function(hljs) {
   METHOD.contains = PERL_DEFAULT_CONTAINS;
 
   return {
-    aliases: ['pl'],
+    aliases: ['pl', 'pm'],
+    lexemes: /[\w\.]+/,
     keywords: PERL_KEYWORDS,
     contains: PERL_DEFAULT_CONTAINS
   };
@@ -10620,6 +10863,118 @@ hljs.registerLanguage('monkey', function(hljs) {
   }
 });
 
+hljs.registerLanguage('moonscript', function(hljs) {
+  var KEYWORDS = {
+    keyword:
+      // Moonscript keywords
+      'if then not for in while do return else elseif break continue switch and or ' +
+      'unless when class extends super local import export from using',
+    literal:
+      'true false nil',
+    built_in:
+      '_G _VERSION assert collectgarbage dofile error getfenv getmetatable ipairs load ' +
+      'loadfile loadstring module next pairs pcall print rawequal rawget rawset require ' +
+      'select setfenv setmetatable tonumber tostring type unpack xpcall coroutine debug ' +
+      'io math os package string table'
+  };
+  var JS_IDENT_RE = '[A-Za-z$_][0-9A-Za-z$_]*';
+  var SUBST = {
+    className: 'subst',
+    begin: /#\{/, end: /}/,
+    keywords: KEYWORDS
+  };
+  var EXPRESSIONS = [
+    hljs.inherit(hljs.C_NUMBER_MODE,
+      {starts: {end: '(\\s*/)?', relevance: 0}}), // a number tries to eat the following slash to prevent treating it as a regexp
+    {
+      className: 'string',
+      variants: [
+        {
+          begin: /'/, end: /'/,
+          contains: [hljs.BACKSLASH_ESCAPE]
+        },
+        {
+          begin: /"/, end: /"/,
+          contains: [hljs.BACKSLASH_ESCAPE, SUBST]
+        }
+      ]
+    },
+    {
+      className: 'built_in',
+      begin: '@__' + hljs.IDENT_RE
+    },
+    {
+      begin: '@' + hljs.IDENT_RE // relevance booster on par with CoffeeScript
+    },
+    {
+      begin: hljs.IDENT_RE + '\\\\' + hljs.IDENT_RE // inst\method
+    }
+  ];
+  SUBST.contains = EXPRESSIONS;
+
+  var TITLE = hljs.inherit(hljs.TITLE_MODE, {begin: JS_IDENT_RE});
+  var PARAMS_RE = '(\\(.*\\))?\\s*\\B[-=]>';
+  var PARAMS = {
+    className: 'params',
+    begin: '\\([^\\(]', returnBegin: true,
+    /* We need another contained nameless mode to not have every nested
+    pair of parens to be called "params" */
+    contains: [{
+      begin: /\(/, end: /\)/,
+      keywords: KEYWORDS,
+      contains: ['self'].concat(EXPRESSIONS)
+    }]
+  };
+
+  return {
+    aliases: ['moon'],
+    keywords: KEYWORDS,
+    illegal: /\/\*/,
+    contains: EXPRESSIONS.concat([
+      hljs.COMMENT('--', '$'),
+      {
+        className: 'function',  // function: -> =>
+        begin: '^\\s*' + JS_IDENT_RE + '\\s*=\\s*' + PARAMS_RE, end: '[-=]>',
+        returnBegin: true,
+        contains: [TITLE, PARAMS]
+      },
+      {
+        begin: /[\(,:=]\s*/, // anonymous function start
+        relevance: 0,
+        contains: [
+          {
+            className: 'function',
+            begin: PARAMS_RE, end: '[-=]>',
+            returnBegin: true,
+            contains: [PARAMS]
+          }
+        ]
+      },
+      {
+        className: 'class',
+        beginKeywords: 'class',
+        end: '$',
+        illegal: /[:="\[\]]/,
+        contains: [
+          {
+            beginKeywords: 'extends',
+            endsWithParent: true,
+            illegal: /[:="\[\]]/,
+            contains: [TITLE]
+          },
+          TITLE
+        ]
+      },
+      {
+        className: 'name',    // table
+        begin: JS_IDENT_RE + ':', end: ':',
+        returnBegin: true, returnEnd: true,
+        relevance: 0
+      }
+    ])
+  };
+});
+
 hljs.registerLanguage('nginx', function(hljs) {
   var VAR = {
     className: 'variable',
@@ -10717,8 +11072,21 @@ hljs.registerLanguage('nimrod', function(hljs) {
   return {
     aliases: ['nim'],
     keywords: {
-      keyword: 'addr and as asm bind block break|0 case|0 cast const|0 continue|0 converter discard distinct|10 div do elif else|0 end|0 enum|0 except export finally for from generic if|0 import|0 in include|0 interface is isnot|10 iterator|10 let|0 macro method|10 mixin mod nil not notin|10 object|0 of or out proc|10 ptr raise ref|10 return shl shr static template try|0 tuple type|0 using|0 var|0 when while|0 with without xor yield',
-      literal: 'shared guarded stdin stdout stderr result|10 true false'
+      keyword:
+        'addr and as asm bind block break case cast const continue converter ' +
+        'discard distinct div do elif else end enum except export finally ' +
+        'for from generic if import in include interface is isnot iterator ' +
+        'let macro method mixin mod nil not notin object of or out proc ptr ' +
+        'raise ref return shl shr static template try tuple type using var ' +
+        'when while with without xor yield',
+      literal:
+        'shared guarded stdin stdout stderr result true false',
+      built_in:
+        'int int8 int16 int32 int64 uint uint8 uint16 uint32 uint64 float ' +
+        'float32 float64 bool char string cstring pointer expr stmt void ' +
+        'auto any range array openarray varargs seq set clong culong cchar ' +
+        'cschar cshort cint csize clonglong cfloat cdouble clongdouble ' +
+        'cuchar cushort cuint culonglong cstringarray semistatic'
     },
     contains: [ {
         className: 'meta', // Actually pragma
@@ -10740,9 +11108,6 @@ hljs.registerLanguage('nimrod', function(hljs) {
         className: 'type',
         begin: /\b[A-Z]\w+\b/,
         relevance: 0
-      }, {
-        className: 'built_in',
-        begin: /\b(int|int8|int16|int32|int64|uint|uint8|uint16|uint32|uint64|float|float32|float64|bool|char|string|cstring|pointer|expr|stmt|void|auto|any|range|array|openarray|varargs|seq|set|clong|culong|cchar|cschar|cshort|cint|csize|clonglong|cfloat|cdouble|clongdouble|cuchar|cushort|cuint|culonglong|cstringarray|semistatic)\b/
       }, {
         className: 'number',
         relevance: 0,
@@ -11147,6 +11512,7 @@ hljs.registerLanguage('oxygene', function(hljs) {
   };
   return {
     case_insensitive: true,
+    lexemes: /\.?\w+/,
     keywords: OXYGENE_KEYWORDS,
     illegal: '("|\\$[G-Zg-z]|\\/\\*|</|=>|->)',
     contains: [
@@ -11223,7 +11589,7 @@ hljs.registerLanguage('pf', function(hljs) {
   };
   var TABLE = {
     className: 'variable',
-    begin: /</, end: />/
+    begin: /<(?!\/)/, end: />/
   };
   var QUOTE_STRING = {
     className: 'string',
@@ -11881,7 +12247,7 @@ hljs.registerLanguage('qml', function(hljs) {
       keyword:
         'in of on if for while finally var new function do return void else break catch ' +
         'instanceof with throw case default try this switch continue typeof delete ' +
-        'let yield const export super debugger as async await',
+        'let yield const export super debugger as async await import',
       literal:
         'true false null undefined NaN Infinity',
       built_in:
@@ -11899,69 +12265,44 @@ hljs.registerLanguage('qml', function(hljs) {
     };
 
   var QML_IDENT_RE = '[a-zA-Z_][a-zA-Z0-9\\._]*';
-  
-  var END_OF_LINE_MODE = {
-    className: 'string',
-    begin: '(\\b|"|\')',
-    end: '(//|/\\*|$)',
-    illegal: '\\n',
-    contains: [hljs.BACKSLASH_ESCAPE]
-  };
 
-  // Isolate import statements. Ends at a comment or end of line.
-  // Use keyword class.
-  var IMPORT = {
-      beginKeywords: 'import', end: '$',
-      starts: {
-        className: 'string',
-        end: '(//|/\\*|$)', 
-        returnEnd: true
-      },
-      contains: [
-        END_OF_LINE_MODE
-      ]
-  };
-  
   // Isolate property statements. Ends at a :, =, ;, ,, a comment or end of line.
   // Use property class.
   var PROPERTY = {
       className: 'keyword',
-      begin: '\\bproperty\\b', 
+      begin: '\\bproperty\\b',
       starts: {
         className: 'string',
-        end: '(:|=|;|,|//|/\\*|$)', 
+        end: '(:|=|;|,|//|/\\*|$)',
         returnEnd: true
-      },
-      relevance: 0
+      }
   };
-  
+
   // Isolate signal statements. Ends at a ) a comment or end of line.
   // Use property class.
   var SIGNAL = {
       className: 'keyword',
-      begin: '\\bsignal\\b', 
+      begin: '\\bsignal\\b',
       starts: {
         className: 'string',
-        end: '(\\(|:|=|;|,|//|/\\*|$)', 
+        end: '(\\(|:|=|;|,|//|/\\*|$)',
         returnEnd: true
-      },
-      relevance: 10
+      }
   };
-  
+
   // id: is special in QML. When we see id: we want to mark the id: as attribute and
   // emphasize the token following.
   var ID_ID = {
       className: 'attribute',
       begin: '\\bid\\s*:',
       starts: {
-        className: 'emphasis',
-        end: QML_IDENT_RE, 
+        className: 'string',
+        end: QML_IDENT_RE,
         returnEnd: false
-      },
-      relevance: 10
+      }
   };
 
-  // Find QML object attribute. An attribute is a QML identifier followed by :. 
+  // Find QML object attribute. An attribute is a QML identifier followed by :.
   // Unfortunately it's hard to know where it ends, as it may contain scalars,
   // objects, object definitions, or javascript. The true end is either when the parent
   // ends or the next attribute is detected.
@@ -11971,10 +12312,10 @@ hljs.registerLanguage('qml', function(hljs) {
     contains: [
       {
         className: 'attribute',
-        begin: QML_IDENT_RE, 
-        includeBegin: true,
-        end: '\\s*:', 
-        excludeEnd: true
+        begin: QML_IDENT_RE,
+        end: '\\s*:',
+        excludeEnd: true,
+        relevance: 0
       }
     ],
     relevance: 0
@@ -11983,19 +12324,12 @@ hljs.registerLanguage('qml', function(hljs) {
   // Find QML object. A QML object is a QML identifier followed by { and ends at the matching }.
   // All we really care about is finding IDENT followed by { and just mark up the IDENT and ignore the {.
   var QML_OBJECT = {
-    begin: QML_IDENT_RE + '\\s*{',
+    begin: QML_IDENT_RE + '\\s*{', end: '{',
     returnBegin: true,
+    relevance: 0,
     contains: [
-      {
-        className: 'decorator',
-        keywords: KEYWORDS,
-        begin: QML_IDENT_RE, 
-        includeBegin: true,
-        end: '\\s*{', 
-        excludeEnd: true
-      }
-    ],
-    relevance: 0
+      hljs.inherit(hljs.TITLE_MODE, {begin: QML_IDENT_RE})
+    ]
   };
 
   return {
@@ -12004,7 +12338,7 @@ hljs.registerLanguage('qml', function(hljs) {
     keywords: KEYWORDS,
     contains: [
       {
-        className: 'pi',
+        className: 'meta',
         begin: /^\s*['"]use (strict|asm)['"]/
       },
       hljs.APOS_STRING_MODE,
@@ -12046,7 +12380,6 @@ hljs.registerLanguage('qml', function(hljs) {
         ],
         relevance: 0
       },
-      IMPORT,
       SIGNAL,
       PROPERTY,
       {
@@ -12343,6 +12676,15 @@ hljs.registerLanguage('rust', function(hljs) {
   var NUM_SUFFIX = '([uif](8|16|32|64|size))\?';
   var BLOCK_COMMENT = hljs.inherit(hljs.C_BLOCK_COMMENT_MODE);
   BLOCK_COMMENT.contains.push('self');
+  var KEYWORDS =
+    'alignof as be box break const continue crate do else enum extern ' +
+    'false fn for if impl in let loop match mod mut offsetof once priv ' +
+    'proc pub pure ref return self Self sizeof static struct super trait true ' +
+    'type typeof unsafe unsized use virtual while where yield move ' +
+    'int i8 i16 i32 i64 ' +
+    'uint u8 u32 u64 ' +
+    'float f32 f64 ' +
+    'str char bool'
   var BUILTINS =
     // prelude
     'Copy Send Sized Sync Drop Fn FnMut FnOnce drop Box ToOwned Clone ' +
@@ -12359,14 +12701,7 @@ hljs.registerLanguage('rust', function(hljs) {
     aliases: ['rs'],
     keywords: {
       keyword:
-        'alignof as be box break const continue crate do else enum extern ' +
-        'false fn for if impl in let loop match mod mut offsetof once priv ' +
-        'proc pub pure ref return self Self sizeof static struct super trait true ' +
-        'type typeof unsafe unsized use virtual while where yield ' +
-        'int i8 i16 i32 i64 ' +
-        'uint u8 u32 u64 ' +
-        'float f32 f64 ' +
-        'str char bool',
+        KEYWORDS,
       literal:
         'true false Some None Ok Err',
       built_in:
@@ -12435,6 +12770,11 @@ hljs.registerLanguage('rust', function(hljs) {
       {
         begin: hljs.IDENT_RE + '::',
         keywords: {built_in: BUILTINS}
+      },
+      {
+        className: 'params',
+        begin: /\|/, end: /\|/,
+        keywords: KEYWORDS
       },
       {
         begin: '->'
@@ -13124,7 +13464,7 @@ hljs.registerLanguage('sql', function(hljs) {
   var COMMENT_MODE = hljs.COMMENT('--', '$');
   return {
     case_insensitive: true,
-    illegal: /[<>{}*]/,
+    illegal: /[<>{}*#]/,
     contains: [
       {
         beginKeywords:
@@ -13134,6 +13474,7 @@ hljs.registerLanguage('sql', function(hljs) {
           'unlock purge reset change stop analyze cache flush optimize repair kill ' +
           'install uninstall checksum restore check backup revoke',
         end: /;/, endsWithParent: true,
+        lexemes: /[\w\.]+/,
         keywords: {
           keyword:
             'abort abs absolute acc acce accep accept access accessed accessible account acos action activate add ' +
@@ -14020,6 +14361,50 @@ hljs.registerLanguage('swift', function(hljs) {
   };
 });
 
+hljs.registerLanguage('taggerscript', function(hljs) {
+
+  var COMMENT = {
+    className: 'comment',
+    begin: /\$noop\(/,
+    end: /\)/,
+    contains: [{
+      begin: /\(/,
+      end: /\)/,
+      contains: ['self', {
+        begin: /\\./
+      }]
+    }],
+    relevance: 10
+  };
+
+  var FUNCTION = {
+    className: 'keyword',
+    begin: /\$(?!noop)[a-zA-Z][_a-zA-Z0-9]*/,
+    end: /\(/,
+    excludeEnd: true
+  };
+
+  var VARIABLE = {
+    className: 'variable',
+    begin: /%[_a-zA-Z0-9:]*/,
+    end: '%'
+  };
+
+  var ESCAPE_SEQUENCE = {
+    className: 'symbol',
+    begin: /\\./
+  };
+
+  return {
+    contains: [
+      COMMENT,
+      FUNCTION,
+      VARIABLE,
+      ESCAPE_SEQUENCE
+    ]
+  };
+});
+
 hljs.registerLanguage('tcl', function(hljs) {
   return {
     aliases: ['tk'],
@@ -14450,7 +14835,7 @@ hljs.registerLanguage('vala', function(hljs) {
         // Other
         'using new this get set const stdout stdin stderr var',
       built_in:
-        'DBus GLib CCode Gee Object Gtk',
+        'DBus GLib CCode Gee Object Gtk Posix',
       literal:
         'false true null'
     },
@@ -14744,7 +15129,7 @@ hljs.registerLanguage('vim', function(hljs) {
         'synstack pyeval prevnonblank readfile cindent filereadable changenr ' +
         'exp'
     },
-    illegal: /[{:]/,
+    illegal: /;/,
     contains: [
       hljs.NUMBER_MODE,
       hljs.APOS_STRING_MODE,
@@ -15006,8 +15391,7 @@ hljs.registerLanguage('xquery', function(hljs) {
     'replace value rename copy modify update';
   var LITERAL = 'false true xs:string xs:integer element item xs:date xs:datetime xs:float xs:double xs:decimal QName xs:anyURI xs:long xs:int xs:short xs:byte attribute';
   var VAR = {
-    begin: /\$[a-zA-Z0-9\-]+/,
-    relevance: 5
+    begin: /\$[a-zA-Z0-9\-]+/
   };
 
   var NUMBER = {
