@@ -5,10 +5,6 @@ class Tags extends Webiny.Ui.FormComponent {
     constructor(props) {
         super(props);
 
-        _.assign(this.state, {
-            tag: ''
-        });
-
         this.bindMethods('focusTagInput,removeTag,addTag');
     }
 
