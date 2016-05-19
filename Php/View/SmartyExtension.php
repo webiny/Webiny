@@ -17,9 +17,7 @@ class SmartyExtension extends SmartyExtensionAbstract
     function getFunctions()
     {
         return [
-            new SmartySimplePlugin('webiny', 'function', [$this, 'webinyInclude']),
-            new SmartySimplePlugin('money', 'modifier', [$this, 'moneyFormat']),
-            new SmartySimplePlugin('date', 'modifier', [$this, 'dateFormat']),
+            new SmartySimplePlugin('webiny', 'function', [$this, 'webinyInclude'])
         ];
     }
 
@@ -72,33 +70,5 @@ class SmartyExtension extends SmartyExtensionAbstract
             '<script src="' . $jsPath . '" type="text/javascript"></script>',
             '<script>var WebinyEnvironment = \'' . $env . '\';</script>'
         ]);
-    }
-
-    /**
-     * Returns number formatted as money
-     *
-     * @param string|number $number
-     *
-     * @return string
-     */
-    public static function moneyFormat($number)
-    {
-        $number = floatval($number);
-
-        return money_format("%.2n", $number);
-    }
-
-    /**
-     * Returns formatted date
-     *
-     * @param        $date
-     *
-     * @param string $format
-     *
-     * @return string
-     */
-    public static function dateFormat($date, $format = 'd/M/y')
-    {
-        return date($format, strtotime($date));
     }
 }

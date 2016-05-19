@@ -39,10 +39,6 @@ class TemplateEngine
         self::$templateEngine = $this->templateEngine('Smarty');
 
         self::$templateEngine->assign('Webiny', new View());
-
-        /**
-         * @TODO: Add registration of template engine plugins from apps and plugins
-         */
     }
 
     /**
