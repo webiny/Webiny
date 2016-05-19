@@ -49,7 +49,7 @@ Editor.defaultProps = {
 
     renderer() {
         return (
-            <div>
+            <div className="smde">
                 <textarea></textarea>
             </div>
         );

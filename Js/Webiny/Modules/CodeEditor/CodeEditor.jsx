@@ -7,11 +7,12 @@ class CodeEditor extends Webiny.Ui.FormComponent {
         this.codeMirror = null;
         this.options = {
             lineNumbers: true,
+            htmlMode: true,
             mode: 'text/html', // needs to be loaded via bower.json
             theme: 'monokai' // needs to be loaded via bower.json
         };
 
-        this.bindMethods('getTextareaElement');
+        this.bindMethods('getTextareaElement,fullscreen');
     }
 
     componentDidMount() {

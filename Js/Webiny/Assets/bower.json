@@ -51,6 +51,13 @@
         "dist/css/select2.min.css"
       ]
     },
+    "simplemde": {
+      "main": [
+        [
+          "dist/simplemde.min.js"
+        ]
+      ]
+    },
     "codemirror": {
       "main": [
         [
