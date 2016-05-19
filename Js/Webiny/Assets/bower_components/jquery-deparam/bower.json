@@ -1,0 +1,6 @@
+{
+  "name": "jquery-deparam",
+  "version": "0.5.1",
+  "main": "jquery-deparam.js",
+  "license": "MIT"
+}
