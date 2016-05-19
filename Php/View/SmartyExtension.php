@@ -17,7 +17,7 @@ class SmartyExtension extends SmartyExtensionAbstract
     function getFunctions()
     {
         return [
-            new SmartySimplePlugin('webiny', 'function', [$this, 'webinyInclude']),
+            new SmartySimplePlugin('webiny', 'function', [$this, 'webinyInclude'])
         ];
     }
 

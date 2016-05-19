@@ -229,7 +229,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         $attributes = $entity->getAttributes()->val();
         foreach ($filters as $fName => $fValue) {
             // Construct an $in statement only if filter value is index-based
-            if (is_array($fValue) && !count(array_filter(array_keys($fValue), 'is_string')) > 0) {
+            if (!self::str($fName)->startsWith('$') && is_array($fValue) && !count(array_filter(array_keys($fValue), 'is_string')) > 0) {
                 $fValue = [
                     '$in' => $fValue
                 ];

@@ -68,6 +68,10 @@ Events:
                 - {Handler: Php/Dispatchers/ServiceDispatcher}
 
 Services:
+    EntityFlowExport:
+        Class: \Apps\Core\Php\Dispatchers\Flows\ExportFlow
+        Tags: [entity-dispatcher-flow]
+
     EntityFlowCrudList:
         Class: \Apps\Core\Php\Dispatchers\Flows\CrudListFlow
         Tags: [entity-dispatcher-flow]

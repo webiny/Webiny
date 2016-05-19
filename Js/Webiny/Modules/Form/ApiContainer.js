@@ -35,7 +35,7 @@ class ApiContainer extends BaseContainer {
     }
 
     showLoading() {
-        this.setState({loading: true});
+        this.setState({loading: true, error: null});
     }
 
     hideLoading() {
@@ -56,7 +56,8 @@ class ApiContainer extends BaseContainer {
         if (id) {
             this.showLoading();
             this.request = this.api.execute(this.api.httpMethod, id).then(apiResponse => {
-                if (apiResponse.isAborted()) {
+                if (apiResponse.isAborted() || apiResponse.isError()) {
+                    this.onCancel();
                     return;
                 }
                 if (this.props.prepareLoadedData) {
@@ -85,6 +86,7 @@ class ApiContainer extends BaseContainer {
                         Webiny.Router.goToRoute(onSubmitSuccess);
                     }
                 }
+                this.setState({error: apiResponse});
                 return apiResponse;
             });
         }
@@ -102,6 +104,7 @@ class ApiContainer extends BaseContainer {
                     Webiny.Router.goToRoute(onSubmitSuccess);
                 }
             }
+            this.setState({error: apiResponse});
             return apiResponse;
         });
     }

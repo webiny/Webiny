@@ -32,10 +32,11 @@ class ApiResponse {
     }
 
     getCode() {
-        if (this.data && 'code' in this.data) {
-            return this.data.code;
-        }
-        return null;
+        return _.get(this.data, 'code');
+    }
+
+    getMessage() {
+        return _.get(this.data, 'message');
     }
 
     getMeta(key) {

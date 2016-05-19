@@ -7,7 +7,8 @@ class BaseContainer extends Webiny.Ui.Component {
         super(props);
 
         this.state = {
-            model: {}
+            model: {},
+            error: null
         };
 
         this.mainForm = null;
@@ -52,6 +53,19 @@ class BaseContainer extends Webiny.Ui.Component {
 
     loadData(id = null) {
         throw new Error('Implement loadData method in your form container class!');
+    }
+
+    getError(key = null) {
+        if (!key) {
+            return this.state.error;
+        }
+
+        return _.get(this.state.error, key);
+    }
+
+    hasError() {
+        console.log("HAS ERROR", this.state.error !== null);
+        return this.state.error !== null;
     }
 
     /* eslint-enable */
