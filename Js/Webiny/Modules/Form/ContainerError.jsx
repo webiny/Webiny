@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
-const t = Webiny.i18n;
 
 class ContainerError extends Webiny.Ui.Component {
 
@@ -9,11 +8,20 @@ class ContainerError extends Webiny.Ui.Component {
 ContainerError.defaultProps = {
     renderer() {
         const error = this.props.container.getError();
+        if (!error) {
+            return null;
+        }
+
+        const data = [];
+        _.each(error.getData(), (value, key) => {
+            data.push(<li><strong>{key}</strong>: {value}</li>);
+        });
+
         return (
-            <Ui.Grid.Col all={12}>
-                <Ui.Alert title="Save failed" type="error">{container.getError() && container.getError().getMessage()}
-                </Ui.Alert>
-            </Ui.Grid.Col>
+            <Ui.Alert title="Save failed" type="error">
+                {error.getMessage()}
+                {data && <ul>{data}</ul>}
+            </Ui.Alert>
         );
     }
 };
