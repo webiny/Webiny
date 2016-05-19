@@ -68,7 +68,7 @@ class ExportFlow extends AbstractFlow
      */
     public function canHandle($httpMethod, $params)
     {
-        $exportable = ($params[0] === 'export' || ($this->mongo()->isId($params[0]) && $params[1] === 'export'));
+        $exportable = ($params[0] === 'export' || ($this->mongo()->isId($params[0]) && isset($params[1]) && $params[1] === 'export'));
 
         return in_array($httpMethod, ['GET', 'POST']) && $exportable;
     }
