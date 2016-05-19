@@ -60,25 +60,7 @@ class Route {
         }
 
         // Parse query string params
-        window.location.search.substring(1).split('&').forEach(el => {
-            if (el !== '') {
-                el = el.split('=');
-                let value = decodeURIComponent(el[1]);
-                if (/^\d+$/.test(value)) {
-                    value = parseInt(value);
-                }
-
-                if (value === 'true') {
-                    value = true;
-                }
-
-                if (value === 'false') {
-                    value = false;
-                }
-
-                this.paramValues[decodeURIComponent(el[0])] = value;
-            }
-        });
+        _.merge(this.paramValues, $.deparam(window.location.search.substring(1)));
 
         return true;
     }

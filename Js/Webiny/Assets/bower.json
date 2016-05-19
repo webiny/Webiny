@@ -25,7 +25,8 @@
     "c3": "~0.4.10",
     "jGrowl": "jgrowl#~1.4.4",
     "codemirror": "^5.14.2",
-    "simplemde": "^1.10.1"
+    "simplemde": "^1.10.1",
+    "jquery-deparam": "^0.5.1"
   },
   "overrides": {
     "system.js": {
