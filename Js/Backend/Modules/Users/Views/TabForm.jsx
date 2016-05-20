@@ -42,6 +42,27 @@ Form.defaultProps = {
             }
         };
 
+        const changeConfirmProps = {
+            message: (newValue, oldValue) => {
+                if (newValue && newValue.id !== '56a905eff31cd07c458b456b') {
+                    return `Do you really want to change selection to ${newValue.src}?`;
+                }
+                return null;
+            },
+            onCancel: form => {
+                return form.getInitialModel('avatar');
+            }
+        };
+
+        const avatarConfirmProps = {
+            message: (newValue, oldValue) => {
+                return `Set new avatar?`;
+            },
+            onCancel: form => {
+                return form.getInitialModel('avatar');
+            }
+        };
+
         return (
             <Ui.Form.Container ui="myForm" {...containerProps}>
                 {(model, container) => (
@@ -61,8 +82,20 @@ Form.defaultProps = {
                                             <Ui.Grid.Col all={6}>
                                                 <Ui.Input label="Last name" name="lastName" validate="required"/>
                                             </Ui.Grid.Col>
-                                            <Ui.Grid.Col all={12}>
+                                            <Ui.Grid.Col all={6}>
                                                 <Ui.Input label="Email" name="email" description="Your email"/>
+                                            </Ui.Grid.Col>
+                                            <Ui.Grid.Col all={6}>
+                                                <Ui.ChangeConfirm {...changeConfirmProps}>
+                                                    <Ui.Search
+                                                        name="document"
+                                                        label="Document"
+                                                        placeholder="Select a document"
+                                                        api="/entities/core/files"
+                                                        fields="name"
+                                                        searchFields="name"
+                                                        useDataAsValue/>
+                                                </Ui.ChangeConfirm>
                                             </Ui.Grid.Col>
                                             <Ui.Grid.Col all={12}>
                                                 <Ui.Textarea label="Notes" name="notes" description="User notes"/>
@@ -79,9 +112,10 @@ Form.defaultProps = {
                                         </Ui.Grid.Row>
                                     </Ui.Tabs.Tab>
                                     <Ui.Tabs.Tab label="Files" onClick={this.ui('files:loadData')}>
-                                        <Ui.Files.Avatar
-                                            name="avatar"
-                                            cropper={{
+                                        <Ui.ChangeConfirm {...avatarConfirmProps}>
+                                            <Ui.Files.Avatar
+                                                name="avatar"
+                                                cropper={{
                                                         title: 'Crop your avatar',
                                                         config: {
                                                             aspectRatio: 1,
@@ -92,6 +126,7 @@ Form.defaultProps = {
                                                             height: 400,
                                                             cropBoxResizable: false
                                                         }}}/>
+                                        </Ui.ChangeConfirm>
                                         <Ui.Files.Gallery
                                             defaultBody={{ref: Webiny.Router.getParams('id')}}
                                             name="gallery"
@@ -138,7 +173,8 @@ Form.defaultProps = {
                                             {(model, form) => (
                                                 <Ui.Grid.Row>
                                                     <Ui.Form.Error container={form}>
-                                                        {error => <Ui.Alert title="Hmmm..." type="info">Not sure what happened...</Ui.Alert>}
+                                                        {error => <Ui.Alert title="Hmmm..." type="info">Not sure what
+                                                            happened...</Ui.Alert>}
                                                     </Ui.Form.Error>
                                                     <Ui.Grid.Col all={6}>
                                                         <Ui.Input label="First name" name="firstName" validate="required"/>

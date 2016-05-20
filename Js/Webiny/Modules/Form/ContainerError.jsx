@@ -14,8 +14,6 @@ ContainerError.defaultProps = {
             return null;
         }
 
-        console.log(error);
-
         if (_.isFunction(this.props.children)) {
             return this.props.children(error);
         }

@@ -52,7 +52,7 @@ class Container extends Webiny.Ui.Component {
 
         if (this.props.loadModel) {
             return this.props.loadModel.call(this).then(model => {
-                this.setState({model, loading: false, initialModel: model});
+                this.setState({model, loading: false, initialModel: _.clone(model)});
             });
         }
 
@@ -141,7 +141,8 @@ class Container extends Webiny.Ui.Component {
                 this.hideLoading();
                 const onSubmitSuccess = this.props.onSubmitSuccess;
                 if (!apiResponse.isError()) {
-                    this.setState({model: apiResponse.getData(), error: null});
+                    const newModel = apiResponse.getData();
+                    this.setState({model: newModel, initialModel: _.clone(newModel), error: null});
                     if (_.isFunction(this.props.onSuccessGrowl)) {
                         Webiny.Growl.success(this.props.onSuccessGrowl(model));
                     }
@@ -164,7 +165,8 @@ class Container extends Webiny.Ui.Component {
             this.hideLoading();
             const onSubmitSuccess = this.props.onSubmitSuccess;
             if (!apiResponse.isError()) {
-                this.setState({model: apiResponse.getData(), error: null});
+                const newModel = apiResponse.getData();
+                this.setState({model: newModel, initialModel: _.clone(newModel), error: null});
                 if (_.isFunction(this.props.onSuccessGrowl)) {
                     Webiny.Growl.success(this.props.onSuccessGrowl(model));
                 }
@@ -221,6 +223,20 @@ class Container extends Webiny.Ui.Component {
     }
 
     /**
+     * Get initial form model
+     * @param key
+     * @returns {*}
+     */
+    getInitialModel(key = null) {
+        const data = _.clone(this.state.initialModel);
+        if (key) {
+            return _.get(data, key);
+        }
+
+        return data;
+    }
+
+    /**
      * Set form model (merge current model with given model object)
      * @param key object or string key
      * @param value callable or value (if key is a string)
@@ -255,10 +271,12 @@ class Container extends Webiny.Ui.Component {
                     return;
                 }
                 if (this.props.prepareLoadedData) {
-                    this.setState({model: this.props.prepareLoadedData(apiResponse.getData()), loading: false});
+                    const model = this.props.prepareLoadedData(apiResponse.getData());
+                    this.setState({model, initialModel: _.clone(model), loading: false});
                     return;
                 }
-                this.setState({model: apiResponse.getData(), loading: false});
+                const model = apiResponse.getData();
+                this.setState({model, initialModel: _.clone(model), loading: false});
             });
             return this.request;
         }
@@ -296,7 +314,7 @@ class Container extends Webiny.Ui.Component {
         if (this.props.onReset) {
             this.props.onReset();
         }
-        this.setState({model: this.state.initialModel});
+        this.setState({model: _.clone(this.state.initialModel)});
     }
 
     cancel() {
