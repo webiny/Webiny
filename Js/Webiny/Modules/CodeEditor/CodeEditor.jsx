@@ -34,7 +34,7 @@ class CodeEditor extends Webiny.Ui.FormComponent {
     }
 
     componentWillReceiveProps(props) {
-        if (this.codeMirror.getValue() !== props.valueLink.value) {
+        if (this.codeMirror.getValue() !== props.valueLink.value && !_.isNull(props.valueLink.value)) {
             // the "+ ''" sort a strange with splitLines method within CodeMirror
             this.codeMirror.setValue(props.valueLink.value + '');
         }
