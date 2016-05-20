@@ -25,7 +25,10 @@ class Component extends React.Component {
 
     /* eslint-disable */
     componentWillReceiveProps(nextProps) {
-        // Reserved for future system-wide functionality
+        if (nextProps.ui != this.props.ui) {
+            UiDispatcher.unregister(this.props.ui);
+            UiDispatcher.register(nextProps.ui, this);
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {

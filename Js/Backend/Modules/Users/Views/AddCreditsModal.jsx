@@ -97,36 +97,32 @@ class AddCreditsModal extends Webiny.Ui.Component {
                 <Ui.Modal.Header title="Add credits"/>
                 <Ui.Modal.Body>
                     {error}
-                    <Ui.Form.ApiContainer {...formProps}>
+                    <Ui.Form.Container {...formProps}>
                         <Ui.Tabs.Tabs ui="myTabs" position="left">
                             <Ui.Tabs.Tab label="First Tab">
-                                <Ui.Form.Form layout={false}>
-                                    <fields>
-                                        <Ui.Grid.Row>
-                                            <Ui.Grid.Col all={12}>
-                                                <Ui.Input label="Email" name="email" validate="cronFrequency" description="Enter your email or you will be fired!"/>
-                                            </Ui.Grid.Col>
-                                            <Ui.Grid.Col all={12}>
-                                                <Ui.Search {...searchProps}/>
-                                            </Ui.Grid.Col>
-                                        </Ui.Grid.Row>
-                                    </fields>
-                                </Ui.Form.Form>
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={12}>
+                                        <Ui.Input
+                                            label="Email"
+                                            name="email"
+                                            validate="cronFrequency"
+                                            description="Enter your email or you will be fired!"/>
+                                    </Ui.Grid.Col>
+                                    <Ui.Grid.Col all={12}>
+                                        <Ui.Search {...searchProps}/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
                             </Ui.Tabs.Tab>
                             <Ui.Tabs.Tab label="Second tab" icon="icon-columns">
-                                <Ui.Form.Form layout={false} onInvalid={this.ui('modalTabs:selectTab', 1)}>
-                                    <fields>
-                                        <Ui.Grid.Row>
-                                            <Ui.Grid.Col all={12}>
-                                                <Ui.Input label="First name" name="firstName" validate="required"/>
-                                                <Ui.Input label="Last name" name="lastName" validate="required"/>
-                                            </Ui.Grid.Col>
-                                        </Ui.Grid.Row>
-                                    </fields>
-                                </Ui.Form.Form>
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={12}>
+                                        <Ui.Input label="First name" name="firstName" validate="required"/>
+                                        <Ui.Input label="Last name" name="lastName" validate="required"/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
                             </Ui.Tabs.Tab>
                         </Ui.Tabs.Tabs>
-                    </Ui.Form.ApiContainer>
+                    </Ui.Form.Container>
                 </Ui.Modal.Body>
                 <Ui.Modal.Footer>
                     <Ui.Button type="secondary" label="Cancel" onClick={this.ui('addCreditsModal:hide')}/>

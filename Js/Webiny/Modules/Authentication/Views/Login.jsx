@@ -33,8 +33,8 @@ class Login extends Webiny.Ui.View {
         $('body').removeClass('sign-in');
     }
 
-    renderForm() {
-        return this.props.renderForm.call(this);
+    renderForm(model, container) {
+        return this.props.renderForm.call(this, model, container);
     }
 
     submit() {
@@ -55,10 +55,10 @@ Login.defaultProps = {
     fields: '*',
     cookieName: 'webiny-token',
     onSubmit(model, container) {
-        container.setState({error: null, model});
-        return container.api.setQuery({fields: this.props.fields}).post('login', model).then(apiResponse => {
+        container.setState({error: null});
+        return container.api.post('login', model, {_fields: this.props.fields}).then(apiResponse => {
             if (apiResponse.isError()) {
-                return container.setState({error: apiResponse.getError()});
+                return container.setState({error: apiResponse});
             }
 
             const data = apiResponse.getData();
@@ -75,7 +75,7 @@ Login.defaultProps = {
         }
         Webiny.Router.goToRoute(onSuccess || Webiny.Router.getDefaultRoute());
     },
-    renderForm() {
+    renderForm(model, container) {
         const passwordProps = {
             type: 'password',
             name: 'password',
@@ -88,35 +88,28 @@ Login.defaultProps = {
         return (
             <div className="container">
                 <div className="sign-in-holder">
-                    <Ui.Form.Form className="form-signin" layout={false}>
-                        <fields>
-                            <a href="#" className="logo">
-                                <img src={Webiny.Assets('Core.Backend', 'images/logo_orange.png')} width="180" height="58"/>
-                            </a>
+                    <div className="form-signin">
+                        <a href="#" className="logo">
+                            <img src={Webiny.Assets('Core.Backend', 'images/logo_orange.png')} width="180" height="58"/>
+                        </a>
 
-                            <h2 className="form-signin-heading">Sign in to your Account</h2>
+                        <h2 className="form-signin-heading">Sign in to your Account</h2>
 
-                            <div className="clear"></div>
-                            <Ui.Show if={UiD.value('loginForm.state.error')}>
-                                <div className="alert alert-danger alert-dismissable">
-                                    <span className="icon icon-cancel-circled"></span>
-                                    <Ui.Value value="loginForm.state.error"/>
-                                </div>
-                            </Ui.Show>
+                        <div className="clear"></div>
+                        <Ui.Form.Error container={container}/>
 
-                            <div className="clear"></div>
-                            <Ui.Input name="username" placeholder="Enter email" label="Email address *" validate="required,email"/>
-                            <Ui.Input {...passwordProps}/>
+                        <div className="clear"></div>
+                        <Ui.Input name="username" placeholder="Enter email" label="Email address *" validate="required,email"/>
+                        <Ui.Input {...passwordProps}/>
 
-                            <div className="form-footer">
-                                <div className="submit-wrapper">
-                                    <Ui.Button type="primary" size="large" onClick={this.submit} icon="icon-next">
-                                        <span>Submit</span>
-                                    </Ui.Button>
-                                </div>
+                        <div className="form-footer">
+                            <div className="submit-wrapper">
+                                <Ui.Button type="primary" size="large" onClick={this.submit} icon="icon-next">
+                                    <span>Submit</span>
+                                </Ui.Button>
                             </div>
-                        </fields>
-                    </Ui.Form.Form>
+                        </div>
+                    </div>
 
                     <p className="copyright">Version 0.1 (Beta)</p>
                     <a href="#" className="site">www.webiny.com</a>
@@ -126,9 +119,9 @@ Login.defaultProps = {
     },
     renderer() {
         return (
-            <Ui.Form.ApiContainer api={this.props.api} ui="loginForm" onSubmit={this.onSubmit}>
-                {this.renderForm}
-            </Ui.Form.ApiContainer>
+            <Ui.Form.Container api={this.props.api} ui="loginForm" onSubmit={this.onSubmit}>
+                {(model, container) => this.renderForm(model, container)}
+            </Ui.Form.Container>
         );
     }
 };

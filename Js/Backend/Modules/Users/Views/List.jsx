@@ -43,7 +43,7 @@ List.defaultProps = {
                     <h2>Users</h2>
                 </Ui.Grid.Col>
                 <Ui.List.ApiContainer ui="myList" {...listProps}>
-                    <Ui.List.FormFilters>
+                    {/*<Ui.List.FormFilters>
                         {(applyFilters, resetFilters) => {
                             return (
                                 <Ui.Grid.Row>
@@ -63,7 +63,7 @@ List.defaultProps = {
                                 </Ui.Grid.Row>
                             );
                         }}
-                    </Ui.List.FormFilters>
+                    </Ui.List.FormFilters> */}
                     <Table.Table>
                         <Table.Row detailsRenderer={null} onShowDetails={null}>
                             <Table.Field name="id" label="ID"/>

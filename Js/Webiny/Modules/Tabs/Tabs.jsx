@@ -78,6 +78,16 @@ export class Tabs extends Webiny.Ui.Component {
     componentWillMount() {
         super.componentWillMount();
         this.setState({selected: Webiny.Router.getParams('tab') || this.props.selected || 0});
+        if (this.props.attachToForm) {
+            this.props.attachToForm(this);
+        }
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        if (this.props.detachFromForm) {
+            this.props.detachFromForm(this);
+        }
     }
 
     componentWillReceiveProps(props) {
