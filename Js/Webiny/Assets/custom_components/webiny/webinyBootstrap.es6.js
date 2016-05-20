@@ -74,6 +74,8 @@ class WebinyBootstrapClass {
         console.groupCollapsed('Bootstrap');
         // First we need to import Core/Webiny
         this.includeApp('Core.Webiny').then(app => {
+            app.instance.meta = app.config;
+            _.set(Webiny.Apps, app.config.name, app.instance);
             app.instance.addModules(this.meta['Core.Webiny'].modules).run().then(() => {
                 runWebiny().then(() => {
                     console.groupEnd('Bootstrap');
