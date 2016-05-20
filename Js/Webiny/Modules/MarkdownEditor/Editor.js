@@ -13,8 +13,6 @@ class Editor extends Webiny.Ui.FormComponent {
     componentDidMount() {
         super.componentDidMount();
 
-        console.log(this.getTextareaElement());
-
         const mdConfig = {
             element: this.getTextareaElement(),
             renderingConfig: {

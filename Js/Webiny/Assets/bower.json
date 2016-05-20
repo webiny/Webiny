@@ -27,7 +27,8 @@
     "codemirror": "^5.14.2",
     "simplemde": "^1.10.1",
     "jquery-deparam": "^0.5.1",
-    "highlightjs": "^9.3.0"
+    "highlightjs": "^9.3.0",
+    "trumbowyg": "^2.1.0"
   },
   "overrides": {
     "system.js": {
@@ -71,6 +72,16 @@
           "mode/javascript/javascript.js",
           "mode/htmlmixed/htmlmixed.js"
         ]
+      ]
+    },
+    "trumbowyg": {
+      "main": [
+        "dist/trumbowyg.min.js",
+        "dist/plugins/base64/trumbowyg.base64.min.js",
+        "dist/plugins/noembed/trumbowyg.noembed.min.js",
+        "dist/plugins/pasteimage/trumbowyg.pasteimage.js",
+        "dist/plugins/preformatted/trumbowyg.preformatted.min.js",
+        "dist/ui/trumbowyg.min.css"
       ]
     }
   }
