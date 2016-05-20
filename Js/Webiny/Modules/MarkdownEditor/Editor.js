@@ -30,7 +30,7 @@ class Editor extends Webiny.Ui.FormComponent {
     }
 
     componentWillReceiveProps(props) {
-        if (this.mdEditor.codemirror.getValue() !== props.valueLink.value) {
+        if (this.mdEditor.codemirror.getValue() !== props.valueLink.value && !_.isNull(props.valueLink.value)) {
             // the "+ ''" sort a strange with splitLines method within CodeMirror
             this.mdEditor.codemirror.setValue(props.valueLink.value + '');
         }
@@ -49,7 +49,7 @@ Editor.defaultProps = {
 
     renderer() {
         return (
-            <div>
+            <div className="smde">
                 <textarea></textarea>
             </div>
         );

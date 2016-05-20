@@ -7,11 +7,12 @@ class CodeEditor extends Webiny.Ui.FormComponent {
         this.codeMirror = null;
         this.options = {
             lineNumbers: true,
+            htmlMode: true,
             mode: 'text/html', // needs to be loaded via bower.json
             theme: 'monokai' // needs to be loaded via bower.json
         };
 
-        this.bindMethods('getTextareaElement');
+        this.bindMethods('getTextareaElement,fullscreen');
     }
 
     componentDidMount() {
@@ -33,7 +34,7 @@ class CodeEditor extends Webiny.Ui.FormComponent {
     }
 
     componentWillReceiveProps(props) {
-        if (this.codeMirror.getValue() !== props.valueLink.value) {
+        if (this.codeMirror.getValue() !== props.valueLink.value && !_.isNull(props.valueLink.value)) {
             // the "+ ''" sort a strange with splitLines method within CodeMirror
             this.codeMirror.setValue(props.valueLink.value + '');
         }
