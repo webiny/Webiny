@@ -6,6 +6,7 @@ use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Entity\Attributes\FileAttribute;
 use Apps\Core\Php\DevTools\Entity\Attributes\FilesAttribute;
 use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Mongo\Index\SingleIndex;
@@ -84,6 +85,10 @@ class User extends EntityAbstract
         $this->api('POST', 'login', function () {
             $data = $this->wRequest()->getRequestData();
             $login = $this->wAuth()->processLogin($data['username']);
+
+            if (!$this->wAuth()->getUser()->enabled) {
+                throw new AppException('User account is disabled!');
+            }
 
             return [
                 'authToken' => $login['authToken'],

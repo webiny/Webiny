@@ -65,6 +65,10 @@ class FormComponent extends Component {
         return !_.isEmpty(this.props.valueLink.value);
     }
 
+    setInvalid(message) {
+        this.setState({isValid: false, validationMessage: message});
+    }
+
     getValue() {
         return this.props.valueLink.value;
     }

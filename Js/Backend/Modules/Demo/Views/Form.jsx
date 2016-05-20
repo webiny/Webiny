@@ -148,7 +148,7 @@ class Form extends Webiny.Ui.View {
                                         <Ui.Grid.Col all={4}>
                                             <Ui.Select name="staticSelect" label="Static select">
                                                 <option value="yes">Yes</option>
-                                                <option value="no">No</option>
+                                                <option value="no"><webiny-no>No</webiny-no></option>
                                                 <option value="maybe"><strong>Maybe</strong></option>
                                             </Ui.Select>
                                         </Ui.Grid.Col>

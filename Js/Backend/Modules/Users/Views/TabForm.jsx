@@ -57,9 +57,6 @@ Form.defaultProps = {
         const avatarConfirmProps = {
             message: (newValue, oldValue) => {
                 return `Set new avatar?`;
-            },
-            onCancel: form => {
-                return form.getInitialModel('avatar');
             }
         };
 
@@ -72,8 +69,8 @@ Form.defaultProps = {
                             <Ui.Button type="primary" label="Delete user" align="right" onClick={this.ui('deleteConfirm:show')}/>
                             <Ui.Panel.Header title="Users Form"/>
                             <Ui.Panel.Body>
-                                <Ui.Form.Error container={container}/>
-                                <Ui.Tabs.Tabs ui="tabs">
+                                <Ui.Form.Error message="Something went wrong during save" container={container}/>
+                                <Ui.Tabs.Tabs>
                                     <Ui.Tabs.Tab label="General">
                                         <Ui.Grid.Row>
                                             <Ui.Grid.Col all={6}>
@@ -192,8 +189,8 @@ Form.defaultProps = {
                                 </Ui.Tabs.Tabs>
                             </Ui.Panel.Body>
                             <Ui.Panel.Footer className="text-right">
-                                <Ui.Button type="default" onClick={this.ui('myForm:cancel')} label="Cancel"/>
-                                <Ui.Button type="primary" onClick={this.ui('myForm:submit')} label="Submit"/>
+                                <Ui.Button type="default" onClick={container.cancel} label="Cancel"/>
+                                <Ui.Button type="primary" onClick={container.submit} label="Submit"/>
                             </Ui.Panel.Footer>
                         </Ui.Panel.Panel>
                     </Ui.Grid.Col>

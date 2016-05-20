@@ -33,8 +33,8 @@ List.defaultProps = {
             filterBy: 'enabled'
             // filterBy: ['enabled', 'enabled'], // first value is name of the input to watch, second is name of the field to filter by
             /* filterBy: ['enabled', newVal => { // first value is name of the input to watch, second is a custom function that returns a filters object
-                return {enabled: newVal};
-            }] */
+             return {enabled: newVal};
+             }] */
         };
 
         return (
@@ -43,14 +43,14 @@ List.defaultProps = {
                     <h2>Users</h2>
                 </Ui.Grid.Col>
                 <Ui.List.ApiContainer ui="myList" {...listProps}>
-                    {/*<Ui.List.FormFilters>
+                    <Ui.List.FormFilters>
                         {(applyFilters, resetFilters) => {
                             return (
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={4}>
                                         <Ui.Select {...statusProps}>
-                                            <option value="true">Enabled</option>
-                                            <option value="false">Disabled</option>
+                                            <option value="true">{this.i18n('Enabled')}</option>
+                                            <option value="false">{this.i18n('Disabled')}</option>
                                         </Ui.Select>
                                     </Ui.Grid.Col>
                                     <Ui.Grid.Col all={4}>
@@ -63,9 +63,9 @@ List.defaultProps = {
                                 </Ui.Grid.Row>
                             );
                         }}
-                    </Ui.List.FormFilters> */}
+                    </Ui.List.FormFilters>
                     <Table.Table>
-                        <Table.Row detailsRenderer={null} onShowDetails={null}>
+                        <Table.Row>
                             <Table.Field name="id" label="ID"/>
                             <Table.Field name="firstName" label="First Name" sort="firstName"/>
                             <Table.Field name="email" sort="email" label="Email"/>

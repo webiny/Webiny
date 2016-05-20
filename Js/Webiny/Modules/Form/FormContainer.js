@@ -42,7 +42,8 @@ class Container extends Webiny.Ui.Component {
             'onCancel',
             'onInvalid',
             'onReset',
-            'renderContent'
+            '__renderContent',
+            '__processError'
         );
     }
 
@@ -56,7 +57,7 @@ class Container extends Webiny.Ui.Component {
             });
         }
 
-        this.loadModel(this.props.id);
+        this.loadModel(this.props.id, this.props.model);
     }
 
     componentWillUnmount() {
@@ -68,8 +69,8 @@ class Container extends Webiny.Ui.Component {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        if (props.id !== this.props.id) {
-            this.loadModel(props.id);
+        if (props.id !== this.props.id || !_.isEqual(props.model, this.props.model)) {
+            this.loadModel(props.id, props.model);
         }
     }
 
@@ -156,7 +157,7 @@ class Container extends Webiny.Ui.Component {
 
                     return apiResponse;
                 }
-                this.setState({error: apiResponse});
+                this.__processError(apiResponse);
                 return apiResponse;
             });
         }
@@ -178,7 +179,7 @@ class Container extends Webiny.Ui.Component {
                     return Webiny.Router.goToRoute(onSubmitSuccess);
                 }
             }
-            this.setState({error: apiResponse});
+            this.__processError(apiResponse);
             return apiResponse;
         });
     }
@@ -214,7 +215,7 @@ class Container extends Webiny.Ui.Component {
      * @returns {*}
      */
     getModel(key = null) {
-        const data = _.merge({}, this.state.model);
+        const data = _.clone(this.state.model);
         if (key) {
             return _.get(data, key);
         }
@@ -256,7 +257,7 @@ class Container extends Webiny.Ui.Component {
         return this;
     }
 
-    loadModel(id = null) {
+    loadModel(id = null, model = null) {
         if (!id) {
             if (this.props.connectToRouter) {
                 id = Webiny.Router.getParams('id');
@@ -279,6 +280,10 @@ class Container extends Webiny.Ui.Component {
                 this.setState({model, initialModel: _.clone(model), loading: false});
             });
             return this.request;
+        }
+
+        if (model) {
+            this.setState({model, initialModel: _.clone(model)});
         }
     }
 
@@ -345,10 +350,7 @@ class Container extends Webiny.Ui.Component {
                                 if (allIsValid) {
                                     // If input is located in a Tabs component, focus the right Tab
                                     // Do it only for the first failed input!
-                                    const inputTabs = cmp.props.__tabs;
-                                    if (inputTabs) {
-                                        this.tabs[inputTabs.id].selectTab(inputTabs.tab);
-                                    }
+                                    this.__focusTab(cmp);
                                 }
                                 allIsValid = false;
                             }
@@ -482,6 +484,8 @@ class Container extends Webiny.Ui.Component {
             if (hasValidators) {
                 const isValid = component.getValue() === null ? null : true;
                 component.setState({isValid, validationResults});
+            } else {
+                component.setState({isValid: null, validationMessage: null});
             }
             return validationResults;
         }).catch(validationError => {
@@ -506,12 +510,39 @@ class Container extends Webiny.Ui.Component {
      * Render Container content
      * @returns {*}
      */
-    renderContent() {
+    __renderContent() {
         const children = this.props.children;
-        if (_.isFunction(children)) {
-            return this.registerInputs(children.call(this, _.clone(this.state.model), this));
+        if (!_.isFunction(children)) {
+            throw new Error('Form.Container must have a function as its only child!');
         }
-        return this.registerInputs(children);
+        return this.registerInputs(children.call(this, _.clone(this.state.model), this));
+    }
+
+    __processError(apiResponse) {
+        this.setState({error: apiResponse}, () => {
+            // Check error data and if validation error - try highlighting invalid fields
+            const data = apiResponse.getData();
+            if (_.isPlainObject(data)) {
+                let tabFocused = false;
+                _.each(data, (message, name) => {
+                    const input = this.getInput(name);
+                    if (input) {
+                        if (!tabFocused) {
+                            this.__focusTab(input);
+                            tabFocused = true;
+                        }
+                        this.getInput(name).setInvalid(message);
+                    }
+                });
+            }
+        });
+    }
+
+    __focusTab(input) {
+        const inputTabs = input.props.__tabs;
+        if (inputTabs) {
+            this.tabs[inputTabs.id].selectTab(inputTabs.tab);
+        }
     }
 }
 
@@ -522,7 +553,7 @@ Container.defaultProps = {
     },
     renderer() {
         return (
-            <webiny-form-container>{this.renderContent()}</webiny-form-container>
+            <webiny-form-container>{this.__renderContent()}</webiny-form-container>
         );
     }
 };

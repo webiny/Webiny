@@ -207,7 +207,7 @@ class Component extends React.Component {
         const module = _.get(Webiny.Router.getActiveRoute(), 'module.name');
         const app = _.get(Webiny.Router.getActiveRoute(), 'module.app.name');
         const key = `${app}.${module}.${this.getClassName()}.${md5(label)}`;
-        return Webiny.i18n(key, label, variables, options);
+        return <webiny-i18n id={key}>{Webiny.i18n(key, label, variables, options)}</webiny-i18n>;
     }
 
     render() {

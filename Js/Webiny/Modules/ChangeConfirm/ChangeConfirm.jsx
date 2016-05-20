@@ -30,9 +30,11 @@ class ChangeConfirm extends Webiny.Ui.Component {
         this.dialogProps = {
             message: msg,
             onCancel: () => {
-                const cancelValue = this.props.onCancel(this.getInput(this.props).props.form);
+                const cancelValue = this.props.onCancel && this.props.onCancel(this.getInput(this.props).props.form) || undefined;
                 if (!_.isUndefined(cancelValue)) {
                     this.realValueLink.requestChange(cancelValue);
+                } else {
+                    this.realValueLink.requestChange(this.realValueLink.value);
                 }
                 this.refs.dialog.hide();
             },

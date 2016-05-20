@@ -1,8 +1,8 @@
 import Webiny from 'Webiny';
-import Container from './Container';
+import Container from './FormContainer';
+import Error from './FormContainerError';
 import Fieldset from './Fieldset';
 import DelayedValueLink from './DelayedValueLink';
-import Error from './ContainerError';
 
 class Module extends Webiny.Module {
 
