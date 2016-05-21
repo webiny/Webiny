@@ -3,7 +3,7 @@ import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 const Table = Ui.List.Table;
 
-import MyForm from './MyForm';
+import AddCreditsModal from './AddCreditsModal';
 
 class Form extends Webiny.Ui.View {
 
@@ -14,13 +14,20 @@ Form.defaultProps = {
         const containerProps = {
             api: '/entities/core/users',
             fields: 'id,firstName,lastName,email,userGroups,settings,enabled,avatar,gallery',
-            title: 'Users form',
             connectToRouter: true,
-            onSubmitSuccess: () => {
-                Webiny.Router.goToRoute('Users.List');
-            },
-            onCancel: () => {
-                Webiny.Router.goToRoute('Users.List');
+            onSubmitSuccess: 'Users.List',
+            onCancel: 'Users.List',
+            onSuccessGrowl: (record) => {
+                return <span>User <strong>{record.firstName}</strong> was saved successfully!</span>;
+            }
+        };
+
+        const inlineContainerProps = {
+            id: Webiny.Router.getParams('id'),
+            api: '/entities/core/users',
+            fields: 'id,firstName,email',
+            onSuccessGrowl: (record) => {
+                return <span>User <strong>{record.firstName}</strong> was saved successfully!</span>;
             }
         };
 
@@ -31,31 +38,81 @@ Form.defaultProps = {
             confirm: 'Yes, very!',
             cancel: 'Nope',
             onConfirm: modal => {
-                const model = this.ui('myForm').getData();
-                console.log(model);
                 modal.hide();
             }
         };
 
+        const changeConfirmProps = {
+            message: (newValue, oldValue) => {
+                if (newValue && newValue.id !== '56a905eff31cd07c458b456b') {
+                    return `Do you really want to change selection to ${newValue.src}?`;
+                }
+                return null;
+            },
+            onCancel: form => {
+                return form.getInitialModel('avatar');
+            }
+        };
+
+        const avatarConfirmProps = {
+            message: (newValue, oldValue) => {
+                return `Set new avatar?`;
+            }
+        };
+
         return (
-            <Webiny.Builder.View name="core-users-form">
-                <Ui.Form.ApiContainer ui="myForm" {...containerProps}>
+            <Ui.Form.Container ui="myForm" {...containerProps}>
+                {(model, container) => (
                     <Ui.Grid.Col all={12}>
                         <Ui.Panel.Panel>
                             <Ui.Modal.Confirmation {...deleteConfirmProps}/>
                             <Ui.Button type="primary" label="Delete user" align="right" onClick={this.ui('deleteConfirm:show')}/>
                             <Ui.Panel.Header title="Users Form"/>
                             <Ui.Panel.Body>
-                                <Ui.Tabs.Tabs ui="tabs">
+                                <Ui.Form.Error message="Something went wrong during save" container={container}/>
+                                <Ui.Tabs.Tabs>
                                     <Ui.Tabs.Tab label="General">
-                                        <MyForm layout={false}/>
+                                        <Ui.Grid.Row>
+                                            <Ui.Grid.Col all={6}>
+                                                <Ui.Input label="First name" name="firstName" validate="required"/>
+                                            </Ui.Grid.Col>
+                                            <Ui.Grid.Col all={6}>
+                                                <Ui.Input label="Last name" name="lastName" validate="required"/>
+                                            </Ui.Grid.Col>
+                                            <Ui.Grid.Col all={6}>
+                                                <Ui.Input label="Email" name="email" description="Your email"/>
+                                            </Ui.Grid.Col>
+                                            <Ui.Grid.Col all={6}>
+                                                <Ui.ChangeConfirm {...changeConfirmProps}>
+                                                    <Ui.Search
+                                                        name="document"
+                                                        label="Document"
+                                                        placeholder="Select a document"
+                                                        api="/entities/core/files"
+                                                        fields="name"
+                                                        searchFields="name"
+                                                        useDataAsValue/>
+                                                </Ui.ChangeConfirm>
+                                            </Ui.Grid.Col>
+                                            <Ui.Grid.Col all={12}>
+                                                <Ui.Textarea label="Notes" name="notes" description="User notes"/>
+                                            </Ui.Grid.Col>
+                                            <Ui.Grid.Col all={12}>
+                                                <Ui.Button type="primary" label="Add credits" onClick={this.ui('addCreditsModal:show')}/>
+                                                <AddCreditsModal ui="addCreditsModal"/>
+                                            </Ui.Grid.Col>
+                                        </Ui.Grid.Row>
+                                        <Ui.Grid.Row>
+                                            <Ui.Grid.Col all={12}>
+                                                <Ui.Switch label="Enabled" name="enabled"/>
+                                            </Ui.Grid.Col>
+                                        </Ui.Grid.Row>
                                     </Ui.Tabs.Tab>
                                     <Ui.Tabs.Tab label="Files" onClick={this.ui('files:loadData')}>
-                                        <Ui.Form.Form layout={false}>
-                                            <fields>
-                                                <Ui.Files.Avatar
-                                                    name="avatar"
-                                                    cropper={{
+                                        <Ui.ChangeConfirm {...avatarConfirmProps}>
+                                            <Ui.Files.Avatar
+                                                name="avatar"
+                                                cropper={{
                                                         title: 'Crop your avatar',
                                                         config: {
                                                             aspectRatio: 1,
@@ -66,10 +123,11 @@ Form.defaultProps = {
                                                             height: 400,
                                                             cropBoxResizable: false
                                                         }}}/>
-                                                <Ui.Files.Gallery
-                                                    defaultBody={{ref: Webiny.Router.getParams('id')}}
-                                                    name="gallery"
-                                                    newCropper={{
+                                        </Ui.ChangeConfirm>
+                                        <Ui.Files.Gallery
+                                            defaultBody={{ref: Webiny.Router.getParams('id')}}
+                                            name="gallery"
+                                            newCropper={{
                                                          title: 'Crop your new image',
                                                          action: 'Upload image',
                                                          config: {
@@ -81,7 +139,7 @@ Form.defaultProps = {
                                                              touchDragZoom: false
                                                          }
                                                          }}
-                                                    editCropper={{
+                                            editCropper={{
                                                          title: 'Edit your image',
                                                          action: 'Save changes',
                                                          config: {
@@ -93,8 +151,6 @@ Form.defaultProps = {
                                                              touchDragZoom: false
                                                          }
                                                      }}/>
-                                            </fields>
-                                        </Ui.Form.Form>
 
                                         <h2>Files list</h2>
                                         <Ui.List.ApiContainer ui="files" autoLoad={false} api="/entities/core/files"
@@ -109,16 +165,37 @@ Form.defaultProps = {
                                             <Ui.List.Pagination size="small"/>
                                         </Ui.List.ApiContainer>
                                     </Ui.Tabs.Tab>
+                                    <Ui.Tabs.Tab label="Form">
+                                        <Ui.Form.Container ui="inlineForm" {...inlineContainerProps}>
+                                            {(model, form) => (
+                                                <Ui.Grid.Row>
+                                                    <Ui.Form.Error container={form}>
+                                                        {error => <Ui.Alert title="Hmmm..." type="info">Not sure what
+                                                            happened...</Ui.Alert>}
+                                                    </Ui.Form.Error>
+                                                    <Ui.Grid.Col all={6}>
+                                                        <Ui.Input label="First name" name="firstName" validate="required"/>
+                                                    </Ui.Grid.Col>
+                                                    <Ui.Grid.Col all={4}>
+                                                        <Ui.Input label="Email" name="email" description="Your email"/>
+                                                    </Ui.Grid.Col>
+                                                    <Ui.Grid.Col all={2}>
+                                                        <Ui.Button type="primary" onClick={form.submit} label="Save"/>
+                                                    </Ui.Grid.Col>
+                                                </Ui.Grid.Row>
+                                            )}
+                                        </Ui.Form.Container>
+                                    </Ui.Tabs.Tab>
                                 </Ui.Tabs.Tabs>
                             </Ui.Panel.Body>
                             <Ui.Panel.Footer className="text-right">
-                                <Ui.Button type="default" onClick={this.ui('myForm:cancel')} label="Cancel"/>
-                                <Ui.Button type="primary" onClick={this.ui('myForm:submit')} label="Submit"/>
+                                <Ui.Button type="default" onClick={container.cancel} label="Cancel"/>
+                                <Ui.Button type="primary" onClick={container.submit} label="Submit"/>
                             </Ui.Panel.Footer>
                         </Ui.Panel.Panel>
                     </Ui.Grid.Col>
-                </Ui.Form.ApiContainer>
-            </Webiny.Builder.View>
+                )}
+            </Ui.Form.Container>
         );
     }
 };

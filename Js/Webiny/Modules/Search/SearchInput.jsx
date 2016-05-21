@@ -16,8 +16,6 @@ class SearchInput extends Webiny.Ui.FormComponent {
         this.warned = false;
         this.preventBlur = false;
 
-        Webiny.Mixins.ChangeConfirmableComponent.extend(this);
-
         this.bindMethods(
             'inputChanged',
             'selectItem',
@@ -39,6 +37,7 @@ class SearchInput extends Webiny.Ui.FormComponent {
 
         if (props.selected) {
             newState['selected'] = this.renderPreview(props.selected);
+            newState['search'] = '';
         }
 
         this.setState(newState);
@@ -136,6 +135,24 @@ class SearchInput extends Webiny.Ui.FormComponent {
 
         return this.setState(newState, () => {
             this.props.onSelect(item);
+        });
+    }
+
+    selectItem(item) {
+        const search = this.props.valueLink ? this.renderPreview(item) : '';
+        this.setState({
+            selected: null,
+            search,
+            options: [],
+            selectedData: item
+        }, () => {
+            if (this.props.valueLink) {
+                this.preventBlur = true;
+                this.props.valueLink.requestChange(this.props.useDataAsValue ? item : item[this.props.valueAttr]);
+                setTimeout(this.validate, 10);
+                this.preventBlur = false;
+                //this.props.onSelect(item);
+            }
         });
     }
 

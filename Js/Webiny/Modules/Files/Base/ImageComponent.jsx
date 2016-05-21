@@ -51,7 +51,9 @@ class Image extends Webiny.Ui.FormComponent {
 
     getFiles(e) {
         this.setState({error: null});
-        e.stopPropagation();
+        if (e) {
+            e.stopPropagation();
+        }
         this.refs.reader.getFiles();
     }
 

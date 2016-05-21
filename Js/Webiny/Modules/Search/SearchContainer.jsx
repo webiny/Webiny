@@ -30,6 +30,8 @@ class SearchContainer extends Webiny.Ui.Component {
             return;
         }
 
+        this.setState({options: []});
+
         let id = props.valueLink.value;
         if (id && _.isPlainObject(id)) {
             id = id.id;
@@ -102,16 +104,7 @@ class SearchContainer extends Webiny.Ui.Component {
             loading: this.state.loading,
             options: this.state.options,
             onSearch: this.loadOptions,
-            selected: this.state.selected,
-            onSelect: item => {
-                let selected = false;
-                if (this.props.valueLink) {
-                    selected = item;
-                    this.selectedId = item[props.valueAttr];
-                }
-                this.setState({options: [], selected});
-                this.props.onSelect(item);
-            }
+            selected: this.state.selected
         });
         return <SearchInput {...props}/>;
     }
@@ -122,7 +115,6 @@ SearchContainer.defaultProps = {
     searchOperator: 'or',
     valueAttr: 'id',
     textAttr: 'name',
-    onSelect: _.noop,
     onReset: _.noop,
     placeholder: 'Type to search'
 };

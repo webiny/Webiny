@@ -25,13 +25,9 @@ FormFilters.defaultProps = {
         const resetFilters = () => () => this.applyFilters({});
 
         return (
-            <webiny-list-filters>
-                <Ui.Form.Form ref="form" layout={false} data={this.props.filters} onSubmit={this.applyFilters}>
-                    <fields>
-                        {this.props.children(applyFilters, resetFilters)}
-                    </fields>
-                </Ui.Form.Form>
-            </webiny-list-filters>
+            <Ui.Form.Container ref="form" model={this.props.filters} onSubmit={this.applyFilters}>
+                {() => this. props.children(applyFilters, resetFilters)}
+            </Ui.Form.Container>
         );
     }
 };

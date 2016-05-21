@@ -83,37 +83,25 @@ class Example extends Webiny.Ui.View {
                     <Ui.Panel.Body>
                         <Ui.Tabs.Tabs ui="tabs">
                             <Ui.Tabs.Tab label="First Tab">
-                                <Ui.Form.Form {...firstFormProps}>
-                                    <fields>
-                                        <Ui.Grid.Row>
-                                            <Ui.Grid.Col all={12}>
-                                                <Ui.Input label="Email" name="email" validate="required,email"/>
-                                            </Ui.Grid.Col>
-                                        </Ui.Grid.Row>
-                                    </fields>
-                                </Ui.Form.Form>
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={12}>
+                                        <Ui.Input label="Email" name="email" validate="required,email"/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
                             </Ui.Tabs.Tab>
                             <Ui.Tabs.Tab label="Second tab">
-                                <Ui.Form.Form {...secondFormProps}>
-                                    <fields>
-                                        <Ui.Grid.Row>
-                                            <Ui.Grid.Col all={12}>
-                                                <Ui.Input label="Name" name="name" validate="required"/>
-                                            </Ui.Grid.Col>
-                                        </Ui.Grid.Row>
-                                    </fields>
-                                </Ui.Form.Form>
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={12}>
+                                        <Ui.Input label="Name" name="name" validate="required"/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
                             </Ui.Tabs.Tab>
                             <Ui.Tabs.Tab label="Third tab">
-                                <Ui.Form.Form {...thirdFormProps}>
-                                    <fields>
-                                        <Ui.Grid.Row>
-                                            <Ui.Grid.Col all={12}>
-                                                <Ui.Input label="Brand" name="brand" validate="required"/>
-                                            </Ui.Grid.Col>
-                                        </Ui.Grid.Row>
-                                    </fields>
-                                </Ui.Form.Form>
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={12}>
+                                        <Ui.Input label="Brand" name="brand" validate="required"/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
                             </Ui.Tabs.Tab>
                         </Ui.Tabs.Tabs>
                     </Ui.Panel.Body>

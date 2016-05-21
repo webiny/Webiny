@@ -25,7 +25,10 @@ class Component extends React.Component {
 
     /* eslint-disable */
     componentWillReceiveProps(nextProps) {
-        // Reserved for future system-wide functionality
+        if (nextProps.ui != this.props.ui) {
+            UiDispatcher.unregister(this.props.ui);
+            UiDispatcher.register(nextProps.ui, this);
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -204,7 +207,7 @@ class Component extends React.Component {
         const module = _.get(Webiny.Router.getActiveRoute(), 'module.name');
         const app = _.get(Webiny.Router.getActiveRoute(), 'module.app.name');
         const key = `${app}.${module}.${this.getClassName()}.${md5(label)}`;
-        return Webiny.i18n(key, label, variables, options);
+        return <webiny-i18n id={key}>{Webiny.i18n(key, label, variables, options)}</webiny-i18n>;
     }
 
     render() {

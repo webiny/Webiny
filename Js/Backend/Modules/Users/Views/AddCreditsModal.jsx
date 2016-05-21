@@ -16,40 +16,7 @@ class AddCreditsModal extends Webiny.Ui.Component {
             }
         };
 
-        Webiny.Tools.Validator.addValidator('cronFrequency', (val) => {
-            const api = new Webiny.Api.Endpoint('/entities/core/users');
-
-            return api.post('call', {mask: val}).then(() => {
-                throw new Error('Message');
-            });
-        });
-
-        this.bindMethods('addCredits,show,hide,generateSlug');
-    }
-
-    /**
-     * @param model Submitted form data
-     * @param container Form container instance that handled the forms
-     * @returns {*}
-     */
-    addCredits(model) {
-        this.setState({model, error: false});
-        const api = new Webiny.Api.Endpoint('/entities/core/users');
-        return api.post('call', model).then(ar => {
-            if (ar.isError() && ar.getCode() === 'WBY-ENTITY-API-METHOD-VALIDATION') {
-                return this.setState({error: ar.getData().credits});
-            }
-
-            this.hide();
-        });
-    }
-
-    generateSlug(value) {
-        const api = new Webiny.Api.Endpoint('/entities/core/users');
-
-        return api.post('call', {data: value}).then(() => {
-            this.setState({error: 'Neki glupi error!'});
-        });
+        this.bindMethods('show,hide');
     }
 
     hide() {
@@ -97,36 +64,34 @@ class AddCreditsModal extends Webiny.Ui.Component {
                 <Ui.Modal.Header title="Add credits"/>
                 <Ui.Modal.Body>
                     {error}
-                    <Ui.Form.ApiContainer {...formProps}>
-                        <Ui.Tabs.Tabs ui="myTabs" position="left">
-                            <Ui.Tabs.Tab label="First Tab">
-                                <Ui.Form.Form layout={false}>
-                                    <fields>
-                                        <Ui.Grid.Row>
-                                            <Ui.Grid.Col all={12}>
-                                                <Ui.Input label="Email" name="email" validate="cronFrequency" description="Enter your email or you will be fired!"/>
-                                            </Ui.Grid.Col>
-                                            <Ui.Grid.Col all={12}>
-                                                <Ui.Search {...searchProps}/>
-                                            </Ui.Grid.Col>
-                                        </Ui.Grid.Row>
-                                    </fields>
-                                </Ui.Form.Form>
-                            </Ui.Tabs.Tab>
-                            <Ui.Tabs.Tab label="Second tab" icon="icon-columns">
-                                <Ui.Form.Form layout={false} onInvalid={this.ui('modalTabs:selectTab', 1)}>
-                                    <fields>
-                                        <Ui.Grid.Row>
-                                            <Ui.Grid.Col all={12}>
-                                                <Ui.Input label="First name" name="firstName" validate="required"/>
-                                                <Ui.Input label="Last name" name="lastName" validate="required"/>
-                                            </Ui.Grid.Col>
-                                        </Ui.Grid.Row>
-                                    </fields>
-                                </Ui.Form.Form>
-                            </Ui.Tabs.Tab>
-                        </Ui.Tabs.Tabs>
-                    </Ui.Form.ApiContainer>
+                    <Ui.Form.Container {...formProps}>
+                        {() => (
+                            <Ui.Tabs.Tabs ui="myTabs" position="left">
+                                <Ui.Tabs.Tab label="First Tab">
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={12}>
+                                            <Ui.Input
+                                                label="Email"
+                                                name="email"
+                                                validate="cronFrequency"
+                                                description="Enter your email or you will be fired!"/>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={12}>
+                                            <Ui.Search {...searchProps}/>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                </Ui.Tabs.Tab>
+                                <Ui.Tabs.Tab label="Second tab" icon="icon-columns">
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={12}>
+                                            <Ui.Input label="First name" name="firstName" validate="required"/>
+                                            <Ui.Input label="Last name" name="lastName" validate="required"/>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                </Ui.Tabs.Tab>
+                            </Ui.Tabs.Tabs>
+                        )}
+                    </Ui.Form.Container>
                 </Ui.Modal.Body>
                 <Ui.Modal.Footer>
                     <Ui.Button type="secondary" label="Cancel" onClick={this.ui('addCreditsModal:hide')}/>

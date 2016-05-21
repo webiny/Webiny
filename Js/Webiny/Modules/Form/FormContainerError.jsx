@@ -6,20 +6,27 @@ class ContainerError extends Webiny.Ui.Component {
 }
 
 ContainerError.defaultProps = {
+    title: 'Oops!',
+    type: 'error',
+    message: null,
     renderer() {
         const error = this.props.container.getError();
         if (!error) {
             return null;
         }
 
+        if (_.isFunction(this.props.children)) {
+            return this.props.children(error);
+        }
+
         const data = [];
         _.each(error.getData(), (value, key) => {
-            data.push(<li><strong>{key}</strong>: {value}</li>);
+            data.push(<li key={key}><strong>{key}</strong>: {value}</li>);
         });
 
         return (
-            <Ui.Alert title="Save failed" type="error">
-                {error.getMessage()}
+            <Ui.Alert title={this.props.title} type={this.props.type}>
+                {this.props.message || error.getMessage()}
                 {data && <ul>{data}</ul>}
             </Ui.Alert>
         );
