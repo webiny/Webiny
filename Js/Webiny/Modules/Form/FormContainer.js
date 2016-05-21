@@ -43,7 +43,8 @@ class Container extends Webiny.Ui.Component {
             'onInvalid',
             'onReset',
             '__renderContent',
-            '__processError'
+            '__processError',
+            '__focusTab'
         );
     }
 
@@ -144,8 +145,8 @@ class Container extends Webiny.Ui.Component {
                 if (!apiResponse.isError()) {
                     const newModel = apiResponse.getData();
                     this.setState({model: newModel, initialModel: _.clone(newModel), error: null});
-                    if (_.isFunction(this.props.onSuccessGrowl)) {
-                        Webiny.Growl.success(this.props.onSuccessGrowl(model));
+                    if (_.isFunction(this.props.onSuccessMessage)) {
+                        Webiny.Growl.success(this.props.onSuccessMessage(model));
                     }
                     if (_.isFunction(onSubmitSuccess)) {
                         return onSubmitSuccess.bind(this)(apiResponse);
@@ -168,8 +169,8 @@ class Container extends Webiny.Ui.Component {
             if (!apiResponse.isError()) {
                 const newModel = apiResponse.getData();
                 this.setState({model: newModel, initialModel: _.clone(newModel), error: null});
-                if (_.isFunction(this.props.onSuccessGrowl)) {
-                    Webiny.Growl.success(this.props.onSuccessGrowl(model));
+                if (_.isFunction(this.props.onSuccessMessage)) {
+                    Webiny.Growl.success(this.props.onSuccessMessage(model));
                 }
                 if (_.isFunction(onSubmitSuccess)) {
                     return onSubmitSuccess.bind(this)(apiResponse);
@@ -401,10 +402,13 @@ class Container extends Webiny.Ui.Component {
 
             // Input changed callback, triggered on each input change
             const changeCallback = function inputChanged(newValue) {
-                callback.call(this, newValue, this.inputs[input.props.name].component);
-                // See if there is a watch registered for changed input
-                const watches = this.watches[input.props.name] || new Set();
-                _.map(Array.from(watches), w => w(newValue));
+                const component = _.get(this.inputs, input.props.name + '.component');
+                if (component) {
+                    callback.call(this, newValue, this.inputs[input.props.name].component);
+                    // See if there is a watch registered for changed input
+                    const watches = this.watches[input.props.name] || new Set();
+                    _.map(Array.from(watches), w => w(newValue));
+                }
             };
 
             newProps['valueLink'] = this.bindTo('model.' + input.props.name, changeCallback.bind(this), input.props.defaultValue);
@@ -548,7 +552,7 @@ class Container extends Webiny.Ui.Component {
 
 Container.defaultProps = {
     connectToRouter: false,
-    onSuccessGrowl: () => {
+    onSuccessMessage: () => {
         return 'Your record was saved successfully!';
     },
     renderer() {

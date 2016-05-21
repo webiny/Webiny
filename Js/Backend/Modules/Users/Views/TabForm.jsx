@@ -17,7 +17,7 @@ Form.defaultProps = {
             connectToRouter: true,
             onSubmitSuccess: 'Users.List',
             onCancel: 'Users.List',
-            onSuccessGrowl: (record) => {
+            onSuccessMessage: (record) => {
                 return <span>User <strong>{record.firstName}</strong> was saved successfully!</span>;
             }
         };
@@ -26,7 +26,7 @@ Form.defaultProps = {
             id: Webiny.Router.getParams('id'),
             api: '/entities/core/users',
             fields: 'id,firstName,email',
-            onSuccessGrowl: (record) => {
+            onSuccessMessage: (record) => {
                 return <span>User <strong>{record.firstName}</strong> was saved successfully!</span>;
             }
         };
