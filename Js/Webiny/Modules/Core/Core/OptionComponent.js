@@ -17,7 +17,7 @@ class OptionComponent extends Component {
             // Assume the most basic form of filtering (single string)
             let name = this.props.filterBy;
             let filter = this.props.filterBy;
-            let loadIfEmpty = true;
+            let loadIfEmpty = false;
 
             // Check if filterBy is defined as array (0 => name of the input to watch, 1 => filter by field)
             if (_.isArray(this.props.filterBy)) {
@@ -29,7 +29,7 @@ class OptionComponent extends Component {
             if (_.isPlainObject(this.props.filterBy)) {
                 name = this.props.filterBy.name;
                 filter = this.props.filterBy.filter;
-                loadIfEmpty = this.props.filterBy.loadIfEmpty;
+                loadIfEmpty = _.get(this.props.filterBy, 'loadIfEmpty', loadIfEmpty);
             }
 
             this.filterName = name;
@@ -60,12 +60,10 @@ class OptionComponent extends Component {
     }
 
     applyFilter(newValue, name, filter, loadIfEmpty) {
-        this.props.valueLink.requestChange(null);
-        if (newValue === null) {
+        if (newValue === null && !loadIfEmpty) {
             this.setState({options: []});
-            if (!loadIfEmpty) {
-                return;
-            }
+            this.props.valueLink.requestChange(null);
+            return;
         }
 
         // If filter is a function, it needs to return a config for api created using new value

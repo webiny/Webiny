@@ -90,7 +90,13 @@ class SelectInput extends Webiny.Ui.FormComponent {
             return this.props.valueLink.value;
         }
 
-        return this.props.valueLink.value ? _.find(this.options, {id: this.props.valueLink.value}).data : null;
+        let data = null;
+        const option = _.find(this.options, {id: this.props.valueLink.value});
+        if (option) {
+            data = option.data;
+        }
+
+        return this.props.valueLink.value ? data : null;
     }
 
     getPreviousData() {
@@ -113,7 +119,12 @@ class SelectInput extends Webiny.Ui.FormComponent {
             if (this.props.useDataAsValue) {
                 this.previousData = prevValue ? prevValue : null;
             } else {
-                this.previousData = prevValue ? _.clone(_.find(this.options, {id: prevValue}).data) : null;
+                let data = null;
+                const option = _.find(this.options, {id: prevValue});
+                if (option) {
+                    data = option.data;
+                }
+                this.previousData = data ? _.clone(data) : null;
             }
             this.props.valueLink.requestChange(value);
         } else {

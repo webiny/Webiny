@@ -31,6 +31,10 @@ class Confirmation extends Webiny.Ui.ModalComponent {
         if (!content) {
             content = this.props.children;
         }
+
+        if (_.isFunction(content)) {
+            content = content();
+        }
         return content;
     }
 

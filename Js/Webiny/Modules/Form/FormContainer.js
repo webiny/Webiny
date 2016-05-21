@@ -266,25 +266,38 @@ class Container extends Webiny.Ui.Component {
         }
 
         if (id) {
+            if (this.request) {
+                return this.request;
+            }
+
             this.showLoading();
             this.request = this.api.execute(this.api.httpMethod, id).then(apiResponse => {
+                this.request = null;
                 if (apiResponse.isAborted() || apiResponse.isError()) {
                     this.onCancel();
                     return;
                 }
                 if (this.props.prepareLoadedData) {
-                    const model = this.props.prepareLoadedData(apiResponse.getData());
-                    this.setState({model, initialModel: _.clone(model), loading: false}, this.__processWatches);
+                    const loadedModel = this.props.prepareLoadedData(apiResponse.getData());
+                    this.setState({model: loadedModel, initialModel: _.clone(loadedModel), loading: false}, this.__processWatches);
                     return;
                 }
-                const model = apiResponse.getData();
-                this.setState({model, initialModel: _.clone(model), loading: false}, this.__processWatches);
+                const loadedModel = apiResponse.getData();
+                this.setState({model: loadedModel, initialModel: _.clone(loadedModel), loading: false}, this.__processWatches);
             });
             return this.request;
         }
 
         if (model) {
-            this.setState({model, initialModel: _.clone(model)}, this.__processWatches);
+            // Find watches to trigger - this is mostly necessary on static forms
+            const changes = [];
+            _.each(this.watches, (watches, name) => {
+                if (!_.isEqual(_.get(model, name), _.get(this.state.model, name))) {
+                    changes.push(name);
+                }
+            });
+
+            this.setState({model, initialModel: _.clone(model)}, () => this.__processWatches(changes));
         }
     }
 
@@ -399,7 +412,8 @@ class Container extends Webiny.Ui.Component {
 
             // Input changed callback, triggered on each input change
             const changeCallback = function inputChanged(newValue, oldValue) {
-                const component = _.get(this.inputs, input.props.name + '.component');
+                const inputConfig = this.inputs[input.props.name];
+                const component = inputConfig && inputConfig.component;
                 if (component) {
                     callback.call(this, newValue, oldValue, component);
                     // See if there is a watch registered for changed input
@@ -546,8 +560,9 @@ class Container extends Webiny.Ui.Component {
         }
     }
 
-    __processWatches() {
-        _.each(this.watches, (watches, name) => {
+    __processWatches(changes = null) {
+        const source = changes ? _.pick(this.watches, changes) : this.watches;
+        _.each(source, (watches, name) => {
             _.map(Array.from(watches), w => w(_.get(this.state.model, name)));
         });
     }

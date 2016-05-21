@@ -27,7 +27,7 @@ class Endpoint extends Base {
 
     constructor(baseUrl, config = {}) {
         super(baseUrl);
-        console.info('%c[New Endpoint]: ' + baseUrl, 'color: #1918DE; font-weight: bold', config);
+        // console.info('%c[New Endpoint]: ' + baseUrl, 'color: #1918DE; font-weight: bold', config);
         // URL is a relative part of request, containing entity/service action
         this.url = config.url || '/';
         // GET, POST, PATCH, PUT, DELETE, HEAD

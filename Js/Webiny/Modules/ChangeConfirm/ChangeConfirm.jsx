@@ -9,9 +9,9 @@ class ChangeConfirm extends Webiny.Ui.Component {
             value: this.getInput(props).props.valueLink.value
         };
 
-        this.dialogProps = {};
+        this.message = null;
 
-        this.bindMethods('onChange');
+        this.bindMethods('onChange,onConfirm,onCancel');
     }
 
     componentWillReceiveProps(props) {
@@ -23,35 +23,38 @@ class ChangeConfirm extends Webiny.Ui.Component {
         this.setState({newValue: value});
         const input = this.getInput(this.props);
         const component = input.props.form.getInput(input.props.name);
-        const msg = _.isFunction(this.props.message) && this.props.message(value, this.realValueLink.value, component) || null;
+        let msg = this.props.message;
+        if (_.isFunction(msg)) {
+            msg = msg(value, this.realValueLink.value, component);
+        }
+
         if (!msg) {
             this.realValueLink.requestChange(value);
             return;
         }
 
-        // Dialog
-        this.dialogProps = {
-            message: msg,
-            onCancel: () => {
-                const cancelValue = this.props.onCancel && this.props.onCancel(this.getInput(this.props).props.form) || undefined;
-                if (!_.isUndefined(cancelValue)) {
-                    this.realValueLink.requestChange(cancelValue);
-                } else {
-                    this.realValueLink.requestChange(this.realValueLink.value);
-                }
-                this.refs.dialog.hide();
-            },
-            onConfirm: () => {
-                this.realValueLink.requestChange(value);
-                this.refs.dialog.hide();
-            }
-        };
-
-        this.refs.dialog.show();
+        this.message = msg;
+        this.value = value;
+        this.setState({time: new Date().getTime()}, this.refs.dialog.show);
     }
 
     getInput(props) {
         return React.Children.toArray(props.children)[0];
+    }
+
+    onCancel() {
+        const cancelValue = this.props.onCancel && this.props.onCancel(this.getInput(this.props).props.form) || undefined;
+        if (!_.isUndefined(cancelValue)) {
+            this.realValueLink.requestChange(cancelValue);
+        } else {
+            this.realValueLink.requestChange(this.realValueLink.value);
+        }
+        this.refs.dialog.hide();
+    }
+
+    onConfirm() {
+        this.realValueLink.requestChange(this.value);
+        this.refs.dialog.hide();
     }
 }
 
@@ -66,7 +69,7 @@ ChangeConfirm.defaultProps = {
         return (
             <webiny-change-confirm>
                 {React.cloneElement(input, props)}
-                <Ui.Modal.Confirmation ref="dialog" {...this.dialogProps}/>
+                <Ui.Modal.Confirmation ref="dialog" message={() => this.message} onConfirm={this.onConfirm} onCancel={this.onCancel}/>
             </webiny-change-confirm>
         );
     }
