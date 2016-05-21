@@ -18,7 +18,7 @@ class SearchContainer extends Webiny.Ui.Component {
         this.bindMethods(
             'setInitialData',
             'loadOptions',
-            'getSelectedData'
+            'getCurrentData'
         );
 
         Webiny.Mixins.ApiComponent.extend(this);
@@ -55,8 +55,8 @@ class SearchContainer extends Webiny.Ui.Component {
         this.setInitialData(this.props);
     }
 
-    getSelectedData() {
-        return this.refs.input.getSelectedData();
+    getCurrentData() {
+        return this.refs.input.getCurrentData();
     }
 
     setInitialData(props) {

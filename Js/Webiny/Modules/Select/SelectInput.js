@@ -7,7 +7,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
 
         this.select2 = null;
         this.options = null;
-        this.bindMethods('getConfig,getValue,triggerChange,getSelect2InputElement,itemRenderer,getSelectedData');
+        this.bindMethods('getConfig,getValue,triggerChange,getSelect2InputElement,itemRenderer,getCurrentData,getPreviousData');
     }
 
     componentDidMount() {
@@ -16,6 +16,13 @@ class SelectInput extends Webiny.Ui.FormComponent {
             return;
         }
         this.instantiate();
+    }
+
+    componentWillReceiveProps(props) {
+        super.componentWillReceiveProps(props);
+        if (props.valueLink.value !== this.props.valueLink.value) {
+            this.previousData = _.clone(this.getCurrentData());
+        }
     }
 
     componentDidUpdate() {
@@ -78,13 +85,16 @@ class SelectInput extends Webiny.Ui.FormComponent {
         return _.isObject(value) ? value.id : '' + value;
     }
 
-    getSelectedData() {
+    getCurrentData() {
         if (this.props.useDataAsValue) {
             return this.props.valueLink.value;
         }
 
-        const selectedOption = _.find(this.options, {id: this.props.valueLink.value});
-        return selectedOption.data;
+        return this.props.valueLink.value ? _.find(this.options, {id: this.props.valueLink.value}).data : null;
+    }
+
+    getPreviousData() {
+        return this.previousData;
     }
 
     triggerChange(value) {
@@ -96,7 +106,15 @@ class SelectInput extends Webiny.Ui.FormComponent {
                 value = selectedOption.data;
             }
         }
+
         if (this.props.valueLink) {
+            // Save previous selection data so it can be accessed from onChange handlers
+            const prevValue = this.props.valueLink.value;
+            if (this.props.useDataAsValue) {
+                this.previousData = prevValue ? prevValue : null;
+            } else {
+                this.previousData = prevValue ? _.clone(_.find(this.options, {id: prevValue}).data) : null;
+            }
             this.props.valueLink.requestChange(value);
         } else {
             this.props.onChange(value);

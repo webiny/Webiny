@@ -20,7 +20,10 @@ class ChangeConfirm extends Webiny.Ui.Component {
     }
 
     onChange(value) {
-        const msg = _.isFunction(this.props.message) && this.props.message(value, this.realValueLink.value) || null;
+        this.setState({newValue: value});
+        const input = this.getInput(this.props);
+        const component = input.props.form.getInput(input.props.name);
+        const msg = _.isFunction(this.props.message) && this.props.message(value, this.realValueLink.value, component) || null;
         if (!msg) {
             this.realValueLink.requestChange(value);
             return;

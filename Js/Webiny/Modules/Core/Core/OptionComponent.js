@@ -12,20 +12,46 @@ class OptionComponent extends Component {
 
         this.bindMethods('prepareOptions,renderOptions,setFilters,applyFilter');
         Webiny.Mixins.ApiComponent.extend(this);
-        Webiny.Mixins.FilterableComponent.extend(this);
+
+        if (this.props.filterBy) {
+            // Assume the most basic form of filtering (single string)
+            let name = this.props.filterBy;
+            let filter = this.props.filterBy;
+            let loadIfEmpty = true;
+
+            // Check if filterBy is defined as array (0 => name of the input to watch, 1 => filter by field)
+            if (_.isArray(this.props.filterBy)) {
+                name = this.props.filterBy[0];
+                filter = this.props.filterBy[1];
+            }
+
+            // Check if filterBy is defined as object
+            if (_.isPlainObject(this.props.filterBy)) {
+                name = this.props.filterBy.name;
+                filter = this.props.filterBy.filter;
+                loadIfEmpty = this.props.filterBy.loadIfEmpty;
+            }
+
+            this.filterName = name;
+            this.filterField = filter;
+            this.filterLoadIfEmpty = loadIfEmpty;
+
+            this.unwatch = this.props.form.watch(name, newValue => this.applyFilter(newValue, name, filter, loadIfEmpty));
+        }
     }
 
     componentDidMount() {
         super.componentDidMount();
-        if (!this.props.filterBy || this.props.valueLink.value !== null) {
+
+        if (!this.props.filterBy || this.props.valueLink.value !== null || this.filterName && this.props.form.getModel(this.filterName)) {
             this.prepareOptions(this.props);
         }
     }
 
     componentWillUnmount() {
         super.componentWillUnmount();
-        if (this.$unwatch) {
-            this.$unwatch();
+        if (this.unwatch) {
+            this.unwatch();
         }
 
         if (this.request) {
@@ -86,16 +112,16 @@ class OptionComponent extends Component {
             if (this.props.filterBy) {
                 // Get current value of the field that filters current field
                 let filter = null;
-                const filteredByValue = _.get(this.props.form.state.model, this.$filterName);
-                if (_.isFunction(this.$filterField)) {
-                    filter = this.$filterField(filteredByValue, this.api);
+                const filteredByValue = this.props.form.getModel(this.filterName);
+                if (_.isFunction(this.filterField)) {
+                    filter = this.filterField(filteredByValue, this.api);
                     if (_.isPlainObject(filter)) {
                         _.merge(query, filter);
                     }
                 }
 
-                if (_.isString(this.$filterField)) {
-                    query[this.$filterField] = filteredByValue;
+                if (_.isString(this.filterField)) {
+                    query[this.filterField] = filteredByValue;
                 }
 
                 this.api.setQuery(query);

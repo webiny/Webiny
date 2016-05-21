@@ -5,11 +5,15 @@ class SelectContainer extends Webiny.Ui.OptionComponent {
 
     constructor(props) {
         super(props);
-        this.bindMethods('getSelectedData');
+        this.bindMethods('getCurrentData,getPreviousData');
     }
 
-    getSelectedData() {
-        return this.refs.input.getSelectedData();
+    getCurrentData() {
+        return this.refs.input.getCurrentData();
+    }
+
+    getPreviousData() {
+        return this.refs.input.getPreviousData();
     }
 
     render() {

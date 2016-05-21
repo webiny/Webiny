@@ -7,7 +7,7 @@ class Login extends Webiny.Ui.View {
     constructor(props) {
         super(props);
 
-        this.bindMethods('submit,onSubmit,o nSubmitSuccess,renderForm');
+        this.bindMethods('submit,onSubmit,onSubmitSuccess,renderForm');
     }
 
     componentWillMount() {

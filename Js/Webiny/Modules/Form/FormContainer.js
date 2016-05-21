@@ -274,17 +274,17 @@ class Container extends Webiny.Ui.Component {
                 }
                 if (this.props.prepareLoadedData) {
                     const model = this.props.prepareLoadedData(apiResponse.getData());
-                    this.setState({model, initialModel: _.clone(model), loading: false});
+                    this.setState({model, initialModel: _.clone(model), loading: false}, this.__processWatches);
                     return;
                 }
                 const model = apiResponse.getData();
-                this.setState({model, initialModel: _.clone(model), loading: false});
+                this.setState({model, initialModel: _.clone(model), loading: false}, this.__processWatches);
             });
             return this.request;
         }
 
         if (model) {
-            this.setState({model, initialModel: _.clone(model)});
+            this.setState({model, initialModel: _.clone(model)}, this.__processWatches);
         }
     }
 
@@ -395,19 +395,16 @@ class Container extends Webiny.Ui.Component {
             };
 
             // Add onChange callback to valueLink
-            const name = _.upperFirst(_.camelCase(input.props.name));
-
-            // Callback can be set on Container or on input itself
-            const callback = _.get(input.props, 'onChange', _.get(this.props, 'onChange' + name, _.noop));
+            const callback = _.get(input.props, 'onChange', _.noop);
 
             // Input changed callback, triggered on each input change
-            const changeCallback = function inputChanged(newValue) {
+            const changeCallback = function inputChanged(newValue, oldValue) {
                 const component = _.get(this.inputs, input.props.name + '.component');
                 if (component) {
-                    callback.call(this, newValue, this.inputs[input.props.name].component);
+                    callback.call(this, newValue, oldValue, component);
                     // See if there is a watch registered for changed input
                     const watches = this.watches[input.props.name] || new Set();
-                    _.map(Array.from(watches), w => w(newValue));
+                    _.map(Array.from(watches), w => w(newValue, oldValue, component));
                 }
             };
 
@@ -547,6 +544,12 @@ class Container extends Webiny.Ui.Component {
         if (inputTabs) {
             this.tabs[inputTabs.id].selectTab(inputTabs.tab);
         }
+    }
+
+    __processWatches() {
+        _.each(this.watches, (watches, name) => {
+            _.map(Array.from(watches), w => w(_.get(this.state.model, name)));
+        });
     }
 }
 

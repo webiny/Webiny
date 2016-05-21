@@ -24,7 +24,7 @@ class SearchInput extends Webiny.Ui.FormComponent {
             'onBlur',
             'renderPreview',
             'fetchValue',
-            'getSelectedData'
+            'getCurrentData'
         );
     }
 
@@ -43,7 +43,7 @@ class SearchInput extends Webiny.Ui.FormComponent {
         this.setState(newState);
     }
 
-    getSelectedData() {
+    getCurrentData() {
         if (this.props.useDataAsValue) {
             return this.props.valueLink.value;
         }
