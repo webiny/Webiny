@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
 class FormContainerLoader extends Webiny.Ui.Component {
 

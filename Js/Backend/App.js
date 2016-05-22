@@ -17,6 +17,7 @@ backend.beforeRender(() => {
                         delete modules['Authentication'];
                     }
 
+                    app.instance.meta = app.config;
                     appInstance.addModules(modules);
                     _.set(Webiny.Apps, config.name, appInstance);
                     appInstance.run();

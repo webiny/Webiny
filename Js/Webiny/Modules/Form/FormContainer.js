@@ -320,7 +320,6 @@ class Container extends Webiny.Ui.Component {
                 return this.onSubmit(this.state.model);
             }
             return this.onInvalid();
-
         });
     }
 

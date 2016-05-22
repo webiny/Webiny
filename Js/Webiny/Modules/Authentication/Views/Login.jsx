@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
-const UiD = Webiny.Ui.Dispatcher;
 
 class Login extends Webiny.Ui.View {
 

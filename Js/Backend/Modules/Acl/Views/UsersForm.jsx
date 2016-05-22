@@ -3,8 +3,6 @@ import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 const Table = Ui.List.Table;
 
-import AddCreditsModal from './AddCreditsModal';
-
 class Form extends Webiny.Ui.View {
 
 }
@@ -96,10 +94,6 @@ Form.defaultProps = {
                                             </Ui.Grid.Col>
                                             <Ui.Grid.Col all={12}>
                                                 <Ui.Textarea label="Notes" name="notes" description="User notes"/>
-                                            </Ui.Grid.Col>
-                                            <Ui.Grid.Col all={12}>
-                                                <Ui.Button type="primary" label="Add credits" onClick={this.ui('addCreditsModal:show')}/>
-                                                <AddCreditsModal ui="addCreditsModal"/>
                                             </Ui.Grid.Col>
                                         </Ui.Grid.Row>
                                         <Ui.Grid.Row>
