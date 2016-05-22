@@ -29,7 +29,7 @@ TextareaContainer.defaultProps = {
             disabled: this.isDisabled(),
             className: 'form-control',
             valueLink: this.props.valueLink,
-            placeholder: this.props.placeholder,
+            placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder),
             style: this.props.style
         };
 

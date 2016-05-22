@@ -46,7 +46,7 @@ InputContainer.defaultProps = {
             type: this.props.type,
             className: 'form-control',
             valueLink: this.props.valueLink,
-            placeholder: this.props.placeholder,
+            placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder),
             onKeyUp: this.props.onKeyUp || null,
             onKeyDown: this.props.onKeyDown || this.onKeyDown.bind(this),
             onEnter: this.props.onEnter
