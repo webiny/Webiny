@@ -48,7 +48,7 @@ Alert.defaultProps = {
 
         const content = props.children;
 
-        const title = this.props.title ? <strong>{this.props.title}</strong> : null;
+        const title = this.props.title ? <strong>{this.props.title}:</strong> : null;
 
         return (
             <div className={classes}>
