@@ -255,7 +255,7 @@ SearchInput.defaultProps = {
         const inputProps = {
             type: 'text',
             readOnly: this.props.readOnly || false,
-            placeholder: this.props.placeholder,
+            placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder),
             autoComplete: 'off',
             spellCheck: 'false',
             dir: 'auto',
