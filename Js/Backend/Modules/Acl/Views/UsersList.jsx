@@ -23,7 +23,7 @@ List.defaultProps = {
                     <Table.Table>
                         <Table.Row>
                             <Table.GravatarField name="gravatar"/>
-                            <Table.Field name="firstName" label="First Name" sort="firstName" align="left">
+                            <Table.Field name="firstName" label="First Name" sort="firstName">
                                 <Table.FieldRenderer>
                                     {function renderer(data) {
                                         return (
@@ -36,11 +36,10 @@ List.defaultProps = {
                                     }}
                                 </Table.FieldRenderer>
                             </Table.Field>
-                            <Table.Field name="email" sort="email" label="Email" align="left"/>
-                            <Table.CaseField name="enabled" label="Status" sort="enabled">
-                                <case value={true}>Enabled</case>
-                                <case value={false}>Disabled</case>
-                            </Table.CaseField>
+                            <Table.Field name="email" sort="email" label="Email"/>
+                            <Table.ToggleField name="enabled" label="Status" sort="enabled" align="center" message={(newValue, oldValue) => {
+                                return 'This will disable user\'s account and prevent him from logging in!';
+                            }}/>
                             <Table.DateField name="createdOn" label="Created On" sort="createdOn"/>
                             <Table.Actions>
                                 <Table.EditAction route="Users.Edit"/>

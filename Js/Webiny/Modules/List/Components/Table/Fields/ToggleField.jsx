@@ -7,6 +7,7 @@ class ToggleField extends Field {
 }
 
 ToggleField.defaultProps = _.merge({}, Field.defaultProps, {
+    message: null,
     onChange: null,
     renderer() {
         const props = {
@@ -22,6 +23,16 @@ ToggleField.defaultProps = _.merge({}, Field.defaultProps, {
             value: _.get(this.props.data, this.props.name),
             disabled: this.props.disabled
         };
+
+        if (this.props.message) {
+            return (
+                <td className={this.getTdClasses()}>
+                    <Webiny.Ui.Components.ChangeConfirm message={this.props.message}>
+                        <Webiny.Ui.Components.SwitchButton {...props}/>
+                    </Webiny.Ui.Components.ChangeConfirm>
+                </td>
+            );
+        }
 
         return (
             <td className={this.getTdClasses()}>

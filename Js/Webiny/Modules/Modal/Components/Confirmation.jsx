@@ -10,6 +10,11 @@ class Confirmation extends Webiny.Ui.ModalComponent {
         this.bindMethods('renderContent,onCancel,onConfirm');
     }
 
+    show() {
+        this.setState({time: new Date().getTime()});
+        super.show();
+    }
+
     onCancel() {
         if (_.isFunction(this.props.onCancel)) {
             return this.props.onCancel(this);

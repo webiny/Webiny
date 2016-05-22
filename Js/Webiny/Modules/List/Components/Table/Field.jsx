@@ -20,6 +20,7 @@ class Field extends Webiny.Ui.Component {
 
 Field.defaultProps = {
     default: '-',
+    align: 'left',
     sortedClass: 'sorted',
     alignLeftClass: 'text-left',
     alignRightClass: 'text-right',

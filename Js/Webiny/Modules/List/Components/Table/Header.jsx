@@ -2,7 +2,6 @@ import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
 class Header extends Webiny.Ui.Component {
-
     constructor(props) {
         super(props);
 
@@ -27,11 +26,21 @@ class Header extends Webiny.Ui.Component {
 }
 
 Header.defaultProps = {
+    align: 'left',
+    alignLeftClass: 'text-left',
+    alignRightClass: 'text-right',
+    alignCenterClass: 'text-center',
+    sortedAscendingIcon: 'icon-caret-up',
+    sortedDescendingIcon: 'icon-caret-down',
+    sortableIcon: 'icon-sort',
     renderer() {
-        const classes = this.classSet({
-            sorted: this.props.sorted && this.props.sorted !== 0,
-            'text-left': this.props.align === 'left'
-        });
+        const classes = {
+            sorted: this.props.sorted && this.props.sorted !== 0
+        };
+
+        classes[this.props.alignLeftClass] = this.props.align === 'left';
+        classes[this.props.alignRightClass] = this.props.align === 'right';
+        classes[this.props.alignCenterClass] = this.props.align === 'center';
 
         const sortIcon = {};
         sortIcon[this.props.sortedAscendingIcon] = this.props.sorted === 1;
@@ -51,15 +60,12 @@ Header.defaultProps = {
         }
 
         return (
-            <th className={classes}>
+            <th className={this.classSet(classes)}>
                 {this.props.children}
                 {content}
             </th>
         );
-    },
-    sortedAscendingIcon: 'icon-caret-up',
-    sortedDescendingIcon: 'icon-caret-down',
-    sortableIcon: 'icon-sort'
+    }
 };
 
 export default Header;
