@@ -7,7 +7,7 @@ class ChangeConfirm extends Webiny.Ui.Component {
 
         const input = this.getInput(props);
         this.state = {
-            value: input.props.valueLink ? input.props.valueLink : input.props.value
+            value: input.props.valueLink ? input.props.valueLink.value : input.props.value
         };
 
         this.hasValueLink = _.has(input.props, 'valueLink');
