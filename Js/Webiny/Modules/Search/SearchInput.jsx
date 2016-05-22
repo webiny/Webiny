@@ -127,14 +127,13 @@ class SearchInput extends Webiny.Ui.FormComponent {
                 this.setState(newState, () => {
                     this.props.valueLink.requestChange(value);
                     setTimeout(this.validate, 10);
-                    this.props.onSelect(item);
                     this.preventBlur = false;
                 });
             });
         }
 
         return this.setState(newState, () => {
-            this.props.onSelect(item);
+            this.props.onChange(item);
         });
     }
 
@@ -151,7 +150,8 @@ class SearchInput extends Webiny.Ui.FormComponent {
                 this.props.valueLink.requestChange(this.props.useDataAsValue ? item : item[this.props.valueAttr]);
                 setTimeout(this.validate, 10);
                 this.preventBlur = false;
-                // this.props.onSelect(item);
+            } else {
+                this.props.onChange(item);
             }
         });
     }
@@ -250,7 +250,7 @@ SearchInput.defaultProps = {
     },
     valueAttr: 'id',
     textAttr: 'name',
-    onSelect: _.noop,
+    onChange: _.noop,
     onReset: _.noop,
     onSearch: _.noop,
     inputIcon: 'icon-search',
