@@ -3,7 +3,6 @@
  * Webiny Platform (http://www.webiny.com/)
  *
  * @copyright Copyright Webiny LTD
- * @license   http://www.webiny.com/platform/license
  */
 
 namespace Apps\Core\Php\Dispatchers\Flows;
