@@ -103,7 +103,7 @@ Base.defaultProps = {
             className: 'form-control',
             value: this.valueLink.value || '',
             onChange: this.onChange,
-            placeholder: this.props.placeholder
+            placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder)
         };
 
         return (
