@@ -115,9 +115,9 @@ class SelectInput extends Webiny.Ui.FormComponent {
 
         if (this.props.valueLink) {
             // Save previous selection data so it can be accessed from onChange handlers
-            const prevValue = this.props.valueLink.value;
+            const prevValue = this.getValue();
             if (this.props.useDataAsValue) {
-                this.previousData = prevValue ? prevValue : null;
+                this.previousData = prevValue ? _.clone(prevValue) : null;
             } else {
                 let data = null;
                 const option = _.find(this.options, {id: prevValue});
