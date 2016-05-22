@@ -35,7 +35,8 @@ class ApiContainer extends BaseContainer {
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
         this.prepare(_.clone(props));
-        if (this.props.autoLoad) {
+        // TODO: think of a way to improve this check (maybe limit it only to API related props?)
+        if (this.props.autoLoad && !_.isEqual(_.omit(props, ['children']), _.omit(this.props, ['children']))) {
             this.loadData();
         }
     }

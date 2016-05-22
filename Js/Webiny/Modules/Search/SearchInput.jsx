@@ -114,30 +114,6 @@ class SearchInput extends Webiny.Ui.FormComponent {
     }
 
     selectItem(item) {
-        const newState = {
-            selected: null,
-            search: '',
-            options: [],
-            selectedData: item
-        };
-
-        if (this.props.valueLink) {
-            this.preventBlur = true;
-            return this.requestChange(this.props.useDataAsValue ? item : item[this.props.valueAttr], (value) => {
-                this.setState(newState, () => {
-                    this.props.valueLink.requestChange(value);
-                    setTimeout(this.validate, 10);
-                    this.preventBlur = false;
-                });
-            });
-        }
-
-        return this.setState(newState, () => {
-            this.props.onChange(item);
-        });
-    }
-
-    selectItem(item) {
         const search = this.props.valueLink ? this.renderPreview(item) : '';
         this.setState({
             selected: null,
