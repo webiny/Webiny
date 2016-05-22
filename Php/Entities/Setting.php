@@ -3,6 +3,7 @@ namespace Apps\Core\Php\Entities;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Webiny\Component\Entity\EntityException;
 
 /**
  * Class Setting
@@ -25,26 +26,27 @@ class Setting extends EntityAbstract
     {
         parent::__construct();
 
-        $this->attr('key')->char()->setValidators('required')->setToArrayDefault();
+        $this->attr('key')->char()->setValidators('required,unique')->setToArrayDefault();
         $this->attr('settings')->object()->setToArrayDefault();
 
         $this->api('get', 'key/{key}', function ($key) {
-            return $this->findOne(['key' => $key]);
+            $record = $this->findOne(['key' => $key]);
+            $record->id = $key;
+            return $record->toArray('*');
+        });
+
+        $this->api('patch', 'key/{key}', function ($key) {
+            $record = $this->findOne(['key' => $key]);
+            $data = $this->wRequest()->getPayload()->getAll();
+            if (empty($record)) {
+                $record = new self();
+                $record->key = $key;
+            }
+            $record->settings = $data['settings'];
+            $record->save();
+
+            $record->id = $key;
+            return $record->toArray('*');
         });
     }
-
-    public function save()
-    {
-        // if the key already exists, we need to update the record
-        $result = $this->findOne(['key' => $this->key]);
-        if (!empty($result)) {
-            $result->settings = $this->settings;
-            $result->save();
-
-            return true;
-        } else {
-            return parent::save();
-        }
-    }
-
 }
