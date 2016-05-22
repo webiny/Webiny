@@ -58,7 +58,7 @@ class Container extends Webiny.Ui.Component {
             });
         }
 
-        this.loadModel(this.props.id, this.props.model);
+        this.loadModel(this.props.id || _.get(this.props, 'defaultModel.id'), this.props.model);
     }
 
     componentWillUnmount() {
@@ -139,7 +139,7 @@ class Container extends Webiny.Ui.Component {
     onSubmit(model) {
         this.showLoading();
         if (model.id) {
-            return this.api.patch(model.id, model).then(apiResponse => {
+            return this.api.patch(this.api.url + '/' + model.id, model).then(apiResponse => {
                 this.hideLoading();
                 const onSubmitSuccess = this.props.onSubmitSuccess;
                 if (!apiResponse.isError()) {
@@ -163,7 +163,7 @@ class Container extends Webiny.Ui.Component {
             });
         }
 
-        return this.api.post('/', model).then(apiResponse => {
+        return this.api.post(this.api.url, model).then(apiResponse => {
             this.hideLoading();
             const onSubmitSuccess = this.props.onSubmitSuccess;
             if (!apiResponse.isError()) {
@@ -271,7 +271,7 @@ class Container extends Webiny.Ui.Component {
             }
 
             this.showLoading();
-            this.request = this.api.execute(this.api.httpMethod, id).then(apiResponse => {
+            this.request = this.api.execute(this.api.httpMethod, this.api.url + '/' + id).then(apiResponse => {
                 this.request = null;
                 if (apiResponse.isAborted() || apiResponse.isError()) {
                     this.onCancel();
@@ -282,7 +282,7 @@ class Container extends Webiny.Ui.Component {
                     this.setState({model: loadedModel, initialModel: _.clone(loadedModel), loading: false}, this.__processWatches);
                     return;
                 }
-                const loadedModel = apiResponse.getData();
+                const loadedModel = _.merge({}, this.props.defaultModel || {}, apiResponse.getData());
                 this.setState({model: loadedModel, initialModel: _.clone(loadedModel), loading: false}, this.__processWatches);
             });
             return this.request;
@@ -568,6 +568,7 @@ class Container extends Webiny.Ui.Component {
 }
 
 Container.defaultProps = {
+    defaultModel: {},
     connectToRouter: false,
     onSuccessMessage: () => {
         return 'Your record was saved successfully!';
