@@ -7,6 +7,7 @@ class BaseContainer extends Webiny.Ui.Component {
         super(props);
 
         this.state = {
+            loading: false,
             list: [],
             meta: {},
             sorters: {},
@@ -292,7 +293,7 @@ class BaseContainer extends Webiny.Ui.Component {
         }
 
         if (element.type === 'loader') {
-            return this.loaderElement;
+            return this.loaderElement ? this.loaderElement : React.createElement(Ui.List.Loader, {container: this});
         }
 
         if (element.type === 'multi-actions') {
@@ -366,7 +367,7 @@ BaseContainer.defaultProps = {
             table: this.tableElement,
             pagination: this.paginationElement,
             multiActions: this.multiActionsElement,
-            loader: this.loaderElement,
+            loader: this.loaderElement ? this.loaderElement : React.createElement(Ui.List.Loader, {container: this}),
             container: this
         };
 
