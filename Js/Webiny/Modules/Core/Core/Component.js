@@ -187,8 +187,22 @@ class Component extends React.Component {
         // TODO: Things like `apiParams` will be constructed using a form in UI builder
         // TODO: values like '@activeLocation' will be dynamic, and are accessed through injector
         // TODO: Modules responsible for these values should make these values available to injector on module initialization
-        // TODO: '@route:id', etc. will give access to Router params
-        return params;
+        const injected = {};
+        _.each(params, (v, k) => {
+            if (_.isPlainObject(v)) {
+                injected[k] = this.apiParams(v);
+                return;
+            }
+
+            if (_.isString(v) && v.startsWith('@')) {
+                const parts = v.split(':');
+                if (parts[0] === '@router') {
+                    v = Webiny.Router.getParams(parts[1]);
+                }
+            }
+            injected[k] = v;
+        });
+        return injected;
     }
 
     /**

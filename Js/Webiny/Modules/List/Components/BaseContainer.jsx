@@ -20,6 +20,7 @@ class BaseContainer extends Webiny.Ui.Component {
         };
 
         this.filtersElement = null;
+        this.loaderElement = null;
         this.tableElement = null;
         this.paginationElement = null;
         this.multiActionsElement = null;
@@ -95,6 +96,7 @@ class BaseContainer extends Webiny.Ui.Component {
 
         _.assign(this.state, state);
         this.setState(this.state);
+        return this.state;
     }
 
     setSorters(sorters) {
@@ -196,7 +198,8 @@ class BaseContainer extends Webiny.Ui.Component {
             sorters: this.state.sorters,
             onSort: this.setSorters,
             actions: this.getContainerActions(),
-            selectedRows: this.state.selectedRows
+            selectedRows: this.state.selectedRows,
+            showEmpty: !this.isLoading()
         });
 
         return tableProps;
@@ -249,6 +252,11 @@ class BaseContainer extends Webiny.Ui.Component {
             if (child.type === Ui.List.Pagination) {
                 this.paginationElement = React.cloneElement(child, this.paginationProps(props), child.props.children);
             }
+
+            if (child.type === Ui.List.Loader) {
+                this.loaderElement = React.cloneElement(child, {container: this}, child.props.children);
+            }
+
             if (child.type === Ui.List.MultiActions) {
                 this.multiActionsElement = React.cloneElement(child, this.multiActionsProps(props), child.props.children);
             }
@@ -281,6 +289,10 @@ class BaseContainer extends Webiny.Ui.Component {
 
         if (element.type === 'pagination') {
             return this.paginationElement;
+        }
+
+        if (element.type === 'loader') {
+            return this.loaderElement;
         }
 
         if (element.type === 'multi-actions') {
@@ -329,6 +341,7 @@ BaseContainer.defaultProps = {
     layout: function layout() {
         return (
             <div className="col-xs-12">
+                <loader/>
                 <filters/>
                 <table/>
                 <pagination/>
@@ -353,6 +366,7 @@ BaseContainer.defaultProps = {
             table: this.tableElement,
             pagination: this.paginationElement,
             multiActions: this.multiActionsElement,
+            loader: this.loaderElement,
             container: this
         };
 

@@ -34,14 +34,36 @@ class ApiContainer extends BaseContainer {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        this.prepare(_.clone(props));
-        // TODO: think of a way to improve this check (maybe limit it only to API related props?)
-        if (this.props.autoLoad && !_.isEqual(_.omit(props, ['children']), _.omit(this.props, ['children']))) {
-            this.loadData();
+        const checkParams = ['sorters', 'filters', 'page', 'perPage', 'searchQuery', 'searchOperator', 'searchFields'];
+        const prevQueryParams = _.pick(this.state, checkParams);
+        const newQueryParams = _.pick(this.prepare(_.clone(props)), checkParams);
+        const queryParamsChanged = !_.isEqual(prevQueryParams, newQueryParams);
+        // Need to do this explicit check because 'query' prop can contain data coming from anywhere and it is not processed in 'prepare'
+        const queryPropsChanged = !_.isEqual(props.query, this.props.query);
+        if (this.props.autoLoad && (queryParamsChanged || queryPropsChanged)) {
+            this.loadData(props);
         }
     }
 
-    loadData() {
+    /**
+     * LOADING METHODS
+     */
+    showLoading() {
+        this.setState({loading: true});
+    }
+
+    hideLoading() {
+        this.setState({loading: false});
+    }
+
+    isLoading() {
+        return this.state.loading;
+    }
+
+    loadData(props = null) {
+        if (!props) {
+            props = this.props;
+        }
         const selectedRows = this.state.selectedRows;
         selectedRows.clear();
         this.setState({selectedRows});
@@ -52,8 +74,9 @@ class ApiContainer extends BaseContainer {
             _searchQuery: this.state.searchQuery,
             _searchFields: this.state.searchFields,
             _searchOperator: this.state.searchOperator
-        });
+        }, props.query);
 
+        this.showLoading();
         this.request = this.api.setQuery(query).execute().then(apiResponse => {
             let data = null;
             if (!apiResponse.isError() && !apiResponse.isAborted()) {
@@ -61,7 +84,7 @@ class ApiContainer extends BaseContainer {
                 if (this.props.prepareLoadedData) {
                     data.list = this.props.prepareLoadedData(data.list);
                 }
-                this.setState(data);
+                this.setState(data, this.hideLoading);
             }
 
             return data;

@@ -16,7 +16,7 @@ Empty.defaultProps = {
     ),
     renderer() {
         if (this.props.children) {
-            return <webiny-list-empty>{this.props.children}</webiny-list-empty>;
+            return <webiny-list-empty>{_.isFunction(this.props.children) ? this.props.children() : this.props.children}</webiny-list-empty>;
         }
 
         return (

@@ -202,7 +202,7 @@ Table.defaultProps = {
             'table-' + this.props.type
         ]);
 
-        if (!this.props.data || !this.props.data.length) {
+        if (!this.props.data || !this.props.data.length && this.props.showEmpty) {
             return this.emptyElement;
         }
 

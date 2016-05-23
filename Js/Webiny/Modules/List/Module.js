@@ -13,6 +13,7 @@ import SelectAll from './Components/Table/SelectAll';
 import SelectRow from './Components/Table/SelectRow';
 import Filters from './Components/Filters';
 import FormFilters from './Components/FormFilters';
+import Loader from './Components/ListContainerLoader';
 import Pagination from './Components/Pagination';
 import MultiActions from './Components/MultiActions';
 import MultiAction from './Components/MultiActions/MultiAction';
@@ -77,7 +78,8 @@ class Module extends Webiny.Module {
             DeleteMultiAction,
             Filters,
             FormFilters,
-            Pagination
+            Pagination,
+            Loader
         };
     }
 }
