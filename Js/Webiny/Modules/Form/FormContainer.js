@@ -13,6 +13,7 @@ class Container extends Webiny.Ui.Component {
             error: null
         };
 
+        this.submitDisabled = false;
         this.isValid = null;
         this.watches = {};
         this.inputs = {};
@@ -42,6 +43,8 @@ class Container extends Webiny.Ui.Component {
             'onCancel',
             'onInvalid',
             'onReset',
+            'enableSubmit',
+            'disableSubmit',
             '__renderContent',
             '__processError',
             '__focusTab'
@@ -73,6 +76,14 @@ class Container extends Webiny.Ui.Component {
         if (props.id !== this.props.id || !_.isEqual(props.model, this.props.model)) {
             this.loadModel(props.id, props.model);
         }
+    }
+
+    enableSubmit() {
+        this.submitDisabled = false;
+    }
+
+    disableSubmit(message = '') {
+        this.submitDisabled = message;
     }
 
     /**
@@ -311,6 +322,11 @@ class Container extends Webiny.Ui.Component {
             e.preventDefault();
         }
 
+        if (this.submitDisabled) {
+            Webiny.Growl.info(this.submitDisabled, 'Wait!');
+            return false;
+        }
+
         return this.validate().then(valid => {
             if (valid) {
                 // If onSubmit was passed through props, execute it. Otherwise proceed with default behaviour.
@@ -504,7 +520,7 @@ class Container extends Webiny.Ui.Component {
             return validationResults;
         }).catch(validationError => {
             // Set custom error message if defined
-            const validator = validationError.validator;
+            const validator = validationError.getValidator();
             if (validator in messages) {
                 validationError.setMessage(messages[validator]);
             }
@@ -512,7 +528,7 @@ class Container extends Webiny.Ui.Component {
             // Set component state to reflect validation error
             component.setState({
                 isValid: false,
-                validationMessage: validationError.message,
+                validationMessage: validationError.getMessage(),
                 validationResults: false
             });
 

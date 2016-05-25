@@ -84,16 +84,26 @@ class Gallery extends ImageComponent {
             image.order = state.images.length;
         }
 
+        if (this.props.form) {
+            this.props.form.disableSubmit('Files are being uploaded...');
+        }
+
         image.jobId = this.uploader.upload(image, (percentage) => {
             const newState = this.state;
             newState.images[this.getImageIndex(image)].progress = percentage;
             this.setState({images: state.images});
         }, (newImage) => {
+            if (this.props.form) {
+                this.props.form.enableSubmit();
+            }
             const newState = this.state;
             newImage.key = image.key;
             newState.images[this.getImageIndex(image)] = newImage;
             this.props.valueLink.requestChange(state.images);
         }, (apiResponse, failedImage, jobId) => {
+            if (this.props.form) {
+                this.props.form.enableSubmit();
+            }
             if (apiResponse.isAborted()) {
                 const images = this.state.images;
                 images.splice(_.findIndex(images, {jobId}), 1);

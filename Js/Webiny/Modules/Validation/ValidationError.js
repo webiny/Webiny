@@ -7,6 +7,10 @@ class ValidationError extends Error {
         this.value = value;
     }
 
+    setValidator(validator) {
+        this.validator = validator;
+    }
+
     getMessage() {
         return this.message;
     }
