@@ -65,10 +65,10 @@ class App extends PackageAbstract
         return 'Apps/' . $this->name . $version;
     }
 
-    public function getEntities()
+    public function getEntities($withDetails = false)
     {
         $version = $this->wConfig()->get('Apps.' . $this->name);
-        if ($version) {
+        if ($version && $version !== 'root') {
             $version = '/' . str_replace('.', '_', $version);
         } else {
             $version = '';
@@ -86,6 +86,13 @@ class App extends PackageAbstract
                 'name'  => $entityName,
                 'class' => 'Apps\\' . $this->str($file->getKey())->replace(['.php', $version], '')->replace('/', '\\')->val()
             ];
+
+            if($withDetails){
+                $instance = new $entities[$entityName]['class'];
+                $meta = $instance->meta();
+                $entities[$entityName]['attributes'] = $meta['attributes'];
+                $entities[$entityName]['methods'] = $meta['methods'] ?? [];
+            }
         }
 
         return $entities;

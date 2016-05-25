@@ -18,12 +18,15 @@ class Entities extends AbstractService
     function __construct()
     {
         $this->api('get', '/', function () {
+            $withDetails = $this->wRequest()->query('withDetails', false);
             $entities = [];
             /* @var $app App */
             foreach ($this->wApps() as $app) {
-                $entities = array_merge($entities, array_values($app->getEntities()));
+                foreach($app->getEntities($withDetails) as $entity){
+                    $entities[] = $entity;
+                }
             }
-
+            
             return $entities;
         });
 
@@ -31,6 +34,12 @@ class Entities extends AbstractService
             $entityClass = $this->wRequest()->query('entity');
             $instance = new $entityClass;
             return $instance->meta()['attributes'];
+        });
+
+        $this->api('get', 'methods', function () {
+            $entityClass = $this->wRequest()->query('entity');
+            $instance = new $entityClass;
+            return $instance->meta()['methods'];
         });
     }
 }

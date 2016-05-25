@@ -210,12 +210,25 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         /* @var $attr AttributeAbstract */
         foreach ($entity->getAttributes() as $attrName => $attr) {
             $data['attributes'][] = [
-                'name'               => $attrName,
-                'type'               => self::str(get_class($attr))->explode('\\')->last()->replace('Attribute', '')->caseLower()->val(),
-                'validators'         => join(',', $attr->getValidators()),
-                'validationMessages' => $attr->getValidationMessages(),
-                'defaultValue'       => $attr->getDefaultValue()
+                'name'         => $attrName,
+                'type'         => self::str(get_class($attr))->explode('\\')->last()->replace('Attribute', '')->caseLower()->val(),
+                //'validators'         => join(',', $attr->getValidators()), // TODO: need to detect closure validators
+                //'validationMessages' => $attr->getValidationMessages(),
+                'defaultValue' => $attr->getDefaultValue()
             ];
+        }
+
+
+        foreach ($entity->getApiMethods() as $httpMethod => $methods) {
+            /* @var $method \Apps\Core\Php\Dispatchers\ApiMethod */
+            foreach ($methods as $pattern => $method) {
+                $data['methods'][] = [
+                    'key'        => $pattern . '.' . $httpMethod,
+                    'httpMethod' => $httpMethod,
+                    'pattern'    => $pattern,
+                    'url'        => $method->getUrl()
+                ];
+            }
         }
 
         return $data;

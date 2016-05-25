@@ -46,15 +46,13 @@ Alert.defaultProps = {
             );
         }
 
-        const content = props.children;
-
         const title = this.props.title ? <strong>{this.props.title}:</strong> : null;
 
         return (
             <div className={classes}>
                 {icon}
                 {close}
-                {title} {content}
+                {title} {props.children}
             </div>
         );
     }

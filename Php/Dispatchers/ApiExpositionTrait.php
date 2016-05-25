@@ -93,7 +93,7 @@ trait ApiExpositionTrait
 
         $pattern = $pattern != '/' ? trim($pattern, '/') : '/';
         $httpMethod = strtolower($httpMethod);
-        $apiMethod = $this->apiMethods->keyNested($httpMethod . '.' . $pattern, new ApiMethod($httpMethod, $pattern), true);
+        $apiMethod = $this->apiMethods->keyNested($httpMethod . '.' . $pattern, new ApiMethod($httpMethod, $pattern, $this), true);
         $apiMethod->addCallback($callable);
 
         return $apiMethod;

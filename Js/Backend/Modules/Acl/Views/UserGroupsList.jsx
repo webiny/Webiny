@@ -9,73 +9,46 @@ class List extends Webiny.Ui.View {
 List.defaultProps = {
     renderer: function render() {
         const listProps = {
-            api: '/entities/core/users',
-            fields: 'id,enabled,firstName,lastName,email,createdOn,gravatar',
+            api: '/entities/core/user-groups',
+            fields: 'id,name,tag,createdOn',
             connectToRouter: true,
-            searchFields: 'firstName,lastName,email'
-        };
-
-        const statusProps = {
-            ui: 'statusFilter',
-            placeholder: Webiny.i18n('webiny.core.statusFilter.placeholder', 'Status'),
-            allowClear: true,
-            name: 'enabled'
-        };
-
-        const selectProps = {
-            ui: 'emailFilter',
-            placeholder: 'Email',
-            allowClear: true,
-            api: '/entities/core/users',
-            name: 'email',
-            valueAttr: 'email',
-            textAttr: 'email',
-            filterBy: 'enabled'
-            // filterBy: ['enabled', 'enabled'], // first value is name of the input to watch, second is name of the field to filter by
-            /* filterBy: ['enabled', newVal => { // first value is name of the input to watch, second is a custom function that returns a filters object
-             return {enabled: newVal};
-             }] */
+            query: {_sort: 'name'},
+            perPage: 25
         };
 
         return (
             <Webiny.Builder.View na me="core-users-list">
                 <Ui.Grid.Col all={12}>
-                    <h2>Users</h2>
+                    <h2>
+                        <Ui.Grid.Row>
+                            <Ui.Grid.Col all={10}>
+                                User Groups
+                            </Ui.Grid.Col>
+                            <Ui.Grid.Col all={2}>
+                                <Ui.Link type="primary" align="right" route="UserGroups.Create">Create new User Group</Ui.Link>
+                            </Ui.Grid.Col>
+                        </Ui.Grid.Row>
+                    </h2>
                 </Ui.Grid.Col>
-                <Ui.List.ApiContainer ui="myList" {...listProps}>
-                    <Ui.List.FormFilters>
-                        {(applyFilters, resetFilters) => {
-                            return (
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={4}>
-                                        <Ui.Select {...statusProps}>
-                                            <option value="true">{this.i18n('Enabled')}</option>
-                                            <option value="false">{this.i18n('Disabled')}</option>
-                                        </Ui.Select>
-                                    </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={4}>
-                                        <Ui.Select {...selectProps}/>
-                                    </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={4}>
-                                        <Ui.Button type="primary" label="Filter" onClick={applyFilters()}/>
-                                        <Ui.Button type="secondary" label="Reset" onClick={resetFilters()}/>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-                            );
-                        }}
-                    </Ui.List.FormFilters>
+                <Ui.List.ApiContainer {...listProps}>
                     <Table.Table>
                         <Table.Row>
-                            <Table.Field name="id" label="ID"/>
-                            <Table.Field name="firstName" label="First Name" sort="firstName"/>
-                            <Table.Field name="email" sort="email" label="Email"/>
-                            <Table.CaseField name="enabled" label="Status" sort="enabled">
-                                <case value={true}>Enabled</case>
-                                <case value={false}>Disabled</case>
-                            </Table.CaseField>
-                            <Table.DateField name="createdOn" label="Created On" sort="createdOn"/>
+                            <Table.Field name="name" label="Name" sort="name">
+                                <Table.FieldRenderer>
+                                    {function renderer(data) {
+                                        return (
+                                            <td className={this.getTdClasses()}>
+                                                <strong>{data.name}</strong>
+                                                <br/>
+                                                {data.id}
+                                            </td>
+                                        );
+                                    }}
+                                </Table.FieldRenderer>
+                            </Table.Field>
+                            <Table.Field name="tag" label="Tag" sort="tag"/>
                             <Table.Actions>
-                                <Table.EditAction route="Users.Form"/>
+                                <Table.EditAction route="UserGroups.Edit"/>
                                 <Table.DeleteAction/>
                             </Table.Actions>
                         </Table.Row>

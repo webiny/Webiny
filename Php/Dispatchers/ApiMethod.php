@@ -8,6 +8,8 @@
 namespace Apps\Core\Php\Dispatchers;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\DevTools\Services\AbstractService;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Validation\Validation;
 use Webiny\Component\Validation\ValidationException;
@@ -25,14 +27,19 @@ class ApiMethod
 
     private $httpMethod;
     private $pattern;
+    /**
+     * @var null|EntityAbstract|AbstractService
+     */
+    private $context;
     private $callbacks = [];
     private $bodyValidators;
     private $routeOptions = [];
 
-    function __construct($httpMethod, $methodName, $callable = null)
+    function __construct($httpMethod, $methodName, $context, $callable = null)
     {
         $this->httpMethod = $httpMethod;
         $this->pattern = $methodName;
+        $this->context = $context;
         if ($callable) {
             $this->callbacks = [$callable];
         }
@@ -46,6 +53,25 @@ class ApiMethod
     public function getRouteOptions()
     {
         return $this->routeOptions;
+    }
+
+    public function getUrl($params = [])
+    {
+        // Determine if this method belongs to entity or service
+        $parts = $this->str(get_class($this->context))->explode('\\')->val();
+        $app = $this->str($parts[1])->kebabCase()->val();
+        if ($this->context instanceof EntityAbstract) {
+            $contextUrl = 'entities/' . $app . '/' . $this->str($parts[4])->pluralize()->kebabCase()->val();
+        } else {
+            $contextUrl = 'services/' . $app . '/' . $this->str($parts[4])->kebabCase()->val();
+        }
+
+        $url = $this->str($this->wConfig()->get('Application.ApiPath') . '/' . $contextUrl . '/' . $this->pattern);
+        foreach ($params as $k => $v) {
+            $url->replace('{' . $k . '}', $v);
+        }
+
+        return $url->val();
     }
 
     public function __invoke($params, $bindTo = null)

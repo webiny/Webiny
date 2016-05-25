@@ -15,6 +15,7 @@ class InputContainer extends Webiny.Ui.FormComponent {
 }
 
 InputContainer.defaultProps = {
+    delay: 400,
     onEnter: _.noop,
     renderer() {
         const cssConfig = {
@@ -61,7 +62,7 @@ InputContainer.defaultProps = {
             <div className={this.classSet(cssConfig, this.props.className)}>
                 {label}
                 <div className="input-group">
-                    <Webiny.Ui.Components.DelayedValueLink>
+                    <Webiny.Ui.Components.DelayedValueLink delay={this.props.delay}>
                         <Input {...props}/>
                     </Webiny.Ui.Components.DelayedValueLink>
                     {validationIcon}

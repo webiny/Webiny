@@ -1,3 +1,4 @@
+import Webiny from 'Webiny';
 import Field from './../Field';
 
 class RowDetailsField extends Field {
@@ -5,17 +6,25 @@ class RowDetailsField extends Field {
 }
 
 RowDetailsField.defaultProps = _.merge({}, Field.defaultProps, {
+    hide: () => false,
     renderer() {
         let onClick = this.props.actions.hideRowDetails;
         let label = 'Hide details';
+        let className = 'expand close';
         if (!this.props.rowDetailsExpanded) {
             onClick = this.props.actions.showRowDetails;
             label = 'Show details';
+            className = 'expand';
         }
+
+        const props = {
+            onClick: onClick(this.props.rowIndex),
+            className
+        };
 
         return (
             <td className={this.getTdClasses()}>
-                <Webiny.Ui.Components.Link onClick={onClick(this.props.rowIndex)}>{label}</Webiny.Ui.Components.Link>
+                {this.props.hide(this.props.data) ? null : <Webiny.Ui.Components.Link {...props}/>}
             </td>
         );
     }

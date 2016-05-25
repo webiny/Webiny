@@ -1,4 +1,3 @@
-import Webiny from 'Webiny';
 import Base from './Base';
 
 const apiProps = [

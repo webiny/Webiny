@@ -15,7 +15,7 @@ List.defaultProps = {
         };
 
         return (
-            <Webiny.Builder.View na me="core-users-list">
+            <Ui.Grid.Row>
                 <Ui.Grid.Col all={12}>
                     <h2>Users</h2>
                 </Ui.Grid.Col>
@@ -53,7 +53,7 @@ List.defaultProps = {
                     </Table.Table>
                     <Ui.List.Pagination/>
                 </Ui.List.ApiContainer>
-            </Webiny.Builder.View>
+            </Ui.Grid.Row>
         );
     }
 };

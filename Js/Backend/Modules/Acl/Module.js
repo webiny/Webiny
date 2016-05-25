@@ -14,12 +14,12 @@ class Module extends Webiny.Module {
         );
 
         this.registerRoutes(
-            new Webiny.Route('Users.Create', '/acl/users/new', Views.UsersForm),
-            new Webiny.Route('Users.Edit', '/acl/users/:id', Views.UsersForm),
-            new Webiny.Route('Users.List', '/acl/users', Views.UsersList),
-            new Webiny.Route('UserGroups.Create', '/acl/groups/new', Views.UserGroupsForm),
-            new Webiny.Route('UserGroups.Edit', '/acl/groups/:id', Views.UserGroupsForm),
-            new Webiny.Route('UserGroups.List', '/acl/groups', Views.UserGroupsList)
+            new Webiny.Route('Users.Create', '/acl/users/new', Views.UsersForm, 'Create User'),
+            new Webiny.Route('Users.Edit', '/acl/users/:id', Views.UsersForm, 'Edit User'),
+            new Webiny.Route('Users.List', '/acl/users', Views.UsersList, 'Users'),
+            new Webiny.Route('UserGroups.Create', '/acl/groups/new', Views.UserGroupsForm, 'New User Group'),
+            new Webiny.Route('UserGroups.Edit', '/acl/groups/:id', Views.UserGroupsForm, 'Edit User Group'),
+            new Webiny.Route('UserGroups.List', '/acl/groups', Views.UserGroupsList, 'User Groups')
         );
     }
 }
