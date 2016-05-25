@@ -9,8 +9,12 @@ class UserGroupsForm extends Webiny.Ui.View {
 
         this.state = {
             entities: [],
-            entityFilter: ''
+            services: [],
+            entityFilter: '',
+            serviceFilter: ''
         };
+
+        this.bindMethods('renderService');
     }
 
     componentWillMount() {
@@ -18,6 +22,35 @@ class UserGroupsForm extends Webiny.Ui.View {
         new Webiny.Api.Endpoint('/services/core/entities', {query: {withDetails: true}}).get().then(apiResponse => {
             this.setState({entities: apiResponse.getData()});
         });
+
+        new Webiny.Api.Endpoint('/services/core/services', {query: {withDetails: true}}).get().then(apiResponse => {
+            this.setState({services: apiResponse.getData()});
+        });
+    }
+
+    renderService(service, model, container) {
+        return (
+            <div key={service.id}>
+                <Ui.Form.Fieldset title={service.name}/>
+                {service.methods.map(m => {
+                    return (
+                        <Ui.Grid.Row key={m.key}>
+                            <Ui.Grid.Col all={2}>
+                                <Ui.SwitchButton value={m.exposed} onChange={v => {
+                                    const permissions = _.get(model.permissions, 'services.' + service.name, {});
+                                    _.set(permissions, m.key, v);
+                                    _.set(model.permissions, 'services.' + service.name, permissions);
+                                    container.setModel(model);
+                                }}/>
+                            </Ui.Grid.Col>
+                            <Ui.Grid.Col all={10}>
+                                <strong>{m.httpMethod.toUpperCase()}</strong> {m.url}
+                            </Ui.Grid.Col>
+                        </Ui.Grid.Row>
+                    );
+                })}
+            </div>
+        );
     }
 }
 
@@ -38,14 +71,15 @@ UserGroupsForm.defaultProps = {
             <Ui.Form.Container ui="notificationForm" {...formProps}>
                 {(model, container) => {
                     const entities = [];
-                     this.state.entities.map(entity => {
-                        if(entity.class.toLowerCase().indexOf(this.state.entityFilter.toLowerCase()) === -1){
+                    const services = [];
+                    this.state.entities.map(entity => {
+                        if (entity.class.toLowerCase().indexOf(this.state.entityFilter.toLowerCase()) === -1) {
                             return;
                         }
 
                         const entityPermissions = {
                             id: entity.class,
-                            entity: entity.class,
+                            name: entity.class,
                             create: _.get(model, 'permissions.entities.' + entity.class + '.create', false),
                             read: _.get(model, 'permissions.entities.' + entity.class + '.read', false),
                             update: _.get(model, 'permissions.entities.' + entity.class + '.update', false),
@@ -63,7 +97,25 @@ UserGroupsForm.defaultProps = {
                         entities.push(entityPermissions);
                     });
 
-                    const actions = {
+                    this.state.services.map(service => {
+                        if (service.class.toLowerCase().indexOf(this.state.serviceFilter.toLowerCase()) === -1) {
+                            return;
+                        }
+
+                        const servicePermissions = {
+                            id: service.class,
+                            name: service.class,
+                            methods: service.methods.map(m => {
+                                const exposed = _.get(model, 'permissions.services.' + service.class + '.' + m.key, false);
+                                return _.assign({}, m, {exposed});
+                            })
+                        };
+
+                        services.push(servicePermissions);
+                    });
+
+
+                    const entityActions = {
                         update: (id, attrs) => {
                             const permissions = _.get(model.permissions.entities, id, {});
                             const parts = _.toPairs(attrs)[0];
@@ -101,10 +153,10 @@ UserGroupsForm.defaultProps = {
                                         <Ui.Tabs.Tabs>
                                             <Ui.Tabs.Tab label="Entities">
                                                 <Ui.Input placeholder="Filter entities" valueLink={this.bindTo('entityFilter')} delay={0}/>
-                                                <Table.Table data={entities} actions={actions}>
+                                                <Table.Table data={entities} actions={entityActions}>
                                                     <Table.Row>
                                                         <Table.RowDetailsField hide={data => !data.custom}/>
-                                                        <Table.Field name="entity" label="Entity"/>
+                                                        <Table.Field name="name" label="Entity"/>
                                                         <Table.ToggleField name="create" label="Create" align="center"/>
                                                         <Table.ToggleField name="read" label="Read" align="center"/>
                                                         <Table.ToggleField name="update" label="Update" align="center"/>
@@ -117,13 +169,13 @@ UserGroupsForm.defaultProps = {
                                                                     {data.custom.map(m => {
                                                                         return (
                                                                             <Ui.Grid.Row key={m.key}>
-                                                                                <Ui.Grid.Col all={9} xsOffset={1}>
-                                                                                    <strong>{m.httpMethod.toUpperCase()}</strong> {m.url}
-                                                                                </Ui.Grid.Col>
                                                                                 <Ui.Grid.Col all={2}>
                                                                                     <Ui.SwitchButton value={m.exposed} onChange={v => {
-                                                                                actions.update(data.id, {[m.key]: v});
-                                                                            }}/>
+                                                                                        entityActions.update(data.id, {[m.key]: v});
+                                                                                    }}/>
+                                                                                </Ui.Grid.Col>
+                                                                                <Ui.Grid.Col all={10}>
+                                                                                    <strong>{m.httpMethod.toUpperCase()}</strong> {m.url}
                                                                                 </Ui.Grid.Col>
                                                                             </Ui.Grid.Row>
                                                                         );
@@ -135,6 +187,8 @@ UserGroupsForm.defaultProps = {
                                                 </Table.Table>
                                             </Ui.Tabs.Tab>
                                             <Ui.Tabs.Tab label="Services">
+                                                <Ui.Input placeholder="Filter services" valueLink={this.bindTo('serviceFilter')} delay={0}/>
+                                                {services.map(service => this.renderService(service, model, container))}
                                             </Ui.Tabs.Tab>
                                         </Ui.Tabs.Tabs>
                                     </Ui.Grid.Col>

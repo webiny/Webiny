@@ -66,7 +66,7 @@ class ApiMethod
             $contextUrl = 'services/' . $app . '/' . $this->str($parts[4])->kebabCase()->val();
         }
 
-        $url = $this->str($this->wConfig()->get('Application.ApiPath') . '/' . $contextUrl . '/' . $this->pattern);
+        $url = $this->str($this->wConfig()->get('Application.ApiPath') . '/' . $contextUrl . '/' . $this->pattern)->trimRight('/');
         foreach ($params as $k => $v) {
             $url->replace('{' . $k . '}', $v);
         }

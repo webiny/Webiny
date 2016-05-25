@@ -7,6 +7,7 @@
 
 namespace Apps\Core\Php\Dispatchers;
 
+use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Router\Route\Route;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
@@ -84,11 +85,16 @@ trait ApiExpositionTrait
      * @param callable $callable
      *
      * @return ApiMethod
+     * @throws ApiException
      */
     public function api($httpMethod, $pattern, $callable)
     {
         if (!$this->apiMethods) {
             $this->apiMethods = new ArrayObject();
+        }
+
+        if ($this->str($pattern)->contains('.')) {
+            throw new ApiException('Use of "." character in URL pattern is not allowed!');
         }
 
         $pattern = $pattern != '/' ? trim($pattern, '/') : '/';

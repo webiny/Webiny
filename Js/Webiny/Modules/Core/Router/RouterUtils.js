@@ -30,7 +30,7 @@ class RouterUtils {
         _.each(_this.routes, route => {
             if (route.match(url) && !matchedRoute) {
                 matchedRoute = route;
-                console.log('%c[Router]: ' + url, 'color: #139C09; font-weight: bold');
+                // console.log('%c[Router]: ' + url, 'color: #139C09; font-weight: bold');
             }
         });
 

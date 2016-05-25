@@ -79,22 +79,54 @@ class App extends PackageAbstract
         $entities = [];
         /* @var $file \Webiny\Component\Storage\File\File */
         foreach ($dir as $file) {
+            $entityClass = 'Apps\\' . $this->str($file->getKey())->replace(['.php', $version], '')->replace('/', '\\')->val();
             $entityName = $this->str($file->getKey())->explode('/')->last()->replace('.php', '')->val();
-            $id = $this->str($entityName)->kebabCase()->val();
+            $id = $this->str($entityClass)->replace('\\', '.')->val();
             $entities[$entityName] = [
                 'id'    => $id,
                 'name'  => $entityName,
-                'class' => 'Apps\\' . $this->str($file->getKey())->replace(['.php', $version], '')->replace('/', '\\')->val()
+                'class' => $entityClass
             ];
 
-            if($withDetails){
-                $instance = new $entities[$entityName]['class'];
-                $meta = $instance->meta();
+            if ($withDetails) {
+                $meta = $entities[$entityName]['class']::meta();
                 $entities[$entityName]['attributes'] = $meta['attributes'];
                 $entities[$entityName]['methods'] = $meta['methods'] ?? [];
             }
         }
 
         return $entities;
+    }
+
+    public function getServices($withDetails = false)
+    {
+        $version = $this->wConfig()->get('Apps.' . $this->name);
+        if ($version && $version !== 'root') {
+            $version = '/' . str_replace('.', '_', $version);
+        } else {
+            $version = '';
+        }
+
+        $servicesDir = $this->getName() . $version . '/Php/Services';
+        $dir = new Directory($servicesDir, $this->wStorage('Apps'), false, '*.php');
+        $services = [];
+        /* @var $file \Webiny\Component\Storage\File\File */
+        foreach ($dir as $file) {
+            $serviceClass = 'Apps\\' . $this->str($file->getKey())->replace(['.php', $version], '')->replace('/', '\\')->val();
+            $serviceName = $this->str($file->getKey())->explode('/')->last()->replace('.php', '')->val();
+            $id = $this->str($serviceClass)->replace('\\', '.')->val();
+            $services[$serviceName] = [
+                'id'    => $id,
+                'name'  => $serviceName,
+                'class' => $serviceClass
+            ];
+
+            if ($withDetails) {
+                $meta = $services[$serviceName]['class']::meta();
+                $services[$serviceName]['methods'] = $meta['methods'] ?? [];
+            }
+        }
+
+        return $services;
     }
 }

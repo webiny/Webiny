@@ -126,16 +126,6 @@ class User extends EntityAbstract
 
             return $user->toArray($this->wRequest()->getFields('*,!password'));
         });
-
-        $this->api('POST', 'call', function () {
-            $data = $this->wRequest()->getRequestData();
-
-            return $data;
-        })->setBodyValidators(['credits' => 'required,gt:100']);
-
-        $this->api('POST', 'delete', function () {
-            return true;
-        })->setBodyValidators(['ids' => 'required,gte:1']);
     }
 
 
