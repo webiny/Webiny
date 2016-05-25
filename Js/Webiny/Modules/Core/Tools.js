@@ -61,7 +61,14 @@ class Tools {
             _.each(jsApps, app => {
                 _.each(app.modules, module => {
                     _.each(module.menus, menu => {
-                        menus[menu.key] = menu;
+                        const key = menu.key;
+                        if (key in menus) {
+                            _.map(menu.route, route => {
+                                menus[key].route.push(route);
+                            });
+                        } else {
+                            menus[key] = menu.clone();
+                        }
                     });
                 });
             });
