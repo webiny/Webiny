@@ -167,7 +167,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
         const config = {
             disabled: this.isDisabled(props),
             minimumResultsForSearch: props.minimumResultsForSearch,
-            placeholder: props.placeholder,
+            placeholder: _.get(props.placeholder, 'props.children', props.placeholder),
             allowClear: props.allowClear,
             templateResult: item => this.itemRenderer(item, 'optionRenderer'),
             templateSelection: item => this.itemRenderer(item, 'selectedRenderer')
