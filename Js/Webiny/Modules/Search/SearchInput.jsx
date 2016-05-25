@@ -60,7 +60,9 @@ class SearchInput extends Webiny.Ui.FormComponent {
 
     inputChanged(e) {
         this.setState({search: e.target.value});
-        this.props.onSearch(e.target.value);
+        if (e.target.value.length >= 2) {
+            this.props.onSearch(e.target.value);
+        }
     }
 
     onKeyUp(e) {
@@ -121,14 +123,16 @@ class SearchInput extends Webiny.Ui.FormComponent {
             options: [],
             selectedData: item
         }, () => {
+            this.preventBlur = true;
+            const value = this.props.useDataAsValue ? item : item[this.props.valueAttr];
             if (this.props.valueLink) {
-                this.preventBlur = true;
-                this.props.valueLink.requestChange(this.props.useDataAsValue ? item : item[this.props.valueAttr]);
+                this.props.valueLink.requestChange(value);
                 setTimeout(this.validate, 10);
-                this.preventBlur = false;
             } else {
-                this.props.onChange(item);
+                this.props.onChange(value, this.props.container);
+                this.props.container.reset();
             }
+            this.preventBlur = false;
         });
     }
 

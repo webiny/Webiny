@@ -45,21 +45,6 @@ class ApiContainer extends BaseContainer {
         }
     }
 
-    /**
-     * LOADING METHODS
-     */
-    showLoading() {
-        this.setState({loading: true});
-    }
-
-    hideLoading() {
-        this.setState({loading: false});
-    }
-
-    isLoading() {
-        return this.state.loading;
-    }
-
     loadData(props = null) {
         if (!props) {
             props = this.props;

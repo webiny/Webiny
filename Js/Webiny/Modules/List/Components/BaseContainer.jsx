@@ -53,6 +53,21 @@ class BaseContainer extends Webiny.Ui.Component {
         super.componentWillReceiveProps(props);
     }
 
+    /**
+     * LOADING METHODS
+     */
+    showLoading() {
+        this.setState({loading: true});
+    }
+
+    hideLoading() {
+        this.setState({loading: false});
+    }
+
+    isLoading() {
+        return this.state.loading;
+    }
+
     loadData() {
         throw new Error('Implement loadData method in your list container class!');
     }
