@@ -13,7 +13,7 @@ class FileUploader {
         if (!progress) {
             progress = _.noop;
         }
-        const id = Webiny.Tools.createUID();
+        const id = _.uniqueId('file-upload-');
         this.pending.push({id, file, progress, done, error});
         this.process();
         return id;

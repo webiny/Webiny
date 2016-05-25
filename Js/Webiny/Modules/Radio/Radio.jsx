@@ -10,7 +10,7 @@ class Radio extends Webiny.Ui.FormComponent {
 
     componentWillMount() {
         super.componentWillMount();
-        this.id = Webiny.Tools.createUID();
+        this.id = _.uniqueId('radio-');
     }
 
     onChange() {

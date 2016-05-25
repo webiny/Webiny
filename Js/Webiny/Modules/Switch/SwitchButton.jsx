@@ -10,7 +10,7 @@ class SwitchButton extends Webiny.Ui.Component {
 
     componentWillMount() {
         super.componentWillMount();
-        this.id = Webiny.Tools.createUID();
+        this.id = _.uniqueId('switch-');
     }
 
     switch() {

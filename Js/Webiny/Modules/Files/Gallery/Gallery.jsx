@@ -57,7 +57,7 @@ class Gallery extends ImageComponent {
         this.dom = ReactDOM.findDOMNode(this);
         if (props.valueLink.value) {
             const images = props.valueLink.value.map(img => {
-                img.key = Webiny.Tools.createUID();
+                img.key = _.uniqueId('image-');
                 return img;
             });
             this.setState({images});
@@ -140,7 +140,7 @@ class Gallery extends ImageComponent {
 
         if (files.length === 1) {
             const file = files[0];
-            file.key = Webiny.Tools.createUID();
+            file.key = _.uniqueId('image-');
             if (this.props.newCropper) {
                 return this.setState({showCrop: true, cropImage: file});
             }
@@ -149,7 +149,7 @@ class Gallery extends ImageComponent {
         }
 
         files.map(img => {
-            img.key = Webiny.Tools.createUID();
+            img.key = _.uniqueId('image-');
             this.saveImage(img);
         });
     }
