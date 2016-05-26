@@ -22,12 +22,16 @@ function replaceVariables(text, values) {
 
 const i18n = function i18n(key, text, variables, options = {}) {
     const translations = {
-        'webiny.core.statusFilter.placeholder': 'My Status'
+        en_GB: {
+            'Selecto.Backend.Billing.InvoicesList.c7699f35c47afc1dc52a7bb914be10b3': 'Are you sure you want to approve invoice {invoiceNumber}?'
+        }
     };
 
-    const output = _.get(translations, key, text);
+    const output = _.get(translations[i18n.language], key, text);
     return replaceVariables(output, variables, options);
 };
+
+i18n.language = 'en_GB';
 
 // Following methods are plain-simple for now - let's make them smarter in the near future
 i18n.price = function price(value, currency = '£') {

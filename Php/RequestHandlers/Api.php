@@ -57,6 +57,8 @@ class Api
             return new ApiErrorResponse($e->getData(), $e->getErrorMessage(), $e->getErrorCode(), $e->getResponseCode());
         } catch (AppException $e) {
             return new ApiErrorResponse($e->getData(), $e->getErrorMessage(), $e->getErrorCode(), 404);
+        } catch (\Exception $e) {
+            return new ApiErrorResponse(null, $e->getMessage(), $e->getCode(), 404);
         }
     }
 }
