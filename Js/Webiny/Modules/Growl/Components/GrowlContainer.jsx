@@ -13,7 +13,7 @@ class GrowlContainer extends Webiny.Ui.Component {
     }
 
     addGrowl(growl) {
-        this.state.growls.push(React.cloneElement(growl, {id: Webiny.Tools.createUID()}));
+        this.state.growls.push(React.cloneElement(growl, {id: _.uniqueId('growl-')}));
         this.setState({growls: this.state.growls});
     }
 

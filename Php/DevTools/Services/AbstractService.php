@@ -17,4 +17,27 @@ use Webiny\Component\StdLib\StdLibTrait;
 abstract class AbstractService
 {
     use DevToolsTrait, ApiExpositionTrait, StdLibTrait;
+
+    public static function meta()
+    {
+        $service = new static();
+
+        $data = [
+            'class' => get_class($service)
+        ];
+        
+        foreach ($service->getApiMethods() as $httpMethod => $methods) {
+            /* @var $method \Apps\Core\Php\Dispatchers\ApiMethod */
+            foreach ($methods as $pattern => $method) {
+                $data['methods'][] = [
+                    'key'        => $pattern . '.' . $httpMethod,
+                    'httpMethod' => $httpMethod,
+                    'pattern'    => $pattern,
+                    'url'        => $method->getUrl()
+                ];
+            }
+        }
+
+        return $data;
+    }
 }

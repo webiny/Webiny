@@ -24,7 +24,8 @@ class ServiceDispatcher extends AbstractApiDispatcher
         }
 
         $result = null;
-        $request = $this->parseUrl($event->getUrl()->replace('/services', ''));
+        $url = substr_replace($event->getUrl(), '', 0, 9);
+        $request = $this->parseUrl($this->str($url));
         $httpMethod = strtolower($this->wRequest()->getRequestMethod());
 
         $url = join('/', $request['params']);

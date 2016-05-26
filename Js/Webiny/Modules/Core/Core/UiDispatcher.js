@@ -64,6 +64,7 @@ class UiDispatcher {
                 callable = component[method];
             }
 
+            // TODO: see if this is necessary at all!!!!
             const signalParams = [];
             _.each(params, p => {
                 if (_.startsWith(p, '@')) {

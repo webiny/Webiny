@@ -48,6 +48,13 @@ class OptionComponent extends Component {
         }
     }
 
+    componentWillReceiveProps(props) {
+        super.componentWillReceiveProps(props);
+        if (!_.isEqual(props, this.props)) {
+            this.prepareOptions(props);
+        }
+    }
+
     componentWillUnmount() {
         super.componentWillUnmount();
         if (this.unwatch) {
@@ -89,18 +96,25 @@ class OptionComponent extends Component {
     }
 
     prepareOptions(props = null) {
-        const options = [];
+        let options = [];
         if (!props) {
             props = this.props;
         }
 
         if (props.options) {
-            _.each(props.options, (value, key) => {
-                options.push({
-                    id: key,
-                    text: value
+            if (_.isPlainObject(props.options)) {
+                _.each(props.options, (value, key) => {
+                    options.push({
+                        id: key,
+                        text: value
+                    });
                 });
-            });
+            }
+
+            if (_.isArray(props.options)) {
+                options = this.renderOptions(props, props.options);
+            }
+
 
             return this.setState({options});
         }

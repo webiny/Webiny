@@ -57,7 +57,7 @@ class Gallery extends ImageComponent {
         this.dom = ReactDOM.findDOMNode(this);
         if (props.valueLink.value) {
             const images = props.valueLink.value.map(img => {
-                img.key = Webiny.Tools.createUID();
+                img.key = _.uniqueId('image-');
                 return img;
             });
             this.setState({images});
@@ -84,16 +84,26 @@ class Gallery extends ImageComponent {
             image.order = state.images.length;
         }
 
+        if (this.props.form) {
+            this.props.form.disableSubmit('Files are being uploaded...');
+        }
+
         image.jobId = this.uploader.upload(image, (percentage) => {
             const newState = this.state;
             newState.images[this.getImageIndex(image)].progress = percentage;
             this.setState({images: state.images});
         }, (newImage) => {
+            if (this.props.form) {
+                this.props.form.enableSubmit();
+            }
             const newState = this.state;
             newImage.key = image.key;
             newState.images[this.getImageIndex(image)] = newImage;
             this.props.valueLink.requestChange(state.images);
         }, (apiResponse, failedImage, jobId) => {
+            if (this.props.form) {
+                this.props.form.enableSubmit();
+            }
             if (apiResponse.isAborted()) {
                 const images = this.state.images;
                 images.splice(_.findIndex(images, {jobId}), 1);
@@ -130,7 +140,7 @@ class Gallery extends ImageComponent {
 
         if (files.length === 1) {
             const file = files[0];
-            file.key = Webiny.Tools.createUID();
+            file.key = _.uniqueId('image-');
             if (this.props.newCropper) {
                 return this.setState({showCrop: true, cropImage: file});
             }
@@ -139,7 +149,7 @@ class Gallery extends ImageComponent {
         }
 
         files.map(img => {
-            img.key = Webiny.Tools.createUID();
+            img.key = _.uniqueId('image-');
             this.saveImage(img);
         });
     }

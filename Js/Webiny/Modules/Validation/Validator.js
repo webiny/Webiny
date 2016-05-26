@@ -68,7 +68,14 @@ class Validator {
             this.parseArgs(args, formInputs);
             args.unshift(value);
             chain = chain.then(function validationLink() {
-                let validator = _this.getValidator(validatorName)(...args);
+                let validator = null;
+                try {
+                    validator = _this.getValidator(validatorName)(...args);
+                } catch (e) {
+                    e.setValidator(validatorName);
+                    throw e;
+                }
+
                 // In case it's an instance of Http.Request, attach an error handler to catch validation error
                 // This is required because Http.Request is not a Promise itself, but only a wrapper around it
                 if (validator instanceof Webiny.Http.Request) {

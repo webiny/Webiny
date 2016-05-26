@@ -20,7 +20,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        if (props.valueLink.value !== this.props.valueLink.value) {
+        if (props.valueLink && props.valueLink.value !== this.props.valueLink.value) {
             this.previousData = _.clone(this.getCurrentData());
         }
     }

@@ -5,7 +5,7 @@ class Dispatcher {
     }
 
     dispatch(event, data) {
-        console.info('%c[Dispatch]: ' + event, 'color: #1918DE; font-weight: bold', data);
+        // console.info('%c[Dispatch]: ' + event, 'color: #1918DE; font-weight: bold', data);
         if (!this.listeners.hasOwnProperty(event)) {
             return Q(null);
         }

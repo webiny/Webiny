@@ -97,6 +97,14 @@ class SearchContainer extends Webiny.Ui.Component {
         }, 500);
     }
 
+    reset() {
+        this.setState({
+            options: [],
+            selected: null,
+            search: ''
+        });
+    }
+
     render() {
         const props = _.omit(this.props, ['key', 'ref']);
         _.assign(props, {
@@ -104,7 +112,8 @@ class SearchContainer extends Webiny.Ui.Component {
             loading: this.state.loading,
             options: this.state.options,
             onSearch: this.loadOptions,
-            selected: this.state.selected
+            selected: this.state.selected,
+            container: this
         });
         return <SearchInput {...props}/>;
     }

@@ -4,7 +4,7 @@ const Ui = Webiny.Ui.Components;
 function insertKey(data = []) {
     _.each(data || [], (v, i) => {
         if (!_.has(data[i], '$key')) {
-            data[i]['$key'] = Webiny.Tools.createUID();
+            data[i]['$key'] = _.uniqueId('dynamic-fieldset-');
         }
     });
     return data;
@@ -63,7 +63,7 @@ class Fieldset extends Webiny.Ui.FormComponent {
     }
 
     addData(index) {
-        this.state.model.splice(index + 1, 0, {$key: Webiny.Tools.createUID()});
+        this.state.model.splice(index + 1, 0, {$key: _.uniqueId('dynamic-fieldset-')});
         this.setState({model: this.state.model}, () => {
             this.props.valueLink.requestChange(this.state.model);
         });

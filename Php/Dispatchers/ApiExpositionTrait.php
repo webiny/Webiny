@@ -7,6 +7,7 @@
 
 namespace Apps\Core\Php\Dispatchers;
 
+use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Router\Route\Route;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
@@ -84,6 +85,7 @@ trait ApiExpositionTrait
      * @param callable $callable
      *
      * @return ApiMethod
+     * @throws ApiException
      */
     public function api($httpMethod, $pattern, $callable)
     {
@@ -91,9 +93,13 @@ trait ApiExpositionTrait
             $this->apiMethods = new ArrayObject();
         }
 
+        if ($this->str($pattern)->contains('.')) {
+            throw new ApiException('Use of "." character in URL pattern is not allowed!');
+        }
+
         $pattern = $pattern != '/' ? trim($pattern, '/') : '/';
         $httpMethod = strtolower($httpMethod);
-        $apiMethod = $this->apiMethods->keyNested($httpMethod . '.' . $pattern, new ApiMethod($httpMethod, $pattern), true);
+        $apiMethod = $this->apiMethods->keyNested($httpMethod . '.' . $pattern, new ApiMethod($httpMethod, $pattern, $this), true);
         $apiMethod->addCallback($callable);
 
         return $apiMethod;

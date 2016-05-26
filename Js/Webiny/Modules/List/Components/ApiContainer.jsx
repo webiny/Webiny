@@ -45,21 +45,6 @@ class ApiContainer extends BaseContainer {
         }
     }
 
-    /**
-     * LOADING METHODS
-     */
-    showLoading() {
-        this.setState({loading: true});
-    }
-
-    hideLoading() {
-        this.setState({loading: false});
-    }
-
-    isLoading() {
-        return this.state.loading;
-    }
-
     loadData(props = null) {
         if (!props) {
             props = this.props;
@@ -67,14 +52,14 @@ class ApiContainer extends BaseContainer {
         const selectedRows = this.state.selectedRows;
         selectedRows.clear();
         this.setState({selectedRows});
-        const query = _.assign({}, this.state.filters, {
+        const query = _.assign({}, props.query, this.state.filters, {
             _sort: Webiny.Router.sortersToString(this.state.sorters),
             _perPage: this.state.perPage,
             _page: this.state.page,
             _searchQuery: this.state.searchQuery,
             _searchFields: this.state.searchFields,
             _searchOperator: this.state.searchOperator
-        }, props.query);
+        });
 
         this.showLoading();
         this.request = this.api.setQuery(query).execute().then(apiResponse => {
