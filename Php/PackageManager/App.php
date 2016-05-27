@@ -65,6 +65,20 @@ class App extends PackageAbstract
         return 'Apps/' . $this->name . $version;
     }
 
+    public function getBuildPath()
+    {
+        $version = $this->wConfig()->get('Apps.' . $this->name);
+        if ($version) {
+            $version = '/' . str_replace('.', '_', $version);
+        } else {
+            $version = '';
+        }
+
+        $env = $this->wIsProduction() ? 'production' : 'development';
+
+        return '/build/' . $env . '/' . $this->name . $version;
+    }
+
     public function getEntities($withDetails = false)
     {
         $version = $this->wConfig()->get('Apps.' . $this->name);

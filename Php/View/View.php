@@ -7,10 +7,14 @@
 
 namespace Apps\Core\Php\View;
 
+use Apps\Core\Php\DevTools\DevToolsTrait;
 use Webiny\Component\Config\Config;
+use Webiny\Component\StdLib\StdLibTrait;
 
 class View
 {
+    use DevToolsTrait, StdLibTrait;
+
     /**
      * Get access to system configuration
      *
@@ -19,5 +23,13 @@ class View
     public static function wConfig()
     {
         return \Apps\Core\Php\DevTools\Config::getInstance();
+    }
+
+    public function Assets($app, $path)
+    {
+        $parts = $this->str($app)->explode('.');
+        $app = $this->wApps($parts[0]);
+
+        return $this->wConfig()->get('Application.WebPath') . $app->getBuildPath() . '/' . $parts[1] . '/' . ltrim($path, '/');
     }
 }
