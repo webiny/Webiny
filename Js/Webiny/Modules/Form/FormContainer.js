@@ -53,11 +53,13 @@ class Container extends Webiny.Ui.Component {
 
     componentWillMount() {
         super.componentWillMount();
-        this.setState({model: _.merge({}, this.props.defaultModel || {})});
+        const model = _.merge({}, this.props.defaultModel || {});
+        this.setState({model, initialModel: model});
 
         if (this.props.loadModel) {
-            return this.props.loadModel.call(this).then(model => {
-                this.setState({model, loading: false, initialModel: _.clone(model)});
+            return this.props.loadModel.call(this).then(customModel => {
+                const mergedModel = _.merge({}, this.props.defaultModel || {}, customModel);
+                this.setState({model: mergedModel, loading: false, initialModel: _.clone(mergedModel)});
             });
         }
 
@@ -289,17 +291,18 @@ class Container extends Webiny.Ui.Component {
                     return;
                 }
                 if (this.props.prepareLoadedData) {
-                    const loadedModel = this.props.prepareLoadedData(apiResponse.getData());
-                    this.setState({model: loadedModel, initialModel: _.clone(loadedModel), loading: false}, this.__processWatches);
+                    const newModel = _.merge({}, this.props.defaultModel || {}, this.props.prepareLoadedData(apiResponse.getData()));
+                    this.setState({model: newModel, initialModel: _.clone(newModel), loading: false}, this.__processWatches);
                     return;
                 }
-                const loadedModel = _.merge({}, this.props.defaultModel || {}, apiResponse.getData());
-                this.setState({model: loadedModel, initialModel: _.clone(loadedModel), loading: false}, this.__processWatches);
+                const newModel = _.merge({}, this.props.defaultModel || {}, apiResponse.getData());
+                this.setState({model: newModel, initialModel: _.clone(newModel), loading: false}, this.__processWatches);
             });
             return this.request;
         }
 
         if (model) {
+            model = _.merge({}, this.props.defaultModel || {}, model);
             // Find watches to trigger - this is mostly necessary on static forms
             const changes = [];
             _.each(this.watches, (watches, name) => {
