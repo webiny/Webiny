@@ -507,7 +507,7 @@ class Container extends Webiny.Ui.Component {
 
     validateInput(component) {
         const validators = this.inputs[component.props.name].validators;
-        const hasValidators = Webiny.Tools.keys(validators).length;
+        const hasValidators = _.keys(validators).length;
         const messages = this.inputs[component.props.name].messages;
         // Validate input
         return Q(Validator.validate(component.getValue(), validators, this.inputs)).then(validationResults => {
