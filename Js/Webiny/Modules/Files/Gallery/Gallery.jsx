@@ -320,12 +320,11 @@ Gallery.defaultProps = {
         let message = null;
         if (this.state.images.length === 0) {
             message = (
-                <div>
+                <form>
                     <div className="dz-default dz-message">
-                        <span className="main-text">DRAG FILES HERE</span>
-                        <i className="demo-icon icon-upload-icon"></i>
+                        <span className="tray-bin__main-text">DRAG FILES HERE</span>
                     </div>
-                </div>
+                </form>
             );
         }
 
@@ -341,12 +340,19 @@ Gallery.defaultProps = {
             'tray-bin--empty': !this.state.images.length
         };
 
-        /* let errors = null;
-         if (this.state.errors) {
-         errors = this.state.errors.map((err, index) => {
-         return <div key={index}><strong>{err.name}</strong> {err.message}</div>;
-         });
-         } */
+        let errors = null;
+        if (this.state.errors.length) {
+            const data = [];
+            _.each(this.state.errors, (err, key) => {
+                data.push(<li key={key}><strong>{err.name}</strong>: {err.message}</li>);
+            });
+
+            errors = (
+                <Ui.Alert title="Some files could not be uploaded" type="error">
+                    {data && <ul>{data}</ul>}
+                </Ui.Alert>
+            );
+        }
 
         const confirmationProps = {
             ref: 'confirm',
@@ -360,6 +366,7 @@ Gallery.defaultProps = {
 
         return (
             <div className={this.classSet(css)} {...props}>
+                {errors}
                 {message}
                 <div>
                     {this.state.images.map((item, index) => {
@@ -392,6 +399,10 @@ Gallery.defaultProps = {
                     {this.getCropper(
                         <Ui.Input label="Title" placeholder="Type in an image title" valueLink={this.bindTo('cropImage.title')}/>
                     )}
+                </div>
+                <div className="txt_b">
+                    <span>Dragging not convenient?</span>
+                    <a href="#" onClick={this.getFiles}>SELECT FILES HERE</a>
                 </div>
                 <Ui.Modal.Confirmation {...confirmationProps}/>
             </div>
