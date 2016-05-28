@@ -1,12 +1,12 @@
 /* line 1, ../scss/core.scss */
-.select2-container {
+.select2 {
   box-sizing: border-box;
   display: inline-block;
   margin: 0;
   position: relative;
   vertical-align: middle;
   width: 100% !important;
-  z-index: 30000;
+  z-index: 10;
 
   &:after {
     position: absolute;
@@ -21,6 +21,12 @@
     pointer-events: none;
   }
 }
+
+.select2-container {
+  top: auto !important;
+  left: auto !important;
+}
+
 .admin-dash .select2-container {
   z-index: 9070;
 }
@@ -137,6 +143,7 @@
 
 /* line 43, ../scss/_dropdown.scss */
 .select2-container--open .select2-dropdown--above {
+  bottom: 46px;
   border-bottom: none;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
@@ -228,7 +235,7 @@
 .select2-container--default .select2-selection--single .select2-selection__rendered {
   color: #444;
   line-height: 1.35;
-  padding: 13px 23px;
+  padding: 13px 50px 13px 23px;
   text-align: left;
   background-color: #fbfbfb;
 }

@@ -1,0 +1,83 @@
+.Progress {
+	padding: 5px 0;
+}
+
+.Progress__bar {
+	position: relative;
+
+	height: 4px;
+	border-radius: 2px;
+	overflow: hidden;
+
+	background-color: #b7bbc4;
+}
+
+.Progress__bar-inner {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	background-color: #41bfaf;
+}
+
+.Progress__files {
+	display: block;
+	text-align: center;
+}
+
+.Progress--inline {
+	.Progress__title {
+		display: inline-block;
+		vertical-align: middle;
+		width: 150px;
+	}
+
+	.Progress__bar {
+		display: inline-block;
+		width: calc(100% - 250px);
+		margin-left: 20px;
+		vertical-align: middle;
+	}
+
+	.Progress__percentage {
+		display: inline-block;
+		width: 50px;
+		margin-left: 20px;
+		vertical-align: middle;
+	}
+}
+
+.Progress--total {
+	.Progress__title {
+		font-weight: bold;
+		text-transform: uppercase;
+	}
+
+	.Progress__bar-inner {
+		background-color: $color-primary;
+	}
+}
+
+.Progress--free-space {
+	padding-bottom: 50px;
+	.Progress__title {
+		font-weight: bold;
+		text-transform: uppercase;
+	}
+
+	.Progress__bar {
+		display: block;
+		width: 100%;
+		margin: 10px 0;
+	}
+
+	.Progress__percentage {
+		width: auto;
+		margin: 0;
+	}
+
+	.Progress__files {
+		display: inline-block;
+		float: right;
+	}
+}

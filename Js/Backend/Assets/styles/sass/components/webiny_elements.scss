@@ -37,7 +37,7 @@
 
 .alert {
   background: #CC3300;
-  border-radius: 22px;
+  border-radius: 0;
   padding: 12px 10px 12px 50px;
   border: none;
   position: relative;
@@ -55,6 +55,14 @@
   }
   button.close {
     margin: 0 5px 0 5px;
+
+    color: #fff;
+
+    opacity: 1;
+
+    &:hover {
+      opacity: 0.6;
+    }
   }
   &.alert-danger {
     background: #CC3300;
@@ -74,6 +82,17 @@
     position: absolute;
     left: 8px;
     top: 9px;
+  }
+
+  ul, ol {
+    margin-top: 20px;
+
+    color: #fff;
+    font-size: 15px;
+  }
+
+  li {
+    padding-left: 0;
   }
 }
 

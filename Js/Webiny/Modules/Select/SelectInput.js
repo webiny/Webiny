@@ -170,7 +170,8 @@ class SelectInput extends Webiny.Ui.FormComponent {
             placeholder: _.get(props.placeholder, 'props.children', props.placeholder),
             allowClear: props.allowClear,
             templateResult: item => this.itemRenderer(item, 'optionRenderer'),
-            templateSelection: item => this.itemRenderer(item, 'selectedRenderer')
+            templateSelection: item => this.itemRenderer(item, 'selectedRenderer'),
+            dropdownParent: $(ReactDOM.findDOMNode(this)).find('.dropdown-wrapper')
         };
 
         if (!this.options || !_.isEqual(props.options, this.options) || !this.select2) {
@@ -218,6 +219,7 @@ SelectInput.defaultProps = {
             <div className={this.classSet(cssConfig)}>
                 {label}
                 <select style={{'width': '100%'}}/>
+                <div className="dropdown-wrapper"></div>
                 {validationMessage}
             </div>
         );

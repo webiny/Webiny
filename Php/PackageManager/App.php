@@ -52,7 +52,7 @@ class App extends PackageAbstract
     public function getPath($absolute = true)
     {
         $version = $this->wConfig()->get('Apps.' . $this->name);
-        if ($version) {
+        if ($version && $version !== 'root') {
             $version = '/' . str_replace('.', '_', $version);
         } else {
             $version = '';
@@ -68,7 +68,7 @@ class App extends PackageAbstract
     public function getBuildPath()
     {
         $version = $this->wConfig()->get('Apps.' . $this->name);
-        if ($version) {
+        if ($version && $version !== 'root') {
             $version = '/' . str_replace('.', '_', $version);
         } else {
             $version = '';
