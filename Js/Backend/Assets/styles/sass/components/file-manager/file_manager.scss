@@ -1,0 +1,166 @@
+.modal--file-manager {
+    .modal-dialog {
+        // position: absolute;
+        // top: 30px;
+        // left: 30px;
+        // right: 30px;
+        // bottom: 30px;
+
+        // width: auto;
+        // margin: 0;
+    }
+
+    .modal-content {
+        // display: flex;
+        // height: 100%;
+        // flex-direction: column;
+        // justify-content: space-between;
+    }
+
+    .modal-body {
+        // flex: 1 0;
+    }
+}
+
+.modal--file-manager {
+	.modal-dialog {
+        width: calc(100% - 60px);
+	}
+
+	.modal-header {
+		height: auto;
+	}
+
+	.modal-title {
+		padding-bottom: 18px;
+
+		text-transform: uppercase;
+	}
+
+	.modal-header__top {
+		position: relative;
+
+		.btn-upload {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+	}
+
+	.modal-header__bottom {
+		display: none;
+		border-top: 1px solid #e3e3e3;
+		background-color: #F6F6F6;
+	}
+
+	.modal-header--upload,
+	.modal-header--uploading {
+		.modal-header__bottom {
+			display: block;
+		}
+	}
+
+	.tabs__navigation-item {
+		> a {
+			padding-left: 40px;
+
+			&:before {
+			    content: "\e811";
+
+				position: absolute;
+			    top: 50%;
+			    left: 25px;
+			    transform: translateY(-50%) rotate(-90deg);
+
+				color: inherit;
+			    font-family: "fontello";
+			    font-style: normal;
+			    font-weight: normal;
+			    speak: none;
+			}
+		}
+
+		&.active {
+			> a {
+				color: #000;
+
+				&:before {
+			    	transform: translateY(-50%);
+				}
+
+				> .txt {
+					color: inherit;
+					font-weight: bold;
+				}
+			}
+		}
+	}
+
+	.tab-pane {
+		padding: 0;
+	}
+
+	.block {
+		margin-top: 0;
+	}
+
+	.list-header {
+		border-bottom: 1px solid #e3e3e3;
+	}
+
+	.tabs__navigation-item-options {
+		float: right;
+	    border: none;
+	    padding: 0;
+	    line-height: 0;
+
+		color: #b3b3b3;
+		font-size: 20px;
+
+	    background: transparent;
+	}
+}
+
+.fm-uploader__form {
+	display: flex;
+	width: 100%;
+	padding: 20px 40px 0;
+	justify-content: space-between;
+
+	.form-group {
+		flex-basis: 50%;
+
+		&:nth-child(2) {
+			padding: 0 20px;
+		}
+
+		&:nth-child(3) {
+			flex-basis: 200px;
+
+			.btn {
+				display: block;
+				width: 100%;
+			}
+		}
+	}
+
+	.select2-container {
+		z-index: 30000 !important;
+	}
+}
+
+.fm-uploader__progress {
+	.Progress {
+		padding: 5px 25px;
+	}
+}
+
+.fm-uploader__progress--total {
+	padding: 0 15px 20px;
+}
+
+.fm-uploader__progress--files {
+	padding: 20px 15px;
+	border-top: 1px solid #e3e3e3;
+}

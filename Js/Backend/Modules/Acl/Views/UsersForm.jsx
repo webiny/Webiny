@@ -41,7 +41,7 @@ Form.defaultProps = {
         };
 
         const changeConfirmProps = {
-            message: (newValue, oldValue) => {
+            message: newValue => {
                 if (newValue && newValue.id !== '56a905eff31cd07c458b456b') {
                     return `Do you really want to change selection to ${newValue.src}?`;
                 }

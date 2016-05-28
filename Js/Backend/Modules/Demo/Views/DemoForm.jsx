@@ -32,8 +32,8 @@ class Form extends Webiny.Ui.View {
             selectedRenderer: (item) => {
                 return item.name;
             },
-            onChange: (value, input) => {
-                console.log(value, input.getCurrentData());
+            onChange: (newValue, oldValue, input) => {
+                console.log(newValue, input.getCurrentData());
             }
         };
 

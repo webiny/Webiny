@@ -15,6 +15,7 @@ use Webiny\Component\Entity\Entity;
 use Webiny\Component\Http\Response;
 use Webiny\Component\Mongo\Mongo;
 use Webiny\Component\Security\Security;
+use Webiny\Component\StdLib\StdObject\UrlObject\UrlObjectException;
 use Webiny\Component\StdLib\StdObjectTrait;
 use Webiny\Component\StdLib\SingletonTrait;
 use Apps\Core\Php\DevTools\DevToolsTrait;
@@ -97,14 +98,18 @@ class Bootstrap
     private function getConfigSet()
     {
         $configSets = $this->wConfig()->get('ConfigSets', []);
-        $url = $this->wRequest()->getCurrentUrl(true)->getDomain();
-        $currentDomain = $this->str($url)->caseLower()->trimRight('/')->val();
+        try {
+            $url = $this->wRequest()->getCurrentUrl(true)->getDomain();
+            $currentDomain = $this->str($url)->caseLower()->trimRight('/')->val();
 
-        $configSet = false;
-        foreach ($configSets as $name => $domain) {
-            if ($currentDomain == $this->url($domain)->getDomain()) {
-                $configSet = $name;
+            $configSet = false;
+            foreach ($configSets as $name => $domain) {
+                if ($currentDomain == $this->url($domain)->getDomain()) {
+                    $configSet = $name;
+                }
             }
+        } catch (UrlObjectException $e) {
+            $configSet = 'Production';
         }
 
         return $configSet;

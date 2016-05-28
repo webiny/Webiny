@@ -25,7 +25,7 @@ class BaseCheckboxGroup extends Webiny.Ui.FormComponent {
         const isComplex = _.isArray(newValue) || _.isPlainObject(newValue);
 
         // If empty array or empty object - convert it to boolean
-        if (isComplex && Webiny.Tools.keys(newValue).length === 0) {
+        if (isComplex && _.keys(newValue).length === 0) {
             newValue = true;
         }
 
@@ -141,7 +141,7 @@ class BaseCheckboxGroup extends Webiny.Ui.FormComponent {
         let data = {};
         if (value) {
             if (_.isArray(value)) {
-                Webiny.Tools.keys(value).forEach(key => {
+                _.keys(value).forEach(key => {
                     if (_.isPlainObject(value[key])) {
                         data[value[key][this.props.valueAttr]] = true;
                     } else {

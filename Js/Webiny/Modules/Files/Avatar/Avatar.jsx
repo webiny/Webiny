@@ -41,7 +41,9 @@ class Avatar extends ImageComponent {
     renderError() {
         let error = null;
         if (this.state.error) {
-            error = <h4>{this.state.error.message}</h4>;
+            error = (
+                <Ui.Alert type="error" icon={null}>{this.state.error.message}</Ui.Alert>
+            );
         }
         return error;
     }
@@ -84,16 +86,16 @@ Avatar.defaultProps = {
             onDragLeave: this.onDragLeave,
             onDragOver: this.onDragOver,
             onClick: this.getFiles,
-            className: 'edit-avatar'
+            className: 'Avatar'
         };
 
         return (
             <div>
-                {this.renderError()}
                 <div {...props}>
-                <span className="avatar-placeholder">
-                    {imageSrc ? <img src={imageSrc} className="avatar img-responsive" height="157" width="157"/> : this.props.empty}
-                </span>
+                    {this.renderError()}
+                    <span className="avatar-placeholder">
+                        {imageSrc ? <img src={imageSrc} className="avatar img-responsive" height="157" width="157"/> : this.props.empty}
+                    </span>
                     {imageAction}
                     <span className="small-txt">JPG, PNG, GIF</span>
                     <Ui.Files.FileReader accept={this.props.accept} ref="reader" onChange={this.fileChanged}/>

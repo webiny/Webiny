@@ -1,0 +1,65 @@
+.avatars {
+  margin-bottom: 20px;
+}
+
+.Avatar {
+  display: inline-block;
+  margin-right: 40px;
+  text-align: center;
+
+  .alert {
+    padding-left: 10px;
+  }
+
+  button.upload {
+    display: inline-block;
+    padding: 14px 30px;
+    margin-right: 0;
+    margin-bottom: 10px;
+    position: relative;
+
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+
+    &:before {
+      content: "\e83c";
+      margin-right: 5px;
+
+      color: #fff;
+      font-family: 'fontello';
+      font-style: normal;
+      font-weight: normal;
+      line-height: 1em;
+    }
+  }
+
+  .small-txt {
+    display: block;
+    color: #c6c6c6;
+    font-size: 12px;
+  }
+
+  .avatar-placeholder {
+    display: block;
+    width: 132px;
+    height: 132px;
+    margin: 0 auto 15px;
+    overflow: hidden;
+
+    border: 2px dashed $borderColor;
+    border-radius: 50%;
+
+    color: #777;
+    font-size: 44px;
+    text-align: center;
+    line-height: 275%;
+
+    background-color: $formBgColor;
+  }
+
+  .avatar-placeholder--no-border {
+    border: none;
+  }
+}

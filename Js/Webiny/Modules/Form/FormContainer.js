@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
-import Validator from './../Validation/Validator';
 
 class Container extends Webiny.Ui.Component {
 
@@ -47,17 +46,20 @@ class Container extends Webiny.Ui.Component {
             'disableSubmit',
             '__renderContent',
             '__processError',
+            '__processSubmitResponse',
             '__focusTab'
         );
     }
 
     componentWillMount() {
         super.componentWillMount();
-        this.setState({model: _.merge({}, this.props.defaultModel || {})});
+        const model = _.merge({}, this.props.defaultModel || {});
+        this.setState({model, initialModel: model});
 
         if (this.props.loadModel) {
-            return this.props.loadModel.call(this).then(model => {
-                this.setState({model, loading: false, initialModel: _.clone(model)});
+            return this.props.loadModel.call(this).then(customModel => {
+                const mergedModel = _.merge({}, this.props.defaultModel || {}, customModel);
+                this.setState({model: mergedModel, loading: false, initialModel: _.clone(mergedModel)});
             });
         }
 
@@ -150,50 +152,10 @@ class Container extends Webiny.Ui.Component {
     onSubmit(model) {
         this.showLoading();
         if (model.id) {
-            return this.api.patch(this.api.url + '/' + model.id, model).then(apiResponse => {
-                this.hideLoading();
-                const onSubmitSuccess = this.props.onSubmitSuccess;
-                if (!apiResponse.isError()) {
-                    const newModel = apiResponse.getData();
-                    this.setState({model: newModel, initialModel: _.clone(newModel), error: null});
-                    if (_.isFunction(this.props.onSuccessMessage)) {
-                        Webiny.Growl.success(this.props.onSuccessMessage(model));
-                    }
-                    if (_.isFunction(onSubmitSuccess)) {
-                        return onSubmitSuccess.bind(this)(apiResponse);
-                    }
-
-                    if (_.isString(onSubmitSuccess)) {
-                        return Webiny.Router.goToRoute(onSubmitSuccess);
-                    }
-
-                    return apiResponse;
-                }
-                this.__processError(apiResponse);
-                return apiResponse;
-            });
+            return this.api.patch(this.api.url + '/' + model.id, model).then(res => this.__processSubmitResponse(model, res));
         }
 
-        return this.api.post(this.api.url, model).then(apiResponse => {
-            this.hideLoading();
-            const onSubmitSuccess = this.props.onSubmitSuccess;
-            if (!apiResponse.isError()) {
-                const newModel = apiResponse.getData();
-                this.setState({model: newModel, initialModel: _.clone(newModel), error: null});
-                if (_.isFunction(this.props.onSuccessMessage)) {
-                    Webiny.Growl.success(this.props.onSuccessMessage(model));
-                }
-                if (_.isFunction(onSubmitSuccess)) {
-                    return onSubmitSuccess.bind(this)(apiResponse);
-                }
-
-                if (_.isString(onSubmitSuccess)) {
-                    return Webiny.Router.goToRoute(onSubmitSuccess);
-                }
-            }
-            this.__processError(apiResponse);
-            return apiResponse;
-        });
+        return this.api.post(this.api.url, model).then(res => this.__processSubmitResponse(model, res));
     }
 
     onInvalid() {
@@ -289,17 +251,18 @@ class Container extends Webiny.Ui.Component {
                     return;
                 }
                 if (this.props.prepareLoadedData) {
-                    const loadedModel = this.props.prepareLoadedData(apiResponse.getData());
-                    this.setState({model: loadedModel, initialModel: _.clone(loadedModel), loading: false}, this.__processWatches);
+                    const newModel = _.merge({}, this.props.defaultModel || {}, this.props.prepareLoadedData(apiResponse.getData()));
+                    this.setState({model: newModel, initialModel: _.clone(newModel), loading: false}, this.__processWatches);
                     return;
                 }
-                const loadedModel = _.merge({}, this.props.defaultModel || {}, apiResponse.getData());
-                this.setState({model: loadedModel, initialModel: _.clone(loadedModel), loading: false}, this.__processWatches);
+                const newModel = _.merge({}, this.props.defaultModel || {}, apiResponse.getData());
+                this.setState({model: newModel, initialModel: _.clone(newModel), loading: false}, this.__processWatches);
             });
             return this.request;
         }
 
         if (model) {
+            model = _.merge({}, this.props.defaultModel || {}, model);
             // Find watches to trigger - this is mostly necessary on static forms
             const changes = [];
             _.each(this.watches, (watches, name) => {
@@ -483,8 +446,8 @@ class Container extends Webiny.Ui.Component {
     }
 
     attachValidators(props) {
-        this.inputs[props.name].validators = Validator.parseValidateProperty(props.validate);
-        this.inputs[props.name].messages = Validator.parseCustomValidationMessages(props.children);
+        this.inputs[props.name].validators = Webiny.Tools.Validator.parseValidateProperty(props.validate);
+        this.inputs[props.name].messages = Webiny.Tools.Validator.parseCustomValidationMessages(props.children);
     }
 
     attachToForm(component) {
@@ -507,10 +470,10 @@ class Container extends Webiny.Ui.Component {
 
     validateInput(component) {
         const validators = this.inputs[component.props.name].validators;
-        const hasValidators = Webiny.Tools.keys(validators).length;
+        const hasValidators = _.keys(validators).length;
         const messages = this.inputs[component.props.name].messages;
         // Validate input
-        return Q(Validator.validate(component.getValue(), validators, this.inputs)).then(validationResults => {
+        return Q(Webiny.Tools.Validator.validate(component.getValue(), validators, this.inputs)).then(validationResults => {
             if (hasValidators) {
                 const isValid = component.getValue() === null ? null : true;
                 component.setState({isValid, validationResults});
@@ -568,6 +531,31 @@ class Container extends Webiny.Ui.Component {
         });
     }
 
+    __processSubmitResponse(model, apiResponse) {
+        this.hideLoading();
+        if (apiResponse.isError()) {
+            this.__processError(apiResponse);
+            return apiResponse;
+        }
+
+        const newModel = apiResponse.getData();
+        this.setState({model: newModel, initialModel: _.clone(newModel), error: null});
+        if (_.isFunction(this.props.onSuccessMessage)) {
+            Webiny.Growl.success(this.props.onSuccessMessage(model));
+        }
+
+        const onSubmitSuccess = this.props.onSubmitSuccess;
+        if (_.isFunction(onSubmitSuccess)) {
+            return onSubmitSuccess.bind(this)(apiResponse);
+        }
+
+        if (_.isString(onSubmitSuccess)) {
+            return Webiny.Router.goToRoute(onSubmitSuccess);
+        }
+
+        return apiResponse;
+    }
+
     __focusTab(input) {
         const inputTabs = input.props.__tabs;
         if (inputTabs) {
@@ -586,6 +574,7 @@ class Container extends Webiny.Ui.Component {
 Container.defaultProps = {
     defaultModel: {},
     connectToRouter: false,
+    onSubmitSuccess: null,
     onSuccessMessage: () => {
         return 'Your record was saved successfully!';
     },
