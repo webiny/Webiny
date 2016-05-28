@@ -365,46 +365,48 @@ Gallery.defaultProps = {
         };
 
         return (
-            <div className={this.classSet(css)} {...props}>
-                {errors}
-                {message}
-                <div>
-                    {this.state.images.map((item, index) => {
-                        const imageProps = {
-                            key: item.id || index,
-                            index,
-                            image: item,
-                            onEdit: () => this.editImage(item, index),
-                            onDelete: () => {
-                                if (this.props.confirmDelete) {
-                                    this.refs.confirm.setData(item, index).show();
-                                } else {
-                                    this.deleteImage(item, index);
-                                }
-                            },
-                            onCancelUpload: () => this.cancelUpload(item),
-                            onDragStart: this.onImageDragStart,
-                            onDragEnd: this.onImageDragEnd,
-                            onDragOver: this.onImageDragOver
-                        };
+            <div className="form-group">
+                <div className={this.classSet(css)} {...props}>
+                    {errors}
+                    {message}
+                    <form>
+                        {this.state.images.map((item, index) => {
+                            const imageProps = {
+                                key: item.id || index,
+                                index,
+                                image: item,
+                                onEdit: () => this.editImage(item, index),
+                                onDelete: () => {
+                                    if (this.props.confirmDelete) {
+                                        this.refs.confirm.setData(item, index).show();
+                                    } else {
+                                        this.deleteImage(item, index);
+                                    }
+                                },
+                                onCancelUpload: () => this.cancelUpload(item),
+                                onDragStart: this.onImageDragStart,
+                                onDragEnd: this.onImageDragEnd,
+                                onDragOver: this.onImageDragOver
+                            };
 
-                        return <Image {...imageProps}/>;
-                    })}
-                    <Ui.Files.FileReader
-                        accept={this.props.accept}
-                        multiple={true}
-                        ref="reader"
-                        sizeLimit={this.props.sizeLimit}
-                        onChange={this.filesChanged}/>
-                    {this.getCropper(
-                        <Ui.Input label="Title" placeholder="Type in an image title" valueLink={this.bindTo('cropImage.title')}/>
-                    )}
+                            return <Image {...imageProps}/>;
+                        })}
+                        <Ui.Files.FileReader
+                            accept={this.props.accept}
+                            multiple={true}
+                            ref="reader"
+                            sizeLimit={this.props.sizeLimit}
+                            onChange={this.filesChanged}/>
+                        {this.getCropper(
+                            <Ui.Input label="Title" placeholder="Type in an image title" valueLink={this.bindTo('cropImage.title')}/>
+                        )}
+                    </form>
+                    <div className="txt_b">
+                        <span>Dragging not convenient?</span>&nbsp;
+                        <a href="#" onClick={this.getFiles}>SELECT FILES HERE</a>
+                    </div>
+                    <Ui.Modal.Confirmation {...confirmationProps}/>
                 </div>
-                <div className="txt_b">
-                    <span>Dragging not convenient?</span>
-                    <a href="#" onClick={this.getFiles}>SELECT FILES HERE</a>
-                </div>
-                <Ui.Modal.Confirmation {...confirmationProps}/>
             </div>
         );
     }

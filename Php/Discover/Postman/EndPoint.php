@@ -2,11 +2,12 @@
 namespace Apps\Core\Php\Discover\Postman;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\Discover\Parser\AbstractParser;
 use Apps\Core\Php\Discover\Parser\EntityParser;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
 
-class EntityEndPoint
+class EndPoint
 {
     use DevToolsTrait, StdLibTrait;
 
@@ -21,7 +22,7 @@ class EntityEndPoint
      */
     private $method;
 
-    function __construct(EntityParser $parser, $method)
+    function __construct(AbstractParser $parser, $method)
     {
         $this->parser = $parser;
         $this->method = $method;
@@ -68,15 +69,5 @@ class EntityEndPoint
         }
 
         return json_encode($body, JSON_PRETTY_PRINT);
-    }
-
-    private function getBody($attrs)
-    {
-        $body = [];
-        foreach ($attrs as $name => $attr) {
-            $body[$name] = $attr['value'];
-        }
-
-        return $body;
     }
 }

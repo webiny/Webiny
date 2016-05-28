@@ -178,7 +178,7 @@ class ApiMethod
         }
 
         if (count($errors)) {
-            $message = 'Invalid arguments provided to method `' . $this->httpMethod . '.' . $this->pattern . '`';
+            $message = 'Invalid arguments provided to method `' . $this->pattern . '.' . $this->httpMethod . '`';
             throw new ApiMethodException($message, 'WBY-ENTITY-API-METHOD-VALIDATION', 404, $errors);
         }
     }

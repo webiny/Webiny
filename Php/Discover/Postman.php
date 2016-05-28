@@ -4,7 +4,8 @@ namespace Apps\Core\Php\Discover;
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\Discover\Parser\AppParser;
 use Apps\Core\Php\Discover\Parser\EntityParser;
-use Apps\Core\Php\Discover\Postman\EntityEndPoint;
+use Apps\Core\Php\Discover\Parser\ServiceParser;
+use Apps\Core\Php\Discover\Postman\EndPoint;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
 
@@ -23,8 +24,8 @@ class Postman
         /* @var $entity EntityParser */
         foreach ($app->getEntities() as $entity) {
             $order = [];
-            foreach($entity->getApiMethods() as $method){
-                $endpoint = new EntityEndPoint($entity, $method);
+            foreach ($entity->getApiMethods() as $method) {
+                $endpoint = new EndPoint($entity, $method);
                 $request = $endpoint->getRequest();
                 $requests[] = $request;
                 $order[] = $request['id'];
@@ -33,13 +34,32 @@ class Postman
             // Each Entity is stored in its own folder
             $folders[] = [
                 'id'          => StringObject::uuid(),
-                'name'        => $entity->getName(),
+                'name'        => '(E) ' . $entity->getName(),
                 'description' => '',
                 'order'       => $order
             ];
         }
 
-        foreach($requests as $index => $r){
+        /* @var $service ServiceParser */
+        foreach ($app->getServices() as $service) {
+            $order = [];
+            foreach ($service->getApiMethods() as $method) {
+                $endpoint = new EndPoint($service, $method);
+                $request = $endpoint->getRequest();
+                $requests[] = $request;
+                $order[] = $request['id'];
+            }
+
+            // Each Service is stored in its own folder
+            $folders[] = [
+                'id'          => StringObject::uuid(),
+                'name'        => '(S) ' . $service->getName(),
+                'description' => '',
+                'order'       => $order
+            ];
+        }
+
+        foreach ($requests as $index => $r) {
             $requests[$index]['collectionId'] = $collectionId;
         }
 

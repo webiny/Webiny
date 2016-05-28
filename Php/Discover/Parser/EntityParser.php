@@ -12,30 +12,17 @@ use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\StdObjectException;
 use Webiny\Component\Storage\File\File;
 
-class EntityParser
+class EntityParser extends AbstractParser
 {
-    use DevToolsTrait, StdLibTrait, MongoTrait;
-
-    /**
-     * @var AppParser
-     */
-    private $app;
-    private $class;
-    private $name;
-    private $slug;
-    private $url;
+    protected $baseClass = 'Apps\Core\Php\DevTools\Entity\EntityAbstract';
     private $apiMethods;
     private $defaultValues;
-
     private $paramId;
     private $headerAuthorizationToken;
 
     function __construct(AppParser $app, $entity)
     {
-        $this->app = $app;
-        $this->class = $entity;
-        $this->name = $this->str($entity)->explode('\\')->last()->val();
-        $this->slug = $this->str($this->name)->kebabCase()->pluralize()->val();
+        parent::__construct($app, $entity);
         $this->url = '/entities/' . $app->getSlug() . '/' . $this->slug;
         $this->defaultValues = [
             'object'   => new \stdClass(),
@@ -63,44 +50,21 @@ class EntityParser
         ];
     }
 
-    /**
-     * @return AppParser
-     */
-    public function getApp()
+    public function getApiMethods()
     {
-        return $this->app;
-    }
+        if (!$this->apiMethods) {
+            $this->apiMethods = [
+                'crudList'   => $this->getCrudList(),
+                'crudGet'    => $this->getCrudGet(),
+                'crudCreate' => $this->getCrudCreate(),
+                'crudUpdate' => $this->getCrudUpdate(),
+                'crudDelete' => $this->getCrudDelete()
+            ];
+            $customMethods = $this->getCustomMethods();
+            $this->apiMethods = array_merge($this->apiMethods, $customMethods);
+        }
 
-    /**
-     * @return mixed
-     */
-    public function getClass()
-    {
-        return $this->class;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSlug()
-    {
-        return $this->slug;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUrl()
-    {
-        return $this->url;
+        return $this->apiMethods;
     }
 
     public function getRequiredAttributes()
@@ -172,23 +136,6 @@ class EntityParser
         }
 
         return $required;
-    }
-
-    public function getApiMethods()
-    {
-        if (!$this->apiMethods) {
-            $this->apiMethods = [
-                'crudList'   => $this->getCrudList(),
-                'crudGet'    => $this->getCrudGet(),
-                'crudCreate' => $this->getCrudCreate(),
-                'crudUpdate' => $this->getCrudUpdate(),
-                'crudDelete' => $this->getCrudDelete()
-            ];
-            $customMethods = $this->getCustomMethods();
-            $this->apiMethods = array_merge($this->apiMethods, $customMethods);
-        }
-
-        return $this->apiMethods;
     }
 
     private function getCrudList()
@@ -277,13 +224,13 @@ class EntityParser
      */
     private function getCustomMethods()
     {
-        $apiDocs = $this->parseEntityApi($this->class);
+        $apiDocs = $this->parseApi($this->class);
         $methods = [];
         foreach ($apiDocs as $name => $httpMethods) {
             foreach ($httpMethods as $httpMethod => $config) {
                 $config = $this->arr($config);
                 $definition = [
-                    'path'        => $this->url . '/' . $name, //$config['url'],
+                    'path'        => $this->url . '/' . ltrim($name, '/'),
                     'name'        => $config->key('name'),
                     'description' => $config->key('description', '', true),
                     'method'      => strtoupper($httpMethod),
@@ -319,98 +266,5 @@ class EntityParser
         }
 
         return $methods;
-    }
-
-    /**
-     * Parse entity class
-     *
-     * @param $class
-     *
-     * @return array
-     * @throws AppException
-     * @throws \Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObjectException
-     * @throws \Webiny\Component\StdLib\StdObject\StringObject\StringObjectException
-     */
-    private function parseEntityApi($class)
-    {
-        try {
-            $reflectionClass = new \ReflectionClass($class);
-            $method = $reflectionClass->getMethod('entityApi');
-        } catch (\ReflectionException $e) {
-            return [];
-        }
-
-        $startLine = $method->getStartLine() + 1;
-        $endLine = $method->getEndLine() - 1;
-
-        $storage = $this->wStorage('Root');
-        $classPath = $this->str($class)->explode('\\')->filter();
-        $classFile = $this->wApps($classPath[1])->getPath(false) . '/' . $classPath->slice(2)->implode('\\')->replace('\\', '/');
-
-        $classFile = new File($classFile . '.php', $storage);
-        if (!$classFile->exists()) {
-            return [];
-        }
-
-        $classContents = $classFile->getContents();
-        $classLines = $this->str($classContents)->explode("\n");
-
-        $entityApiLines = $classLines->slice($startLine, $endLine - $startLine, false);
-
-        $apiDocs = [];
-        $tmpDoc = $this->arr();
-        foreach ($entityApiLines as $line => $code) {
-            $code = $this->str($code)->trim();
-            if ($code->trim()->val() == 'parent::entityApi();') {
-                $parentClass = $reflectionClass->getParentClass()->getName();
-                $parentApi = $this->parseEntityApi($parentClass);
-                foreach ($parentApi as $key => $api) {
-                    if (!array_key_exists($key, $apiDocs)) {
-                        $apiDocs[$key] = $api;
-                    }
-                }
-            }
-
-            if ($code->startsWith('/*') || $code->endsWith('*/')) {
-                continue;
-            }
-
-            if ($code->startsWith('$this->api(')) {
-                $match = $code->match('\'(\w+)\',\s?\'([\w+-{}/]+)\'');
-                if (!$match) {
-                    throw new AppException('Failed to parse API method definition: `' . $code->val() . '`', 'WBY-DISCOVER-FAILED');
-                }
-                $httpMethod = strtolower($match->keyNested('1.0'));
-                $methodName = $match->keyNested('2.0');
-                if ($methodName) {
-                    $apiDocs[$methodName][$httpMethod] = $tmpDoc->val();
-                }
-                $tmpDoc = $this->arr();
-                continue;
-            }
-
-            if ($code->startsWith('* @api')) {
-                $annotationLine = $code->replace('* @api.', '')->explode(' ', 2)->val();
-                $line = $this->str($annotationLine[0]);
-                // Parse parameters and fetch the appropriate value for given parameter type
-                if ($line->startsWith('body.') || $line->startsWith('path.') || $line->startsWith('headers.')) {
-                    $paramLine = $this->str($annotationLine[1])->explode(' ', 2);
-                    $param = [
-                        'type'        => $paramLine[0],
-                        'value'       => $this->defaultValues[$paramLine[0]],
-                        'name'        => $line->replace(['body.', 'path.'], '')->val(),
-                        'description' => $paramLine[1]
-                    ];
-
-                    // TODO: add check if this parameter is 'required'
-
-                    $tmpDoc->keyNested($annotationLine[0], $param);
-                    continue;
-                }
-                $tmpDoc->keyNested($annotationLine[0], $annotationLine[1]);
-            }
-        }
-
-        return $apiDocs;
     }
 }

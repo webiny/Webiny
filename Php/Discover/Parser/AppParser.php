@@ -51,22 +51,37 @@ class AppParser
      */
     public function getEntities()
     {
-        $entitiesPath = $this->wApps($this->name)->getPath(false) . '/Php/Entities';
-        $storage = $this->wStorage('Root');
-        $files = new Directory($entitiesPath, $storage, 0, '*.php');
-
         // Read all entities
         $entities = [];
-        foreach ($files as $file) {
-            $key = $this->str($file->getKey());
-            $class = $key->replace('.php', '')->pregReplace('#/v\d+(_\d+)?#', '')->replace('/', '\\');
+        foreach ($this->wApps($this->name)->getEntities() as $entity) {
+            $class = $entity['class'];
             // Check if abstract
-            $cls = new \ReflectionClass($class->val());
+            $cls = new \ReflectionClass($class);
             if (!$cls->isAbstract() && !$cls->isTrait()) {
-                $entities[] = new EntityParser($this, $class->val());
+                $entities[] = new EntityParser($this, $class);
             }
         }
 
         return $entities;
+    }
+
+    /**
+     * @return array
+     * @throws \Webiny\Component\StdLib\StdObject\StringObject\StringObjectException
+     */
+    public function getServices()
+    {
+        // Read all services
+        $services = [];
+        foreach ($this->wApps($this->name)->getServices() as $service) {
+            $class = $service['class'];
+            // Check if abstract
+            $cls = new \ReflectionClass($class);
+            if (!$cls->isAbstract() && !$cls->isTrait()) {
+                $services[] = new ServiceParser($this, $class);
+            }
+        }
+
+        return $services;
     }
 }

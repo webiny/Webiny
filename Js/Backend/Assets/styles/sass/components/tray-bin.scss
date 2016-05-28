@@ -3,23 +3,29 @@
  ================================================= */
 
  .tray-bin {
-    position: relative;
-    min-height: 285px;
-    margin: 0 0 20px 0;
-    padding: 15px 12px;
+    text-align: center;
 
-    background-color: $formBgColor;
-    border: 2px dashed $borderColor;
-    border-radius: 3px;
+    form {
+        position: relative;
+        min-height: 285px;
+        margin: 0 0 20px 0;
+        padding: 18px 8px;
 
-    .txt_b {
-        display: none;
+        background-color: $formBgColor;
+        border: 2px dashed $borderColor;
+        border-radius: 3px;
+
+        &:after {
+            content: "";
+            display: block;
+            float: none;
+            clear: both;
+        }
     }
 
     span {
         font-family: 'Roboto Condensed', sans-serif;
         margin-bottom: 3px;
-        display: block;
     }
 
     .btn {
@@ -72,22 +78,39 @@
 
 .tray-bin__file {
     position: relative;
+    
     display: inline-block;
+    float: left;
     padding: 14px;
-    margin-bottom: 15px;
+    margin: 0 7px 15px;
     border: 1px solid #e8e8e8;
     overflow: hidden;
 
     text-align: left;
 
     background: #fff;
+
+    .Progress {
+        padding: 8px 0 9px;
+    }
+}
+
+.tray-bin__file--uploading {
+    .tray-bin__file-size {
+        display: none;
+    }
 }
 
 .tray-bin__file-name {
+    display: block;
     margin-top: 5px;
 
     color: #313131;
     font-size: 15px;
+
+    width: 133px;
+    white-space: nowrap;
+    overflow: hidden;
     text-overflow: ellipsis;
 }
 
@@ -121,6 +144,7 @@
 }
 
 .tray-bin__file-size {
+    display: block;
     color: #868695;
     font-size: 14px;
     text-transform: uppercase;
@@ -181,8 +205,9 @@
 }
 
 .tray-bin--empty {
-    padding-top: 101px;
-    text-align: center;
+    form {
+        padding-top: 101px;
+    }
 }
 
 .tray-bin--progress {

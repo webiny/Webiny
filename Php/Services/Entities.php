@@ -17,6 +17,10 @@ class Entities extends AbstractService
 
     function __construct()
     {
+        /**
+         * @api.name List all entities registered in the system
+         * @api.query.withDetails boolean Return full details (default: false)
+         */
         $this->api('get', '/', function () {
             $withDetails = $this->wRequest()->query('withDetails', false);
             $entities = [];
@@ -30,12 +34,20 @@ class Entities extends AbstractService
             return $entities;
         });
 
+        /**
+         * @api.name Get entity attributes
+         * @api.query.entity string Entity class for which to get attributes
+         */
         $this->api('get', 'attributes', function () {
             $entityClass = $this->wRequest()->query('entity');
             $instance = new $entityClass;
             return $instance->meta()['attributes'];
         });
 
+        /**
+         * @api.name Get entity methods
+         * @api.query.entity string Entity class for which to get methods
+         */
         $this->api('get', 'methods', function () {
             $entityClass = $this->wRequest()->query('entity');
             $instance = new $entityClass;

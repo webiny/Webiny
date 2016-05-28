@@ -3,10 +3,6 @@
   overflow: visible;
 }
 
-.tray-bin__file {
-  margin: 0 2px 15px;
-}
-
 .tray-bin__file.placeholder {
   width: 163px;
   height: 210px;
@@ -19,9 +15,4 @@
   padding-top: 90px;
   font-weight: bold;
   font-size: 16px;
-}
-
-.dropdown > .btn > .caret {
-  position: relative;
-  right: 0;
 }

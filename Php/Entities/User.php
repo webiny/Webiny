@@ -8,7 +8,10 @@ use Apps\Core\Php\DevTools\Entity\Attributes\FilesAttribute;
 use Apps\Core\Php\DevTools\Entity\EntityAbstract;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\RequestHandlers\ApiException;
+use Webiny\Component\Crypt\CryptTrait;
 use Webiny\Component\Entity\EntityCollection;
+use Webiny\Component\Mailer\Email;
+use Webiny\Component\Mailer\MailerTrait;
 use Webiny\Component\Mongo\Index\SingleIndex;
 
 /**
@@ -27,7 +30,7 @@ use Webiny\Component\Mongo\Index\SingleIndex;
  */
 class User extends EntityAbstract
 {
-    use DevToolsTrait, AuthorizationTrait;
+    use DevToolsTrait, AuthorizationTrait, CryptTrait, MailerTrait;
 
     protected static $entityCollection = 'Users';
     protected static $entityMask = '{email}';
@@ -54,6 +57,7 @@ class User extends EntityAbstract
                 return $this->wAuth()->createPasswordHash($password);
             }
         });
+        $this->attr('passwordRecoveryCode')->char();
         $this->attr('enabled')->boolean()->setDefaultValue(true);
         $userGroup = '\Apps\Core\Php\Entities\UserGroup';
         $this->attr('groups')->many2many('User2Group')->setEntity($userGroup)->setValidators('minLength:1')->onSet(function ($groups) {
@@ -126,8 +130,58 @@ class User extends EntityAbstract
 
             return $user->toArray($this->wRequest()->getFields('*,!password'));
         });
-    }
 
+        /**
+         * @api.name Reset password (sends a password reset code via email)
+         * @api.url /reset-password
+         * @api.body.email string User's email address
+         */
+        $this->api('POST', 'reset-password', function () {
+            $data = $this->wRequest()->getRequestData();
+            $user = self::findOne(['email' => $data['email']]);
+            if (!$user) {
+                throw new AppException('We could not find a user using this e-mail address!');
+            }
+
+            $user->passwordRecoveryCode = $this->crypt()->generateRandomString(6, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
+            $user->save();
+
+            $mailer = $this->mailer();
+            $message = $mailer->getMessage();
+
+            $html = $this->wTemplateEngine()->fetch('Core:Templates/Emails/ResetPassword.tpl', ['code' => $user->passwordRecoveryCode]);
+            $message->setBody($html);
+            $message->setSubject('Your password reset code!');
+            $message->setTo(new Email($user->email));
+
+            if ($mailer->send($message)) {
+                return true;
+            }
+
+            throw new AppException('Failed to send password recovery code!');
+        })->setBodyValidators(['email' => 'email']);
+
+        /**
+         * @api.name Set new password
+         * @api.url /set-password
+         * @api.body.code string Password reset code (received via email)
+         * @api.body.password string New password to set
+         */
+        $this->api('POST', '/set-password', function () {
+            $data = $this->wRequest()->getRequestData();
+
+            $user = self::findOne(['passwordRecoveryCode' => $data['code']]);
+            if (!$user) {
+                throw new AppException('Invalid password reset code!');
+            }
+
+            $user->passwordRecoveryCode = '';
+            $user->password = $data['password'];
+            $user->save();
+
+            return true;
+        })->setBodyValidators(['code' => 'required', 'password' => 'required']);
+    }
 
     protected static function entityIndexes()
     {
