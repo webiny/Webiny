@@ -55,6 +55,9 @@ trait ApiExpositionTrait
 
             $regex = str_replace('[\w-]', '[\w-\.]', $regex);
 
+            // Add a ^ to force regex from the beginning of URL
+            $regex = '#^' . ltrim($regex, '#');
+
             if (preg_match($regex, $url, $matches)) {
                 $params = [];
                 foreach ($compiled->getVariables() as $index => $v) {
