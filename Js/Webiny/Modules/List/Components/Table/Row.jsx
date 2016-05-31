@@ -70,6 +70,12 @@ class Row extends Webiny.Ui.Component {
         const name = _.upperFirst(_.camelCase(field.props.name));
         const tableProps = this.props.table.props;
 
+        // See if field children are a function - if yes, it is a custom field renderer
+        if (_.isFunction(field.props.children)) {
+            props.renderer = field.props.children;
+            props.renderer.bindArgs = [props.data];
+        }
+
         // See if inline Table.FieldRenderer is present
         const children = React.Children.map(field.props.children, child => {
             if (child.type === Ui.List.Table.FieldRenderer && _.isFunction(child.props.children)) {
@@ -77,6 +83,7 @@ class Row extends Webiny.Ui.Component {
                 props.renderer.bindArgs = [props.data];
                 return null;
             }
+
             return child;
         });
 

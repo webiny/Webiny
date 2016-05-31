@@ -149,6 +149,10 @@ class OptionComponent extends Component {
                     data = data.list;
                 }
 
+                if (this.props.prepareLoadedData) {
+                    data = this.props.prepareLoadedData(data);
+                }
+
                 this.setState({options: this.renderOptions(props, data)});
             });
 
