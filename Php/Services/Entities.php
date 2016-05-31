@@ -3,6 +3,7 @@
 namespace Apps\Core\Php\Services;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\Entity\EntityAbstract;
 use Apps\Core\Php\DevTools\Services\AbstractService;
 use Apps\Core\Php\PackageManager\App;
 use Webiny\Component\StdLib\StdLibTrait;
@@ -40,6 +41,7 @@ class Entities extends AbstractService
          */
         $this->api('get', 'attributes', function () {
             $entityClass = $this->wRequest()->query('entity');
+            /* @var $instance EntityAbstract */
             $instance = new $entityClass;
             return $instance->meta()['attributes'];
         });
@@ -50,6 +52,7 @@ class Entities extends AbstractService
          */
         $this->api('get', 'methods', function () {
             $entityClass = $this->wRequest()->query('entity');
+            /* @var $instance EntityAbstract */
             $instance = new $entityClass;
             return $instance->meta()['methods'];
         });
