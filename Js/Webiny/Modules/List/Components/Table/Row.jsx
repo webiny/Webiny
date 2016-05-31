@@ -66,33 +66,17 @@ class Row extends Webiny.Ui.Component {
             rowDetailsExpanded: this.props.expanded
         });
 
-        // Add field renderer
-        const name = _.upperFirst(_.camelCase(field.props.name));
-        const tableProps = this.props.table.props;
-
-        // See if field children are a function - if yes, it is a custom field renderer
-        if (_.isFunction(field.props.children)) {
-            props.renderer = field.props.children;
-            props.renderer.bindArgs = [props.data];
-        }
-
-        // See if inline Table.FieldRenderer is present
-        const children = React.Children.map(field.props.children, child => {
-            if (child.type === Ui.List.Table.FieldRenderer && _.isFunction(child.props.children)) {
-                props.renderer = child.props.children;
-                props.renderer.bindArgs = [props.data];
-                return null;
+        // Filter Field children
+        const childrenArray = _.isArray(field.props.children) ? field.props.children : [field.props.children];
+        const children = [];
+        _.filter(childrenArray).map(fieldChild => {
+            // Do not include FieldInfo in Field children
+            if (fieldChild.type !== Ui.List.Table.FieldInfo) {
+                children.push(fieldChild);
             }
-
-            return child;
         });
 
-        // If field renderer was passed through props, it overrides the inline renderer
-        if (_.has(tableProps, 'field' + name)) {
-            props.renderer = tableProps['field' + name];
-        }
-
-        return React.cloneElement(field, props, children);
+        return React.cloneElement(field, props, children.length === 1 ? children[0] : children);
     }
 
     onClick() {

@@ -24,17 +24,11 @@ List.defaultProps = {
                         <Table.Row>
                             <Table.GravatarField name="gravatar"/>
                             <Table.Field name="firstName" label="First Name" sort="firstName">
-                                <Table.FieldRenderer>
-                                    {function renderer(data) {
-                                        return (
-                                            <td className={this.getTdClasses()}>
-                                                <strong>{data.firstName} {data.lastName}</strong>
-                                                <br/>
-                                                {data.id}
-                                            </td>
-                                        );
-                                    }}
-                                </Table.FieldRenderer>
+                                {data => (
+                                    <span>
+                                        <strong>{data.firstName} {data.lastName}</strong><br/>{data.id}
+                                    </span>
+                                )}
                             </Table.Field>
                             <Table.Field name="email" sort="email" label="Email"/>
                             <Table.ToggleField

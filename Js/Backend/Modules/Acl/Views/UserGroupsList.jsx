@@ -34,17 +34,11 @@ List.defaultProps = {
                     <Table.Table>
                         <Table.Row>
                             <Table.Field name="name" label="Name" sort="name">
-                                <Table.FieldRenderer>
-                                    {function renderer(data) {
-                                        return (
-                                            <td className={this.getTdClasses()}>
-                                                <strong>{data.name}</strong>
-                                                <br/>
-                                                {data.id}
-                                            </td>
-                                        );
-                                    }}
-                                </Table.FieldRenderer>
+                                {data => (
+                                    <span>
+                                        <strong>{data.name}</strong><br/>{data.id}
+                                    </span>
+                                )}
                             </Table.Field>
                             <Table.Field name="tag" label="Tag" sort="tag"/>
                             <Table.Actions>

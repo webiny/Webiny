@@ -32,7 +32,7 @@ CaseField.defaultProps = _.merge({}, Field.defaultProps, {
             return <td className={this.getTdClasses()}>{content}</td>;
         }
 
-        return content;
+        return <case-field>{content}</case-field>;
     }
 });
 

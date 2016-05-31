@@ -20,15 +20,19 @@ class Field extends Webiny.Ui.Component {
 
 Field.defaultProps = {
     default: '-',
+    includeTd: true,
     align: 'left',
     sortedClass: 'sorted',
     alignLeftClass: 'text-left',
     alignRightClass: 'text-right',
     alignCenterClass: 'text-center',
     renderer() {
-        return (
-            <td className={this.getTdClasses()}>{_.get(this.props.data, this.props.name) || this.props.default}</td>
-        );
+        let content = _.get(this.props.data, this.props.name) || this.props.default;
+        if (_.isFunction(this.props.children)) {
+            content = this.props.children.call(this, this.props.data, this);
+        }
+
+        return this.props.includeTd ? <td className={this.getTdClasses()}>{content}</td> : content;
     }
 };
 

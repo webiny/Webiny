@@ -6,7 +6,6 @@ import Row from './Components/Table/Row';
 import RowDetails from './Components/Table/RowDetails';
 import Field from './Components/Table/Field';
 import FieldInfo from './Components/Table/FieldInfo';
-import FieldRenderer from './Components/Table/FieldRenderer';
 import Header from './Components/Table/Header';
 import Footer from './Components/Table/Footer';
 import SelectAll from './Components/Table/SelectAll';
@@ -50,7 +49,6 @@ class Module extends Webiny.Module {
                 RowDetails,
                 Field,
                 FieldInfo,
-                FieldRenderer,
                 Footer,
                 Empty,
                 SelectAll,
