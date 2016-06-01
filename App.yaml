@@ -7,6 +7,27 @@ AuthorName: Webiny LTD
 AuthorLink: http://www.webiny.com
 AuthorEmail: info@webiny.com
 
+Mailer:
+    Default:
+        CharacterSet: utf-8
+        MaxLineLength: 78
+        Priority: 2
+        Sender:
+            Email: pavel@getporthop.com
+            Name: PortHop Team
+        Transport:
+            Type: smtp
+            Host: email-smtp.eu-west-1.amazonaws.com
+            Port: 465
+            Username: AKIAJZHN6HBOYRZTQIBQ
+            Password: Aqy0ZzCBDmquoBzInOAPSADRhcLGCgune2tsnJu2p3ng
+            Encryption: ssl
+            AuthMode: login
+        AntiFlood:
+            Threshold: 99
+            Sleep: 1
+        DisableDelivery: false
+
 Storage:
     Services:
         Root:

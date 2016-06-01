@@ -1,5 +1,3 @@
-import Webiny from 'Webiny';
-
 class FileUploader {
 
     constructor(api) {

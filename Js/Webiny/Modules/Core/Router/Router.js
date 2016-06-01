@@ -20,6 +20,10 @@ class Router {
     }
 
     start(url) {
+        if (!this.baseUrl) {
+            return Q();
+        }
+
         url = url || History.getState().data.url;
         const matchedRoute = Utils.matchRoute(this, url);
 

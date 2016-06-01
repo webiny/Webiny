@@ -9,11 +9,9 @@ RowDetailsField.defaultProps = _.merge({}, Field.defaultProps, {
     hide: () => false,
     renderer() {
         let onClick = this.props.actions.hideRowDetails;
-        let label = 'Hide details';
         let className = 'expand close';
         if (!this.props.rowDetailsExpanded) {
             onClick = this.props.actions.showRowDetails;
-            label = 'Show details';
             className = 'expand';
         }
 

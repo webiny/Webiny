@@ -1,36 +1,40 @@
 import Webiny from 'Webiny';
 
+let initialized = false;
+
 // Find Webiny app element and mount the app
 function runWebiny() {
     const config = WebinyBootstrap.config;
     const appElement = document.querySelector('webiny-app');
-    if (appElement) {
-        const appName = config.app;
-        const authenticationApp = config.authentication || 'Core.Backend';
-        Webiny.Router.setBaseUrl(config.router.baseUrl);
-        Webiny.Router.setTitlePattern(config.router.title);
-        Webiny.Router.setDefaultRoute(config.router.defaultRoute);
+    const appName = config.app;
+    const authenticationApp = config.authentication || 'Core.Backend';
 
-        // Include required apps
-        let boot = Q();
-        _.each(config.require || [], depName => {
-            boot = WebinyBootstrap.includeApp(depName, true);
-        });
-
-        return boot.then(() => {
-            return WebinyBootstrap.includeApp(appName).then(app => {
-                // Filter modules
-                const modules = app.config.modules;
-                if (app.config.name !== authenticationApp) {
-                    delete modules['Authentication'];
-                }
-                app.instance.meta = app.config;
-                app.instance.addModules(modules);
-                _.set(Webiny.Apps, app.config.name, app.instance);
-                return app.instance.run(appElement);
-            });
-        });
+    // Configure Router
+    if (config.router) {
+        Webiny.Router.setBaseUrl(config.router.baseUrl || '/');
+        Webiny.Router.setTitlePattern(config.router.title || '');
+        Webiny.Router.setDefaultRoute(config.router.defaultRoute || null);
     }
+
+    // Include required apps
+    let boot = Q();
+    _.each(config.require || [], depName => {
+        boot = WebinyBootstrap.includeApp(depName, true);
+    });
+
+    return boot.then(() => {
+        return WebinyBootstrap.includeApp(appName).then(app => {
+            // Filter modules
+            const modules = app.config.modules;
+            if (app.config.name !== authenticationApp) {
+                delete modules['Authentication'];
+            }
+            app.instance.meta = app.config;
+            app.instance.addModules(modules);
+            _.set(Webiny.Apps, app.config.name, app.instance);
+            return app.instance.run(appElement);
+        });
+    });
 }
 
 function formatAjaxResponse(jqXhr) {
@@ -64,6 +68,11 @@ class WebinyBootstrapClass {
     }
 
     run(config) {
+        if (initialized) {
+            return;
+        }
+
+        initialized = true;
         this.config = config;
         this.env = window.WebinyEnvironment;
         window._apiUrl = '/api';
@@ -73,12 +82,13 @@ class WebinyBootstrapClass {
 
         console.groupCollapsed('Bootstrap');
         // First we need to import Core/Webiny
-        this.includeApp('Core.Webiny').then(app => {
+        return this.includeApp('Core.Webiny').then(app => {
             app.instance.meta = app.config;
             _.set(Webiny.Apps, app.config.name, app.instance);
-            app.instance.addModules(this.meta['Core.Webiny'].modules).run().then(() => {
-                runWebiny().then(() => {
+            return app.instance.addModules(this.meta['Core.Webiny'].modules).run().then(() => {
+                return runWebiny().then(() => {
                     console.groupEnd('Bootstrap');
+                    return Webiny;
                 });
             });
         });

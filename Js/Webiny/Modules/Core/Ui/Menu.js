@@ -1,5 +1,3 @@
-import Webiny from 'Webiny';
-
 class Menu {
 
     constructor(label, route = null, icon = '', key = '') {

@@ -7,7 +7,7 @@ class App {
         this.name = name;
         this.modules = [];
         this.onBeforeRender = _.noop;
-        this.element = null;
+        this.element = 'default';
     }
 
     addModules(modules) {
@@ -46,8 +46,8 @@ class App {
             });
 
             return Q(this.onBeforeRender()).then(() => {
-                if (mountPoint) {
-                    ReactDOM.render(_.isNull(this.element) ? React.createElement(RootElement) : this.element, mountPoint);
+                if (mountPoint && this.element !== null) {
+                    ReactDOM.render(this.element === 'default' ? React.createElement(RootElement) : this.element, mountPoint);
                 }
             });
         });

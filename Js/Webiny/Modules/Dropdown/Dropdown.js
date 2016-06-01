@@ -12,7 +12,7 @@ class Dropdown extends Webiny.Ui.Component {
         super.componentDidMount();
 
         if (!this.props.closeOnClick) {
-            $(document).on('click.' + this.id, '.' + this.id + ' .dropdown-menu', function (e) {
+            $(document).on('click.' + this.id, '.' + this.id + ' .dropdown-menu', e => {
                 e.stopPropagation();
             });
         }
