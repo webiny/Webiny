@@ -1,6 +1,7 @@
 import Webiny from 'Webiny';
-import DialogHolder from './DialogHolder';
 const Ui = Webiny.Ui.Components;
+
+let currentModal = null;
 
 class Dialog extends Webiny.Ui.Component {
 
@@ -12,6 +13,11 @@ class Dialog extends Webiny.Ui.Component {
         };
 
         this.clickStartedOnBackdrop = false;
+        if (!document.querySelector(props.modalContainerTag)) {
+            document.body.appendChild(document.createElement(props.modalContainerTag));
+        }
+
+        this.modalContainer = document.querySelector(props.modalContainerTag);
 
         this.bindMethods('show,hide,bindHandlers,unbindHandlers,prepareChildren,prepareChild');
     }
@@ -19,16 +25,20 @@ class Dialog extends Webiny.Ui.Component {
     componentDidUpdate(prevProps, prevState) {
         super.componentDidUpdate(prevProps, prevState);
         if (this.state.isShown) {
+            ReactDOM.render(this.props.renderDialog.call(this), this.modalContainer);
+            $(this.modalContainer).find('.modal').focus();
+            this.props.onShown();
             this.bindHandlers();
         } else {
+            this.props.onHidden();
             this.unbindHandlers();
+            ReactDOM.unmountComponentAtNode(this.modalContainer);
         }
     }
 
     componentWillUnmount() {
         super.componentWillUnmount();
         this.unbindHandlers();
-        Webiny.Ui.Dispatcher.get('ModalContainer').setContent(null);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -36,7 +46,7 @@ class Dialog extends Webiny.Ui.Component {
     }
 
     bindHandlers() {
-        $('webiny-modal-container').on('keyup.modal', '.modal', e => {
+        $(this.props.modalContainerTag).on('keyup.modal', '.modal', e => {
             // Listen for ESC button
             if (e.keyCode === 27) {
                 this.hide();
@@ -55,21 +65,31 @@ class Dialog extends Webiny.Ui.Component {
     }
 
     unbindHandlers() {
-        $('webiny-modal-container').off('.modal');
+        $(this.props.modalContainerTag).off('.modal');
     }
 
-    hide() {
+    hide(callback = _.noop) {
         this.props.onHide();
         this.setState({
             isShown: false
-        });
+        }, callback);
+        currentModal = null;
     }
 
     show() {
-        this.props.onShow();
-        this.setState({
-            isShown: true
-        });
+        const show = () => {
+            this.props.onShow();
+            this.setState({
+                isShown: true
+            });
+            currentModal = this;
+        };
+
+        if (currentModal) {
+            currentModal.hide(show);
+        } else {
+            show();
+        }
     }
 
     prepareChild(child) {
@@ -99,35 +119,23 @@ Dialog.defaultProps = {
     onShow: _.noop,
     onShown: _.noop,
     closeOnClick: true,
-    renderer() {
-        const ModalContainer = Webiny.Ui.Dispatcher.get('ModalContainer');
-
-        if (!ModalContainer) {
-            return null;
-        }
-
-        if (!this.state.isShown) {
-            ModalContainer.setContent(null);
-            return null;
-        }
-
+    modalContainerTag: 'webiny-modal',
+    renderDialog() {
         const className = this.classSet({modal: true, 'modal-wizard': this.props.wide});
-
-        ModalContainer.setContent(
-            <DialogHolder onShown={this.props.onShown} onHidden={this.props.onHidden}>
-                <div style={{display: 'block'}}>
-                    <div className="modal-backdrop in"></div>
-                    <div className={className} tabIndex="-1" style={{display: 'block'}}>
-                        <div className="modal-dialog">
-                            <div className="modal-content">
-                                {this.prepareChildren(this.props.children)}
-                            </div>
+        return (
+            <div style={{display: 'block'}}>
+                <div className="modal-backdrop in"></div>
+                <div className={className} tabIndex="-1" style={{display: 'block'}}>
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            {this.prepareChildren(this.props.children)}
                         </div>
                     </div>
                 </div>
-            </DialogHolder>
+            </div>
         );
-
+    },
+    renderer() {
         return null;
     }
 };

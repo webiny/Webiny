@@ -127,7 +127,7 @@ class Form extends Webiny.Ui.View {
                                                 api="/entities/core/files"
                                                 fields="name,id,createdOn,ref"
                                                 searchFields="name"
-                                                onChange={(value, input) => console.log(value, input.getCurrentData())}/>
+                                                onChange={(newValue, oldValue, input) => console.log(newValue, input.getCurrentData())}/>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>
                                     <Ui.Grid.Row>

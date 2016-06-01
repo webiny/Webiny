@@ -20,7 +20,6 @@ Main.defaultProps = {
                         <Webiny.Ui.Placeholder name="MasterContent"/>
                     </div>
                 </div>
-                <Webiny.Ui.Components.Modal.Container ui="ModalContainer"/>
                 <Components.Footer/>
             </div>
         );
