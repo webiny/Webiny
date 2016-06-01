@@ -81,7 +81,7 @@ Login.defaultProps = {
             placeholder: 'Password',
             label: 'Password *',
             validate: 'required,password',
-            description: <span className="info-txt"><a tabIndex="-1" href="#">Forgot your password?</a></span>
+            info: <span className="info-txt"><a tabIndex="-1" href="#">Forgot your password?</a></span>
         };
 
         return (
@@ -92,7 +92,7 @@ Login.defaultProps = {
                             <img src={Webiny.Assets('Core.Backend', 'images/logo_orange.png')} width="180" height="58"/>
                         </a>
 
-                        <h2 className="form-signin-heading">Sign in to your Account</h2>
+                        <h2 className="form-signin-heading"><span></span>Sign in to your Account</h2>
 
                         <div className="clear"></div>
                         <Ui.Form.Error container={container}/>

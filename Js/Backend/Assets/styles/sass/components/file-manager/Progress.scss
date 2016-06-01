@@ -1,18 +1,22 @@
-.Progress {
+.progress {
+	height: auto;
 	padding: 5px 0;
+	margin-bottom: 0;
+	background-color: transparent;
+	box-shadow: none;
 }
 
-.Progress__bar {
+.progress__bar {
 	position: relative;
 
 	height: 4px;
 	border-radius: 2px;
 	overflow: hidden;
 
-	background-color: #b7bbc4;
+	background-color: #e4e4e4;
 }
 
-.Progress__bar-inner {
+.progress__bar-inner {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -20,26 +24,26 @@
 	background-color: #41bfaf;
 }
 
-.Progress__files {
+.progress__files {
 	display: block;
 	text-align: center;
 }
 
-.Progress--inline {
-	.Progress__title {
+.progress--inline {
+	.progress__title {
 		display: inline-block;
 		vertical-align: middle;
 		width: 150px;
 	}
 
-	.Progress__bar {
+	.progress__bar {
 		display: inline-block;
 		width: calc(100% - 250px);
 		margin-left: 20px;
 		vertical-align: middle;
 	}
 
-	.Progress__percentage {
+	.progress__percentage {
 		display: inline-block;
 		width: 50px;
 		margin-left: 20px;
@@ -47,36 +51,36 @@
 	}
 }
 
-.Progress--total {
-	.Progress__title {
+.progress--total {
+	.progress__title {
 		font-weight: bold;
 		text-transform: uppercase;
 	}
 
-	.Progress__bar-inner {
+	.progress__bar-inner {
 		background-color: $color-primary;
 	}
 }
 
-.Progress--free-space {
+.progress--free-space {
 	padding-bottom: 50px;
-	.Progress__title {
+	.progress__title {
 		font-weight: bold;
 		text-transform: uppercase;
 	}
 
-	.Progress__bar {
+	.progress__bar {
 		display: block;
 		width: 100%;
 		margin: 10px 0;
 	}
 
-	.Progress__percentage {
+	.progress__percentage {
 		width: auto;
 		margin: 0;
 	}
 
-	.Progress__files {
+	.progress__files {
 		display: inline-block;
 		float: right;
 	}

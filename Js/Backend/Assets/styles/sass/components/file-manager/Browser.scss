@@ -1,4 +1,4 @@
-.Browser {
+.browser {
 	display: flex;
 	flex-wrap: wrap;
 
@@ -53,7 +53,7 @@
 	}
 }
 
-.Browser__header {
+.browser__header {
 	flex-basis: 100%;
 
 	padding: 10px;
@@ -62,7 +62,7 @@
 	background-color: #fafaf9;
 }
 
-.Browser__header-tools {
+.browser__header-tools {
 	float: right;
 
 	> div {
@@ -72,7 +72,7 @@
 	}
 }
 
-.Browser__header-actions {
+.browser__header-actions {
 	a {
 		color: #aeaeae;
 
@@ -86,7 +86,7 @@
 	}
 }
 
-.Browser__header-options {
+.browser__header-options {
 	.btn {
 		border-bottom-width: 1px;
 
@@ -97,7 +97,7 @@
 	}
 }
 
-.Browser__sorter {
+.browser__sorter {
 	display: flex;
 	justify-content: space-between;
 
@@ -105,12 +105,12 @@
 	border-bottom: 1px solid #e3e3e3;
 }
 
-.Browser__sorter-options {
+.browser__sorter-options {
 	color: #a9a9a9;
 	font-size: 20px;
 }
 
-.Browser__sorter-sortable {
+.browser__sorter-sortable {
 	position: relative;
 	padding-right: 15px;
 
@@ -134,12 +134,12 @@
 	}
 }
 
-.Browser__box {
+.browser__box {
 	padding: 0 30px;
 	overflow-y: scroll;
 }
 
-.Browser__box-item {
+.browser__box-item {
 	padding: 15px 10px 15px 0;
 
 	list-style: none;
@@ -147,7 +147,7 @@
 	font-size: 14px;
 }
 
-.Browser__box-item--folder {
+.browser__box-item--folder {
 	.icon {
 		color: #c2c2c2;
 		font-size: 20px;
@@ -155,44 +155,44 @@
 	}
 }
 
-.Browser__box-item-checkbox {
+.browser__box-item-checkbox {
 	display: inline-block;
 }
 
-.Browser__box-item-name {
+.browser__box-item-name {
 	display: inline-block;
 }
 
-.Browser__box-item-date {
+.browser__box-item-date {
 	color: #8a8a8a;
 }
 
-.Browser__box-item-size {
+.browser__box-item-size {
 	color: #8a8a8a;
 }
 
-.Browser__box-item-options {
+.browser__box-item-options {
 	font-size: 20px;
 }
 
-.Browser__content {
+.browser__content {
 	flex-grow: 3;
 	flex-basis: 50%;
 }
 
-.Browser__details {
+.browser__details {
 	flex-basis: 350px;
 
 	border-left: 1px solid #E3E3E3;
 	background-color: #f0f0f0;
 }
 
-.Browser__content--list {
-	.Browser__sorter-file {
+.browser__content--list {
+	.browser__sorter-file {
 		flex-basis: 365px;
 	}
 
-	.Browser__box-item {
+	.browser__box-item {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -204,17 +204,17 @@
 		}
 	}
 
-	.Browser__box-item-file {
+	.browser__box-item-file {
 		> div {
 			vertical-align: middle;
 		}
 	}
 
-	.Browser__box-item-image {
+	.browser__box-item-image {
 		display: none;
 	}
 
-	.Browser__box-item--folder {
+	.browser__box-item--folder {
 		justify-content: flex-start;
 
 		font-size: 16px;
@@ -222,7 +222,7 @@
 		text-transform: uppercase;	
 	}
 
-	.Browser__box-item-file {
+	.browser__box-item-file {
 		flex-basis: 350px;
 
 		.icon {
@@ -232,7 +232,7 @@
 		}
 	}
 
-	.Browser__box-item--selected {
+	.browser__box-item--selected {
 		padding-left: 7px;
 		margin-left: -11px;
 		margin-top: -1px;
@@ -243,8 +243,8 @@
 	}
 }
 
-.Browser__content--grid {
-	.Browser__box {
+.browser__content--grid {
+	.browser__box {
 		display: flex;
 		align-items: flex-start;
 		flex-wrap: wrap;
@@ -252,21 +252,21 @@
 		padding: 10px;
 	}
 
-	.Browser__box-item {
+	.browser__box-item {
 		position: relative;
 		padding: 5px 5px 10px;
 		margin: 0 10px 20px;
 	}
 
 
-	.Browser__box-item-checkbox {
+	.browser__box-item-checkbox {
 		position: absolute;
 		top: 10px;
 		left: 10px;
 		z-index: 1;
 	}
 
-	.Browser__box-item-image {
+	.browser__box-item-image {
 		position: relative;
 		display: block;
 		width: 145px;
@@ -290,8 +290,8 @@
 		}
 	}
 
-	.Browser__box-item--folder {
-		.Browser__box-item-image {
+	.browser__box-item--folder {
+		.browser__box-item-image {
 			background-color: #f6f6f6;
 
 			&:before {
@@ -303,7 +303,7 @@
 		}
 	}
 
-	.Browser__box-item-name {
+	.browser__box-item-name {
 		margin-top: 10px;
 		margin-left: 5px;
 
@@ -312,22 +312,22 @@
 		}
 	}
 
-	.Browser__box-item-date {
+	.browser__box-item-date {
 		display: none;
 	}
 
-	.Browser__box-item-size {
+	.browser__box-item-size {
 		display: none;
 	}
 
-	.Browser__box-item-options {
+	.browser__box-item-options {
 		display: none;
 	}
 
-	.Browser__box-item--selected {
+	.browser__box-item--selected {
 		box-shadow: 0 0 7px rgba(0,0,0, 0.25);
 
-		.Browser__box-item-options {
+		.browser__box-item-options {
 			display: inline-block;
 			position: absolute;
 			bottom: 5px;
@@ -337,7 +337,7 @@
 	}
 }
 
-.File-details {
+.file-details {
 	padding: 20px;
 
 	.control-label {
@@ -363,7 +363,7 @@
 	}
 }
 
-.File-details__filename {
+.file-details__filename {
 	margin-bottom: 15px;
 
 	.form-control[readonly] {
@@ -373,7 +373,7 @@
 	}
 }
 
-.File-details__preview {
+.file-details__preview {
 	position: relative;
 	display: block;
 	width: 100%;
@@ -394,7 +394,7 @@
 	}
 }
 
-.File-details__actions {
+.file-details__actions {
 	margin-bottom: 15px;
 
 	.btn-success {
@@ -403,7 +403,7 @@
 	}
 }
 
-.File-details__info {
+.file-details__info {
 	.btn-default {
 		position: absolute;
 		top: 50%;

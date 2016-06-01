@@ -1,9 +1,9 @@
 .modal {
-    z-index: 20001;
+    z-index: 2001;
 }
 
 .modal-backdrop {
-    z-index: 20000;
+    z-index: 2000;
     background-color: rgba(0, 0, 0, 1);
 }
 
@@ -69,7 +69,6 @@
 .alert-modal {
     .modal-header {
         background-color: transparent;
-        margin-bottom: 0;
     }
 
     .modal-content {

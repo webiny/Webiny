@@ -17,6 +17,8 @@ class InputContainer extends Webiny.Ui.FormComponent {
 InputContainer.defaultProps = {
     delay: 400,
     onEnter: _.noop,
+    description: null,
+    info: null,
     renderer() {
         const cssConfig = {
             'form-group': true,
@@ -58,9 +60,15 @@ InputContainer.defaultProps = {
             description = description(this);
         }
 
+        let info = this.props.info;
+        if (_.isFunction(info)) {
+            info = info(this);
+        }
+
         return (
             <div className={this.classSet(cssConfig, this.props.className)}>
                 {label}
+                <span className="info-text">{info}</span>
                 <div className="input-group">
                     <Webiny.Ui.Components.DelayedValueLink delay={this.props.delay}>
                         <Input {...props}/>

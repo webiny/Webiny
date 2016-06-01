@@ -204,44 +204,42 @@ textarea.form-control {
   }
 }
 
-form {
-  &.form-sm {
-    .form-group {
-      margin-bottom: 10px;
-      min-height: 56px;
-      input.form-control, .dropdown.sel button {
-        height: 42px;
-      }
-      label {
-      }
-      span.icon, &.error span.icon, &.success span.icon {
-        display: none;
-      }
+.form-sm {
+  .form-group {
+    margin-bottom: 10px;
+    min-height: 56px;
+    input.form-control, .dropdown.sel button {
+      height: 42px;
     }
-    textarea.form-control {
-      height: 80px;
+    label {
     }
-    .form-group {
-      .bootstrap-switch {
-        margin-top: 3px;
-      }
-      .dropdown.sel .dropdown-menu {
-        margin-top: -5px;
-      }
-      .picker-holder span.icon_c {
-        font-size: 20px;
-      }
+    span.icon, &.error span.icon, &.success span.icon {
+      display: none;
     }
   }
-  &.navbar-form {
-    margin: 0;
-    padding: 0;
-    .form-group {
-      min-height: 0;
-      margin-bottom: 5px;
-      input {
-        min-width: 200px;
-      }
+  textarea.form-control {
+    height: 80px;
+  }
+  .form-group {
+    .bootstrap-switch {
+      margin-top: 3px;
+    }
+    .dropdown.sel .dropdown-menu {
+      margin-top: -5px;
+    }
+    .picker-holder span.icon_c {
+      font-size: 20px;
+    }
+  }
+}
+.navbar-form {
+  margin: 0;
+  padding: 0;
+  .form-group {
+    min-height: 0;
+    margin-bottom: 5px;
+    input {
+      min-width: 200px;
     }
   }
 }
@@ -310,63 +308,3 @@ form {
     line-height: 1em;
   }
 }
-
-
-.avatars {
-  margin-bottom: 20px;
-}
-.edit-avatar {
-  width: 132px;
-  display: inline-block;
-  margin-right: 40px;
-  text-align: center;
-}
-.edit-avatar button.upload {
-  width: 100%;
-  padding: 14px 12px;
-  margin-bottom: 10px;
-  position: relative;
-
-  color: #fff;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1;
-
-  &:before {
-    content: "\e83c";
-    margin-right: 5px;
-
-    color: #fff;
-    font-family: 'fontello';
-    font-style: normal;
-    font-weight: normal;
-    line-height: 1em;
-  }
-}
-
-.edit-avatar .small-txt {
-  color: #c6c6c6;
-  font-size: 12px;
-}
-.avatar-placeholder {
-  display: block;
-  width: 132px;
-  height: 132px;
-  margin-bottom: 15px;
-  overflow: hidden;
-
-  border: 2px dashed $borderColor;
-  border-radius: 50%;
-
-  color: #777;
-  font-size: 44px;
-  text-align: center;
-  line-height: 275%;
-
-  background-color: $formBgColor;
-}
-
-.avatar-placeholder--no-border {
-  border: none;
-}
-

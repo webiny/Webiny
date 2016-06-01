@@ -5,33 +5,37 @@
  .tray-bin {
     text-align: center;
 
-    form {
-        position: relative;
-        min-height: 285px;
-        margin: 0 0 20px 0;
-        padding: 18px 8px;
-
-        background-color: $formBgColor;
-        border: 2px dashed $borderColor;
-        border-radius: 3px;
-
-        &:after {
-            content: "";
-            display: block;
-            float: none;
-            clear: both;
-        }
-    }
-
     span {
         font-family: 'Roboto Condensed', sans-serif;
         margin-bottom: 3px;
+    }
+
+    a:focus {
+        color: $color-primary;
     }
 
     .btn {
         border-radius: 0px;
         font-weight: bold;
         font-size: 19px;
+    }
+}
+
+.tray-bin__container {
+    position: relative;
+    min-height: 285px;
+    margin: 0 0 20px 0;
+    padding: 18px 8px;
+
+    background-color: $formBgColor;
+    border: 2px dashed $borderColor;
+    border-radius: 3px;
+
+    &:after {
+        content: "";
+        display: block;
+        float: none;
+        clear: both;
     }
 }
 
@@ -90,7 +94,7 @@
 
     background: #fff;
 
-    .Progress {
+    .progress {
         padding: 8px 0 9px;
     }
 }
@@ -205,7 +209,7 @@
 }
 
 .tray-bin--empty {
-    form {
+    .tray-bin__container {
         padding-top: 101px;
     }
 }

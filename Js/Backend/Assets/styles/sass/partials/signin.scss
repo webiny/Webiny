@@ -186,7 +186,7 @@
   margin: 50px auto;
   max-width: 640px;
 
-  form {
+  .form-signin {
     background-color: #ffffff;
     padding: 50px 40px;
     overflow: hidden;
@@ -240,9 +240,7 @@
   height: 80px;
   z-index: 0;
   opacity: 1;
-  -webkit-transform-origin: 100% 0%;
   transform-origin: 100% 0%;
-  -webkit-animation: loader3 10s ease-in-out infinite;
   animation: loader3 10s ease-in-out infinite;
   background-size: 45px 45px;
 }
@@ -293,7 +291,7 @@
 
 @media (min-width: 768px) {
   .sign-in-holder {
-    form {
+    .form-signin {
       padding: 50px 100px 40px;
     }
   }

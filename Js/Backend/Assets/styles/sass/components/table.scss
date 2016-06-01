@@ -243,11 +243,9 @@ table.table {
     margin-right: 20px;
     clear: none;
   }
-  form {
-    .form-group {
-      min-height: 0;
-      margin-bottom: 5px;
-    }
+  .form-group {
+    min-height: 0;
+    margin-bottom: 5px;
   }
 }
 

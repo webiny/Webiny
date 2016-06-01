@@ -43,6 +43,7 @@
   margin: 10px;
   text-align: left;
   display: none;
+  word-break: break-all;
   min-height: 40px;
 }
 
@@ -87,6 +88,7 @@
   padding: 10px;
   margin: 10px;
   display: none;
+  word-break: break-all;
   padding-top: 4px;
   padding-bottom: 4px;
   cursor: pointer;
