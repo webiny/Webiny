@@ -151,6 +151,9 @@ class Container extends Webiny.Ui.Component {
      */
     onSubmit(model) {
         this.showLoading();
+
+        this.__removeKeys(model);
+
         if (model.id) {
             return this.api.patch(this.api.url + '/' + model.id, model).then(res => this.__processSubmitResponse(model, res));
         }
@@ -292,11 +295,12 @@ class Container extends Webiny.Ui.Component {
 
         return this.validate().then(valid => {
             if (valid) {
+                const model = this.__removeKeys(this.state.model);
                 // If onSubmit was passed through props, execute it. Otherwise proceed with default behaviour.
                 if (this.props.onSubmit) {
-                    return this.props.onSubmit(this.state.model, this);
+                    return this.props.onSubmit(model, this);
                 }
-                return this.onSubmit(this.state.model);
+                return this.onSubmit(model);
             }
             return this.onInvalid();
         });
@@ -568,6 +572,18 @@ class Container extends Webiny.Ui.Component {
         _.each(source, (watches, name) => {
             _.map(Array.from(watches), w => w(_.get(this.state.model, name)));
         });
+    }
+
+    __removeKeys(collection, excludeKeys = ['$key']) {
+        function omitFn(value) {
+            if (value && typeof value === 'object') {
+                excludeKeys.forEach(key => {
+                    delete value[key];
+                });
+            }
+        }
+
+        return _.cloneDeepWith(collection, omitFn);
     }
 }
 
