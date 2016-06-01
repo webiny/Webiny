@@ -248,9 +248,14 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
             }
 
             if (array_key_exists($fName, $attributes) && $attributes[$fName] instanceof DateTimeAttribute && is_string($fValue)) {
+                $from = $to = $fValue;
+                if (self::str($fValue)->contains(':')) {
+                    list($from, $to) = explode(':', $fValue);
+                }
+
                 $fValue = [
-                    '$gte' => self::datetime($fValue)->setTime(0, 0, 0)->getMongoDate(),
-                    '$lte' => self::datetime($fValue)->setTime(23, 59, 59)->getMongoDate()
+                    '$gte' => self::datetime($from)->setTime(0, 0, 0)->getMongoDate(),
+                    '$lte' => self::datetime($to)->setTime(23, 59, 59)->getMongoDate()
                 ];
             }
 
