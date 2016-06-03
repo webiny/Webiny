@@ -14,6 +14,8 @@ use Webiny\Component\Entity\Attribute\DateTimeAttribute;
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Entity\Event\EntityDeleteEvent;
 use Apps\Core\Php\DevTools\Entity\Event\EntityEvent;
+use Webiny\Component\Entity\Attribute\Many2OneAttribute;
+use Webiny\Component\Entity\Attribute\One2ManyAttribute;
 
 /**
  * EntityAbstract class is the main class to extend when creating your own entities
@@ -205,18 +207,42 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
 
         $data = [
             'class' => get_class($entity),
-            'mask'  => $entity::$entityMask
+            'mask'  => $entity::$entityMask,
+            'relations' => [],
+            'attributes' => [],
+            'methods' => []
         ];
+
+        $attributeType = function(AttributeAbstract $attr){
+            if($attr instanceof Many2OneAttribute){
+                return 'many2one';
+            }
+
+            if($attr instanceof One2ManyAttribute){
+                return 'one2many';
+            }
+
+            return self::str(get_class($attr))->explode('\\')->last()->replace('Attribute', '')->caseLower()->val();
+        };
 
         /* @var $attr AttributeAbstract */
         foreach ($entity->getAttributes() as $attrName => $attr) {
-            $data['attributes'][] = [
+            $attrData = [
                 'name'         => $attrName,
                 'type'         => self::str(get_class($attr))->explode('\\')->last()->replace('Attribute', '')->caseLower()->val(),
                 //'validators'         => join(',', $attr->getValidators()), // TODO: need to detect closure validators
                 //'validationMessages' => $attr->getValidationMessages(),
                 'defaultValue' => $attr->getDefaultValue()
             ];
+
+            if ($attr instanceof Many2OneAttribute || $attr instanceof One2ManyAttribute) {
+                $data['relations'][] = [
+                    'target' => self::str($attr->getEntity())->replace('\\', '.')->trimLeft('.')->val(),
+                    'type' => $attributeType($attr)
+                ];
+            }
+
+            $data['attributes'][] = $attrData;
         }
 
 

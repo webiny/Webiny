@@ -98,14 +98,15 @@ class App extends PackageAbstract
             $id = $this->str($entityClass)->replace('\\', '.')->val();
             $entities[$entityName] = [
                 'id'    => $id,
-                'name'  => $entityName,
-                'class' => $entityClass
+                'name'  => $this->getName() . '.' . $entityName,
+                'class' => $entityClass,
             ];
 
             if ($withDetails) {
                 $meta = $entities[$entityName]['class']::meta();
                 $entities[$entityName]['attributes'] = $meta['attributes'];
-                $entities[$entityName]['methods'] = $meta['methods'] ?? [];
+                $entities[$entityName]['methods'] = $meta['methods'];
+                $entities[$entityName]['relations'] = $meta['relations'];
             }
         }
 
