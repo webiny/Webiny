@@ -71,7 +71,14 @@ class SearchInput extends Webiny.Ui.FormComponent {
         switch (this.key) {
             case 'Backspace':
                 if (_.isEmpty(this.state.search) || _.get(this.props, 'valueLink.value')) {
+                    // Reset only if it is a selected value with valid mongo ID or data object
+                    const id = this.props.valueLink.value;
+                    if (this.props.allowFreeInput && _.isString(id) && !id.match(/^[0-9a-fA-F]{24}$/)) {
+                        this.inputChanged(e);
+                        break;
+                    }
                     this.reset();
+                    break;
                 } else {
                     this.inputChanged(e);
                 }
@@ -237,6 +244,7 @@ SearchInput.defaultProps = {
     loadingIcon: 'icon-search',
     placeholder: 'Type to search',
     useDataAsValue: false,
+    allowFreeInput: false,
     renderOption(item, index) {
         const itemClasses = {
             selected: index === this.state.selected

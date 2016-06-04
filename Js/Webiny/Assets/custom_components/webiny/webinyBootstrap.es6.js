@@ -69,7 +69,7 @@ class WebinyBootstrapClass {
 
     run(config) {
         if (initialized) {
-            return;
+            return Q(false);
         }
 
         initialized = true;

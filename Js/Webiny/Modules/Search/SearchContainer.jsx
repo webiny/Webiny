@@ -33,10 +33,14 @@ class SearchContainer extends Webiny.Ui.Component {
         this.setState({options: []});
 
         let id = props.valueLink.value;
+
+        const isMongoId = id && id.match(/^[0-9a-fA-F]{24}$/);
+
         if (id && _.isPlainObject(id)) {
             id = id.id;
         }
-        if (id !== this.selectedId) {
+
+        if (id !== this.selectedId && isMongoId) {
             this.setInitialData(props);
         }
 
@@ -46,6 +50,14 @@ class SearchContainer extends Webiny.Ui.Component {
                 options: [],
                 selected: false,
                 search: ''
+            });
+        }
+
+        if (_.isString(id) && !isMongoId) {
+            this.setState({
+                options: [],
+                selected: false,
+                search: id
             });
         }
     }
@@ -94,6 +106,10 @@ class SearchContainer extends Webiny.Ui.Component {
                 const data = apiResponse.getData();
                 this.setState({options: _.get(data, 'list', data), loading: false});
             });
+
+            if (this.props.allowFreeInput) {
+                this.props.valueLink.requestChange(query);
+            }
         }, 500);
     }
 
@@ -125,7 +141,8 @@ SearchContainer.defaultProps = {
     valueAttr: 'id',
     textAttr: 'name',
     onReset: _.noop,
-    placeholder: 'Type to search'
+    placeholder: 'Type to search',
+    allowFreeInput: false
 };
 
 export default SearchContainer;
