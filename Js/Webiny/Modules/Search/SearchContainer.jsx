@@ -34,7 +34,7 @@ class SearchContainer extends Webiny.Ui.Component {
 
         let id = props.valueLink.value;
 
-        const isMongoId = id && id.match(/^[0-9a-fA-F]{24}$/);
+        const isMongoId = id && _.isString(id) && id.match(/^[0-9a-fA-F]{24}$/);
 
         if (id && _.isPlainObject(id)) {
             id = id.id;
