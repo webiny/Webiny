@@ -128,6 +128,7 @@ class Form extends Webiny.Ui.View {
                                                 fields="name,id,createdOn,ref"
                                                 searchFields="name"
                                                 allowFreeInput={true}
+                                                useDataAsValue={true}
                                                 onChange={(newValue, oldValue, input) => console.log(newValue, input.getCurrentData())}/>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>

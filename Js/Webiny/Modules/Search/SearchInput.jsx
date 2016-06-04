@@ -122,8 +122,10 @@ class SearchInput extends Webiny.Ui.FormComponent {
 
         if (this.props.allowFreeInput) {
             if (this.props.valueLink) {
-                this.props.valueLink.requestChange(this.state.search);
-                setTimeout(this.validate, 10);
+                if (!this.state.selectedData) {
+                    this.props.valueLink.requestChange(this.state.search);
+                    setTimeout(this.validate, 10);
+                }
             } else {
                 this.props.onChange(this.state.search, this.props.container);
                 this.props.container.reset();
@@ -133,13 +135,13 @@ class SearchInput extends Webiny.Ui.FormComponent {
 
     selectItem(item) {
         const search = this.props.valueLink ? this.renderPreview(item) : '';
+        this.preventBlur = true;
         this.setState({
             selected: null,
             search,
             options: [],
             selectedData: item
         }, () => {
-            this.preventBlur = true;
             const value = this.props.useDataAsValue ? item : item[this.props.valueAttr];
             if (this.props.valueLink) {
                 this.props.valueLink.requestChange(value);
