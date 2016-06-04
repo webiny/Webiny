@@ -106,11 +106,7 @@ class SearchContainer extends Webiny.Ui.Component {
                 const data = apiResponse.getData();
                 this.setState({options: _.get(data, 'list', data), loading: false});
             });
-
-            if (this.props.allowFreeInput) {
-                this.props.valueLink.requestChange(query);
-            }
-        }, 500);
+        }, this.props.allowFreeInput ? 300 : 500);
     }
 
     reset() {

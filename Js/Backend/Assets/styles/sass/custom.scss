@@ -17,11 +17,30 @@
   font-size: 16px;
 }
 
+/** SEARCH COMPONENT **/
 .search {
   padding: 0 0 0 36px;
-}
-
-.search a.btn {
-  left: 0;
-  margin-left: 0;
+  a {
+    &.btn {
+      left: 0;
+      margin-left: 0;
+    }
+  }
+  .autosuggest {
+    .plain-search {
+      padding: 0;
+      ul {
+        li {
+          padding: 14px 10px;
+          margin: 0;
+          &.selected {
+            background-color: #F8F8F8;
+            a {
+              color: #F95015;
+            }
+          }
+        }
+      }
+    }
+  }
 }

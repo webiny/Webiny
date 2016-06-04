@@ -32,7 +32,7 @@ class SearchInput extends Webiny.Ui.FormComponent {
         super.componentWillReceiveProps(props);
         const newState = {
             options: props.options,
-            selected: ''
+            selected: null
         };
 
         if (props.selected) {
@@ -100,9 +100,6 @@ class SearchInput extends Webiny.Ui.FormComponent {
             case 'ArrowLeft':
             case 'ArrowRight':
                 break;
-            case 'Tab':
-                this.onBlur();
-                break;
             default:
                 this.inputChanged(e);
                 break;
@@ -114,12 +111,24 @@ class SearchInput extends Webiny.Ui.FormComponent {
             return;
         }
 
-        const state = {options: []};
-        if (!_.get(this.props, 'valueLink.value')) {
-            state['search'] = '';
-            state['selected'] = null;
+        if (!this.props.allowFreeInput) {
+            const state = {options: []};
+            if (!_.get(this.props, 'valueLink.value')) {
+                state['search'] = '';
+                state['selected'] = null;
+            }
+            this.setState(state, this.validate);
         }
-        this.setState(state, this.validate);
+
+        if (this.props.allowFreeInput) {
+            if (this.props.valueLink) {
+                this.props.valueLink.requestChange(this.state.search);
+                setTimeout(this.validate, 10);
+            } else {
+                this.props.onChange(this.state.search, this.props.container);
+                this.props.container.reset();
+            }
+        }
     }
 
     selectItem(item) {
