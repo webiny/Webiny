@@ -1,12 +1,10 @@
 import Webiny from 'Webiny';
-import SearchContainer from './SearchContainer';
-import SearchInput from './SearchInput';
+import Search from './Search';
 
 class Module extends Webiny.Module {
 
     init() {
-        Webiny.Ui.Components.Search = SearchContainer;
-        Webiny.Ui.Components.SearchInput = SearchInput;
+        Webiny.Ui.Components.Search = Search;
     }
 }
 

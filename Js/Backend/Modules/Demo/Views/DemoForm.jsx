@@ -9,7 +9,7 @@ class Form extends Webiny.Ui.View {
         const formProps = {
             ui: 'myForm',
             api: '/entities/core/users',
-            fields: 'id,firstName,lastName,email,userGroups,settings,enabled,userQuery',
+            fields: 'id,firstName,lastName,email,settings,enabled,avatar.id@avatar',
             connectToRouter: true
         };
 
@@ -121,14 +121,14 @@ class Form extends Webiny.Ui.View {
                                         <Ui.Grid.Col all={6}>
                                             <Ui.Search
                                                 validate="required"
-                                                name="userQuery"
+                                                name="avatar"
                                                 textAttr="name"
                                                 label="Find file"
                                                 api="/entities/core/files"
                                                 fields="name,id,createdOn,ref"
                                                 searchFields="name"
-                                                allowFreeInput={true}
-                                                useDataAsValue={true}
+                                                allowFreeInput={false}
+                                                useDataAsValue={false}
                                                 onChange={(newValue, oldValue, input) => console.log(newValue, input.getCurrentData())}/>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>

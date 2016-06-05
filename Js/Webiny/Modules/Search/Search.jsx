@@ -1,22 +1,27 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-class SearchInput extends Webiny.Ui.FormComponent {
+class Search extends Webiny.Ui.FormComponent {
 
     constructor(props) {
         super(props);
 
         _.assign(this.state, {
-            search: '',
-            selected: null,
-            selectedData: null,
-            options: []
+            query: '', // Value being searched
+            preview: '', // Rendered value of selected value (value from valueLink)
+            options: [],
+            loading: false,
+            selectedOption: -1, // Selected option index
+            selectedData: null // Delected item data
         });
 
         this.warned = false;
         this.preventBlur = false;
+        this.delay = null;
+        this.currentValueIsId = false;
 
         this.bindMethods(
+            'loadOptions',
             'inputChanged',
             'selectItem',
             'selectCurrent',
@@ -26,42 +31,105 @@ class SearchInput extends Webiny.Ui.FormComponent {
             'fetchValue',
             'getCurrentData'
         );
+
+        Webiny.Mixins.ApiComponent.extend(this);
     }
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
+        if (!props.valueLink) {
+            return;
+        }
+
+        this.normalizeValue(props);
+    }
+
+    componentWillMount() {
+        super.componentWillMount();
+        this.normalizeValue(this.props);
+    }
+
+    /** Custom methods */
+
+    /**
+     * We support 3 types of values:
+     * - id
+     * - object
+     * - random string
+     *
+     * @param props
+     */
+    normalizeValue(props) {
+        if (!props.valueLink) {
+            return;
+        }
+
+        const value = props.valueLink.value;
+
         const newState = {
-            options: props.options,
-            selected: null
+            options: [],
+            selectedOption: -1,
+            query: ''
         };
 
-        if (props.selected) {
-            newState['selected'] = this.renderPreview(props.selected);
-            newState['search'] = '';
+        // Try to extract ID
+        let id = null;
+        if (value && _.isString(value) && value.match(/^[0-9a-fA-F]{24}$/)) {
+            id = value;
+        } else if (value && _.isPlainObject(value)) {
+            id = value.id;
+            newState['selectedData'] = value;
         }
+
+        if (!id && value) {
+            newState['preview'] = value;
+        } else if (id && _.isPlainObject(value)) {
+            newState['preview'] = this.renderPreview(value);
+        } else if (id) {
+            this.api.get(value).then(apiResponse => {
+                const data = apiResponse.getData();
+                this.setState({selectedData: data, preview: this.renderPreview(data)});
+            });
+        }
+
+        this.currentValueIsId = !!id;
 
         this.setState(newState);
     }
 
-    getCurrentData() {
-        if (this.props.useDataAsValue) {
-            return this.props.valueLink.value;
-        }
 
+    getCurrentData() {
         return this.state.selectedData;
     }
 
-    renderPreview(item) {
-        if (!item) {
-            return null;
-        }
-        return this.props.selectedRenderer.call(this, item);
+    loadOptions(query) {
+        this.setState({query});
+        clearTimeout(this.delay);
+
+        this.delay = setTimeout(() => {
+            if (_.isEmpty(this.state.query)) {
+                return;
+            }
+
+            this.setState({loading: true});
+            this.api.setQuery({_searchQuery: this.state.query}).execute().then(apiResponse => {
+                const data = apiResponse.getData();
+                this.setState({options: _.get(data, 'list', data), loading: false});
+            });
+        }, this.props.allowFreeInput ? 300 : 500);
     }
 
     inputChanged(e) {
-        this.setState({search: e.target.value});
+        if (this.props.valueLink && this.props.valueLink.value && this.currentValueIsId && this.props.allowFreeInput) {
+            this.props.valueLink.requestChange(e.target.value);
+        }
+        this.setState({
+            query: e.target.value,
+            preview: '',
+            selectedData: null
+        });
         if (e.target.value.length >= 2) {
-            this.props.onSearch(e.target.value);
+            this.loadOptions(e.target.value);
         }
     }
 
@@ -70,7 +138,7 @@ class SearchInput extends Webiny.Ui.FormComponent {
 
         switch (this.key) {
             case 'Backspace':
-                if (_.isEmpty(this.state.search) || _.get(this.props, 'valueLink.value')) {
+                if (_.isEmpty(this.state.query) || _.get(this.props, 'valueLink.value')) {
                     // Reset only if it is a selected value with valid mongo ID or data object
                     const id = this.props.valueLink.value;
                     if (this.props.allowFreeInput && _.isString(id) && !id.match(/^[0-9a-fA-F]{24}$/)) {
@@ -114,8 +182,8 @@ class SearchInput extends Webiny.Ui.FormComponent {
         if (!this.props.allowFreeInput) {
             const state = {options: []};
             if (!_.get(this.props, 'valueLink.value')) {
-                state['search'] = '';
-                state['selected'] = null;
+                state['query'] = '';
+                state['selectedOption'] = -1;
             }
             this.setState(state, this.validate);
         }
@@ -123,23 +191,23 @@ class SearchInput extends Webiny.Ui.FormComponent {
         if (this.props.allowFreeInput) {
             if (this.props.valueLink) {
                 if (!this.state.selectedData) {
-                    this.props.valueLink.requestChange(this.state.search);
+                    this.props.valueLink.requestChange(this.state.query);
                     setTimeout(this.validate, 10);
                 }
             } else {
-                this.props.onChange(this.state.search, this.props.container);
+                this.props.onChange(this.state.query, this.props.container);
                 this.props.container.reset();
             }
         }
     }
 
     selectItem(item) {
-        const search = this.props.valueLink ? this.renderPreview(item) : '';
         this.preventBlur = true;
         this.setState({
-            selected: null,
-            search,
+            selectedOption: -1,
+            query: '',
             options: [],
+            preview: this.renderPreview(item),
             selectedData: item
         }, () => {
             const value = this.props.useDataAsValue ? item : item[this.props.valueAttr];
@@ -147,8 +215,8 @@ class SearchInput extends Webiny.Ui.FormComponent {
                 this.props.valueLink.requestChange(value);
                 setTimeout(this.validate, 10);
             } else {
-                this.props.onChange(value, this.props.container);
-                this.props.container.reset();
+                this.props.onChange(value, this);
+                this.reset();
             }
             this.preventBlur = false;
         });
@@ -159,7 +227,7 @@ class SearchInput extends Webiny.Ui.FormComponent {
             return;
         }
 
-        let selected = this.state.selected;
+        let selected = this.state.selectedOption;
         if (selected === null) {
             selected = -1;
         }
@@ -170,8 +238,8 @@ class SearchInput extends Webiny.Ui.FormComponent {
         }
 
         this.setState({
-            selected,
-            search: this.renderPreview(this.state.options[selected])
+            selectedOption: selected,
+            preview: this.renderPreview(this.state.options[selected])
         });
     }
 
@@ -181,8 +249,8 @@ class SearchInput extends Webiny.Ui.FormComponent {
         }
 
         let selected = this.state.options.length - 1;
-        if (this.state.selected <= selected) {
-            selected = this.state.selected - 1;
+        if (this.state.selectedOption <= selected) {
+            selected = this.state.selectedOption - 1;
         }
 
         if (selected < 0) {
@@ -190,8 +258,8 @@ class SearchInput extends Webiny.Ui.FormComponent {
         }
 
         this.setState({
-            selected,
-            search: this.renderPreview(this.state.options[selected])
+            selectedOption: selected,
+            preview: this.renderPreview(this.state.options[selected])
         });
     }
 
@@ -200,18 +268,19 @@ class SearchInput extends Webiny.Ui.FormComponent {
             return;
         }
 
-        if (this.state.selected === null) {
+        if (this.state.selectedOption === -1) {
             return;
         }
 
-        const current = this.state.options[this.state.selected];
+        const current = this.state.options[this.state.selectedOption];
         this.selectItem(current);
     }
 
     reset() {
         this.setState({
-            selected: null,
-            search: '',
+            selectedOption: -1,
+            query: '',
+            preview: '',
             options: [],
             selectedData: null
         }, () => {
@@ -235,17 +304,17 @@ class SearchInput extends Webiny.Ui.FormComponent {
         }
         return value;
     }
+
+    renderPreview(item) {
+        if (!item) {
+            return null;
+        }
+        return this.props.selectedRenderer.call(this, item);
+    }
 }
 
-SearchInput.defaultProps = {
-    optionRenderer: function optionRenderer(item) {
-        const value = this.fetchValue(item);
-        const content = {__html: value.replace(/\s+/g, '&nbsp;')};
-        return <div dangerouslySetInnerHTML={content}></div>;
-    },
-    selectedRenderer: function selectedRenderer(item) {
-        return this.fetchValue(item);
-    },
+Search.defaultProps = {
+    searchOperator: 'or',
     valueAttr: 'id',
     textAttr: 'name',
     onChange: _.noop,
@@ -256,14 +325,22 @@ SearchInput.defaultProps = {
     placeholder: 'Type to search',
     useDataAsValue: false,
     allowFreeInput: false,
+    optionRenderer: function optionRenderer(item) {
+        const value = this.fetchValue(item);
+        const content = {__html: value.replace(/\s+/g, '&nbsp;')};
+        return <div dangerouslySetInnerHTML={content}></div>;
+    },
+    selectedRenderer: function selectedRenderer(item) {
+        return this.fetchValue(item);
+    },
     renderOption(item, index) {
         const itemClasses = {
-            selected: index === this.state.selected
+            selected: index === this.state.selectedOption
         };
 
         const linkProps = {
             onMouseDown: () => this.selectItem(item),
-            onMouseOver: () => this.setState({selected: index, search: this.renderPreview(item)})
+            onMouseOver: () => this.setState({selectedOption: index, preview: this.renderPreview(item)})
         };
 
         return (
@@ -284,7 +361,7 @@ SearchInput.defaultProps = {
             dir: 'auto',
             onKeyDown: this.onKeyUp,
             onBlur: this.onBlur,
-            value: this.state.search || this.state.selected || '',
+            value: this.state.query || this.state.preview || '',
             onChange: this.inputChanged,
             disabled: this.isDisabled()
         };
@@ -345,4 +422,4 @@ SearchInput.defaultProps = {
     }
 };
 
-export default SearchInput;
+export default Search;
