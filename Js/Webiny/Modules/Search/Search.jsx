@@ -19,6 +19,7 @@ class Search extends Webiny.Ui.FormComponent {
         this.preventBlur = false;
         this.delay = null;
         this.currentValueIsId = false;
+        this.filters = {};
 
         this.bindMethods(
             'loadOptions',
@@ -33,6 +34,29 @@ class Search extends Webiny.Ui.FormComponent {
         );
 
         Webiny.Mixins.ApiComponent.extend(this);
+
+        if (this.props.filterBy) {
+            // Assume the most basic form of filtering (single string)
+            let name = this.props.filterBy;
+            let filter = this.props.filterBy;
+
+            // Check if filterBy is defined as array (0 => name of the input to watch, 1 => filter by field)
+            if (_.isArray(this.props.filterBy)) {
+                name = this.props.filterBy[0];
+                filter = this.props.filterBy[1];
+            }
+
+            // Check if filterBy is defined as object
+            if (_.isPlainObject(this.props.filterBy)) {
+                name = this.props.filterBy.name;
+                filter = this.props.filterBy.filter;
+            }
+
+            this.filterName = name;
+            this.filterField = filter;
+
+            this.unwatch = this.props.form.watch(name, newValue => this.applyFilter(newValue, name, filter));
+        }
     }
 
     componentWillReceiveProps(props) {
@@ -47,6 +71,11 @@ class Search extends Webiny.Ui.FormComponent {
     componentWillMount() {
         super.componentWillMount();
         this.normalizeValue(this.props);
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        this.unwatch();
     }
 
     /** Custom methods */
@@ -102,6 +131,22 @@ class Search extends Webiny.Ui.FormComponent {
         return this.state.selectedData;
     }
 
+    applyFilter(newValue, name, filter) {
+        // If filter is a function, it needs to return a config for api created using new value
+        if (_.isFunction(filter)) {
+            const config = filter(newValue, this.api);
+            if (_.isPlainObject(config)) {
+                this.filters = filters;
+            }
+        } else {
+            // If filter is a string, create a filter object using that string as field name
+            const filters = {};
+            filters[filter] = _.isObject(newValue) ? newValue.id : newValue;
+            this.filters = filters;
+        }
+        this.filters = _.pickBy(this.filters, (v, k) => !_.isNull(v) && !_.isUndefined(v) && v !== '');
+    }
+
     loadOptions(query) {
         this.setState({query});
         clearTimeout(this.delay);
@@ -112,7 +157,7 @@ class Search extends Webiny.Ui.FormComponent {
             }
 
             this.setState({loading: true});
-            this.api.setQuery({_searchQuery: this.state.query}).execute().then(apiResponse => {
+            this.api.setQuery(_.merge({_searchQuery: this.state.query}, this.filters)).execute().then(apiResponse => {
                 const data = apiResponse.getData();
                 this.setState({options: _.get(data, 'list', data), loading: false});
             });
