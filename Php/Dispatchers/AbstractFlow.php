@@ -19,4 +19,9 @@ abstract class AbstractFlow
     abstract public function canHandle($httpMethod, $params);
 
     abstract public function handle(EntityAbstract $entity, $params);
+
+    public function getPriority()
+    {
+        return 100;
+    }
 }

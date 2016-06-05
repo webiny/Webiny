@@ -37,6 +37,13 @@ class EntityDispatcher extends AbstractApiDispatcher
         }
 
         $flows = $this->wService()->getServicesByTag('entity-dispatcher-flow');
+
+        usort($flows, function ($flow1, $flow2) {
+            /* @var AbstractFlow $flow1 */
+            /* @var AbstractFlow $flow2 */
+            return $flow1->getPriority() <=> $flow2->getPriority();
+        });
+
         /* @var $flow AbstractFlow */
         foreach ($flows as $flow) {
             if ($this->isInstanceOf($flow, $this->flowClass) && $flow->canHandle($httpMethod, $params)) {
