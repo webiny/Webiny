@@ -42,6 +42,7 @@ class Container extends Webiny.Ui.Component {
             'onCancel',
             'onInvalid',
             'onReset',
+            'isSubmitDisabled',
             'enableSubmit',
             'disableSubmit',
             '__renderContent',
@@ -78,6 +79,10 @@ class Container extends Webiny.Ui.Component {
         if (props.id !== this.props.id || !_.isEqual(props.model, this.props.model)) {
             this.loadModel(props.id, props.model);
         }
+    }
+
+    isSubmitDisabled() {
+        return this.submitDisabled;
     }
 
     enableSubmit() {

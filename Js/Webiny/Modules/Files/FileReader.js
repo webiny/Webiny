@@ -24,7 +24,7 @@ class FileReader extends Webiny.Ui.Component {
         _.each(files, file => {
             const reader = new window.FileReader();
 
-            reader.onload = ((f) => {
+            reader.onloadend = ((f) => {
                 return (e) => {
                     loadedFiles++;
                     const data = {
@@ -56,7 +56,11 @@ class FileReader extends Webiny.Ui.Component {
                 };
             })(file);
 
-            reader.readAsDataURL(file);
+            if (this.props.readAs === 'binary') {
+                reader.readAsBinaryString(file);
+            } else {
+                reader.readAsDataURL(file);
+            }
         });
     }
 }
@@ -65,6 +69,7 @@ FileReader.defaultProps = {
     accept: '',
     multiple: false,
     sizeLimit: 2097152, // 10485760
+    readAs: 'data', // data || binary
     renderer() {
         return (
             <input

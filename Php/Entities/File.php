@@ -63,6 +63,11 @@ class File extends EntityAbstract
         return $this->getExt($ext);
     }
 
+    public function getAbsolutePath()
+    {
+        return $this->storage(self::STORAGE)->getAbsolutePath($this->src);
+    }
+
     /**
      * @inheritDoc
      */

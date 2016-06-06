@@ -7,6 +7,10 @@ class FileUploader {
         this.request = null;
     }
 
+    getQueue() {
+        return this.pending;
+    }
+
     upload(file, progress = _.noop, done = _.noop, error = _.noop) {
         if (!progress) {
             progress = _.noop;
