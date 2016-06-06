@@ -20,6 +20,7 @@ class Search extends Webiny.Ui.FormComponent {
         this.delay = null;
         this.currentValueIsId = false;
         this.filters = {};
+        this.unwatch = _.noop;
 
         this.bindMethods(
             'loadOptions',

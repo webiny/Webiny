@@ -129,6 +129,7 @@ class Form extends Webiny.Ui.View {
                                                 searchFields="name"
                                                 allowFreeInput={false}
                                                 useDataAsValue={false}
+                                                filterBy="userGroup"
                                                 onChange={(newValue, oldValue, input) => console.log(newValue, input.getCurrentData())}/>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>

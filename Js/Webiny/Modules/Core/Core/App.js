@@ -28,8 +28,6 @@ class App {
             if (config.module) {
                 return WebinyBootstrap.import(this.name.replace('.', '/') + '/Modules/' + config.name).then(m => {
                     const module = m.default ? new m.default(this) : new Webiny.Module(this);
-                    // Run setup method (does nothing unless module has a custom module class)
-                    module.init();
                     return this.setupModule(module, config);
                 });
             }
@@ -57,6 +55,8 @@ class App {
         if (!module.name) {
             module.name = config.name;
         }
+
+        module.init();
 
         // Automatically set Actions, Components and Views
         const promises = config.folders.map(x => {
