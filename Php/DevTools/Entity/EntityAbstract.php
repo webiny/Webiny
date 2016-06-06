@@ -274,7 +274,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
                 ];
             }
 
-            $dateAttr = $attributes[$fName] instanceof DateTimeAttribute || $attributes[$fName] instanceof DateAttribute;
+            $dateAttr = isset($attributes[$fName]) && ($attributes[$fName] instanceof DateTimeAttribute || $attributes[$fName] instanceof DateAttribute);
             if (array_key_exists($fName, $attributes) && $dateAttr && is_string($fValue)) {
                 $from = $to = $fValue;
                 if (self::str($fValue)->contains(':')) {
