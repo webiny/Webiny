@@ -175,11 +175,11 @@ class OptionComponent extends Component {
     renderOptions(props, data) {
         const options = [];
         _.each(data, (option, key) => {
-            if (_.isString(key) && _.isString(option)) {
-                options.push({id: key, text: option, data: null});
+            if (_.isString(key) && _.isString(option) || _.isNumber(option)) {
+                options.push({id: key, text: '' + option, data: null});
                 return;
             }
-            const id = _.isPlainObject(option) ? option[props.valueAttr || 'id'] : option;
+            const id = _.isPlainObject(option) ? option[props.valueAttr || 'id'] : '' + option;
             const text = this.renderOptionText(props, option);
             // Add data to option so we can run it through selectedRenderer when item selection changes
             options.push({id, text, data: option});
