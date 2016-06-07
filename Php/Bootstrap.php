@@ -11,6 +11,9 @@ class Bootstrap
     public function handle()
     {
         $appConfig = $this->wApps('Core')->getConfig();
-        Mailer::setConfig($appConfig->get('Mailer', []));
+        $mailer = $appConfig->get('Mailer');
+        if ($mailer) {
+            Mailer::setConfig($mailer);
+        }
     }
 }
