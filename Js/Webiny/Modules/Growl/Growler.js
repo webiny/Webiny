@@ -45,7 +45,7 @@ _.assign(Growler, {
         growler.addGrowl(<SuccessGrowl {...{message, title, sticky, ttl}}/>);
     },
 
-    danger(message, title = 'Danger', sticky = false, ttl = 3000) {
+    danger(message, title = 'Danger', sticky = true, ttl = 3000) {
         const growler = getGrowler();
 
         if (!growler) {
@@ -55,7 +55,7 @@ _.assign(Growler, {
         growler.addGrowl(<DangerGrowl {...{message, title, sticky, ttl}}/>);
     },
 
-    warning(message, title = 'Warning', sticky = false, ttl = 3000) {
+    warning(message, title = 'Warning', sticky = true, ttl = 3000) {
         const growler = getGrowler();
 
         if (!growler) {
