@@ -6,12 +6,12 @@
   ],
   "ignore": [],
   "homepage": "https://github.com/reactjs/react-bower",
-  "version": "15.0.1",
-  "_release": "15.0.1",
+  "version": "15.1.0",
+  "_release": "15.1.0",
   "_resolution": {
     "type": "version",
-    "tag": "v15.0.1",
-    "commit": "e4fcc1576683b688f4e710b1e6c880e208a14ecf"
+    "tag": "v15.1.0",
+    "commit": "687c097a7db9e4e32681105eded57b553732c14a"
   },
   "_source": "https://github.com/reactjs/react-bower.git",
   "_target": "*",

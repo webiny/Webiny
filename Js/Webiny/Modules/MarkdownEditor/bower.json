@@ -1,0 +1,14 @@
+{
+    "dependencies": {
+        "simplemde": "^1.10.1"
+    },
+    "overrides": {
+        "simplemde": {
+            "main": [
+                [
+                    "dist/simplemde.min.js"
+                ]
+            ]
+        }
+    }
+}
