@@ -137,7 +137,7 @@ class Search extends Webiny.Ui.FormComponent {
         if (_.isFunction(filter)) {
             const config = filter(newValue, this.api);
             if (_.isPlainObject(config)) {
-                this.filters = filters;
+                this.filters = config;
             }
         } else {
             // If filter is a string, create a filter object using that string as field name
@@ -145,7 +145,7 @@ class Search extends Webiny.Ui.FormComponent {
             filters[filter] = _.isObject(newValue) ? newValue.id : newValue;
             this.filters = filters;
         }
-        this.filters = _.pickBy(this.filters, (v, k) => !_.isNull(v) && !_.isUndefined(v) && v !== '');
+        this.filters = _.pickBy(this.filters, v => !_.isNull(v) && !_.isUndefined(v) && v !== '');
     }
 
     loadOptions(query) {
