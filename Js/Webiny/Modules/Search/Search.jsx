@@ -278,12 +278,7 @@ class Search extends Webiny.Ui.FormComponent {
             return;
         }
 
-        let selected = this.state.selectedOption;
-        if (selected === null) {
-            selected = -1;
-        }
-        selected++;
-
+        let selected = this.state.selectedOption + 1;
         if (selected >= this.state.options.length) {
             selected = this.state.options.length - 1;
         }

@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import Menu from './Menu';
 
 class Module {
 
@@ -82,7 +83,7 @@ class Module {
     }
 
     registerMenus(...menus) {
-        this.menus = menus;
+        _.each(menus, menu => Menu.add(menu));
         return this;
     }
 
