@@ -66,6 +66,10 @@ class Search extends Webiny.Ui.FormComponent {
             return;
         }
 
+        if (_.isEqual(props.valueLink.value, this.props.valueLink.value)) {
+            return;
+        }
+
         this.normalizeValue(props);
     }
 
@@ -211,6 +215,7 @@ class Search extends Webiny.Ui.FormComponent {
             case 'Escape':
                 this.onBlur();
                 break;
+            case 'Tab':
             case 'ArrowLeft':
             case 'ArrowRight':
                 break;
@@ -236,7 +241,7 @@ class Search extends Webiny.Ui.FormComponent {
 
         if (this.props.allowFreeInput) {
             if (this.props.valueLink) {
-                if (!this.state.selectedData) {
+                if (!this.state.selectedData && !(this.state.query === '' && this.state.preview !== '')) {
                     this.props.valueLink.requestChange(this.state.query);
                     setTimeout(this.validate, 10);
                 }
