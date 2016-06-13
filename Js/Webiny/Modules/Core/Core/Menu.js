@@ -4,7 +4,7 @@
  */
 class Menu {
     constructor() {
-        this.menu = {};
+        this.menu = [];
     }
 
     /**
@@ -12,11 +12,11 @@ class Menu {
      * @param menu
      */
     add(menu) {
-        const key = menu.key;
         // If top-level menu already exists...
-        if (key in this.menu) {
+        const menuIndex = _.findIndex(this.menu, {key: menu.key});
+        if (menuIndex > -1) {
             // Get existing top-level menu
-            const topLevelMenu = this.menu[key];
+            const topLevelMenu = this.menu[menuIndex];
             // Assign new sub-menu items to existing top-level menu
             _.map(menu.route, subMenu => {
                 const subMenuIndex = _.findIndex(topLevelMenu.route, {key: subMenu.key});
@@ -28,11 +28,26 @@ class Menu {
                     topLevelMenu.route.push(subMenu);
                 }
             });
-            return this;
+        } else {
+            // New top-level menu
+            this.menu.push(menu);
         }
 
-        // New top-level menu
-        this.menu[key] = menu;
+        // Sort 1st-level menu
+        this.menu = _.sortBy(this.menu, ['label']);
+        // Sort 2nd-level menu
+        _.each(this.menu, sndMenu => {
+            if (_.isArray(sndMenu.route)) {
+                sndMenu.route = _.sortBy(sndMenu.route, ['label']);
+                // Sort 3rd-level menu
+                _.each(sndMenu.route, thrdMenu => {
+                    if (_.isArray(thrdMenu.route)) {
+                        thrdMenu.route = _.sortBy(thrdMenu.route, ['key']);
+                    }
+                });
+            }
+        });
+
         return this;
     }
 
