@@ -23,8 +23,6 @@ class Header extends Webiny.Ui.Component {
 }
 
 function renderer() {
-    const Layout = Webiny.Apps.Core.Backend.Layout.Components;
-
     return (
         <div className="navbar navbar-inverse" role="navigation">
             <div className="navbar-header">
