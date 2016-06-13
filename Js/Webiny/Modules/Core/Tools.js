@@ -16,28 +16,6 @@ class Tools {
         return settings;
     }
 
-    getAppsMenus() {
-        const menus = {};
-        _.each(Webiny.Apps, jsApps => {
-            _.each(jsApps, app => {
-                _.each(app.modules, module => {
-                    _.each(module.menus, menu => {
-                        const key = menu.key;
-                        if (key in menus) {
-                            _.map(menu.route, route => {
-                                menus[key].route.push(route);
-                            });
-                        } else {
-                            menus[key] = menu.clone();
-                        }
-                    });
-                });
-            });
-        });
-
-        return _.values(menus);
-    }
-
     saveUiState(ui, key = null) {
         key = key || ui;
         const component = Webiny.Ui.Dispatcher.get(ui);

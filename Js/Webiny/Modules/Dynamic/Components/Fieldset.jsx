@@ -1,8 +1,11 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-function insertKey(data = []) {
-    _.each(data || [], (v, i) => {
+function insertKey(data) {
+    if (!data) {
+        data = [];
+    }
+    _.each(data, (v, i) => {
         if (!_.has(data[i], '$key')) {
             data[i]['$key'] = _.uniqueId('dynamic-fieldset-');
         }

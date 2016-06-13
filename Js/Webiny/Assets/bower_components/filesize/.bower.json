@@ -28,15 +28,14 @@
     }
   ],
   "license": "BSD-3-Clause",
-  "version": "3.2.1",
-  "_release": "3.2.1",
+  "version": "3.3.0",
+  "_release": "3.3.0",
   "_resolution": {
     "type": "version",
-    "tag": "3.2.1",
-    "commit": "cc2ad7ae9684b91aa27b6067babeaf9642c658fe"
+    "tag": "3.3.0",
+    "commit": "4cef8ecf9c69ee386685176f05f7a96671d8111c"
   },
-  "_source": "git://github.com/avoidwork/filesize.js.git",
+  "_source": "https://github.com/avoidwork/filesize.js.git",
   "_target": "^3.2.1",
-  "_originalSource": "filesize",
-  "_direct": true
+  "_originalSource": "filesize"
 }

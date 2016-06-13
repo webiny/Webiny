@@ -1,6 +1,6 @@
 {
   "name": "bottlejs",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "A powerful dependency injection micro container",
   "main": "dist/bottle.min.js",
   "license": "MIT",
@@ -38,13 +38,13 @@
   "private": false,
   "dependencies": {},
   "devDependencies": {},
-  "_release": "1.2.2",
+  "_release": "1.2.3",
   "_resolution": {
     "type": "version",
-    "tag": "v1.2.2",
-    "commit": "576562758703ed947b86db93b2c894a71fe8548c"
+    "tag": "v1.2.3",
+    "commit": "8be6e62423b17374c6d8b3f62b93bafac65f9816"
   },
-  "_source": "git://github.com/young-steveo/bottlejs.git",
+  "_source": "https://github.com/young-steveo/bottlejs.git",
   "_target": "~1.2.1",
   "_originalSource": "bottlejs"
 }

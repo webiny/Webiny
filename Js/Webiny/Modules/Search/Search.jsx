@@ -66,6 +66,10 @@ class Search extends Webiny.Ui.FormComponent {
             return;
         }
 
+        if (_.isEqual(props.valueLink.value, this.props.valueLink.value)) {
+            return;
+        }
+
         this.normalizeValue(props);
     }
 
@@ -116,7 +120,7 @@ class Search extends Webiny.Ui.FormComponent {
         } else if (id && _.isPlainObject(value)) {
             newState['preview'] = this.renderPreview(value);
         } else if (id) {
-            this.api.get(value).then(apiResponse => {
+            this.api.get(this.api.getUrl(value)).then(apiResponse => {
                 const data = apiResponse.getData();
                 this.setState({selectedData: data, preview: this.renderPreview(data)});
             });
@@ -137,7 +141,7 @@ class Search extends Webiny.Ui.FormComponent {
         if (_.isFunction(filter)) {
             const config = filter(newValue, this.api);
             if (_.isPlainObject(config)) {
-                this.filters = filters;
+                this.filters = config;
             }
         } else {
             // If filter is a string, create a filter object using that string as field name
@@ -145,7 +149,7 @@ class Search extends Webiny.Ui.FormComponent {
             filters[filter] = _.isObject(newValue) ? newValue.id : newValue;
             this.filters = filters;
         }
-        this.filters = _.pickBy(this.filters, (v, k) => !_.isNull(v) && !_.isUndefined(v) && v !== '');
+        this.filters = _.pickBy(this.filters, v => !_.isNull(v) && !_.isUndefined(v) && v !== '');
     }
 
     loadOptions(query) {
@@ -211,6 +215,7 @@ class Search extends Webiny.Ui.FormComponent {
             case 'Escape':
                 this.onBlur();
                 break;
+            case 'Tab':
             case 'ArrowLeft':
             case 'ArrowRight':
                 break;
@@ -236,7 +241,7 @@ class Search extends Webiny.Ui.FormComponent {
 
         if (this.props.allowFreeInput) {
             if (this.props.valueLink) {
-                if (!this.state.selectedData) {
+                if (!this.state.selectedData && !(this.state.query === '' && this.state.preview !== '')) {
                     this.props.valueLink.requestChange(this.state.query);
                     setTimeout(this.validate, 10);
                 }
@@ -273,12 +278,7 @@ class Search extends Webiny.Ui.FormComponent {
             return;
         }
 
-        let selected = this.state.selectedOption;
-        if (selected === null) {
-            selected = -1;
-        }
-        selected++;
-
+        let selected = this.state.selectedOption + 1;
         if (selected >= this.state.options.length) {
             selected = this.state.options.length - 1;
         }

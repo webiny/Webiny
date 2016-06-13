@@ -7,7 +7,7 @@ class Footer extends Webiny.Ui.Component {
 Footer.defaultProps = {
     renderer() {
         return (
-            <div className="modal-footer">{this.props.children}</div>
+            <div className={this.classSet('modal-footer', this.props.className)}>{this.props.children}</div>
         );
     }
 };
