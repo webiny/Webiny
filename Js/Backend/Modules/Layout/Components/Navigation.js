@@ -147,7 +147,15 @@ Navigation.defaultProps = {
     renderer() {
         const Layout = Webiny.Apps.Core.Backend.Layout.Components;
 
-        const menus = Webiny.Tools.getAppsMenus();
+        const menu = [];
+        _.each(Webiny.Menu.getMenu(), m => {
+            menu.push(this.renderMainMenu(m));
+        });
+
+        const submenu = [];
+        _.each(Webiny.Menu.getMenu(), m => {
+            submenu.push(this.renderSubMenu(m));
+        });
 
         return (
             <div className="master-navigation">
@@ -157,13 +165,13 @@ Navigation.defaultProps = {
                     <div className="shield"></div>
                     <div className="left-menu">
                         <ul className="nav navbar-nav navbar-right">
-                            {menus.map(this.renderMainMenu)}
+                            {menu}
                         </ul>
                     </div>
 
                     <div className="left-menu-submenu" style={{display: this.state.submenu ? 'block' : 'none'}}>
                         <div>
-                            {menus.map(this.renderSubMenu)}
+                            {submenu}
                         </div>
                     </div>
                 </div>

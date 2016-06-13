@@ -24,6 +24,14 @@ class Router {
             return Q();
         }
 
+        /**
+         * Observe clicks on anchors and handle them accordingly
+         */
+        const $this = this;
+        $(document).on('click', 'a', function handleClick(e) {
+            $this.handleAnchorClick(this, e);
+        });
+
         url = url || History.getState().data.url;
         const matchedRoute = Utils.matchRoute(this, url);
 
@@ -300,13 +308,4 @@ class Router {
     }
 }
 
-const router = new Router;
-
-/**
- * Observe clicks on anchors and handle them accordingly
- */
-$(document).on('click', 'a', function handleClick(e) {
-    router.handleAnchorClick(this, e);
-});
-
-export default router;
+export default new Router;

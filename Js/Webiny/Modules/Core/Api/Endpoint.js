@@ -52,10 +52,15 @@ class Endpoint extends Base {
         return this;
     }
 
-    getUrl() {
+    getUrl(value = null) {
         if (_.isFunction(this.url)) {
-            return this.url();
+            return this.url(value);
         }
+
+        if (value) {
+            return (this.url + '/' + value).replace('//', '/');
+        }
+
         return this.url;
     }
 

@@ -1,17 +1,14 @@
 {
   "name": "simplemde",
-  "version": "1.10.1",
+  "version": "1.11.1",
   "homepage": "https://github.com/NextStepWebs/simplemde-markdown-editor",
   "authors": [
-    "Wes Cossick"
+    "Wes Cossick <https://wescossick.com>"
   ],
   "description": "A simple, beautiful, and embeddable JavaScript Markdown editor.",
   "main": [
-    "dist/simplemde.min.js",
-    "dist/simplemde.min.css"
-  ],
-  "moduleType": [
-    "globals"
+    "src/js/simplemde.js",
+    "src/css/simplemde.css"
   ],
   "keywords": [
     "embeddable",
@@ -22,14 +19,15 @@
   ],
   "license": "MIT",
   "ignore": [
+    "**/.*",
     "node_modules",
     "bower_components"
   ],
-  "_release": "1.10.1",
+  "_release": "1.11.1",
   "_resolution": {
     "type": "version",
-    "tag": "1.10.1",
-    "commit": "6eae597a693d167a3d02c9020da779b1bece1671"
+    "tag": "1.11.1",
+    "commit": "00e0f69d9378979f58e0ebf07dc2da9b9d70f083"
   },
   "_source": "https://github.com/NextStepWebs/simplemde-markdown-editor.git",
   "_target": "^1.10.1",

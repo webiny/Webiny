@@ -146,14 +146,17 @@ class Form extends Webiny.Ui.View {
                                     </Ui.Grid.Row>
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={4}>
-                                            <Ui.Switch label="Enabled" name="enabled"/>
+                                            <Ui.DateRange label="Date range" name="range"/>
                                         </Ui.Grid.Col>
                                         <Ui.Grid.Col all={4}>
-                                            <Ui.Select name="staticSelect" label="Static select">
+                                            <Ui.Select name="staticSelect" label="Static select" placeholder="Select an option">
                                                 <option value="yes">Yes</option>
                                                 <option value="no"><webiny-no>No</webiny-no></option>
                                                 <option value="maybe"><strong>Maybe</strong></option>
                                             </Ui.Select>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={4}>
+                                            <Ui.Switch label="Enabled" name="enabled"/>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>
                                     <Ui.Grid.Row>

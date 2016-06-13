@@ -50,7 +50,10 @@ class OptionComponent extends Component {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        if (!_.isEqual(props, this.props)) {
+        const omit = ['valueLink'];
+        const oldProps = _.omit(props, omit);
+        const newProps = _.omit(props, omit);
+        if (!_.isEqual(newProps, oldProps)) {
             this.prepareOptions(props);
         }
     }

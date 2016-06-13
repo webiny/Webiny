@@ -9,6 +9,7 @@ import ApiComponent from './Core/ApiComponent';
 import Injector from './Core/Injector';
 import Model from './Core/Model';
 import View from './Core/View';
+import Menu from './Core/Menu';
 import Dispatcher from './Core/Dispatcher';
 import UiDispatcher from './Core/UiDispatcher';
 import Router from './Router/Router';
@@ -20,7 +21,7 @@ import Endpoint from './Api/Endpoint';
 import RootElement from './Ui/RootElement';
 import Placeholder from './Ui/Placeholder';
 import Settings from './Ui/Settings';
-import Menu from './Ui/Menu';
+import UiMenu from './Ui/Menu';
 import Hide from './Ui/Hide';
 import Show from './Ui/Show';
 import Value from './Ui/Value';
@@ -33,6 +34,7 @@ class Module extends WebinyModule {
 
         _.merge(Webiny, {
             App,
+            Menu,
             Module: WebinyModule,
             Modules: {},
             Mixins: {
@@ -51,7 +53,7 @@ class Module extends WebinyModule {
                 FormComponent,
                 ModalComponent,
                 OptionComponent,
-                Menu,
+                Menu: UiMenu,
                 Settings,
                 View,
                 Views: {}

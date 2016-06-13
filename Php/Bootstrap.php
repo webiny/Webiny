@@ -15,5 +15,10 @@ class Bootstrap
         if ($mailer) {
             Mailer::setConfig($mailer);
         }
+
+        /**
+         * @see http://php.net/manual/en/mongodb.setprofilinglevel.php
+         */
+        $this->wDatabase()->command(['profile' => 2]);
     }
 }

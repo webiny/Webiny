@@ -3,13 +3,19 @@
  *
  * @copyright 2016 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
- * @version 3.2.1
+ * @version 3.3.0
  */
 (function (global) {
 const b = /^(b|B)$/;
 const symbol = {
-	bits: ["b", "Kb", "Mb", "Gb", "Tb", "Pb", "Eb", "Zb", "Yb"],
-	bytes: ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+	iec: {
+		bits: ["b", "Kib", "Mib", "Gib", "Tib", "Pib", "Eib", "Zib", "Yib"],
+		bytes: ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
+	},
+	jedec: {
+		bits: ["b", "Kb", "Mb", "Gb", "Tb", "Pb", "Eb", "Zb", "Yb"],
+		bytes: ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+	}
 };
 
 /**
@@ -23,7 +29,7 @@ const symbol = {
 function filesize (arg, descriptor = {}) {
 	let result = [],
 		val = 0,
-		e, base, bits, ceil, neg, num, output, round, unix, spacer, symbols;
+		e, base, bits, ceil, neg, num, output, round, unix, spacer, standard, symbols;
 
 	if (isNaN(arg)) {
 		throw new Error("Invalid arguments");
@@ -35,6 +41,7 @@ function filesize (arg, descriptor = {}) {
 	round = descriptor.round !== undefined ? descriptor.round : unix ? 1 : 2;
 	spacer = descriptor.spacer !== undefined ? descriptor.spacer : unix ? "" : " ";
 	symbols = descriptor.symbols || descriptor.suffixes || {};
+	standard = base === 2 ? descriptor.standard || "jedec" : "jedec";
 	output = descriptor.output || "string";
 	e = descriptor.exponent !== undefined ? descriptor.exponent : -1;
 	num = Number(arg);
@@ -77,10 +84,10 @@ function filesize (arg, descriptor = {}) {
 		}
 
 		result[0] = Number(val.toFixed(e > 0 ? round : 0));
-		result[1] = base === 10 && e === 1 ? bits ? "kb" : "kB" : symbol[bits ? "bits" : "bytes"][e];
+		result[1] = base === 10 && e === 1 ? bits ? "kb" : "kB" : symbol[standard][bits ? "bits" : "bytes"][e];
 
 		if (unix) {
-			result[1] = result[1].charAt(0);
+			result[1] = standard === "jedec" ? result[1].charAt(0) : e > 0 ? result[1].replace(/B$/, "") : result[1];
 
 			if (b.test(result[1])) {
 				result[0] = Math.floor(result[0]);
@@ -94,7 +101,7 @@ function filesize (arg, descriptor = {}) {
 		result[0] = -result[0];
 	}
 
-	// Applying custom suffix
+	// Applying custom symbol
 	result[1] = symbols[result[1]] || result[1];
 
 	// Returning Array, Object, or String (default)

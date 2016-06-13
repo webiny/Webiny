@@ -2,6 +2,7 @@ import Webiny from 'Webiny';
 import Date from './Date';
 import DateTime from './DateTime';
 import Time from './Time';
+import DateRange from './DateRange';
 
 class Module extends Webiny.Module {
 
@@ -9,6 +10,7 @@ class Module extends Webiny.Module {
         Webiny.Ui.Components.Date = Date;
         Webiny.Ui.Components.DateTime = DateTime;
         Webiny.Ui.Components.Time = Time;
+        Webiny.Ui.Components.DateRange = DateRange;
     }
 }
 
