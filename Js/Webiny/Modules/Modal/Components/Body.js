@@ -7,7 +7,7 @@ class Body extends Webiny.Ui.Component {
 Body.defaultProps = {
     renderer() {
         return (
-            <div className="modal-body">
+            <div className={this.classSet('modal-body', this.props.className)}>
                 {this.props.children}
             </div>
         );
