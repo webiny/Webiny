@@ -112,7 +112,7 @@ class Gallery extends ImageComponent {
         });
 
         state.images.push(image);
-        this.setState({images: state.images, cropImage: null});
+        this.setState({images: state.images});
     }
 
     cancelUpload(image) {
@@ -125,8 +125,9 @@ class Gallery extends ImageComponent {
     }
 
     applyCropping(newImage) {
-        this.saveImage(newImage);
-        this.setState({showCrop: false});
+        this.setState({showCrop: false, cropImage: null}, () => {
+            this.saveImage(newImage);
+        });
     }
 
     onCropperHidden() {

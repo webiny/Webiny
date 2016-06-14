@@ -30,6 +30,10 @@ class ModalFileCropper extends FileCropper {
         }
     }
 
+    shouldComponentUpdate(nextProps) {
+        return !_.isEqual(nextProps.image, this.props.image);
+    }
+
     applyCropping() {
         super.applyCropping();
         this.hide();

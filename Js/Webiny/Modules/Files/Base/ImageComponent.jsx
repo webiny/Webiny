@@ -20,7 +20,6 @@ class Image extends Webiny.Ui.FormComponent {
 
     applyCropping(newImage) {
         this.props.valueLink.requestChange(newImage);
-        this.setState({showCrop: false, cropImage: null});
     }
 
     onCropperHidden() {

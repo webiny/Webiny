@@ -66,13 +66,15 @@ class Dialog extends Webiny.Ui.Component {
         $(this.props.modalContainerTag).off('.modal');
     }
 
-    hide(callback = _.noop) {
+    hide(callback) {
         this.props.onHide();
         this.setState({
             isShown: false
         }, () => {
             this.props.onHidden();
-            callback();
+            if (_.isFunction(callback)) {
+                callback();
+            }
         });
         currentModal = null;
     }
