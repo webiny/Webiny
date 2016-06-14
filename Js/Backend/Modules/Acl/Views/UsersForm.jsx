@@ -122,17 +122,18 @@ Form.defaultProps = {
                                             body={{ref: Webiny.Router.getParams('id')}}
                                             name="gallery"
                                             newCropper={{
-                                                         title: 'Crop your new image',
-                                                         action: 'Upload image',
-                                                         config: {
-                                                             closeOnClick: false,
-                                                             autoCropArea: 0.7,
-                                                             guides: false,
-                                                             strict: true,
-                                                             mouseWheelZoom: false,
-                                                             touchDragZoom: false
-                                                         }
-                                                         }}
+                                                inline: true,
+                                                title: 'Crop your new image',
+                                                action: 'Upload image',
+                                                config: {
+                                                    closeOnClick: false,
+                                                    autoCropArea: 0.7,
+                                                    guides: false,
+                                                    strict: true,
+                                                    mouseWheelZoom: false,
+                                                    touchDragZoom: false
+                                                }
+                                            }}
                                             editCropper={{
                                                          title: 'Edit your image',
                                                          action: 'Save changes',
