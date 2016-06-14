@@ -119,7 +119,7 @@ Form.defaultProps = {
                                                         }}}/>
                                         </Ui.ChangeConfirm>
                                         <Ui.Files.Gallery
-                                            defaultBody={{ref: Webiny.Router.getParams('id')}}
+                                            body={{ref: Webiny.Router.getParams('id')}}
                                             name="gallery"
                                             newCropper={{
                                                          title: 'Crop your new image',
@@ -146,6 +146,7 @@ Form.defaultProps = {
                                                          }
                                                      }}/>
 
+                                        <div className="clearfix"/>
                                         <h2>Files list</h2>
                                         <Ui.List.ApiContainer ui="files" autoLoad={false} api="/entities/core/files"
                                                               fields="id,name,type,size" perPage={3}>

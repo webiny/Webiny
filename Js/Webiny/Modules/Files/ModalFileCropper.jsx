@@ -62,9 +62,11 @@ ModalFileCropper.defaultProps = _.merge({}, FileCropper.defaultProps, {
                 // Initialize cropper plugin
                 setTimeout(this.initCropper);
             },
+            onHide: () => {
+                this.destroyCropper();
+            },
             onHidden: () => {
                 props.onHidden();
-                this.destroyCropper();
             },
             closeOnClick: props.config.closeOnClick || props.closeOnClick,
             className: ''
