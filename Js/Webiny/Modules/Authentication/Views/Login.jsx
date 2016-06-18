@@ -87,6 +87,7 @@ Login.defaultProps = {
         return (
             <div className="container">
                 <div className="sign-in-holder">
+                    <Ui.Form.Loader container={container}/>
                     <div className="form-signin">
                         <a href="#" className="logo">
                             <img src={Webiny.Assets('Core.Backend', 'images/logo_orange.png')} width="180" height="58"/>

@@ -86,7 +86,7 @@ Avatar.defaultProps = {
             onDragLeave: this.onDragLeave,
             onDragOver: this.onDragOver,
             onClick: this.getFiles,
-            className: 'Avatar'
+            className: 'avatar'
         };
 
         return (

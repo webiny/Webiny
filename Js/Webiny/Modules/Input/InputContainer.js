@@ -19,6 +19,8 @@ InputContainer.defaultProps = {
     onEnter: _.noop,
     description: null,
     info: null,
+    showValidationIcon: true,
+    showValidationMessage: true,
     renderer() {
         const cssConfig = {
             'form-group': true,
@@ -73,10 +75,10 @@ InputContainer.defaultProps = {
                     <Webiny.Ui.Components.DelayedValueLink delay={this.props.delay}>
                         <Input {...props}/>
                     </Webiny.Ui.Components.DelayedValueLink>
-                    {validationIcon}
+                    {this.props.showValidationIcon ? validationIcon: null}
                 </div>
                 <span className="help-block">{description}</span>
-                {validationMessage}
+                {this.props.showValidationMessage ? validationMessage : null}
             </div>
         );
     }

@@ -12,7 +12,13 @@
     font-size: 35px;
 }
 
+.panel-footer--white-bg {
+	padding: 25px 35px;
+	background-color: #fff;
+}
+
 .panel-body {
+	position: relative;
 	padding: 15px 0;
 }
 
@@ -28,7 +34,12 @@
 	.panel-body {
 		padding: 40px;
 	}
+	
+	.panel-body--no-padding {
+		padding: 0;
+	}
 }
+
 
 .panel--horizontal {
 	padding: 0;
