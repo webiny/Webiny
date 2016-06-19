@@ -11,43 +11,57 @@ List.defaultProps = {
         const listProps = {
             api: '/entities/core/users',
             fields: 'id,enabled,firstName,lastName,email,createdOn,gravatar',
-            connectToRouter: true
+            connectToRouter: true,
+            searchFields: 'firstName,lastName,email'
         };
 
         return (
-            <Ui.Grid.Row>
-                <Ui.Grid.Col all={12}>
-                    <h2>Users</h2>
-                </Ui.Grid.Col>
-                <Ui.List.ApiContainer ui="myList" {...listProps}>
-                    <Table.Table>
-                        <Table.Row>
-                            <Table.GravatarField name="gravatar"/>
-                            <Table.Field name="firstName" label="First Name" sort="firstName">
-                                {data => (
-                                    <span>
-                                        <strong>{data.firstName} {data.lastName}</strong><br/>{data.id}
-                                    </span>
-                                )}
-                            </Table.Field>
-                            <Table.Field name="email" sort="email" label="Email"/>
-                            <Table.ToggleField
-                                name="enabled"
-                                label="Status"
-                                sort="enabled"
-                                align="center"
-                                message={() => {this.i18n('This will disable user\'s account and prevent him from logging in!');}}/>
-                            <Table.DateField name="createdOn" label="Created On" sort="createdOn"/>
-                            <Table.Actions>
-                                <Table.EditAction route="Users.Edit"/>
-                                <Table.DeleteAction/>
-                            </Table.Actions>
-                        </Table.Row>
-                        <Table.Footer/>
-                    </Table.Table>
-                    <Ui.List.Pagination/>
-                </Ui.List.ApiContainer>
-            </Ui.Grid.Row>
+            <Ui.View>
+                <Ui.View.Header title="Users List">
+                    <Ui.Link type="primary" route="Users.Create" align="right">
+                        <Ui.Icon icon="icon-plus-circled"/>
+                        Create user
+                    </Ui.Link>
+                </Ui.View.Header>
+                <Ui.View.Body>
+                    <Ui.List.ApiContainer {...listProps}>
+                        <Ui.List.FormFilters>
+                            {(applyFilters, resetFilters) => (
+                                <Ui.Input
+                                    name="_searchQuery"
+                                    placeholder="Search by name or email"
+                                    onEnter={applyFilters()}/>
+                            )}
+                        </Ui.List.FormFilters>
+                        <Table.Table>
+                            <Table.Row>
+                                <Table.GravatarField name="gravatar"/>
+                                <Table.Field name="firstName" label="First Name" sort="firstName" route="Users.Edit">
+                                    {data => (
+                                        <span>
+                                            <strong>{data.firstName} {data.lastName}</strong><br/>{data.id}
+                                        </span>
+                                    )}
+                                </Table.Field>
+                                <Table.Field name="email" sort="email" label="Email"/>
+                                <Table.ToggleField
+                                    name="enabled"
+                                    label="Status"
+                                    sort="enabled"
+                                    align="center"
+                                    message={() => {this.i18n('This will disable user\'s account and prevent him from logging in!');}}/>
+                                <Table.DateField name="createdOn" label="Created On" sort="createdOn"/>
+                                <Table.Actions>
+                                    <Table.EditAction route="Users.Edit"/>
+                                    <Table.DeleteAction/>
+                                </Table.Actions>
+                            </Table.Row>
+                            <Table.Footer/>
+                        </Table.Table>
+                        <Ui.List.Pagination/>
+                    </Ui.List.ApiContainer>
+                </Ui.View.Body>
+            </Ui.View>
         );
     }
 };

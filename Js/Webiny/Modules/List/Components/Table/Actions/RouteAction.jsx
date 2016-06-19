@@ -19,7 +19,7 @@ RouteAction.defaultProps = {
         }
 
         return (
-            <Ui.Link route={this.props.route} params={params}>{this.props.label}</Ui.Link>
+            <Ui.Link route={this.props.route} params={params}>{this.props.label || this.props.children}</Ui.Link>
         );
     }
 };

@@ -39,7 +39,7 @@ View.defaultProps = {
             <view>
                 {this.headerTemplate}
                 <div className="view-content">
-                    <Ui.Panel.Panel>
+                    <Ui.Panel.Panel className={'panel--boxed'}>
                         {this.bodyTemplate}
                         {this.footerTemplate}
                     </Ui.Panel.Panel>

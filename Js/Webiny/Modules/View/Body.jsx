@@ -9,7 +9,7 @@ Body.defaultProps = {
     noPadding: false,
     renderer() {
         return (
-            <Ui.Panel.Body className={{'no-padding': this.props.noPadding}}>
+            <Ui.Panel.Body className={{'panel-body--no-padding': this.props.noPadding}}>
                 {this.props.children}
             </Ui.Panel.Body>
         );
