@@ -18,6 +18,8 @@ class CodeEditor extends Webiny.Ui.FormComponent {
     componentDidMount() {
         super.componentDidMount();
 
+        this.options = _.merge(this.options, this.props);
+
         this.codeMirror = CodeMirror.fromTextArea(this.getTextareaElement(), this.options);
 
         // add resize option (not supported natively by CodeMirror)
