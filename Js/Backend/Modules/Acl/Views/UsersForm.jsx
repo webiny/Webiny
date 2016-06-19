@@ -119,20 +119,21 @@ Form.defaultProps = {
                                                         }}}/>
                                         </Ui.ChangeConfirm>
                                         <Ui.Files.Gallery
-                                            defaultBody={{ref: Webiny.Router.getParams('id')}}
+                                            body={{ref: Webiny.Router.getParams('id')}}
                                             name="gallery"
                                             newCropper={{
-                                                         title: 'Crop your new image',
-                                                         action: 'Upload image',
-                                                         config: {
-                                                             closeOnClick: false,
-                                                             autoCropArea: 0.7,
-                                                             guides: false,
-                                                             strict: true,
-                                                             mouseWheelZoom: false,
-                                                             touchDragZoom: false
-                                                         }
-                                                         }}
+                                                inline: true,
+                                                title: 'Crop your new image',
+                                                action: 'Upload image',
+                                                config: {
+                                                    closeOnClick: false,
+                                                    autoCropArea: 0.7,
+                                                    guides: false,
+                                                    strict: true,
+                                                    mouseWheelZoom: false,
+                                                    touchDragZoom: false
+                                                }
+                                            }}
                                             editCropper={{
                                                          title: 'Edit your image',
                                                          action: 'Save changes',
@@ -146,6 +147,7 @@ Form.defaultProps = {
                                                          }
                                                      }}/>
 
+                                        <div className="clearfix"/>
                                         <h2>Files list</h2>
                                         <Ui.List.ApiContainer ui="files" autoLoad={false} api="/entities/core/files"
                                                               fields="id,name,type,size" perPage={3}>

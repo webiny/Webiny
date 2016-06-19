@@ -1,10 +1,10 @@
 import Webiny from 'Webiny';
-import CodeEditor from './CodeEditor';
+import Container from './Container';
 
 class Module extends Webiny.Module {
 
     init() {
-        Webiny.Ui.Components.CodeEditor = CodeEditor;
+        Webiny.Ui.Components.CodeEditor = Container;
     }
 }
 

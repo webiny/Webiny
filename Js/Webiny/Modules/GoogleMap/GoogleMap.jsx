@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
 class GoogleMaps extends Webiny.Ui.Component {
 
@@ -33,7 +32,7 @@ class GoogleMaps extends Webiny.Ui.Component {
             return false;
         }
 
-        return !_.isEqual(this.props.valueLink.value, newProps.valueLink.value)
+        return !_.isEqual(this.props.valueLink.value, newProps.valueLink.value);
     }
 
     componentDidUpdate() {
@@ -62,7 +61,7 @@ class GoogleMaps extends Webiny.Ui.Component {
                 this.props.valueLink.requestChange({
                     lat: this.marker.getPosition().lat(),
                     lng: this.marker.getPosition().lng()
-                })
+                });
             });
         }
 

@@ -7,8 +7,8 @@ class HttpResponse {
         this.headers = response.headers;
     }
 
-    getData() {
-        return this.data;
+    getData(key, defaultValue) {
+        return key ? _.get(this.data, key, defaultValue) : this.data;
     }
 
     setData(data) {
