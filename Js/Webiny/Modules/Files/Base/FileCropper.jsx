@@ -20,8 +20,10 @@ class FileCropper extends Webiny.Ui.Component {
     }
 
     destroyCropper() {
-        this.cropper.cropper('destroy');
-        this.cropper = null;
+        if (this.cropper) {
+            this.cropper.cropper('destroy');
+            this.cropper = null;
+        }
     }
 
     getCacheBust() {

@@ -28,8 +28,8 @@ class Container extends Webiny.Ui.Component {
             'getModel',
             'setModel',
             'loadModel',
-            'registerInputs',
-            'registerInput',
+            'registerComponents',
+            'registerComponent',
             'attachToForm',
             'attachValidators',
             'detachFromForm',
@@ -374,7 +374,7 @@ class Container extends Webiny.Ui.Component {
      * @param input
      * @returns {*}
      */
-    registerInput(input) {
+    registerComponent(input) {
         if (typeof input !== 'object' || input === null) {
             return input;
         }
@@ -382,6 +382,10 @@ class Container extends Webiny.Ui.Component {
         // Do not descend into nested Form.Container
         if (input.type && input.type === Ui.Form.Container) {
             return input;
+        }
+
+        if (input.type && (input.type === Ui.Form.Error || input.type === Ui.Form.Loader)) {
+            return React.cloneElement(input, {container: this});
         }
 
         if (input.props && input.props.name) {
@@ -430,7 +434,7 @@ class Container extends Webiny.Ui.Component {
                 form: this
             });
 
-            const tabsContent = React.cloneElement(input, tabsProps, this.registerInputs(input.props && input.props.children));
+            const tabsContent = React.cloneElement(input, tabsProps, this.registerComponents(input.props && input.props.children));
             this.parsingTabsIndex--;
             return tabsContent;
         }
@@ -439,7 +443,7 @@ class Container extends Webiny.Ui.Component {
             this.parsingTabIndex++;
         }
 
-        return React.cloneElement(input, _.omit(input.props, ['key', 'ref']), this.registerInputs(input.props && input.props.children));
+        return React.cloneElement(input, _.omit(input.props, ['key', 'ref']), this.registerComponents(input.props && input.props.children));
     }
 
     /**
@@ -447,11 +451,11 @@ class Container extends Webiny.Ui.Component {
      * @param children
      * @returns {*}
      */
-    registerInputs(children) {
+    registerComponents(children) {
         if (typeof children !== 'object' || children === null) {
             return children;
         }
-        return React.Children.map(children, this.registerInput, this);
+        return React.Children.map(children, this.registerComponent, this);
     }
 
     attachValidators(props) {
@@ -517,7 +521,7 @@ class Container extends Webiny.Ui.Component {
         if (!_.isFunction(children)) {
             throw new Error('Form.Container must have a function as its only child!');
         }
-        return this.registerInputs(children.call(this, _.clone(this.state.model), this));
+        return this.registerComponents(children.call(this, _.clone(this.state.model), this));
     }
 
     __processError(apiResponse) {

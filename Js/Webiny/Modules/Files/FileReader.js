@@ -4,8 +4,16 @@ class FileReader extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);
+        this.reset = () => {
+            ReactDOM.findDOMNode(this).value = null;
+        };
 
         this.bindMethods('onChange', 'getFiles', 'readFiles');
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        this.reset = _.noop;
     }
 
     getFiles() {
@@ -51,7 +59,7 @@ class FileReader extends Webiny.Ui.Component {
 
                     if (loadedFiles === files.length) {
                         this.props.onChange.apply(this, this.props.multiple ? [output, errors] : [output[0] || null, errors[0] || null]);
-                        ReactDOM.findDOMNode(this).value = null;
+                        this.reset();
                     }
                 };
             })(file);

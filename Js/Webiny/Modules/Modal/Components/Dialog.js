@@ -27,10 +27,8 @@ class Dialog extends Webiny.Ui.Component {
         if (this.state.isShown) {
             ReactDOM.render(this.props.renderDialog.call(this), this.modalContainer);
             $(this.modalContainer).find('.modal').focus();
-            this.props.onShown();
             this.bindHandlers();
         } else {
-            this.props.onHidden();
             this.unbindHandlers();
             ReactDOM.unmountComponentAtNode(this.modalContainer);
         }
@@ -68,11 +66,16 @@ class Dialog extends Webiny.Ui.Component {
         $(this.props.modalContainerTag).off('.modal');
     }
 
-    hide(callback = _.noop) {
+    hide(callback) {
         this.props.onHide();
         this.setState({
             isShown: false
-        }, callback);
+        }, () => {
+            this.props.onHidden();
+            if (_.isFunction(callback)) {
+                callback();
+            }
+        });
         currentModal = null;
     }
 
@@ -81,6 +84,8 @@ class Dialog extends Webiny.Ui.Component {
             this.props.onShow();
             this.setState({
                 isShown: true
+            }, () => {
+                this.props.onShown();
             });
             currentModal = this;
         };

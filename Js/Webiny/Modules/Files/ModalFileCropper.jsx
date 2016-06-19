@@ -6,7 +6,6 @@ class ModalFileCropper extends FileCropper {
 
     constructor(props) {
         super(props);
-        this.initialData = null;
         this.bindMethods('show,hide');
     }
 
@@ -28,6 +27,10 @@ class ModalFileCropper extends FileCropper {
         if (prevProps.image && !this.props.image) {
             return this.hide();
         }
+    }
+
+    shouldComponentUpdate(nextProps) {
+        return !_.isEqual(nextProps.image, this.props.image);
     }
 
     applyCropping() {
@@ -62,9 +65,11 @@ ModalFileCropper.defaultProps = _.merge({}, FileCropper.defaultProps, {
                 // Initialize cropper plugin
                 setTimeout(this.initCropper);
             },
+            onHide: () => {
+                this.destroyCropper();
+            },
             onHidden: () => {
                 props.onHidden();
-                this.destroyCropper();
             },
             closeOnClick: props.config.closeOnClick || props.closeOnClick,
             className: ''

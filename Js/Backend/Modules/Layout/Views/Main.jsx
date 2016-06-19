@@ -9,18 +9,17 @@ class Main extends Webiny.Ui.View {
 
 Main.defaultProps = {
     renderer() {
-        const Components = Webiny.Apps.Core.Backend.Layout.Components;
         return (
             <div className="master minimized">
                 <Webiny.Ui.Components.Growl.Container ui="GrowlContainer"/>
                 <Webiny.Ui.Placeholder name="Header"/>
 
-                <div className="master-content master-content--no-background">
+                <div className="master-content">
                     <div className="container-fluid">
                         <Webiny.Ui.Placeholder name="MasterContent"/>
                     </div>
                 </div>
-                <Components.Footer/>
+                <Webiny.Apps.Core.Backend.Layout.Components.Footer/>
             </div>
         );
     }

@@ -93,13 +93,12 @@
     }
     > .btn {
       border: none;
-      padding: 5px;
-      padding-right: 26px;
+      padding: 5px 26px 5px 5px;
     }
   }
   &.open.balloon > .btn {
     border: none;
-    padding: 5px;
+    padding: 5px 26px 5px 5px;
   }
 }
 

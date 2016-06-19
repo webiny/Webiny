@@ -5,7 +5,7 @@ import ImageComponent from './../Base/ImageComponent';
 import Image from './Image';
 
 const placeholder = document.createElement('div');
-placeholder.className = 'tray-bin__placeholder';
+placeholder.className = 'tray-bin__file placeholder';
 placeholder.textContent = 'Drop here';
 
 class Gallery extends ImageComponent {
@@ -112,7 +112,7 @@ class Gallery extends ImageComponent {
         });
 
         state.images.push(image);
-        this.setState({images: state.images, cropImage: null});
+        this.setState({images: state.images});
     }
 
     cancelUpload(image) {
@@ -125,8 +125,9 @@ class Gallery extends ImageComponent {
     }
 
     applyCropping(newImage) {
-        this.saveImage(newImage);
-        this.setState({showCrop: false});
+        this.setState({showCrop: false, cropImage: null}, () => {
+            this.saveImage(newImage);
+        });
     }
 
     onCropperHidden() {
@@ -145,7 +146,9 @@ class Gallery extends ImageComponent {
                 return this.setState({showCrop: true, cropImage: file});
             }
 
-            return this.saveImage(file);
+            return this.setState({showCrop: false, cropImage: null}, () => {
+                this.saveImage(file);
+            });
         }
 
         files.map(img => {
