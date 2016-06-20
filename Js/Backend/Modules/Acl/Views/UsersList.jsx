@@ -16,7 +16,7 @@ List.defaultProps = {
         };
 
         return (
-            <Ui.View>
+            <Ui.View.List>
                 <Ui.View.Header title="Users List">
                     <Ui.Link type="primary" route="Users.Create" align="right">
                         <Ui.Icon icon="icon-plus-circled"/>
@@ -26,7 +26,7 @@ List.defaultProps = {
                 <Ui.View.Body>
                     <Ui.List.ApiContainer {...listProps}>
                         <Ui.List.FormFilters>
-                            {(applyFilters, resetFilters) => (
+                            {(applyFilters) => (
                                 <Ui.Input
                                     name="_searchQuery"
                                     placeholder="Search by name or email"
@@ -61,7 +61,7 @@ List.defaultProps = {
                         <Ui.List.Pagination/>
                     </Ui.List.ApiContainer>
                 </Ui.View.Body>
-            </Ui.View>
+            </Ui.View.List>
         );
     }
 };

@@ -59,16 +59,15 @@ Form.defaultProps = {
         };
 
         return (
-            <Ui.Form.Container {...containerProps}>
+            <Ui.Form.Container ui="myForm" {...containerProps}>
                 {(model, container) => (
-                    <Ui.View>
+                    <Ui.View.Form>
                         <Ui.View.Header title={model.id ? 'Edit User' : 'Create User'}>
                             <Ui.Modal.Confirmation {...deleteConfirmProps}/>
                             <Ui.Button type="primary" label="Delete user" align="right" onClick={this.ui('deleteConfirm:show')}/>
                         </Ui.View.Header>
+                        <Ui.Form.Error message="Something went wrong during save"/>
                         <Ui.View.Body noPadding>
-                            <Ui.Form.Loader/>
-                            <Ui.Form.Error message="Something went wrong during save"/>
                             <Ui.Tabs.Tabs>
                                 <Ui.Tabs.Tab label="General">
                                     <Ui.Grid.Row>
@@ -190,7 +189,7 @@ Form.defaultProps = {
                             <Ui.Button type="default" onClick={container.cancel} label="Go back"/>
                             <Ui.Button type="primary" onClick={container.submit} label="Save" align="right"/>
                         </Ui.View.Footer>
-                    </Ui.View>
+                    </Ui.View.Form>
                 )}
             </Ui.Form.Container>
         );

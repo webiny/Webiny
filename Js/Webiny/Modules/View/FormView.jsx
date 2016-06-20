@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-class View extends Webiny.Ui.Component {
+class FormView extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);
@@ -13,6 +13,7 @@ class View extends Webiny.Ui.Component {
         this.headerComponent = null;
         this.bodyComponent = null;
         this.footerComponent = null;
+        this.errorComponent = null;
 
         if (typeof children !== 'object' || children === null) {
             return children;
@@ -25,14 +26,38 @@ class View extends Webiny.Ui.Component {
             }
 
             if (child.type === Ui.View.Body) {
-                this.bodyComponent = child;
+                // Check if form loader exists in body
+                let loader = null;
+                React.Children.map(child.props.children, bodyChild => {
+                    if (bodyChild.type === Ui.Form.Loader) {
+                        loader = true;
+                    }
+                });
+
+                if (loader) {
+                    this.bodyComponent = child;
+                } else {
+                    const bodyChildren = React.Children.toArray(child.props.children);
+                    bodyChildren.push(<Ui.Form.Loader key="loader" container={this.props.container}/>);
+                    this.bodyComponent = React.cloneElement(child, child.props, bodyChildren);
+                }
                 return;
             }
 
             if (child.type === Ui.View.Footer) {
                 this.footerComponent = child;
+                return;
+            }
+
+            if (child.type === Ui.Form.Error) {
+                this.errorComponent = React.cloneElement(child, _.merge(child.props, {container: this.props.container}));
+                return;
             }
         });
+
+        if (!this.errorComponent) {
+            this.errorComponent = <Ui.Form.Error container={this.props.container}/>;
+        }
     }
 
     componentWillMount() {
@@ -46,12 +71,13 @@ class View extends Webiny.Ui.Component {
     }
 }
 
-View.defaultProps = {
+FormView.defaultProps = {
     renderer() {
         return (
             <view>
                 {this.headerComponent}
                 <div className="view-content">
+                    {this.errorComponent}
                     <Ui.Panel.Panel className={'panel--boxed'}>
                         {this.bodyComponent}
                         {this.footerComponent}
@@ -62,4 +88,4 @@ View.defaultProps = {
     }
 };
 
-export default View;
+export default FormView;

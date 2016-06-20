@@ -127,11 +127,9 @@ UserGroupsForm.defaultProps = {
                     };
 
                     return (
-                        <Ui.View>
+                        <Ui.View.Form>
                             <Ui.View.Header title={model.id ? 'Edit user group' : 'Create user group'}/>
                             <Ui.View.Body>
-                                <Ui.Form.Loader/>
-                                <Ui.Form.Error message="Something went wrong during save"/>
                                 <Ui.Form.Fieldset title="General"/>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>
@@ -191,7 +189,7 @@ UserGroupsForm.defaultProps = {
                                 <Ui.Button type="default" onClick={container.cancel} label="Go back"/>
                                 <Ui.Button type="primary" onClick={container.submit} label="Save user group" align="right"/>
                             </Ui.View.Footer>
-                        </Ui.View>
+                        </Ui.View.Form>
                     );
                 }}
             </Ui.Form.Container>

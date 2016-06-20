@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-class View extends Webiny.Ui.Component {
+class ListView extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);
@@ -46,7 +46,7 @@ class View extends Webiny.Ui.Component {
     }
 }
 
-View.defaultProps = {
+ListView.defaultProps = {
     renderer() {
         return (
             <view>
@@ -62,4 +62,4 @@ View.defaultProps = {
     }
 };
 
-export default View;
+export default ListView;

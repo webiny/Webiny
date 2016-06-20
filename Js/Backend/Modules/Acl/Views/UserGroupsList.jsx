@@ -17,7 +17,7 @@ List.defaultProps = {
         };
 
         return (
-            <Ui.View>
+            <Ui.View.List>
                 <Ui.View.Header title="User Groups List">
                     <Ui.Link type="primary" route="UserGroups.Create" align="right">
                         <Ui.Icon icon="icon-plus-circled"/>
@@ -46,7 +46,7 @@ List.defaultProps = {
                         <Ui.List.Pagination/>
                     </Ui.List.ApiContainer>
                 </Ui.View.Body>
-            </Ui.View>
+            </Ui.View.List>
         );
     }
 };

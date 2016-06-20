@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-class Container extends Webiny.Ui.Component {
+class FormContainer extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);
@@ -384,8 +384,8 @@ class Container extends Webiny.Ui.Component {
             return input;
         }
 
-        if (input.type && (input.type === Ui.Form.Error || input.type === Ui.Form.Loader)) {
-            return React.cloneElement(input, {container: this});
+        if (input.type && _.includes(this.props.injectInto(), input.type)) {
+            input = React.cloneElement(input, {container: this});
         }
 
         if (input.props && input.props.name) {
@@ -596,10 +596,14 @@ class Container extends Webiny.Ui.Component {
     }
 }
 
-Container.defaultProps = {
+FormContainer.defaultProps = {
     defaultModel: {},
     connectToRouter: false,
     onSubmitSuccess: null,
+    injectInto: () => [
+        Ui.Form.Loader,
+        Ui.Form.Error
+    ],
     onSuccessMessage: () => {
         return 'Your record was saved successfully!';
     },
@@ -610,4 +614,4 @@ Container.defaultProps = {
     }
 };
 
-export default Container;
+export default FormContainer;
