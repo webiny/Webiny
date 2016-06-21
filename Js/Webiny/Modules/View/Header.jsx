@@ -9,7 +9,11 @@ Header.defaultProps = {
     renderer() {
         return (
             <div className="master-content__header master-content__header--with-bg">
-                <h2>{this.props.title}</h2>
+                <div className="master-content__title-wrapper">
+                    <h2 className="master-content__title">{this.props.title}</h2>
+
+                    <div className="master-content__description">{this.props.description}</div>
+                </div>
                 {this.props.children}
             </div>
         );

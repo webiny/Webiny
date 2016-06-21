@@ -73,7 +73,7 @@ textarea.form-control {
   > span.icon {
     position: absolute;
     top: 28px;
-    z-index: 500;
+    z-index: 10;
     font-size: 41px;
     line-height: 98%;
     right: -6px;
@@ -197,7 +197,7 @@ textarea.form-control {
     top: 50% !important;
     transform: translateY(-50%);
     right: -6px;
-    z-index: 500;
+    z-index: 10;
     
     font-size: 41px;
     line-height: 98%;
@@ -212,9 +212,6 @@ textarea.form-control {
       height: 42px;
     }
     label {
-    }
-    span.icon, &.error span.icon, &.success span.icon {
-      display: none;
     }
   }
   textarea.form-control {
