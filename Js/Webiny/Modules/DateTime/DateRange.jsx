@@ -140,10 +140,14 @@ DateRange.defaultProps = {
     modelFormat: 'YYYY-MM-DD',
     rangeDelimiter: ':',
     renderer() {
+        let label = null;
+        if (this.props.label) {
+            label = <label className="control-label">{this.props.label}</label>;
+        }
+
         return (
             <div className="form-group">
-                <label className="control-label">{this.props.label}</label>
-
+                {label}
                 <div className="picker-holder">
                     <input type="text" ref="daterange" className="form-control pavel" data-toggle="dropdown"/>
                     <span className="icon-calendar icon_c"></span>

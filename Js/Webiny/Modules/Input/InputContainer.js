@@ -75,7 +75,7 @@ InputContainer.defaultProps = {
                     <Webiny.Ui.Components.DelayedValueLink delay={this.props.delay}>
                         <Input {...props}/>
                     </Webiny.Ui.Components.DelayedValueLink>
-                    {this.props.showValidationIcon ? validationIcon: null}
+                    {this.props.showValidationIcon ? validationIcon : null}
                 </div>
                 <span className="help-block">{description}</span>
                 {this.props.showValidationMessage ? validationMessage : null}
