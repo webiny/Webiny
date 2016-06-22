@@ -13,6 +13,9 @@ const apiProps = [
 function normalizeParams(params) {
     const verifiedParams = {};
     _.each(params, (v, k) => {
+        if (k === 'fields' || k === '_fields') {
+            v = v.replace(' ', '');
+        }
         if (apiProps.indexOf(k) > -1) {
             verifiedParams['_' + k] = v;
         } else {

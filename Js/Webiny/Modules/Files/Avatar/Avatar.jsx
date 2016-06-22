@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 import ImageComponent from './../Base/ImageComponent';
+const Ui = Webiny.Ui.Components;
 
 class Avatar extends ImageComponent {
 
@@ -86,7 +86,7 @@ Avatar.defaultProps = {
             onDragLeave: this.onDragLeave,
             onDragOver: this.onDragOver,
             onClick: this.getFiles,
-            className: 'Avatar'
+            className: 'avatar'
         };
 
         return (

@@ -68,6 +68,7 @@ UserGroupsForm.defaultProps = {
         };
 
         return (
+
             <Ui.Form.Container ui="notificationForm" {...formProps}>
                 {(model, container) => {
                     const entities = [];
@@ -126,19 +127,9 @@ UserGroupsForm.defaultProps = {
                     };
 
                     return (
-                        <Ui.Panel.Panel>
-                            <Ui.Panel.Header>
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={6}>
-                                        User Group
-                                    </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={6}>
-                                        <Ui.Button type="primary" align="right" onClick={container.submit}>Save Changes</Ui.Button>
-                                        <Ui.Button type="default" align="right" onClick={container.cancel}>Go Back</Ui.Button>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-                            </Ui.Panel.Header>
-                            <Ui.Panel.Body>
+                        <Ui.View.Form>
+                            <Ui.View.Header title={model.id ? 'Edit user group' : 'Create user group'}/>
+                            <Ui.View.Body>
                                 <Ui.Form.Fieldset title="General"/>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>
@@ -193,8 +184,12 @@ UserGroupsForm.defaultProps = {
                                         </Ui.Tabs.Tabs>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
-                            </Ui.Panel.Body>
-                        </Ui.Panel.Panel>
+                            </Ui.View.Body>
+                            <Ui.View.Footer>
+                                <Ui.Button type="default" onClick={container.cancel} label="Go back"/>
+                                <Ui.Button type="primary" onClick={container.submit} label="Save user group" align="right"/>
+                            </Ui.View.Footer>
+                        </Ui.View.Form>
                     );
                 }}
             </Ui.Form.Container>

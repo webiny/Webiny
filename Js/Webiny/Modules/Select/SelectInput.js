@@ -152,8 +152,8 @@ class SelectInput extends Webiny.Ui.FormComponent {
      */
     itemRenderer(item, type) {
         let text = item.text;
-        if (_.isFunction(this.props[type]) && item.data) {
-            text = this.props[type].call(this, item.data || {});
+        if (_.isFunction(this.props[type])) {
+            text = this.props[type].call(this, item || {});
         }
 
         if (!_.isString(text)) {

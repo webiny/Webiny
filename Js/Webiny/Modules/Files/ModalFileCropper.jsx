@@ -6,7 +6,6 @@ class ModalFileCropper extends FileCropper {
 
     constructor(props) {
         super(props);
-        this.initialData = null;
         this.bindMethods('show,hide');
     }
 

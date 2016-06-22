@@ -17,40 +17,36 @@ List.defaultProps = {
         };
 
         return (
-            <Webiny.Builder.View na me="core-users-list">
-                <Ui.Grid.Col all={12}>
-                    <h2>
-                        <Ui.Grid.Row>
-                            <Ui.Grid.Col all={10}>
-                                User Groups
-                            </Ui.Grid.Col>
-                            <Ui.Grid.Col all={2}>
-                                <Ui.Link type="primary" align="right" route="UserGroups.Create">Create new User Group</Ui.Link>
-                            </Ui.Grid.Col>
-                        </Ui.Grid.Row>
-                    </h2>
-                </Ui.Grid.Col>
-                <Ui.List.ApiContainer {...listProps}>
-                    <Table.Table>
-                        <Table.Row>
-                            <Table.Field name="name" label="Name" sort="name">
-                                {data => (
-                                    <span>
+            <Ui.View.List>
+                <Ui.View.Header title="User Groups List">
+                    <Ui.Link type="primary" route="UserGroups.Create" align="right">
+                        <Ui.Icon icon="icon-plus-circled"/>
+                        Create user group
+                    </Ui.Link>
+                </Ui.View.Header>
+                <Ui.View.Body>
+                    <Ui.List.ApiContainer {...listProps}>
+                        <Table.Table>
+                            <Table.Row>
+                                <Table.Field name="name" label="Name" sort="name">
+                                    {data => (
+                                        <span>
                                         <strong>{data.name}</strong><br/>{data.id}
                                     </span>
-                                )}
-                            </Table.Field>
-                            <Table.Field name="tag" label="Tag" sort="tag"/>
-                            <Table.Actions>
-                                <Table.EditAction route="UserGroups.Edit"/>
-                                <Table.DeleteAction/>
-                            </Table.Actions>
-                        </Table.Row>
-                        <Table.Footer/>
-                    </Table.Table>
-                    <Ui.List.Pagination/>
-                </Ui.List.ApiContainer>
-            </Webiny.Builder.View>
+                                    )}
+                                </Table.Field>
+                                <Table.Field name="tag" label="Tag" sort="tag"/>
+                                <Table.Actions>
+                                    <Table.EditAction route="UserGroups.Edit"/>
+                                    <Table.DeleteAction/>
+                                </Table.Actions>
+                            </Table.Row>
+                            <Table.Footer/>
+                        </Table.Table>
+                        <Ui.List.Pagination/>
+                    </Ui.List.ApiContainer>
+                </Ui.View.Body>
+            </Ui.View.List>
         );
     }
 };

@@ -56,7 +56,7 @@ Image.defaultProps = {
         let progress = null;
         if (_.has(image, 'progress')) {
             const progressProps = {
-                className: 'Progress__bar-inner',
+                className: 'progress__bar-inner',
                 role: 'progressbar',
                 'aria-valuenow': image.progress,
                 'aria-valuemin': 0,
@@ -66,8 +66,8 @@ Image.defaultProps = {
                 }
             };
             progress = (
-                <div className="Progress">
-                    <div className="Progress__bar">
+                <div className="progress">
+                    <div className="progress__bar">
                         <div {...progressProps}></div>
                     </div>
                 </div>

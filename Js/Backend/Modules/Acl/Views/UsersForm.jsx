@@ -61,52 +61,54 @@ Form.defaultProps = {
         return (
             <Ui.Form.Container ui="myForm" {...containerProps}>
                 {(model, container) => (
-                    <Ui.Grid.Col all={12}>
-                        <Ui.Panel.Panel>
+                    <Ui.View.Form>
+                        <Ui.View.Header title={model.id ? 'Edit User' : 'Create User'}>
                             <Ui.Modal.Confirmation {...deleteConfirmProps}/>
                             <Ui.Button type="primary" label="Delete user" align="right" onClick={this.ui('deleteConfirm:show')}/>
-                            <Ui.Panel.Header title="Users Form"/>
-                            <Ui.Panel.Body>
-                                <Ui.Form.Error message="Something went wrong during save" container={container}/>
-                                <Ui.Tabs.Tabs>
-                                    <Ui.Tabs.Tab label="General">
-                                        <Ui.Grid.Row>
-                                            <Ui.Grid.Col all={6}>
-                                                <Ui.Input label="First name" name="firstName" validate="required"/>
-                                            </Ui.Grid.Col>
-                                            <Ui.Grid.Col all={6}>
-                                                <Ui.Input label="Last name" name="lastName" validate="required"/>
-                                            </Ui.Grid.Col>
-                                            <Ui.Grid.Col all={6}>
-                                                <Ui.Input label="Email" name="email" description="Your email"/>
-                                            </Ui.Grid.Col>
-                                            <Ui.Grid.Col all={6}>
-                                                <Ui.ChangeConfirm {...changeConfirmProps}>
-                                                    <Ui.Search
-                                                        name="document"
-                                                        label="Document"
-                                                        placeholder="Select a document"
-                                                        api="/entities/core/files"
-                                                        fields="name"
-                                                        searchFields="name"
-                                                        useDataAsValue/>
-                                                </Ui.ChangeConfirm>
-                                            </Ui.Grid.Col>
-                                            <Ui.Grid.Col all={12}>
-                                                <Ui.Textarea label="Notes" name="notes" description="User notes"/>
-                                            </Ui.Grid.Col>
-                                        </Ui.Grid.Row>
-                                        <Ui.Grid.Row>
-                                            <Ui.Grid.Col all={12}>
-                                                <Ui.Switch label="Enabled" name="enabled"/>
-                                            </Ui.Grid.Col>
-                                        </Ui.Grid.Row>
-                                    </Ui.Tabs.Tab>
-                                    <Ui.Tabs.Tab label="Files" onClick={this.ui('files:loadData')}>
-                                        <Ui.ChangeConfirm {...avatarConfirmProps}>
-                                            <Ui.Files.Avatar
-                                                name="avatar"
-                                                cropper={{
+                        </Ui.View.Header>
+                        <Ui.Form.Error message="Something went wrong during save"/>
+                        <Ui.View.Body noPadding>
+                            <Ui.Tabs.Tabs>
+                                <Ui.Tabs.Tab label="General">
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={6}>
+                                            <Ui.Input label="First name" name="firstName" validate="required"/>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <Ui.Input label="Last name" name="lastName" validate="required"/>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <Ui.Input label="Email" name="email" description="Your email"/>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <Ui.ChangeConfirm {...changeConfirmProps}>
+                                                <Ui.Search
+                                                    name="document"
+                                                    label="Document"
+                                                    placeholder="Select a document"
+                                                    api="/entities/core/files"
+                                                    fields="name"
+                                                    searchFields="name"
+                                                    useDataAsValue/>
+                                            </Ui.ChangeConfirm>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={12}>
+                                            <Ui.Textarea label="Notes" name="notes" description="User notes"/>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={12}>
+                                            <Ui.Switch label="Enabled" name="enabled"/>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                </Ui.Tabs.Tab>
+                                <Ui.Tabs.Tab label="Files" onClick={this.ui('files:loadData')}>
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={12}>
+                                            <Ui.ChangeConfirm {...avatarConfirmProps}>
+                                                <Ui.Files.Avatar
+                                                    name="avatar"
+                                                    cropper={{
                                                         title: 'Crop your avatar',
                                                         config: {
                                                             aspectRatio: 1,
@@ -117,12 +119,31 @@ Form.defaultProps = {
                                                             height: 400,
                                                             cropBoxResizable: false
                                                         }}}/>
-                                        </Ui.ChangeConfirm>
-                                        <Ui.Files.Gallery
-                                            body={{ref: Webiny.Router.getParams('id')}}
-                                            name="gallery"
-                                            newCropper={{
-                                                inline: true,
+                                            </Ui.ChangeConfirm>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={6}>
+                                            <Ui.Files.Image
+                                                name="avatar"
+                                                cropper={{
+                                                    title: 'Crop your image',
+                                                    action: 'Apply',
+                                                    config: {
+                                                        closeOnClick: false,
+                                                        autoCropArea: 0.7,
+                                                        guides: false,
+                                                        strict: true,
+                                                        mouseWheelZoom: false,
+                                                        touchDragZoom: false
+                                                    }
+                                                }}/>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                    <Ui.Files.Gallery
+                                        body={{ref: Webiny.Router.getParams('id')}}
+                                        name="gallery"
+                                        newCropper={{
                                                 title: 'Crop your new image',
                                                 action: 'Upload image',
                                                 config: {
@@ -134,7 +155,7 @@ Form.defaultProps = {
                                                     touchDragZoom: false
                                                 }
                                             }}
-                                            editCropper={{
+                                        editCropper={{
                                                          title: 'Edit your image',
                                                          action: 'Save changes',
                                                          config: {
@@ -147,49 +168,49 @@ Form.defaultProps = {
                                                          }
                                                      }}/>
 
-                                        <div className="clearfix"/>
-                                        <h2>Files list</h2>
-                                        <Ui.List.ApiContainer ui="files" autoLoad={false} api="/entities/core/files"
-                                                              fields="id,name,type,size" perPage={3}>
-                                            <Table.Table>
-                                                <Table.Row>
-                                                    <Table.Field name="name" align="left" label="Name"/>
-                                                    <Table.Field name="type" align="left" label="Type" sort="type"/>
-                                                    <Table.FileSizeField name="size" label="Size"/>
-                                                </Table.Row>
-                                            </Table.Table>
-                                            <Ui.List.Pagination size="small"/>
-                                        </Ui.List.ApiContainer>
-                                    </Ui.Tabs.Tab>
-                                    <Ui.Tabs.Tab label="Form">
-                                        <Ui.Form.Container ui="inlineForm" {...inlineContainerProps}>
-                                            {(model, form) => (
-                                                <Ui.Grid.Row>
-                                                    <Ui.Form.Error container={form}>
-                                                        {error => <Ui.Alert title="Hmmm..." type="info">Not sure what
-                                                            happened...</Ui.Alert>}
-                                                    </Ui.Form.Error>
-                                                    <Ui.Grid.Col all={6}>
-                                                        <Ui.Input label="First name" name="firstName" validate="required"/>
-                                                    </Ui.Grid.Col>
-                                                    <Ui.Grid.Col all={4}>
-                                                        <Ui.Input label="Email" name="email" description="Your email"/>
-                                                    </Ui.Grid.Col>
-                                                    <Ui.Grid.Col all={2}>
-                                                        <Ui.Button type="primary" onClick={form.submit} label="Save"/>
-                                                    </Ui.Grid.Col>
-                                                </Ui.Grid.Row>
-                                            )}
-                                        </Ui.Form.Container>
-                                    </Ui.Tabs.Tab>
-                                </Ui.Tabs.Tabs>
-                            </Ui.Panel.Body>
-                            <Ui.Panel.Footer className="text-right">
-                                <Ui.Button type="default" onClick={container.cancel} label="Cancel"/>
-                                <Ui.Button type="primary" onClick={container.submit} label="Submit"/>
-                            </Ui.Panel.Footer>
-                        </Ui.Panel.Panel>
-                    </Ui.Grid.Col>
+                                    <div className="clearfix"/>
+                                    <h2>Files list</h2>
+                                    <Ui.List.ApiContainer ui="files" autoLoad={false} api="/entities/core/files"
+                                                          fields="id,name,type,size" perPage={3}>
+                                        <Table.Table>
+                                            <Table.Row>
+                                                <Table.Field name="name" align="left" label="Name"/>
+                                                <Table.Field name="type" align="left" label="Type" sort="type"/>
+                                                <Table.FileSizeField name="size" label="Size"/>
+                                            </Table.Row>
+                                            <Table.Empty/>
+                                        </Table.Table>
+                                        <Ui.List.Pagination size="small"/>
+                                    </Ui.List.ApiContainer>
+                                </Ui.Tabs.Tab>
+                                <Ui.Tabs.Tab label="Form">
+                                    <Ui.Form.Container ui="inlineForm" {...inlineContainerProps}>
+                                        {(model, form) => (
+                                            <Ui.Grid.Row>
+                                                <Ui.Form.Error container={form}>
+                                                    {error => <Ui.Alert title="Hmmm..." type="info">Not sure what
+                                                        happened...</Ui.Alert>}
+                                                </Ui.Form.Error>
+                                                <Ui.Grid.Col all={6}>
+                                                    <Ui.Input label="First name" name="firstName" validate="required"/>
+                                                </Ui.Grid.Col>
+                                                <Ui.Grid.Col all={4}>
+                                                    <Ui.Input label="Email" name="email" description="Your email"/>
+                                                </Ui.Grid.Col>
+                                                <Ui.Grid.Col all={2}>
+                                                    <Ui.Button type="primary" onClick={form.submit} label="Save"/>
+                                                </Ui.Grid.Col>
+                                            </Ui.Grid.Row>
+                                        )}
+                                    </Ui.Form.Container>
+                                </Ui.Tabs.Tab>
+                            </Ui.Tabs.Tabs>
+                        </Ui.View.Body>
+                        <Ui.View.Footer>
+                            <Ui.Button type="default" onClick={container.cancel} label="Go back"/>
+                            <Ui.Button type="primary" onClick={container.submit} label="Save" align="right"/>
+                        </Ui.View.Footer>
+                    </Ui.View.Form>
                 )}
             </Ui.Form.Container>
         );

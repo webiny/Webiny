@@ -41,9 +41,9 @@ class FilesAttribute extends One2ManyAttribute
         return $this;
     }
 
-    public function getValue()
+    public function getValue($params = [])
     {
-        $values = parent::getValue();
+        $values = parent::getValue($params);
 
         foreach ($values as $value) {
             $value->tags->merge($this->tags)->unique();

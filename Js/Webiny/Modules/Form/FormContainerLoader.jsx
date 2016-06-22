@@ -14,7 +14,13 @@ FormContainerLoader.defaultProps = {
             return this.props.children();
         }
 
-        return null; // TODO: Return loader markup here when it's done
+        return (
+            <div className="loading-overlay">
+                <div className="loading-overlay__icon-wrapper">
+                    <div className="loading-overlay__icon"></div>
+                </div>
+            </div>
+        );
     }
 };
 

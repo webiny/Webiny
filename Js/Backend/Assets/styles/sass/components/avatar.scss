@@ -1,10 +1,14 @@
 .avatars {
+  text-align: center;
   margin-bottom: 20px;
+
+  label {
+    margin-bottom: 20px;
+  }
 }
 
 .avatar {
   display: inline-block;
-  margin-right: 40px;
   text-align: center;
 
   .alert {

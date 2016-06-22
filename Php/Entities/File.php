@@ -29,7 +29,13 @@ class File extends EntityAbstract
         $this->attr('size')->integer()->setToArrayDefault();
         $this->attr('type')->char()->setToArrayDefault();
         $this->attr('ext')->char()->setToArrayDefault();
-        $this->attr('src')->char()->setToArrayDefault();
+        $this->attr('src')->char()->setToArrayDefault()->onGet(function ($value, $width = null, $height = null) {
+            if (!$width || !$height) {
+                return $value;
+            }
+
+            return $this->getSize($width . 'x' . $height);
+        });
         $this->attr('tags')->arr()->setToArrayDefault();
         $this->attr('ref')->char()->setToArrayDefault();
         $this->attr('order')->integer()->setDefaultValue(0)->setToArrayDefault();
@@ -49,7 +55,10 @@ class File extends EntityAbstract
     public function toArray($fields = '', $nestedLevel = 1)
     {
         $data = parent::toArray($fields, $nestedLevel);
-        $data['src'] = $this->getUrl();
+        $src = $this->str($data['src']);
+        if (!isset($data['src']) || !$src->startsWith('http://') && !$src->startsWith('https://')) {
+            $data['src'] = $this->getUrl();
+        }
 
         return $data;
     }
@@ -60,7 +69,7 @@ class File extends EntityAbstract
             return $this->storage(self::STORAGE)->getURL($this->src);
         }
 
-        return $this->getExt($ext);
+        return $this->getSize($ext);
     }
 
     public function getAbsolutePath()
@@ -161,7 +170,7 @@ class File extends EntityAbstract
         return $name;
     }
 
-    private function getExt($imageExt)
+    private function getSize($imageExt)
     {
         $storage = $this->storage(self::STORAGE);
         // Predefined sizes

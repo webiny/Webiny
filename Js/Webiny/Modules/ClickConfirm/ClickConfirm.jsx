@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-class ChangeConfirm extends Webiny.Ui.Component {
+class ClickConfirm extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
 
@@ -43,7 +43,7 @@ class ChangeConfirm extends Webiny.Ui.Component {
     }
 }
 
-ChangeConfirm.defaultProps = {
+ClickConfirm.defaultProps = {
     renderer() {
         // Input
         const input = this.getInput(this.props);
@@ -60,4 +60,4 @@ ChangeConfirm.defaultProps = {
     }
 };
 
-export default ChangeConfirm;
+export default ClickConfirm;

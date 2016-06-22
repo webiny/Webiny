@@ -146,7 +146,9 @@ class Gallery extends ImageComponent {
                 return this.setState({showCrop: true, cropImage: file});
             }
 
-            return this.saveImage(file);
+            return this.setState({showCrop: false, cropImage: null}, () => {
+                this.saveImage(file);
+            });
         }
 
         files.map(img => {

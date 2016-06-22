@@ -21,9 +21,9 @@ class Module extends Webiny.Module {
         );
 
 
-        this.registerMenus(
+        /*this.registerMenus(
             new Menu('Settings', items, 'icon-settings')
-        );
+        );*/
     }
 }
 

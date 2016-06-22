@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+const Ui = Webiny.Ui.Components;
 
 class Field extends Webiny.Ui.Component {
 
@@ -30,6 +31,14 @@ Field.defaultProps = {
         let content = _.get(this.props.data, this.props.name) || this.props.default;
         if (_.isFunction(this.props.children)) {
             content = this.props.children.call(this, this.props.data, this);
+        }
+
+        if (this.props.route) {
+            content = (
+                <Ui.List.Table.RouteAction route={this.props.route} data={this.props.data}>
+                    {content}
+                </Ui.List.Table.RouteAction>
+            );
         }
 
         return this.props.includeTd ? <td className={this.getTdClasses()}>{content}</td> : content;
