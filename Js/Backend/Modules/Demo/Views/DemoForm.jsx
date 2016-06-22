@@ -24,13 +24,13 @@ class Form extends Webiny.Ui.View {
             optionRenderer: (item) => {
                 return (
                     <div>
-                        <strong>{item.name}</strong><br/>
-                        <span>Tag: {item.tag}</span>
+                        <strong>{item.data.name}</strong><br/>
+                        <span>Tag: {item.data.tag}</span>
                     </div>
                 );
             },
             selectedRenderer: (item) => {
-                return item.name;
+                return item.data.name;
             },
             onChange: (newValue, oldValue, input) => {
                 console.log(newValue, input.getCurrentData());

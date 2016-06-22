@@ -152,11 +152,11 @@ class SelectInput extends Webiny.Ui.FormComponent {
      */
     itemRenderer(item, type) {
         let text = item.text;
-        if (_.isFunction(this.props[type])) {
+        if (_.isFunction(this.props[type]) && item.id) {
             text = this.props[type].call(this, item || {});
         }
 
-        if (!_.isString(text)) {
+        if (text && !_.isString(text)) {
             text = ReactDOMServer.renderToStaticMarkup(text);
         }
 
