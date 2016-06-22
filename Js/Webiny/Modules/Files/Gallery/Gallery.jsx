@@ -321,11 +321,9 @@ Gallery.defaultProps = {
         let message = null;
         if (this.state.images.length === 0) {
             message = (
-                <form>
-                    <div className="dz-default dz-message">
-                        <span className="tray-bin__main-text">DRAG FILES HERE</span>
-                    </div>
-                </form>
+                <div className="dz-default dz-message">
+                    <span className="tray-bin__main-text">DRAG FILES HERE</span>
+                </div>
             );
         }
 
@@ -369,8 +367,8 @@ Gallery.defaultProps = {
             <div className="form-group">
                 <div className={this.classSet(css)} {...props}>
                     {errors}
-                    {message}
-                    <form>
+                    <div className="tray-bin__container">
+                        {message}
                         {this.state.images.map((item, index) => {
                             const imageProps = {
                                 key: item.id || index,
@@ -401,7 +399,7 @@ Gallery.defaultProps = {
                         {this.getCropper(
                             <Ui.Input label="Title" placeholder="Type in an image title" valueLink={this.bindTo('cropImage.title')}/>
                         )}
-                    </form>
+                    </div>
                     <div className="txt_b">
                         <span>Dragging not convenient?</span>&nbsp;
                         <a href="#" onClick={this.getFiles}>SELECT FILES HERE</a>

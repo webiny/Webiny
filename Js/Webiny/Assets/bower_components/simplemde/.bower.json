@@ -1,6 +1,6 @@
 {
   "name": "simplemde",
-  "version": "1.11.1",
+  "version": "1.11.2",
   "homepage": "https://github.com/NextStepWebs/simplemde-markdown-editor",
   "authors": [
     "Wes Cossick <https://wescossick.com>"
@@ -23,11 +23,11 @@
     "node_modules",
     "bower_components"
   ],
-  "_release": "1.11.1",
+  "_release": "1.11.2",
   "_resolution": {
     "type": "version",
-    "tag": "1.11.1",
-    "commit": "00e0f69d9378979f58e0ebf07dc2da9b9d70f083"
+    "tag": "1.11.2",
+    "commit": "6abda7ab68cc20f4aca870eb243747951b90ab04"
   },
   "_source": "https://github.com/NextStepWebs/simplemde-markdown-editor.git",
   "_target": "^1.10.1",

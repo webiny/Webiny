@@ -20,7 +20,7 @@
         "baobab": "~2.2.1",
         "react": "https://github.com/reactjs/react-bower.git",
         "select2": "4.0.0",
-        "eonasdan-bootstrap-datetimepicker": "~4.17.37",
+        "eonasdan-bootstrap-datetimepicker": "4.15.35",
         "bootstrap-daterangepicker": "~2.1.19",
         "filesize": "^3.2.1",
         "c3": "~0.4.10",
