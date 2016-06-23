@@ -79,7 +79,7 @@ abstract class PackageAbstract
     {
         $this->populateProperties($info);
         $this->config = $info;
-        $possibleTypes = ['app', 'plugin', 'theme'];
+        $possibleTypes = ['app', 'plugin'];
         if (!in_array($type, $possibleTypes)) {
             throw new \Exception("Invalid package type: " . $type);
         }
@@ -177,36 +177,6 @@ abstract class PackageAbstract
     }
 
     /**
-     * Check if current parent object is an app.
-     *
-     * @return bool
-     */
-    public function isApp()
-    {
-        return $this->type == "app";
-    }
-
-    /**
-     * Check if current parent object is a plugin.
-     *
-     * @return bool
-     */
-    public function isPlugin()
-    {
-        return $this->type == "plugin";
-    }
-
-    /**
-     * Check if current parent object is a plugin.
-     *
-     * @return bool
-     */
-    public function isTheme()
-    {
-        return $this->type == "theme";
-    }
-
-    /**
      * Populates object properties from the provided ConfigObject.
      *
      * @param ConfigObject $data Object from which to thake the properties.
@@ -218,7 +188,7 @@ abstract class PackageAbstract
         foreach ($properties as $k => $v) {
             $pName = ucfirst(substr($k, 1));
             if (property_exists($this, $k)) {
-                $this->$k = $data->get($pName, "");
+                $this->$k = $data->get($pName, '');
             }
         }
     }
