@@ -14,16 +14,16 @@
     "moment.min.js"
   ],
   "dependencies": {
-    "jquery": ">=1.10",
+    "jquery": "1.9.1 - 2",
     "moment": ">=2.9.0"
   },
   "homepage": "https://github.com/dangrossman/bootstrap-daterangepicker",
-  "version": "2.1.21",
-  "_release": "2.1.21",
+  "version": "2.1.22",
+  "_release": "2.1.22",
   "_resolution": {
     "type": "version",
-    "tag": "v2.1.21",
-    "commit": "d39abc8b91b662b8b60a75e18c2de09fd6c04299"
+    "tag": "v2.1.22",
+    "commit": "7e46da4e92214d97fbb822258bd8c1a83136d4de"
   },
   "_source": "https://github.com/dangrossman/bootstrap-daterangepicker.git",
   "_target": "~2.1.19",

@@ -193,7 +193,7 @@ class OptionComponent extends Component {
 
     renderOptionText(props, option) {
         if (props.optionRenderer) {
-            return props.optionRenderer(option);
+            return props.optionRenderer({data: option});
         } else if (_.isPlainObject(option) && !_.has(option, '_owner')) { // Pretty lousy check for React object
             return _.get(option, props.textAttr);
         } else if (_.isString(option)) {

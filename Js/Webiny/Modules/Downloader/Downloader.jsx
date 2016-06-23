@@ -24,6 +24,8 @@ class Downloader extends Webiny.Ui.Component {
 }
 
 Downloader.defaultProps = {
+    debug: false,
+    debugKey: 'PHPSTORM',
     renderer() {
         if (this.downloaded) {
             return null;
@@ -56,12 +58,17 @@ Downloader.defaultProps = {
 
         this.downloaded = true;
 
+        let debug = null;
+        if (this.props.debug) {
+            debug = <input type="hidden" name="XDEBUG_SESSION_START" value={this.props.debugKey}/>;
+        }
+
         return (
             <form ref="downloader" action={action} method={this.state.httpMethod} target="_blank">
                 {ids}
                 {filters}
                 {authorization}
-                <input type="hidden" name="XDEBUG_SESSION_START" value="PHPSTORM"/>
+                {debug}
             </form>
         );
     }

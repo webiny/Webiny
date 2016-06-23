@@ -281,9 +281,7 @@
 <script type="text/javascript">
     $(function () {
         $('#datetimepicker6').datetimepicker();
-        $('#datetimepicker7').datetimepicker({
-			useCurrent: false
-		});
+        $('#datetimepicker7').datetimepicker();
         $("#datetimepicker6").on("dp.change", function (e) {
             $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
         });
@@ -321,9 +319,7 @@
 <script type="text/javascript">
     $(function () {
         $('#datetimepicker6').datetimepicker();
-        $('#datetimepicker7').datetimepicker({
-			useCurrent: false //Important! See issue #1075
-		});
+        $('#datetimepicker7').datetimepicker();
         $("#datetimepicker6").on("dp.change", function (e) {
             $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
         });

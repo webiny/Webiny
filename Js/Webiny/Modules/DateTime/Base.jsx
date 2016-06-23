@@ -5,28 +5,7 @@ class Base extends Webiny.Ui.FormComponent {
     constructor(props) {
         super(props);
 
-        _.assign(this.state, {
-            selectedValue: null
-        });
-
-        this.bindMethods('onChangeSelectedValue,onChange');
-
-        this.valueLink = this.bindTo('selectedValue', this.onChangeSelectedValue);
-    }
-
-    setValue() {
-        let newValue = this.props.valueLink.value;
-
-        if (this.props.component !== 'time') {
-            newValue = moment(newValue, this.props.modelFormat);
-            newValue = newValue.isValid() ? newValue.format(this.props.inputFormat) : '';
-        }
-
-        this.input.val(newValue);
-
-        if (this.props.minDate) {
-            this.input.data('DateTimePicker').minDate(new Date(this.props.minDate));
-        }
+        this.bindMethods('setValue,onChange');
     }
 
     /**
@@ -44,33 +23,27 @@ class Base extends Webiny.Ui.FormComponent {
             minDate: this.props.minDate ? new Date(this.props.minDate) : false,
             viewMode: this.props.viewMode
         }).on('dp.change', e => {
-            let newValue = this.input.val() || null;
-
-            if (newValue && this.props.component !== 'time') {
-                newValue = e.date.format(this.props.inputFormat);
-            }
-            this.valueLink.requestChange(newValue);
+            this.onChange(e);
         });
 
-        this.setValue();
+        this.setValue(this.props.valueLink.value);
     }
 
     componentDidUpdate() {
         super.componentDidUpdate();
-        this.setValue();
+        this.setValue(this.props.valueLink.value);
     }
 
-    onChangeSelectedValue(sel) {
-        sel = sel || null;
-        if (sel && this.props.component !== 'time') {
-            const format = this.props.withTimezone ? 'YYYY-MM-DDTHH:mm:ssZ' : this.props.modelFormat;
-            sel = moment(sel, this.props.inputFormat).format(format);
+    setValue(newValue) {
+        this.input.val(newValue);
+
+        if (this.props.minDate) {
+            this.input.data('DateTimePicker').minDate(new Date(this.props.minDate));
         }
-        this.props.valueLink.requestChange(sel);
     }
 
     onChange(e) {
-        this.valueLink.requestChange(e.target.value);
+        this.props.valueLink.requestChange(e.target.value);
     }
 }
 
@@ -101,7 +74,7 @@ Base.defaultProps = {
             readOnly: this.props.readOnly,
             type: 'text',
             className: 'form-control',
-            value: this.valueLink.value || '',
+            value: this.props.valueLink.value || '',
             onChange: this.onChange,
             placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder)
         };

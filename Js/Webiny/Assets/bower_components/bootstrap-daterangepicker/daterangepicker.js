@@ -1,5 +1,5 @@
 /**
-* @version: 2.1.21
+* @version: 2.1.22
 * @author: Dan Grossman http://www.dangrossman.info/
 * @copyright: Copyright (c) 2012-2016 Dan Grossman. All rights reserved.
 * @license: Licensed under the MIT license. See http://www.opensource.org/licenses/mit-license.php
@@ -858,9 +858,15 @@
                 selected = this.endDate ? this.endDate.clone() : this.previousRightTime.clone();
                 minDate = this.startDate;
 
+                if (selected.isBefore(this.startDate))
+                    selected = this.startDate.clone();
+
+                if (maxDate && selected.isAfter(maxDate))
+                    selected = maxDate.clone();
+
                 //Preserve the time already selected
                 var timeSelector = this.container.find('.calendar.right .calendar-time div');
-                if (timeSelector.html() != '') {
+                if (!this.endDate && timeSelector.html() != '') {
 
                     selected.hour(timeSelector.find('.hourselect option:selected').val() || selected.hour());
                     selected.minute(timeSelector.find('.minuteselect option:selected').val() || selected.minute());
@@ -873,12 +879,6 @@
                         if (ampm === 'AM' && selected.hour() === 12)
                             selected.hour(0);
                     }
-
-                    if (selected.isBefore(this.startDate))
-                        selected = this.startDate.clone();
-
-                    if (maxDate && selected.isAfter(maxDate))
-                        selected = maxDate.clone();
 
                 }
             }

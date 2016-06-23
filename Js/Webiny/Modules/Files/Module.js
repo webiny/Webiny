@@ -1,7 +1,8 @@
 import Webiny from 'Webiny';
 import Avatar from './Avatar/Avatar';
 import Gallery from './Gallery/Gallery';
-import Image from './Gallery/Image';
+import GalleryImage from './Gallery/Image';
+import Image from './Image/Image';
 import FileReader from './FileReader';
 import InlineFileCropper from './InlineFileCropper';
 import ModalFileCropper from './ModalFileCropper';
@@ -13,13 +14,14 @@ class Module extends Webiny.Module {
         Webiny.Ui.Components.Files = {
             Avatar,
             Gallery,
+            Image,
             FileReader,
             InlineFileCropper,
             ModalFileCropper,
             FileUploader
         };
 
-        Webiny.Ui.Components.Files.Gallery.Image = Image;
+        Webiny.Ui.Components.Files.Gallery.Image = GalleryImage;
     }
 }
 

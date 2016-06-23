@@ -103,10 +103,12 @@ Form.defaultProps = {
                                     </Ui.Grid.Row>
                                 </Ui.Tabs.Tab>
                                 <Ui.Tabs.Tab label="Files" onClick={this.ui('files:loadData')}>
-                                    <Ui.ChangeConfirm {...avatarConfirmProps}>
-                                        <Ui.Files.Avatar
-                                            name="avatar"
-                                            cropper={{
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={12}>
+                                            <Ui.ChangeConfirm {...avatarConfirmProps}>
+                                                <Ui.Files.Avatar
+                                                    name="avatar"
+                                                    cropper={{
                                                         title: 'Crop your avatar',
                                                         config: {
                                                             aspectRatio: 1,
@@ -117,12 +119,31 @@ Form.defaultProps = {
                                                             height: 400,
                                                             cropBoxResizable: false
                                                         }}}/>
-                                    </Ui.ChangeConfirm>
+                                            </Ui.ChangeConfirm>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={6}>
+                                            <Ui.Files.Image
+                                                name="avatar"
+                                                cropper={{
+                                                    title: 'Crop your image',
+                                                    action: 'Apply',
+                                                    config: {
+                                                        closeOnClick: false,
+                                                        autoCropArea: 0.7,
+                                                        guides: false,
+                                                        strict: true,
+                                                        mouseWheelZoom: false,
+                                                        touchDragZoom: false
+                                                    }
+                                                }}/>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
                                     <Ui.Files.Gallery
                                         body={{ref: Webiny.Router.getParams('id')}}
                                         name="gallery"
                                         newCropper={{
-                                                inline: true,
                                                 title: 'Crop your new image',
                                                 action: 'Upload image',
                                                 config: {

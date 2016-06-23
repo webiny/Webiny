@@ -7,16 +7,18 @@
 
 namespace Apps\Core\Php\Bootstrap;
 
+use Apps\Core\Php\DevTools\BootstrapTrait;
 use Apps\Core\Php\DevTools\Response\ApiResponse;
 use Apps\Core\Php\DevTools\Response\HtmlResponse;
 use Apps\Core\Php\DevTools\Response\ResponseAbstract;
 use Apps\Core\Php\DevTools\Response\ResponseEvent;
+use Apps\Core\Php\PackageManager\App;
 use Webiny\Component\Entity\Entity;
 use Webiny\Component\Http\Response;
 use Webiny\Component\Mongo\Mongo;
 use Webiny\Component\Security\Security;
+use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\UrlObject\UrlObjectException;
-use Webiny\Component\StdLib\StdObjectTrait;
 use Webiny\Component\StdLib\SingletonTrait;
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\PackageManager\PackageScanner;
@@ -26,7 +28,7 @@ use Apps\Core\Php\PackageManager\PackageScanner;
  */
 class Bootstrap
 {
-    use SingletonTrait, DevToolsTrait, StdObjectTrait;
+    use SingletonTrait, DevToolsTrait, StdLibTrait;
 
     /**
      * @var ErrorHandler
@@ -56,6 +58,15 @@ class Bootstrap
         Mongo::setConfig($this->wConfig()->get('Mongo'));
         Entity::setConfig($this->wConfig()->get('Entity'));
         Security::setConfig($this->wConfig()->get('Security'));
+
+        /* @var $app App */
+        foreach ($this->wApps() as $app) {
+            $class = 'Apps\\' . $app->getName() . '\\Php\\Bootstrap';
+            if (class_exists($class) && in_array('Apps\Core\Php\DevTools\BootstrapTrait', class_uses($class))){
+                $bootstrap = new $class;
+                $bootstrap->run($app);
+            }
+        }
 
         $this->wEvents()->fire('Core.Bootstrap.End');
     }

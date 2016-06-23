@@ -22,9 +22,12 @@
 	padding: 15px 0;
 }
 
+.panel-footer {
+	border-top: 1px solid #f2f2f2;
+}
+
 .panel--boxed {
 	padding: 0;
-    border: 1px solid #e8e8e8;
 	.panel-header--gray-bg {
 		padding: 40px;
 
@@ -37,9 +40,12 @@
 	
 	.panel-body--no-padding {
 		padding: 0;
+		
+		> .tabs {
+			border: none;
+		}
 	}
 }
-
 
 .panel--horizontal {
 	padding: 0;

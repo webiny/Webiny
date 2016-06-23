@@ -40,14 +40,14 @@ class FileAttribute extends Many2OneAttribute
         return $this;
     }
 
-    public function getValue()
+    public function getValue($params = [])
     {
-        $value = parent::getValue();
+        $value = parent::getValue($params);
         if ($this->isInstanceOf($value, $this->getEntity())) {
             $value->tags->merge($this->tags)->unique();
         }
 
-        return $value;
+        return $this->processGetValue($value, $params);
     }
 
     public function setValue($value = null, $fromDb = false)

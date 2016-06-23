@@ -65,24 +65,24 @@ class Events
     /**
      * Listen for an event and register a handler that will be triggered when the event is fired.
      *
-     * @param string $event Event name.
-     * @param string $handler Handler, must be a valid callable.
-     * @param int    $priority
+     * @param string          $event Event name.
+     * @param string|callable $handler Handler, must be a valid callable.
+     * @param int             $priority
      *
      * @throws \Exception
      */
     public function listen($event, $handler, $priority)
     {
-        $this->listeners[$event][$handler] = $priority;
+        $this->listeners[$event][] = ['handler' => $handler, 'priority' => $priority];
     }
 
     /**
      * Fire an event.
      *
-     * @param string $event Event name.
-     * @param array  $eventData
-     * @param null   $resultType If specified, the event results will be filtered using given class/interface name
-     * @param null|int   $limit Limit to a number of valid results
+     * @param string   $event Event name.
+     * @param array    $eventData
+     * @param null     $resultType If specified, the event results will be filtered using given class/interface name
+     * @param null|int $limit Limit to a number of valid results
      *
      * @return array Returns array of event results
      */
@@ -115,10 +115,17 @@ class Events
         }
 
         // register the listeners with the event
-        foreach ($this->listeners[$event] as $listener => $priority) {
-            $listener = explode('::', $listener);
+        foreach ($this->listeners[$event] as $config) {
+            $listener = $config['handler'];
+            $priority = $config['priority'];
+
             try {
-                $this->eventManager->listen($event)->handler($listener[0])->method($listener[1])->priority($priority);
+                if (is_string($listener)) {
+                    $listener = explode('::', $listener);
+                    $this->eventManager->listen($event)->handler($listener[0])->method($listener[1])->priority($priority);
+                } else {
+                    $this->eventManager->listen($event)->handler($listener)->priority($priority);
+                }
             } catch (\Exception $e) {
                 throw new \Exception($e->getMessage() . " Event: " . $event . " handler: " . $listener[0] . " method:" . $listener[1]);
             }

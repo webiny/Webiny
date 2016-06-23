@@ -152,11 +152,11 @@ class SelectInput extends Webiny.Ui.FormComponent {
      */
     itemRenderer(item, type) {
         let text = item.text;
-        if (_.isFunction(this.props[type])) {
+        if (_.isFunction(this.props[type]) && item.id) {
             text = this.props[type].call(this, item || {});
         }
 
-        if (!_.isString(text)) {
+        if (text && !_.isString(text)) {
             text = ReactDOMServer.renderToStaticMarkup(text);
         }
 
@@ -216,7 +216,7 @@ SelectInput.defaultProps = {
         let validationMessage = null;
 
         if (this.state.isValid === false) {
-            validationMessage = <span className="info-txt">({this.state.validationMessage})</span>;
+            validationMessage = <span className="help-block">({this.state.validationMessage})</span>;
         }
 
         return (

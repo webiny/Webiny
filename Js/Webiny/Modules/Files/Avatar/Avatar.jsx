@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 import ImageComponent from './../Base/ImageComponent';
+const Ui = Webiny.Ui.Components;
 
 class Avatar extends ImageComponent {
 

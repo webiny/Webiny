@@ -26,7 +26,7 @@ class App extends PackageAbstract
      *
      * @throws \Exception
      */
-    public function __construct(ConfigObject $info, $path, $type = "app")
+    public function __construct(ConfigObject $info, $path, $type = 'app')
     {
         parent::__construct($info, $path, $type);
 

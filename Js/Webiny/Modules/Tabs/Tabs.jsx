@@ -102,6 +102,7 @@ export class Tabs extends Webiny.Ui.Component {
 
 Tabs.defaultProps = {
     position: 'top', // top, left
+    size: 'default',
     renderer() {
         const tabsContainerCss = this.classSet({
             'tabs': true,
@@ -128,10 +129,15 @@ Tabs.defaultProps = {
             tabsContent.push(React.cloneElement(child, props, child.props.children));
         });
 
+        const tabsNavClasses = {
+            'tabs__navigation nav nav-tabs': true,
+            'tabs__navigation--large': this.props.size === 'large'
+        };
+
         return (
             <div className={tabsContainerCss}>
                 <div className="tabs__body">
-                    <ul className="tabs__navigation nav nav-tabs">{tabsHeader}</ul>
+                    <ul className={this.classSet(tabsNavClasses)}>{tabsHeader}</ul>
                     <div className="tabs__panes">{tabsContent}</div>
                 </div>
             </div>
