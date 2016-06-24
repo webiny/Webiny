@@ -17,6 +17,29 @@
     max-width: none;
 }
 
+
+.modal-dialog .modal-content {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+
+    -webkit-transform: translateY(20%);
+    -moz-transform: translateY(20%);
+    -ms-transform: translateY(20%);
+    transform: translateY(20%);
+    opacity: 0;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.modal-show.modal-dialog .modal-content{
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+    opacity: 1;
+}
+
 .modal-content {
     border-radius: 0;
     background-color: #fff;

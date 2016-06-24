@@ -4,7 +4,7 @@ namespace Apps\Core\Php;
 use Apps\Core\Php\DevTools\BootstrapTrait;
 use Webiny\Component\Mailer\Mailer;
 
-class App
+class Bootstrap
 {
     use BootstrapTrait;
 

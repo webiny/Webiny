@@ -10,6 +10,9 @@
   text-transform: uppercase;
 
   border-radius: 60px;
+
+  will-change: opacity;
+  transition: all 0.2s;
 }
 
 button.btn {
@@ -17,6 +20,8 @@ button.btn {
     cursor: pointer;
   }
 }
+
+
 
 .btn.btn-lg, .btn-group.btn-group-lg .btn {
   font-size: 18px;
