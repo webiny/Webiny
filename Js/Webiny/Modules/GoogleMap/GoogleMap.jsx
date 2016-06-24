@@ -11,7 +11,7 @@ class GoogleMaps extends Webiny.Ui.Component {
         this.loading = null;
 
         if (!window.google) {
-            WebinyBootstrap.includeScript('https://maps.googleapis.com/maps/api/js');
+            WebinyBootstrap.includeScript('https://maps.googleapis.com/maps/api/js?key=' + this.props.key);
         }
 
         this.bindMethods('positionMarker,setupMap,search');
@@ -98,6 +98,7 @@ class GoogleMaps extends Webiny.Ui.Component {
 }
 
 GoogleMaps.defaultProps = {
+    key: null,
     zoom: 4,
     lat: 0,
     lng: 0,

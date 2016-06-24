@@ -116,6 +116,10 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         $this->attr('createdOn')->datetime()->setDefaultValue('now');
         $this->attr('modifiedOn')->datetime()->setAutoUpdate(true);
 
+        $this->api('POST', 'restore/{restore}', function ($restore) {
+            return $this->restore($restore)->toArray();
+        });
+
         /**
          * Fire event for registering extra attributes
          */
@@ -206,19 +210,19 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         $entity = new static();
 
         $data = [
-            'class' => get_class($entity),
-            'mask'  => $entity::$entityMask,
-            'relations' => [],
+            'class'      => get_class($entity),
+            'mask'       => $entity::$entityMask,
+            'relations'  => [],
             'attributes' => [],
-            'methods' => []
+            'methods'    => []
         ];
 
-        $attributeType = function(AttributeAbstract $attr){
-            if($attr instanceof Many2OneAttribute){
+        $attributeType = function (AttributeAbstract $attr) {
+            if ($attr instanceof Many2OneAttribute) {
                 return 'many2one';
             }
 
-            if($attr instanceof One2ManyAttribute){
+            if ($attr instanceof One2ManyAttribute) {
                 return 'one2many';
             }
 
@@ -238,7 +242,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
             if ($attr instanceof Many2OneAttribute || $attr instanceof One2ManyAttribute) {
                 $data['relations'][] = [
                     'target' => self::str($attr->getEntity())->replace('\\', '.')->trimLeft('.')->val(),
-                    'type' => $attributeType($attr)
+                    'type'   => $attributeType($attr)
                 ];
             }
 

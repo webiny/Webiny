@@ -31,7 +31,7 @@ class CrudDeleteFlow extends AbstractFlow
             try {
                 $entity->delete();
             } catch (EntityException $e) {
-                throw new ApiException('Failed to delete entity!', $e->getMessage(), $e->getCode(), 400);
+                throw new ApiException('Failed to delete entity! ' . $e->getMessage(), $e->getCode(), 400);
             }
 
             return true;

@@ -172,8 +172,11 @@ class WebinyBootstrapClass {
         }
     }
 
-    includeScript(filename) {
+    includeScript(filename, attributes = {}) {
         const file = document.createElement('script');
+        _.each(attributes, (v, k) => {
+            file.setAttribute(k, v);
+        });
         file.setAttribute('src', filename);
         document.head.appendChild(file);
     }

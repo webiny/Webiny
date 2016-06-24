@@ -9,6 +9,8 @@
 
 namespace Apps\Core\Php\DevTools\Entity;
 
+use MongoDB\Model\BSONArray;
+use MongoDB\Model\BSONDocument;
 use Webiny\Component\Entity\Attribute\AttributeType;
 use Webiny\Component\Mongo\MongoTrait;
 use Webiny\Component\StdLib\SingletonTrait;
@@ -40,9 +42,10 @@ class Archiver
      *
      * @return int Archive process ID
      */
-    public function archive(EntityAbstract $entity) {
+    public function archive(EntityAbstract $entity)
+    {
         $this->archiveCallCount++;
-        if($this->archiveCallCount > 1){
+        if ($this->archiveCallCount > 1) {
             return $this->archiveCallCount;
         }
 
@@ -59,8 +62,9 @@ class Archiver
         return $this->archiveCallCount;
     }
 
-    public function unblock($archiveProcessId){
-        if($this->archiveCallCount == $archiveProcessId){
+    public function unblock($archiveProcessId)
+    {
+        if ($this->archiveCallCount == $archiveProcessId) {
             $this->archiveCallCount = 0;
         }
     }
@@ -69,20 +73,23 @@ class Archiver
      * Restore entity from archive.
      *
      * @param string $class Entity class name
-     * @param string $id    Entity instance id
+     * @param string $id Entity instance id
      *
      * @return EntityAbstract|null
      */
-    public function restore($class, $id) {
+    public function restore($class, $id)
+    {
         $find = [
             'entityId'    => $id,
             'entityClass' => $class
         ];
         $archive = $this->mongo()->findOne($this->collectionName, $find);
 
-        if(!$archive){
+        if (!$archive) {
             return null;
         }
+
+        $archive = $this->convertToArray($archive);
 
         $entity = new $class;
 
@@ -93,9 +100,10 @@ class Archiver
      * Remove record from the archive
      *
      * @param string $class Entity class name
-     * @param string $id    Entity instance id
+     * @param string $id Entity instance id
      */
-    public function remove($class, $id) {
+    public function remove($class, $id)
+    {
         $find = [
             'entityId'    => $id,
             'entityClass' => $class
@@ -110,7 +118,9 @@ class Archiver
      *
      * @return array
      */
-    public function extractData(EntityAbstract $entity) {
+    public function extractData(EntityAbstract $entity)
+    {
+        $data = [];
         foreach ($entity->getAttributes() as $attr => $attrInstance) {
             $entityAttribute = $entity->getAttribute($attr);
             $entityAttributeValue = $entityAttribute->getValue();
@@ -118,20 +128,19 @@ class Archiver
             $isMany2Many = $this->isInstanceOf($entityAttribute, AttributeType::MANY2MANY);
             $isMany2One = $this->isInstanceOf($entityAttribute, AttributeType::MANY2ONE);
 
-            if($isOne2Many) {
+            if ($isOne2Many) {
                 $data[$attr] = [];
                 foreach ($entityAttributeValue as $item) {
                     $attrDataExtractor = new static();
                     $data[$attr][] = $attrDataExtractor->extractData($item);
                 }
-            } elseif($isMany2Many) {
+            } elseif ($isMany2Many) {
                 $data[$attr] = [];
                 foreach ($entityAttributeValue as $item) {
                     $data[$attr][] = $item->id;
                 }
-            } elseif($isMany2One) {
-                $id = $entityAttribute->id;
-                $id = $id ? $id : null;
+            } elseif ($isMany2One) {
+                $id = $entityAttributeValue->id ?? null;
                 $data[$attr] = $id;
             } else {
                 $data[$attr] = $entityAttribute->getValue();
@@ -139,5 +148,19 @@ class Archiver
         }
 
         return $data;
+    }
+
+    protected function convertToArray($source)
+    {
+        $value = [];
+        foreach ($source as $k => $v) {
+            if ($v instanceof BSONDocument || $v instanceof BSONArray) {
+                $value[$k] = $this->convertToArray($v->getArrayCopy());
+            } else {
+                $value[$k] = $v;
+            }
+        }
+
+        return $value;
     }
 }
