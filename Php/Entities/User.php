@@ -46,7 +46,6 @@ class User extends EntityAbstract
         ])->setToArrayDefault();
 
         $this->attr('avatar')->smart(new FileAttribute())->setTags('user', 'avatar');
-        $this->attr('gallery')->smart(new FilesAttribute())->setTags('user-gallery');
         $this->attr('gravatar')->dynamic(function () {
             return md5($this->email);
         });
