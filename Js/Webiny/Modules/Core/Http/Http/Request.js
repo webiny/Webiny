@@ -1,5 +1,21 @@
 import HttpResponse from './Response';
 
+/**
+ * TODO: add ajax request logging to get a performance overview in the backend
+ * These 2 functions are an example of measuring ajax request time/size
+ */
+/* xhr.onloadstart = function () {
+    window.performance.mark('mark_start_xhr');
+};
+xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4) {
+        window.performance.mark('mark_end_xhr');
+        window.performance.measure('measure_xhr_' + xhr.reponseURL, 'mark_start_xhr', 'mark_end_xhr');
+        console.log(window.performance.getEntriesByType('measure')[0].duration, xhr.response.length);
+        window.performance.clearMeasures();
+    }
+}; */
+
 function formatResponse(jqXhr) {
     const headers = {};
     _.filter(jqXhr.getAllResponseHeaders().split('\n')).map(item => {

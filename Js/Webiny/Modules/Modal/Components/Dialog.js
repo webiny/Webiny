@@ -1,12 +1,17 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-let currentModal = null;
+const mountedDialogs = [];
+
+function getShownDialog() {
+    return _.find(mountedDialogs, item => item.state.isShown === true);
+}
 
 class Dialog extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);
+        this.id = _.uniqueId('modal-dialog-');
 
         this.state = {
             isShown: false
@@ -22,24 +27,42 @@ class Dialog extends Webiny.Ui.Component {
         this.bindMethods('show,hide,bindHandlers,unbindHandlers,prepareChildren,prepareChild');
     }
 
+    componentWillUpdate(nextProps, nextState) {
+        super.componentWillUpdate(nextProps, nextState);
+        const currentDialog = getShownDialog();
+        if (currentDialog && currentDialog.id !== this.id && nextState.isShown) {
+            currentDialog.hide();
+        }
+    }
+
     componentDidUpdate(prevProps, prevState) {
         super.componentDidUpdate(prevProps, prevState);
         if (this.state.isShown) {
-            ReactDOM.render(this.props.renderDialog.call(this), this.modalContainer);
-            $(this.modalContainer).find('.modal').focus();
-            $(this.modalContainer).find('.modal-dialog').addClass('modal-show');
-            this.bindHandlers();
-            $(this.modalContainer).show();
-        } else {
+            this.closeCheck = setInterval(() => {
+                const currentDialog = getShownDialog();
+                if (!currentDialog || currentDialog.id === this.id) {
+                    clearInterval(this.closeCheck);
+                    ReactDOM.render(this.props.renderDialog.call(this), this.modalContainer);
+                    $(this.modalContainer).find('.modal').focus();
+                    $(this.modalContainer).find('.modal-dialog').addClass('modal-show');
+                    this.bindHandlers();
+                }
+            }, 1);
+        } else if (prevState.isShown && !this.isShown()) {
             this.unbindHandlers();
-            $(this.modalContainer).hide();
+            ReactDOM.unmountComponentAtNode(this.modalContainer);
         }
+    }
+
+    componentDidMount() {
+        super.componentDidMount();
+        mountedDialogs.push(this);
     }
 
     componentWillUnmount() {
         super.componentWillUnmount();
-        ReactDOM.unmountComponentAtNode(this.modalContainer);
         this.unbindHandlers();
+        mountedDialogs.splice(_.findIndex(mountedDialogs, {id: this.id}), 1);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -72,32 +95,26 @@ class Dialog extends Webiny.Ui.Component {
     hide() {
         this.props.onHide();
         $(this.modalContainer).find('.modal-dialog').removeClass('modal-show');
-        return new Promise(resolve => {
+        setTimeout(() => {
             this.setState({
                 isShown: false
             }, () => {
                 this.props.onHidden();
-                resolve();
             });
-        });
+        }, 200);
     }
 
     show() {
-        const show = () => {
-            currentModal = this;
-            this.props.onShow();
-            this.setState({
-                isShown: true
-            }, () => {
-                this.props.onShown();
-            });
-        };
+        this.props.onShow();
+        this.setState({
+            isShown: true
+        }, () => {
+            this.props.onShown();
+        });
+    }
 
-        if (currentModal) {
-            currentModal.hide().then(show);
-        } else {
-            show();
-        }
+    isShown() {
+        return this.state.isShown;
     }
 
     prepareChild(child) {
