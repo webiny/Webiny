@@ -57,7 +57,7 @@ Confirmation.defaultProps = {
     onCancel: null,
     renderer() {
         return (
-            <Ui.Modal.Dialog ref="dialog">
+            <Ui.Modal.Dialog ref="dialog" modalContainerTag="confirmation-modal">
                 <Ui.Modal.Header title={this.props.title}/>
                 <Ui.Modal.Body>{this.renderContent()}</Ui.Modal.Body>
                 <Ui.Modal.Footer>

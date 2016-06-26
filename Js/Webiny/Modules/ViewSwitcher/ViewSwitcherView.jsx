@@ -48,6 +48,9 @@ class ViewSwitcherView extends Webiny.Ui.Component {
     }
 
     hide() {
+        if (this.props.modal && this.state.show) {
+            this.refs.view.hide();
+        }
         this.setState({show: false, params: []});
     }
 }

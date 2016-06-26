@@ -19,7 +19,6 @@ class Image extends Webiny.Ui.FormComponent {
 
         _.merge(this.state, {
             error: null,
-            showCrop: false,
             cropImage: null,
             actualWidth: 0,
             actualHeight: 0
@@ -27,12 +26,11 @@ class Image extends Webiny.Ui.FormComponent {
     }
 
     applyCropping(newImage) {
-        this.setState({showCrop: false});
         this.props.valueLink.requestChange(newImage);
     }
 
     onCropperHidden() {
-        this.setState({showCrop: false, cropImage: null});
+        this.setState({cropImage: null});
     }
 
     fileChanged(file, error) {
@@ -44,7 +42,7 @@ class Image extends Webiny.Ui.FormComponent {
         if (_.has(file, 'src')) {
             file.id = _.get(this.props.valueLink.value, 'id', this.lastId);
             if (this.props.cropper) {
-                this.setState({showCrop: true, cropImage: file});
+                this.setState({cropImage: file});
             } else {
                 this.props.valueLink.requestChange(file);
             }
@@ -53,7 +51,6 @@ class Image extends Webiny.Ui.FormComponent {
 
     editFile() {
         this.setState({
-            showCrop: true,
             cropImage: this.props.valueLink.value
         });
     }

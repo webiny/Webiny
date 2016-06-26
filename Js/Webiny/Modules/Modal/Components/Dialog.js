@@ -31,23 +31,18 @@ class Dialog extends Webiny.Ui.Component {
         super.componentWillUpdate(nextProps, nextState);
         const currentDialog = getShownDialog();
         if (currentDialog && currentDialog.id !== this.id && nextState.isShown) {
-            currentDialog.hide();
+            $(currentDialog.modalContainer).hide();
         }
     }
 
     componentDidUpdate(prevProps, prevState) {
         super.componentDidUpdate(prevProps, prevState);
-        if (this.state.isShown) {
-            this.closeCheck = setInterval(() => {
-                const currentDialog = getShownDialog();
-                if (!currentDialog || currentDialog.id === this.id) {
-                    clearInterval(this.closeCheck);
-                    ReactDOM.render(this.props.renderDialog.call(this), this.modalContainer);
-                    $(this.modalContainer).find('.modal').focus();
-                    $(this.modalContainer).find('.modal-dialog').addClass('modal-show');
-                    this.bindHandlers();
-                }
-            }, 1);
+        if (this.isShown()) {
+            $(this.modalContainer).show();
+            ReactDOM.render(this.props.renderDialog.call(this), this.modalContainer);
+            $(this.modalContainer).find('.modal').focus();
+            $(this.modalContainer).find('.modal-dialog').addClass('modal-show');
+            this.bindHandlers();
         } else if (prevState.isShown && !this.isShown()) {
             this.unbindHandlers();
             ReactDOM.unmountComponentAtNode(this.modalContainer);
@@ -95,13 +90,11 @@ class Dialog extends Webiny.Ui.Component {
     hide() {
         this.props.onHide();
         $(this.modalContainer).find('.modal-dialog').removeClass('modal-show');
-        setTimeout(() => {
-            this.setState({
-                isShown: false
-            }, () => {
-                this.props.onHidden();
-            });
-        }, 200);
+        this.setState({
+            isShown: false
+        }, () => {
+            this.props.onHidden();
+        });
     }
 
     show() {
@@ -145,10 +138,11 @@ Dialog.defaultProps = {
     onShown: _.noop,
     closeOnClick: true,
     modalContainerTag: 'webiny-modal',
+    style: {},
     renderDialog() {
         const className = this.classSet({modal: true, 'modal-wizard': this.props.wide});
         return (
-            <div style={{display: 'block'}}>
+            <div style={_.merge({}, {display: 'block'}, this.props.style)}>
                 <div className="modal-backdrop in"></div>
                 <div className={className} tabIndex="-1" style={{display: 'block'}}>
                     <div className="modal-dialog">

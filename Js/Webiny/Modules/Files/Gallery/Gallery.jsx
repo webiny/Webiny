@@ -125,13 +125,13 @@ class Gallery extends ImageComponent {
     }
 
     applyCropping(newImage) {
-        this.setState({showCrop: false, cropImage: null}, () => {
+        this.setState({cropImage: null}, () => {
             this.saveImage(newImage);
         });
     }
 
     onCropperHidden() {
-        this.setState({showCrop: false, cropImage: null});
+        this.setState({cropImage: null});
     }
 
     filesChanged(files, errors) {
@@ -143,10 +143,10 @@ class Gallery extends ImageComponent {
             const file = files[0];
             file.key = _.uniqueId('image-');
             if (this.props.newCropper) {
-                return this.setState({showCrop: true, cropImage: file});
+                return this.setState({cropImage: file});
             }
 
-            return this.setState({showCrop: false, cropImage: null}, () => {
+            return this.setState({cropImage: null}, () => {
                 this.saveImage(file);
             });
         }
@@ -200,7 +200,7 @@ class Gallery extends ImageComponent {
     }
 
     editImage(image, index) {
-        this.setState({showCrop: true, cropImage: image, cropIndex: index});
+        this.setState({cropImage: image, cropIndex: index});
     }
 
     deleteImage(image, index) {
