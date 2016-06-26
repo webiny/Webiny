@@ -89,7 +89,8 @@ class Dialog extends Webiny.Ui.Component {
 
     hide() {
         this.props.onHide();
-        $(this.modalContainer).find('.modal-dialog').removeClass('modal-show');
+        // TODO: add setTimeout to setState for this to work
+        // $(this.modalContainer).find('.modal-dialog').removeClass('modal-show');
         this.setState({
             isShown: false
         }, () => {
