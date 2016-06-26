@@ -3,8 +3,8 @@ const Ui = Webiny.Ui.Components;
 
 const mountedDialogs = [];
 
-function getShownDialog() {
-    return _.find(mountedDialogs, item => item.state.isShown === true);
+function getShownDialog(id = null) {
+    return _.find(mountedDialogs, item => item.state.isShown === true && item.id !== id);
 }
 
 class Dialog extends Webiny.Ui.Component {
@@ -33,6 +33,14 @@ class Dialog extends Webiny.Ui.Component {
         if (currentDialog && currentDialog.id !== this.id && nextState.isShown) {
             $(currentDialog.modalContainer).hide();
         }
+
+
+        if (!nextState.isShown) {
+            const prevDialog = getShownDialog(this.id);
+            if (prevDialog) {
+                $(prevDialog.modalContainer).show();
+            }
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -42,7 +50,6 @@ class Dialog extends Webiny.Ui.Component {
             ReactDOM.render(this.props.renderDialog.call(this), this.modalContainer);
             $(this.modalContainer).find('.modal').focus();
             $(this.modalContainer).find('.modal-dialog').addClass('modal-show');
-            $(this.modalContainer).find('.modal-backdrop').addClass('in');
             this.bindHandlers();
         } else if (prevState.isShown && !this.isShown()) {
             this.unbindHandlers();
@@ -90,14 +97,14 @@ class Dialog extends Webiny.Ui.Component {
 
     hide() {
         this.props.onHide();
-        // TODO: add setTimeout to setState for this to work
-        // $(this.modalContainer).find('.modal-dialog').removeClass('modal-show');
-        // $(this.modalContainer).find('.modal-backdrop').removeClass('in');
-        this.setState({
-            isShown: false
-        }, () => {
-            this.props.onHidden();
-        });
+        $(this.modalContainer).find('.modal-dialog').removeClass('modal-show');
+        // setTimeout(() => {
+            this.setState({
+                isShown: false
+            }, () => {
+                this.props.onHidden();
+            });
+        // }, 200);
     }
 
     show() {
@@ -146,7 +153,7 @@ Dialog.defaultProps = {
         const className = this.classSet({modal: true, 'modal-wizard': this.props.wide});
         return (
             <div style={_.merge({}, {display: 'block'}, this.props.style)}>
-                <div className="modal-backdrop"></div>
+                <div className="modal-backdrop in"></div>
                 <div className={className} tabIndex="-1" style={{display: 'block'}}>
                     <div className="modal-dialog">
                         <div className="modal-content">

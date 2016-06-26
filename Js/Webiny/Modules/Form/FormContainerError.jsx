@@ -27,7 +27,7 @@ ContainerError.defaultProps = {
         return (
             <Ui.Alert title={this.props.title} type={this.props.type}>
                 {this.props.message || error.getMessage()}
-                {data && <ul>{data}</ul>}
+                {data.length > 0 && <ul>{data}</ul>}
             </Ui.Alert>
         );
     }
