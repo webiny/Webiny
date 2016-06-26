@@ -116,9 +116,9 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         $this->attr('createdOn')->datetime()->setDefaultValue('now');
         $this->attr('modifiedOn')->datetime()->setAutoUpdate(true);
 
-        $this->api('POST', 'restore/{restore}', function ($restore) {
+        /*$this->api('POST', 'restore/{restore}', function ($restore) {
             return $this->restore($restore)->toArray();
-        });
+        });*/
 
         /**
          * Fire event for registering extra attributes
