@@ -10,6 +10,7 @@ Link.defaultProps = {
     merge: true,
     url: null,
     route: null,
+    params: {},
     separate: false,
     className: '',
     renderer() {

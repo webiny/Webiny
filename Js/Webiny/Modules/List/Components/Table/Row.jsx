@@ -104,7 +104,7 @@ Row.defaultProps = {
             <tr className={this.classSet(this.props.className)} onClick={this.onClick}>
                 {select}
                 {this.fields.map(this.renderField)}
-                {this.actions ? <td>{this.actions}</td> : null}
+                {this.actions ? <td className="text-center">{this.actions}</td> : null}
             </tr>
         );
     }
