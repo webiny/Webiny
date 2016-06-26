@@ -3,8 +3,8 @@ const Ui = Webiny.Ui.Components;
 
 const mountedDialogs = [];
 
-function getShownDialog() {
-    return _.find(mountedDialogs, item => item.state.isShown === true);
+function getShownDialog(id = null) {
+    return _.find(mountedDialogs, item => item.state.isShown === true && item.id !== id);
 }
 
 class Dialog extends Webiny.Ui.Component {
@@ -32,6 +32,14 @@ class Dialog extends Webiny.Ui.Component {
         const currentDialog = getShownDialog();
         if (currentDialog && currentDialog.id !== this.id && nextState.isShown) {
             $(currentDialog.modalContainer).hide();
+        }
+
+
+        if (!nextState.isShown) {
+            const prevDialog = getShownDialog(this.id);
+            if (prevDialog) {
+                $(prevDialog.modalContainer).show();
+            }
         }
     }
 
@@ -89,13 +97,14 @@ class Dialog extends Webiny.Ui.Component {
 
     hide() {
         this.props.onHide();
-        // TODO: add setTimeout to setState for this to work
-        // $(this.modalContainer).find('.modal-dialog').removeClass('modal-show');
-        this.setState({
-            isShown: false
-        }, () => {
-            this.props.onHidden();
-        });
+        $(this.modalContainer).find('.modal-dialog').removeClass('modal-show');
+        setTimeout(() => {
+            this.setState({
+                isShown: false
+            }, () => {
+                this.props.onHidden();
+            });
+        }, 200);
     }
 
     show() {
