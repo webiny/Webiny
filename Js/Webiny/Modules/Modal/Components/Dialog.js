@@ -42,6 +42,7 @@ class Dialog extends Webiny.Ui.Component {
             ReactDOM.render(this.props.renderDialog.call(this), this.modalContainer);
             $(this.modalContainer).find('.modal').focus();
             $(this.modalContainer).find('.modal-dialog').addClass('modal-show');
+            $(this.modalContainer).find('.modal-backdrop').addClass('in');
             this.bindHandlers();
         } else if (prevState.isShown && !this.isShown()) {
             this.unbindHandlers();
@@ -91,6 +92,7 @@ class Dialog extends Webiny.Ui.Component {
         this.props.onHide();
         // TODO: add setTimeout to setState for this to work
         // $(this.modalContainer).find('.modal-dialog').removeClass('modal-show');
+        // $(this.modalContainer).find('.modal-backdrop').removeClass('in');
         this.setState({
             isShown: false
         }, () => {
@@ -144,7 +146,7 @@ Dialog.defaultProps = {
         const className = this.classSet({modal: true, 'modal-wizard': this.props.wide});
         return (
             <div style={_.merge({}, {display: 'block'}, this.props.style)}>
-                <div className="modal-backdrop in"></div>
+                <div className="modal-backdrop"></div>
                 <div className={className} tabIndex="-1" style={{display: 'block'}}>
                     <div className="modal-dialog">
                         <div className="modal-content">

@@ -5,6 +5,8 @@
 .modal-backdrop {
     z-index: 2000;
     background-color: rgba(0, 0, 0, 1);
+    opacity:0;
+    transition: all 0.3s;
 }
 
 .modal-backdrop.in{
@@ -18,7 +20,7 @@
 }
 
 
-.modal-dialog .modal-content {
+.modal-dialog .modal-content{
     will-change: transform, opacity;
     backface-visibility: hidden;
 
