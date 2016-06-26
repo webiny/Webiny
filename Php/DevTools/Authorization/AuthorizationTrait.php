@@ -11,14 +11,14 @@ use Webiny\Component\Entity\EntityCollection;
 trait AuthorizationTrait
 {
     /**
+     * @return EntityCollection|array
+     */
+    public abstract function getUserGroups();
+
+    /**
      * @return User
      */
     protected abstract function getUserToAuthorize();
-
-    /**
-     * @return EntityCollection
-     */
-    protected abstract function getUserGroups();
 
     public function canCreate($class)
     {

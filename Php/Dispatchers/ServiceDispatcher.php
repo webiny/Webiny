@@ -48,7 +48,7 @@ class ServiceDispatcher extends AbstractApiDispatcher
             throw new ApiException($message, 'WBY-SD-NO_METHODS_EXPOSED', 404);
         }
 
-        if (!$this->wAuth()->canExecute($serviceClass, $url)) {
+        if (!$this->wAuth()->canExecute($serviceClass, $matchedServiceMethod->getApiMethod()->getPattern())) {
             throw new ApiException('You don\'t have an EXECUTE permission on ' . $serviceClass, 'WBY-AUTHORIZATION');
         }
 

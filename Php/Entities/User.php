@@ -182,6 +182,11 @@ class User extends EntityAbstract
         })->setBodyValidators(['code' => 'required', 'password' => 'required']);
     }
 
+    public function getUserGroups()
+    {
+        return $this->groups;
+    }
+
     protected static function entityIndexes()
     {
         return [
@@ -196,11 +201,6 @@ class User extends EntityAbstract
     protected function getUserToAuthorize()
     {
         return $this;
-    }
-
-    protected function getUserGroups()
-    {
-        return $this->groups;
     }
 
     public function save()
