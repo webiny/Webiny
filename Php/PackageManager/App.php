@@ -144,4 +144,15 @@ class App extends PackageAbstract
 
         return $services;
     }
+
+    public function getBootstrap()
+    {
+        if (file_exists($this->getPath(true) . '/Php/Bootstrap.php')) {
+            $class = 'Apps\\' . $this->getName() . '\\Php\\Bootstrap';
+            if (in_array('Apps\Core\Php\DevTools\BootstrapTrait', class_uses($class))) {
+                return new $class;
+            }
+        }
+        return null;
+    }
 }

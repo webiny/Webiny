@@ -61,9 +61,8 @@ class Bootstrap
 
         /* @var $app App */
         foreach ($this->wApps() as $app) {
-            $class = 'Apps\\' . $app->getName() . '\\Php\\Bootstrap';
-            if (class_exists($class) && in_array('Apps\Core\Php\DevTools\BootstrapTrait', class_uses($class))){
-                $bootstrap = new $class;
+            $bootstrap = $app->getBootstrap();
+            if ($bootstrap) {
                 $bootstrap->run($app);
             }
         }
