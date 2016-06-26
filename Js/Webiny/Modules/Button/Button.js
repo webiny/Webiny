@@ -61,7 +61,7 @@ Button.defaultProps = {
         if (icon) {
             content = <span>{content}</span>;
         }
-        return <button {...props} type="button" className={classes}>{content} {icon}</button>;
+        return <button {...props} type="button" className={classes}>{icon} {content}</button>;
     }
 };
 

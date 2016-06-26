@@ -36,6 +36,12 @@ class CrudCreateFlow extends AbstractFlow
             if ($e->getCode() == EntityException::VALIDATION_FAILED) {
                 throw new ApiException($e->getMessage(), 'WBY-ED-CRUD_CREATE_FLOW-2', 422, $e->getInvalidAttributes());
             }
+
+            $code = $e->getCode();
+            if (!$code) {
+                $code = 'WBY-ED-CRUD_CREATE_FLOW-2';
+            }
+            throw new ApiException($e->getMessage(), $code, 422);
         }
 
         return $entity->toArray($this->wRequest()->getFields());
