@@ -30,7 +30,8 @@ Container.defaultProps = {
             valueLink: this.props.valueLink,
             placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder),
             style: this.props.style,
-            mode: this.props.mode
+            mode: this.props.mode,
+            readOnly: _.get(this.props, 'readOnly', false)
         };
 
         return (
