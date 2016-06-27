@@ -118,7 +118,7 @@ formValidator.addValidator('required', (value) => {
 });
 
 formValidator.addValidator('eq', (value, equalTo) => {
-    if (!value || value === equalTo) {
+    if (value === equalTo) {
         return true;
     }
     throw new ValidationError('This field must be equal to ' + equalTo);

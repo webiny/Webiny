@@ -9,7 +9,8 @@ class Module extends Webiny.Module {
         this.registerMenus(
             new Menu('ACL', [
                 new Menu('Users', 'Users.List'),
-                new Menu('User Groups', 'UserGroups.List')
+                new Menu('User Groups', 'UserGroups.List'),
+                new Menu('API Tokens', 'ApiTokens.List')
             ], 'icon-users')
         );
 
@@ -20,7 +21,8 @@ class Module extends Webiny.Module {
             new Webiny.Route('Users.List', '/acl/users', Views.UsersList, 'Users'),
             new Webiny.Route('UserGroups.Create', '/acl/groups/new', Views.UserGroupsForm, 'New User Group'),
             new Webiny.Route('UserGroups.Edit', '/acl/groups/:id', Views.UserGroupsForm, 'Edit User Group'),
-            new Webiny.Route('UserGroups.List', '/acl/groups', Views.UserGroupsList, 'User Groups')
+            new Webiny.Route('UserGroups.List', '/acl/groups', Views.UserGroupsList, 'User Groups'),
+            new Webiny.Route('ApiTokens.List', '/acl/api-tokens', Views.ApiTokensList, 'API Tokens')
         );
 
         Webiny.Dispatcher.on('Acl.Account.Refresh', () => {

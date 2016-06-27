@@ -157,7 +157,7 @@ Dialog.defaultProps = {
             <div style={_.merge({}, {display: 'block'}, this.props.style)}>
                 <div className="modal-backdrop"></div>
                 <div className={className} tabIndex="-1" style={{display: 'block'}}>
-                    <div className="modal-dialog">
+                    <div className={this.classSet('modal-dialog', this.props.className)}>
                         <div className="modal-content">
                             {this.prepareChildren(this.props.children)}
                         </div>

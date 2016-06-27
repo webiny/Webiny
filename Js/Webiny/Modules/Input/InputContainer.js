@@ -16,6 +16,7 @@ class InputContainer extends Webiny.Ui.FormComponent {
 
 InputContainer.defaultProps = {
     delay: 400,
+    readOnly: false,
     onEnter: _.noop,
     description: null,
     info: null,
