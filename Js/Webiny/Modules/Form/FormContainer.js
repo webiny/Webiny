@@ -58,7 +58,7 @@ class FormContainer extends Webiny.Ui.Component {
         this.setState({model, initialModel: model});
 
         if (this.props.loadModel) {
-            return this.props.loadModel.call(this).then(customModel => {
+            return this.props.loadModel.call(this, this).then(customModel => {
                 const mergedModel = _.merge({}, this.props.defaultModel || {}, customModel);
                 this.setState({model: mergedModel, loading: false, initialModel: _.clone(mergedModel)});
             });

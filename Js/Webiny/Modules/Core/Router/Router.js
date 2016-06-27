@@ -65,7 +65,7 @@ class Router {
         });
 
         beforeStartChain = beforeStartChain.then(event => {
-            if (!event.isStopped()) {
+            if (!event.isStopped() || event.goTo === null) {
                 Utils.renderRoute(event.route);
             } else {
                 if (event.goTo !== null) {

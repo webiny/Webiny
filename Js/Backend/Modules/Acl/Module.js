@@ -14,6 +14,7 @@ class Module extends Webiny.Module {
         );
 
         this.registerRoutes(
+            new Webiny.Route('Users.Account', '/acl/users/account', Views.UsersAccount, 'Account Settings'),
             new Webiny.Route('Users.Create', '/acl/users/new', Views.UsersForm, 'Create User'),
             new Webiny.Route('Users.Edit', '/acl/users/:id', Views.UsersForm, 'Edit User'),
             new Webiny.Route('Users.List', '/acl/users', Views.UsersList, 'Users'),
@@ -21,6 +22,13 @@ class Module extends Webiny.Module {
             new Webiny.Route('UserGroups.Edit', '/acl/groups/:id', Views.UserGroupsForm, 'Edit User Group'),
             new Webiny.Route('UserGroups.List', '/acl/groups', Views.UserGroupsList, 'User Groups')
         );
+
+        Webiny.Dispatcher.on('Acl.Account.Refresh', () => {
+            return new Webiny.Api.Endpoint('/entities/core/users').get('/me').then(res => {
+                Webiny.Model.set('User', res.getData());
+                return res;
+            });
+        });
     }
 }
 

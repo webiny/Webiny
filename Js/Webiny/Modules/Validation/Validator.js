@@ -8,9 +8,7 @@ class Validator {
     }
 
     addValidator(name, callable) {
-        if (!_.has(this.validators[name])) {
-            this.validators[name] = callable;
-        }
+        this.validators[name] = callable;
         return this;
     }
 
@@ -72,8 +70,7 @@ class Validator {
                 try {
                     validator = _this.getValidator(validatorName)(...args);
                 } catch (e) {
-                    e.setValidator(validatorName);
-                    throw e;
+                    throw new ValidationError(e.message, validatorName, value);
                 }
 
                 // In case it's an instance of Http.Request, attach an error handler to catch validation error

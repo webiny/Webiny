@@ -78,7 +78,7 @@ Form.defaultProps = {
                                             <Ui.Input label="Last name" name="lastName" validate="required"/>
                                         </Ui.Grid.Col>
                                         <Ui.Grid.Col all={6}>
-                                            <Ui.Input label="Email" name="email" description="Your email"/>
+                                            <Ui.Input label="Email" name="email" description="Your email" validate="required,email"/>
                                         </Ui.Grid.Col>
                                         <Ui.Grid.Col all={6}>
                                             <Ui.ChangeConfirm {...changeConfirmProps}>

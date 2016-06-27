@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+const Ui = Webiny.Ui.Components;
 
 class Header extends Webiny.Ui.Component {
 
@@ -45,7 +46,12 @@ function renderer() {
 
                     <div className="drop dropdown-menu" role="menu" aria-labelledby="dropdownMenu4">
                         <span className="top-arr"></span>
-
+                        <ul>
+                            <li>
+                                <Ui.Link route="Users.Account">Account preferences</Ui.Link>
+                                <span>Set your account and user preferences </span>
+                            </li>
+                        </ul>
                         <div className="drop-footer">
                             <a href="javascript:void(0);" className="logout" onClick={this.logout}>
                                 <span className="icon-sign-out icon-bell icon"></span>
