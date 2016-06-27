@@ -81,7 +81,7 @@ Login.defaultProps = {
             placeholder: 'Password',
             label: 'Password *',
             validate: 'required,password'
-            //info: <span className="info-txt"><a tabIndex="-1" href="#">Forgot your password?</a></span>
+            // info: <span className="info-txt"><a tabIndex="-1" href="#">Forgot your password?</a></span>
         };
 
         return (

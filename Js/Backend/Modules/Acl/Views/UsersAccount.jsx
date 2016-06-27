@@ -6,11 +6,11 @@ class UsersAccount extends Webiny.Ui.View {
 }
 
 UsersAccount.defaultProps = {
-    configureContainer(container){
+    configureContainer(container) {
         return container;
     },
     renderer() {
-        const container = {
+        const formContainer = {
             api: '/entities/core/users',
             loadModel: (container) => {
                 return container.api.get('/me', {_fields: 'id,firstName,lastName,email,gravatar'}).then(res => {
@@ -21,7 +21,7 @@ UsersAccount.defaultProps = {
                 container.showLoading();
                 return container.api.patch('/me', model).then(apiResponse => {
                     container.hideLoading();
-                    if(apiResponse.isError()){
+                    if (apiResponse.isError()) {
                         return container.__processError(apiResponse);
                     }
 
@@ -33,7 +33,7 @@ UsersAccount.defaultProps = {
         };
 
         return (
-            <Ui.Form.Container ui="myForm" {...this.props.configureContainer(container)}>
+            <Ui.Form.Container ui="myForm" {...this.props.configureContainer(formContainer)}>
                 {(model, container) => (
                     <Ui.View.Form>
                         <Ui.View.Header title="Account Settings"/>

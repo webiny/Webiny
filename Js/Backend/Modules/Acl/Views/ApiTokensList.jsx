@@ -62,7 +62,7 @@ ApiTokensList.defaultProps = {
                                                 sort="enabled"
                                                 align="center"
                                                 message={checked => {
-                                                    if(!checked){
+                                                    if (!checked) {
                                                         return (
                                                             <span>This will disable API token and prevent it's bearer from using your API!
                                                                 <br/>Are you sure you want to disable it?

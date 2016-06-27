@@ -14,7 +14,6 @@ class Date extends BaseDateTime {
         setTimeout(() => {
             const widget = ReactDOM.findDOMNode(this).querySelector('.bootstrap-datetimepicker-widget');
             if (!widget) {
-
                 if (newValue) {
                     const format = this.props.withTimezone ? 'YYYY-MM-DDTHH:mm:ssZ' : this.props.modelFormat;
                     newValue = moment(newValue, this.props.modelFormat).format(format);

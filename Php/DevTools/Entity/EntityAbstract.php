@@ -154,9 +154,9 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
          * Archiver blocks further calls to that method until the entity that initiated archiving unblocks it by calling "unblock".
          * To perform unblocking, "archive process id" is required, to identify entity instance that initiated the archiving process.
          */
-        $archiveProcessId = Archiver::getInstance()->archive($this);
+        // $archiveProcessId = Archiver::getInstance()->archive($this);
         $deleted = parent::delete();
-        Archiver::getInstance()->unblock($archiveProcessId);
+        // Archiver::getInstance()->unblock($archiveProcessId);
 
         /**
          * Fire "AfterDelete" event
