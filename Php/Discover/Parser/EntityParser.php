@@ -48,6 +48,13 @@ class EntityParser extends AbstractParser
             'type'        => 'string',
             'required'    => true
         ];
+
+        $this->headerApiToken = [
+            'name'        => 'Api-Token',
+            'description' => 'API token',
+            'type'        => 'string',
+            'required'    => true
+        ];
     }
 
     public function getApiMethods()
@@ -144,11 +151,10 @@ class EntityParser extends AbstractParser
             'path'       => $this->url,
             'name'       => 'List ' . $this->str($this->name)->pluralize(),
             'method'     => 'GET',
-            'parameters' => [
-                $this->headerAuthorizationToken
-            ],
+            'parameters' => [],
             'headers'    => [
-                $this->headerAuthorizationToken
+                $this->headerAuthorizationToken,
+                $this->headerApiToken
             ],
             'tests'      => [
                 'var jsonData = JSON . parse(responseBody);',
@@ -169,7 +175,8 @@ class EntityParser extends AbstractParser
                 $this->paramId
             ],
             'headers'    => [
-                $this->headerAuthorizationToken
+                $this->headerAuthorizationToken,
+                $this->headerApiToken
             ]
         ];
     }
@@ -182,7 +189,8 @@ class EntityParser extends AbstractParser
             'method'     => 'POST',
             'parameters' => [],
             'headers'    => [
-                $this->headerAuthorizationToken
+                $this->headerAuthorizationToken,
+                $this->headerApiToken
             ],
             'body'       => $this->getRequiredAttributes()
         ];
@@ -198,7 +206,8 @@ class EntityParser extends AbstractParser
                 $this->paramId
             ],
             'headers'    => [
-                $this->headerAuthorizationToken
+                $this->headerAuthorizationToken,
+                $this->headerApiToken
             ],
             'body'       => $this->getRequiredAttributes()
         ];
@@ -214,7 +223,8 @@ class EntityParser extends AbstractParser
                 $this->paramId
             ],
             'headers'    => [
-                $this->headerAuthorizationToken
+                $this->headerAuthorizationToken,
+                $this->headerApiToken
             ]
         ];
     }
@@ -234,6 +244,9 @@ class EntityParser extends AbstractParser
                     'name'        => $config->key('name'),
                     'description' => $config->key('description', '', true),
                     'method'      => strtoupper($httpMethod),
+                    'headers'     => [
+                        'Api-Token' => $this->headerApiToken
+                    ]
                 ];
 
                 // Build path, body and header parameters
