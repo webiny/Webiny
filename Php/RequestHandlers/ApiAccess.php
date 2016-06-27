@@ -22,6 +22,10 @@ class ApiAccess
 
     public function handle(ApiEvent $event)
     {
+        if (!$this->wConfig()->getConfig()->get('Application.ApiTokenControl')) {
+            return;
+        }
+
         // Check if request is coming from your own host
         $referrer = $this->wRequest()->server()->httpReferer();
         $requestHost = $referrer ? $this->url($referrer)->getHost() : null;
