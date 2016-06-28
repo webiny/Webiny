@@ -67,6 +67,7 @@ class Dialog extends Webiny.Ui.Component {
         super.componentWillUnmount();
         this.unbindHandlers();
         mountedDialogs.splice(_.findIndex(mountedDialogs, {id: this.id}), 1);
+        ReactDOM.unmountComponentAtNode(this.modalContainer);
     }
 
     shouldComponentUpdate(nextProps, nextState) {
