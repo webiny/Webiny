@@ -16,19 +16,17 @@ class RootElement extends View {
         this.bindMethods('onDidUpdate,checkHash');
     }
 
-    componentWillMount() {
-        Router.start(window.location.pathname).then(() => {
-            this.setState({loading: false});
-        });
-    }
-
     componentDidMount() {
         this.unsubscribe = Dispatcher.on('RenderRoute', () => {
             return this.setState({
                 time: new Date().getTime()
             });
         });
-        this.checkHash();
+
+        Router.start(window.location.pathname).then(() => {
+            this.setState({loading: false});
+            this.checkHash();
+        });
     }
 
     checkHash() {

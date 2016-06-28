@@ -80,8 +80,8 @@ Login.defaultProps = {
             name: 'password',
             placeholder: 'Password',
             label: 'Password *',
-            validate: 'required,password',
-            info: <span className="info-txt"><a tabIndex="-1" href="#">Forgot your password?</a></span>
+            validate: 'required,password'
+            // info: <span className="info-txt"><a tabIndex="-1" href="#">Forgot your password?</a></span>
         };
 
         return (
@@ -104,8 +104,9 @@ Login.defaultProps = {
 
                         <div className="form-footer">
                             <div className="submit-wrapper">
-                                <Ui.Button type="primary" size="large" onClick={this.submit} icon="icon-next">
+                                <Ui.Button type="primary" size="large" onClick={this.submit}>
                                     <span>Submit</span>
+                                    <Ui.Icon icon="icon-next"/>
                                 </Ui.Button>
                             </div>
                         </div>

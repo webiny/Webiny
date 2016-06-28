@@ -57,11 +57,15 @@ Confirmation.defaultProps = {
     onCancel: null,
     renderer() {
         return (
-            <Ui.Modal.Dialog ref="dialog" modalContainerTag="confirmation-modal">
-                <Ui.Modal.Header title={this.props.title}/>
-                <Ui.Modal.Body>{this.renderContent()}</Ui.Modal.Body>
+            <Ui.Modal.Dialog ref="dialog" modalContainerTag="confirmation-modal" className="alert-modal">
+                <Ui.Modal.Body>
+                    <div className="text-center">
+                        <h4>{this.props.title}</h4>
+                        <p>{this.renderContent()}</p>
+                    </div>
+                </Ui.Modal.Body>
                 <Ui.Modal.Footer>
-                    <Ui.Button type="secondary" label={this.props.cancel} onClick={this.onCancel}/>
+                    <Ui.Button type="default" label={this.props.cancel} onClick={this.onCancel}/>
                     <Ui.Button type="primary" label={this.props.confirm} onClick={this.onConfirm}/>
                 </Ui.Modal.Footer>
             </Ui.Modal.Dialog>

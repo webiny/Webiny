@@ -5,8 +5,10 @@
 .modal-backdrop {
     z-index: 2000;
     background-color: rgba(0, 0, 0, 1);
-    opacity:0;
-    transition: all 0.3s;
+    will-change: opacity;
+    backface-visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s;
 }
 
 .modal-backdrop.in{
@@ -19,8 +21,13 @@
     max-width: none;
 }
 
+.modal-content {
+    border-radius: 0;
+    background-color: #fff;
+    -webkit-animation: fadeIn 0.2s;
+}
 
-.modal-dialog .modal-content{
+.modal-dialog .modal-content {
     will-change: transform, opacity;
     backface-visibility: hidden;
 
@@ -40,12 +47,6 @@
     -ms-transform: translateY(0);
     transform: translateY(0);
     opacity: 1;
-}
-
-.modal-content {
-    border-radius: 0;
-    background-color: #fff;
-    -webkit-animation: fadeIn 0.2s;
 }
 
 .modal-content .modal-header {
@@ -72,9 +73,12 @@
 }
 
 .modal-content .modal-body {
-    color: #666;
-    margin-top: 0;
+  color: #666;
+  margin-top: 0;
+
+  .modal-body--no-padding {
     padding: 0;
+  }
 }
 
 .modal-header .close {

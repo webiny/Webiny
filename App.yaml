@@ -84,6 +84,8 @@ Events:
                 - {Handler: Php/RequestHandlers/Backend, Priority: 390}
                 - {Handler: Php/RequestHandlers/Routes, Priority: 380}
         Api:
+            Before:
+                - {Handler: Php/RequestHandlers/ApiAccess}
             Request:
                 - {Handler: Php/Dispatchers/EntityDispatcher}
                 - {Handler: Php/Dispatchers/ServiceDispatcher}

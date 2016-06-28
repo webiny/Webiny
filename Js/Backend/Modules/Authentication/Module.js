@@ -7,7 +7,7 @@ class Authentication extends Webiny.Modules.Authentication {
         this.registerRoutes(
             new Webiny.Route('Login', '/login', {
                 MasterLayout: Login
-            }).skipDefaultComponents(true)
+            }, 'Login').skipDefaultComponents(true)
         );
     }
 }

@@ -8,6 +8,7 @@
 namespace Apps\Core\Php\Dispatchers\Flows;
 
 use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\Dispatchers\AbstractFlow;
 use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\Attribute\Validation\ValidationException;
@@ -51,16 +52,19 @@ class ExecuteMethodFlow extends AbstractFlow
             $bindTo = $entity;
         }
 
+        $code = 'WBY-ED-EXECUTE_METHOD_FLOW';
         try {
             return $apiMethod($params, $bindTo);
         } catch (ApiException $e) {
             throw $e;
+        } catch (AppException $e) {
+            throw $e;
         } catch (ValidationException $e) {
-            throw new ApiException($e->getMessage(), 'WBY-ED-EXECUTE_METHOD_FLOW', 400, iterator_to_array($e->getIterator()));
+            throw new ApiException($e->getMessage(), $code, 400, iterator_to_array($e->getIterator()));
         } catch (EntityException $e) {
-            throw new ApiException($e->getMessage(), 'WBY-ED-EXECUTE_METHOD_FLOW', 400, $e->getInvalidAttributes());
+            throw new ApiException($e->getMessage(), $code, 400, $e->getInvalidAttributes());
         } catch (ExceptionAbstract $e) {
-            throw new ApiException($e->getMessage(), 'WBY-ED-EXECUTE_METHOD_FLOW', 400, $e->getData());
+            throw new ApiException($e->getMessage(), $code, 400);
         }
     }
 
