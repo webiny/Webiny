@@ -60,7 +60,7 @@ class ExecuteMethodFlow extends AbstractFlow
         } catch (EntityException $e) {
             throw new ApiException($e->getMessage(), 'WBY-ED-EXECUTE_METHOD_FLOW', 400, $e->getInvalidAttributes());
         } catch (ExceptionAbstract $e) {
-            throw new ApiException($e->getMessage(), 'WBY-ED-EXECUTE_METHOD_FLOW', 400);
+            throw new ApiException($e->getMessage(), 'WBY-ED-EXECUTE_METHOD_FLOW', 400, $e->getData());
         }
     }
 
