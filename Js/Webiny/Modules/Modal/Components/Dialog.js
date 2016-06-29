@@ -98,6 +98,9 @@ class Dialog extends Webiny.Ui.Component {
     }
 
     hide() {
+        if (!this.state.isShown) {
+            return;
+        }
         this.props.onHide();
 
         $(this.modalContainer).find('.modal-dialog').removeClass('modal-show');
