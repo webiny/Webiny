@@ -103,16 +103,18 @@ class Dialog extends Webiny.Ui.Component {
         }
         this.props.onHide();
 
-        $(this.modalContainer).find('.modal-dialog').removeClass('modal-show');
+        this.setState({
+            isShown: false
+        }, () => {
+            this.props.onHidden();
+        });
+
+        /*$(this.modalContainer).find('.modal-dialog').removeClass('modal-show');
         $(this.modalContainer).find('.modal-backdrop').removeClass('in');
 
         $(this.modalContainer).find('.modal-backdrop')[0].addEventListener('transitionend', () => {
-            this.setState({
-                isShown: false
-            }, () => {
-                this.props.onHidden();
-            });
-        });
+
+        });*/
     }
 
     show() {
