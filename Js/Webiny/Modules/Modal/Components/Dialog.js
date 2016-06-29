@@ -7,6 +7,7 @@ function getShownDialog(id = null) {
     return _.find(mountedDialogs, item => item.state.isShown === true && item.id !== id);
 }
 
+
 class Dialog extends Webiny.Ui.Component {
 
     constructor(props) {
@@ -14,7 +15,8 @@ class Dialog extends Webiny.Ui.Component {
         this.id = _.uniqueId('modal-dialog-');
 
         this.state = {
-            isShown: false
+            isShown: false,
+            isDialogShown: false
         };
 
         this.clickStartedOnBackdrop = false;
@@ -24,7 +26,7 @@ class Dialog extends Webiny.Ui.Component {
 
         this.modalContainer = document.querySelector(props.modalContainerTag);
 
-        this.bindMethods('show,hide,bindHandlers,unbindHandlers,prepareChildren,prepareChild');
+        this.bindMethods('show,hide,bindHandlers,unbindHandlers,prepareChildren,prepareChild,animationFinish');
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -49,8 +51,6 @@ class Dialog extends Webiny.Ui.Component {
             $(this.modalContainer).show();
             ReactDOM.render(this.props.renderDialog.call(this), this.modalContainer);
             $(this.modalContainer).find('.modal').focus();
-            $(this.modalContainer).find('.modal-dialog').addClass('modal-show');
-            $(this.modalContainer).find('.modal-backdrop').addClass('in');
             this.bindHandlers();
         } else if (prevState.isShown && !this.isShown()) {
             this.unbindHandlers();
@@ -103,24 +103,23 @@ class Dialog extends Webiny.Ui.Component {
         }
         this.props.onHide();
 
-        $(this.modalContainer).find('.modal-dialog').removeClass('modal-show');
-        $(this.modalContainer).find('.modal-backdrop').removeClass('in');
-
-        $(this.modalContainer).find('.modal-backdrop')[0].addEventListener('transitionend', () => {
-            this.setState({
-                isShown: false
-            }, () => {
-                this.props.onHidden();
-            });
+        this.setState({
+            isDialogShown: false
+        }, () => {
+            this.props.onHidden();
         });
     }
 
     show() {
+        $(this.modalContainer).show();
         this.props.onShow();
         this.setState({
             isShown: true
         }, () => {
             this.props.onShown();
+            this.setState({
+                isDialogShown: true
+            });
         });
     }
 
@@ -146,6 +145,12 @@ class Dialog extends Webiny.Ui.Component {
         }
         return React.Children.map(children, this.prepareChild);
     }
+
+    animationFinish(isDialogShown) {
+        if (!isDialogShown) {
+            this.setState({isShown: false});
+        }
+    }
 }
 
 Dialog.defaultProps = {
@@ -161,15 +166,24 @@ Dialog.defaultProps = {
         const className = this.classSet({modal: true, 'modal-wizard': this.props.wide});
         return (
             <div style={_.merge({}, {display: 'block'}, this.props.style)}>
-                <div className="modal-backdrop"></div>
+
+                <Ui.Animate trigger={this.state.isDialogShown} show={{opacity:0.8, duration: 100}}>
+                    <div className="modal-backdrop"></div>
+                </Ui.Animate>
+
                 <div className={className} tabIndex="-1" style={{display: 'block'}}>
-                    <div className={this.classSet('modal-dialog', this.props.className)}>
-                        <div className="modal-content">
-                            {this.prepareChildren(this.props.children)}
+                    <Ui.Animate trigger={this.state.isDialogShown} onFinish={this.animationFinish}
+                                show={{translateY: 50, ease: 'spring', duration: 800}}
+                                hide={{translateY: -100, ease: 'easeOut', opacity:0, duration: 250}}>
+                        <div className={this.classSet('modal-dialog modal-show', this.props.className)} style={{top:-50}}>
+                            <div className="modal-content">
+                                {this.prepareChildren(this.props.children)}
+                            </div>
                         </div>
-                    </div>
+                    </Ui.Animate>
                 </div>
             </div>
+
         );
     },
     renderer() {
