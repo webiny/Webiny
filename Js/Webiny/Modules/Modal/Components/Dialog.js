@@ -151,8 +151,9 @@ Dialog.defaultProps = {
     closeOnClick: true,
     modalContainerTag: 'webiny-modal',
     style: {},
+    wrapperClassName: null,
     renderDialog() {
-        const className = this.classSet({modal: true, 'modal-wizard': this.props.wide});
+        const className = this.classSet({modal: true, 'modal-wizard': this.props.wide}, this.props.wrapperClassName);
         return (
             <div style={_.merge({}, {display: 'block'}, this.props.style)}>
                 <div className="modal-backdrop"></div>
