@@ -58,16 +58,16 @@ i18n.price = function price(value, currency = '£') {
     return accounting.formatMoney(value, _.get(currencySymbols, currency, currency));
 };
 
-i18n.date = function date(value) {
-    return moment(value).format('DD/MMM/YY');
+i18n.date = function date(value, format = 'DD/MMM/YY') {
+    return moment(value).format(format);
 };
 
-i18n.time = function time(value) {
-    return moment(value).format('HH:mm');
+i18n.time = function time(value, format = 'HH:mm') {
+    return moment(value).format(format);
 };
 
-i18n.datetime = function datetime(value) {
-    return moment(value).format('DD/MMM/YY HH:mm');
+i18n.datetime = function datetime(value, format = 'DD/MMM/YY HH:mm') {
+    return moment(value).format(format);
 };
 
 export default i18n;
