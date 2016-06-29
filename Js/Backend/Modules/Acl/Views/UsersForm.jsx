@@ -168,7 +168,7 @@ Form.defaultProps = {
                                                          }
                                                      }}/>
 
-                                    <div className="clearfix"/>
+                                    <div className="clearfix"></div>
                                     <h2>Files list</h2>
                                     <Ui.List.ApiContainer ui="files" autoLoad={false} api="/entities/core/files"
                                                           fields="id,name,type,size" perPage={3}>

@@ -23,13 +23,7 @@ class Module extends Webiny.Module {
          ])
          ], 'icon-browser')
          );
-         */
-
-        this.registerRoutes(
-            new Webiny.Route('Dashboard', '/', {
-                MasterContent: Views.Example
-            })
-        );
+        */
 
         this.registerDefaultComponents({
             Header: Components.Navigation,

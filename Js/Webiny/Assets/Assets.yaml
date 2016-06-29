@@ -10,3 +10,6 @@ Assets:
         - bower_components/react/react.js
         - bower_components/react/react-dom.js
         - bower_components/react/react-dom-server.js
+        - bower_components/react/react.min.js
+        - bower_components/react/react-dom.min.js
+        - bower_components/react/react-dom-server.min.js
