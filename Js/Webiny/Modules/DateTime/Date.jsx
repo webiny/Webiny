@@ -16,7 +16,7 @@ class Date extends BaseDateTime {
             if (!widget) {
                 if (newValue) {
                     const format = this.props.withTimezone ? 'YYYY-MM-DDTHH:mm:ssZ' : this.props.modelFormat;
-                    newValue = moment(newValue, this.props.modelFormat).format(format);
+                    newValue = moment(newValue, this.props.inputFormat).format(format);
                 }
                 this.props.valueLink.requestChange(newValue, this.validate);
             }

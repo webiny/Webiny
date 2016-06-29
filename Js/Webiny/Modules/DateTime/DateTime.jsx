@@ -8,9 +8,9 @@ class DateTime extends DateComponent {
             const widget = ReactDOM.findDOMNode(this).querySelector('.bootstrap-datetimepicker-widget');
             if (!widget) {
                 if (newValue) {
-                    newValue = moment(newValue, this.props.modelFormat).format(this.props.modelFormat);
+                    newValue = moment(newValue, this.props.inputFormat).format(this.props.modelFormat);
                 }
-                this.props.valueLink.requestChange(newValue);
+                this.props.valueLink.requestChange(newValue, this.validate);
             }
         }, 1);
     }
