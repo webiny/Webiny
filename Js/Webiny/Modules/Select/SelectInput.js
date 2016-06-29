@@ -126,7 +126,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
                 }
                 this.previousData = data ? _.clone(data) : null;
             }
-            this.props.valueLink.requestChange(value);
+            this.props.valueLink.requestChange(value, !this.isValid() ? this.validate : _.noop);
         } else {
             this.props.onChange(value);
         }

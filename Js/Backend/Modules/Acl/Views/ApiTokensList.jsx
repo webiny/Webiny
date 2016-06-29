@@ -44,7 +44,14 @@ ApiTokensList.defaultProps = {
                                     </Ui.List.FormFilters>
                                     <Table.Table>
                                         <Table.Row>
-                                            <Table.Field name="token" align="left" label="Token"/>
+                                            <Table.Field name="token" align="left" label="Token">
+                                                {data => (
+                                                    <span>
+                                                        <strong>{data.token}</strong><br/>
+                                                        {data.description}
+                                                    </span>
+                                                )}
+                                            </Table.Field>
                                             <Table.Field name="owner" align="left" label="Owner" sort="owner"/>
                                             <Table.TimeAgoField
                                                 name="lastActivity"
