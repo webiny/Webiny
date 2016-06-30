@@ -160,11 +160,13 @@ DateRange.defaultProps = {
             label = <label className="control-label">{this.props.label}</label>;
         }
 
+        const css = this.classSet('form-control', {empty: !this.props.valueLink.value});
+
         return (
             <div className="form-group">
                 {label}
                 <div className="picker-holder">
-                    <input type="text" ref="daterange" className="form-control pavel" data-toggle="dropdown"/>
+                    <input type="text" ref="daterange" className={css} data-toggle="dropdown"/>
                     <span className="icon-calendar icon_c"></span>
                 </div>
             </div>

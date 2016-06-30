@@ -177,7 +177,11 @@ textarea.form-control {
     }
     input {
       cursor: pointer;
+      &.empty {
+        color: #a9a9a9;
+      }
     }
+
     span.icon_c {
       font-size: 20px;
       color: #333;
