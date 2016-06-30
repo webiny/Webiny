@@ -112,7 +112,7 @@ Login.defaultProps = {
                         </div>
                     </div>
 
-                    <p className="copyright">Version 0.1 (Beta)</p>
+                    <p className="copyright">Version 2.0</p>
                     <a href="#" className="site">www.webiny.com</a>
                 </div>
             </div>

@@ -9,35 +9,35 @@ class Footer extends Webiny.Ui.Component {
             developerMode: false,
             links: [
                 {
-                    name: 'Webiny 2.2',
-                    url: '#'
-                },
-                {
-                    name: 'Legal',
-                    url: '#'
-                },
-                {
-                    name: 'Copyright',
-                    url: '#'
-                },
-                {
-                    name: 'Support',
-                    url: '#'
+                    name: 'Webiny 2.0',
+                    url: 'http://www.webiny.com/'
                 }
+                /* {
+                 name: 'Legal',
+                 url: '#'
+                 },
+                 {
+                 name: 'Copyright',
+                 url: '#'
+                 },
+                 {
+                 name: 'Support',
+                 url: '#'
+                 } */
             ],
             linksSecondary: [
-                {
-                    name: 'Help',
-                    url: '#'
-                },
-                {
-                    name: 'Documentation',
-                    url: '#'
-                },
-                {
-                    name: 'GitHub',
-                    url: '#'
-                }
+                /* {
+                 name: 'Help',
+                 url: '#'
+                 },
+                 {
+                 name: 'Documentation',
+                 url: '#'
+                 },
+                 {
+                 name: 'GitHub',
+                 url: '#'
+                 } */
             ]
         };
     }
@@ -45,7 +45,7 @@ class Footer extends Webiny.Ui.Component {
     renderLink(item, key) {
         return (
             <li key={key}>
-                <a href={item.url}>{item.name}</a>
+                <a href={item.url} target="_blank">{item.name}</a>
             </li>
         );
     }

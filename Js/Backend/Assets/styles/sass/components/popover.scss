@@ -1,0 +1,14 @@
+.popover {
+  border-radius: 0;
+  padding: 0;
+  border-color: $borderColor;
+
+  .popover-title{
+    background-color: #3FBFB0;
+    color: #fff;
+    border-radius: 0;
+    font-weight: 300;
+    font-size: 1.2em;
+    border-bottom: none;
+  }
+}

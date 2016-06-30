@@ -14,7 +14,6 @@
     "q": "1.0.1",
     "summernote": "git://github.com/Pavel910/summernote.git#develop",
     "system.js": "~0.18.4",
-    "jquery-ui": "~1.11.4",
     "js-cookie": "~2.0.4",
     "bottlejs": "~1.2.1",
     "baobab": "~2.2.1",
@@ -30,7 +29,8 @@
     "jquery-deparam": "^0.5.1",
     "highlightjs": "^9.3.0",
     "trumbowyg": "^2.1.0",
-    "dynamics.js": "^1.1.0"
+    "dynamics.js": "^1.1.0",
+    "jquery": "^3.0.0"
   },
   "overrides": {
     "system.js": {
