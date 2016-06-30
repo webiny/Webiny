@@ -210,7 +210,11 @@ class Search extends Webiny.Ui.FormComponent {
             case 'Enter':
                 e.stopPropagation();
                 e.preventDefault();
-                this.selectCurrent();
+                if (this.state.options.length > 0) {
+                    this.selectCurrent();
+                } else {
+                    this.props.onEnter(e);
+                }
                 break;
             case 'Escape':
                 this.onBlur();
@@ -363,6 +367,7 @@ Search.defaultProps = {
     searchOperator: 'or',
     valueAttr: 'id',
     textAttr: 'name',
+    onEnter: _.noop,
     onChange: _.noop,
     onReset: _.noop,
     onSearch: _.noop,
