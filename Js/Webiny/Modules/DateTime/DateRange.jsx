@@ -70,6 +70,13 @@ class DateRange extends Webiny.Ui.FormComponent {
         this.unregisterListeners();
     }
 
+    componentWillReceiveProps(props) {
+        super.componentWillReceiveProps(props);
+        if (!props.valueLink.value) {
+            this.refs.daterange.value = this.props.placeholder || '';
+        }
+    }
+
     prepare() {
         this.element = $(this.refs.daterange);
 
