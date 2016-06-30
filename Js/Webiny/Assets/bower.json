@@ -30,7 +30,8 @@
     "jquery-deparam": "^0.5.1",
     "highlightjs": "^9.3.0",
     "trumbowyg": "^2.1.0",
-    "dynamics.js": "^1.1.0"
+    "dynamics.js": "^1.1.0",
+    "animate.css": "^3.5.2"
   },
   "overrides": {
     "system.js": {

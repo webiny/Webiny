@@ -3,13 +3,13 @@
   display: inline-block;
   > .btn {
     border-bottom: 2px solid #CCC;
-    border-radius: 0 ;
+    border-radius: 0;
     padding: 6px 26px 6px 8px;
     height: 35px;
     line-height: 156%;
     position: relative;
     z-index: 110;
-    margin-right: 0 ;
+    margin-right: 0;
   }
   &.open > .btn {
     padding-top: 4px;
@@ -37,12 +37,12 @@
       }
     }
     .dropdown-menu {
-      padding: 25px 10px;
-      border-radius: 0 ;
+      padding: 15px;
+      border-radius: 0;
       margin-top: 1px;
       border: 1px solid #ccc;
       box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.175);
-      left: 0 ;
+      left: 0;
       z-index: 100;
       text-align: left;
     }
@@ -56,7 +56,7 @@
     padding-left: 10px;
   }
   > a {
-    padding: 3px 10px;
+    padding: 5px 10px;
   }
 }
 
@@ -68,7 +68,7 @@
   &.right {
     text-align: right;
     > .dropdown-menu {
-      right: 0 ;
+      right: 0;
       left: auto;
       border-right: 2px solid #CCC;
     }
@@ -76,16 +76,11 @@
   &.balloon {
     > .dropdown-menu {
       z-index: 120;
-      &:before {
-        background: url(../img/arr_2.png) no-repeat;
-        top: -10px;
-        content: "";
-        left: 10px;
-        display: inline-block;
-        height: 43px;
-        width: 17px;
-        position: absolute;
-      }
+      opacity: 0;
+      display:block;
+      animation: slideOutUp 225ms cubic-bezier(0.4, 0, 1, 1) both;
+      transition: all 225ms;
+
     }
     &.right > .dropdown-menu:before {
       left: auto;
@@ -94,11 +89,25 @@
     > .btn {
       border: none;
       padding: 5px 26px 5px 5px;
+      background-color: transparent;
+      &:hover {
+        background-color: transparent;
+        color: $importantColor;
+      }
     }
   }
   &.open.balloon > .btn {
     border: none;
     padding: 5px 26px 5px 5px;
+    background-color: transparent;
+    color: $importantColor;
+  }
+
+  &.open.balloon > .dropdown-menu {
+    top: 0px;
+    opacity: 1;
+    visibility: visible;
+    animation: slideInDown 225ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
   }
 }
 
