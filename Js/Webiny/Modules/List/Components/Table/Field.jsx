@@ -27,6 +27,8 @@ Field.defaultProps = {
     alignLeftClass: 'text-left',
     alignRightClass: 'text-right',
     alignCenterClass: 'text-center',
+    route: null,
+    params: null,
     renderer() {
         let content = _.get(this.props.data, this.props.name) || this.props.default;
         if (_.isFunction(this.props.children)) {
@@ -35,7 +37,7 @@ Field.defaultProps = {
 
         if (this.props.route) {
             content = (
-                <Ui.List.Table.RouteAction route={this.props.route} data={this.props.data}>
+                <Ui.List.Table.RouteAction route={this.props.route} data={this.props.data} params={this.props.params}>
                     {content}
                 </Ui.List.Table.RouteAction>
             );

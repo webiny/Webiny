@@ -20,6 +20,10 @@ RouteAction.defaultProps = {
             });
         }
 
+        if(_.isFunction(params)){
+            params = params(this.props.data);
+        }
+
         return (
             <Ui.Link route={route} params={params}>{this.props.label || this.props.children}</Ui.Link>
         );

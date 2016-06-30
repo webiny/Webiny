@@ -21,6 +21,7 @@ import DeleteMultiAction from './Components/MultiActions/DeleteMultiAction';
 import DateTimeField from './Components/Table/Fields/DateTimeField';
 import DateField from './Components/Table/Fields/DateField';
 import TimeField from './Components/Table/Fields/TimeField';
+import PriceField from './Components/Table/Fields/PriceField';
 import FileSizeField from './Components/Table/Fields/FileSizeField';
 import CaseField from './Components/Table/Fields/CaseField';
 import ToggleField from './Components/Table/Fields/ToggleField';
@@ -60,6 +61,7 @@ class Module extends Webiny.Module {
                 CaseField,
                 ToggleField,
                 TimeAgoField,
+                PriceField,
                 GravatarField,
                 RowDetailsField,
                 Actions,

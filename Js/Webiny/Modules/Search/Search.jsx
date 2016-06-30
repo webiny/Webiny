@@ -103,7 +103,8 @@ class Search extends Webiny.Ui.FormComponent {
         const newState = {
             options: [],
             selectedOption: -1,
-            query: ''
+            query: '',
+            preview: ''
         };
 
         // Try to extract ID

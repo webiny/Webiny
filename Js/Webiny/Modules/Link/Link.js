@@ -9,6 +9,7 @@ Link.defaultProps = {
     size: null,
     merge: true,
     url: null,
+    title: '',
     route: null,
     params: {},
     separate: false,

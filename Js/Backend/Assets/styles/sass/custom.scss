@@ -72,11 +72,6 @@
   opacity: 1;
 }
 
-.example-appear {
-  opacity: 0.01;
-}
-
-.example-appear.example-appear-active {
-  opacity: 1;
-  transition: opacity .5s ease-in;
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  padding: 12px 50px 11px 23px;
 }

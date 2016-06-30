@@ -20,6 +20,8 @@ class Router {
     }
 
     start(url) {
+        this.hideLoader();
+
         if (!this.baseUrl) {
             return Q();
         }
@@ -184,6 +186,10 @@ class Router {
         return this.activeRoute.getQueryParams(param);
     }
 
+    setQueryParams(params, merge = true){
+        this.goToRoute('current', params, merge);
+    }
+
     getHref(params = {}) {
         return this.getActiveRoute().getHref(params);
     }
@@ -305,6 +311,20 @@ class Router {
             }
         });
         return object;
+    }
+
+    hideLoader() {
+        const loader = document.querySelector('.preloader-wrap');
+        if (loader) {
+            setTimeout(() => {
+                dynamics.animate(loader, {
+                    opacity: 0
+                }, {
+                    type: dynamics.easeOut,
+                    duration: 500
+                });
+            }, 200);
+        }
     }
 }
 
