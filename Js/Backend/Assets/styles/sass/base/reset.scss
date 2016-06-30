@@ -65,7 +65,7 @@ input:focus, select:focus, textarea:focus {
 button {
   &:focus, &:active:focus {
     outline: none !important;
-    box-shadow: none !important;
+    box-shadow: none;
   }
 }
 
