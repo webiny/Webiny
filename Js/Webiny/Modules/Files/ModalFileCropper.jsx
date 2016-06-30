@@ -34,16 +34,18 @@ class ModalFileCropper extends FileCropper {
     }
 
     applyCropping() {
-        super.applyCropping();
-        this.hide();
+        const model = this.getImage();
+        this.hide().then(() => {
+            this.props.onCrop(model);
+        });
     }
 
     hide() {
-        this.refs.dialog.hide();
+        return this.refs.dialog.hide();
     }
 
     show() {
-        this.refs.dialog.show();
+        return this.refs.dialog.show();
     }
 }
 

@@ -46,7 +46,7 @@ class Container extends Webiny.Ui.Component {
 }
 
 Container.defaultProps = {
-    renderer(){
+    renderer() {
         return (
             <div>{this.props.children}</div>
         );
@@ -71,12 +71,16 @@ Animate.defaultProps = {
     onFinish: _.noop,
     show: 'fadeIn',
     hide: 'fadeOut',
-    renderer(){
+    renderer() {
         return (
             <ReactTransitionGroup>
                 {this.state.trigger && (
-                    <Container onFinish={this.props.onFinish} show={this.props.show}
-                               hide={this.props.hide}>{this.props.children}</Container>
+                    <Container
+                        onFinish={this.props.onFinish}
+                        show={this.props.show}
+                        hide={this.props.hide}>
+                        {this.props.children}
+                    </Container>
                 )}
             </ReactTransitionGroup>
         );

@@ -24,19 +24,24 @@ class LinkState {
 
         const _this = this;
         return function stateKeySetter(value, callback = _.noop) {
-            if (typeof value === 'undefined') {
-                value = false;
-            }
-            const oldValue = _this.__getValue(key);
+            return new Promise(resolve => {
+                if (typeof value === 'undefined') {
+                    value = false;
+                }
+                const oldValue = _this.__getValue(key);
 
-            let partialState = component.state;
-            _.set(partialState, key, value);
-            component.setState(partialState, () => callback(value, oldValue));
-            partialState = null;
+                let partialState = component.state;
+                _.set(partialState, key, value);
+                component.setState(partialState, () => {
+                    callback(value, oldValue);
+                    partialState = null;
 
-            if (_this.callback) {
-                _this.callback(value, oldValue);
-            }
+                    if (_this.callback) {
+                        _this.callback(value, oldValue);
+                    }
+                    resolve(value, oldValue);
+                });
+            });
         };
     }
 }

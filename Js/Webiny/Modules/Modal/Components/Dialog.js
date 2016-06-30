@@ -99,26 +99,34 @@ class Dialog extends Webiny.Ui.Component {
 
     hide() {
         if (!this.state.isShown) {
-            return;
+            return Q(true);
         }
         this.props.onHide();
 
-        this.setState({
-            isDialogShown: false
-        }, () => {
-            this.props.onHidden();
+        return new Promise(resolve => {
+            this.hideResolve = resolve;
+            this.setState({
+                isDialogShown: false
+            });
         });
     }
 
     show() {
+        // This shows the modal container element in case it was previously hidden by another dialog
         $(this.modalContainer).show();
+
         this.props.onShow();
-        this.setState({
-            isShown: true
-        }, () => {
-            this.props.onShown();
+
+        return new Promise(resolve => {
             this.setState({
-                isDialogShown: true
+                isShown: true
+            }, () => {
+                this.setState({
+                    isDialogShown: true
+                }, () => {
+                    this.props.onShown();
+                    resolve();
+                });
             });
         });
     }
@@ -148,8 +156,9 @@ class Dialog extends Webiny.Ui.Component {
 
     animationFinish(isDialogShown) {
         if (!isDialogShown) {
-            this.setState({isShown: false});
+            this.setState({isShown: false}, this.props.onHidden);
         }
+        this.hideResolve();
     }
 }
 
@@ -167,15 +176,17 @@ Dialog.defaultProps = {
         return (
             <div style={_.merge({}, {display: 'block'}, this.props.style)}>
 
-                <Ui.Animate trigger={this.state.isDialogShown} show={{opacity:0.8, duration: 100}}>
+                <Ui.Animate trigger={this.state.isDialogShown} show={{opacity: 0.8, duration: 100}}>
                     <div className="modal-backdrop"></div>
                 </Ui.Animate>
 
                 <div className={className} tabIndex="-1" style={{display: 'block'}}>
-                    <Ui.Animate trigger={this.state.isDialogShown} onFinish={this.animationFinish}
-                                show={{translateY: 50, ease: 'spring', duration: 800}}
-                                hide={{translateY: -100, ease: 'easeOut', opacity:0, duration: 250}}>
-                        <div className={this.classSet('modal-dialog modal-show', this.props.className)} style={{top:-50}}>
+                    <Ui.Animate
+                        trigger={this.state.isDialogShown}
+                        onFinish={this.animationFinish}
+                        show={{translateY: 50, ease: 'spring', duration: 800}}
+                        hide={{translateY: -100, ease: 'easeOut', opacity: 0, duration: 250}}>
+                        <div className={this.classSet('modal-dialog modal-show', this.props.className)} style={{top: -50}}>
                             <div className="modal-content">
                                 {this.prepareChildren(this.props.children)}
                             </div>

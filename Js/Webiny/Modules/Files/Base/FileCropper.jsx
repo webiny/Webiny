@@ -4,7 +4,7 @@ class FileCropper extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);
-        this.bindMethods('initCropper,getCacheBust,applyCropping,destroyCropper');
+        this.bindMethods('initCropper,getCacheBust,applyCropping,destroyCropper,getImage');
     }
 
     initCropper() {
@@ -14,7 +14,7 @@ class FileCropper extends Webiny.Ui.Component {
         if (data.width && data.height) {
             this.cropper.cropper('setCropBoxData', {
                 width: data.width,
-                heigt: data.height
+                height: data.height
             });
         }
     }
@@ -35,6 +35,10 @@ class FileCropper extends Webiny.Ui.Component {
     }
 
     applyCropping() {
+        this.props.onCrop(this.getImage());
+    }
+
+    getImage() {
         const model = _.clone(this.props.image);
         let options = {};
 
@@ -46,7 +50,7 @@ class FileCropper extends Webiny.Ui.Component {
         }
 
         model.src = this.cropper.cropper('getCroppedCanvas', options).toDataURL();
-        this.props.onCrop(model);
+        return model;
     }
 }
 
