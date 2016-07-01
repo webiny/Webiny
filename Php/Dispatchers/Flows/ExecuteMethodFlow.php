@@ -10,6 +10,7 @@ namespace Apps\Core\Php\Dispatchers\Flows;
 use Apps\Core\Php\DevTools\Entity\EntityAbstract;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\DevTools\Reports\AbstractReport;
+use Apps\Core\Php\DevTools\Reports\ReportInterface;
 use Apps\Core\Php\Dispatchers\AbstractFlow;
 use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\Attribute\Validation\ValidationException;
@@ -56,7 +57,7 @@ class ExecuteMethodFlow extends AbstractFlow
         $code = 'WBY-ED-EXECUTE_METHOD_FLOW';
         try {
             $result = $apiMethod($params, $bindTo);
-            if ($result instanceof AbstractReport) {
+            if ($result instanceof ReportInterface) {
                 $result->getReport(false);
                 die();
             }
