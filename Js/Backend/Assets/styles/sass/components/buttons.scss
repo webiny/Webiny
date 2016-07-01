@@ -104,6 +104,11 @@ button.btn {
   &.btn-default {
     &:active, &.active {
       background: #F2F2F2;
+      box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.9);
+    }
+    &:hover{
+      background: #F2F2F2;
+      box-shadow: 0px 0px 0px 3px $borderColor;
     }
   }
   &.btn-primary {

@@ -82,6 +82,12 @@ textarea.form-control {
     color: #CC3300;
   }
 
+  .help-block.w-anim {
+    opacity: 0;
+    position: relative;
+    top: -50px;
+  }
+
   &.error .help-block {
     color: #CC3300;
   }
@@ -202,7 +208,7 @@ textarea.form-control {
     transform: translateY(-50%);
     right: -6px;
     z-index: 10;
-    
+    transition: all 225ms;
     font-size: 41px;
     line-height: 98%;
   }
