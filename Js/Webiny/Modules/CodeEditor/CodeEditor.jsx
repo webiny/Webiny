@@ -22,14 +22,6 @@ class CodeEditor extends Webiny.Ui.FormComponent {
 
         this.codeMirror = CodeMirror.fromTextArea(this.getTextareaElement(), this.options);
 
-        // add resize option (not supported natively by CodeMirror)
-        $(this.codeMirror.getWrapperElement()).resizable({
-            resize: () => {
-                this.codeMirror.setSize($(this.codeMirror.getWrapperElement()).width(), $(this.codeMirror.getWrapperElement()).height());
-                this.codeMirror.refresh();
-            }
-        });
-
         this.codeMirror.on('change', () => {
             this.props.valueLink.requestChange(this.codeMirror.getValue());
         });
