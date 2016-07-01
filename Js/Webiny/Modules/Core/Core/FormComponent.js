@@ -41,12 +41,14 @@ class FormComponent extends Component {
 
     validate() {
         if (this.props.validateInput) {
-            this.props.validateInput(this).then(validationResult => {
+            return this.props.validateInput(this).then(validationResult => {
                 if (this.props.onBlur) {
                     this.props.onBlur.call(null, validationResult, this);
                 }
+                return validationResult;
             });
         }
+        return Q(true);
     }
 
     isValid() {
