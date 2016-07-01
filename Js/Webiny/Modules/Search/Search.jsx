@@ -191,7 +191,7 @@ class Search extends Webiny.Ui.FormComponent {
             case 'Backspace':
                 if (_.isEmpty(this.state.query) || _.get(this.props, 'valueLink.value')) {
                     // Reset only if it is a selected value with valid mongo ID or data object
-                    const id = this.props.valueLink.value;
+                    const id = _.get(this.props, 'valueLink.value');
                     if (this.props.allowFreeInput && _.isString(id) && !id.match(/^[0-9a-fA-F]{24}$/)) {
                         this.inputChanged(e);
                         break;
