@@ -35,14 +35,14 @@ InputContainer.defaultProps = {
         }
 
         let validationIcon = null;
-        let validationMessage = null;
+        let validationMessage = false;
         if (this.state.isValid === true) {
             validationIcon = <span className="icon icon-good"></span>;
         }
 
         if (this.state.isValid === false) {
             validationIcon = <span className="icon icon-bad"></span>;
-            validationMessage = <span className="help-block">{this.state.validationMessage}</span>;
+            validationMessage = <span className="help-block w-anim">{this.state.validationMessage}</span>;
         }
 
         const props = {
@@ -79,7 +79,12 @@ InputContainer.defaultProps = {
                     {this.props.showValidationIcon ? validationIcon : null}
                 </div>
                 <span className="help-block">{description}</span>
-                {this.props.showValidationMessage ? validationMessage : null}
+                <Webiny.Ui.Components.Animate
+                    trigger={validationMessage}
+                    show={{translateY: 50, opacity: 1, duration: 225}}
+                    hide={{translateY: -50, opacity: 0, duration: 225}}>
+                    {this.props.showValidationMessage ? validationMessage : null}
+                </Webiny.Ui.Components.Animate>
             </div>
         );
     }
