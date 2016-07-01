@@ -93,6 +93,12 @@
       &:hover {
         background-color: transparent;
         color: $importantColor;
+        border: none;
+        box-shadow: none;
+      }
+      &:active{
+        border: none;
+        box-shadow: none;
       }
     }
   }

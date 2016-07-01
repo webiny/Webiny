@@ -19,6 +19,13 @@ button.btn {
   &:hover, span:hover {
     cursor: pointer;
   }
+  &:hover {
+    box-shadow: 0px 0px 0px 3px $borderColor;
+  }
+  &:active, &.active {
+    border: 1px solid $borderColor;
+    box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.9);
+  }
 }
 
 .btn.btn-lg, .btn-group.btn-group-lg .btn {
@@ -108,30 +115,31 @@ button.btn {
         border-color: #ED4005;
       }
     }
-    &:hover {
+    &:hover{
       background: #ED4005;
+      box-shadow: 0px 0px 0px 3px #FA5723;
     }
     &:active, &.active {
-      -webkit-box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.5);
-      -moz-box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.5);
-      box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.5);
+      border: 1px solid #ED4005;
+      background: #ED4005;
+      box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.9);
     }
   }
   &.btn-success {
     background: #3FBFB0;
     border: 1px solid #3FBFB0;
     &.preloading {
-      &:hover, &:active, &:focus {
+      &:hover, &:active, &:focus, &:active:focus{
         background: #3FBFB0;
         border: 1px solid #3FBFB0;
       }
     }
     &:hover {
       background: #32988B;
+      box-shadow: 0px 0px 0px 3px #3FBFB0;
     }
     &:active, &.active {
       border: 1px solid #32988B;
-      
       background: #32988B;
       box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.9);
     }
