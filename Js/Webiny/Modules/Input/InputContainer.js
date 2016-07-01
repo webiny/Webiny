@@ -22,6 +22,8 @@ InputContainer.defaultProps = {
     info: null,
     showValidationIcon: true,
     showValidationMessage: true,
+    showAnimation: {translateY: 50, opacity: 1, duration: 225},
+    hideAnimation: {translateY: -50, opacity: 0, duration: 225},
     renderer() {
         const cssConfig = {
             'form-group': true,
@@ -81,8 +83,8 @@ InputContainer.defaultProps = {
                 <span className="help-block">{description}</span>
                 <Webiny.Ui.Components.Animate
                     trigger={validationMessage}
-                    show={{translateY: 50, opacity: 1, duration: 225}}
-                    hide={{translateY: -50, opacity: 0, duration: 225}}>
+                    show={this.props.showAnimation}
+                    hide={this.props.hideAnimation}>
                     {this.props.showValidationMessage ? validationMessage : null}
                 </Webiny.Ui.Components.Animate>
             </div>
