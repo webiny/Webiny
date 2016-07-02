@@ -33,7 +33,7 @@ class Navigation extends Webiny.Ui.Component {
     mainMenuItemClick(menu) {
         let submenu = _.isString(menu.route) || _.isNull(menu.route) ? null : menu.key;
         if (this.state.submenu === menu.key) {
-            submenu = null;
+            return;
         }
         this.setState({submenu});
     }
@@ -81,11 +81,8 @@ class Navigation extends Webiny.Ui.Component {
 
         const menuProps = {
             key: menu.key,
-            className: 'subnavigation',
-            'data-this-menu': menu.key,
-            style: {
-                display: menu.key === this.state.submenu ? 'block' : 'none'
-            }
+            className: menu.key === this.state.submenu ? 'subnavigation open' : 'subnavigation',
+            'data-this-menu': menu.key
         };
 
         return (
