@@ -10,17 +10,14 @@
 .growl.top-right {
   right: 0;
   top: 55px;
-  animation: bounceInDown 225ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 .growl.bottom-left {
   left: 0;
   bottom: 55px;
-  animation: bounceInUp 225ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 .growl.bottom-right {
   right: 0;
   bottom:55px;
-  animation: bounceInUp 225ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 .growl.center {
   top: 0;
@@ -48,12 +45,12 @@
 
 .growl.top-right .growl-notification,
 .growl.top-left .growl-notification{
-  animation: bounceInDown 225ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  animation: bounceInDown 800ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 
 .growl.bottom-right .growl-notification,
 .growl.bottom-left .growl-notification{
-  animation: bounceInUp 225ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  animation: bounceInUp 800ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
 
 .growl-notification.danger {
