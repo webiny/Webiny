@@ -11,6 +11,12 @@ use Webiny\Component\Storage\File\File;
 abstract class AbstractPdfReport extends AbstractReport
 {
     /**
+     * Get report template
+     * @return string
+     */
+    abstract public function getTemplate();
+
+    /**
      * Get report as an instance of File or send it to browser
      *
      * @param bool|false $asFile

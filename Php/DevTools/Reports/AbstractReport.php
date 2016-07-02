@@ -16,8 +16,6 @@ abstract class AbstractReport implements ReportInterface
 
     abstract public function getFileName();
 
-    abstract public function getTemplate();
-
     /**
      * @param bool|void|File $asFile
      *

@@ -33,7 +33,7 @@ class ApiMethod
     private $context;
     private $callbacks = [];
     private $bodyValidators;
-    private $routeOptions = [];
+    private $authorizationCallback;
 
     function __construct($httpMethod, $methodName, $context, $callable = null)
     {
@@ -50,11 +50,6 @@ class ApiMethod
         return $this->pattern;
     }
 
-    public function getRouteOptions()
-    {
-        return $this->routeOptions;
-    }
-
     public function getUrl($params = [])
     {
         // Determine if this method belongs to entity or service
@@ -66,10 +61,16 @@ class ApiMethod
             $contextUrl = 'services/' . $app . '/' . $this->str($parts[4])->kebabCase()->val();
         }
 
-        $url = $this->str($this->wConfig()->get('Application.ApiPath') . '/' . $contextUrl . '/' . $this->pattern)->trimRight('/');
+        $url = $this->str($this->pattern)->trimLeft('/');
         foreach ($params as $k => $v) {
             $url->replace('{' . $k . '}', $v);
         }
+
+        if ($url->startsWith('{id}')) {
+            $url->replace('{id}', $this->context->id);
+        }
+
+        $url = $this->str($this->wConfig()->get('Application.ApiPath') . '/' . $contextUrl . '/' . $url)->trimRight('/');
 
         return $url->val();
     }
@@ -78,6 +79,11 @@ class ApiMethod
     {
         if (!$params) {
             $params = [];
+        }
+
+        // Call authorization callback if any
+        if (is_callable($this->authorizationCallback)) {
+            call_user_func_array($this->authorizationCallback, []);
         }
 
         if (($this->httpMethod === 'post' || $this->httpMethod === 'patch') && count($this->bodyValidators)) {
@@ -104,13 +110,6 @@ class ApiMethod
         return $this;
     }
 
-    public function setRouteOptions($options)
-    {
-        $this->routeOptions = $options;
-
-        return $this;
-    }
-
     /**
      * Set body validators
      *
@@ -121,6 +120,20 @@ class ApiMethod
     public function setBodyValidators(array $validators = [])
     {
         $this->bodyValidators = $validators;
+
+        return $this;
+    }
+
+    /**
+     * Set a custom authorization callback
+     *
+     * @param $callable
+     *
+     * @return $this
+     */
+    public function setAuthorization($callable)
+    {
+        $this->authorizationCallback = $callable;
 
         return $this;
     }
