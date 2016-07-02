@@ -26,8 +26,9 @@ trait ApiExpositionTrait
     private $apiMethods;
 
     /**
-     * @param $httpMethod
-     * @param $url
+     *
+     * @param string $httpMethod
+     * @param string $url
      *
      * @return MatchedApiMethod
      */
@@ -49,7 +50,7 @@ trait ApiExpositionTrait
             if ($pattern === '/') {
                 continue;
             }
-            $route = new Route($pattern, null, $method->getRouteOptions());
+            $route = new Route($pattern, null);
             $compiled = $route->compile();
             $regex = $compiled->getRegex();
 
@@ -81,7 +82,7 @@ trait ApiExpositionTrait
     }
 
     /**
-     * Expose API method
+     * Expose new API method or get instance of existing method
      *
      * @param string   $httpMethod
      * @param string   $pattern
@@ -90,7 +91,7 @@ trait ApiExpositionTrait
      * @return ApiMethod
      * @throws ApiException
      */
-    public function api($httpMethod, $pattern, $callable)
+    public function api($httpMethod, $pattern, $callable = null)
     {
         if (!$this->apiMethods) {
             $this->apiMethods = new ArrayObject();
@@ -102,8 +103,12 @@ trait ApiExpositionTrait
 
         $pattern = $pattern != '/' ? trim($pattern, '/') : '/';
         $httpMethod = strtolower($httpMethod);
-        $apiMethod = $this->apiMethods->keyNested($httpMethod . '.' . $pattern, new ApiMethod($httpMethod, $pattern, $this), true);
-        $apiMethod->addCallback($callable);
+        if ($callable) {
+            $apiMethod = $this->apiMethods->keyNested($httpMethod . '.' . $pattern, new ApiMethod($httpMethod, $pattern, $this), true);
+            $apiMethod->addCallback($callable);
+        } else {
+            $apiMethod = $this->apiMethods->keyNested($httpMethod . '.' . $pattern);
+        }
 
         return $apiMethod;
     }

@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import Downloader from './../Downloader/Downloader';
 
 class Link extends Webiny.Ui.Component {
 
@@ -11,6 +12,8 @@ Link.defaultProps = {
     url: null,
     title: '',
     route: null,
+    download: null,
+    data: null,
     params: {},
     separate: false,
     className: '',
@@ -39,6 +42,12 @@ Link.defaultProps = {
             props.target = '_blank';
         }
 
+        const typeClasses = {
+            default: 'btn-default',
+            primary: 'btn-primary',
+            secondary: 'btn-success'
+        };
+
         const alignClasses = {
             normal: '',
             left: 'pull-left',
@@ -55,8 +64,7 @@ Link.defaultProps = {
 
         classes.btn = this.props.type || this.props.size;
         if (this.props.type) {
-            classes['btn'] = true;
-            classes['btn-' + this.props.type] = true;
+            classes[typeClasses[this.props.type]] = true;
         }
 
         if (this.props.size) {
@@ -71,7 +79,28 @@ Link.defaultProps = {
             classes[this.props.className] = true;
         }
 
-        return <a {...props} className={this.classSet(classes)}>{this.props.children}</a>;
+        /**
+         * If downloader is used, handle URL or a custom function
+         */
+        let downloader = null;
+        if (props.download) {
+            downloader = <Downloader ref="downloader"/>;
+            props.onClick = () => {
+                if (_.isString(this.props.download)) {
+                    this.refs.downloader.download('GET', this.props.download);
+                } else {
+                    this.props.download(this.refs.downloader.download, this.props.data || null);
+                }
+            };
+            delete props['download'];
+        }
+
+        return (
+            <a {...props} className={this.classSet(classes)}>
+                {this.props.children}
+                {downloader}
+            </a>
+        );
     }
 };
 
