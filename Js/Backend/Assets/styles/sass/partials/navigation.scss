@@ -867,7 +867,6 @@ body.opened-mobile-nav .left-menu-submenu {
     .left-menu-submenu > div {
       position: absolute;
       left: 55px;
-      box-shadow: 0 0 18px -9px rgba(0, 0, 0, 0.75);
       visibility: hidden;
     }
   }
@@ -891,8 +890,19 @@ body.opened-mobile-nav .left-menu-submenu {
         background: #F1F1F1;
         color: #3A3A3A;
         z-index: -50;
-        transition: right 0.5s;
-        display: none;
+        transition: opacity 225ms;
+        display: block;
+        visibility: hidden;
+        height: 0;
+        opacity: 0;
+        margin-bottom: 0;
+        &.open {
+          visibility: visible;
+          opacity: 1;
+          height: auto;
+          margin-bottom: 25px;
+          animation: slideInLeft 225ms $easeOutCubic both;
+        }
       }
     }
   }
