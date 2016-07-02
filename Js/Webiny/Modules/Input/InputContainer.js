@@ -23,7 +23,7 @@ InputContainer.defaultProps = {
     showValidationIcon: true,
     showValidationMessage: true,
     showAnimation: {translateY: 50, opacity: 1, duration: 225},
-    hideAnimation: {translateY: -50, opacity: 0, duration: 225},
+    hideAnimation: {translateY: 0, opacity: 0, duration: 225},
     renderer() {
         const cssConfig = {
             'form-group': true,
