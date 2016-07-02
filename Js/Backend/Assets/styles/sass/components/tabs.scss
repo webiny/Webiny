@@ -35,7 +35,7 @@
 		
 		> a {
 			position: relative;
-
+			transition: all 225ms;
 			display: block;
 			margin-right: 0;
 			padding: 20px 15px 20px 15px;
@@ -107,11 +107,18 @@
 	background-color: #fff;
 
 	.tab-pane {
-		display: none;
+		display: block;
+		height: 0px;
+		padding: 0px;
+		opacity: 0;
+		overflow: hidden;
 
 		&.active {
-			display: block;
+			overflow: auto;
 			height: 100%;
+			opacity: 1;
+			padding: 20px;
+			transition: opacity 500ms;
 		}
 	}
 
