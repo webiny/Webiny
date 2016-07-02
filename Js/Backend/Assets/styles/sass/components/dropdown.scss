@@ -45,7 +45,16 @@
       left: 0;
       z-index: 100;
       text-align: left;
+      animation: slideOutUp 225ms cubic-bezier(0.4, 0, 1, 1) both;
+      transition: all 225ms;
+      display: block;
+      opacity: 0;
     }
+  }
+  &.open > .dropdown-menu{
+    opacity: 1;
+    visibility: visible;
+    animation: slideInDown 225ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
   }
 }
 
@@ -57,6 +66,7 @@
   }
   > a {
     padding: 5px 10px;
+    cursor: pointer;
   }
 }
 
