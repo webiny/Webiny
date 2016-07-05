@@ -1,0 +1,19 @@
+import Webiny from 'Webiny';
+
+class DateTime extends Webiny.Ui.Component {
+
+}
+
+DateTime.defaultProps = {
+    format: 'YYYY-MM-DD HH:mm',
+    renderer() {
+        const datetime = moment(this.props.value, moment.ISO_8601);
+
+        return (
+            <span>{datetime.isValid() ? datetime.format(this.props.format) : 'invalid date format'}</span>
+        );
+    }
+};
+
+
+export default DateTime;
