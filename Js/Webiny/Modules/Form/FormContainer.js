@@ -559,7 +559,7 @@ class FormContainer extends Webiny.Ui.Component {
 
         const onSubmitSuccess = this.props.onSubmitSuccess;
         if (_.isFunction(onSubmitSuccess)) {
-            return onSubmitSuccess.bind(this)(apiResponse);
+            return onSubmitSuccess.call(this, apiResponse);
         }
 
         if (_.isString(onSubmitSuccess)) {
