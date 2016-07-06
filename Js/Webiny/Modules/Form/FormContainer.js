@@ -35,13 +35,11 @@ class FormContainer extends Webiny.Ui.Component {
             'detachFromForm',
             'validateInput',
             'submit',
-            'reset',
             'cancel',
             'validate',
             'onSubmit',
             'onCancel',
             'onInvalid',
-            'onReset',
             'isSubmitDisabled',
             'enableSubmit',
             'disableSubmit',
@@ -64,7 +62,7 @@ class FormContainer extends Webiny.Ui.Component {
             });
         }
 
-        this.loadModel(this.props.id || _.get(this.props, 'defaultModel.id'), this.props.model);
+        this.loadModel(this.props.id, this.props.model);
     }
 
     componentWillUnmount() {
@@ -169,12 +167,6 @@ class FormContainer extends Webiny.Ui.Component {
     onInvalid() {
         if (_.isFunction(this.props.onInvalid)) {
             this.props.onInvalid();
-        }
-    }
-
-    onReset() {
-        if (this.props.onReset) {
-            this.props.onReset();
         }
     }
 
@@ -311,18 +303,6 @@ class FormContainer extends Webiny.Ui.Component {
         });
     }
 
-    reset() {
-        _.forIn(this.inputs, cmp => {
-            cmp.component.setState({isValid: null});
-        });
-        this.isValid = null;
-
-        if (this.props.onReset) {
-            this.props.onReset();
-        }
-        this.setState({model: _.clone(this.state.initialModel)});
-    }
-
     cancel() {
         console.log('Form Container [ON CANCEL]');
         if (_.isString(this.props.onCancel)) {
@@ -369,6 +349,11 @@ class FormContainer extends Webiny.Ui.Component {
      * HELPER METHODS FOR REGISTERING INPUTS
      */
 
+    // TODO: construct onChange callback to process watches, etc.
+    bindTo(name, changeCallback = _.noop, defaultValue = null) {
+        return super.bindTo('model.' + name, changeCallback, defaultValue);
+    }
+
     /**
      * @private
      * @param input
@@ -413,7 +398,7 @@ class FormContainer extends Webiny.Ui.Component {
                 }
             };
 
-            newProps['valueLink'] = this.bindTo('model.' + input.props.name, changeCallback.bind(this), input.props.defaultValue);
+            newProps['valueLink'] = this.bindTo(input.props.name, changeCallback.bind(this), input.props.defaultValue);
             if (this.parsingTabsIndex > 0) {
                 newProps['__tabs'] = {id: 'tabs-' + this.parsingTabsIndex, tab: this.parsingTabIndex};
             }
@@ -559,7 +544,7 @@ class FormContainer extends Webiny.Ui.Component {
 
         const onSubmitSuccess = this.props.onSubmitSuccess;
         if (_.isFunction(onSubmitSuccess)) {
-            return onSubmitSuccess.bind(this)(apiResponse);
+            return onSubmitSuccess.call(this, apiResponse);
         }
 
         if (_.isString(onSubmitSuccess)) {

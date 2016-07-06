@@ -25,7 +25,7 @@ UsersAccount.defaultProps = {
                         return container.__processError(apiResponse);
                     }
 
-                    container.reset();
+                    container.setModel({password: null, confirmPassword: null});
                     this.dispatch('Acl.Account.Refresh');
                     Webiny.Growl.success('Account settings were saved!');
                 });

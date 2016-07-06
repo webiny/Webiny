@@ -83,7 +83,12 @@ class ApiMethod
 
         // Call authorization callback if any
         if (is_callable($this->authorizationCallback)) {
-            call_user_func_array($this->authorizationCallback, []);
+            $callback = $this->authorizationCallback;
+            if ($bindTo) {
+                $callback = $callback->bindTo($bindTo);
+            }
+            $callback();
+
         }
 
         if (($this->httpMethod === 'post' || $this->httpMethod === 'patch') && count($this->bodyValidators)) {

@@ -39,7 +39,7 @@ trait ApiExpositionTrait
         }
 
         $httpMethod = strtolower($httpMethod);
-        $methods = $this->apiMethods->key($httpMethod);
+        $methods = $this->apiMethods->key($httpMethod) ?? [];
 
         if ($url === '' && isset($methods['/'])) {
             return new MatchedApiMethod($methods['/'], []);

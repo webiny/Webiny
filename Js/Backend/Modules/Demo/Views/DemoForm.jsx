@@ -223,7 +223,6 @@ class Form extends Webiny.Ui.View {
                         </Ui.Panel.Body>
                         <Ui.Panel.Footer className="text-right">
                             <Ui.Button type="default" onClick={container.cancel} label="Cancel"/>
-                            <Ui.Button type="secondary" onClick={container.reset} label="Reset"/>
                             <Ui.Button type="primary" onClick={container.submit} label="Submit"/>
                         </Ui.Panel.Footer>
                     </Ui.Panel.Panel>
