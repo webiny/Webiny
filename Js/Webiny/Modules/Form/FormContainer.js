@@ -35,13 +35,11 @@ class FormContainer extends Webiny.Ui.Component {
             'detachFromForm',
             'validateInput',
             'submit',
-            'reset',
             'cancel',
             'validate',
             'onSubmit',
             'onCancel',
             'onInvalid',
-            'onReset',
             'isSubmitDisabled',
             'enableSubmit',
             'disableSubmit',
@@ -169,12 +167,6 @@ class FormContainer extends Webiny.Ui.Component {
     onInvalid() {
         if (_.isFunction(this.props.onInvalid)) {
             this.props.onInvalid();
-        }
-    }
-
-    onReset() {
-        if (this.props.onReset) {
-            this.props.onReset();
         }
     }
 
@@ -309,18 +301,6 @@ class FormContainer extends Webiny.Ui.Component {
             }
             return this.onInvalid();
         });
-    }
-
-    reset() {
-        _.forIn(this.inputs, cmp => {
-            cmp.component.setState({isValid: null});
-        });
-        this.isValid = null;
-
-        if (this.props.onReset) {
-            this.props.onReset();
-        }
-        this.setState({model: _.clone(this.state.initialModel)});
     }
 
     cancel() {
