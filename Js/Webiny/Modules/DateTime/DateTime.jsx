@@ -4,15 +4,13 @@ class DateTime extends DateComponent {
 
     onChange(e) {
         let newValue = e.target.value;
-        setTimeout(() => {
-            const widget = ReactDOM.findDOMNode(this).querySelector('.bootstrap-datetimepicker-widget');
-            if (!widget) {
-                if (newValue) {
-                    newValue = moment(newValue, this.props.inputFormat).format(this.props.modelFormat);
-                }
-                this.props.valueLink.requestChange(newValue, this.validate);
-            }
-        }, 1);
+        if (newValue) {
+            newValue = moment(newValue, this.props.inputFormat).format(this.props.modelFormat);
+        }
+
+        if (newValue !== this.props.valueLink.value) {
+            this.props.valueLink.requestChange(newValue, this.validate);
+        }
     }
 }
 

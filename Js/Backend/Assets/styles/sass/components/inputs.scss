@@ -54,6 +54,9 @@ label, .form-group label, label.control-label {
 
 input.form-control {
   padding: 21px 15px;
+  &.placeholder {
+    color: #a9a9a9;
+  }
 }
 
 textarea.form-control {
@@ -240,6 +243,7 @@ textarea.form-control {
     }
   }
 }
+
 .navbar-form {
   margin: 0;
   padding: 0;

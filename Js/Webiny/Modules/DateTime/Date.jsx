@@ -3,31 +3,33 @@ import BaseDateTime from './Base';
 class Date extends BaseDateTime {
 
     setValue(newValue) {
-        newValue = moment(newValue, this.props.modelFormat);
-        newValue = newValue.isValid() ? newValue.format(this.props.inputFormat) : '';
+        if (!_.isEmpty(newValue)) {
+            newValue = moment(newValue, this.props.modelFormat);
+            newValue = newValue.isValid() ? newValue.format(this.props.inputFormat) : '';
+        } else {
+            newValue = this.props.placeholder;
+        }
 
         super.setValue(newValue);
     }
 
     onChange(e) {
         let newValue = e.target.value;
-        setTimeout(() => {
-            const widget = ReactDOM.findDOMNode(this).querySelector('.bootstrap-datetimepicker-widget');
-            if (!widget) {
-                if (newValue) {
-                    const format = this.props.withTimezone ? 'YYYY-MM-DDTHH:mm:ssZ' : this.props.modelFormat;
-                    newValue = moment(newValue, this.props.inputFormat).format(format);
-                }
-                this.props.valueLink.requestChange(newValue, this.validate);
-            }
-        }, 1);
+        if (newValue) {
+            const format = this.props.withTimezone ? 'YYYY-MM-DDTHH:mm:ssZ' : this.props.modelFormat;
+            newValue = moment(newValue, this.props.inputFormat).format(format);
+        }
+
+        if (newValue !== this.props.valueLink.value) {
+            this.props.valueLink.requestChange(newValue, this.validate);
+        }
     }
 }
 
 Date.defaultProps = _.merge({}, BaseDateTime.defaultProps, {
     disabled: false,
     readOnly: false,
-    placeholder: '',
+    placeholder: null,
     inputFormat: 'YYYY-MM-DD',
     modelFormat: 'YYYY-MM-DD',
     viewMode: 'days',

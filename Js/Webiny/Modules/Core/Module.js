@@ -47,7 +47,8 @@ class Module extends WebinyModule {
                 Components: {
                     Hide,
                     Show,
-                    Value
+                    Value,
+                    Filters: {}
                 },
                 Dispatcher: UiDispatcher,
                 FormComponent,

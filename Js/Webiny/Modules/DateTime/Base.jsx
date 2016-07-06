@@ -4,8 +4,17 @@ class Base extends Webiny.Ui.FormComponent {
 
     constructor(props) {
         super(props);
+        this.valueChanged = false;
 
-        this.bindMethods('setValue,onChange');
+        this.bindMethods('setValue');
+    }
+
+    shouldComponentUpdate(nextProps) {
+        const omit = ['children', 'key', 'ref', 'valueLink'];
+        const oldProps = _.omit(this.props, omit);
+        const newProps = _.omit(nextProps, omit);
+
+        return !_.isEqual(newProps, oldProps) || !_.isEqual(nextProps.valueLink.value, this.props.valueLink.value);
     }
 
     /**
@@ -22,8 +31,13 @@ class Base extends Webiny.Ui.FormComponent {
             debug: this.props.debug || false,
             minDate: this.props.minDate ? new Date(this.props.minDate) : false,
             viewMode: this.props.viewMode
-        }).on('dp.change', e => {
-            this.onChange(e);
+        }).on('dp.hide', e => {
+            if (this.valueChanged) {
+                this.onChange(e);
+            }
+            this.valueChanged = false;
+        }).on('dp.change', () => {
+            this.valueChanged = true;
         });
 
         this.setValue(this.props.valueLink.value);
@@ -40,10 +54,6 @@ class Base extends Webiny.Ui.FormComponent {
         if (this.props.minDate) {
             this.input.data('DateTimePicker').minDate(new Date(this.props.minDate));
         }
-    }
-
-    onChange(e) {
-        this.props.valueLink.requestChange(e.target.value);
     }
 }
 
@@ -73,7 +83,7 @@ Base.defaultProps = {
             stepping: this.props.stepping,
             readOnly: this.props.readOnly,
             type: 'text',
-            className: 'form-control',
+            className: this.classSet('form-control', {placeholder: !this.props.valueLink.value}),
             value: this.props.valueLink.value || '',
             onChange: this.onChange,
             placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder)

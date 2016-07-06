@@ -178,7 +178,7 @@ DateRange.defaultProps = {
             validationMessage = <span className="help-block w-anim">{this.state.validationMessage}</span>;
         }
 
-        const css = this.classSet('form-control', {empty: !this.props.valueLink.value});
+        const css = this.classSet('form-control', {placeholder: !this.props.valueLink.value});
 
         return (
             <div className={this.classSet(cssConfig)}>

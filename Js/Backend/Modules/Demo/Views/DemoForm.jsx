@@ -135,13 +135,13 @@ class Form extends Webiny.Ui.View {
                                     </Ui.Grid.Row>
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={4}>
-                                            <Ui.DateTime label="Date & Time" name="datetime"/>
+                                            <Ui.DateTime label="Date & Time" name="datetime" placeholder="Select date and time"/>
                                         </Ui.Grid.Col>
                                         <Ui.Grid.Col all={4}>
-                                            <Ui.Date label="Date" name="date"/>
+                                            <Ui.Date label="Date" name="date" placeholder="Select a date"/>
                                         </Ui.Grid.Col>
                                         <Ui.Grid.Col all={4}>
-                                            <Ui.Time label="Time" name="time"/>
+                                            <Ui.Time label="Time" name="time" placeholder="Select time"/>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>
                                     <Ui.Grid.Row>

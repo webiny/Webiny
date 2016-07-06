@@ -10,7 +10,6 @@ Time.defaultProps = _.merge({}, BaseDateTime.defaultProps, {
     placeholder: '',
     inputFormat: 'HH:mm',
     modelFormat: 'HH:mm:ss',
-    component: 'time',
     stepping: 15,
     withTimezone: false
 });
