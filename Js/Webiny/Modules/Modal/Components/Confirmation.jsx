@@ -19,7 +19,7 @@ class Confirmation extends Webiny.Ui.ModalComponent {
         if (_.isFunction(this.props.onCancel)) {
             return this.props.onCancel(this);
         }
-        this.hide();
+        return this.hide();
     }
 
     onConfirm() {
@@ -28,7 +28,7 @@ class Confirmation extends Webiny.Ui.ModalComponent {
             data.push(this);
             this.props.onConfirm(...data);
         }
-        this.hide();
+        return this.hide();
     }
 
     renderContent() {

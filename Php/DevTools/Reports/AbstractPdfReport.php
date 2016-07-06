@@ -31,6 +31,9 @@ abstract class AbstractPdfReport extends AbstractReport
 
     private function getPdf($template, $data, $filename, $asFile)
     {
+        $parts = $this->str($template)->explode(':');
+        $templatesDir = $this->wApps($parts[0])->getPath(true) . '/' . $this->str($parts[1])->explode('/')->first();
+        $this->wTemplateEngine()->setTemplateDir($templatesDir);
         $filename = $this->str($filename)->replace('/', '_')->val() . '.pdf';
         $data['fileName'] = $filename;
         $html = $this->wTemplateEngine()->fetch($template, $data);

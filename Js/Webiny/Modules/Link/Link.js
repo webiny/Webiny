@@ -1,23 +1,14 @@
 import Webiny from 'Webiny';
-import Downloader from './../Downloader/Downloader';
+const Ui = Webiny.Ui.Components;
 
 class Link extends Webiny.Ui.Component {
+    constructor(props) {
+        super(props);
 
-}
+        this.bindMethods('getLinkProps');
+    }
 
-Link.defaultProps = {
-    type: null,
-    size: null,
-    merge: true,
-    url: null,
-    title: '',
-    route: null,
-    download: null,
-    data: null,
-    params: {},
-    separate: false,
-    className: '',
-    renderer() {
+    getLinkProps() {
         const props = _.clone(this.props);
 
         props.href = 'javascript:void(0)';
@@ -79,27 +70,25 @@ Link.defaultProps = {
             classes[this.props.className] = true;
         }
 
-        /**
-         * If downloader is used, handle URL or a custom function
-         */
-        let downloader = null;
-        if (props.download) {
-            downloader = <Downloader ref="downloader"/>;
-            props.onClick = () => {
-                if (_.isString(this.props.download)) {
-                    this.refs.downloader.download('GET', this.props.download);
-                } else {
-                    this.props.download(this.refs.downloader.download, this.props.data || null);
-                }
-            };
-            delete props['download'];
-        }
+        props.className = this.classSet(classes);
+        return props;
+    }
+}
 
+Link.defaultProps = {
+    type: null,
+    size: null,
+    merge: true,
+    url: null,
+    title: '',
+    route: null,
+    data: null,
+    params: {},
+    separate: false,
+    className: '',
+    renderer() {
         return (
-            <a {...props} className={this.classSet(classes)}>
-                {this.props.children}
-                {downloader}
-            </a>
+            <a {...this.getLinkProps()}>{this.props.children}</a>
         );
     }
 };

@@ -13,9 +13,14 @@ Action.defaultProps = {
             return this.props.children.call(this, this.props.data, this);
         }
 
+        if (this.props.download) {
+            return (
+                <Ui.DownloadLink download={this.props.download} data={this.props.data}>{this.props.label}</Ui.DownloadLink>
+            );
+        }
+
         return (
             <Ui.Link
-                download={this.props.download}
                 data={this.props.data}
                 onClick={() => this.props.onClick.call(this, this.props.data, this)}>
                 {this.props.label}

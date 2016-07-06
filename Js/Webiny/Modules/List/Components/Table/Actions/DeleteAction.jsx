@@ -24,7 +24,7 @@ DeleteAction.defaultProps = {
                         onConfirm: () => {
                             return actions.delete(record.id).then(() => {
                                 this.props.afterDelete();
-                                modal.hide();
+                                return modal.hide();
                             });
                         }
                     };

@@ -48,6 +48,19 @@ class TemplateEngine
         return self::$templateEngine;
     }
 
+    /**
+     * Set root template dir
+     * @param string $dir
+     *
+     * @return $this
+     */
+    public function setTemplateDir($dir)
+    {
+        self::$templateEngine->setTemplateDir($dir);
+
+        return $this;
+    }
+
     public function fetch($template, $parameters = [])
     {
         $template = $this->str($template);

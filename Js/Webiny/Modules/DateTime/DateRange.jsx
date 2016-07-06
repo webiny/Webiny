@@ -106,6 +106,10 @@ class DateRange extends Webiny.Ui.FormComponent {
             this.onChange(picker);
         });
 
+        if (!this.props.valueLink.value) {
+            this.refs.daterange.value = this.props.placeholder || '';
+        }
+
         return this;
     }
 
@@ -132,7 +136,7 @@ class DateRange extends Webiny.Ui.FormComponent {
                 };
                 this.setState(state);
                 if (this.props.valueLink) {
-                    this.props.valueLink.requestChange(state.date.range);
+                    this.props.valueLink.requestChange(state.date.range, this.validate);
                 } else {
                     this.props.onChange(state.date.range);
                 }
@@ -154,21 +158,41 @@ DateRange.defaultProps = {
     modelFormat: 'YYYY-MM-DD',
     rangeDelimiter: ':',
     rangeType: 'Last 30 Days', // initial date range
+    showValidationMessage: true,
+    showAnimation: {translateY: 50, opacity: 1, duration: 225},
+    hideAnimation: {translateY: 0, opacity: 0, duration: 225},
     renderer() {
+        const cssConfig = {
+            'form-group': true,
+            'error': this.state.isValid === false,
+            'success': this.state.isValid === true
+        };
+
         let label = null;
         if (this.props.label) {
             label = <label className="control-label">{this.props.label}</label>;
         }
 
+        let validationMessage = false;
+        if (this.state.isValid === false) {
+            validationMessage = <span className="help-block w-anim">{this.state.validationMessage}</span>;
+        }
+
         const css = this.classSet('form-control', {empty: !this.props.valueLink.value});
 
         return (
-            <div className="form-group">
+            <div className={this.classSet(cssConfig)}>
                 {label}
                 <div className="picker-holder">
                     <input type="text" ref="daterange" className={css} data-toggle="dropdown"/>
                     <span className="icon-calendar icon_c"></span>
                 </div>
+                <Webiny.Ui.Components.Animate
+                    trigger={validationMessage}
+                    show={this.props.showAnimation}
+                    hide={this.props.hideAnimation}>
+                    {this.props.showValidationMessage ? validationMessage : null}
+                </Webiny.Ui.Components.Animate>
             </div>
         );
     }

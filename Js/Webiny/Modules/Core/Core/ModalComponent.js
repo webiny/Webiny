@@ -8,11 +8,11 @@ class ModalComponent extends Component {
     }
 
     hide() {
-        this.refs.dialog.hide();
+        return this.refs.dialog.hide();
     }
 
     show() {
-        this.refs.dialog.show();
+        return this.refs.dialog.show();
     }
 }
 
