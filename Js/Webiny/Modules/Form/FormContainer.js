@@ -64,7 +64,7 @@ class FormContainer extends Webiny.Ui.Component {
             });
         }
 
-        this.loadModel(this.props.id || _.get(this.props, 'defaultModel.id'), this.props.model);
+        this.loadModel(this.props.id, this.props.model);
     }
 
     componentWillUnmount() {
