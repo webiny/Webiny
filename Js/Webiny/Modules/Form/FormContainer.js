@@ -349,6 +349,11 @@ class FormContainer extends Webiny.Ui.Component {
      * HELPER METHODS FOR REGISTERING INPUTS
      */
 
+    // TODO: construct onChange callback to process watches, etc.
+    bindTo(name, changeCallback = _.noop, defaultValue = null) {
+        return super.bindTo('model.' + name, changeCallback, defaultValue);
+    }
+
     /**
      * @private
      * @param input
@@ -393,7 +398,7 @@ class FormContainer extends Webiny.Ui.Component {
                 }
             };
 
-            newProps['valueLink'] = this.bindTo('model.' + input.props.name, changeCallback.bind(this), input.props.defaultValue);
+            newProps['valueLink'] = this.bindTo(input.props.name, changeCallback.bind(this), input.props.defaultValue);
             if (this.parsingTabsIndex > 0) {
                 newProps['__tabs'] = {id: 'tabs-' + this.parsingTabsIndex, tab: this.parsingTabIndex};
             }
