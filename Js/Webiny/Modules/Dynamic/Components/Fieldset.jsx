@@ -80,7 +80,7 @@ class Fieldset extends Webiny.Ui.FormComponent {
     }
 
     addData(index) {
-        const model = _.clone(this.props.valueLink.value);
+        const model = this.props.valueLink.value ? _.clone(this.props.valueLink.value) : [];
         model.splice(index + 1, 0, {$key: _.uniqueId('dynamic-fieldset-')});
         this.props.valueLink.requestChange(model);
     }
