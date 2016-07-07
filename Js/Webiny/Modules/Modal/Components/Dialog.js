@@ -20,6 +20,11 @@ class Dialog extends Webiny.Ui.Component {
             isDialogShown: false
         };
 
+        this.modalShowDuration = 800;
+        this.modalHideDuration = 250;
+        this.backdropShowDuration = 100;
+        this.backdropHideDuration = 100;
+
         this.clickStartedOnBackdrop = false;
         if (!document.querySelector(props.modalContainerTag)) {
             document.body.appendChild(document.createElement(props.modalContainerTag));
@@ -37,23 +42,25 @@ class Dialog extends Webiny.Ui.Component {
         // Hide currently visible dialog but do not unmount it
         if (currentDialog && currentDialog.id !== this.id && nextState.isShown) {
             const container = $(currentDialog.modalContainer);
-            const modal = container.find('.modal');
+            const modal = container.find('.modal-dialog');
             const backdrop = container.find('.modal-backdrop');
+
+            dynamics.animate(modal[0], {
+                opacity: 0,
+                translateY: -100
+            }, {
+                type: dynamics.easeOut,
+                duration: 250,
+                complete: () => {
+                    modal.closest('.modal').hide();
+                }
+            });
 
             dynamics.animate(backdrop[0], {
                 opacity: 0
             }, {
-                type: dynamics.easeInOut,
-                duration: 220
-            });
-
-
-            dynamics.animate(modal[0], {
-                opacity: 0
-            }, {
-                type: dynamics.easeOut,
-                duration: 250,
-                complete: () => modal.hide()
+                type: dynamics.linear,
+                duration: this.backdropHideDuration
             });
         }
     }
@@ -74,21 +81,22 @@ class Dialog extends Webiny.Ui.Component {
             const prevDialog = getShownDialog(this.id);
             if (prevDialog) {
                 const prevContainer = $(prevDialog.modalContainer);
-                const prevModal = prevContainer.find('.modal');
+                const prevModal = prevContainer.find('.modal-dialog');
                 const prevBackdrop = prevContainer.find('.modal-backdrop');
-                prevModal.show();
+                prevModal.closest('.modal').show();
                 dynamics.animate(prevModal[0], {
-                    opacity: 1
+                    opacity: 1,
+                    translateY: 50
                 }, {
-                    type: dynamics.easeIn,
-                    duration: 250
+                    type: dynamics.spring,
+                    duration: this.modalShowDuration
                 });
 
                 dynamics.animate(prevBackdrop[0], {
                     opacity: 0.8
                 }, {
-                    type: dynamics.easeIn,
-                    duration: 100
+                    type: dynamics.linear,
+                    duration: this.backdropShowDuration
                 });
             }
         }
@@ -157,12 +165,24 @@ class Dialog extends Webiny.Ui.Component {
             this.setState({
                 isShown: true
             }, () => {
-                this.setState({
-                    isDialogShown: true
-                }, () => {
-                    this.props.onShown();
-                    resolve();
-                });
+                // Now we are supposed to show dialog with animation
+                const show = () => {
+                    this.setState({
+                        isDialogShown: true
+                    }, () => {
+                        this.props.onShown();
+                        resolve();
+                    });
+                };
+
+                // If there was a previous dialog (eg: hidden with ClickConfirm), let the animation finish and show new dialog with delay
+                if (getShownDialog(this.id)) {
+                    setTimeout(show, 250);
+                } else {
+                    // No previous dialog was opened - we can safely show our new dialog
+                    show();
+                }
+
             });
         });
     }
@@ -215,8 +235,8 @@ Dialog.defaultProps = {
 
                 <Ui.Animate
                     trigger={this.state.isDialogShown}
-                    show={{opacity: 0.8, duration: 100, ease: 'linear'}}
-                    hide={{opacity: 0, duration: 100, ease: 'linear'}}>
+                    show={{opacity: 0.8, duration: this.backdropShowDuration, ease: 'linear'}}
+                    hide={{opacity: 0, duration: this.backdropHideDuration, ease: 'linear'}}>
                     <div className="modal-backdrop" style={{opacity: 0}}></div>
                 </Ui.Animate>
 
@@ -224,8 +244,8 @@ Dialog.defaultProps = {
                     <Ui.Animate
                         trigger={this.state.isDialogShown}
                         onFinish={this.animationFinish}
-                        show={{translateY: 50, ease: 'spring', duration: 800}}
-                        hide={{translateY: -100, ease: 'easeOut', opacity: 0, duration: 250}}>
+                        show={{translateY: 50, ease: 'spring', duration: this.modalShowDuration}}
+                        hide={{translateY: -100, ease: 'easeOut', opacity: 0, duration: this.modalHideDuration}}>
                         <div className={this.classSet('modal-dialog modal-show', this.props.className)} style={{top: -50}}>
                             <div className="modal-content">
                                 {this.prepareChildren(this.props.children)}
