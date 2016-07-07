@@ -52,7 +52,10 @@ class Dialog extends Webiny.Ui.Component {
                 type: dynamics.easeOut,
                 duration: 250,
                 complete: () => {
+                    // Need to hide .modal to let mouse events through
                     modal.closest('.modal').hide();
+                    // Remove transform so next time we animate, we start from scratch, with no transformations applied
+                    modal.css('transform', '');
                 }
             });
 
