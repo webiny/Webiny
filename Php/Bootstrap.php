@@ -8,6 +8,7 @@ class Bootstrap
 {
     use BootstrapTrait;
 
+    
     public function run(PackageManager\App $app)
     {
         $mailer = $app->getConfig()->get('Mailer');
