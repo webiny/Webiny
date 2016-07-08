@@ -74,7 +74,7 @@ class WebinyBootstrapClass {
 
         initialized = true;
         this.config = config;
-        this.env = window.WebinyEnvironment;
+        this.env = window.webinyEnvironment;
         window._apiUrl = '/api';
         if (this.env === 'development') {
             window.$Webiny = Webiny;
@@ -83,6 +83,12 @@ class WebinyBootstrapClass {
         console.groupCollapsed('Bootstrap');
         // First we need to import Core/Webiny
         return this.includeApp('Core.Webiny').then(app => {
+            // Include logger
+            System.import('Core/Webiny/webiny/logger').then(m => {
+                const logger = new m.default();
+                console.log(logger);
+            });
+
             app.instance.meta = app.config;
             _.set(Webiny.Apps, app.config.name, app.instance);
             return app.instance.addModules(this.meta['Core.Webiny'].modules).run().then(() => {
