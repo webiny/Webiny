@@ -20,7 +20,7 @@ class ApiContainer extends BaseContainer {
     componentDidMount() {
         super.componentDidMount();
         if (this.props.autoRefresh && _.isNumber(this.props.autoRefresh)) {
-            this.autoRefresh = setInterval(this.loadData, 1000 * this.props.autoRefresh);
+            this.autoRefresh = setInterval(() => this.loadData(null, false), 1000 * this.props.autoRefresh);
         }
     }
 
@@ -45,7 +45,7 @@ class ApiContainer extends BaseContainer {
         }
     }
 
-    loadData(props = null) {
+    loadData(props = null, showLoading = true) {
         if (!props) {
             props = this.props;
         }
@@ -61,7 +61,10 @@ class ApiContainer extends BaseContainer {
             _searchOperator: this.state.searchOperator
         });
 
-        this.showLoading();
+        if (showLoading) {
+            this.showLoading();
+        }
+
         this.request = this.api.setQuery(query).execute().then(apiResponse => {
             const data = {loading: false};
             if (!apiResponse.isError() && !apiResponse.isAborted()) {
