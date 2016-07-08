@@ -31,7 +31,8 @@ class Search extends Webiny.Ui.FormComponent {
             'onBlur',
             'renderPreview',
             'fetchValue',
-            'getCurrentData'
+            'getCurrentData',
+            'applyFreeInput'
         );
 
         Webiny.Mixins.ApiComponent.extend(this);
@@ -213,6 +214,8 @@ class Search extends Webiny.Ui.FormComponent {
                 e.preventDefault();
                 if (this.state.options.length > 0) {
                     this.selectCurrent();
+                } else if (this.props.allowFreeInput) {
+                    this.applyFreeInput();
                 } else {
                     this.props.onEnter(e);
                 }
@@ -245,15 +248,19 @@ class Search extends Webiny.Ui.FormComponent {
         }
 
         if (this.props.allowFreeInput) {
-            if (this.props.valueLink) {
-                if (!this.state.selectedData && !(this.state.query === '' && this.state.preview !== '')) {
-                    this.props.valueLink.requestChange(this.state.query);
-                    setTimeout(this.validate, 10);
-                }
-            } else {
-                this.props.onChange(this.state.query, this.props.container);
-                this.props.container.reset();
+            this.applyFreeInput();
+        }
+    }
+
+    applyFreeInput() {
+        if (this.props.valueLink) {
+            if (!this.state.selectedData && !(this.state.query === '' && this.state.preview !== '')) {
+                this.props.valueLink.requestChange(this.state.query);
+                setTimeout(this.validate, 10);
             }
+        } else {
+            this.props.onChange(this.state.query, this.props.container);
+            this.props.container.reset();
         }
     }
 
