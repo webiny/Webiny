@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
 class Link extends Webiny.Ui.Component {
     constructor(props) {

@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-import AnimationSets from './../../Animate/AnimationSets';
 
 const Ui = Webiny.Ui.Components;
 const mountedDialogs = [];
@@ -78,31 +77,6 @@ class Dialog extends Webiny.Ui.Component {
             this.unbindHandlers();
             ReactDOM.unmountComponentAtNode(this.modalContainer);
         }
-
-        // Show previous dialog if it was hidden
-        if (!this.isShown()) {
-            const prevDialog = getShownDialog(this.id);
-            if (prevDialog) {
-                const prevContainer = $(prevDialog.modalContainer);
-                const prevModal = prevContainer.find('.modal-dialog');
-                const prevBackdrop = prevContainer.find('.modal-backdrop');
-                prevModal.closest('.modal').show();
-                dynamics.animate(prevModal[0], {
-                    opacity: 1,
-                    translateY: 50
-                }, {
-                    type: dynamics.spring,
-                    duration: this.modalShowDuration
-                });
-
-                dynamics.animate(prevBackdrop[0], {
-                    opacity: 0.8
-                }, {
-                    type: dynamics.linear,
-                    duration: this.backdropShowDuration
-                });
-            }
-        }
     }
 
     componentDidMount() {
@@ -164,6 +138,28 @@ class Dialog extends Webiny.Ui.Component {
         // This shows the modal container element in case it was previously hidden by another dialog
         this.props.onShow();
 
+        if (this.isShown()) {
+            const prevContainer = $(this.modalContainer);
+            const prevModal = prevContainer.find('.modal-dialog');
+            const prevBackdrop = prevContainer.find('.modal-backdrop');
+            prevModal.closest('.modal').show();
+            dynamics.animate(prevModal[0], {
+                opacity: 1,
+                translateY: 50
+            }, {
+                type: dynamics.spring,
+                duration: this.modalShowDuration,
+                complete: this.hideResolve
+            });
+
+            dynamics.animate(prevBackdrop[0], {
+                opacity: 0.8
+            }, {
+                type: dynamics.linear,
+                duration: this.backdropShowDuration
+            });
+        }
+
         return new Promise(resolve => {
             this.setState({
                 isShown: true
@@ -185,7 +181,6 @@ class Dialog extends Webiny.Ui.Component {
                     // No previous dialog was opened - we can safely show our new dialog
                     show();
                 }
-
             });
         });
     }
@@ -218,6 +213,7 @@ class Dialog extends Webiny.Ui.Component {
         if (!isDialogShown) {
             this.setState({isShown: false}, this.props.onHidden);
         }
+
         this.hideResolve();
     }
 }

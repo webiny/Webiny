@@ -31,19 +31,25 @@ class ClickConfirm extends Webiny.Ui.Component {
     }
 
     onCancel() {
-        if (this.props.onCancel) {
-            this.props.onCancel();
-        }
-        this.refs.dialog.hide();
+        this.refs.dialog.hide().then(this.props.onCancel);
     }
 
     onConfirm() {
-        this.realOnClick();
-        this.refs.dialog.hide();
+        Q(this.realOnClick(this)).then(response => {
+            this.refs.dialog.hide().then(() => {
+                this.props.onComplete(response);
+            });
+        });
+    }
+
+    hide() {
+        return this.refs.dialog.hide();
     }
 }
 
 ClickConfirm.defaultProps = {
+    onComplete: _.noop,
+    onCancel: _.noop,
     renderer() {
         // Input
         const input = this.getInput(this.props);
@@ -54,7 +60,11 @@ ClickConfirm.defaultProps = {
         return (
             <webiny-click-confirm>
                 {React.cloneElement(input, props)}
-                <Ui.Modal.Confirmation ref="dialog" message={() => this.message} onConfirm={this.onConfirm} onCancel={this.onCancel}/>
+                <Ui.Modal.Confirmation
+                    ref="dialog"
+                    autoHide={false}
+                    message={() => this.message} onConfirm={this.onConfirm}
+                    onCancel={this.onCancel}/>
             </webiny-click-confirm>
         );
     }

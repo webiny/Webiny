@@ -22,7 +22,7 @@ class DownloadLink extends Link {
 }
 
 DownloadLink.defaultProps = {
-    renderer(){
+    renderer() {
         const props = this.getLinkProps();
 
         const downloader = <Ui.Downloader ref="downloader"/>;

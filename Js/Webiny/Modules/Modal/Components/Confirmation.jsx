@@ -28,7 +28,10 @@ class Confirmation extends Webiny.Ui.ModalComponent {
             data.push(this);
             this.props.onConfirm(...data);
         }
-        return this.hide();
+
+        if (this.props.autoHide) {
+            this.hide();
+        }
     }
 
     renderContent() {
@@ -55,12 +58,14 @@ Confirmation.defaultProps = {
     cancel: 'No',
     onConfirm: _.noop,
     onCancel: null,
+    autoHide: true,
     renderer() {
         return (
             <Ui.Modal.Dialog ref="dialog" modalContainerTag="confirmation-modal" className="alert-modal">
                 <Ui.Modal.Body>
                     <div className="text-center">
                         <h4>{this.props.title}</h4>
+
                         <p>{this.renderContent()}</p>
                     </div>
                 </Ui.Modal.Body>
