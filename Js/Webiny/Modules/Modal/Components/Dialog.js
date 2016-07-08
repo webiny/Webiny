@@ -124,12 +124,13 @@ class Dialog extends Webiny.Ui.Component {
         if (!this.state.isShown) {
             return Q(true);
         }
-        this.props.onHide();
 
-        return new Promise(resolve => {
-            this.hideResolve = resolve;
-            this.setState({
-                isDialogShown: false
+        return Q(this.props.onHide()).then(() => {
+            return new Promise(resolve => {
+                this.hideResolve = resolve;
+                this.setState({
+                    isDialogShown: false
+                });
             });
         });
     }
