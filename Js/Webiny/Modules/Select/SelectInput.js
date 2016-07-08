@@ -201,6 +201,7 @@ SelectInput.defaultProps = {
     minimumResultsForSearch: 15,
     useDataAsValue: false,
     dropdownParent: '.dropdown-wrapper',
+    description: null,
     renderer() {
         const cssConfig = {
             'form-group': true,
@@ -225,6 +226,7 @@ SelectInput.defaultProps = {
                 <select style={{'width': '100%'}}/>
 
                 <div className="dropdown-wrapper"></div>
+                <span className="help-block">{this.props.description}</span>
                 {validationMessage}
             </div>
         );
