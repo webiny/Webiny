@@ -12,7 +12,7 @@ class CodeEditor extends Webiny.Ui.FormComponent {
             theme: 'monokai' // needs to be loaded via bower.json
         };
 
-        this.bindMethods('getTextareaElement,fullscreen');
+        this.bindMethods('getTextareaElement');
     }
 
     componentDidMount() {

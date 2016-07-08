@@ -3,6 +3,7 @@ namespace Apps\Core\Php\View;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\Services\Apps;
+use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Storage\StorageException;
 use Webiny\Component\TemplateEngine\Drivers\Smarty\SmartyExtensionAbstract;
@@ -34,6 +35,8 @@ class SmartyExtension extends SmartyExtensionAbstract
     public function webinyInclude($params, $smarty)
     {
         $env = $this->wConfig()->get('Application.Environment', 'production');
+        $apiPath = $this->wConfig()->getConfig()->get('Application.ApiPath');
+        $jsConfig = $this->wConfig()->getConfig()->get('Js', new ConfigObject())->toArray();
         $apps = new Apps();
         try {
             $meta = $apps->getAppsMeta('Core.Webiny');
@@ -65,10 +68,16 @@ class SmartyExtension extends SmartyExtensionAbstract
             }
         }
 
-        return join("\n    ", [
-            '<link href="' . $cssPath . '" rel="stylesheet" type="text/css">',
-            '<script src="' . $jsPath . '" type="text/javascript"></script>',
-            '<script>var WebinyEnvironment = \'' . $env . '\';</script>'
-        ]);
+        $config = json_encode($jsConfig, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+
+        return <<<EOT
+    <script type="text/javascript">
+        var webinyEnvironment = '{$env}';
+        var webinyApiUrl = '{$apiPath}';
+        var webinyConfig = {$config};
+    </script>
+    <link href="{$cssPath}" rel="stylesheet" type="text/css"/>
+    <script src="{$jsPath}" type="text/javascript"></script>
+EOT;
     }
 }

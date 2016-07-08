@@ -75,7 +75,6 @@ class WebinyBootstrapClass {
         initialized = true;
         this.config = config;
         this.env = window.webinyEnvironment;
-        window._apiUrl = '/api';
         if (this.env === 'development') {
             window.$Webiny = Webiny;
         }
@@ -146,7 +145,7 @@ class WebinyBootstrapClass {
     includeApp(appName, meta) {
         if (!meta || meta === true) {
             const config = {
-                url: _apiUrl + '/services/core/apps/' + appName,
+                url: webinyApiUrl + '/services/core/apps/' + appName,
                 dataType: 'json',
                 contentType: 'application/json;charset=UTF-8',
                 processData: false
