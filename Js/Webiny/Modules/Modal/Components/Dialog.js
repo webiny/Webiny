@@ -19,10 +19,10 @@ class Dialog extends Webiny.Ui.Component {
             isDialogShown: false
         };
 
-        this.modalShowDuration = 1200;
-        this.modalHideDuration = 450;
+        this.modalShowDuration = 800;
+        this.modalHideDuration = 250;
         this.backdropShowDuration = 100;
-        this.backdropHideDuration = 100;
+        this.backdropHideDuration = 200;
 
         this.animating = false;
         this.clickStartedOnBackdrop = false;
@@ -62,7 +62,7 @@ class Dialog extends Webiny.Ui.Component {
             dynamics.animate(backdrop[0], {
                 opacity: 0
             }, {
-                type: dynamics.linear,
+                type: dynamics.easeOut,
                 duration: this.backdropHideDuration
             });
         }
@@ -158,7 +158,7 @@ class Dialog extends Webiny.Ui.Component {
             dynamics.animate(prevBackdrop[0], {
                 opacity: 0.8
             }, {
-                type: dynamics.linear,
+                type: dynamics.easeIn,
                 duration: this.backdropShowDuration
             });
         }
@@ -238,8 +238,8 @@ Dialog.defaultProps = {
 
                 <Ui.Animate
                     trigger={this.state.isDialogShown}
-                    show={{opacity: 0.8, duration: this.backdropShowDuration, ease: 'linear'}}
-                    hide={{opacity: 0, duration: this.backdropHideDuration, ease: 'linear'}}>
+                    show={{opacity: 0.8, duration: this.backdropShowDuration, ease: 'easeIn'}}
+                    hide={{opacity: 0, duration: this.backdropHideDuration, ease: 'easeOut'}}>
                     <div className="modal-backdrop" style={{opacity: 0}}></div>
                 </Ui.Animate>
 
