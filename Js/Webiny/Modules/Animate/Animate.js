@@ -10,6 +10,13 @@ class Container extends Webiny.Ui.Component {
     componentWillEnter(callback) {
         const elements = ReactDOM.findDOMNode(this).childNodes;
 
+        const showCallback = () => {
+            callback();
+            if (_.isFunction(this.props.onFinish)) {
+                this.props.onFinish(true);
+            }
+        };
+
         _.forEach(elements, (el) => {
             if (_.isObject(this.props.show)) {
                 AnimationSets.custom(this.props.show, el, () => {
@@ -19,12 +26,7 @@ class Container extends Webiny.Ui.Component {
                     }
                 });
             } else {
-                AnimationSets[this.props.show](el, () => {
-                    callback();
-                    if (_.isFunction(this.props.onFinish)) {
-                        this.props.onFinish(true);
-                    }
-                });
+                AnimationSets[this.props.show](el, showCallback);
             }
         });
     }
@@ -32,21 +34,18 @@ class Container extends Webiny.Ui.Component {
     componentWillLeave(callback) {
         const elements = ReactDOM.findDOMNode(this).childNodes;
 
+        const hideCallback = () => {
+            callback();
+            if (_.isFunction(this.props.onFinish)) {
+                this.props.onFinish();
+            }
+        };
+
         _.forEach(elements, (el) => {
             if (_.isObject(this.props.hide)) {
-                AnimationSets.custom(this.props.hide, el, () => {
-                    callback();
-                    if (_.isFunction(this.props.onFinish)) {
-                        this.props.onFinish();
-                    }
-                });
+                AnimationSets.custom(this.props.hide, el, hideCallback);
             } else {
-                AnimationSets[this.props.hide](el, () => {
-                    callback();
-                    if (_.isFunction(this.props.onFinish)) {
-                        this.props.onFinish();
-                    }
-                });
+                AnimationSets[this.props.hide](el, hideCallback);
             }
         });
     }
