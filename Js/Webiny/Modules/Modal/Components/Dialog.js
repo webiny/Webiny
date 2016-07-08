@@ -19,11 +19,12 @@ class Dialog extends Webiny.Ui.Component {
             isDialogShown: false
         };
 
-        this.modalShowDuration = 800;
-        this.modalHideDuration = 250;
+        this.modalShowDuration = 1200;
+        this.modalHideDuration = 450;
         this.backdropShowDuration = 100;
         this.backdropHideDuration = 100;
 
+        this.animating = false;
         this.clickStartedOnBackdrop = false;
         if (!document.querySelector(props.modalContainerTag)) {
             document.body.appendChild(document.createElement(props.modalContainerTag));
@@ -49,7 +50,7 @@ class Dialog extends Webiny.Ui.Component {
                 translateY: -100
             }, {
                 type: dynamics.easeOut,
-                duration: 250,
+                duration: this.modalHideDuration,
                 complete: () => {
                     // Need to hide .modal to let mouse events through
                     modal.closest('.modal').hide();
@@ -100,7 +101,7 @@ class Dialog extends Webiny.Ui.Component {
         const namespace = '.' + this.id;
         $(this.props.modalContainerTag).on('keyup' + namespace, '.modal', e => {
             // Listen for ESC button
-            if (e.keyCode === 27) {
+            if (e.keyCode === 27 && !this.animating) {
                 this.hide();
             }
         }).on('mousedown' + namespace, '.modal', e => {
@@ -121,10 +122,11 @@ class Dialog extends Webiny.Ui.Component {
     }
 
     hide() {
-        if (!this.state.isShown) {
+        if (!this.state.isDialogShown || this.animating) {
             return Q(true);
         }
 
+        this.animating = true;
         return Q(this.props.onHide()).then(() => {
             return new Promise(resolve => {
                 this.hideResolve = resolve;
@@ -166,6 +168,7 @@ class Dialog extends Webiny.Ui.Component {
                 isShown: true
             }, () => {
                 // Now we are supposed to show dialog with animation
+                this.animating = true;
                 const show = () => {
                     this.setState({
                         isDialogShown: true
@@ -211,11 +214,11 @@ class Dialog extends Webiny.Ui.Component {
     }
 
     animationFinish(isDialogShown) {
+        this.animating = false;
         if (!isDialogShown) {
             this.setState({isShown: false}, this.props.onHidden);
+            this.hideResolve();
         }
-
-        this.hideResolve();
     }
 }
 
