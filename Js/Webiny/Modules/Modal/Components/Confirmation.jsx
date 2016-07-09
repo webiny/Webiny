@@ -50,18 +50,10 @@ class Confirmation extends Webiny.Ui.ModalComponent {
         this.data = data;
         return this;
     }
-}
 
-Confirmation.defaultProps = {
-    title: 'Confirmation dialog',
-    confirm: 'Yes',
-    cancel: 'No',
-    onConfirm: _.noop,
-    onCancel: null,
-    autoHide: true,
-    renderer() {
+    renderDialog() {
         return (
-            <Ui.Modal.Dialog ref="dialog" modalContainerTag="confirmation-modal" className="alert-modal">
+            <Ui.Modal.Dialog modalContainerTag="confirmation-modal" className="alert-modal">
                 <Ui.Modal.Body>
                     <div className="text-center">
                         <h4>{this.props.title}</h4>
@@ -76,6 +68,15 @@ Confirmation.defaultProps = {
             </Ui.Modal.Dialog>
         );
     }
-};
+}
+
+Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
+    title: 'Confirmation dialog',
+    confirm: 'Yes',
+    cancel: 'No',
+    onConfirm: _.noop,
+    onCancel: null,
+    autoHide: true
+});
 
 export default Confirmation;

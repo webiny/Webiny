@@ -3,7 +3,7 @@ const Ui = Webiny.Ui.Components;
 
 class ApiTokenForm extends Webiny.Ui.ModalComponent {
 
-    render() {
+    renderDialog() {
         const formProps = {
             ui: 'tokenModalForm',
             api: '/entities/core/api-token',
@@ -13,7 +13,7 @@ class ApiTokenForm extends Webiny.Ui.ModalComponent {
         };
 
         return (
-            <Ui.Modal.Dialog ref="dialog">
+            <Ui.Modal.Dialog>
                 <Ui.Modal.Header title="API Token"/>
                 <Ui.Modal.Body>
                     <Ui.Form.Container {...formProps}>
