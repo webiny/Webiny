@@ -1,4 +1,5 @@
 $color-primary:					#fa541d; 		// primary layout color
+$color-secondary:				#00ccaf; 		// primary layout color
 
 // MAIN BLOCKS
 $masterContentBgColor: 			#f2f2f2; 	// master content background color
@@ -29,17 +30,17 @@ $darkIconColor: 				#1b3345; 	// Dark icon color
 
 
 $breakpoints:
-	(
-		phone: 480px,
-		tablet: 768px,
-		laptop: 1024px,
-		desktop: 1440px
-	) !default;
+(
+        phone: 480px,
+        tablet: 768px,
+        laptop: 1024px,
+        desktop: 1440px
+) !default;
 
 $media-expressions:
-	(
-		screen: "screen",
+(
+        screen: "screen",
         print: "print",
         retina2x: ( "(-webkit-min-device-pixel-ratio: 2)", "(min-resolution: 192dpi)" ),
         retina3x: ( "(-webkit-min-device-pixel-ratio: 3)", "(min-resolution: 350dpi)" )
-    ) !default;
+) !default;

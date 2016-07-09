@@ -96,7 +96,7 @@
 
 .tab-pane {
   padding: 20px;
-  
+
   background-color: #fff;
 }
 
@@ -126,13 +126,14 @@
   .keyword-block{
     position: relative;
     display: inline-block;
-    margin: 2px 0;
+    float: left;
+    margin: 2px 2px;
     padding: 8px 35px 8px 15px;
     background-color: $highlightColor;
     border-radius: 20px;
     p{
       margin: 0;
-      
+
       color: white;
       font-size: 14px;
       line-height: 1;
@@ -148,6 +149,7 @@
   }
   .keyword-input{
     width: 250px;
+    padding: 8px;
     background-color: $formBgColor;
   }
   .remove-keyword{
@@ -175,5 +177,12 @@
         }
       }
     }
+  }
+
+  &:after {
+    content: "";
+    display: block;
+    clear: both;
+    float: none;
   }
 }

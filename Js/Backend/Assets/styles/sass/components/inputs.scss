@@ -7,7 +7,7 @@ label, .form-group label, label.control-label {
 
 .form-group {
   label span.mandat {
-    color: #CC3300;
+    color: #cc3300;
     margin-left: 2px;
   }
 }
@@ -44,10 +44,10 @@ label, .form-group label, label.control-label {
   }
   &[readonly] {
     color: #393939 !important;
-    background-color: #F5F5F5 !important;
+    background-color: #f5f5f5 !important;
     &:hover, &:focus {
       color: #393939 !important;
-      background-color: #F5F5F5 !important;
+      background-color: #f5f5f5 !important;
     }
   }
 }
@@ -69,10 +69,10 @@ textarea.form-control {
   position: relative;
   text-align: left;
   &.error input.form-control {
-    border: 1px solid #CC3300;
+    border: 1px solid #cc3300;
   }
   &.success input.form-control {
-    border: 1px solid #3FBFB0;
+    border: 1px solid #3fbfb0;
   }
   > span.icon {
     position: absolute;
@@ -83,7 +83,7 @@ textarea.form-control {
     right: -6px;
   }
   &.error span.icon {
-    color: #CC3300;
+    color: #cc3300;
   }
 
   .help-block.w-anim {
@@ -93,20 +93,28 @@ textarea.form-control {
   }
 
   &.error .help-block {
-    color: #CC3300;
+    color: #cc3300;
+  }
+
+  &.error .select2-selection--single {
+    border-color: #cc3300;
+  }
+
+  &.success .select2-selection--single {
+    border-color: #3fbfb0;
   }
 
   &.success span.icon {
-    color: #3FBFB0;
+    color: #3fbfb0;
     right: -4px;
   }
 
   &.success .help-block {
-    color: #3FBFB0;
+    color: #3fbfb0;
   }
   span.info-txt {
     float: right;
-    color: #6C6C6C;
+    color: #6c6c6c;
     margin-top: 3px;
     font-size: 0.9em;
     font-weight: 500;
@@ -243,7 +251,6 @@ textarea.form-control {
     }
   }
 }
-
 .navbar-form {
   margin: 0;
   padding: 0;
