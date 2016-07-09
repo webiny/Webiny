@@ -55,9 +55,11 @@ class File extends EntityAbstract
     public function toArray($fields = '', $nestedLevel = 1)
     {
         $data = parent::toArray($fields, $nestedLevel);
-        $src = $this->str($data['src']);
-        if (!isset($data['src']) || !$src->startsWith('http://') && !$src->startsWith('https://')) {
-            $data['src'] = $this->getUrl();
+        if(isset($data['src'])){
+            $src = $this->str($data['src']);
+            if (!$src->startsWith('http://') && !$src->startsWith('https://')) {
+                $data['src'] = $this->getUrl();
+            }
         }
 
         return $data;

@@ -6,7 +6,10 @@ class InputContainer extends Webiny.Ui.FormComponent {
     onKeyDown(e) {
         switch (e.key) {
             case 'Enter':
-                this.props.onEnter(e);
+                if (this.props.onEnter) {
+                    e.preventDefault();
+                    this.props.onEnter(e);
+                }
                 break;
             default:
                 break;
@@ -17,7 +20,7 @@ class InputContainer extends Webiny.Ui.FormComponent {
 InputContainer.defaultProps = {
     delay: 400,
     readOnly: false,
-    onEnter: _.noop,
+    onEnter: null,
     description: null,
     info: null,
     showValidationIcon: true,
@@ -74,6 +77,7 @@ InputContainer.defaultProps = {
             <div className={this.classSet(cssConfig, this.props.className)}>
                 {label}
                 <span className="info-text">{info}</span>
+
                 <div className="input-group">
                     <Webiny.Ui.Components.DelayedValueLink delay={this.props.delay}>
                         <Input {...props}/>

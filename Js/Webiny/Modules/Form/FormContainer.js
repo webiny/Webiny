@@ -25,6 +25,7 @@ class FormContainer extends Webiny.Ui.Component {
         }
 
         this.bindMethods(
+            'onKeyDown',
             'getModel',
             'setModel',
             'loadModel',
@@ -301,6 +302,18 @@ class FormContainer extends Webiny.Ui.Component {
             }
             return this.onInvalid();
         });
+    }
+
+    onKeyDown(e) {
+        switch (e.key) {
+            case 'Enter':
+                if (!e.isDefaultPrevented() && e.target.nodeName === 'INPUT') {
+                    this.submit(e);
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     cancel() {
@@ -594,7 +607,7 @@ FormContainer.defaultProps = {
     },
     renderer() {
         return (
-            <webiny-form-container>{this.__renderContent()}</webiny-form-container>
+            <webiny-form-container onKeyDown={this.onKeyDown}>{this.__renderContent()}</webiny-form-container>
         );
     }
 };
