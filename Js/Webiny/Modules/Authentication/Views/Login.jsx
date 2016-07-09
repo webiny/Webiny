@@ -25,6 +25,7 @@ class Login extends Webiny.Ui.View {
     componentDidMount() {
         super.componentDidMount();
         $('body').addClass('sign-in');
+        $('[type="password"]').focus();
     }
 
     componentWillUnmount() {
