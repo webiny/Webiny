@@ -1,0 +1,21 @@
+.actions {
+	.action {
+		display: inline-block;
+		padding: 0;
+
+		margin-left: 10px;
+		color: rgba(89,89,89, 0.5);
+		
+		&:hover {
+			color: $color-primary;
+		}
+	}
+
+	.action--active {
+		color: $color-primary;
+		
+		&:hover {
+			color: rgba(89,89,89, 0.5);
+		}
+	}
+}

@@ -9,12 +9,15 @@ class Base extends Webiny.Ui.FormComponent {
         this.bindMethods('setValue');
     }
 
-    shouldComponentUpdate(nextProps) {
+    shouldComponentUpdate(nextProps, nextState) {
         const omit = ['children', 'key', 'ref', 'valueLink'];
         const oldProps = _.omit(this.props, omit);
         const newProps = _.omit(nextProps, omit);
 
-        return !_.isEqual(newProps, oldProps) || !_.isEqual(nextProps.valueLink.value, this.props.valueLink.value);
+        const newValue = nextProps.valueLink.value;
+        const oldValue = this.props.valueLink.value;
+
+        return !_.isEqual(newProps, oldProps) || !_.isEqual(newValue, oldValue) || !_.isEqual(nextState, this.state);
     }
 
     /**
