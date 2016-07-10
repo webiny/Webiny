@@ -239,6 +239,7 @@ class Component extends React.Component {
                 params.push(this);
                 return this.props.renderer.call(...params);
             } catch (e) {
+                Webiny.Logger.reportError('js', e.message, e.stack);
                 console.error('[RENDER ERROR][' + this.getClassName() + ']', e);
                 return (
                     <div className="porlet porlet-primary">
