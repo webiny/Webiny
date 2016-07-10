@@ -149,10 +149,10 @@ class HttpRequest {
         this.promise = new Promise(resolve => {
             this.request = $.ajax(this.getRequestObject())
                 .done((data, textStatus, jqXhr) => {
-                    resolve(new HttpResponse(formatResponse(jqXhr)));
+                    resolve(new HttpResponse(formatResponse(jqXhr), this));
                 })
                 .fail(jqXhr => {
-                    resolve(new HttpResponse(formatResponse(jqXhr)));
+                    resolve(new HttpResponse(formatResponse(jqXhr), this));
                 });
         });
 

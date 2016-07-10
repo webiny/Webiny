@@ -1,10 +1,11 @@
 class HttpResponse {
 
-    constructor(response) {
+    constructor(response, request) {
         this.data = response.data;
         this.status = response.status;
         this.statusText = response.statusText;
         this.headers = response.headers;
+        this.request = request;
     }
 
     getData(key, defaultValue) {
