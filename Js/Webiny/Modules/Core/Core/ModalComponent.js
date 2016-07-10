@@ -17,12 +17,21 @@ class ModalComponent extends Component {
         return this.refs.dialog.show();
     }
 
+    isAnimating() {
+        return this.refs.dialog.isAnimating();
+    }
+
     renderDialog() {
-        throw new Error('Implement renderDialog() method in your modal component class');
+        if (_.isFunction(this.props.renderDialog)) {
+            return this.props.renderDialog.call(this);
+        }
+
+        throw new Error('Implement renderDialog() method in your modal component class or add a renderDialog() function through props!');
     }
 }
 
 ModalComponent.defaultProps = {
+    renderDialog: null,
     renderer() {
         const dialog = this.renderDialog();
         if (dialog.type === Webiny.Ui.Components.Modal.Dialog) {

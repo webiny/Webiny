@@ -102,7 +102,7 @@ class Dialog extends Webiny.Ui.Component {
         $(this.props.modalContainerTag).on('keyup' + namespace, '.modal', e => {
             // Listen for ESC button
             if (e.keyCode === 27 && !this.animating) {
-                this.hide();
+                Q(this.props.onCancel()).then(this.hide);
             }
         }).on('mousedown' + namespace, '.modal', e => {
             // Catch backdrop click
@@ -111,7 +111,7 @@ class Dialog extends Webiny.Ui.Component {
             }
         }).on('click' + namespace, '.modal', () => {
             if (this.clickStartedOnBackdrop && this.props.closeOnClick) {
-                this.hide();
+                Q(this.props.onCancel()).then(this.hide);
             }
             this.clickStartedOnBackdrop = false;
         });
@@ -142,28 +142,41 @@ class Dialog extends Webiny.Ui.Component {
         this.props.onShow();
 
         if (this.isShown()) {
-            const prevContainer = $(this.modalContainer);
-            const prevModal = prevContainer.find('.modal-dialog');
-            const prevBackdrop = prevContainer.find('.modal-backdrop');
-            prevModal.closest('.modal').show();
-            dynamics.animate(prevModal[0], {
-                opacity: 1,
-                translateY: 50
-            }, {
-                type: dynamics.spring,
-                duration: this.modalShowDuration,
-                complete: this.hideResolve
-            });
+            // Animate previously hidden dialog
+            return new Promise(resolve => {
+                this.animating = true;
+                const prevContainer = $(this.modalContainer);
+                const prevModal = prevContainer.find('.modal-dialog');
+                const prevBackdrop = prevContainer.find('.modal-backdrop');
+                prevModal.closest('.modal').show();
+                dynamics.animate(prevModal[0], {
+                    opacity: 1,
+                    translateY: 50
+                }, {
+                    type: dynamics.spring,
+                    duration: this.modalShowDuration,
+                    complete: () => {
+                        prevModal.closest('.modal').focus();
+                        this.animating = false;
+                        resolve();
+                    }
+                });
 
-            dynamics.animate(prevBackdrop[0], {
-                opacity: 0.8
-            }, {
-                type: dynamics.easeIn,
-                duration: this.backdropShowDuration
+                dynamics.animate(prevBackdrop[0], {
+                    opacity: 0.8
+                }, {
+                    type: dynamics.easeIn,
+                    duration: this.backdropShowDuration
+                });
             });
         }
 
         return new Promise(resolve => {
+            // If showing previously visually hidden modal - resolve promise
+            if (this.isShown()) {
+                return resolve();
+            }
+
             this.setState({
                 isShown: true
             }, () => {
@@ -191,6 +204,10 @@ class Dialog extends Webiny.Ui.Component {
 
     isShown() {
         return this.state.isShown;
+    }
+
+    isAnimating() {
+        return this.animating;
     }
 
     prepareChild(child) {
@@ -228,6 +245,7 @@ Dialog.defaultProps = {
     onHidden: _.noop,
     onShow: _.noop,
     onShown: _.noop,
+    onCancel: _.noop, // Called when dialog is closed using ESC or backdrop click
     closeOnClick: true,
     modalContainerTag: 'webiny-modal',
     style: {},

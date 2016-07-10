@@ -63,7 +63,8 @@ ClickConfirm.defaultProps = {
                 <Ui.Modal.Confirmation
                     ref="dialog"
                     autoHide={false}
-                    message={() => this.message} onConfirm={this.onConfirm}
+                    message={() => this.message}
+                    onConfirm={this.onConfirm}
                     onCancel={this.onCancel}/>
             </webiny-click-confirm>
         );

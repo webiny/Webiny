@@ -12,14 +12,16 @@ class Confirmation extends Webiny.Ui.ModalComponent {
 
     show() {
         this.setState({time: new Date().getTime()});
-        super.show();
+        return super.show();
     }
 
     onCancel() {
-        if (_.isFunction(this.props.onCancel)) {
-            return this.props.onCancel(this);
+        if (!this.isAnimating()) {
+            if (_.isFunction(this.props.onCancel)) {
+                return this.props.onCancel(this);
+            }
+            return this.hide();
         }
-        return this.hide();
     }
 
     onConfirm() {
@@ -50,10 +52,18 @@ class Confirmation extends Webiny.Ui.ModalComponent {
         this.data = data;
         return this;
     }
+}
 
+Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
+    title: 'Confirmation dialog',
+    confirm: 'Yes',
+    cancel: 'No',
+    onConfirm: _.noop,
+    onCancel: null,
+    autoHide: true,
     renderDialog() {
         return (
-            <Ui.Modal.Dialog modalContainerTag="confirmation-modal" className="alert-modal">
+            <Ui.Modal.Dialog modalContainerTag="confirmation-modal" className="alert-modal" onCancel={this.onCancel}>
                 <Ui.Modal.Body>
                     <div className="text-center">
                         <h4>{this.props.title}</h4>
@@ -68,15 +78,6 @@ class Confirmation extends Webiny.Ui.ModalComponent {
             </Ui.Modal.Dialog>
         );
     }
-}
-
-Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
-    title: 'Confirmation dialog',
-    confirm: 'Yes',
-    cancel: 'No',
-    onConfirm: _.noop,
-    onCancel: null,
-    autoHide: true
 });
 
 export default Confirmation;
