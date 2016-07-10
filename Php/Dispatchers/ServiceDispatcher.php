@@ -31,8 +31,8 @@ class ServiceDispatcher extends AbstractApiDispatcher
         $url = join('/', $request['params']);
 
         $serviceClass = '\\Apps\\' . $request['app'] . '\\Php\\Services\\' . $request['class'];
-        if (!class_exists($serviceClass)) {
-            return new ApiErrorResponse([], 'Service class ' . $serviceClass . ' does not exist!');
+        if (!$this->fileExists($serviceClass)) {
+            return new ApiErrorResponse([], 'Service class ' . $serviceClass . ' does not exist!', 'WBY-CLASS_NOT_FOUND');
         }
 
         $service = new $serviceClass;

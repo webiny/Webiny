@@ -32,8 +32,8 @@ class EntityDispatcher extends AbstractApiDispatcher
         $params = $request['params'];
 
         $entityClass = '\\Apps\\' . $request['app'] . '\\Php\\Entities\\' . $this->str($request['class'])->singularize();
-        if (!class_exists($entityClass)) {
-            return new ApiErrorResponse([], 'Entity class ' . $entityClass . ' does not exist!');
+        if (!$this->fileExists($entityClass)) {
+            return new ApiErrorResponse([], 'Entity class ' . $entityClass . ' does not exist!', 'WBY-CLASS_NOT_FOUND');
         }
 
         $flows = $this->wService()->getServicesByTag('entity-dispatcher-flow');

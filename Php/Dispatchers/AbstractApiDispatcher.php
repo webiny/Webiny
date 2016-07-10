@@ -25,12 +25,23 @@ abstract class AbstractApiDispatcher
         }
 
         $data = [
-            'app' => $this->toPascalCase($parts[0]),
-            'class' => $this->toPascalCase($parts[1]),
+            'app'    => $this->toPascalCase($parts[0]),
+            'class'  => $this->toPascalCase($parts[1]),
             'params' => $this->str($parts->key(2, '', true))->explode('/')->filter()->val()
         ];
 
         return $data;
+    }
+
+    protected function fileExists($class)
+    {
+        $parts = $this->str($class)->explode('\\')->filter()->values()->val();
+        $version = $this->wConfig()->get('Apps.' . $parts[1]);
+        if ($version && $version !== 'root') {
+            array_splice($parts, 2, 0, str_replace('.', '_', $version));
+        }
+
+        return file_exists($this->wConfig()->get('Application.AbsolutePath') . join('/', $parts) . '.php');
     }
 
     protected function toCamelCase($str)
