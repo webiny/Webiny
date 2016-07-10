@@ -22,7 +22,7 @@ UsersAccount.defaultProps = {
                 return container.api.patch('/me', model).then(apiResponse => {
                     container.hideLoading();
                     if (apiResponse.isError()) {
-                        return container.__processError(apiResponse);
+                        return container.handleApiError(apiResponse);
                     }
 
                     container.setModel({password: null, confirmPassword: null});

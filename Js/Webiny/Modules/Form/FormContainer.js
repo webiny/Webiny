@@ -44,8 +44,8 @@ class FormContainer extends Webiny.Ui.Component {
             'isSubmitDisabled',
             'enableSubmit',
             'disableSubmit',
+            'handleApiError',
             '__renderContent',
-            '__processError',
             '__processSubmitResponse',
             '__focusTab'
         );
@@ -139,10 +139,12 @@ class FormContainer extends Webiny.Ui.Component {
 
     showLoading() {
         this.setState({loading: true, error: null});
+        return this;
     }
 
     hideLoading() {
         this.setState({loading: false});
+        return this;
     }
 
     isLoading() {
@@ -510,19 +512,7 @@ class FormContainer extends Webiny.Ui.Component {
         });
     }
 
-    /**
-     * Render Container content
-     * @returns {*}
-     */
-    __renderContent() {
-        const children = this.props.children;
-        if (!_.isFunction(children)) {
-            throw new Error('Form.Container must have a function as its only child!');
-        }
-        return this.registerComponents(children.call(this, _.clone(this.state.model), this));
-    }
-
-    __processError(apiResponse) {
+    handleApiError(apiResponse) {
         this.setState({error: apiResponse}, () => {
             // Check error data and if validation error - try highlighting invalid fields
             const data = apiResponse.getData();
@@ -540,12 +530,25 @@ class FormContainer extends Webiny.Ui.Component {
                 });
             }
         });
+        return  this;
+    }
+
+    /**
+     * Render Container content
+     * @returns {*}
+     */
+    __renderContent() {
+        const children = this.props.children;
+        if (!_.isFunction(children)) {
+            throw new Error('Form.Container must have a function as its only child!');
+        }
+        return this.registerComponents(children.call(this, _.clone(this.state.model), this));
     }
 
     __processSubmitResponse(model, apiResponse) {
         this.hideLoading();
         if (apiResponse.isError()) {
-            this.__processError(apiResponse);
+            this.handleApiError(apiResponse);
             return apiResponse;
         }
 
