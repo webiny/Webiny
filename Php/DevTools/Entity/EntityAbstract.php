@@ -16,6 +16,7 @@ use Apps\Core\Php\DevTools\Entity\Event\EntityDeleteEvent;
 use Apps\Core\Php\DevTools\Entity\Event\EntityEvent;
 use Webiny\Component\Entity\Attribute\Many2OneAttribute;
 use Webiny\Component\Entity\Attribute\One2ManyAttribute;
+use Webiny\Component\Entity\Entity;
 
 /**
  * EntityAbstract class is the main class to extend when creating your own entities
@@ -23,6 +24,8 @@ use Webiny\Component\Entity\Attribute\One2ManyAttribute;
 abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
 {
     use DevToolsTrait, ApiExpositionTrait;
+
+    protected static $callbacks = [];
 
     private static $protectedAttributes = [
         'id',
@@ -123,7 +126,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         /**
          * Fire event for registering extra attributes
          */
-        $this->wEvents()->fire($this->getEventName() . '.Extend', new EntityEvent($this));
+        $this->processCallbacks('onExtend', new EntityEvent($this));
     }
 
     public function delete()
@@ -139,7 +142,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
          * Fire "BeforeDelete" event
          */
         $event = new EntityDeleteEvent($this);
-        $this->wEvents()->fire($this->getEventName() . '.BeforeDelete', $event);
+        $this->processCallbacks('onBeforeDelete', $event);
 
         /**
          * If delete was prevented in some event handler, return event result (false by default)
@@ -158,11 +161,8 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         $deleted = parent::delete();
         // Archiver::getInstance()->unblock($archiveProcessId);
 
-        /**
-         * Fire "AfterDelete" event
-         */
         if ($deleted) {
-            $this->wEvents()->fire($this->getEventName() . '.AfterDelete', $event);
+            $this->processCallbacks('onAfterDelete', $event);
         }
 
         return $deleted;
@@ -171,11 +171,41 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
     public function save()
     {
         $event = new EntityEvent($this);
-        $this->wEvents()->fire($this->getEventName() . '.BeforeSave', $event);
+        $this->processCallbacks('onBeforeSave', $event);
         $save = parent::save();
-        $this->wEvents()->fire($this->getEventName() . '.AfterSave', $event);
+        $this->processCallbacks('onAfterSave', $event);
 
         return $save;
+    }
+
+    public static function trigger($eventName, ...$params)
+    {
+        static::processCallbacks($eventName, ...$params);
+    }
+
+    public static function onExtend($callback)
+    {
+        static::on('onExtend', $callback);
+    }
+
+    public static function onBeforeSave($callback)
+    {
+        static::on('onBeforeSave', $callback);
+    }
+
+    public static function onAfterSave($callback)
+    {
+        static::on('onAfterSave', $callback);
+    }
+
+    public static function onBeforeDelete($callback)
+    {
+        static::on('onBeforeDelete', $callback);
+    }
+
+    public static function onAfterDelete($callback)
+    {
+        static::on('onAfterDelete', $callback);
     }
 
     public static function find(array $conditions = [], array $order = [], $limit = 0, $page = 0)
@@ -304,11 +334,24 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         return $builtFilters;
     }
 
-    private function getEventName()
+    protected static function on($eventName, $callback)
     {
-        $classParts = $this->str(get_class($this))->explode('\\')->filter();
-        $eventName = $classParts[1] . '.' . $classParts->last();
+        $className = get_called_class();
+        static::$callbacks[$className][$eventName][] = $callback;
+    }
 
-        return $eventName;
+    protected static function processCallbacks($eventName, ...$params)
+    {
+        $className = get_called_class();
+        $classes = array_values([$className] + class_parents($className));
+        foreach ($classes as $class) {
+            if ($class == 'Apps\Core\Php\DevTools\Entity\EntityAbstract') {
+                return;
+            }
+            $callbacks = static::$callbacks[$class][$eventName] ?? [];
+            foreach ($callbacks as $callback) {
+                $callback(...$params);
+            }
+        }
     }
 }

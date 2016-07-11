@@ -77,6 +77,8 @@ class User extends EntityAbstract
 
             return $groups;
         });
+        $this->attr('lastActive')->datetime();
+        $this->attr('lastLogin')->datetime();
 
         /**
          * @api.name Login
@@ -187,6 +189,37 @@ class User extends EntityAbstract
         return $this->groups;
     }
 
+    public function save()
+    {
+        $new = !$this->exists();
+        $res = parent::save();
+        if ($new) {
+            $this->wAuth()->getLogin()->setUserAccountConfirmationStatus($this->email);
+        }
+
+        return $res;
+    }
+
+    /**
+     * Triggered when User is logged-in successfully
+     *
+     * @param $callback
+     */
+    public static function onLoginSuccess($callback)
+    {
+        static::on('onLoginSuccess', $callback);
+    }
+
+    /**
+     * Triggered when User is successfully authenticated (using Authorization)
+     *
+     * @param $callback
+     */
+    public static function onActivity($callback)
+    {
+        static::on('onActivity', $callback);
+    }
+
     protected static function entityIndexes()
     {
         return [
@@ -202,19 +235,4 @@ class User extends EntityAbstract
     {
         return $this;
     }
-
-    public function save()
-    {
-        $new = !$this->exists();
-        $res = parent::save();
-        if ($new) {
-            $this->wAuth()->getLogin()->setUserAccountConfirmationStatus($this->email);
-        }
-
-        return $res;
-    }
-    
-    
-    
-    
 }

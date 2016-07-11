@@ -2,6 +2,7 @@
 namespace Apps\Core\Php\DevTools\Authorization;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\Entity\EntityAbstract;
 use Apps\Core\Php\Entities\User;
 use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\EntityCollection;
@@ -79,18 +80,18 @@ class Authorization
      */
     public function getUser()
     {
-        if ($this->user) {
-            return $this->user;
-        }
+        if (!$this->user) {
+            $authCookie = $this->wRequest()->header('Authorization');
 
-        $authCookie = $this->wRequest()->header('Authorization');
-
-        try {
-            $class = $this->userClass;
-            $user = $this->login->getUser($authCookie);
-            $this->user = $class::findOne(['email' => $user->getUsername()]);
-        } catch (\Exception $le) {
-            return null;
+            try {
+                /* @var $class EntityAbstract */
+                $class = $this->userClass;
+                $user = $this->login->getUser($authCookie);
+                $this->user = $class::findOne(['email' => $user->getUsername()]);
+                $class::trigger('onActivity', $this->user);
+            } catch (\Exception $le) {
+                return null;
+            }
         }
 
         return $this->user;
@@ -103,10 +104,13 @@ class Authorization
             // if login is successful, return device and auth tokens
             $authToken = $this->login->getAuthToken();
 
+            /* @var $class EntityAbstract */
             $class = $this->userClass;
             $this->user = $class::findOne(['email' => $username]);
 
             if ($this->user && $this->user->enabled) {
+                $class::trigger('onLoginSuccess', $this->user);
+
                 return [
                     'authToken' => $authToken
                 ];
