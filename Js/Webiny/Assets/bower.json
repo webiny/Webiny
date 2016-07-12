@@ -31,7 +31,8 @@
     "trumbowyg": "^2.1.0",
     "dynamics.js": "^1.1.0",
     "jquery": "^3.0.0",
-    "animate.css": "^3.5.2"
+    "animate.css": "^3.5.2",
+    "zeroclipboard": "^2.2.0"
   },
   "overrides": {
     "system.js": {

@@ -28,9 +28,11 @@ TextareaContainer.defaultProps = {
             onBlur: this.validate,
             disabled: this.isDisabled(),
             className: 'form-control',
+            value: this.props.value || null,
             valueLink: this.props.valueLink,
             placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder),
-            style: this.props.style
+            style: this.props.style,
+            onChange: this.props.onChange || null
         };
 
         return (

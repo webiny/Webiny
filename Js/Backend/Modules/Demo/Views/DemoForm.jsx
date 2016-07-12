@@ -107,6 +107,7 @@ class Form extends Webiny.Ui.View {
                 <Ui.View.Form>
                     <Ui.View.Header title="Demo Form" description="Demo form to demonstrate most of the input components Webiny offers">
                         <Ui.Link type="default" align="right" route="Demo.List">Back to list</Ui.Link>
+                        <Ui.Copy.Button copied="Stolen!" type="secondary" icon="icon-pencil" value="You just stole a record!" label="Steal it..." align="right"/>
                     </Ui.View.Header>
                     <Ui.View.Body noPadding>
                         <Ui.Tabs.Tabs size="large">
@@ -115,6 +116,9 @@ class Form extends Webiny.Ui.View {
                                     <h3>Conditional element ({model.email})</h3>
                                 </Ui.Hide>
                                 <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={12}>
+                                        <Ui.Copy.Input label="Cron setup" value="* * * * * wget http://selecto.app:8001/api/services/cron-manager/runner/run >/dev/null 2>&1"/>
+                                    </Ui.Grid.Col>
                                     <Ui.Grid.Col all={3}>
                                         <Ui.Input label="Email" name="email" validate="required,email"/>
                                     </Ui.Grid.Col>
