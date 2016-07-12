@@ -56,11 +56,13 @@ InputContainer.defaultProps = {
             readOnly: this.props.readOnly,
             type: this.props.type,
             className: 'form-control',
+            value: this.props.value || null,
             valueLink: this.props.valueLink,
             placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder),
             onKeyUp: this.props.onKeyUp || null,
             onKeyDown: this.props.onKeyDown || this.onKeyDown.bind(this),
-            onEnter: this.props.onEnter
+            onEnter: this.props.onEnter,
+            onChange: this.props.onChange || _.noop
         };
 
         let description = this.props.description;
@@ -73,15 +75,22 @@ InputContainer.defaultProps = {
             info = info(this);
         }
 
+        if (!props.valueLink) {
+            delete props['valueLink'];
+        }
+
+        let input = <Input {...props}/>;
+        if (props.valueLink) {
+            input = <Webiny.Ui.Components.DelayedValueLink>{input}</Webiny.Ui.Components.DelayedValueLink>;
+        }
+
         return (
             <div className={this.classSet(cssConfig, this.props.className)}>
                 {label}
                 <span className="info-text">{info}</span>
 
                 <div className="input-group">
-                    <Webiny.Ui.Components.DelayedValueLink delay={this.props.delay}>
-                        <Input {...props}/>
-                    </Webiny.Ui.Components.DelayedValueLink>
+                    {input}
                     {this.props.showValidationIcon ? validationIcon : null}
                 </div>
                 <span className="help-block">{description}</span>

@@ -32,15 +32,22 @@ TextareaContainer.defaultProps = {
             valueLink: this.props.valueLink,
             placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder),
             style: this.props.style,
-            onChange: this.props.onChange || null
+            onChange: this.props.onChange || _.noop
         };
+
+        if (!props.valueLink) {
+            delete props['valueLink'];
+        }
+
+        let textarea = <Textarea {...props}/>;
+        if (props.valueLink) {
+            textarea = <Webiny.Ui.Components.DelayedValueLink>{textarea}</Webiny.Ui.Components.DelayedValueLink>;
+        }
 
         return (
             <div className={this.classSet(cssConfig)}>
                 {label}
-                <Webiny.Ui.Components.DelayedValueLink>
-                    <Textarea {...props}/>
-                </Webiny.Ui.Components.DelayedValueLink>
+                {textarea}
                 <span className="help-block">{this.props.description}</span>
                 {validationMessage}
             </div>
