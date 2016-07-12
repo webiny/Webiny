@@ -15,7 +15,50 @@ class List extends Webiny.Ui.View {
     render() {
         return (
             <Ui.View.List>
-                <Ui.View.Header title="Demo List"/>
+                <Ui.View.Header title="Demo List">
+                    <Ui.ClickSuccess message="Simple!" onClose={() => console.log("Me closed!")}>
+                        <Ui.Button type="primary" label="ClickSuccess" align="right" onClick={() => {}}/>
+                    </Ui.ClickSuccess>
+                    <Ui.ClickSuccess message="Hell yeah!">
+                        {success => (
+                            <Ui.ClickConfirm message="Do you really want to delete this user?" onComplete={success}>
+                                <Ui.Button type="primary" label="ClickSuccess with ClickConfirm" align="right" onClick={() => {
+                                    return new Promise(r => {
+                                        setTimeout(r, 1500);
+                                    });
+                                }}/>
+                            </Ui.ClickConfirm>
+                        )}
+                    </Ui.ClickSuccess>
+                    <Ui.ClickConfirm message="Do you really want to delete this user?">
+                        <Ui.Button type="primary" label="ClickConfirm" align="right" onClick={() => {
+                            return new Promise(r => {
+                                setTimeout(r, 1500);
+                            });
+                        }}/>
+                    </Ui.ClickConfirm>
+                    <Ui.ClickConfirm message="Do you really want to delete this user?" renderDialog={(confirm, cancel, confirmation) => {
+                        return (
+                            <Ui.Modal.Dialog onCancel={cancel}>
+                                {confirmation.renderLoader()}
+                                <Ui.Modal.Header title="Custom title"/>
+                                <Ui.Modal.Body>
+                                    <p>Some custom dialog body...</p>
+                                </Ui.Modal.Body>
+                                <Ui.Modal.Footer>
+                                    <Ui.Button type="primary" label="Confirm" align="right" onClick={confirm}/>
+                                    <Ui.Button type="secondary" label="Cancel" align="right" onClick={cancel}/>
+                                </Ui.Modal.Footer>
+                            </Ui.Modal.Dialog>
+                        );
+                    }}>
+                        <Ui.Button type="primary" label="ClickConfirm custom dialog" align="right" onClick={() => {
+                            return new Promise(r => {
+                                setTimeout(r, 1500);
+                            });
+                        }}/>
+                    </Ui.ClickConfirm>
+                </Ui.View.Header>
                 <Ui.View.Body>
                     <Ui.List.ApiContainer
                         connectToRouter={true}

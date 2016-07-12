@@ -6,13 +6,25 @@ class Confirmation extends Webiny.Ui.ModalComponent {
     constructor(props) {
         super(props);
 
+        this.state = {
+            loading: false
+        };
+
         this.data = [];
-        this.bindMethods('renderContent,onCancel,onConfirm');
+        this.bindMethods('showLoading,renderContent,renderLoader,renderDialog,onCancel,onConfirm');
     }
 
     show() {
         this.setState({time: new Date().getTime()});
         return super.show();
+    }
+
+    showLoading() {
+        this.setState({loading: true});
+    }
+
+    hideLoading() {
+        this.setState({loading: false});
     }
 
     onCancel() {
@@ -28,12 +40,21 @@ class Confirmation extends Webiny.Ui.ModalComponent {
         if (_.isFunction(this.props.onConfirm)) {
             const data = _.clone(this.data);
             data.push(this);
-            this.props.onConfirm(...data);
+            this.showLoading();
+            return Q(this.props.onConfirm(...data)).then(() => {
+                this.hideLoading();
+                if (this.props.autoHide) {
+                    return this.hide();
+                }
+            });
         }
+    }
 
-        if (this.props.autoHide) {
-            this.hide();
+    renderLoader() {
+        if (this.state.loading) {
+            return this.props.renderLoader();
         }
+        return null;
     }
 
     renderContent() {
@@ -52,6 +73,10 @@ class Confirmation extends Webiny.Ui.ModalComponent {
         this.data = data;
         return this;
     }
+
+    renderDialog() {
+        return this.props.renderDialog.call(this, this.onConfirm, this.onCancel, this);
+    }
 }
 
 Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
@@ -61,9 +86,19 @@ Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
     onConfirm: _.noop,
     onCancel: null,
     autoHide: true,
-    renderDialog() {
+    renderLoader() {
         return (
-            <Ui.Modal.Dialog modalContainerTag="confirmation-modal" className="alert-modal" onCancel={this.onCancel}>
+            <div className="loading-overlay">
+                <div className="loading-overlay__icon-wrapper">
+                    <div className="loading-overlay__icon"></div>
+                </div>
+            </div>
+        );
+    },
+    renderDialog(confirm, cancel) {
+        return (
+            <Ui.Modal.Dialog modalContainerTag="confirmation-modal" className="alert-modal" onCancel={cancel}>
+                {this.renderLoader()}
                 <Ui.Modal.Body>
                     <div className="text-center">
                         <h4>{this.props.title}</h4>
@@ -72,8 +107,8 @@ Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
                     </div>
                 </Ui.Modal.Body>
                 <Ui.Modal.Footer>
-                    <Ui.Button type="default" label={this.props.cancel} onClick={this.onCancel}/>
-                    <Ui.Button type="primary" label={this.props.confirm} onClick={this.onConfirm}/>
+                    <Ui.Button type="default" label={this.props.cancel} onClick={cancel}/>
+                    <Ui.Button type="primary" label={this.props.confirm} onClick={confirm}/>
                 </Ui.Modal.Footer>
             </Ui.Modal.Dialog>
         );
