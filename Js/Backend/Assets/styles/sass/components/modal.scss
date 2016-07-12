@@ -11,7 +11,7 @@
   transition: opacity 0.3s;
 }
 
-.modal-backdrop.in{
+.modal-backdrop.in {
   opacity: 0.8;
 }
 
@@ -41,7 +41,7 @@
   transition: all 0.3s;
 }
 
-.modal-show.modal-dialog .modal-content{
+.modal-show.modal-dialog .modal-content {
   -webkit-transform: translateY(0);
   -moz-transform: translateY(0);
   -ms-transform: translateY(0);
@@ -50,7 +50,7 @@
 }
 
 .modal-content .modal-header {
-  padding: 0;
+  padding: 0 0 0 20px;
   height: 65px;
   background: #F0F0F0;
   color: #393939;
@@ -186,7 +186,7 @@
         background: #fff;
       }
     }
-    .modal-right{
+    .modal-right {
       width: calc(100% - 20%);
       float: right;
       padding: 20px;
