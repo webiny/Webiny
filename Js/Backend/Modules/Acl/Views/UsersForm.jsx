@@ -175,7 +175,6 @@ Form.defaultProps = {
                                                 <Table.Field name="type" align="left" label="Type" sort="type"/>
                                                 <Table.FileSizeField name="size" label="Size"/>
                                             </Table.Row>
-                                            <Table.Empty/>
                                         </Table.Table>
                                         <Ui.List.Pagination size="small"/>
                                     </Ui.List.ApiContainer>

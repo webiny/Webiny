@@ -203,7 +203,7 @@ Table.defaultProps = {
         ]);
 
         if (!this.props.data || !this.props.data.length && this.props.showEmpty) {
-            return this.emptyElement;
+            return this.emptyElement || <Ui.List.Table.Empty/>;
         }
 
         let selectAll = null;
