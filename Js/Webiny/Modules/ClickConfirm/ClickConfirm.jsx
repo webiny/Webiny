@@ -35,11 +35,7 @@ class ClickConfirm extends Webiny.Ui.Component {
     }
 
     onConfirm() {
-        return Q(this.realOnClick(this)).then(response => {
-            return this.refs.dialog.hide().then(() => {
-                this.props.onComplete(response);
-            });
-        });
+        return Q(this.realOnClick(this));
     }
 
     hide() {
@@ -63,7 +59,8 @@ ClickConfirm.defaultProps = {
             ref: 'dialog',
             message: () => this.message,
             onConfirm: this.onConfirm,
-            onCancel: this.onCancel
+            onCancel: this.onCancel,
+            onComplete: this.props.onComplete
         };
 
         if (_.isFunction(this.props.renderDialog)) {

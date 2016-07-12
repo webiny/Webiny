@@ -22,10 +22,12 @@ DeleteAction.defaultProps = {
                         title: this.props.title,
                         confirm: 'Yes, delete!',
                         message,
+                        onComplete: () => {
+                            actions.reload();
+                        },
                         onConfirm: () => {
-                            return actions.delete(record.id).then(() => {
-                                this.props.afterDelete();
-                                return modal.hide();
+                            return actions.delete(record.id, false).then(res => {
+                                return Q(this.props.afterDelete(res)).then(() => res);
                             });
                         }
                     };

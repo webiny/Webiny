@@ -184,7 +184,7 @@ class BaseContainer extends Webiny.Ui.Component {
         throw new Error('Implement recordUpdate method in your list container class!');
     }
 
-    recordDelete(id) {
+    recordDelete(id, autoRefresh = true) {
         throw new Error('Implement recordDelete method in your list container class!');
     }
 

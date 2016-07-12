@@ -41,10 +41,10 @@ class Confirmation extends Webiny.Ui.ModalComponent {
             const data = _.clone(this.data);
             data.push(this);
             this.showLoading();
-            return Q(this.props.onConfirm(...data)).then(() => {
+            return Q(this.props.onConfirm(...data)).then(result => {
                 this.hideLoading();
                 if (this.props.autoHide) {
-                    return this.hide();
+                    return this.hide().then(() => this.props.onComplete(result));
                 }
             });
         }
@@ -84,6 +84,7 @@ Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
     confirm: 'Yes',
     cancel: 'No',
     onConfirm: _.noop,
+    onComplete: _.noop,
     onCancel: null,
     autoHide: true,
     renderLoader() {

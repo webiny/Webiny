@@ -91,9 +91,9 @@ class ApiContainer extends BaseContainer {
         return this.api.patch(id, attributes).then(this.loadData);
     }
 
-    recordDelete(id) {
+    recordDelete(id, autoRefresh = true) {
         return this.api.delete(id).then(apiResponse => {
-            if (!apiResponse.isError()) {
+            if (!apiResponse.isError() && autoRefresh) {
                 this.loadData();
             }
             return apiResponse;
