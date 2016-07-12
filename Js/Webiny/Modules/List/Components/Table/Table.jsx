@@ -162,7 +162,7 @@ class Table extends Webiny.Ui.Component {
             index,
             key,
             data,
-            fieldsCount: this.headers.length,
+            fieldsCount: this.headers.length + (this.props.onSelect ? 1 : 0),
             expanded: this.state.expandedRows.indexOf(index) > -1,
             selected: this.state.selectedRows.has(data),
             sorters: _.clone(this.props.sorters),

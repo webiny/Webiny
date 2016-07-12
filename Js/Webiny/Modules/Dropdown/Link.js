@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+const Ui = Webiny.Ui.Components;
 
 class Link extends Webiny.Ui.Component {
 
@@ -7,12 +8,15 @@ class Link extends Webiny.Ui.Component {
 Link.defaultProps = {
     renderer() {
         const props = _.clone(this.props);
+        let link = <Ui.Link {...props}>{props.title}</Ui.Link>;
 
-        return (<li role="presentation">
-            <a {...props}>
-                {props.title}
-            </a>
-        </li>);
+        if (props.children && !_.isString(props.children)) {
+            link = this.props.children;
+        }
+
+        return (
+            <li role="presentation">{link}</li>
+        );
     }
 };
 

@@ -8,6 +8,7 @@ class DeleteAction extends Webiny.Ui.Component {
 DeleteAction.defaultProps = {
     label: 'Delete',
     title: 'Delete confirmation',
+    icon: 'icon-cancel',
     message: 'Are you sure you want to delete this record?',
     hide: _.noop,
     afterDelete: _.noop,
@@ -15,7 +16,7 @@ DeleteAction.defaultProps = {
         const message = this.props.message;
 
         return (
-            <Ui.List.Table.ModalAction {..._.pick(this.props, 'data', 'actions', 'label', 'hide', 'afterDelete')}>
+            <Ui.List.Table.ModalAction {..._.pick(this.props, 'data', 'actions', 'label', 'hide', 'afterDelete', 'icon')}>
                 {function render(record, actions, modal) {
                     const props = {
                         title: this.props.title,

@@ -31,7 +31,7 @@ DeleteMultiAction.defaultProps = {
     message: 'Do you really want to delete {count} record(s)?',
     renderer() {
         return (
-            <Ui.List.ModalMultiAction label={this.props.label}>
+            <Ui.List.ModalMultiAction label={this.props.label} data={this.props.data}>
                 {(data, actions, modalActions) => {
                     const props = {
                         title: this.props.title,

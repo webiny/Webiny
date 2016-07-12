@@ -8,8 +8,8 @@ class SelectAll extends Webiny.Ui.Component {
 SelectAll.defaultProps = {
     renderer() {
         return (
-            <th className="small-col">
-                <Ui.Checkbox state={this.props.value} onChange={this.props.onChange} className="checkbox--no-desc"/>
+            <th className="select-row">
+                <Ui.Checkbox state={this.props.value} onChange={this.props.onChange} className="checkbox--select-row"/>
             </th>
         );
     }

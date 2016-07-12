@@ -198,6 +198,8 @@ class OptionComponent extends Component {
             return _.get(option, props.textAttr);
         } else if (_.isString(option)) {
             return option;
+        } else if (_.isFunction(option)) {
+            return option();
         }
         return _.isArray(option) ? option[0] : option;
     }

@@ -111,7 +111,10 @@ class Gallery extends ImageComponent {
             }
         });
 
-        state.images.push(image);
+        if (!image.id) {
+            state.images.push(image);
+        }
+
         this.setState({images: state.images});
     }
 

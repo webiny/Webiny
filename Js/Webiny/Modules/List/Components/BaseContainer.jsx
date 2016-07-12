@@ -354,13 +354,20 @@ BaseContainer.defaultProps = {
     defaultParams: {},
     page: 1,
     perPage: 10,
-    layout: function layout() {
+    layout() {
         return (
             <div className="col-xs-12">
                 <loader/>
                 <filters/>
                 <table/>
-                <pagination/>
+                <Ui.Grid.Row>
+                    <Ui.Grid.Col sm={4}>
+                        <multi-actions/>
+                    </Ui.Grid.Col>
+                    <Ui.Grid.Col sm={8}>
+                        <pagination/>
+                    </Ui.Grid.Col>
+                </Ui.Grid.Row>
             </div>
         );
     },

@@ -22,9 +22,8 @@ Action.defaultProps = {
         return (
             <Ui.Link
                 data={this.props.data}
-                onClick={() => this.props.onClick.call(this, this.props.data, this)}>
-                {this.props.label}
-            </Ui.Link>
+                onClick={() => this.props.onClick.call(this, this.props.data, this)}
+                title={this.props.label}/>
         );
     }
 };

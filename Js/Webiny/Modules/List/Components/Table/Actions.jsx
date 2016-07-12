@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+const Ui = Webiny.Ui.Components;
 
 class Actions extends Webiny.Ui.Component {
 
@@ -24,31 +25,30 @@ class Actions extends Webiny.Ui.Component {
 }
 
 Actions.defaultProps = {
-    label: 'More',
+    label: 'Actions',
     renderer() {
         return (
-            <div className="dropdown balloon">
-                <button className="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
-                    {this.props.label}
-                    <span className="caret"></span>
-                </button>
-                <ul className="dropdown-menu">
-                    {React.Children.map(this.props.children, child => {
-                        if (this.shouldHideItem(child)) {
-                            return null;
-                        }
+            <Ui.Dropdown.Dropdown title={this.props.label} className="balloon">
+                <Ui.Dropdown.Header title="Actions"/>
+                {React.Children.map(this.props.children, child => {
+                    if (this.shouldHideItem(child)) {
+                        return null;
+                    }
 
-                        return (
-                            <li>
-                                {React.cloneElement(child, {
-                                    data: this.props.data,
-                                    actions: this.props.actions
-                                })}
-                            </li>
-                        );
-                    })}
-                </ul>
-            </div>
+                    if (child.type === Ui.Dropdown.Divider || child.type === Ui.Dropdown.Header) {
+                        return child;
+                    }
+
+                    return (
+                        <li role="presentation">
+                            {React.cloneElement(child, {
+                                data: this.props.data,
+                                actions: this.props.actions
+                            })}
+                        </li>
+                    );
+                })}
+            </Ui.Dropdown.Dropdown>
         );
     }
 };
