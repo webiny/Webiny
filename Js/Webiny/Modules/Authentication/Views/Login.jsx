@@ -25,7 +25,9 @@ class Login extends Webiny.Ui.View {
     componentDidMount() {
         super.componentDidMount();
         $('body').addClass('sign-in');
-        $('[type="password"]').focus();
+        setTimeout(() => {
+            $('[type="password"]').focus();
+        }, 100);
     }
 
     componentWillUnmount() {
@@ -89,6 +91,7 @@ Login.defaultProps = {
             <div className="container">
                 <div className="sign-in-holder">
                     <Ui.Form.Loader container={container}/>
+
                     <div className="form-signin">
                         <a href="#" className="logo">
                             <img src={Webiny.Assets('Core.Backend', 'images/logo_orange.png')} width="180" height="58"/>

@@ -22,22 +22,22 @@ trait AuthorizationTrait
 
     public function canCreate($class)
     {
-        return $this->checkPermission($class, 'create');
+        return $this->checkPermission($class, 'crudCreate');
     }
 
     public function canRead($class)
     {
-        return $this->checkPermission($class, 'read');
+        return $this->checkPermission($class, 'crudRead');
     }
 
     public function canUpdate($class)
     {
-        return $this->checkPermission($class, 'update');
+        return $this->checkPermission($class, 'crudUpdate');
     }
 
     public function canDelete($class)
     {
-        return $this->checkPermission($class, 'delete');
+        return $this->checkPermission($class, 'crudDelete');
     }
 
     public function canExecute($class, $method = null)

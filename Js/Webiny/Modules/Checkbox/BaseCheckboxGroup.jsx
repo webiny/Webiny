@@ -70,15 +70,19 @@ class BaseCheckboxGroup extends Webiny.Ui.FormComponent {
 
             const props = {
                 form: this.props.form || null,
-                key,
-                stateKey: item.key,
+                key, // React key
+                stateKey: item.key, // key to update when checked/unchecked
                 grid: item.grid || this.props.grid,
                 label: item.label,
                 children,
                 disabled: this.isDisabled(),
-                state: this.state.data[item.key],
+                state: this.state.data[item.key], // true/false (checked/unchecked)
                 onChange: this.onChange
             };
+
+            if (this.props.checkboxRenderer) {
+                props.renderer = this.props.checkboxRenderer;
+            }
 
             items.push(<Checkbox {...props}/>);
         });
@@ -161,7 +165,8 @@ BaseCheckboxGroup.defaultProps = {
     disabled: false,
     label: '',
     grid: 12,
-    valueAttr: 'id'
+    valueAttr: 'id',
+    checkboxRenderer: null
 };
 
 export default BaseCheckboxGroup;

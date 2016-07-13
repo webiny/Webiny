@@ -92,11 +92,7 @@ export class Tabs extends Webiny.Ui.Component {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        let selected = Webiny.Router.getParams('tab', props.selected);
-        if (selected === null) {
-            selected = this.state.selected;
-        }
-        this.setState({selected});
+        this.setState({selected: props.selected || this.state.selected});
     }
 }
 
@@ -114,7 +110,7 @@ Tabs.defaultProps = {
         const tabsContent = [];
 
         React.Children.map(this.props.children, (child, index) => {
-            const active = this.state.selected === index;
+            const active = parseInt(this.state.selected) === index;
 
             const props = {
                 key: index,

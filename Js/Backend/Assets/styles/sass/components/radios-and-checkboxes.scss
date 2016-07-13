@@ -63,6 +63,7 @@
   margin-bottom: 7px;
   &.checkbox--select-row {
     margin: 0;
+    height: 21px;
     label {
       position: initial;
     }
@@ -75,6 +76,7 @@
   padding-left: 32px;
   margin-right: 15px;
   margin-bottom: 0px;
+  min-height: 21px;
   font-weight: normal;
 }
 

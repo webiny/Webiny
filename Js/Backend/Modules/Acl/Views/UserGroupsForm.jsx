@@ -81,10 +81,10 @@ UserGroupsForm.defaultProps = {
                         const entityPermissions = {
                             id: entity.class,
                             name: entity.class,
-                            create: _.get(model, 'permissions.entities.' + entity.class + '.create', false),
-                            read: _.get(model, 'permissions.entities.' + entity.class + '.read', false),
-                            update: _.get(model, 'permissions.entities.' + entity.class + '.update', false),
-                            delete: _.get(model, 'permissions.entities.' + entity.class + '.delete', false),
+                            crudCreate: _.get(model, 'permissions.entities.' + entity.class + '.crudCreate', false),
+                            crudRead: _.get(model, 'permissions.entities.' + entity.class + '.crudRead', false),
+                            crudUpdate: _.get(model, 'permissions.entities.' + entity.class + '.crudUpdate', false),
+                            crudDelete: _.get(model, 'permissions.entities.' + entity.class + '.crudDelete', false),
                             custom: false
                         };
 
@@ -118,10 +118,10 @@ UserGroupsForm.defaultProps = {
 
                     const entityActions = {
                         update: (id, attrs) => {
-                            const permissions = _.get(model.permissions.entities, id, {});
+                            const permissions = _.get(model.permissions, 'entities.' + id, {});
                             const parts = _.toPairs(attrs)[0];
                             _.set(permissions, parts[0], parts[1]);
-                            _.set(model.permissions.entities, id, permissions);
+                            _.set(model.permissions, 'entities.' + id, permissions);
                             container.setModel(model);
                         }
                     };
@@ -148,10 +148,10 @@ UserGroupsForm.defaultProps = {
                                                     <Table.Row>
                                                         <Table.RowDetailsField hide={data => !data.custom}/>
                                                         <Table.Field name="name" label="Entity"/>
-                                                        <Table.ToggleField name="create" label="Create" align="center"/>
-                                                        <Table.ToggleField name="read" label="Read" align="center"/>
-                                                        <Table.ToggleField name="update" label="Update" align="center"/>
-                                                        <Table.ToggleField name="delete" label="Delete" align="center"/>
+                                                        <Table.ToggleField name="crudCreate" label="Create" align="center"/>
+                                                        <Table.ToggleField name="crudRead" label="Read" align="center"/>
+                                                        <Table.ToggleField name="crudUpdate" label="Update" align="center"/>
+                                                        <Table.ToggleField name="crudDelete" label="Delete" align="center"/>
                                                     </Table.Row>
                                                     <Table.RowDetails>
                                                         {data => {
