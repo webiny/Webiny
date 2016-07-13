@@ -7,7 +7,7 @@ class Date extends BaseDateTime {
             newValue = moment(newValue, this.props.modelFormat);
             newValue = newValue.isValid() ? newValue.format(this.props.inputFormat) : '';
         } else {
-            newValue = this.props.placeholder;
+            newValue = _.get(this.props.placeholder, 'props.children', this.props.placeholder);
         }
 
         super.setValue(newValue);
