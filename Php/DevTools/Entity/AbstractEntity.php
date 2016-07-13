@@ -21,7 +21,7 @@ use Webiny\Component\Entity\Entity;
 /**
  * AbstractEntity class is the main class to extend when creating your own entities
  */
-abstract class AbstractEntity extends \Webiny\Component\Entity\EntityAbstract
+abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 {
     use DevToolsTrait, ApiExpositionTrait;
 
