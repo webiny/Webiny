@@ -8,7 +8,7 @@
 namespace Apps\Core\Php\DevTools\Entity;
 
 use Apps\Core\Php\Dispatchers\ApiExpositionTrait;
-use Webiny\Component\Entity\Attribute\AttributeAbstract;
+use Webiny\Component\Entity\Attribute\AbstractAttribute;
 use Webiny\Component\Entity\Attribute\DateAttribute;
 use Webiny\Component\Entity\Attribute\DateTimeAttribute;
 use Apps\Core\Php\DevTools\DevToolsTrait;
@@ -21,7 +21,7 @@ use Webiny\Component\Entity\Entity;
 /**
  * AbstractEntity class is the main class to extend when creating your own entities
  */
-abstract class AbstractEntity extends \Webiny\Component\Entity\EntityAbstract
+abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 {
     use DevToolsTrait, ApiExpositionTrait;
 
@@ -37,7 +37,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\EntityAbstract
     {
         $indexes = []; //static::entityIndexes();
         foreach ($indexes as $index) {
-            if (self::isInstanceOf($index, '\Webiny\Component\Mongo\Index\IndexAbstract')) {
+            if (self::isInstanceOf($index, '\Webiny\Component\Mongo\Index\AbstractIndex')) {
                 Entity::getInstance()->getDatabase()->createIndex(static::$entityCollection, $index);
             }
         }
@@ -247,7 +247,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\EntityAbstract
             'methods'    => []
         ];
 
-        $attributeType = function (AttributeAbstract $attr) {
+        $attributeType = function (AbstractAttribute $attr) {
             if ($attr instanceof Many2OneAttribute) {
                 return 'many2one';
             }
@@ -259,7 +259,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\EntityAbstract
             return self::str(get_class($attr))->explode('\\')->last()->replace('Attribute', '')->caseLower()->val();
         };
 
-        /* @var $attr AttributeAbstract */
+        /* @var $attr AbstractAttribute */
         foreach ($entity->getAttributes() as $attrName => $attr) {
             $attrData = [
                 'name'         => $attrName,

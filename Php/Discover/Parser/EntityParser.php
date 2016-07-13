@@ -5,7 +5,7 @@ use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\RequestHandlers\ApiException;
-use Webiny\Component\Entity\Attribute\AttributeAbstract;
+use Webiny\Component\Entity\Attribute\AbstractAttribute;
 use Webiny\Component\Entity\Attribute\AttributeType;
 use Webiny\Component\Mongo\MongoTrait;
 use Webiny\Component\StdLib\StdLibTrait;
@@ -81,7 +81,7 @@ class EntityParser extends AbstractParser
         /* @var $entity AbstractEntity */
         $entity = new $this->class;
 
-        /* @var $attr AttributeAbstract */
+        /* @var $attr AbstractAttribute */
 
         foreach ($entity->getAttributes() as $name => $attr) {
             try {
