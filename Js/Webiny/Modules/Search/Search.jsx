@@ -275,6 +275,7 @@ class Search extends Webiny.Ui.FormComponent {
         }, () => {
             const value = this.props.useDataAsValue ? item : item[this.props.valueAttr];
             if (this.props.valueLink) {
+                // This will be handled by FormContainer, which will in turn call your onChange callback (if any)
                 this.props.valueLink.requestChange(value);
                 setTimeout(this.validate, 10);
             } else {

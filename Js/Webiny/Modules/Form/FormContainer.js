@@ -398,7 +398,7 @@ class FormContainer extends Webiny.Ui.Component {
                 form: this
             };
 
-            // Add onChange callback to valueLink
+            // Add onChange callback passed through props to component valueLink
             const callback = _.get(input.props, 'onChange', _.noop);
 
             // Input changed callback, triggered on each input change
@@ -410,6 +410,9 @@ class FormContainer extends Webiny.Ui.Component {
                     // See if there is a watch registered for changed input
                     const watches = this.watches[input.props.name] || new Set();
                     _.map(Array.from(watches), w => w(newValue, oldValue, component));
+                }
+                if (_.isFunction(this.props.onChange)) {
+                    this.props.onChange(this.getModel(), this);
                 }
             };
 
@@ -530,7 +533,7 @@ class FormContainer extends Webiny.Ui.Component {
                 });
             }
         });
-        return  this;
+        return this;
     }
 
     /**
