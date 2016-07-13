@@ -9,13 +9,12 @@ namespace Apps\Core\Php\Dispatchers\Flows;
 
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
-use Apps\Core\Php\DevTools\Reports\AbstractReport;
 use Apps\Core\Php\DevTools\Reports\ReportInterface;
 use Apps\Core\Php\Dispatchers\AbstractFlow;
 use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\Attribute\Validation\ValidationException;
 use Webiny\Component\Entity\EntityException;
-use Webiny\Component\StdLib\Exception\ExceptionAbstract;
+use Webiny\Component\StdLib\Exception\AbstractException;
 
 /**
  * Class ExecuteMethodFlow
@@ -71,7 +70,7 @@ class ExecuteMethodFlow extends AbstractFlow
             throw new ApiException($e->getMessage(), $code, 400, iterator_to_array($e->getIterator()));
         } catch (EntityException $e) {
             throw new ApiException($e->getMessage(), $code, 400, $e->getInvalidAttributes());
-        } catch (ExceptionAbstract $e) {
+        } catch (AbstractException $e) {
             throw new ApiException($e->getMessage(), $code, 400);
         }
     }

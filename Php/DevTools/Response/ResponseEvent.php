@@ -10,11 +10,11 @@ use Webiny\Component\EventManager\Event;
 class ResponseEvent extends Event
 {
     /**
-     * @var ResponseAbstract
+     * @var AbstractResponse
      */
     private $response;
 
-    public function __construct(ResponseAbstract $response)
+    public function __construct(AbstractResponse $response)
     {
         parent::__construct();
         $this->response = $response;

@@ -10,7 +10,6 @@ namespace Apps\Core\Php\Dispatchers\Flows;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\Dispatchers\AbstractFlow;
 use Apps\Core\Php\RequestHandlers\ApiException;
-use Webiny\Component\Entity\Attribute\DateTimeAttribute;
 
 /**
  * Class CrudListFlow

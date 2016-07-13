@@ -12,7 +12,7 @@ use Webiny\Component\Config\ConfigObject;
 /**
  * Description
  */
-class Plugin extends PackageAbstract
+class Plugin extends AbstractPackage
 {
     use ParsersTrait;
 

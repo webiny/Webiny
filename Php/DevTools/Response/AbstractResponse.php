@@ -2,9 +2,9 @@
 namespace Apps\Core\Php\DevTools\Response;
 
 /**
- * Class ResponseAbstract
+ * Class AbstractResponse
  */
-abstract class ResponseAbstract
+abstract class AbstractResponse
 {
     protected $statusCode = 200;
 

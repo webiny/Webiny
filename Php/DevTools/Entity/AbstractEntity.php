@@ -10,7 +10,6 @@ namespace Apps\Core\Php\DevTools\Entity;
 use Apps\Core\Php\Dispatchers\ApiExpositionTrait;
 use Webiny\Component\Entity\Attribute\AbstractAttribute;
 use Webiny\Component\Entity\Attribute\DateAttribute;
-use Webiny\Component\Entity\Attribute\DateTimeAttribute;
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Entity\Event\EntityDeleteEvent;
 use Apps\Core\Php\DevTools\Entity\Event\EntityEvent;
@@ -92,7 +91,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 
     /**
      * Get createdOn attribute
-     * @return DateTimeAttribute
+     * @return DateAttribute
      */
     public function getCreatedOn()
     {
@@ -101,7 +100,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 
     /**
      * Get modifiedOn attribute
-     * @return DateTimeAttribute
+     * @return DateAttribute
      */
     public function getModifiedOn()
     {
@@ -308,14 +307,14 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                 ];
             }
 
-            $dateAttr = isset($attributes[$fName]) && ($attributes[$fName] instanceof DateTimeAttribute || $attributes[$fName] instanceof DateAttribute);
+            $dateAttr = isset($attributes[$fName]) && ($attributes[$fName] instanceof DateAttribute || $attributes[$fName] instanceof DateAttribute);
             if (array_key_exists($fName, $attributes) && $dateAttr && is_string($fValue)) {
                 $from = $to = $fValue;
                 if (self::str($fValue)->contains(':')) {
                     list($from, $to) = explode(':', $fValue);
                 }
 
-                if ($attributes[$fName] instanceof DateTimeAttribute) {
+                if ($attributes[$fName] instanceof DateAttribute) {
                     $fValue = [
                         '$gte' => self::datetime($from)->setTime(0, 0, 0)->getMongoDate(),
                         '$lte' => self::datetime($to)->setTime(23, 59, 59)->getMongoDate()
