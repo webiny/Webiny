@@ -19,9 +19,9 @@ use Webiny\Component\Entity\Attribute\One2ManyAttribute;
 use Webiny\Component\Entity\Entity;
 
 /**
- * EntityAbstract class is the main class to extend when creating your own entities
+ * AbstractEntity class is the main class to extend when creating your own entities
  */
-abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
+abstract class AbstractEntity extends \Webiny\Component\Entity\EntityAbstract
 {
     use DevToolsTrait, ApiExpositionTrait;
 
@@ -77,7 +77,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
      *
      * @param $id
      *
-     * @return null|\Webiny\Component\Entity\EntityAbstract EntityAbstract instance on success, or NULL on failure
+     * @return null|\Webiny\Component\Entity\AbstractEntity AbstractEntity instance on success, or NULL on failure
      */
     public static function restore($id)
     {
@@ -218,7 +218,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
     /**
      * @param $id
      *
-     * @return null|EntityAbstract
+     * @return null|AbstractEntity
      */
     public static function findById($id)
     {
@@ -228,7 +228,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
     /**
      * @param array $conditions
      *
-     * @return null|EntityAbstract
+     * @return null|AbstractEntity
      */
     public static function findOne(array $conditions = [])
     {
@@ -345,7 +345,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         $className = get_called_class();
         $classes = array_values([$className] + class_parents($className));
         foreach ($classes as $class) {
-            if ($class == 'Apps\Core\Php\DevTools\Entity\EntityAbstract') {
+            if ($class == 'Apps\Core\Php\DevTools\Entity\AbstractEntity') {
                 return;
             }
             $callbacks = static::$callbacks[$class][$eventName] ?? [];

@@ -7,7 +7,7 @@
 
 namespace Apps\Core\Php\Dispatchers\Flows;
 
-use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\DevTools\Entity\Export\CsvExportableInterface;
 use Apps\Core\Php\DevTools\Entity\Export\PdfExportableInterface;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
@@ -26,7 +26,7 @@ use Webiny\Component\Storage\File\File;
  */
 class ExportFlow extends AbstractFlow
 {
-    public function handle(EntityAbstract $entity, $params)
+    public function handle(AbstractEntity $entity, $params)
     {
         if (!$this->wAuth()->canRead($entity)) {
             throw new ApiException('You don\'t have a READ permission on ' . get_class($entity), 'WBY-AUTHORIZATION', 401);
@@ -76,7 +76,7 @@ class ExportFlow extends AbstractFlow
         return in_array($httpMethod, ['GET', 'POST']) && $exportable;
     }
 
-    protected function exportCsv(EntityAbstract $entity, EntityCollection $entities)
+    protected function exportCsv(AbstractEntity $entity, EntityCollection $entities)
     {
         if (!$entity instanceof CsvExportableInterface) {
             throw new ApiException(get_class($entity) . ' must implement CsvExportableInterface');
@@ -97,7 +97,7 @@ class ExportFlow extends AbstractFlow
         die($writer->output($entity::getEntityCollection() . '-' . date('Ymd') . '.csv'));
     }
 
-    protected function exportListPdf(EntityAbstract $entity, EntityCollection $entities)
+    protected function exportListPdf(AbstractEntity $entity, EntityCollection $entities)
     {
         if (!$entity instanceof PdfExportableInterface) {
             throw new ApiException(get_class($entity) . ' must implement PdfExportableInterface');
@@ -116,7 +116,7 @@ class ExportFlow extends AbstractFlow
         $zip->finalize();
     }
 
-    protected function exportSinglePdf(EntityAbstract $entity)
+    protected function exportSinglePdf(AbstractEntity $entity)
     {
         if (!$entity instanceof PdfExportableInterface) {
             throw new ApiException(get_class($entity) . ' must implement PdfExportableInterface');

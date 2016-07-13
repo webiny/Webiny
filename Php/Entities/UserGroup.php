@@ -1,7 +1,7 @@
 <?php
 namespace Apps\Core\Php\Entities;
 
-use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
@@ -16,7 +16,7 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  * @package Apps\Core\Php\Entities
  *
  */
-class UserGroup extends EntityAbstract
+class UserGroup extends AbstractEntity
 {
 
     protected static $entityCollection = 'UserGroup';

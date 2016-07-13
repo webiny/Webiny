@@ -2,7 +2,7 @@
 namespace Apps\Core\Php\Entities;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
-use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\Crypt\CryptTrait;
 use Webiny\Component\Entity\EntityException;
 use Webiny\Component\Mongo\Index\SingleIndex;
@@ -17,7 +17,7 @@ use Webiny\Component\Mongo\Index\SingleIndex;
  * @package Apps\Core\Php\Entities
  *
  */
-class ApiToken extends EntityAbstract
+class ApiToken extends AbstractEntity
 {
     use DevToolsTrait, CryptTrait;
 

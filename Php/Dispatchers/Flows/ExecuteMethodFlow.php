@@ -7,7 +7,7 @@
 
 namespace Apps\Core\Php\Dispatchers\Flows;
 
-use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\DevTools\Reports\AbstractReport;
 use Apps\Core\Php\DevTools\Reports\ReportInterface;
@@ -24,7 +24,7 @@ use Webiny\Component\StdLib\Exception\ExceptionAbstract;
 class ExecuteMethodFlow extends AbstractFlow
 {
 
-    public function handle(EntityAbstract $entity, $params)
+    public function handle(AbstractEntity $entity, $params)
     {
         $httpMethod = strtolower($this->wRequest()->getRequestMethod());
         $matchedMethod = $entity->getApiMethod($httpMethod, join('/', $params));

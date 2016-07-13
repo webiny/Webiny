@@ -2,7 +2,7 @@
 namespace Apps\Core\Php\Discover\Parser;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
-use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\Attribute\AttributeAbstract;

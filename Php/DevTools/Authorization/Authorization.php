@@ -2,7 +2,7 @@
 namespace Apps\Core\Php\DevTools\Authorization;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
-use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\Entities\User;
 use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\EntityCollection;
@@ -84,7 +84,7 @@ class Authorization
             $authCookie = $this->wRequest()->header('Authorization');
 
             try {
-                /* @var $class EntityAbstract */
+                /* @var $class AbstractEntity */
                 $class = $this->userClass;
                 $user = $this->login->getUser($authCookie);
                 $this->user = $class::findOne(['email' => $user->getUsername()]);
@@ -104,7 +104,7 @@ class Authorization
             // if login is successful, return device and auth tokens
             $authToken = $this->login->getAuthToken();
 
-            /* @var $class EntityAbstract */
+            /* @var $class AbstractEntity */
             $class = $this->userClass;
             $this->user = $class::findOne(['email' => $username]);
 
