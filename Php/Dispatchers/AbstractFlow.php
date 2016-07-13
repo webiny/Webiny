@@ -8,7 +8,7 @@
 namespace Apps\Core\Php\Dispatchers;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
-use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\Mongo\MongoTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 
@@ -18,7 +18,7 @@ abstract class AbstractFlow
 
     abstract public function canHandle($httpMethod, $params);
 
-    abstract public function handle(EntityAbstract $entity, $params);
+    abstract public function handle(AbstractEntity $entity, $params);
 
     public function getPriority()
     {

@@ -5,7 +5,7 @@ use Apps\Core\Php\DevTools\Authorization\AuthorizationTrait;
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Entity\Attributes\FileAttribute;
 use Apps\Core\Php\DevTools\Entity\Attributes\FilesAttribute;
-use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Crypt\CryptTrait;
@@ -28,7 +28,7 @@ use Webiny\Component\Mongo\Index\SingleIndex;
  * @package Apps\Core\Php\Entities
  *
  */
-class User extends EntityAbstract
+class User extends AbstractEntity
 {
     use DevToolsTrait, AuthorizationTrait, CryptTrait, MailerTrait;
 

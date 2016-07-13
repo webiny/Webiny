@@ -2,7 +2,7 @@
 namespace Apps\Core\Php\Entities;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
-use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\Entity\EntityException;
 
 /**
@@ -15,7 +15,7 @@ use Webiny\Component\Entity\EntityException;
  * @package Apps\Core\Php\Entities
  *
  */
-class Setting extends EntityAbstract
+class Setting extends AbstractEntity
 {
     use DevToolsTrait;
 

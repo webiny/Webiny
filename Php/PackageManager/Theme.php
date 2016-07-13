@@ -12,7 +12,7 @@ use Webiny\Component\Config\ConfigObject;
 /**
  * Description
  */
-class Theme extends PackageAbstract
+class Theme extends AbstractPackage
 {
     use ParsersTrait;
 

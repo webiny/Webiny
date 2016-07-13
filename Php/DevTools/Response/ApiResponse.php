@@ -4,7 +4,7 @@ namespace Apps\Core\Php\DevTools\Response;
 /**
  * Class ApiResponse
  */
-class ApiResponse extends ResponseAbstract implements \ArrayAccess
+class ApiResponse extends AbstractResponse implements \ArrayAccess
 {
 
     protected $data;

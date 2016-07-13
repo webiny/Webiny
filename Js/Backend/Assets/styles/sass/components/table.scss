@@ -35,12 +35,15 @@ table.table {
   }
   thead {
     th {
-      padding: 10px;
+      padding: 10px 15px;
       vertical-align: middle;
       > a {
         font-weight: 800;
         font-size: 16px;
         color: #464646;
+      }
+      &.select-row {
+        max-width: 40px;
       }
     }
     .btn {
@@ -81,6 +84,12 @@ table.table {
       color: #666666;
       border-right: 1px solid #CCC;
       vertical-align: middle;
+      &.select-row {
+        max-width: 40px;
+      }
+      &.row-details {
+        max-width: 40px;
+      }
     }
   }
   > thead > tr > th {
@@ -113,6 +122,7 @@ table.table {
     }
   }
   td a.expand {
+    position: relative;
     width: 22px;
     height: 23px;
     background: #D8D8D8;
@@ -125,6 +135,9 @@ table.table {
     color: #fff;
     &:after {
       content: '+';
+      position: absolute;
+      left: 6px;
+      top: -1px;
     }
   }
   th.sorted {
@@ -156,6 +169,9 @@ table.table {
       line-height: 110%;
       &:after {
         content: '-';
+        position: absolute;
+        left: 8px;
+        top: -1px;
       }
     }
   }

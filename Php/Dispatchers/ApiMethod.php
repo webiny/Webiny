@@ -8,7 +8,7 @@
 namespace Apps\Core\Php\Dispatchers;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
-use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\DevTools\Services\AbstractService;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Validation\Validation;
@@ -28,7 +28,7 @@ class ApiMethod
     private $httpMethod;
     private $pattern;
     /**
-     * @var null|EntityAbstract|AbstractService
+     * @var null|AbstractEntity|AbstractService
      */
     private $context;
     private $callbacks = [];
@@ -55,7 +55,7 @@ class ApiMethod
         // Determine if this method belongs to entity or service
         $parts = $this->str(get_class($this->context))->explode('\\')->val();
         $app = $this->str($parts[1])->kebabCase()->val();
-        if ($this->context instanceof EntityAbstract) {
+        if ($this->context instanceof AbstractEntity) {
             $contextUrl = 'entities/' . $app . '/' . $this->str($parts[4])->pluralize()->kebabCase()->val();
         } else {
             $contextUrl = 'services/' . $app . '/' . $this->str($parts[4])->kebabCase()->val();

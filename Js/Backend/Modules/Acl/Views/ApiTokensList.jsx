@@ -10,6 +10,7 @@ class ApiTokensList extends Webiny.Ui.View {
 ApiTokensList.defaultProps = {
     renderer() {
         const listProps = {
+            ui: 'apiTokenList',
             api: '/entities/core/api-tokens',
             fields: '*,createdOn',
             searchFields: 'owner,token',

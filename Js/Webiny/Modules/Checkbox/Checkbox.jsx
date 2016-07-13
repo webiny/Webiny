@@ -4,12 +4,8 @@ class Checkbox extends Webiny.Ui.FormComponent {
 
     constructor(props) {
         super(props);
-        this.bindMethods('onChange', 'childChanged');
-    }
-
-    componentWillMount() {
-        super.componentWillMount();
         this.id = _.uniqueId('checkbox-');
+        this.bindMethods('onChange,childChanged,isChecked');
     }
 
     /**
@@ -37,6 +33,11 @@ class Checkbox extends Webiny.Ui.FormComponent {
             }
         }
     }
+
+    isChecked() {
+        const value = _.get(this.props, 'valueLink.value') || this.props.state;
+        return !_.isNull(value) && value !== false && value !== undefined;
+    }
 }
 
 Checkbox.defaultProps = {
@@ -44,12 +45,14 @@ Checkbox.defaultProps = {
     label: '',
     grid: 3,
     className: '',
+    addon: null,
     renderer() {
-        const id = this.id;
-        const value = _.get(this.props, 'valueLink.value') || this.props.state;
-
-        const disabled = this.props.disabled ? 'checkbox-disabled' : false;
-        const css = this.classSet('checkbox-custom checkbox-default', disabled, this.props.className, 'col-sm-' + this.props.grid);
+        const css = this.classSet(
+            'checkbox-custom checkbox-default',
+            {'checkbox-disabled': this.isDisabled()},
+            this.props.className,
+            'col-sm-' + this.props.grid
+        );
         let children = null;
 
         if (this.props.children) {
@@ -66,20 +69,16 @@ Checkbox.defaultProps = {
             });
         }
 
-        children = <label htmlFor={id}>{this.props.label} {children}</label>;
-
         const checkboxProps = {
-            id,
             disabled: this.isDisabled(),
-            type: 'checkbox',
             onChange: this.onChange,
-            checked: !_.isNull(value) && value !== false && value !== undefined
+            checked: this.isChecked()
         };
 
         return (
             <div className={css}>
-                <input {...checkboxProps}/>
-                {children}
+                <input id={this.id} type="checkbox" {...checkboxProps}/>
+                <label htmlFor={this.id}>{this.props.label} {children}</label>
                 {this.props.addon || null}
             </div>
         );

@@ -8,10 +8,10 @@
 namespace Apps\Core\Php\DevTools\Entity\Event;
 
 use Webiny\Component\EventManager\Event;
-use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 
 /**
- * This class is passed along the following EntityAbstract events:
+ * This class is passed along the following AbstractEntity events:
  *
  * - BeforeSave
  * - AfterSave
@@ -21,7 +21,7 @@ class EntityEvent extends Event
 {
 
     /**
-     * @var EntityAbstract
+     * @var AbstractEntity
      */
     private $entity;
 
@@ -29,16 +29,16 @@ class EntityEvent extends Event
     /**
      * Base constructor.
      */
-    function __construct(EntityAbstract $entity) {
+    function __construct(AbstractEntity $entity) {
         $this->entity = $entity;
 
         parent::__construct();
     }
 
     /**
-     * Returns an instance of EntityAbstract
+     * Returns an instance of AbstractEntity
      *
-     * @return EntityAbstract
+     * @return AbstractEntity
      */
     public function getEntity() {
         return $this->entity;

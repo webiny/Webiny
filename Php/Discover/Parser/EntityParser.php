@@ -2,10 +2,10 @@
 namespace Apps\Core\Php\Discover\Parser;
 
 use Apps\Core\Php\DevTools\DevToolsTrait;
-use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\RequestHandlers\ApiException;
-use Webiny\Component\Entity\Attribute\AttributeAbstract;
+use Webiny\Component\Entity\Attribute\AbstractAttribute;
 use Webiny\Component\Entity\Attribute\AttributeType;
 use Webiny\Component\Mongo\MongoTrait;
 use Webiny\Component\StdLib\StdLibTrait;
@@ -14,7 +14,7 @@ use Webiny\Component\Storage\File\File;
 
 class EntityParser extends AbstractParser
 {
-    protected $baseClass = 'Apps\Core\Php\DevTools\Entity\EntityAbstract';
+    protected $baseClass = 'Apps\Core\Php\DevTools\Entity\AbstractEntity';
     private $apiMethods;
     private $defaultValues;
     private $paramId;
@@ -78,10 +78,10 @@ class EntityParser extends AbstractParser
     {
         $required = [];
 
-        /* @var $entity EntityAbstract */
+        /* @var $entity AbstractEntity */
         $entity = new $this->class;
 
-        /* @var $attr AttributeAbstract */
+        /* @var $attr AbstractAttribute */
 
         foreach ($entity->getAttributes() as $name => $attr) {
             try {

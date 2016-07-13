@@ -33,9 +33,16 @@ class ViewSwitcherView extends Webiny.Ui.Component {
         if (this.props.modal && this.state.show) {
             if (!_.isFunction(this.refs.view.show)) {
                 console.warn('Warning: view "' + this.props.view + '" is marked as modal but has no "show" method!');
-                return;
+                if (_.isFunction(this.showResolve)) {
+                    this.showResolve();
+                }
+                return true;
             }
-            this.refs.view.show();
+            return this.refs.view.show().then(this.showResolve || _.noop);
+        }
+
+        if (_.isFunction(this.showResolve)) {
+            this.showResolve();
         }
     }
 
@@ -44,7 +51,10 @@ class ViewSwitcherView extends Webiny.Ui.Component {
     }
 
     show(params = []) {
-        this.setState({show: true, params});
+        return new Promise(resolve => {
+            this.showResolve = resolve;
+            this.setState({show: true, params});
+        });
     }
 
     hide() {

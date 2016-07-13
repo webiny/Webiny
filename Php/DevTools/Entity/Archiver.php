@@ -31,18 +31,18 @@ class Archiver
     private $archiveCallCount = 0;
 
     /**
-     * @var EntityAbstract
+     * @var AbstractEntity
      */
     protected $entity;
 
     /**
-     * Build data for archive using given EntityAbstract and store it to archive collection
+     * Build data for archive using given AbstractEntity and store it to archive collection
      *
-     * @param EntityAbstract $entity Entity instance to archive
+     * @param AbstractEntity $entity Entity instance to archive
      *
      * @return int Archive process ID
      */
-    public function archive(EntityAbstract $entity)
+    public function archive(AbstractEntity $entity)
     {
         $this->archiveCallCount++;
         if ($this->archiveCallCount > 1) {
@@ -75,7 +75,7 @@ class Archiver
      * @param string $class Entity class name
      * @param string $id Entity instance id
      *
-     * @return EntityAbstract|null
+     * @return AbstractEntity|null
      */
     public function restore($class, $id)
     {
@@ -112,13 +112,13 @@ class Archiver
     }
 
     /**
-     * Extract EntityAbstract data to array
+     * Extract AbstractEntity data to array
      *
      * @param $entity
      *
      * @return array
      */
-    public function extractData(EntityAbstract $entity)
+    public function extractData(AbstractEntity $entity)
     {
         $data = [];
         foreach ($entity->getAttributes() as $attr => $attrInstance) {

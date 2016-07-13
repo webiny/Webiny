@@ -27,10 +27,12 @@ ModalAction.defaultProps = {
         };
         const modal = this.props.children.call(this, this.props.data, this.props.actions, modalActions, download);
 
+        const icon = this.props.icon ? <Ui.Icon icon={this.props.icon}/> : null;
+
         return (
             <Ui.Link onClick={() => this.refs.dialog.show()}>
                 {React.cloneElement(modal, {ref: 'dialog'})}
-                {this.props.label}
+                {icon} {this.props.label}
                 <Ui.Downloader ref="downloader"/>
             </Ui.Link>
         );

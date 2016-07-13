@@ -4,6 +4,7 @@ import Header from './Components/Header';
 import Body from './Components/Body';
 import Footer from './Components/Footer';
 import Confirmation from './Components/Confirmation';
+import Success from './Components/Success';
 
 class Module extends Webiny.Module {
 
@@ -13,7 +14,8 @@ class Module extends Webiny.Module {
             Body,
             Header,
             Footer,
-            Confirmation
+            Confirmation,
+            Success
         };
     }
 }

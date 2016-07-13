@@ -217,7 +217,7 @@ SelectInput.defaultProps = {
         let validationMessage = null;
 
         if (this.state.isValid === false) {
-            validationMessage = <span className="help-block">({this.state.validationMessage})</span>;
+            validationMessage = <span className="help-block">{this.state.validationMessage}</span>;
         }
 
         return (

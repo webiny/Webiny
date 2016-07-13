@@ -6,12 +6,12 @@ use Apps\Core\Php\Services\Apps;
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Storage\StorageException;
-use Webiny\Component\TemplateEngine\Drivers\Smarty\SmartyExtensionAbstract;
+use Webiny\Component\TemplateEngine\Drivers\Smarty\AbstractSmartyExtension;
 use Webiny\Component\TemplateEngine\Drivers\Smarty\SmartySimplePlugin;
 
 setlocale(LC_MONETARY, 'en_GB.UTF-8');
 
-class SmartyExtension extends SmartyExtensionAbstract
+class SmartyExtension extends AbstractSmartyExtension
 {
     use DevToolsTrait, StdLibTrait;
 

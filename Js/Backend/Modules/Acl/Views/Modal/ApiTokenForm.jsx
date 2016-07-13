@@ -8,7 +8,9 @@ class ApiTokenForm extends Webiny.Ui.ModalComponent {
             ui: 'tokenModalForm',
             api: '/entities/core/api-token',
             fields: '*',
-            onSubmitSuccess: this.props.showView('tokensListView'),
+            onSubmitSuccess: () => {
+                this.props.showView('tokensListView')().then(this.ui('apiTokenList:loadData'));
+            },
             defaultModel: this.props.data
         };
 

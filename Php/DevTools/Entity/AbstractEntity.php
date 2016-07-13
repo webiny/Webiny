@@ -8,9 +8,8 @@
 namespace Apps\Core\Php\DevTools\Entity;
 
 use Apps\Core\Php\Dispatchers\ApiExpositionTrait;
-use Webiny\Component\Entity\Attribute\AttributeAbstract;
+use Webiny\Component\Entity\Attribute\AbstractAttribute;
 use Webiny\Component\Entity\Attribute\DateAttribute;
-use Webiny\Component\Entity\Attribute\DateTimeAttribute;
 use Apps\Core\Php\DevTools\DevToolsTrait;
 use Apps\Core\Php\DevTools\Entity\Event\EntityDeleteEvent;
 use Apps\Core\Php\DevTools\Entity\Event\EntityEvent;
@@ -19,9 +18,9 @@ use Webiny\Component\Entity\Attribute\One2ManyAttribute;
 use Webiny\Component\Entity\Entity;
 
 /**
- * EntityAbstract class is the main class to extend when creating your own entities
+ * AbstractEntity class is the main class to extend when creating your own entities
  */
-abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
+abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 {
     use DevToolsTrait, ApiExpositionTrait;
 
@@ -37,7 +36,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
     {
         $indexes = []; //static::entityIndexes();
         foreach ($indexes as $index) {
-            if (self::isInstanceOf($index, '\Webiny\Component\Mongo\Index\IndexAbstract')) {
+            if (self::isInstanceOf($index, '\Webiny\Component\Mongo\Index\AbstractIndex')) {
                 Entity::getInstance()->getDatabase()->createIndex(static::$entityCollection, $index);
             }
         }
@@ -77,7 +76,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
      *
      * @param $id
      *
-     * @return null|\Webiny\Component\Entity\EntityAbstract EntityAbstract instance on success, or NULL on failure
+     * @return null|\Webiny\Component\Entity\AbstractEntity AbstractEntity instance on success, or NULL on failure
      */
     public static function restore($id)
     {
@@ -92,7 +91,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
 
     /**
      * Get createdOn attribute
-     * @return DateTimeAttribute
+     * @return DateAttribute
      */
     public function getCreatedOn()
     {
@@ -101,7 +100,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
 
     /**
      * Get modifiedOn attribute
-     * @return DateTimeAttribute
+     * @return DateAttribute
      */
     public function getModifiedOn()
     {
@@ -218,7 +217,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
     /**
      * @param $id
      *
-     * @return null|EntityAbstract
+     * @return null|AbstractEntity
      */
     public static function findById($id)
     {
@@ -228,7 +227,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
     /**
      * @param array $conditions
      *
-     * @return null|EntityAbstract
+     * @return null|AbstractEntity
      */
     public static function findOne(array $conditions = [])
     {
@@ -247,7 +246,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
             'methods'    => []
         ];
 
-        $attributeType = function (AttributeAbstract $attr) {
+        $attributeType = function (AbstractAttribute $attr) {
             if ($attr instanceof Many2OneAttribute) {
                 return 'many2one';
             }
@@ -259,7 +258,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
             return self::str(get_class($attr))->explode('\\')->last()->replace('Attribute', '')->caseLower()->val();
         };
 
-        /* @var $attr AttributeAbstract */
+        /* @var $attr AbstractAttribute */
         foreach ($entity->getAttributes() as $attrName => $attr) {
             $attrData = [
                 'name'         => $attrName,
@@ -308,14 +307,14 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
                 ];
             }
 
-            $dateAttr = isset($attributes[$fName]) && ($attributes[$fName] instanceof DateTimeAttribute || $attributes[$fName] instanceof DateAttribute);
+            $dateAttr = isset($attributes[$fName]) && ($attributes[$fName] instanceof DateAttribute || $attributes[$fName] instanceof DateAttribute);
             if (array_key_exists($fName, $attributes) && $dateAttr && is_string($fValue)) {
                 $from = $to = $fValue;
                 if (self::str($fValue)->contains(':')) {
                     list($from, $to) = explode(':', $fValue);
                 }
 
-                if ($attributes[$fName] instanceof DateTimeAttribute) {
+                if ($attributes[$fName] instanceof DateAttribute) {
                     $fValue = [
                         '$gte' => self::datetime($from)->setTime(0, 0, 0)->getMongoDate(),
                         '$lte' => self::datetime($to)->setTime(23, 59, 59)->getMongoDate()
@@ -345,7 +344,7 @@ abstract class EntityAbstract extends \Webiny\Component\Entity\EntityAbstract
         $className = get_called_class();
         $classes = array_values([$className] + class_parents($className));
         foreach ($classes as $class) {
-            if ($class == 'Apps\Core\Php\DevTools\Entity\EntityAbstract') {
+            if ($class == 'Apps\Core\Php\DevTools\Entity\AbstractEntity') {
                 return;
             }
             $callbacks = static::$callbacks[$class][$eventName] ?? [];

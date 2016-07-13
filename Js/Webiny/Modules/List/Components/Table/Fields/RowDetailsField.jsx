@@ -21,7 +21,7 @@ RowDetailsField.defaultProps = _.merge({}, Field.defaultProps, {
         };
 
         return (
-            <td className={this.getTdClasses()}>
+            <td className={this.getTdClasses('row-details')}>
                 {this.props.hide(this.props.data) ? null : <Webiny.Ui.Components.Link {...props}/>}
             </td>
         );

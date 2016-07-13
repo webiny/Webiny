@@ -10,7 +10,8 @@ class Form extends Webiny.Ui.View {
             ui: 'myForm',
             api: '/entities/core/users',
             fields: 'id,firstName,lastName,email,settings,enabled,avatar.id@avatar',
-            connectToRouter: true
+            connectToRouter: true,
+            onSubmitSuccess: 'Demo.List'
         };
 
         const userGroupSelect = {
@@ -103,14 +104,15 @@ class Form extends Webiny.Ui.View {
         return (
             <Ui.Form.Container {...formProps}>
                 {(model, container) => (
-                    <Ui.Panel.Panel>
-                        <Ui.Panel.Header title="Webiny Form"/>
-                        <Ui.Panel.Body>
-                            <Ui.Hide if={model.email === 'pavel910@gmail.com'}>
-                                <h3>Conditional title ({model.email})</h3>
-                            </Ui.Hide>
-                            <Ui.Tabs.Tabs>
-                                <Ui.Tabs.Tab label="First Tab" icon="icon-gauge">
+                    <Ui.View.Form>
+                        <Ui.View.Header title="Demo Form" description="Demo form to demonstrate most of the input components Webiny offers">
+                            <Ui.Link type="default" align="right" route="Demo.List">Back to list</Ui.Link>
+                            <Ui.Copy.Button copied="Stolen!" type="secondary" icon="icon-pencil" value="You just stole a record!"
+                                            label="Steal it..." align="right"/>
+                        </Ui.View.Header>
+                        <Ui.View.Body noPadding>
+                            <Ui.Tabs.Tabs size="large">
+                                <Ui.Tabs.Tab label="Input components" icon="icon-gauge">
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={3}>
                                             <Ui.Input label="Email" name="email" validate="required,email"/>
@@ -151,7 +153,9 @@ class Form extends Webiny.Ui.View {
                                         <Ui.Grid.Col all={4}>
                                             <Ui.Select name="staticSelect" label="Static select" placeholder="Select an option">
                                                 <option value="yes">Yes</option>
-                                                <option value="no"><webiny-no>No</webiny-no></option>
+                                                <option value="no">
+                                                    <webiny-no>No</webiny-no>
+                                                </option>
                                                 <option value="maybe"><strong>Maybe</strong></option>
                                             </Ui.Select>
                                         </Ui.Grid.Col>
@@ -161,42 +165,11 @@ class Form extends Webiny.Ui.View {
                                     </Ui.Grid.Row>
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={12}>
+                                            <Ui.Copy.Input label="Cron setup"
+                                                           value="* * * * * wget http://selecto.app:8001/api/services/cron-manager/runner/run >/dev/null 2>&1"/>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={12}>
                                             <Ui.Tags name="tags" placeholder="Add tag" label="Tags"/>
-                                        </Ui.Grid.Col>
-                                    </Ui.Grid.Row>
-                                    <Ui.Grid.Row>
-                                        {/* CHECKBOXES */}
-                                        <Ui.Grid.Col all={6}>
-                                            <Ui.CheckboxGroup label="Roles (Static)" name="roles" grid={12}>
-                                                <option value="Admin">Admin&nbsp;management</option>
-                                                <option value="Billing">Billing</option>
-                                                <option value="Booking">Bookings</option>
-                                                <option value="Cms">Cms</option>
-                                                <option value="Coupon">Coupon&nbsp;management</option>
-                                                <option value="Crm">CRM</option>
-                                                <option value="Dashboard">Dashboard</option>
-                                                <validator name="minLength">Please select at least 2 options</validator>
-                                            </Ui.CheckboxGroup>
-                                        </Ui.Grid.Col>
-                                        <Ui.Grid.Col all={6}>
-                                            <Ui.CheckboxGroup {...userGroupsSelect} label="User groups (API)">
-                                                <Ui.CheckboxGroup className="mt5" api="/entities/core/users" textAttr="email"/>
-                                            </Ui.CheckboxGroup>
-                                        </Ui.Grid.Col>
-                                    </Ui.Grid.Row>
-                                    <Ui.Grid.Row>
-                                        {/* RADIO */}
-                                        <Ui.Grid.Col all={6}>
-                                            <Ui.RadioGroup label="Roles (static)" name="access" grid={12} validate="required">
-                                                <option value="Admin">Admin</option>
-                                                <option value="Billing">Billing</option>
-                                                <option value="Crm">CRM</option>
-                                                <option value="Dashboard">Dashboard</option>
-                                            </Ui.RadioGroup>
-                                        </Ui.Grid.Col>
-                                        <Ui.Grid.Col all={6}>
-                                            <Ui.RadioGroup label="User (API)" name="user" api="/entities/core/users"
-                                                           textAttr="email"/>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>
                                     <Ui.Grid.Row>
@@ -211,21 +184,82 @@ class Form extends Webiny.Ui.View {
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>
                                 </Ui.Tabs.Tab>
-                                <Ui.Tabs.Tab label="Second tab" icon="icon-columns">
+                                <Ui.Tabs.Tab label="Checkboxes" icon="icon-columns">
                                     <Ui.Grid.Row>
-                                        <Ui.Grid.Col all={12}>
-                                            <Ui.Input label="First name" name="firstName" validate="required"/>
-                                            <Ui.Input label="Last name" name="lastName" validate="required"/>
+                                        {/* CHECKBOXES */}
+                                        <Ui.Grid.Col all={6}>
+                                            <Ui.Form.Fieldset title="Static checkboxes (hard-coded options)"/>
+                                            <Ui.CheckboxGroup name="roles" grid={12}>
+                                                <option value="Admin">Admin&nbsp;management</option>
+                                                <option value="Coupon">Coupon&nbsp;management</option>
+                                                <option value="Crm">CRM</option>
+                                                <option value="Dashboard">Dashboard</option>
+                                                <option value="anually">{() => <strong>Annually</strong>}</option>
+                                                <option value="monthly">
+                                                    <div>Monthly&nbsp;<i>(One season minimum)</i></div>
+                                                </option>
+                                                <validator name="minLength">Please select at least 2 options</validator>
+                                            </Ui.CheckboxGroup>
+
+                                            <div className="clearfix"/>
+                                            <Ui.Form.Fieldset title="Single checkbox"/>
+                                            <Ui.Checkbox label="Single checkbox" name="singleCheckbox" grid={12}>
+                                                <Ui.Tooltip target={<Ui.Icon icon="icon-info-circle"/>}>
+                                                    Set immediately
+                                                </Ui.Tooltip>
+                                            </Ui.Checkbox>
+
+                                            <div className="clearfix"/>
+                                            <Ui.Form.Fieldset title="Custom checkbox markup (using 'checkboxRenderer' prop)"/>
+                                            <Ui.CheckboxGroup name="roles" grid={12} checkboxRenderer={function renderCheckbox() {
+                                                return (
+                                                    <li className="list-item col-xs-offset-1">
+                                                        <div className="form-group">
+                                                            <div className="checkbox">
+                                                                <input type="checkbox" id={this.id} disabled={this.isDisabled()} checked={this.isChecked()} onChange={this.onChange}/>
+                                                                <label htmlFor={this.id}><span className="container-icon"></span>{this.props.label}</label>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                );
+                                            }}>
+                                                <option value="Admin">Admin&nbsp;management</option>
+                                                <option value="Coupon">Coupon&nbsp;management</option>
+                                                <option value="Crm">CRM</option>
+                                            </Ui.CheckboxGroup>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <Ui.Form.Fieldset title="Dynamic checkboxes with nested options"/>
+                                            <Ui.CheckboxGroup {...userGroupsSelect} label="User groups (API)">
+                                                <Ui.CheckboxGroup className="mt5" api="/entities/core/users" textAttr="email"/>
+                                            </Ui.CheckboxGroup>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                </Ui.Tabs.Tab>
+                                <Ui.Tabs.Tab label="Radio buttons" icon="icon-columns">
+                                    <Ui.Grid.Row>
+                                        {/* RADIO */}
+                                        <Ui.Grid.Col all={6}>
+                                            <Ui.RadioGroup label="Roles (static)" name="access" grid={12} validate="required">
+                                                <option value="Admin">Admin</option>
+                                                <option value="Billing">Billing</option>
+                                                <option value="Crm">CRM</option>
+                                                <option value="Dashboard">Dashboard</option>
+                                            </Ui.RadioGroup>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <Ui.RadioGroup label="User (API)" name="user" api="/entities/core/users"
+                                                           textAttr="email" grid={12}/>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>
                                 </Ui.Tabs.Tab>
                             </Ui.Tabs.Tabs>
-                        </Ui.Panel.Body>
-                        <Ui.Panel.Footer className="text-right">
+                        </Ui.View.Body>
+                        <Ui.View.Footer>
                             <Ui.Button type="default" onClick={container.cancel} label="Cancel"/>
-                            <Ui.Button type="primary" onClick={container.submit} label="Submit"/>
-                        </Ui.Panel.Footer>
-                    </Ui.Panel.Panel>
+                            <Ui.Button type="primary" onClick={container.submit} label="Submit" align="right"/>
+                        </Ui.View.Footer>
+                    </Ui.View.Form>
                 )}
             </Ui.Form.Container>
         );

@@ -12,7 +12,7 @@ use Webiny\Component\Config\ConfigObject;
 /**
  * Holds information about the defined package.
  */
-abstract class PackageAbstract
+abstract class AbstractPackage
 {
     /**
      * @var string Name of the package.

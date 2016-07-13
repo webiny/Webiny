@@ -1,7 +1,7 @@
 <?php
 namespace Apps\Core\Php\Entities;
 
-use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\Image\ImageTrait;
 use Webiny\Component\Mongo\Index\SingleIndex;
 use Webiny\Component\Storage\Directory\Directory;
@@ -12,7 +12,7 @@ if (!defined('DS')) {
     define('DS', DIRECTORY_SEPARATOR);
 }
 
-class File extends EntityAbstract
+class File extends AbstractEntity
 {
     use StorageTrait, ImageTrait;
 

@@ -7,10 +7,9 @@
 
 namespace Apps\Core\Php\Bootstrap;
 
-use Apps\Core\Php\DevTools\BootstrapTrait;
 use Apps\Core\Php\DevTools\Response\ApiResponse;
 use Apps\Core\Php\DevTools\Response\HtmlResponse;
-use Apps\Core\Php\DevTools\Response\ResponseAbstract;
+use Apps\Core\Php\DevTools\Response\AbstractResponse;
 use Apps\Core\Php\DevTools\Response\ResponseEvent;
 use Apps\Core\Php\PackageManager\App;
 use Webiny\Component\Entity\Entity;
@@ -72,8 +71,8 @@ class Bootstrap
 
     public function run()
     {
-        $responseClass = '\Apps\Core\Php\DevTools\Response\ResponseAbstract';
-        /* @var $response ResponseAbstract */
+        $responseClass = '\Apps\Core\Php\DevTools\Response\AbstractResponse';
+        /* @var $response AbstractResponse */
         $response = $this->wEvents()->fire('Core.Bootstrap.Request', new BootstrapEvent(), $responseClass, 1);
         if ($response) {
             if ($response instanceof ApiResponse) {
@@ -140,9 +139,9 @@ class Bootstrap
     }
 
     /**
-     * @param ResponseAbstract $response
+     * @param AbstractResponse $response
      */
-    private function processResponse(ResponseAbstract $response)
+    private function processResponse(AbstractResponse $response)
     {
         $event = new ResponseEvent($response);
         $this->wEvents()->fire('Core.Bootstrap.Response', $event);

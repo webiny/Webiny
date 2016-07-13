@@ -162,7 +162,7 @@ class Table extends Webiny.Ui.Component {
             index,
             key,
             data,
-            fieldsCount: this.headers.length,
+            fieldsCount: this.headers.length + (this.props.onSelect ? 1 : 0),
             expanded: this.state.expandedRows.indexOf(index) > -1,
             selected: this.state.selectedRows.has(data),
             sorters: _.clone(this.props.sorters),
@@ -203,7 +203,7 @@ Table.defaultProps = {
         ]);
 
         if (!this.props.data || !this.props.data.length && this.props.showEmpty) {
-            return this.emptyElement;
+            return this.emptyElement || <Ui.List.Table.Empty/>;
         }
 
         let selectAll = null;

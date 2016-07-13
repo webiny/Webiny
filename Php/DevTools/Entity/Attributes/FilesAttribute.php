@@ -8,7 +8,6 @@
 namespace Apps\Core\Php\DevTools\Entity\Attributes;
 
 use Webiny\Component\Entity\Attribute\One2ManyAttribute;
-use Webiny\Component\Entity\EntityAbstract;
 
 /**
  * File attribute

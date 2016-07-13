@@ -13,7 +13,7 @@ use Webiny\Component\Storage\Directory\Directory;
 /**
  * Class that holds information about an application.
  */
-class App extends PackageAbstract
+class App extends AbstractPackage
 {
     use ParsersTrait;
 

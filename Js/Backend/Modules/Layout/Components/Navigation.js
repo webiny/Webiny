@@ -38,6 +38,21 @@ class Navigation extends Webiny.Ui.Component {
         this.setState({submenu});
     }
 
+    findRoute(menu, routeName) {
+        if (_.isString(menu.route)) {
+            return menu.route === routeName;
+        }
+
+        let active = false;
+        _.each(menu.route, r => {
+            if (this.findRoute(r, routeName)) {
+                active = true;
+            }
+        });
+
+        return active;
+    }
+
     renderMainMenu(menu) {
         const menuIconClass = this.classSet('icon app-icon', menu.icon);
         const linkProps = {
@@ -54,7 +69,7 @@ class Navigation extends Webiny.Ui.Component {
             linkProps['data-open-submenu'] = menu.key;
         }
 
-        const active = this.state.menu === menu.key ? 'active' : '';
+        const active = this.findRoute(menu, Webiny.Router.getActiveRoute().getName()) ? 'active' : '';
 
         const click = () => {
             this.mainMenuItemClick(menu);

@@ -7,7 +7,7 @@
 
 namespace Apps\Core\Php\Dispatchers\Flows;
 
-use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\Dispatchers\AbstractFlow;
 use Apps\Core\Php\RequestHandlers\ApiException;
 
@@ -18,7 +18,7 @@ use Apps\Core\Php\RequestHandlers\ApiException;
 class CrudGetFlow extends AbstractFlow
 {
 
-    public function handle(EntityAbstract $entity, $params)
+    public function handle(AbstractEntity $entity, $params)
     {
         if (!$this->wAuth()->canRead($entity)) {
             throw new ApiException('You don\'t have a READ permission on ' . get_class($entity), 'WBY-AUTHORIZATION', 401);

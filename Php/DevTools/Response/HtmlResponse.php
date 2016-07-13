@@ -4,7 +4,7 @@ namespace Apps\Core\Php\DevTools\Response;
 /**
  * Class HtmlResponse
  */
-class HtmlResponse extends ResponseAbstract
+class HtmlResponse extends AbstractResponse
 {
     protected $html;
 
