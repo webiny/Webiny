@@ -66,7 +66,8 @@ class List extends Webiny.Ui.View {
                                 connectToRouter={true}
                                 api="/entities/core/users"
                                 query={{enabled:  true}}
-                                sort="email" fields="id,enabled,firstName,lastName,email,createdOn"
+                                sort="email"
+                                fields="id,enabled,firstName,lastName,email,createdOn"
                                 searchFields="name,email">
                                 <Table.Table>
                                     <Table.Row>
@@ -179,20 +180,42 @@ class List extends Webiny.Ui.View {
                             <Ui.List.ApiContainer
                                 api="/entities/core/users"
                                 query={{enabled:  true}}
-                                sort="email" fields="id,enabled,firstName,lastName,email,createdOn"
+                                perPage={3}
+                                sort="email"
+                                fields="id,enabled,firstName,lastName,email,createdOn"
                                 searchFields="name,email"
-                                customView>
+                                layout={null}>
                                 {(data, meta, list) => {
                                     return (
-                                        <div>
-                                            <h2>
-                                                <Ui.Link onClick={() => list.setPage(1)}>Prev page</Ui.Link>
-                                                Showing page {meta.currentPage} of {meta.totalPages}
-                                                <Ui.Link onClick={() => list.setPage(2)}>Next page</Ui.Link>
-                                            </h2>
-                                            {data.map(row => {
-                                                return (
-                                                    <pre key={row.id}>
+                                        <Ui.Grid.Row>
+                                            <Ui.Grid.Col all={12}>
+                                                <Ui.Form.Fieldset
+                                                    title={`Found a total of ${meta.totalCount} records (showing ${meta.perPage} per page)`}/>
+                                            </Ui.Grid.Col>
+                                            <Ui.Grid.Col all={12}>
+                                                <Ui.List.FormFilters>
+                                                    {(apply, reset) => (
+                                                        <Ui.Grid.Row>
+                                                            <Ui.Grid.Col all={6}>
+                                                                <Ui.Select name="enabled" placeholder="All users" onChange={apply()} allowClear>
+                                                                    <option value={true}>Enabled</option>
+                                                                    <option value={false}>Disabled</option>
+                                                                </Ui.Select>
+                                                            </Ui.Grid.Col>
+                                                            <Ui.Grid.Col all={6}>
+                                                                <Ui.Input
+                                                                    name="_searchQuery"
+                                                                    placeholder="Search by name"
+                                                                    onEnter={apply()}/>
+                                                            </Ui.Grid.Col>
+                                                        </Ui.Grid.Row>
+                                                    )}
+                                                </Ui.List.FormFilters>
+                                                <Ui.List.Loader/>
+                                                <Ui.List.Table.Empty renderIf={!data.length}/>
+                                                {data.map(row => {
+                                                    return (
+                                                        <pre key={row.id}>
                                                         <strong>{row.firstName}</strong> ({row.email})
                                                         <Ui.ClickConfirm message="Delete this user?">
                                                             <Ui.Link onClick={() => list.recordDelete(row.id)}>
@@ -200,9 +223,13 @@ class List extends Webiny.Ui.View {
                                                             </Ui.Link>
                                                         </Ui.ClickConfirm>
                                                     </pre>
-                                                );
-                                            })}
-                                        </div>
+                                                    );
+                                                })}
+                                            </Ui.Grid.Col>
+                                            <Ui.Grid.Col all={12}>
+                                                <Ui.List.Pagination/>
+                                            </Ui.Grid.Col>
+                                        </Ui.Grid.Row>
                                     );
                                 }}
                             </Ui.List.ApiContainer>

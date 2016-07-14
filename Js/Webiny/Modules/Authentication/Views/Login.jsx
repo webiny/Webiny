@@ -26,6 +26,11 @@ class Login extends Webiny.Ui.View {
         super.componentDidMount();
         $('body').addClass('sign-in');
         $('input:first').focus();
+        $('input').keypress(e => {
+            if (e.which === 13) {
+                this.ui('loginForm').submit();
+            }
+        });
     }
 
     componentWillUnmount() {
