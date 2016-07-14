@@ -333,7 +333,7 @@ class BaseContainer extends Webiny.Ui.Component {
         const children = this.props.children;
         if (_.isFunction(children)) {
             if (params.length === 0) {
-                params = [this, this.state.list, this];
+                params = [this, this.state.list, this.state.meta, this];
             } else {
                 params.unshift(this);
                 params.push(this);
@@ -354,6 +354,7 @@ BaseContainer.defaultProps = {
     defaultParams: {},
     page: 1,
     perPage: 10,
+    customView: false,
     layout() {
         return (
             <div className="col-xs-12">
@@ -372,8 +373,13 @@ BaseContainer.defaultProps = {
         );
     },
     renderer() {
-        this.prepareList(this.getContent());
+        const content = this.getContent();
+        if (this.props.customView) {
+            return <webiny-list>{content}</webiny-list>;
+        }
 
+
+        this.prepareList(content);
         const layout = this.props.layout.call(this);
 
         if (React.Children.toArray(layout.props.children).length) {

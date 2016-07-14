@@ -23,7 +23,7 @@ class ClickSuccess extends Webiny.Ui.Component {
             this.refs.dialog.show();
         };
 
-        let content = this.props.children;
+        const content = this.props.children;
         if (_.isFunction(content)) {
             return content(show);
         }

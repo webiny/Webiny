@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 import CopyButton from './CopyButton';
 
 class CopyInput extends CopyButton {

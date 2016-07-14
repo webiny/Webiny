@@ -53,11 +53,13 @@ u {
 
 p a, a {
   color: #fa5a28;
-}
-
-p a:hover, a:hover {
-  color: #fa5a28;
-  text-decoration: underline;
+  &:hover {
+    color: #fa5a28;
+    text-decoration: underline;
+  }
+  &:focus, &:active {
+    color: #fa5a28;
+  }
 }
 
 ul {
