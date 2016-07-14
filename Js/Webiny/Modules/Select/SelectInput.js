@@ -31,8 +31,9 @@ class SelectInput extends Webiny.Ui.FormComponent {
             this.select2 = null;
             return;
         }
+
         this.instantiate();
-        const possibleValues = _.map(this.options, 'id');
+        const possibleValues = _.map(this.options, obj => obj.id.toString());
         const value = this.getValue();
         const inPossibleValues = possibleValues.indexOf(value) > -1;
 

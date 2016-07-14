@@ -186,7 +186,7 @@ class Router {
         return this.activeRoute.getQueryParams(param);
     }
 
-    setQueryParams(params, merge = true){
+    setQueryParams(params, merge = true) {
         this.goToRoute('current', params, merge);
     }
 

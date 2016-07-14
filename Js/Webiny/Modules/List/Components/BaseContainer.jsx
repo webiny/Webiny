@@ -41,7 +41,8 @@ class BaseContainer extends Webiny.Ui.Component {
             'recordUpdate',
             'recordDelete',
             'onSelect',
-            'getContent'
+            'getContent',
+            'registerElement'
         );
     }
 
@@ -333,7 +334,7 @@ class BaseContainer extends Webiny.Ui.Component {
         const children = this.props.children;
         if (_.isFunction(children)) {
             if (params.length === 0) {
-                params = [this, this.state.list, this];
+                params = [this, this.state.list, this.state.meta, this];
             } else {
                 params.unshift(this);
                 params.push(this);
@@ -347,6 +348,46 @@ class BaseContainer extends Webiny.Ui.Component {
 
         return React.Children.toArray(children);
     }
+
+    /**
+     * @private
+     * @param element
+     * @returns {*}
+     */
+    registerElement(element) {
+        if (typeof element !== 'object' || element === null) {
+            return element;
+        }
+
+        if (element.type === Ui.List.Filters || element.type.prototype instanceof Ui.List.Filters) {
+            return React.cloneElement(element, {
+                filters: this.state.filters,
+                onFilter: this.setFilters
+            });
+        }
+
+        const props = _.omit(element.props, ['children', 'key', 'ref']);
+
+        if (element.type === Ui.List.Pagination) {
+            return React.cloneElement(element, this.paginationProps(props));
+        }
+
+        if (element.type === Ui.List.Loader) {
+            return React.cloneElement(element, {container: this});
+        }
+
+        if (element.type === Ui.List.MultiActions) {
+            return React.cloneElement(element, this.multiActionsProps(props));
+        }
+
+        if (element.props && element.props.children) {
+            return React.cloneElement(element, _.omit(element.props, ['key', 'ref']), React.Children.map(element.props.children, item => {
+                return this.registerElement(item);
+            }));
+        }
+
+        return element;
+    }
 }
 
 BaseContainer.defaultProps = {
@@ -354,6 +395,7 @@ BaseContainer.defaultProps = {
     defaultParams: {},
     page: 1,
     perPage: 10,
+    customView: false,
     layout() {
         return (
             <div className="col-xs-12">
@@ -372,8 +414,13 @@ BaseContainer.defaultProps = {
         );
     },
     renderer() {
-        this.prepareList(this.getContent());
+        const content = this.getContent();
 
+        if (!this.props.layout) {
+            return <webiny-list>{React.Children.map(content, this.registerElement, this)}</webiny-list>;
+        }
+
+        this.prepareList(content);
         const layout = this.props.layout.call(this);
 
         if (React.Children.toArray(layout.props.children).length) {

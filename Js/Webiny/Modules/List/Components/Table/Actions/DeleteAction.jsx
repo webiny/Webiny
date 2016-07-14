@@ -17,7 +17,7 @@ DeleteAction.defaultProps = {
 
         return (
             <Ui.List.Table.ModalAction {..._.pick(this.props, 'data', 'actions', 'label', 'hide', 'afterDelete', 'icon')}>
-                {function render(record, actions, modal) {
+                {function render(record, actions) {
                     const props = {
                         title: this.props.title,
                         confirm: 'Yes, delete!',
