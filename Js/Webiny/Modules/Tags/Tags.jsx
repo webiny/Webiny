@@ -76,7 +76,7 @@ Tags.defaultProps = {
 
         return (
             <div className="form-group form-group--keywords">
-                <label className="control-label">Tags</label>
+                <label className="control-label">{_.get(this.props, 'label', 'Tags')}</label>
 
                 <div className="keyword-container" onClick={this.focusTagInput}>
                     <div className="tags-container">
