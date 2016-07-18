@@ -75,19 +75,15 @@ Tags.defaultProps = {
         };
 
         return (
-            <div className="form-group form-group--keywords">
-                <label className="control-label">{_.get(this.props, 'label', 'Tags')}</label>
-
-                <div className="keyword-container" onClick={this.focusTagInput}>
-                    <div className="tags-container">
-                        {_.isArray(this.props.valueLink.value) && this.props.valueLink.value.map((tag, index) => (
-                            <div key={tag} className="keyword-block">
-                                <p>{tag}</p>
-                                <i className="icon icon-cancel" onClick={this.removeTag.bind(this, index)}></i>
-                            </div>
-                        ))}
-                        <input {...input}/>
-                    </div>
+            <div className="keyword-container" onClick={this.focusTagInput}>
+                <div className="tags-container">
+                    {_.isArray(this.props.valueLink.value) && this.props.valueLink.value.map((tag, index) => (
+                        <div key={tag} className="keyword-block">
+                            <p>{tag}</p>
+                            <i className="icon icon-cancel" onClick={this.removeTag.bind(this, index)}></i>
+                        </div>
+                    ))}
+                    <input {...input}/>
                 </div>
             </div>
         );

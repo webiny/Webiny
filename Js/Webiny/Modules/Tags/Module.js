@@ -1,10 +1,10 @@
 import Webiny from 'Webiny';
-import Tags from './Tags';
+import Container from './Container';
 
 class Module extends Webiny.Module {
 
     init() {
-        Webiny.Ui.Components.Tags = Tags;
+        Webiny.Ui.Components.Tags = Container;
     }
 }
 
