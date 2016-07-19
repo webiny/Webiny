@@ -194,7 +194,7 @@ class Form extends Webiny.Ui.View {
                                                 <option value="Coupon">Coupon&nbsp;management</option>
                                                 <option value="Crm">CRM</option>
                                                 <option value="Dashboard">Dashboard</option>
-                                                <option value="anually">{() => <strong>Annually</strong>}</option>
+                                                <option value="anually"><strong>Annually</strong></option>
                                                 <option value="monthly">
                                                     <div>Monthly&nbsp;<i>(One season minimum)</i></div>
                                                 </option>
