@@ -20,7 +20,6 @@ import i18n from './i18n/i18n';
 import Endpoint from './Api/Endpoint';
 import RootElement from './Ui/RootElement';
 import Placeholder from './Ui/Placeholder';
-import Settings from './Ui/Settings';
 import UiMenu from './Ui/Menu';
 import Hide from './Ui/Hide';
 import Show from './Ui/Show';
@@ -55,7 +54,6 @@ class Module extends WebinyModule {
                 ModalComponent,
                 OptionComponent,
                 Menu: UiMenu,
-                Settings,
                 View,
                 Views: {}
             },
