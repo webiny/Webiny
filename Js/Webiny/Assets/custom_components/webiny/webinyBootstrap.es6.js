@@ -145,7 +145,7 @@ class WebinyBootstrapClass {
     includeApp(appName, meta) {
         if (!meta || meta === true) {
             const config = {
-                url: webinyApiUrl + '/services/core/apps/' + appName,
+                url: webinyApiPath + '/services/core/apps/' + appName,
                 dataType: 'json',
                 contentType: 'application/json;charset=UTF-8',
                 processData: false
