@@ -153,6 +153,7 @@ class WebinyBootstrapClass {
             return request(config).then(res => {
                 this.meta[appName] = res.data.data;
                 return this.loadAssets(this.meta[appName]).then(app => {
+                    app.instance.meta = app.config;
                     if (meta === true) {
                         app.instance.addModules(app.config.modules);
                         _.set(Webiny.Apps, app.config.name, app.instance);
