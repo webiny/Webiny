@@ -59,6 +59,7 @@ ApiTokensList.defaultProps = {
                                                 align="center"
                                                 label="Last activity"
                                                 sort="lastActivity"/>
+                                            <Table.Field name="requests" align="center" label="Total Requests" sort="requests"/>
                                             <Table.TimeAgoField
                                                 name="createdOn"
                                                 align="center"
