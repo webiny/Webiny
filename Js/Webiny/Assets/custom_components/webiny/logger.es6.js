@@ -79,7 +79,7 @@ class Logger {
             console.log('sending errors:' + this.errors.length);
             $.ajax({
                 method: 'POST',
-                url: webinyApiUrl + '/entities/core/logger-error-group/save-report',
+                url: webinyApiPath + '/entities/core/logger-error-group/save-report',
                 data: {errors: this.errors, client: this.clientInfo}
             }).done(() => {
                 this.errors = [];
