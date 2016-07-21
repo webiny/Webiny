@@ -1,9 +1,8 @@
 <?php
 namespace Apps\Core\Php\Entities;
 
-use Apps\Core\Php\DevTools\Entity\EntityAbstract;
+use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\Entity\EntityCollection;
-use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
 /**
  * Class LoggerErrorGroup
@@ -11,12 +10,14 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  * @property string           $error
  * @property string           $errorHash
  * @property string           $type
+ * @property date             $lastEntry
+ * @property integer          $errorCount
  * @property EntityCollection $errorEntries
  *
  * @package Apps\Core\Php\Entities
  *
  */
-class LoggerErrorGroup extends EntityAbstract
+class LoggerErrorGroup extends AbstractEntity
 {
 
     protected static $entityCollection = 'LoggerErrorGroup';
@@ -37,17 +38,21 @@ class LoggerErrorGroup extends EntityAbstract
          */
         $this->attr('type')->char()->setToArrayDefault();
 
-        $this->attr('errorEntries')->one2many('id')->setEntity('\Apps\Core\Php\Entities\LoggerEntry');
+        $this->attr('errorEntries')->one2many('errorGroup')->setEntity('\Apps\Core\Php\Entities\LoggerEntry');
+
+        $this->attr('lastEntry')->datetime()->setToArrayDefault();
+        $this->attr('errorCount')->integer()->setToArrayDefault()->setDefaultValue(0);
 
 
         $this->api('POST', '/save-report', function () {
+            $clientData = $this->wRequest()->payload('client');
             $errors = $this->wRequest()->payload('errors');
-            $this->saveReport($errors);
+            $this->saveReport($errors, $clientData);
         });
     }
 
 
-    public function saveReport($errors)
+    public function saveReport($errors, $clientData)
     {
         $groups = [];
 
@@ -77,11 +82,20 @@ class LoggerErrorGroup extends EntityAbstract
             $errorEntry->date = $e['date'];
             $errorEntry->stack = $e['stack'];
             $errorEntry->url = $e['url'];
+            $errorEntry->clientData = $clientData;
             $errorEntry->save();
 
             // assign the error under the group
             $group->errorEntries->add($errorEntry);
+            $group->lastEntry = time();
+            $group->errorCount = $group->errorCount+1;
             $group->save();
         }
+    }
+
+    public function getStats(){
+        // errors today
+        // errors in the last 7 days
+        // total errors
     }
 }

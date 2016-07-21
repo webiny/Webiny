@@ -1,9 +1,8 @@
 <?php
 namespace Apps\Core\Php\Entities;
 
-use Apps\Core\Php\DevTools\Entity\EntityAbstract;
-use Webiny\Component\Entity\EntityCollection;
-use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
+use Apps\Core\Php\DevTools\Entity\AbstractEntity;
+
 
 /**
  * Class LoggerEntry
@@ -16,7 +15,7 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  * @package Apps\Core\Php\Entities
  *
  */
-class LoggerEntry extends EntityAbstract
+class LoggerEntry extends AbstractEntity
 {
 
     protected static $entityCollection = 'LoggerEntry';
@@ -28,7 +27,10 @@ class LoggerEntry extends EntityAbstract
         
         $this->attr('url')->char()->setToArrayDefault();
         $this->attr('date')->datetime()->setToArrayDefault();
+
         $this->attr('stack')->char();
-        $this->attr('clientData')->char();
+        $this->attr('clientData')->object();
+
+        $this->attr('errorGroup')->many2one()->setEntity('Apps\Core\Php\Entities\LoggerErrorGroup');
     }
 }
