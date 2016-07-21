@@ -8,7 +8,7 @@ class Link extends Webiny.Ui.Component {
 Link.defaultProps = {
     renderer() {
         const props = _.clone(this.props);
-        let link = <Ui.Link {...props}>{props.title}</Ui.Link>;
+        let link = <Ui.Link onClick={this.props.onClick}>{props.title}</Ui.Link>;
 
         if (props.children && !_.isString(props.children)) {
             link = this.props.children;
