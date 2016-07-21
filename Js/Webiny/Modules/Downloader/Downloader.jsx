@@ -33,7 +33,7 @@ Downloader.defaultProps = {
 
         let action = this.state.url;
         if (!action.startsWith('http')) {
-            action = webinyApiUrl + action;
+            action = webinyApiPath + action;
         }
 
         let filters = null;

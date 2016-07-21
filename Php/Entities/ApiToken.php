@@ -46,6 +46,7 @@ class ApiToken extends AbstractEntity
         $this->attr('owner')->char()->setToArrayDefault();
         $this->attr('description')->char()->setToArrayDefault();
         $this->attr('lastActivity')->datetime()->setToArrayDefault();
+        $this->attr('requests')->integer()->setToArrayDefault()->setDefaultValue(0);
         $this->attr('enabled')->boolean()->setDefaultValue(true)->setToArrayDefault();
     }
 }

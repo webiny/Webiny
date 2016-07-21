@@ -1,33 +1,13 @@
 import Webiny from 'Webiny';
 import Components from './Components/Components';
-import Views from './Views/Views';
+import Main from './Main';
 
 class Module extends Webiny.Module {
 
     init() {
-        this.registerSettings(
-            new Webiny.Ui.Settings('ui', 'Content', <h2>Content Settings</h2>),
-            new Webiny.Ui.Settings('payments', 'Payments', Views.UiSettings)
-        );
-
-
-        /*
-         const Menu = Webiny.Ui.Menu;
-         this.registerMenus(
-         new Menu('Dashboard', 'Dashboard', 'icon-gauge'),
-         new Menu('Content', [
-         new Menu('Posts', null).setAction('Add post', null, 'icon-plus-circled'),
-         new Menu('Menus', [
-         new Menu('Add new page', null),
-         new Menu('View all pages', null)
-         ])
-         ], 'icon-browser')
-         );
-        */
-
         this.registerDefaultComponents({
             Header: Components.Navigation,
-            MasterLayout: Views.Main
+            MasterLayout: Main
         });
     }
 }

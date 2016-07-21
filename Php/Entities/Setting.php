@@ -37,7 +37,7 @@ class Setting extends AbstractEntity
 
         $this->api('patch', 'key/{key}', function ($key) {
             $record = $this->findOne(['key' => $key]);
-            $data = $this->wRequest()->getPayload()->getAll();
+            $data = $this->wRequest()->getRequestData();
             if (empty($record)) {
                 $record = new self();
                 $record->key = $key;

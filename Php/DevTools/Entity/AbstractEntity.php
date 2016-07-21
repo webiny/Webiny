@@ -16,9 +16,16 @@ use Apps\Core\Php\DevTools\Entity\Event\EntityEvent;
 use Webiny\Component\Entity\Attribute\Many2OneAttribute;
 use Webiny\Component\Entity\Attribute\One2ManyAttribute;
 use Webiny\Component\Entity\Entity;
+use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
 
 /**
  * AbstractEntity class is the main class to extend when creating your own entities
+ *
+ * Class AbstractEntity
+ *
+ * @property string $id
+ * @property DateTimeObject $createdOn
+ * @property DateTimeObject $modifiedOn
  */
 abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 {

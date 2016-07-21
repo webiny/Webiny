@@ -35,6 +35,7 @@ class SmartyExtension extends AbstractSmartyExtension
     public function webinyInclude($params, $smarty)
     {
         $env = $this->wConfig()->get('Application.Environment', 'production');
+        $webPath = $this->wConfig()->getConfig()->get('Application.WebPath');
         $apiPath = $this->wConfig()->getConfig()->get('Application.ApiPath');
         $jsConfig = $this->wConfig()->getConfig()->get('Js', new ConfigObject())->toArray();
         $apps = new Apps();
@@ -73,7 +74,8 @@ class SmartyExtension extends AbstractSmartyExtension
         return <<<EOT
     <script type="text/javascript">
         var webinyEnvironment = '{$env}';
-        var webinyApiUrl = '{$apiPath}';
+        var webinyWebPath = '{$webPath}';
+        var webinyApiPath = '{$apiPath}';
         var webinyConfig = {$config};
     </script>
     <link href="{$cssPath}" rel="stylesheet" type="text/css"/>

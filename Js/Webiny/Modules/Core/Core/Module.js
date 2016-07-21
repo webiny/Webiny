@@ -87,11 +87,6 @@ class Module {
         return this;
     }
 
-    registerSettings(...settings) {
-        this.settings = settings;
-        return this;
-    }
-
     /**
      * Override if needed
      * @returns {Module}

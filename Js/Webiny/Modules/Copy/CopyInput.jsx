@@ -1,4 +1,3 @@
-import Webiny from 'Webiny';
 import CopyButton from './CopyButton';
 
 class CopyInput extends CopyButton {
