@@ -361,3 +361,7 @@ table.table .list-group-item-text {
   color: #666;
   line-height: 140%;
 }
+
+table.table tbody tr.no-hover:hover td{
+  background-color: #fff !important;
+}

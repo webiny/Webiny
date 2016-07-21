@@ -75,3 +75,99 @@
 .select2-container--default .select2-selection--single .select2-selection__rendered {
   padding: 12px 50px 11px 23px;
 }
+
+.expandable-list {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 0px;
+
+  .expandable-list__title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .expandable-list__row {
+    width: 100%;
+    will-change: transform, -webkit-transform;
+    margin: 0;
+    outline: none;
+    position: relative;
+    border: 1px solid #ddd;
+    border-collapse: collapse;
+    margin-bottom: -1px;
+    background-color: #fff;
+    transition: all 225ms;
+    cursor: pointer;
+
+    &:hover {
+      background: #fafafa;
+    }
+
+    &.expandable-list__row--active {
+      background-color: #ddd;
+      box-sizing: border-box;
+      outline: none;
+      padding: 20px 16px;
+      margin-top: 25px;
+      margin-bottom: 25px;
+      width: auto;
+      box-shadow: 0 0 0 10px #ddd;
+
+      &:first-child{
+        margin-top: 0px;
+      }
+
+      &:last-child{
+        margin-bottom: 0px;
+      }
+
+      .expandable-list__row__details {
+        opacity: 1;
+        visibility: visible;
+        margin: 0px;
+        cursor:auto;
+        border:none;
+
+        .expandable-list__row__details__list{
+
+        }
+
+        .expandable-list__row__details__content{
+          margin: 0px;
+          background-color: #fff;
+          padding: 20px;
+        }
+
+        .expandable-list {
+          margin-bottom: 0px;
+          padding: 20px;
+
+          .expandable-list__row{
+            box-shadow: 3px 4px 7px 0px rgba(0, 0, 0, 0.23);
+          }
+
+          .expandable-list__row--active {
+            margin: 0px;
+            background-color: #fff;
+            padding: 20px;
+            margin: 20px -25px;
+          }
+        }
+
+      }
+    }
+
+    .expandable-list__row__fields > div {
+      display: inline-block;
+      box-sizing: border-box;
+      padding: 15px 24px;
+      font-weight: 400;
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+}

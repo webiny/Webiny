@@ -36,6 +36,11 @@ import ModalAction from './Components/Table/Actions/ModalAction';
 import DeleteAction from './Components/Table/Actions/DeleteAction';
 import EditModalAction from './Components/Table/Actions/EditModalAction';
 import Empty from './Components/Table/Empty';
+import ExpandableList from './Components/ExpandableList/ExpandableList';
+import ElRow from './Components/ExpandableList/ElRow';
+import ElField from './Components/ExpandableList/ElField';
+import ElRowDetailsList from './Components/ExpandableList/ElRowDetailsList';
+import ElRowDetailsContent from './Components/ExpandableList/ElRowDetailsContent';
 
 class Module extends Webiny.Module {
 
@@ -71,6 +76,13 @@ class Module extends Webiny.Module {
                 ModalAction,
                 DeleteAction,
                 EditModalAction
+            },
+            ExpandableList: {
+                ExpandableList,
+                ElRow,
+                ElField,
+                ElRowDetailsContent,
+                ElRowDetailsList
             },
             MultiActions,
             MultiAction,

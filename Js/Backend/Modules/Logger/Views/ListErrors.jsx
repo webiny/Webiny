@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
+import ErrorGroup from './ErrorGroup';
 const Ui = Webiny.Ui.Components;
-const Table = Ui.List.Table;
 
 class ListErrors extends Webiny.Ui.View {
 
@@ -10,19 +10,12 @@ ListErrors.defaultProps = {
 
     renderer() {
         const jsErrorList = {
-            api: '/entities/logger/logger-error-group',
+            api: '/entities/core/logger-error-group',
             fields: '*',
             connectToRouter: true,
             searchFields: 'error',
-            defaultQuery: {type: 'js'}
-        };
-
-        const apiErrorList = {
-            api: '/entities/logger/logger-error-group',
-            fields: '*',
-            connectToRouter: true,
-            searchFields: 'error',
-            defaultQuery: {type: 'api'}
+            query: {'_sort': '-lastEntry'},
+            layout: null
         };
 
         return (
@@ -36,18 +29,48 @@ ListErrors.defaultProps = {
                         <Ui.Tabs.Tab label="JavaScript">
 
                             <Ui.List.ApiContainer ui="jsErrorList" {...jsErrorList}>
-                                <Table.Table>
-                                    <Table.Row>
-                                        <Table.Field name="name" align="left" label="Name" sort="name"/>
-                                        <Table.Field name="url" align="left" label="Url" sort="url"/>
-                                    </Table.Row>
-                                    <Table.Empty/>
-                                </Table.Table>
-                                <Ui.List.Pagination/>
+
+                                {(data, meta, list) => {
+                                    return (
+                                        <Ui.Grid.Row>
+                                            <Ui.Grid.Col all={12}>
+                                                <Ui.Form.Fieldset
+                                                    title={`Found a total of ${meta.totalCount} records (showing ${meta.perPage} per page)`}/>
+                                            </Ui.Grid.Col>
+                                            <Ui.Grid.Col all={12}>
+                                                <Ui.List.Loader/>
+                                                <Ui.List.Table.Empty renderIf={!data.length}/>
+                                                <Ui.List.ExpandableList.ExpandableList>
+                                                    {data.map(row => {
+                                                        return (
+
+                                                            <Ui.List.ExpandableList.ElRow key={row.id}>
+                                                                <Ui.List.ExpandableList.ElField all={1} name="Count" className="text-center">
+                                                                    <span className="badge badge-primary">{row.errorCount}</span>
+                                                                </Ui.List.ExpandableList.ElField>
+                                                                <Ui.List.ExpandableList.ElField all={7} name="Error">{row.error}</Ui.List.ExpandableList.ElField>
+                                                                <Ui.List.ExpandableList.ElField all={4} name="Last Entry">{row.lastEntry}</Ui.List.ExpandableList.ElField>
+
+                                                                <Ui.List.ExpandableList.ElRowDetailsList>
+                                                                    <ErrorGroup errorGroupId={row.id} errorGroupName={row.error} />
+                                                                </Ui.List.ExpandableList.ElRowDetailsList>
+                                                                
+                                                            </Ui.List.ExpandableList.ElRow>
+
+                                                        );
+                                                    })}
+                                                </Ui.List.ExpandableList.ExpandableList>
+                                            </Ui.Grid.Col>
+                                            <Ui.Grid.Col all={12}>
+                                                <Ui.List.Pagination/>
+                                            </Ui.Grid.Col>
+                                        </Ui.Grid.Row>
+                                    );
+                                }}
+
                             </Ui.List.ApiContainer>
                         </Ui.Tabs.Tab>
                     </Ui.Tabs.Tabs>
-
 
                 </Ui.View.Body>
             </Ui.View.List>
