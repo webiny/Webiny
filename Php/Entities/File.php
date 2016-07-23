@@ -23,6 +23,7 @@ class File extends AbstractEntity
     public function __construct()
     {
         parent::__construct();
+        $this->index(new SingleIndex('ref', 'ref'));
         $this->getAttribute('modifiedOn')->setToArrayDefault();
         $this->attr('name')->char()->setRequired()->setToArrayDefault();
         $this->attr('title')->char()->setToArrayDefault();
@@ -39,14 +40,6 @@ class File extends AbstractEntity
         $this->attr('tags')->arr()->setToArrayDefault();
         $this->attr('ref')->char()->setToArrayDefault();
         $this->attr('order')->integer()->setDefaultValue(0)->setToArrayDefault();
-    }
-
-
-    protected static function entityIndexes()
-    {
-        return [
-            new SingleIndex('ref', 'ref')
-        ];
     }
 
     /**

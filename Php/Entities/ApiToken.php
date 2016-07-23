@@ -24,18 +24,10 @@ class ApiToken extends AbstractEntity
     protected static $entityCollection = 'ApiTokens';
     protected static $entityMask = '{id}';
 
-    protected static function entityIndexes()
-    {
-        return [
-            new SingleIndex('token', 'token')
-        ];
-    }
-
-
     public function __construct()
     {
         parent::__construct();
-
+        $this->index(new SingleIndex('token', 'token'));
         $this->attr('token')->char()->setSkipOnPopulate()->onToDb(function ($value) {
             if (!$value) {
                 $value = $this->crypt()->generateUserReadableString(40);

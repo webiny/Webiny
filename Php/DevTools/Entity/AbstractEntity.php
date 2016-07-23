@@ -16,6 +16,9 @@ use Apps\Core\Php\DevTools\Entity\Event\EntityEvent;
 use Webiny\Component\Entity\Attribute\Many2OneAttribute;
 use Webiny\Component\Entity\Attribute\One2ManyAttribute;
 use Webiny\Component\Entity\Entity;
+use Webiny\Component\Entity\EntityException;
+use Webiny\Component\Mongo\Index\AbstractIndex;
+use Webiny\Component\Mongo\Index\SingleIndex;
 use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
 
 /**
@@ -23,7 +26,7 @@ use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
  *
  * Class AbstractEntity
  *
- * @property string $id
+ * @property string         $id
  * @property DateTimeObject $createdOn
  * @property DateTimeObject $modifiedOn
  */
@@ -32,50 +35,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     use DevToolsTrait, ApiExpositionTrait;
 
     protected static $callbacks = [];
-
-    private static $protectedAttributes = [
-        'id',
-        'createdOn',
-        'modifiedOn'
-    ];
-
-    final public static function wInstall()
-    {
-        $indexes = []; //static::entityIndexes();
-        foreach ($indexes as $index) {
-            if (self::isInstanceOf($index, '\Webiny\Component\Mongo\Index\AbstractIndex')) {
-                Entity::getInstance()->getDatabase()->createIndex(static::$entityCollection, $index);
-            }
-        }
-    }
-
-    final public static function wUninstall()
-    {
-
-    }
-
-    /**
-     * Remove given $fields from all instances of this entity
-     *
-     * @param array $fields
-     */
-    final public static function wRemoveFields($fields = [])
-    {
-        /**
-         * Unset protected attributes
-         */
-        $fields = array_diff($fields, self::$protectedAttributes);
-        self::wDatabase()->update(static::$entityCollection, [], ['$unset' => array_flip($fields)], ['multiple' => true]);
-    }
-
-    /**
-     * Get entity indexes
-     * @return array
-     */
-    protected static function entityIndexes()
-    {
-        return [];
-    }
+    protected $indexes = [];
 
     /**
      * Restore entity from archive.
@@ -94,6 +54,41 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         }
 
         return $entity;
+    }
+
+    /**
+     * Add index
+     *
+     * @param AbstractIndex|array $index
+     *
+     * @return $this
+     * @throws EntityException
+     */
+    public function index($index)
+    {
+        if ($index instanceof AbstractIndex) {
+            $index = [$index];
+        }
+
+        if (!is_array($index)) {
+            throw new EntityException(EntityException::MSG_INVALID_ARG, ['$index', 'array or AbstractIndex']);
+        }
+
+        /* @var AbstractIndex $i */
+        foreach ($index as $i) {
+            $this->indexes[$i->getName()] = $i;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get all indexes
+     * @return array
+     */
+    public function getIndexes()
+    {
+        return $this->indexes;
     }
 
     /**
@@ -118,11 +113,14 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     {
         parent::__construct();
         $this->apiMethods = $this->arr();
+
         /**
          * Add the following built-in system attributes:
          * createdOn, modifiedOn, deletedOn, deleted and user
          */
         $this->attr('createdOn')->datetime()->setDefaultValue('now');
+        $this->index(new SingleIndex('createdOn', 'createdOn'));
+
         $this->attr('modifiedOn')->datetime()->setAutoUpdate(true);
 
         /*$this->api('POST', 'restore/{restore}', function ($restore) {

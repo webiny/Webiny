@@ -20,17 +20,12 @@ class ApiTokenLog extends AbstractEntity
     protected static $entityCollection = 'ApiTokenLogs';
     protected static $entityMask = '{id}';
 
-    protected static function entityIndexes()
-    {
-        return [
-            new SingleIndex('token', 'token'),
-            new SingleIndex('expire', 'createdOn', false, false, false, 604800) // expire after 7 days
-        ];
-    }
-
     public function __construct()
     {
         parent::__construct();
+
+        $this->index(new SingleIndex('token', 'token'));
+        $this->index(new SingleIndex('expire', 'createdOn', false, false, false, 604800)); // expire after 7 days
 
         $this->attr('token')->many2one()->setEntity('Apps\Core\Php\Entities\ApiToken');
         $this->attr('request')->object()->setToArrayDefault();

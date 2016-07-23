@@ -39,6 +39,8 @@ class User extends AbstractEntity
     {
         parent::__construct();
 
+        $this->index(new SingleIndex('email', 'email', false, true));
+
         $this->attr('email')->char()->setValidators('required,email,unique')->onSet(function ($email) {
             return trim(strtolower($email));
         })->setValidationMessages([
@@ -218,13 +220,6 @@ class User extends AbstractEntity
     public static function onActivity($callback)
     {
         static::on('onActivity', $callback);
-    }
-
-    protected static function entityIndexes()
-    {
-        return [
-            new SingleIndex('email', 'email', false, true)
-        ];
     }
 
     /**
