@@ -11,7 +11,7 @@ class ElRow extends Webiny.Ui.Component {
             mounted: false
         };
 
-        this.bindMethods('hideRowDetails', 'showRowDetails', 'handleClickOutside', 'renderField', 'attachCloseListener', 'deatachCloseListener');
+        this.bindMethods('hideRowDetails', 'showRowDetails', 'handleClickOutside', 'renderField', 'attachCloseListener', 'deatachCloseListener', 'toggleActionSets');
     }
 
     componentWillUnmount() {
@@ -33,11 +33,11 @@ class ElRow extends Webiny.Ui.Component {
         return true;
     }
 
-    attachCloseListener(){
+    attachCloseListener() {
         document.addEventListener('click', this.handleClickOutside, true);
     }
 
-    deatachCloseListener(){
+    deatachCloseListener() {
         document.removeEventListener('click', this.handleClickOutside, true);
     }
 
@@ -104,21 +104,39 @@ class ElRow extends Webiny.Ui.Component {
 ElRow.defaultProps = {
     onClick: _.noop,
     renderer() {
-        const fields = [];
+        let fields = [];
+        let actionSet = false;
         let details = '';
         this.props.children.map((child)=> {
             if (child.type == Ui.List.ExpandableList.ElField) {
                 fields.push(child);
-            } else {
+            } else if (child.type == Ui.List.ExpandableList.ElRowDetailsContent || child.type == Ui.List.ExpandableList.ElRowDetailsList) {
                 details = child;
+            } else if (child.type == Ui.List.ExpandableList.ElActionSet) {
+                actionSet = child;
             }
         });
 
-        return (
-            <div className="expandable-list__row" onClick={this.showRowDetails}>
+        // render action set
+        let fieldsGrid = 12;
+        if (actionSet) {
+            actionSet = (<Ui.Grid.Col all={2} className="expandable-list__row__action-set">{actionSet}</Ui.Grid.Col>);
+            fieldsGrid = 10;
+        }
 
-                <Ui.Grid.Row className="expandable-list__row__fields">
-                    {fields.map(this.renderField)}
+        // render fields
+        fields = (<Ui.Grid.Col all={fieldsGrid} onClick={this.showRowDetails}>
+            <Ui.Grid.Row className="expandable-list__row__fields">
+                {fields.map(this.renderField)}
+            </Ui.Grid.Row>
+        </Ui.Grid.Col>);
+
+        return (
+            <div className="expandable-list__row">
+
+                <Ui.Grid.Row>
+                    {fields}
+                    {actionSet}
                 </Ui.Grid.Row>
 
                 <Ui.Grid.Row className="expandable-list__row__details" style={{display: 'none'}}>

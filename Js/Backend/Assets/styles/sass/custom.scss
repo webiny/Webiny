@@ -81,10 +81,29 @@
   margin-bottom: 20px;
   padding: 0px;
 
-  .expandable-list__title {
+  .expandable-list__title h4 {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: #FA5A28;
+  }
+
+  .expandable-list__action-set{
+    padding-top: 10px;
+    padding-right: 0px;
+    text-align: right;
+  }
+
+  .expandable-list__header{
+    width: 100%;
+    border: 1px solid #ddd;
+    font-weight: bold;
+    padding: 15px;
+    margin-bottom: -1px;
+    background-color: #ddd;
+    &:first-child{
+      padding: 15px 0;
+    }
   }
 
   .expandable-list__row {
@@ -99,9 +118,11 @@
     background-color: #fff;
     transition: all 225ms;
     cursor: pointer;
+    z-index:1;
 
     &:hover {
       background: #fafafa;
+      z-index:2;
     }
 
     &.expandable-list__row--active {
@@ -113,13 +134,18 @@
       margin-bottom: 25px;
       width: auto;
       box-shadow: 0 0 0 10px #ddd;
-
-      &:first-child{
-        margin-top: 0px;
-      }
+      cursor:auto;
 
       &:last-child{
         margin-bottom: 0px;
+      }
+
+      .expandable-list__row__fields{
+        margin: 0px;
+      }
+
+      .expandable-list__row__action-set{
+        padding-top: 7px;
       }
 
       .expandable-list__row__details {
@@ -136,7 +162,7 @@
         .expandable-list__row__details__content{
           margin: 0px;
           background-color: #fff;
-          padding: 20px;
+          padding: 0px;
         }
 
         .expandable-list {
@@ -161,7 +187,7 @@
     .expandable-list__row__fields > div {
       display: inline-block;
       box-sizing: border-box;
-      padding: 15px 24px;
+      padding: 15px;
       font-weight: 400;
       font-size: 13px;
       white-space: nowrap;

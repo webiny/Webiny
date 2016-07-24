@@ -39,6 +39,8 @@ import Empty from './Components/Table/Empty';
 import ExpandableList from './Components/ExpandableList/ExpandableList';
 import ElRow from './Components/ExpandableList/ElRow';
 import ElField from './Components/ExpandableList/ElField';
+import ElAction from './Components/ExpandableList/ElAction';
+import ElActionSet from './Components/ExpandableList/ElActionSet';
 import ElRowDetailsList from './Components/ExpandableList/ElRowDetailsList';
 import ElRowDetailsContent from './Components/ExpandableList/ElRowDetailsContent';
 
@@ -81,6 +83,8 @@ class Module extends Webiny.Module {
                 ExpandableList,
                 ElRow,
                 ElField,
+                ElAction,
+                ElActionSet,
                 ElRowDetailsContent,
                 ElRowDetailsList
             },

@@ -26,16 +26,23 @@ ErrorGroup.defaultProps = {
                         {errorData.list.map(row => {
                             return (
                                 <Ui.List.ExpandableList.ElRow key={row.id}>
-                                    <Ui.List.ExpandableList.ElField all={10}>{row.url}</Ui.List.ExpandableList.ElField>
+                                    <Ui.List.ExpandableList.ElField all={8}>{row.url}</Ui.List.ExpandableList.ElField>
                                     <Ui.List.ExpandableList.ElField all={2}>{row.date}</Ui.List.ExpandableList.ElField>
 
                                     <Ui.List.ExpandableList.ElRowDetailsContent>
                                         <ErrorDetails errorEntry={row.id} url={row.url}/>
                                     </Ui.List.ExpandableList.ElRowDetailsContent>
 
+                                    <Ui.List.ExpandableList.ElActionSet>
+                                        <Ui.List.ExpandableList.ElAction label="Resolve Item" icon="icon-check" />
+                                    </Ui.List.ExpandableList.ElActionSet>
+
                                 </Ui.List.ExpandableList.ElRow>
                             );
                         })}
+                        <Ui.List.ExpandableList.ElActionSet>
+                            <Ui.List.ExpandableList.ElAction label="Resolve Group" icon="icon-check" />
+                        </Ui.List.ExpandableList.ElActionSet>
                     </Ui.List.ExpandableList.ExpandableList>
                 )}
             </Ui.Data>
