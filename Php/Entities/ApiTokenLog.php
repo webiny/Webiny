@@ -25,7 +25,7 @@ class ApiTokenLog extends AbstractEntity
         parent::__construct();
 
         $this->index(new SingleIndex('token', 'token'));
-        $this->index(new SingleIndex('expire', 'createdOn', false, false, false, 604800)); // expire after 7 days
+        $this->index(new SingleIndex('createdOn', 'createdOn', false, false, false, 604800)); // expire after 7 days
 
         $this->attr('token')->many2one()->setEntity('Apps\Core\Php\Entities\ApiToken');
         $this->attr('request')->object()->setToArrayDefault();
