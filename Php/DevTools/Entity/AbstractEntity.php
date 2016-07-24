@@ -119,7 +119,10 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
          * createdOn, modifiedOn, deletedOn, deleted and user
          */
         $this->attr('createdOn')->datetime()->setDefaultValue('now');
-        $this->index(new SingleIndex('createdOn', 'createdOn'));
+        $this->index([
+            new SingleIndex('id', 'id', false, true),
+            new SingleIndex('createdOn', 'createdOn')
+        ]);
 
         $this->attr('modifiedOn')->datetime()->setAutoUpdate(true);
 
