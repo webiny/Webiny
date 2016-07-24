@@ -1,12 +1,14 @@
 import CopyButton from './CopyButton';
 
 class CopyInput extends CopyButton {
-
+    getTarget() {
+        return this.refs.button;
+    }
 }
 
 CopyInput.defaultProps = {
-    copy: 'Copy',
-    copied: 'Copied!',
+    actionLabel: 'Copy',
+    onSuccessMessage: 'Copied to clipboard!',
     onCopy: _.noop,
     style: {
         position: 'absolute',
@@ -52,9 +54,8 @@ CopyInput.defaultProps = {
                     <button
                         style={this.props.style}
                         className="btn btn-primary"
-                        ref="button"
-                        data-clipboard-text={props.value}>
-                        {this.state.label || this.props.copy}
+                        ref="button">
+                        {this.props.actionLabel}
                     </button>
                 </div>
                 <span className="help-block">{description}</span>

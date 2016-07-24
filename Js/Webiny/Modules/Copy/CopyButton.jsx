@@ -4,44 +4,40 @@ const Ui = Webiny.Ui.Components;
 class CopyButton extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            label: null
-        };
 
-        this.timeout = null;
-
-        this.bindMethods('getContent');
+        this.bindMethods('getContent,getTarget');
     }
 
     componentDidMount() {
         super.componentDidMount();
 
-        ZeroClipboard.config({swfPath: Webiny.Assets('Core.Webiny', 'other/ZeroClipboard.swf')});
-        this.client = new ZeroClipboard(this.refs.button);
+        this.clipboard = new Clipboard(this.getTarget(), {
+            text: () => {
+                return this.props.value;
+            }
+        });
 
-        this.client.on('ready', () => {
-            this.client.on('aftercopy', event => {
-                this.props.onCopy(event);
-                this.setState({label: this.props.copied}, () => {
-                    this.timeout = setTimeout(() => {
-                        this.setState({label: null});
-                    }, 2000);
-                });
-            });
+        this.clipboard.on('success', () => {
+            const onSuccessMessage = this.props.onSuccessMessage;
+            if (_.isFunction(onSuccessMessage)) {
+                onSuccessMessage();
+            } else if (_.isString(onSuccessMessage)) {
+                Webiny.Growl.info(onSuccessMessage);
+            }
         });
     }
 
     componentWillUnmount() {
         super.componentWillUnmount();
-        this.client.destroy();
-        clearTimeout(this.timeout);
+        this.clipboard.destroy();
+    }
+
+    getTarget() {
+        return ReactDOM.findDOMNode(this);
     }
 
     getContent() {
         let content = this.props.children || this.props.label;
-        if (this.state.label) {
-            content = this.state.label;
-        }
 
         const icon = this.props.icon ? <Webiny.Ui.Components.Icon icon={this.props.icon} className="right"/> : null;
         if (icon) {
@@ -54,7 +50,7 @@ class CopyButton extends Webiny.Ui.Component {
 
 CopyButton.defaultProps = {
     label: 'Copy',
-    copied: 'Copied!',
+    onSuccessMessage: 'Copied to clipboard!',
     onCopy: _.noop,
     renderer() {
         const props = _.clone(this.props);
