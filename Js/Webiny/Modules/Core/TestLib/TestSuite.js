@@ -128,6 +128,37 @@ class TestSuite {
             });
     }
 
+    login() {
+        // open login page
+        describe('Login Page', function () {
+
+            this.timeout(_.get(ts.getConfig('login'), 'timeout', 2000));
+
+            it('should login into dashboard', function (done) {
+
+                ts.getDriver().get('http://demo.app/admin/login').then(function () {
+                    ts.getDriver().wait(webdriver.until.elementLocated({xpath: '/html/body/webiny-app/rad-placeholder/webiny-form-container/div/div/form/layout/div[3]/div/input'})).then(function () {
+                        // populate email input
+                        var emailInput = ts.getDriver().findElement({xpath: '/html/body/webiny-app/rad-placeholder/webiny-form-container/div/div/form/layout/div[3]/div/input'});
+                        emailInput.sendKeys(_.get(ts.getConfig('login'), 'username', 'missing@username'));
+
+                        // populate password input
+                        var passwordInput = ts.getDriver().findElement({xpath: '/html/body/webiny-app/rad-placeholder/webiny-form-container/div/div/form/layout/div[4]/div/input'});
+                        passwordInput.sendKeys(_.get(ts.getConfig('login'), 'password', 'missing@password'));
+
+                        // submit form
+                        ts.getDriver().findElement({className: 'btn btn-lg btn-primary'}).click().then(function () {
+                            ts.getDriver().wait(webdriver.until.elementLocated({id: 'left-sidebar'})).then(function () {
+                                console.log('LOGIN DONE');
+                                done();
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    }
+
     _createTestTempFolder() {
         // based on the test name, we define the tempFolder where we store the screeenshots and the console logs
         const tempFolder = _.get(ts.getConfig('webdriver'), 'tempFolder', false);
