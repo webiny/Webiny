@@ -27,7 +27,13 @@ class Logger {
         // API response errors
         Webiny.Http.addResponseInterceptor(response => {
             if (response.status !== 200) {
-                this.reportError('api', response.data.message, response.request.body, response.request.method + ' ' + response.request.url);
+                // we want to log only responses that are not valid JSON objects
+                // 5xx response with a valid JSON object is probably an expected exception
+                try {
+                    JSON.parse(response.data);
+                } catch (e) {
+                    this.reportError('api', response.data, response.request.body, response.request.method + ' ' + response.request.url);
+                }
             }
 
             return response;
