@@ -58,6 +58,10 @@ i18n.price = function price(value, currency = '£') {
     return accounting.formatMoney(value, _.get(currencySymbols, currency, currency));
 };
 
+i18n.number = function price(value) {
+    return accounting.formatNumber(value);
+};
+
 i18n.date = function date(value, format = 'DD/MMM/YY') {
     return moment(value).format(format);
 };
