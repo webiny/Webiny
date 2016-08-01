@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+const Ui = Webiny.Ui.Components;
 
 class ListContainerLoader extends Webiny.Ui.Component {
 
@@ -14,13 +15,7 @@ ListContainerLoader.defaultProps = {
             return this.props.children();
         }
 
-        return (
-            <div className="loading-overlay">
-                <div className="loading-overlay__icon-wrapper">
-                    <div className="loading-overlay__icon"></div>
-                </div>
-            </div>
-        );
+        return <Ui.Loader/>;
     }
 };
 

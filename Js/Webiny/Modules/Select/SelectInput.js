@@ -70,6 +70,10 @@ class SelectInput extends Webiny.Ui.FormComponent {
                 this.triggerChange('');
             });
             this.select2.val(this.getValue()).trigger('change');
+
+            if (this.props.dropdownClassName) {
+                setTimeout(() => this.select2.data('select2').$dropdown.addClass(this.props.dropdownClassName));
+            }
         }
     }
 
@@ -202,6 +206,7 @@ SelectInput.defaultProps = {
     minimumResultsForSearch: 15,
     useDataAsValue: false,
     dropdownParent: '.dropdown-wrapper',
+    dropdownClassName: '',
     description: null,
     renderer() {
         const cssConfig = {
