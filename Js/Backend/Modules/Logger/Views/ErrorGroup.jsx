@@ -1,7 +1,8 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 const Table = Ui.List.Table;
-import ErrorDetails from './ErrorDetails';
+import ErrorDetailsJs from './ErrorDetailsJs';
+import ErrorDetailsApi from './ErrorDetailsApi';
 
 class ErrorGroup extends Webiny.Ui.View {
 
@@ -11,17 +12,15 @@ ErrorGroup.defaultProps = {
 
     renderer() {
 
-        console.log('render group:' + this.props.errorGroupId);
-
         const statProps = {
             api: '/entities/core/logger-entry',
-            query: {errorGroup: this.props.errorGroupId},
+            query: {errorGroup: this.props.errorGroup.id},
             fields: '*'
         };
 
         return (
             <Ui.Data {...statProps}>
-                {errorData => (
+                {(errorData, filter, loader) => (
                     <Ui.List.ExpandableList.ExpandableList>
                         {errorData.list.map(row => {
                             return (
@@ -30,11 +29,17 @@ ErrorGroup.defaultProps = {
                                     <Ui.List.ExpandableList.ElField all={4}>{row.date}</Ui.List.ExpandableList.ElField>
 
                                     <Ui.List.ExpandableList.ElRowDetailsContent title={row.url}>
-                                        <ErrorDetails errorEntry={row.id} url={row.url}/>
+                                        {() => {
+                                            if (this.props.errorGroup.type == 'js') {
+                                                return (<ErrorDetailsJs errorEntry={row}/>);
+                                            } else {
+                                                return (<ErrorDetailsApi errorEntry={row}/>);
+                                            }
+                                        }}
                                     </Ui.List.ExpandableList.ElRowDetailsContent>
 
                                     <Ui.List.ExpandableList.ElActionSet>
-                                        <Ui.List.ExpandableList.ElAction label="Resolve Item" icon="icon-check" />
+                                        <Ui.List.ExpandableList.ElAction label="Resolve Item" icon="icon-check"/>
                                     </Ui.List.ExpandableList.ElActionSet>
 
                                 </Ui.List.ExpandableList.ElRow>

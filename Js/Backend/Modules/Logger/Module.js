@@ -13,7 +13,7 @@ class Logger extends Webiny.Module {
         );
 
         this.registerRoutes(
-            new Webiny.Route('Logger.ListErrors', '/logger/list', Views.ListErrors, 'Logger - List Errors')
+            new Webiny.Route('Logger.ListErrors', '/logger/list', Views.Main, 'Logger - List Errors')
         );
     }
 }

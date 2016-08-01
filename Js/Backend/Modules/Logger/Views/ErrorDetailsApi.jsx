@@ -1,16 +1,16 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-class ErrorDetails extends Webiny.Ui.View {
+class ErrorDetailsApi extends Webiny.Ui.View {
 
 }
 
-ErrorDetails.defaultProps = {
+ErrorDetailsApi.defaultProps = {
 
     renderer() {
         const statProps = {
             api: '/entities/core/logger-entry',
-            url: this.props.errorEntry,
+            url: this.props.errorEntry.id,
             fields: 'id, stack, clientData'
         };
 
@@ -22,10 +22,6 @@ ErrorDetails.defaultProps = {
                             <Ui.CodeHighlight language="json">
                                 {JSON.stringify(errorData.clientData, null, 2)}
                             </Ui.CodeHighlight>
-
-                            <Ui.CodeHighlight>
-                                {errorData.stack}
-                            </Ui.CodeHighlight>
                         </Ui.Grid.Col>
                     </Ui.Grid.Row>
                 )}
@@ -34,4 +30,4 @@ ErrorDetails.defaultProps = {
     }
 };
 
-export default ErrorDetails;
+export default ErrorDetailsApi;

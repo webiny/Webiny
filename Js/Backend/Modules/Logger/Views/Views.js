@@ -1,5 +1,5 @@
-import ListErrors from './ListErrors';
+import Main from './Main';
 
 export default {
-    ListErrors
+    Main
 };
