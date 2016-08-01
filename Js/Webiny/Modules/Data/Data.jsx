@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+const Ui = Webiny.Ui.Components;
 
 class Data extends Webiny.Ui.Component {
 
@@ -33,6 +34,8 @@ class Data extends Webiny.Ui.Component {
     }
 
     setData(apiResponse) {
+        this.setState({loading: false});
+
         if (apiResponse.isAborted()) {
             return;
         }
@@ -45,6 +48,7 @@ class Data extends Webiny.Ui.Component {
     }
 
     filter(filters = {}) {
+        this.setState({loading: true});
         this.request = this.api.setQuery(filters).execute().then(this.setData);
     }
 }
@@ -56,7 +60,9 @@ Data.defaultProps = {
             return null;
         }
 
-        return _.isFunction(this.props.children) ? this.props.children(this.state.data, this.filter) : null;
+        const loader = this.state.loading ? <Ui.Loader/> : null;
+
+        return _.isFunction(this.props.children) ? this.props.children(this.state.data, this.filter, loader) : null;
     }
 };
 
