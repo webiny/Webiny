@@ -14,14 +14,11 @@ ErrorDetails.defaultProps = {
             fields: 'id, stack, clientData'
         };
 
-        console.log('render details:' + this.props.errorEntry);
-
         return (
             <Ui.Data {...statProps}>
                 {errorData => (
                     <Ui.Grid.Row>
                         <Ui.Grid.Col all={12}>
-                            <h4>{this.props.url}</h4>
                             <Ui.CodeHighlight language="json">
                                 {JSON.stringify(errorData.clientData, null, 2)}
                             </Ui.CodeHighlight>

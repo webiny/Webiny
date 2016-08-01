@@ -48,12 +48,16 @@ ListErrors.defaultProps = {
                                                                 <Ui.List.ExpandableList.ElField all={1} name="Count" className="text-center">
                                                                     <span className="badge badge-primary">{row.errorCount}</span>
                                                                 </Ui.List.ExpandableList.ElField>
-                                                                <Ui.List.ExpandableList.ElField all={7} name="Error">{row.error}</Ui.List.ExpandableList.ElField>
+                                                                <Ui.List.ExpandableList.ElField all={5} name="Error">{row.error}</Ui.List.ExpandableList.ElField>
                                                                 <Ui.List.ExpandableList.ElField all={4} name="Last Entry">{row.lastEntry}</Ui.List.ExpandableList.ElField>
 
-                                                                <Ui.List.ExpandableList.ElRowDetailsList>
-                                                                    <ErrorGroup errorGroupId={row.id} errorGroupName={row.error} />
+                                                                <Ui.List.ExpandableList.ElRowDetailsList title={row.error}>
+                                                                    <ErrorGroup errorGroupId={row.id} />
                                                                 </Ui.List.ExpandableList.ElRowDetailsList>
+
+                                                                <Ui.List.ExpandableList.ElActionSet>
+                                                                    <Ui.List.ExpandableList.ElAction label="Resolve Group" icon="icon-check" />
+                                                                </Ui.List.ExpandableList.ElActionSet>
                                                                 
                                                             </Ui.List.ExpandableList.ElRow>
 

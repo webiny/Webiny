@@ -6,16 +6,24 @@ class ExpandableList extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            zIndex: 1000
+        };
+
         this.bindMethods(
             'renderHeader'
         );
     }
 
     renderHeader(header, i) {
-        header.key = i;
-        header.onSort = this.onSort;
+        let className = '';
+
+        if (_.get(header, 'className', false)) {
+            className = header.className;
+        }
+
         return (
-            <Ui.Grid.Col {...header}>{header.name}</Ui.Grid.Col>
+            <div className={className + ' expandable-list__header__field flex-cell flex-width-' + header.all} key={i}>{header.name}</div>
         );
     }
 }
@@ -31,40 +39,32 @@ ExpandableList.defaultProps = {
 
         // get row and extract the header info
         let headers = [];
+        let actionSet = false;
         _.forEach(this.props.children, (row)=> {
             if (row.type == Ui.List.ExpandableList.ElRow) {
                 if (_.isObject(row)) {
                     _.forEach(row.props.children, (val)=> {
-                        if (_.get(val.props, 'name', false)) {
+
+                        if (val.type == Ui.List.ExpandableList.ElActionSet) {
+                            actionSet = true;
+                        }
+
+                        if (val.type == Ui.List.ExpandableList.ElField && _.get(val.props, 'name', false)) {
                             headers.push(_.omit(val.props, ['children', 'renderer']));
                         }
                     });
 
                     if (headers.length > 0) {
+                        if (actionSet) {
+                            headers.push({key: 99, all: 2});
+                        }
                         headers =
-                            <div className="expandable-list__header"><Ui.Grid.Row>{headers.map(this.renderHeader)}</Ui.Grid.Row></div>;
+                            <div className="expandable-list__header flex-row">{headers.map(this.renderHeader)}</div>;
                         return false; // exit foreach
                     }
                 }
             }
         });
-
-        // get row and extract actions
-        let actionSet = false;
-        _.forEach(this.props.children, (row)=> {
-            if (row.type == Ui.List.ExpandableList.ElActionSet) {
-                actionSet = row;
-            }
-        });
-
-        // combine title and action sets
-        let titleAction = false;
-        if (_.get(this.props, 'name', false) || actionSet) {
-            titleAction = (<Ui.Grid.Row>
-                {this.props.name && <Ui.Grid.Col className="expandable-list__title" all={10}><h4>{this.props.name}</h4></Ui.Grid.Col>}
-                {actionSet && <Ui.Grid.Col className="expandable-list__action-set" all={2}>{actionSet}</Ui.Grid.Col>}
-            </Ui.Grid.Row>);
-        }
 
         // get rows
         let rows = [];
@@ -83,7 +83,6 @@ ExpandableList.defaultProps = {
 
         return (
             <div className="expandable-list">
-                {titleAction}
                 {headers}
                 <div className="expandable-list__content">
                     {rows}

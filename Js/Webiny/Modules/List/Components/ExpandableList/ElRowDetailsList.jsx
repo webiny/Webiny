@@ -12,13 +12,7 @@ ElRowDetailsList.defaultProps = {
             content = this.props.children.call(this, this.props.data, this);
         }
 
-        return (
-            <Ui.Grid.Row>
-                <Ui.Grid.Col all={12}>
-                    {content}
-                </Ui.Grid.Col>
-            </Ui.Grid.Row>
-        );
+        return <div>{content}</div>;
     }
 };
 

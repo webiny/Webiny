@@ -22,14 +22,14 @@ ErrorGroup.defaultProps = {
         return (
             <Ui.Data {...statProps}>
                 {errorData => (
-                    <Ui.List.ExpandableList.ExpandableList name={this.props.errorGroupName}>
+                    <Ui.List.ExpandableList.ExpandableList>
                         {errorData.list.map(row => {
                             return (
                                 <Ui.List.ExpandableList.ElRow key={row.id}>
-                                    <Ui.List.ExpandableList.ElField all={8}>{row.url}</Ui.List.ExpandableList.ElField>
-                                    <Ui.List.ExpandableList.ElField all={2}>{row.date}</Ui.List.ExpandableList.ElField>
+                                    <Ui.List.ExpandableList.ElField all={6}>{row.url}</Ui.List.ExpandableList.ElField>
+                                    <Ui.List.ExpandableList.ElField all={4}>{row.date}</Ui.List.ExpandableList.ElField>
 
-                                    <Ui.List.ExpandableList.ElRowDetailsContent>
+                                    <Ui.List.ExpandableList.ElRowDetailsContent title={row.url}>
                                         <ErrorDetails errorEntry={row.id} url={row.url}/>
                                     </Ui.List.ExpandableList.ElRowDetailsContent>
 
@@ -40,9 +40,6 @@ ErrorGroup.defaultProps = {
                                 </Ui.List.ExpandableList.ElRow>
                             );
                         })}
-                        <Ui.List.ExpandableList.ElActionSet>
-                            <Ui.List.ExpandableList.ElAction label="Resolve Group" icon="icon-check" />
-                        </Ui.List.ExpandableList.ElActionSet>
                     </Ui.List.ExpandableList.ExpandableList>
                 )}
             </Ui.Data>

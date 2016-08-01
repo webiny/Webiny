@@ -12,11 +12,11 @@ ElField.defaultProps = {
             content = this.props.children.call(this, this.props.data, this);
         }
 
-        let className = _.union([], ['expandable-list__row__fields__field'], [this.props.className]);
+        let className = _.union([], [this.props.className]);
         className = _.join(className, ' ');
 
         return (
-            <Ui.Grid.Col all={this.props.all} align={this.props.align} className={className}>{content}</Ui.Grid.Col>
+            <div className={className + ' expandable-list__row__fields__field flex-cell flex-width-' + this.props.all} onClick={this.props.onClick}>{content}</div>
         );
     }
 };
