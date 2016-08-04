@@ -3,6 +3,10 @@ use Apps\Core\Php\Entities\User;
 use Apps\Core\Php\Entities\UserGroup;
 use Webiny\Component\StdLib\Exception\AbstractException;
 
+if(php_sapi_name() !== 'cli') {
+    die('Invalid invocation!');
+}
+
 $autoloader = require_once getcwd() . '/vendor/autoload.php';
 $autoloader->addPsr4('Apps\\Core\\', getcwd() . '/Apps/Core');
 
@@ -19,7 +23,7 @@ $publicUserGroup = [
         ],
         'services' => [
             'Apps\\Core\\Php\\Services\\Apps' => [
-                'index' => [
+                '{appName}' => [
                     'get' => true
                 ]
             ]
@@ -63,7 +67,6 @@ $usersUserGroup = [
 $_SERVER = [];
 $_SERVER['SERVER_NAME'] = $argv[1];
 
-// Bootstrap the system using newly generated config
 \Apps\Core\Php\Bootstrap\Bootstrap::getInstance();
 
 // Create 'public', 'users' and 'administrators' user groups
@@ -80,7 +83,6 @@ try {
 } catch (AbstractException $e) {
     // Users group exists
 }
-
 
 try {
     $adminGroup = new UserGroup();

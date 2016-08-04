@@ -1,4 +1,8 @@
 <?php
+if(php_sapi_name() !== 'cli') {
+    die('Invalid invocation!');
+}
+
 $autoloader = require_once getcwd() . '/vendor/autoload.php';
 $autoloader->addPsr4('Apps\\Core\\', getcwd() . '/Apps/Core');
 
