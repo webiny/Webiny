@@ -99,16 +99,16 @@ $adminUserGroup = [
             'Apps\\Core\\Php\\Services\\Entities' => [
                 '/' => [
                     'get' => true
-                ]
-            ],
-            'Apps\\Core\\Php\\Services\\Services' => [
-                '/'          => [
-                    'get' => true
                 ],
                 'attributes' => [
                     'get' => true
                 ],
                 'methods'    => [
+                    'get' => true
+                ]
+            ],
+            'Apps\\Core\\Php\\Services\\Services' => [
+                '/'          => [
                     'get' => true
                 ]
             ]
