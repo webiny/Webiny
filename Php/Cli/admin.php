@@ -86,7 +86,9 @@ $adminUserGroup = [
                 'crudRead'    => true,
                 'crudUpdate'  => true,
                 'crudDelete'  => true,
-                'save-report' => true
+                'save-report' => [
+                    'post' => true
+                ]
             ],
             'Apps\\Core\\Php\\Entities\\Setting'          => [
                 'key/{key}' => [
