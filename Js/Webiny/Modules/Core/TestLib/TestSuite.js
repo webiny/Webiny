@@ -61,7 +61,7 @@ class TestSuite {
 
     initDriver() {
         if (_.isUndefined(this.driver)) {
-            const browserName = _.get(this.getConfig('webdriver'), 'browser', 'chrome');
+            const browserName = _.get(this.getConfig('webDriver'), 'browser', 'chrome');
             this.driver = new webdriver.Builder()
                 .forBrowser(browserName)
                 .build();
@@ -92,9 +92,9 @@ class TestSuite {
     }
 
     saveScreenshotAndLogData() {
-        const tempFolder = _.get(ts.getConfig('webdriver'), 'tempFolder', false);
+        const tempFolder = _.get(ts.getConfig('webDriver'), 'tempFolder', false);
         if (!tempFolder) {
-            console.log('Unable to save screenshot because webdriver.tempFolder is not defined in mocha config.');
+            console.log('Unable to save screenshot because webDriver.tempFolder is not defined in mocha config.');
 
             return false;
         }
@@ -161,9 +161,9 @@ class TestSuite {
 
     _createTestTempFolder() {
         // based on the test name, we define the tempFolder where we store the screeenshots and the console logs
-        const tempFolder = _.get(ts.getConfig('webdriver'), 'tempFolder', false);
+        const tempFolder = _.get(ts.getConfig('webDriver'), 'tempFolder', false);
         if (!tempFolder) {
-            console.log('Temp folder (webdriver.tempFolder) is not defined in mocha config therefore no screenshots and console logs will be saved');
+            console.log('Temp folder (webDriver.tempFolder) is not defined in mocha config therefore no screenshots and console logs will be saved');
 
             return false;
         }
