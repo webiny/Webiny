@@ -72,19 +72,23 @@ class PackageScanner
             $name = $this->str($key)->explode('/')->last()->val();
             if ($object == 'App' && $name !== 'Core') {
                 $version = $this->wConfig()->get($object . 's.' . $name);
-                // If app's version is not configured - skip it
                 if (!$version) {
                     continue;
                 }
-                $version = str_replace('.', '_', $version);
-                if ($version != 'root') {
-                    $version = '/' . $version;
+
+                if (!is_bool($version)) {
+                    $version = str_replace('.', '_', $version);
+                    $version = '/v' . $version;
                 } else {
+                    // Skip app if disabled
+                    if (!$version) {
+                        continue;
+                    }
                     $version = '';
                 }
                 $appPath = $this->wConfig()->get('Application.AbsolutePath') . 'Apps/' . $name . $version;
                 $this->wClassLoader()->appendLibrary('Apps\\' . $name . '\\', $appPath);
-                $configPath = $key . '/' . $version . '/' . $object . '.yaml';
+                $configPath = $key . $version . '/' . $object . '.yaml';
             }
 
             // parse packageinfo

@@ -64,7 +64,7 @@ class Apps extends AbstractService
             // If all apps are required we need to fetch meta only for versions currently enabled
             $apps = ['Core' => null];
             foreach ($this->wConfig()->get('Apps')->toArray() as $enabledApp => $version) {
-                $apps[$enabledApp] = $version != 'root' ? str_replace('.', '_', $version) : false;
+                $apps[$enabledApp] = !is_bool($version) ? $this->wApps($enabledApp)->getVersionPath() : false;
             }
         } else {
             // If specific app is given, fetch only one meta.json of the active app version
@@ -73,15 +73,15 @@ class Apps extends AbstractService
                 $key = $appName . '/' . $jsApp;
             } else {
                 $version = $this->wConfig()->get('Apps.' . $appName);
-                $version = $version != 'root' ? str_replace('.', '_', $version) . '/' : '';
-                $key = $appName . '/' . $version . $jsApp;
+                $version = !is_bool($version) ? $this->wApps($appName)->getVersionPath() : '';
+                $key = $appName . $version . '/' . $jsApp;
             }
             $meta = new File($key . '/meta.json', $storage);
             if ($meta->exists()) {
                 return json_decode($meta->getContents(), true);
             }
 
-            throw new AppException('App ' . $app . ' was not found!');
+            throw new AppException('meta.json was not found for ' . $app . '! Re-build the app and try again.');
         }
 
         // Fetch meta.json of each active app

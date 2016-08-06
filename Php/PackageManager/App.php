@@ -49,15 +49,21 @@ class App extends AbstractPackage
         return $this->version;
     }
 
-    public function getPath($absolute = true)
+    public function getVersionPath()
     {
         $version = $this->wConfig()->get('Apps.' . $this->name);
-        if ($version && $version !== 'root') {
-            $version = '/' . str_replace('.', '_', $version);
+        if ($version && !is_bool($version)) {
+            $version = '/v' . str_replace('.', '_', $version);
         } else {
             $version = '';
         }
 
+        return $version;
+    }
+
+    public function getPath($absolute = true)
+    {
+        $version = $this->getVersionPath();
         if ($absolute) {
             return $this->wConfig()->get('Application.AbsolutePath') . 'Apps/' . $this->name . $version;
         }
@@ -67,27 +73,14 @@ class App extends AbstractPackage
 
     public function getBuildPath()
     {
-        $version = $this->wConfig()->get('Apps.' . $this->name);
-        if ($version && $version !== 'root') {
-            $version = '/' . str_replace('.', '_', $version);
-        } else {
-            $version = '';
-        }
-
         $env = $this->wIsProduction() ? 'production' : 'development';
 
-        return '/build/' . $env . '/' . $this->name . $version;
+        return '/build/' . $env . '/' . $this->name . $this->getVersionPath();
     }
 
     public function getEntities($withDetails = false)
     {
-        $version = $this->wConfig()->get('Apps.' . $this->name);
-        if ($version && $version !== 'root') {
-            $version = '/' . str_replace('.', '_', $version);
-        } else {
-            $version = '';
-        }
-
+        $version = $this->getVersionPath();
         $entitiesDir = $this->getName() . $version . '/Php/Entities';
         $dir = new Directory($entitiesDir, $this->wStorage('Apps'), false, '*.php');
         $entities = [];
@@ -115,13 +108,7 @@ class App extends AbstractPackage
 
     public function getServices($withDetails = false)
     {
-        $version = $this->wConfig()->get('Apps.' . $this->name);
-        if ($version && $version !== 'root') {
-            $version = '/' . str_replace('.', '_', $version);
-        } else {
-            $version = '';
-        }
-
+        $version = $this->getVersionPath();
         $servicesDir = $this->getName() . $version . '/Php/Services';
         $dir = new Directory($servicesDir, $this->wStorage('Apps'), false, '*.php');
         $services = [];
@@ -153,6 +140,7 @@ class App extends AbstractPackage
                 return new $class;
             }
         }
+
         return null;
     }
 }

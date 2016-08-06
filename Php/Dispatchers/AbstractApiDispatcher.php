@@ -36,9 +36,9 @@ abstract class AbstractApiDispatcher
     protected function fileExists($class)
     {
         $parts = $this->str($class)->explode('\\')->filter()->values()->val();
-        $version = $this->wConfig()->get('Apps.' . $parts[1]);
-        if ($version && $version !== 'root') {
-            array_splice($parts, 2, 0, str_replace('.', '_', $version));
+        $path = $this->wApps($parts[1])->getVersionPath();
+        if ($path) {
+            array_splice($parts, 2, 0, $path);
         }
 
         return file_exists($this->wConfig()->get('Application.AbsolutePath') . join('/', $parts) . '.php');

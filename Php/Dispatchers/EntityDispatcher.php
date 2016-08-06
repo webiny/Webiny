@@ -38,9 +38,7 @@ class EntityDispatcher extends AbstractApiDispatcher
 
         $flows = $this->wService()->getServicesByTag('entity-dispatcher-flow');
 
-        usort($flows, function ($flow1, $flow2) {
-            /* @var AbstractFlow $flow1 */
-            /* @var AbstractFlow $flow2 */
+        usort($flows, function (AbstractFlow $flow1, AbstractFlow $flow2) {
             return $flow1->getPriority() <=> $flow2->getPriority();
         });
 
