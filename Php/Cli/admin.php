@@ -3,6 +3,10 @@ use Apps\Core\Php\Entities\User;
 use Apps\Core\Php\Entities\UserGroup;
 use Webiny\Component\StdLib\Exception\AbstractException;
 
+if (php_sapi_name() !== 'cli') {
+    die('Invalid invocation!');
+}
+
 $autoloader = require_once getcwd() . '/vendor/autoload.php';
 $autoloader->addPsr4('Apps\\Core\\', getcwd() . '/Apps/Core');
 
@@ -12,14 +16,20 @@ $publicUserGroup = [
     'permissions' => [
         'entities' => [
             'Apps\\Core\\Php\\Entities\\User' => [
-                'login' => [
+                'login'          => [
+                    'post' => true
+                ],
+                'reset-password' => [
+                    'post' => true
+                ],
+                'set-password'   => [
                     'post' => true
                 ]
             ]
         ],
         'services' => [
             'Apps\\Core\\Php\\Services\\Apps' => [
-                'index' => [
+                '{appName}' => [
                     'get' => true
                 ]
             ]
@@ -31,14 +41,77 @@ $adminUserGroup = [
     'tag'         => 'administrators',
     'permissions' => [
         'entities' => [
-            'Apps\\Core\\Php\\Entities\\User' => [
-                'crud.create' => true,
-                'crud.read'   => true,
-                'crud.update' => true,
-                'crud.delete' => true,
-                'me'          => [
+            'Apps\\Core\\Php\\Entities\\User'             => [
+                'crudCreate' => true,
+                'crudRead'   => true,
+                'crudUpdate' => true,
+                'crudDelete' => true,
+                'me'         => [
                     'get'   => true,
                     'patch' => true
+                ]
+            ],
+            'Apps\\Core\\Php\\Entities\\UserGroup'        => [
+                'crudCreate' => true,
+                'crudRead'   => true,
+                'crudUpdate' => true,
+                'crudDelete' => true
+            ],
+            'Apps\\Core\\Php\\Entities\\ApiToken'         => [
+                'crudCreate' => true,
+                'crudRead'   => true,
+                'crudUpdate' => true,
+                'crudDelete' => true
+            ],
+            'Apps\\Core\\Php\\Entities\\ApiTokenLog'      => [
+                'crudCreate' => true,
+                'crudRead'   => true,
+                'crudUpdate' => true,
+                'crudDelete' => true
+            ],
+            'Apps\\Core\\Php\\Entities\\File'             => [
+                'crudCreate' => true,
+                'crudRead'   => true,
+                'crudUpdate' => true,
+                'crudDelete' => true
+            ],
+            'Apps\\Core\\Php\\Entities\\LoggerEntry'      => [
+                'crudCreate' => true,
+                'crudRead'   => true,
+                'crudUpdate' => true,
+                'crudDelete' => true
+            ],
+            'Apps\\Core\\Php\\Entities\\LoggerErrorGroup' => [
+                'crudCreate'  => true,
+                'crudRead'    => true,
+                'crudUpdate'  => true,
+                'crudDelete'  => true,
+                'save-report' => [
+                    'post' => true
+                ]
+            ],
+            'Apps\\Core\\Php\\Entities\\Setting'          => [
+                'key/{key}' => [
+                    'get'   => true,
+                    'patch' => true
+                ]
+            ]
+        ],
+        'services' => [
+            'Apps\\Core\\Php\\Services\\Entities' => [
+                '/' => [
+                    'get' => true
+                ],
+                'attributes' => [
+                    'get' => true
+                ],
+                'methods'    => [
+                    'get' => true
+                ]
+            ],
+            'Apps\\Core\\Php\\Services\\Services' => [
+                '/'          => [
+                    'get' => true
                 ]
             ]
         ]
@@ -63,7 +136,6 @@ $usersUserGroup = [
 $_SERVER = [];
 $_SERVER['SERVER_NAME'] = $argv[1];
 
-// Bootstrap the system using newly generated config
 \Apps\Core\Php\Bootstrap\Bootstrap::getInstance();
 
 // Create 'public', 'users' and 'administrators' user groups
@@ -80,7 +152,6 @@ try {
 } catch (AbstractException $e) {
     // Users group exists
 }
-
 
 try {
     $adminGroup = new UserGroup();
