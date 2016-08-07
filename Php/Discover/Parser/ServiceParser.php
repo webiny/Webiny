@@ -1,7 +1,7 @@
 <?php
 namespace Apps\Core\Php\Discover\Parser;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\RequestHandlers\ApiException;

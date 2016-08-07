@@ -7,7 +7,7 @@
 
 namespace Apps\Core\Php\RequestHandlers;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
 use Apps\Core\Php\DevTools\Response\ApiRawResponse;
@@ -16,7 +16,7 @@ use Apps\Core\Php\Discover\Postman;
 
 class Api
 {
-    use DevToolsTrait;
+    use WebinyTrait;
 
     private $apiResponse = '\Apps\Core\Php\DevTools\Response\ApiResponse';
     private $apiEvent;

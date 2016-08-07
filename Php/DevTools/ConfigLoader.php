@@ -17,7 +17,7 @@ use Webiny\Component\StdLib\SingletonTrait;
  */
 class ConfigLoader
 {
-    use SingletonTrait, DevToolsTrait;
+    use SingletonTrait, WebinyTrait;
 
     public function yaml($path, $flushCache = false)
     {

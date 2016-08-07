@@ -10,7 +10,7 @@ namespace Apps\Core\Php\DevTools\Entity;
 use Apps\Core\Php\Dispatchers\ApiExpositionTrait;
 use Webiny\Component\Entity\Attribute\AbstractAttribute;
 use Webiny\Component\Entity\Attribute\DateAttribute;
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Entity\Event\EntityDeleteEvent;
 use Apps\Core\Php\DevTools\Entity\Event\EntityEvent;
 use Webiny\Component\Entity\Attribute\Many2OneAttribute;
@@ -32,7 +32,7 @@ use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
  */
 abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 {
-    use DevToolsTrait, ApiExpositionTrait;
+    use WebinyTrait, ApiExpositionTrait;
 
     protected static $callbacks = [];
     protected $indexes = [];

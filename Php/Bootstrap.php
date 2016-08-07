@@ -12,6 +12,8 @@ class Bootstrap
 
     public function run(PackageManager\App $app)
     {
+        $this->addAppRoute('/^\/' . $this->wConfig()->get('Application.Backend') . '/', 'Core:Templates/Webiny.tpl', 380);
+
         $mailer = $app->getConfig()->get('Mailer');
         if ($mailer) {
             Mailer::setConfig($mailer);

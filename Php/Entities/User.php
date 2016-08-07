@@ -2,7 +2,7 @@
 namespace Apps\Core\Php\Entities;
 
 use Apps\Core\Php\DevTools\Authorization\AuthorizationTrait;
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Entity\Attributes\FileAttribute;
 use Apps\Core\Php\DevTools\Entity\Attributes\FilesAttribute;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
@@ -30,7 +30,7 @@ use Webiny\Component\Mongo\Index\SingleIndex;
  */
 class User extends AbstractEntity
 {
-    use DevToolsTrait, AuthorizationTrait, CryptTrait, MailerTrait;
+    use WebinyTrait, AuthorizationTrait, CryptTrait, MailerTrait;
 
     protected static $entityCollection = 'Users';
     protected static $entityMask = '{email}';

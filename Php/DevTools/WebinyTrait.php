@@ -19,7 +19,7 @@ use Webiny\Component\Validation\Validation;
 /**
  * This trait provides you with access to all core components.
  */
-trait DevToolsTrait
+trait WebinyTrait
 {
     /**
      * Get access to AnalyticsDb

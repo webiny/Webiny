@@ -1,7 +1,7 @@
 <?php
 namespace Apps\Core\Php\Services;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\DevTools\Services\AbstractService;
 use Apps\Core\Php\Dispatchers\ApiExpositionTrait;

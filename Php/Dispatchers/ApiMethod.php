@@ -7,7 +7,7 @@
 
 namespace Apps\Core\Php\Dispatchers;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\DevTools\Services\AbstractService;
 use Webiny\Component\StdLib\StdLibTrait;
@@ -23,7 +23,7 @@ use Webiny\Component\Validation\ValidationException;
  */
 class ApiMethod
 {
-    use ParamsInjectorTrait, StdLibTrait, DevToolsTrait;
+    use ParamsInjectorTrait, StdLibTrait, WebinyTrait;
 
     private $httpMethod;
     private $pattern;

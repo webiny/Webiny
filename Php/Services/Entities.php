@@ -2,7 +2,7 @@
 
 namespace Apps\Core\Php\Services;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\DevTools\Services\AbstractService;
 use Apps\Core\Php\PackageManager\App;
@@ -14,7 +14,7 @@ use Webiny\Component\StdLib\StdLibTrait;
  */
 class Entities extends AbstractService
 {
-    use DevToolsTrait, StdLibTrait;
+    use WebinyTrait, StdLibTrait;
 
     function __construct()
     {

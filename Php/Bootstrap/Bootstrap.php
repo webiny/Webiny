@@ -19,7 +19,7 @@ use Webiny\Component\Security\Security;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\UrlObject\UrlObjectException;
 use Webiny\Component\StdLib\SingletonTrait;
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\PackageManager\PackageScanner;
 
 /**
@@ -27,7 +27,7 @@ use Apps\Core\Php\PackageManager\PackageScanner;
  */
 class Bootstrap
 {
-    use SingletonTrait, DevToolsTrait, StdLibTrait;
+    use SingletonTrait, WebinyTrait, StdLibTrait;
 
     /**
      * @var ErrorHandler

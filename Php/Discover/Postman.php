@@ -1,7 +1,7 @@
 <?php
 namespace Apps\Core\Php\Discover;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\Discover\Parser\AppParser;
 use Apps\Core\Php\Discover\Parser\EntityParser;
 use Apps\Core\Php\Discover\Parser\ServiceParser;
@@ -11,7 +11,7 @@ use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
 
 class Postman
 {
-    use DevToolsTrait, StdLibTrait;
+    use WebinyTrait, StdLibTrait;
 
     public function generate(AppParser $app)
     {

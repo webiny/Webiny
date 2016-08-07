@@ -1,7 +1,7 @@
 <?php
 namespace Apps\Core\Php\DevTools\Reports;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use PHPZip\Zip\Stream\ZipStream;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Storage\File\File;

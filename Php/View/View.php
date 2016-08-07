@@ -7,13 +7,13 @@
 
 namespace Apps\Core\Php\View;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Webiny\Component\Config\Config;
 use Webiny\Component\StdLib\StdLibTrait;
 
 class View
 {
-    use DevToolsTrait, StdLibTrait;
+    use WebinyTrait, StdLibTrait;
 
     /**
      * Get access to system configuration

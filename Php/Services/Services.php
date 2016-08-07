@@ -2,7 +2,7 @@
 
 namespace Apps\Core\Php\Services;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Services\AbstractService;
 use Apps\Core\Php\PackageManager\App;
 use Webiny\Component\StdLib\StdLibTrait;
@@ -13,7 +13,7 @@ use Webiny\Component\StdLib\StdLibTrait;
  */
 class Services extends AbstractService
 {
-    use DevToolsTrait, StdLibTrait;
+    use WebinyTrait, StdLibTrait;
 
     function __construct()
     {

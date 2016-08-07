@@ -17,7 +17,7 @@ use Apps\Core\Php\PackageManager\App;
  */
 trait BootstrapTrait
 {
-    use DevToolsTrait;
+    use WebinyTrait;
 
     /**
      * Run the app

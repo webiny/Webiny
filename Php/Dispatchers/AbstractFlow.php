@@ -7,14 +7,14 @@
 
 namespace Apps\Core\Php\Dispatchers;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\Mongo\MongoTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 
 abstract class AbstractFlow
 {
-    use DevToolsTrait, StdLibTrait, MongoTrait;
+    use WebinyTrait, StdLibTrait, MongoTrait;
 
     abstract public function canHandle($httpMethod, $params);
 

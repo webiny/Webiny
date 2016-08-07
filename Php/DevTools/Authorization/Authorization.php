@@ -1,7 +1,7 @@
 <?php
 namespace Apps\Core\Php\DevTools\Authorization;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\Entities\User;
 use Apps\Core\Php\RequestHandlers\ApiException;
@@ -18,7 +18,7 @@ use Webiny\Login\LoginException;
  */
 class Authorization
 {
-    use DevToolsTrait, SingletonTrait, SecurityTrait, StdLibTrait, AuthorizationTrait;
+    use WebinyTrait, SingletonTrait, SecurityTrait, StdLibTrait, AuthorizationTrait;
 
     /**
      * @var LoginApp

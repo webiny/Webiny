@@ -7,7 +7,7 @@
 
 namespace Apps\Core\Php\RequestHandlers;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\Entities\ApiToken;
 use Apps\Core\Php\Entities\ApiTokenLog;
 use Apps\Core\Php\RequestHandlers\ApiEvent;
@@ -19,7 +19,7 @@ use Webiny\Component\StdLib\StdLibTrait;
  */
 class ApiAccess
 {
-    use DevToolsTrait, StdLibTrait;
+    use WebinyTrait, StdLibTrait;
 
     public function handle(ApiEvent $event)
     {

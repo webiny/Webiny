@@ -7,7 +7,7 @@
 
 namespace Apps\Core\Php\DevTools\Services;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\Dispatchers\ApiExpositionTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 
@@ -16,7 +16,7 @@ use Webiny\Component\StdLib\StdLibTrait;
  */
 abstract class AbstractService
 {
-    use DevToolsTrait, ApiExpositionTrait, StdLibTrait;
+    use WebinyTrait, ApiExpositionTrait, StdLibTrait;
 
     public static function meta()
     {

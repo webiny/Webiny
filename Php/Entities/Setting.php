@@ -1,7 +1,7 @@
 <?php
 namespace Apps\Core\Php\Entities;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\Entity\EntityException;
 
@@ -17,7 +17,7 @@ use Webiny\Component\Entity\EntityException;
  */
 class Setting extends AbstractEntity
 {
-    use DevToolsTrait;
+    use WebinyTrait;
 
     protected static $entityCollection = 'Settings';
     protected static $entityMask = '{key}';

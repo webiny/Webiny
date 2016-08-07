@@ -1,7 +1,7 @@
 <?php
 namespace Apps\Core\Php\Entities;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\Crypt\CryptTrait;
 use Webiny\Component\Entity\EntityException;
@@ -19,7 +19,7 @@ use Webiny\Component\Mongo\Index\SingleIndex;
  */
 class ApiToken extends AbstractEntity
 {
-    use DevToolsTrait, CryptTrait;
+    use WebinyTrait, CryptTrait;
 
     protected static $entityCollection = 'ApiTokens';
     protected static $entityMask = '{id}';

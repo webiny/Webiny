@@ -7,12 +7,12 @@
 
 namespace Apps\Core\Php\RequestHandlers;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Response\HtmlResponse;
 
 class Routes
 {
-    use DevToolsTrait;
+    use WebinyTrait;
 
     public function handle()
     {

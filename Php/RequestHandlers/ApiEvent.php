@@ -7,7 +7,7 @@
 
 namespace Apps\Core\Php\RequestHandlers;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Webiny\Component\EventManager\Event;
 use Webiny\Component\Http\Request;
 use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
@@ -17,7 +17,7 @@ use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
  */
 class ApiEvent extends Event
 {
-    use DevToolsTrait;
+    use WebinyTrait;
 
     /**
      * Get URL part of the string relevant to API

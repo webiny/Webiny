@@ -1,7 +1,7 @@
 <?php
 namespace Apps\Core\Php\Discover\Postman;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\Discover\Parser\AbstractParser;
 use Apps\Core\Php\Discover\Parser\EntityParser;
 use Webiny\Component\StdLib\StdLibTrait;
@@ -9,7 +9,7 @@ use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
 
 class EndPoint
 {
-    use DevToolsTrait, StdLibTrait;
+    use WebinyTrait, StdLibTrait;
 
     /**
      * @var EntityParser

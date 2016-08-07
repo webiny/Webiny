@@ -1,12 +1,12 @@
 <?php
 namespace Apps\Core\Php\Discover\Parser;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 
 class AppParser
 {
-    use DevToolsTrait, StdLibTrait;
+    use WebinyTrait, StdLibTrait;
 
     private $name;
     private $version;

@@ -17,7 +17,7 @@ use Webiny\Component\TemplateEngine\TemplateEngineTrait;
  */
 class TemplateEngine
 {
-    use SingletonTrait, TemplateEngineTrait, StdLibTrait, DevToolsTrait;
+    use SingletonTrait, TemplateEngineTrait, StdLibTrait, WebinyTrait;
 
     /**
      * @var \Webiny\Component\TemplateEngine\Bridge\TemplateEngineInterface

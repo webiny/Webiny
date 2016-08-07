@@ -10,7 +10,7 @@ namespace Apps\Core\Php\PackageManager;
 use Aws\Common\Facade\DataPipeline;
 use Webiny\Component\StdLib\SingletonTrait;
 use Webiny\Component\StdLib\StdLibTrait;
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\PackageManager\EventHandlers\PackagesInitialized;
 
 /**
@@ -18,7 +18,7 @@ use Apps\Core\Php\PackageManager\EventHandlers\PackagesInitialized;
  */
 class PackageScanner
 {
-    use DevToolsTrait, SingletonTrait, StdLibTrait;
+    use WebinyTrait, SingletonTrait, StdLibTrait;
 
     const CACHE_KEY = 'Core.PackageManager.PackageScanner.Packages';
 

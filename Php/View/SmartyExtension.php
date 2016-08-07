@@ -1,7 +1,7 @@
 <?php
 namespace Apps\Core\Php\View;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\Services\Apps;
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\StdLib\StdLibTrait;
@@ -13,7 +13,7 @@ setlocale(LC_MONETARY, 'en_GB.UTF-8');
 
 class SmartyExtension extends AbstractSmartyExtension
 {
-    use DevToolsTrait, StdLibTrait;
+    use WebinyTrait, StdLibTrait;
 
     function getFunctions()
     {

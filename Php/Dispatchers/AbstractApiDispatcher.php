@@ -7,14 +7,14 @@
 
 namespace Apps\Core\Php\Dispatchers;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
 
 abstract class AbstractApiDispatcher
 {
-    use DevToolsTrait, StdLibTrait;
+    use WebinyTrait, StdLibTrait;
 
     protected function parseUrl(StringObject $url)
     {

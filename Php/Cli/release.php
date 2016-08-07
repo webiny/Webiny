@@ -8,7 +8,7 @@ $autoloader->addPsr4('Apps\\Core\\', getcwd() . '/Apps/Core');
 
 class Release
 {
-    use \Webiny\Component\StdLib\StdLibTrait, \Apps\Core\Php\DevTools\DevToolsTrait;
+    use \Webiny\Component\StdLib\StdLibTrait, \Apps\Core\Php\DevTools\WebinyTrait;
 
     public function __construct($autoloader)
     {

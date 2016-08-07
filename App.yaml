@@ -81,8 +81,7 @@ Events:
         Bootstrap:
             Request:
                 - {Handler: Php/RequestHandlers/Api, Priority: 400}
-                - {Handler: Php/RequestHandlers/Backend, Priority: 390}
-                - {Handler: Php/RequestHandlers/Routes, Priority: 380}
+                - {Handler: Php/RequestHandlers/Routes, Priority: 390}
         Api:
             Before:
                 - {Handler: Php/RequestHandlers/ApiAccess}

@@ -1,7 +1,7 @@
 <?php
 namespace Apps\Core\Php\DevTools\Reports;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Storage\File\File;
 
@@ -10,7 +10,7 @@ use Webiny\Component\Storage\File\File;
  */
 abstract class AbstractReport implements ReportInterface
 {
-    use DevToolsTrait, StdLibTrait;
+    use WebinyTrait, StdLibTrait;
 
     private $data = [];
 

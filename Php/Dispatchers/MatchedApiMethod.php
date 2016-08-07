@@ -7,7 +7,7 @@
 
 namespace Apps\Core\Php\Dispatchers;
 
-use Apps\Core\Php\DevTools\DevToolsTrait;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Validation\Validation;
 use Webiny\Component\Validation\ValidationException;
