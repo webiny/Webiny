@@ -13,34 +13,25 @@ use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
 use Apps\Core\Php\DevTools\Response\ApiRawResponse;
 use Apps\Core\Php\Discover\Parser\AppParser;
 use Apps\Core\Php\Discover\Postman;
+use Webiny\Component\StdLib\StdLibTrait;
 
 class Api
 {
-    use WebinyTrait;
+    use WebinyTrait, StdLibTrait;
 
     private $apiResponse = '\Apps\Core\Php\DevTools\Response\ApiResponse';
     private $apiEvent;
 
     public function handle()
     {
-        // TODO: handle this smarter, with possibility of having API subdomain
-        $path = $this->wRequest()->getCurrentUrl(true)->getPath(true);
-        if (!$path->startsWith('/api')) {
+        $url = $this->wRequest()->getCurrentUrl();
+        if (!$this->str($url)->startsWith($this->wConfig()->get('Application.ApiPath'))) {
             return false;
         }
 
         try {
             header("Access-Control-Allow-Origin: *");
             $this->apiEvent = new ApiEvent();
-
-            $apiUrl = $this->apiEvent->getUrl();
-            if ($apiUrl->startsWith('/discover')) {
-                $app = $apiUrl->replace('/discover/', '')->pascalCase()->val();
-                $appParser = new AppParser($app);
-                $docs = new Postman();
-
-                return new ApiRawResponse($docs->generate($appParser));
-            }
 
             $events = [
                 'Core.Api.Before',
