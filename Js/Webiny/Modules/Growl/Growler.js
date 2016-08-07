@@ -8,20 +8,16 @@ import SuccessGrowl from './Components/SuccessGrowl';
 function getGrowler() {
     const growler = Webiny.Ui.Dispatcher.get('GrowlContainer');
     if (!growler) {
-        console.warn('Warning: "GrowlContainer" was not found in your app!');
+        document.body.appendChild(document.createElement('webiny-growler'));
+        ReactDOM.render(<Webiny.Ui.Components.Growl.Container ui="GrowlContainer"/>, document.querySelector('webiny-growler'));
+        return Webiny.Ui.Dispatcher.get('GrowlContainer');
     }
 
     return growler;
 }
 
 const Growler = function Growler(element) {
-    const growler = getGrowler();
-
-    if (!growler) {
-        return;
-    }
-
-    growler.addGrowl(element);
+    getGrowler().addGrowl(element);
 };
 
 _.assign(Growler, {
