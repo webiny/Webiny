@@ -49,7 +49,7 @@ Placeholder.defaultProps = {
         }
 
         return (
-            <rad-placeholder>{cmps}</rad-placeholder>
+            <webiny-placeholder>{cmps}</webiny-placeholder>
         );
     }
 };
