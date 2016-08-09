@@ -88,7 +88,7 @@ class Authorization
                 $class = $this->userClass;
                 $user = $this->login->getUser($authCookie);
                 $this->user = $class::findOne(['email' => $user->getUsername()]);
-                $class::trigger('onActivity', $this->user);
+                $this->user->trigger('onActivity');
             } catch (\Exception $le) {
                 return null;
             }
@@ -109,7 +109,7 @@ class Authorization
             $this->user = $class::findOne(['email' => $username]);
 
             if ($this->user && $this->user->enabled) {
-                $class::trigger('onLoginSuccess', $this->user);
+                $this->user->trigger('onLoginSuccess');
 
                 return [
                     'authToken' => $authToken

@@ -248,10 +248,16 @@ class FormContainer extends Webiny.Ui.Component {
             this.showLoading();
             this.request = this.api.execute(this.api.httpMethod, this.api.url + '/' + id).then(apiResponse => {
                 this.request = null;
-                if (apiResponse.isAborted() || apiResponse.isError()) {
+                if (apiResponse.isAborted()) {
                     this.onCancel();
                     return;
                 }
+
+                if (apiResponse.isError()) {
+                    this.props.onFailure(apiResponse);
+                    return;
+                }
+
                 if (this.props.prepareLoadedData) {
                     const newModel = _.merge({}, this.props.defaultModel || {}, this.props.prepareLoadedData(apiResponse.getData()));
                     this.setState({model: newModel, initialModel: _.clone(newModel), loading: false}, this.__processWatches);
@@ -590,6 +596,7 @@ FormContainer.defaultProps = {
     defaultModel: {},
     connectToRouter: false,
     onSubmitSuccess: null,
+    onFailure: _.noop,
     injectInto: () => [
         Ui.Form.Loader,
         Ui.Form.Error
