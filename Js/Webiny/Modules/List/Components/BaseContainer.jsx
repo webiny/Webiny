@@ -416,6 +416,10 @@ BaseContainer.defaultProps = {
     renderer() {
         const content = this.getContent();
 
+        if (!content) {
+            return null;
+        }
+
         if (!this.props.layout) {
             return <webiny-list>{React.Children.map(content, this.registerElement, this)}</webiny-list>;
         }
