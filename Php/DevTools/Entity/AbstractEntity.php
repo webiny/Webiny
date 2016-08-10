@@ -339,7 +339,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             return;
         }
 
-        parent::__call($name, $arguments);
+        return parent::__call($name, $arguments);
     }
 
     public static function __callStatic($name, $arguments)
