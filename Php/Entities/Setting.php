@@ -31,7 +31,12 @@ class Setting extends AbstractEntity
 
         $this->api('get', 'key/{key}', function ($key) {
             $record = $this->findOne(['key' => $key]);
+            if (!$record) {
+                $record = new self;
+                $record->key = $key;
+            }
             $record->id = $key;
+
             return $record->toArray('*');
         });
 
@@ -46,6 +51,7 @@ class Setting extends AbstractEntity
             $record->save();
 
             $record->id = $key;
+
             return $record->toArray('*');
         });
     }

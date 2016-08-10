@@ -5,14 +5,15 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\RequestHandlers;
+namespace Apps\Core\Php\Dispatchers;
 
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Response\ApiRawResponse;
 use Apps\Core\Php\Discover\Parser\AppParser;
 use Apps\Core\Php\Discover\Postman;
+use Apps\Core\Php\RequestHandlers\ApiEvent;
 
-class Discover
+class DiscoverDispatcher extends AbstractApiDispatcher
 {
     use WebinyTrait;
 
@@ -20,6 +21,7 @@ class Discover
     {
         $apiUrl = $event->getUrl();
         if ($apiUrl->startsWith('/discover')) {
+            $this->checkApiToken();
             $app = $apiUrl->replace('/discover/', '')->pascalCase()->val();
             $appParser = new AppParser($app);
             $docs = new Postman();
