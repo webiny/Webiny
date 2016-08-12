@@ -29,7 +29,7 @@ class Link extends Webiny.Ui.Component {
                 } else {
                     props.href = route.getHref(props.params, null, this.props.merge);
                     if (props.href.startsWith('//')) {
-                        props.href = _.trimStart(props.href, '/');
+                        props.href = props.href.substring(1); // Get everything after first character (after first slash)
                     }
                 }
             }
