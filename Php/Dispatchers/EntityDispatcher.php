@@ -25,6 +25,8 @@ class EntityDispatcher extends AbstractApiDispatcher
             return false;
         }
 
+        $this->checkApiToken();
+
         $result = null;
         $request = $this->parseUrl($event->getUrl()->replace('/entities', ''));
 

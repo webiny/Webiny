@@ -24,7 +24,14 @@ class Link extends Webiny.Ui.Component {
                 if (_.isString(route)) {
                     route = route === 'current' ? Webiny.Router.getActiveRoute() : Webiny.Router.getRoute(route);
                 }
-                props.href = route === null ? 'javascript:void(0)' : route.getHref(props.params, null, this.props.merge);
+                if (route === null) {
+                    props.href = 'javascript:void(0)';
+                } else {
+                    props.href = route.getHref(props.params, null, this.props.merge);
+                    if (props.href.startsWith('//')) {
+                        props.href = props.href.substring(1); // Get everything after first character (after first slash)
+                    }
+                }
             }
         }
 

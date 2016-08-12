@@ -31,7 +31,7 @@ class Navigation extends Webiny.Ui.Component {
     }
 
     mainMenuItemClick(menu) {
-        let submenu = _.isString(menu.route) || _.isNull(menu.route) ? null : menu.key;
+        const submenu = _.isString(menu.route) || _.isNull(menu.route) ? null : menu.key;
         if (this.state.submenu === menu.key) {
             return;
         }
@@ -54,7 +54,7 @@ class Navigation extends Webiny.Ui.Component {
     }
 
     renderMainMenu(menu) {
-        const menuIconClass = this.classSet('icon app-icon', menu.icon);
+        const menuIconClass = this.classSet('icon app-icon', {'fa': _.includes(menu.icon, 'fa-')}, menu.icon);
         const linkProps = {
             key: menu.key,
             label: menu.label,

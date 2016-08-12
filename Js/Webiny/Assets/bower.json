@@ -1,97 +1,107 @@
 {
-  "name": "webiny/core",
-  "version": "0.1.0",
-  "authors": "Webiny",
-  "private": true,
-  "dependencies": {
-    "accounting": "~0.3.2",
-    "blueimp-md5": "~1.1.1",
-    "bootstrap": "~3.3.5",
-    "cropper": "~0.11.1",
-    "history.js": "~1.8.0",
-    "lodash": "4.6.1",
-    "moment": "~2.10.6",
-    "q": "1.0.1",
-    "summernote": "git://github.com/Pavel910/summernote.git#develop",
-    "system.js": "~0.18.4",
-    "js-cookie": "~2.0.4",
-    "bottlejs": "~1.2.1",
-    "baobab": "~2.2.1",
-    "react": "https://github.com/reactjs/react-bower.git",
-    "select2": "4.0.0",
-    "eonasdan-bootstrap-datetimepicker": "4.15.35",
-    "bootstrap-daterangepicker": "~2.1.19",
-    "filesize": "^3.2.1",
-    "c3": "~0.4.10",
-    "jGrowl": "jgrowl#~1.4.4",
-    "codemirror": "^5.14.2",
-    "simplemde": "^1.10.1",
-    "jquery-deparam": "^0.5.1",
-    "highlightjs": "^9.3.0",
-    "trumbowyg": "^2.1.0",
-    "dynamics.js": "^1.1.0",
-    "jquery": "^3.0.0",
-    "animate.css": "^3.5.2",
-    "platform.js": "platform#^1.3.1",
-    "clipboard": "^1.5.12",
-    "components-font-awesome": "^4.6.3"
-  },
-  "overrides": {
-    "system.js": {
-      "main": "dist/system.js"
+    "name": "webiny/core",
+    "version": "0.1.0",
+    "authors": "Webiny",
+    "private": true,
+    "dependencies": {
+        "accounting": "~0.3.2",
+        "blueimp-md5": "~1.1.1",
+        "bootstrap": "~3.3.5",
+        "cropper": "~0.11.1",
+        "history.js": "~1.8.0",
+        "lodash": "4.6.1",
+        "moment": "~2.10.6",
+        "q": "1.0.1",
+        "summernote": "git://github.com/Pavel910/summernote.git#develop",
+        "system.js": "~0.18.4",
+        "js-cookie": "~2.0.4",
+        "bottlejs": "~1.2.1",
+        "baobab": "~2.2.1",
+        "react": "https://github.com/reactjs/react-bower.git",
+        "select2": "4.0.0",
+        "eonasdan-bootstrap-datetimepicker": "4.15.35",
+        "bootstrap-daterangepicker": "~2.1.19",
+        "filesize": "^3.2.1",
+        "c3": "~0.4.10",
+        "jGrowl": "jgrowl#~1.4.4",
+        "codemirror": "^5.14.2",
+        "simplemde": "^1.10.1",
+        "jquery-deparam": "^0.5.1",
+        "highlightjs": "^9.3.0",
+        "trumbowyg": "^2.1.0",
+        "dynamics.js": "^1.1.0",
+        "jquery": "^3.0.0",
+        "animate.css": "^3.5.2",
+        "platform.js": "platform#^1.3.1",
+        "clipboard": "^1.5.12",
+        "font-awesome": ">=4.2.0"
     },
-    "react": {
-      "main": [
-        "react-with-addons.js",
-        "react-dom.js",
-        "react-dom-server.js"
-      ]
-    },
-    "history.js": {
-      "main": "scripts/bundled-uncompressed/html5/native.history.js"
-    },
-    "filesize": {
-      "main": "lib/filesize.js"
-    },
-    "select2": {
-      "main": [
-        "dist/js/select2.js",
-        "dist/css/select2.min.css"
-      ]
-    },
-    "simplemde": {
-      "main": [
-        [
-          "dist/simplemde.min.js"
-        ]
-      ]
-    },
-    "codemirror": {
-      "main": [
-        [
-          "lib/codemirror.js",
-          "lib/codemirror.css",
-          "theme/dracula.css",
-          "theme/monokai.css",
-          "mode/xml/xml.js",
-          "mode/css/css.js",
-          "mode/javascript/javascript.js",
-          "mode/htmlmixed/htmlmixed.js"
-        ]
-      ]
-    },
-    "trumbowyg": {
-      "main": [
-        "dist/trumbowyg.min.js",
-        "dist/plugins/base64/trumbowyg.base64.min.js",
-        "dist/plugins/noembed/trumbowyg.noembed.min.js",
-        "dist/plugins/pasteimage/trumbowyg.pasteimage.js",
-        "dist/plugins/preformatted/trumbowyg.preformatted.min.js",
-        "dist/ui/trumbowyg.min.css"
-      ]
-    },
-    "bootstrap-daterangepicker": {
-      "main": "daterangepicker.js"
+    "overrides": {
+        "system.js": {
+            "main": "dist/system.js"
+        },
+        "react": {
+            "main": [
+                "react-with-addons.js",
+                "react-dom.js",
+                "react-dom-server.js"
+            ]
+        },
+        "history.js": {
+            "main": "scripts/bundled-uncompressed/html5/native.history.js"
+        },
+        "filesize": {
+            "main": "lib/filesize.js"
+        },
+        "select2": {
+            "main": [
+                "dist/js/select2.js",
+                "dist/css/select2.min.css"
+            ]
+        },
+        "simplemde": {
+            "main": [
+                [
+                    "dist/simplemde.min.js"
+                ]
+            ]
+        },
+        "codemirror": {
+            "main": [
+                [
+                    "lib/codemirror.js",
+                    "lib/codemirror.css",
+                    "theme/dracula.css",
+                    "theme/monokai.css",
+                    "mode/xml/xml.js",
+                    "mode/css/css.js",
+                    "mode/javascript/javascript.js",
+                    "mode/htmlmixed/htmlmixed.js"
+                ]
+            ]
+        },
+        "trumbowyg": {
+            "main": [
+                "dist/trumbowyg.min.js",
+                "dist/plugins/base64/trumbowyg.base64.min.js",
+                "dist/plugins/noembed/trumbowyg.noembed.min.js",
+                "dist/plugins/pasteimage/trumbowyg.pasteimage.js",
+                "dist/plugins/preformatted/trumbowyg.preformatted.min.js",
+                "dist/ui/trumbowyg.min.css"
+            ]
+        },
+        "bootstrap-daterangepicker": {
+            "main": "daterangepicker.js"
+        },
+        "font-awesome": {
+            "main": [
+                "scss/font-awesome.scss",
+                "fonts/fontawesome-webfont.eot",
+                "fonts/fontawesome-webfont.woff",
+                "fonts/fontawesome-webfont.woff2",
+                "fonts/fontawesome-webfont.ttf",
+                "fonts/fontawesome-webfont.svg"
+            ]
+        }
     }
-  }
 }
