@@ -18,7 +18,7 @@ class Pagination extends Webiny.Ui.Component {
     }
 
     renderPages() {
-        const cp = this.props.currentPage;
+        const cp = parseInt(this.props.currentPage);
         const tp = this.props.totalPages;
         let showLowDots = false;
         let showHighDots = false;
@@ -59,7 +59,7 @@ class Pagination extends Webiny.Ui.Component {
         return _.map(pages, (page, i) => {
             const key = page !== null ? page + '-' + i : 'dots-' + i;
             const onClick = page !== null ? this.pageChanged.bind(this, page) : null;
-            const className = this.props.currentPage === page ? 'active' : null;
+            const className = cp === page ? 'active' : null;
             return (
                 <li key={key} className={className} onClick={onClick}>
                     <a href="javascript:void(0);">{page || '...'}</a>
@@ -82,16 +82,17 @@ Pagination.defaultProps = {
             return null;
         }
 
-        const previousPage = this.props.currentPage === 1 ? null : this.pageChanged.bind(this, this.props.currentPage - 1);
+        const cp = parseInt(this.props.currentPage);
+        const previousPage = cp === 1 ? null : this.pageChanged.bind(this, cp - 1);
         const previousClasses = this.classSet({
             previous: true,
-            disabled: this.props.currentPage === 1
+            disabled: cp === 1
         });
 
-        const nextPage = this.props.currentPage === this.props.totalPages ? null : this.pageChanged.bind(this, this.props.currentPage + 1);
+        const nextPage = cp === this.props.totalPages ? null : this.pageChanged.bind(this, cp + 1);
         const nextClasses = this.classSet({
             next: true,
-            disabled: this.props.currentPage === this.props.totalPages
+            disabled: cp === this.props.totalPages
         });
 
         return (

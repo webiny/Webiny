@@ -72,16 +72,13 @@ class Route {
     /**
      *
      * @param params
-     * @param merge True = Merge existing params with new ones. False = use only given params
+     * @param pattern
      * @returns {*}
      */
-    getHref(params = null, pattern = null, merge = true) {
+    getHref(params = null, pattern = null) {
         let url = pattern || this.pattern;
 
-        let newParams = params;
-        if (merge) {
-            newParams = _.merge({}, this.paramValues, params);
-        }
+        const newParams = params || {};
 
         _.forEach(newParams, (value, key) => {
             if (value === null) {
@@ -130,12 +127,6 @@ class Route {
             return queryParams[name];
         }
         return queryParams;
-    }
-
-    setParams(params = false) {
-        params = params === false ? this.getParams() : params;
-        Router.goToRoute(this.getName(), params);
-        return this;
     }
 
     getComponents(placeholder) {

@@ -186,15 +186,15 @@ class Router {
         return this.activeRoute.getQueryParams(param);
     }
 
-    setQueryParams(params, merge = true) {
-        this.goToRoute('current', params, merge);
+    setQueryParams(params) {
+        this.goToRoute('current', params);
     }
 
     getHref(params = {}) {
         return this.getActiveRoute().getHref(params);
     }
 
-    goToRoute(name, params = {}, merge = true) {
+    goToRoute(name, params = {}) {
         let route = this.activeRoute;
         if (name !== 'current') {
             route = _.find(this.routes, ['name', name]);
@@ -208,7 +208,7 @@ class Router {
             console.warn('Route will not change!');
             return null;
         }
-        return this.goToUrl(route.getHref(params, null, merge));
+        return this.goToUrl(route.getHref(params, null));
     }
 
     goToUrl(url, replace = false) {

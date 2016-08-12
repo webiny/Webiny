@@ -27,7 +27,7 @@ class Link extends Webiny.Ui.Component {
                 if (route === null) {
                     props.href = 'javascript:void(0)';
                 } else {
-                    props.href = route.getHref(props.params, null, this.props.merge);
+                    props.href = route.getHref(props.params, null);
                     if (props.href.startsWith('//')) {
                         props.href = props.href.substring(1); // Get everything after first character (after first slash)
                     }
@@ -84,7 +84,6 @@ class Link extends Webiny.Ui.Component {
 Link.defaultProps = {
     type: null,
     size: null,
-    merge: true,
     url: null,
     title: '',
     route: null,

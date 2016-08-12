@@ -173,7 +173,7 @@ class BaseContainer extends Webiny.Ui.Component {
     }
 
     goToRoute(params) {
-        Webiny.Router.goToRoute('current', params);
+        Webiny.Router.goToRoute('current', _.merge({}, Webiny.Router.getParams(), params));
     }
 
     getSearchQuery() {
