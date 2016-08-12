@@ -1,10 +1,9 @@
 <?php
 namespace Apps\Core\Php\Entities;
 
-use Apps\Core\Php\DevTools\Authorization\AuthorizationTrait;
+use Apps\Core\Php\DevTools\Interfaces\UserInterface;
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Entity\Attributes\FileAttribute;
-use Apps\Core\Php\DevTools\Entity\Attributes\FilesAttribute;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\RequestHandlers\ApiException;
@@ -28,9 +27,9 @@ use Webiny\Component\Mongo\Index\SingleIndex;
  * @package Apps\Core\Php\Entities
  *
  */
-class User extends AbstractEntity
+class User extends AbstractEntity implements UserInterface
 {
-    use WebinyTrait, AuthorizationTrait, CryptTrait, MailerTrait;
+    use WebinyTrait, CryptTrait, MailerTrait;
 
     protected static $entityCollection = 'Users';
     protected static $entityMask = '{email}';
@@ -220,14 +219,5 @@ class User extends AbstractEntity
     public static function onActivity($callback)
     {
         static::on('onActivity', $callback);
-    }
-
-    /**
-     * Get user instance for authorization
-     * @return $this
-     */
-    protected function getUserToAuthorize()
-    {
-        return $this;
     }
 }

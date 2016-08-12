@@ -4,8 +4,8 @@ namespace Apps\Core\Php\DevTools\Authorization;
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\Entities\User;
+use Apps\Core\Php\Entities\UserGroup;
 use Apps\Core\Php\RequestHandlers\ApiException;
-use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Security\Security;
 use Webiny\Component\Security\SecurityTrait;
 use Webiny\Component\StdLib\SingletonTrait;
@@ -14,11 +14,11 @@ use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Login\LoginException;
 
 /**
- * Class Login
+ * Class Authorization
  */
 class Authorization
 {
-    use WebinyTrait, SingletonTrait, SecurityTrait, StdLibTrait, AuthorizationTrait;
+    use WebinyTrait, SingletonTrait, SecurityTrait, StdLibTrait;
 
     /**
      * @var LoginApp
@@ -131,19 +131,58 @@ class Authorization
         return $this;
     }
 
-    /**
-     * @return User
-     */
-    protected function getUserToAuthorize()
+    public function canCreate($class)
     {
-        return $this->getUser();
+        return $this->checkPermission($class, 'crudCreate');
     }
 
-    /**
-     * @return EntityCollection
-     */
-    protected function getUserGroups()
+    public function canRead($class)
     {
-        return $this->getUserToAuthorize()->getUserGroups();
+        return $this->checkPermission($class, 'crudRead');
+    }
+
+    public function canUpdate($class)
+    {
+        return $this->checkPermission($class, 'crudUpdate');
+    }
+
+    public function canDelete($class)
+    {
+        return $this->checkPermission($class, 'crudDelete');
+    }
+
+    public function canExecute($class, $method = null)
+    {
+        return $this->checkPermission($class, $method);
+    }
+
+    private function checkPermission($class, $permission)
+    {
+        if(!$this->wConfig()->get('Application.ApiDispatchers.CheckUserPermissions', true)){
+            return true;
+        }
+
+        if (!is_string($class)) {
+            $class = get_class($class);
+        } else {
+            $class = trim($class, '\\');
+        }
+
+        $user = $this->getUser();
+        $groups = [UserGroup::findOne(['tag' => 'public'])];
+        if ($user) {
+            foreach ($user->getUserGroups() as $group) {
+                $groups[] = $group;
+            }
+        }
+
+        /* @var $group UserGroup */
+        foreach ($groups as $group) {
+            if ($group->checkPermission($class, $permission)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

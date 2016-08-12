@@ -336,7 +336,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         if ($name == 'on') {
             $this->instanceCallbacks[$arguments[0]][] = $arguments[1];
 
-            return;
+            return null;
         }
 
         return parent::__call($name, $arguments);
