@@ -31,7 +31,7 @@ class Navigation extends Webiny.Ui.Component {
     }
 
     mainMenuItemClick(menu) {
-        let submenu = _.isString(menu.route) || _.isNull(menu.route) ? null : menu.key;
+        const submenu = _.isString(menu.route) || _.isNull(menu.route) ? null : menu.key;
         if (this.state.submenu === menu.key) {
             return;
         }

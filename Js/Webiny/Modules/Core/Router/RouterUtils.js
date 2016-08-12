@@ -53,7 +53,31 @@ class RouterUtils {
         if (sUrl === '') {
             sUrl = '/';
         }
-        return sUrl;
+
+        // We must ensure that sanitized URL starts with forward slash
+        // These are the examples, top are /user-area routes, and bottom are routes that don't have a prefix
+
+        /**
+         * /user-area/me/account
+         * /me/account
+         *
+         * /user-area/me/company
+         * /me/company
+         *
+         * this.baseUrl = "/user-area"
+         */
+
+        /**
+         * /brands
+         * brands
+         *
+         * /lookbooks
+         * lookbooks
+         *
+         * this.baseUrl = "/"
+         */
+
+        return sUrl.charAt(0) === '/' ? sUrl : '/' + sUrl;
     }
 
     /**
