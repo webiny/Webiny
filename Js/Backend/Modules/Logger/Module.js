@@ -9,7 +9,7 @@ class Logger extends Webiny.Module {
         this.registerMenus(
             new Menu('DevTools', [
                 new Menu('Logger', 'Logger.ListErrors')
-            ], 'icon-bell')
+            ], 'icon-tools')
         );
 
         this.registerRoutes(

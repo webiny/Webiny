@@ -25,7 +25,7 @@ abstract class AbstractService
         $data = [
             'class' => get_class($service)
         ];
-        
+
         foreach ($service->getApiMethods() as $httpMethod => $methods) {
             /* @var $method \Apps\Core\Php\Dispatchers\ApiMethod */
             foreach ($methods as $pattern => $method) {

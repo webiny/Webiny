@@ -45,10 +45,13 @@ class Api
                 }
             }
         } catch (ApiException $e) {
+            // TODO: add exception loggin (ApiExceptionLog - just like ApiTokenLog)
             return new ApiErrorResponse($e->getData(), $e->getErrorMessage(), $e->getErrorCode(), $e->getResponseCode());
         } catch (AppException $e) {
+            // TODO: add exception loggin (ApiExceptionLog - just like ApiTokenLog)
             return new ApiErrorResponse($e->getData(), $e->getErrorMessage(), $e->getErrorCode(), 404);
         } catch (\Exception $e) {
+            // TODO: add exception loggin (ApiExceptionLog - just like ApiTokenLog)
             return new ApiErrorResponse(null, $e->getMessage(), $e->getCode(), 404);
         }
     }

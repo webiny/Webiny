@@ -118,6 +118,17 @@ trait WebinyTrait
     }
 
     /**
+     * Get Mailer instance
+     * @param string $name
+     *
+     * @return \Webiny\Component\Mailer\Mailer
+     */
+    static protected function wMailer($name = 'Default')
+    {
+        return Mailer::getInstance()->getMailer($name);
+    }
+
+    /**
      * Get ServiceManager
      *
      * @param null $name

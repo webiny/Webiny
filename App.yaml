@@ -83,10 +83,8 @@ Events:
                 - {Handler: Php/RequestHandlers/Api, Priority: 400}
                 - {Handler: Php/RequestHandlers/Routes, Priority: 390}
         Api:
-            Before:
-                - {Handler: Php/RequestHandlers/Discover, Priority: 500}
-                - {Handler: Php/RequestHandlers/ApiAccess, Priority: 400}
             Request:
+                - {Handler: Php/Dispatchers/DiscoverDispatcher}
                 - {Handler: Php/Dispatchers/EntityDispatcher}
                 - {Handler: Php/Dispatchers/ServiceDispatcher}
 

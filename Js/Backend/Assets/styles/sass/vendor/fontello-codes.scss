@@ -1,6 +1,7 @@
 @charset "UTF-8";
 
  
+.icon-tools:before { content: '\2692'; } /* '⚒' */
 .icon-trash:before { content: '\e006'; } /* '' */
 .icon-chart-line:before { content: '\e800'; } /* '' */
 .icon-menu:before { content: '\e801'; } /* '' */
@@ -73,7 +74,10 @@
 .icon-rename:before { content: '\e846'; } /* '' */
 .icon-resize:before { content: '\e847'; } /* '' */
 .icon-documents:before { content: '\e848'; } /* '' */
+.icon-filter:before { content: '\f0b0'; } /* '' */
 .icon-folder-open-empty:before { content: '\f115'; } /* '' */
+.icon-terminal:before { content: '\f120'; } /* '' */
 .icon-folder:before { content: '📁'; } /* '\1f4c1' */
+.icon-wrench:before { content: '🔧'; } /* '\1f527' */
 .icon-caret-up:before { content: '󢖴'; } /* '\e25b4' */
 .icon-sort:before { content: '󯃜'; } /* '\ef0dc' */

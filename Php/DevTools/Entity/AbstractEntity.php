@@ -362,7 +362,8 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             }
 
             if ($class == 'Apps\Core\Php\DevTools\Entity\AbstractEntity') {
-                foreach ($this->instanceCallbacks[$eventName] as $callback) {
+                $callbacks = $this->instanceCallbacks[$eventName] ?? [];
+                foreach ($callbacks as $callback) {
                     $callback(...$params);
                 }
 
