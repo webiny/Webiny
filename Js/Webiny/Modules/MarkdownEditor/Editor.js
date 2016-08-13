@@ -17,7 +17,10 @@ class Editor extends Webiny.Ui.FormComponent {
             element: this.getTextareaElement(),
             renderingConfig: {
                 codeSyntaxHighlighting: true
-            }
+            },
+            hideIcons: ['side-by-side', 'fullscreen'],
+            indentWithTabs: true,
+            tabSize: 4
         };
 
         this.mdEditor = new SimpleMDE(mdConfig);
