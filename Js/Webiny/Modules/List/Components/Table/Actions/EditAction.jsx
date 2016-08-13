@@ -14,7 +14,12 @@ EditAction.defaultProps = {
         if (this.props.onClick) {
             const icon = props.icon ? <Ui.Icon icon={props.icon}/> : null;
             props.onClick = () => this.props.onClick(this.props.data);
-            return <Ui.Link {...props}>{icon} {props.label}</Ui.Link>;
+            return (
+                <Ui.Link {...props}>
+                    {icon}
+                    {props.label}
+                </Ui.Link>
+            );
         }
 
         if (this.props.route) {

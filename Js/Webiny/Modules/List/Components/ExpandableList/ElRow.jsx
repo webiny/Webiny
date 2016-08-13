@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-class ElRow extends Webiny.Ui.Component {
+class Row extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);
@@ -50,14 +50,13 @@ class ElRow extends Webiny.Ui.Component {
 
         const domNode = ReactDOM.findDOMNode(this);
 
-        if ($(domNode).has(e.target).length == 0 && !$(domNode).is(e.target)) {
+        if ($(domNode).has(e.target).length === 0 && !$(domNode).is(e.target)) {
             // clicked outside
             if (this.state.active) {
                 this.hideRowDetails();
             } else {
                 this.hideActionSet();
             }
-
         } else {
             // clicked inside
             return false;
@@ -70,12 +69,13 @@ class ElRow extends Webiny.Ui.Component {
         }
 
         // hide row details
-        const details = $(ReactDOM.findDOMNode(this)).find('.expandable-list__row__details:first');
-        $(ReactDOM.findDOMNode(this)).removeClass('expandable-list__row--active');
+        const dom = $(ReactDOM.findDOMNode(this));
+        const details = dom.find('.expandable-list__row__details:first');
+        dom.removeClass('expandable-list__row--active');
         details.hide();
 
         // show row content
-        $(ReactDOM.findDOMNode(this)).find('div.expandable-list__row-wrapper:first').show();
+        dom.find('div.expandable-list__row-wrapper:first').show();
 
 
         this.setState({active: false});
@@ -133,29 +133,26 @@ class ElRow extends Webiny.Ui.Component {
     }
 }
 
-ElRow.defaultProps = {
+Row.defaultProps = {
     onClick: _.noop,
     renderer() {
         let fields = [];
         let actionSet = false;
         let details = '';
-        this.props.children.map((child)=> {
-            if (child.type == Ui.List.ExpandableList.ElField) {
+        this.props.children.map(child => {
+            if (child.type === Ui.ExpandableList.Field) {
                 fields.push(child);
-            } else if (child.type == Ui.List.ExpandableList.ElRowDetailsContent || child.type == Ui.List.ExpandableList.ElRowDetailsList) {
+            } else if (child.type === Ui.ExpandableList.RowDetailsContent || child.type === Ui.ExpandableList.RowDetailsList) {
                 details = child;
-            } else if (child.type == Ui.List.ExpandableList.ElActionSet) {
+            } else if (child.type === Ui.ExpandableList.ActionSet) {
                 actionSet = child;
             }
         });
 
         // render action set
         if (actionSet) {
-            actionSet = (
-                <div className="expandable-list__row__action-set expandable-list__row__fields__field flex-cell flex-width-2"
-                     onClick={this.showActionSet}>
-                    {actionSet}
-                </div>);
+            const className = 'expandable-list__row__action-set expandable-list__row__fields__field flex-cell flex-width-2';
+            actionSet = <div className={className} onClick={this.showActionSet}>{actionSet}</div>;
         }
 
         // render fields
@@ -163,12 +160,10 @@ ElRow.defaultProps = {
 
         return (
             <div className={this.state.rowClass}>
-
                 <div className="expandable-list__row-wrapper flex-row">
                     {fields}
                     {actionSet}
                 </div>
-
                 <Ui.Grid.Row className="expandable-list__row__details" style={{display: 'none'}}>
                     <div className="flex-row">
                         <div className="expandable-list__title flex-cell flex-width-10"><h4>{details.props.title}</h4></div>
@@ -176,10 +171,9 @@ ElRow.defaultProps = {
                     </div>
                     {this.state.active && details}
                 </Ui.Grid.Row>
-
             </div>
         );
     }
 };
 
-export default ElRow;
+export default Row;

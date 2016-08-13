@@ -44,9 +44,17 @@ import ElActionSet from './Components/ExpandableList/ElActionSet';
 import ElRowDetailsList from './Components/ExpandableList/ElRowDetailsList';
 import ElRowDetailsContent from './Components/ExpandableList/ElRowDetailsContent';
 
+ExpandableList.Row = ElRow;
+ExpandableList.Field = ElField;
+ExpandableList.Action = ElAction;
+ExpandableList.ActionSet = ElActionSet;
+ExpandableList.RowDetailsContent = ElRowDetailsContent;
+ExpandableList.RowDetailsList = ElRowDetailsList;
+
 class Module extends Webiny.Module {
 
     init() {
+        Webiny.Ui.Components.ExpandableList = ExpandableList;
         Webiny.Ui.Components.List = {
             ApiContainer,
             StaticContainer,
@@ -78,15 +86,6 @@ class Module extends Webiny.Module {
                 ModalAction,
                 DeleteAction,
                 EditModalAction
-            },
-            ExpandableList: {
-                ExpandableList,
-                ElRow,
-                ElField,
-                ElAction,
-                ElActionSet,
-                ElRowDetailsContent,
-                ElRowDetailsList
             },
             MultiActions,
             MultiAction,

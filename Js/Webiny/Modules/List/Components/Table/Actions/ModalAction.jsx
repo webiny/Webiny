@@ -31,8 +31,9 @@ ModalAction.defaultProps = {
 
         return (
             <Ui.Link onClick={() => this.refs.dialog.show()}>
+                {icon}
+                {this.props.label}
                 {React.cloneElement(modal, {ref: 'dialog'})}
-                {icon} {this.props.label}
                 <Ui.Downloader ref="downloader"/>
             </Ui.Link>
         );

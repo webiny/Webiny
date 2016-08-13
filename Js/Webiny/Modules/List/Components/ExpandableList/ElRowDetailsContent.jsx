@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
 class ElRowDetailsContent extends Webiny.Ui.Component {
 

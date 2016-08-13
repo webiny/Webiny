@@ -34,22 +34,21 @@ ExpandableList.defaultProps = {
     type: 'simple',
     renderer() {
         if (!this.props.data || !this.props.data.length && this.props.showEmpty) {
-            return this.emptyElement || <Ui.List.Table.Empty/>;
+            return this.emptyement || <Ui.List.Table.Empty/>;
         }
 
         // get row and extract the header info
         let headers = [];
         let actionSet = false;
-        _.forEach(this.props.children, (row)=> {
-            if (row.type == Ui.List.ExpandableList.ElRow) {
+        _.forEach(this.props.children, row => {
+            if (row.type === Ui.ExpandableList.Row) {
                 if (_.isObject(row)) {
-                    _.forEach(row.props.children, (val)=> {
-
-                        if (val.type == Ui.List.ExpandableList.ElActionSet) {
+                    _.forEach(row.props.children, val => {
+                        if (val.type === Ui.ExpandableList.ActionSet) {
                             actionSet = true;
                         }
 
-                        if (val.type == Ui.List.ExpandableList.ElField && _.get(val.props, 'name', false)) {
+                        if (val.type === Ui.ExpandableList.Field && _.get(val.props, 'name', false)) {
                             headers.push(_.omit(val.props, ['children', 'renderer']));
                         }
                     });
@@ -58,8 +57,7 @@ ExpandableList.defaultProps = {
                         if (actionSet) {
                             headers.push({key: 99, all: 2});
                         }
-                        headers =
-                            <div className="expandable-list__header flex-row">{headers.map(this.renderHeader)}</div>;
+                        headers = <div className="expandable-list__header flex-row">{headers.map(this.renderHeader)}</div>;
                         return false; // exit foreach
                     }
                 }
@@ -67,13 +65,13 @@ ExpandableList.defaultProps = {
         });
 
         // get rows
-        let rows = [];
-        _.forEach(this.props.children, (row)=> {
-            if (row.type == Ui.List.ExpandableList.ElRow) {
+        const rows = [];
+        _.forEach(this.props.children, row => {
+            if (row.type === Ui.ExpandableList.Row) {
                 rows.push(row);
             } else if (_.isArray(row)) {
-                _.forEach(row, (rowDetails)=> {
-                    if (rowDetails.type == Ui.List.ExpandableList.ElRow) {
+                _.forEach(row, rowDetails => {
+                    if (rowDetails.type === Ui.ExpandableList.Row) {
                         rows.push(rowDetails);
                     }
                 });

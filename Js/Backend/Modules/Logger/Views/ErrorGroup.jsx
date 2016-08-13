@@ -20,32 +20,32 @@ ErrorGroup.defaultProps = {
 
         return (
             <Ui.Data {...statProps}>
-                {(errorData, filter, loader) => (
-                    <Ui.List.ExpandableList.ExpandableList>
+                {(errorData, filter) => (
+                    <Ui.ExpandableList>
                         {errorData.list.map(row => {
                             return (
-                                <Ui.List.ExpandableList.ElRow key={row.id}>
-                                    <Ui.List.ExpandableList.ElField all={6}>{row.url}</Ui.List.ExpandableList.ElField>
-                                    <Ui.List.ExpandableList.ElField all={4}>{row.date}</Ui.List.ExpandableList.ElField>
+                                <Ui.ExpandableList.Row key={row.id}>
+                                    <Ui.ExpandableList.Field all={6}>{row.url}</Ui.ExpandableList.Field>
+                                    <Ui.ExpandableList.Field all={4}>{row.date}</Ui.ExpandableList.Field>
 
-                                    <Ui.List.ExpandableList.ElRowDetailsContent title={row.url}>
+                                    <Ui.ExpandableList.RowDetailsContent title={row.url}>
                                         {() => {
-                                            if (this.props.errorGroup.type == 'js') {
+                                            if (this.props.errorGroup.type === 'js') {
                                                 return (<ErrorDetailsJs errorEntry={row}/>);
                                             } else {
                                                 return (<ErrorDetailsApi errorEntry={row}/>);
                                             }
                                         }}
-                                    </Ui.List.ExpandableList.ElRowDetailsContent>
+                                    </Ui.ExpandableList.RowDetailsContent>
 
-                                    <Ui.List.ExpandableList.ElActionSet>
-                                        <Ui.List.ExpandableList.ElAction label="Resolve Item" icon="icon-check"/>
-                                    </Ui.List.ExpandableList.ElActionSet>
+                                    <Ui.ExpandableList.ActionSet>
+                                        <Ui.ExpandableList.Action label="Resolve Item" icon="icon-check"/>
+                                    </Ui.ExpandableList.ActionSet>
 
-                                </Ui.List.ExpandableList.ElRow>
+                                </Ui.ExpandableList.Row>
                             );
                         })}
-                    </Ui.List.ExpandableList.ExpandableList>
+                    </Ui.ExpandableList>
                 )}
             </Ui.Data>
         );

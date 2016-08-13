@@ -21,8 +21,7 @@ ListErrors.defaultProps = {
         return (
 
             <Ui.List.ApiContainer {...jsErrorList}>
-
-                {(data, meta, list) => {
+                {(data, meta) => {
                     return (
                         <Ui.Grid.Row>
                             <Ui.Grid.Col all={12}>
@@ -32,32 +31,30 @@ ListErrors.defaultProps = {
                             <Ui.Grid.Col all={12}>
                                 <Ui.List.Loader/>
                                 <Ui.List.Table.Empty renderIf={!data.length}/>
-                                <Ui.List.ExpandableList.ExpandableList>
+                                <Ui.ExpandableList>
                                     {data.map(row => {
                                         return (
 
-                                            <Ui.List.ExpandableList.ElRow key={row.id}>
-                                                <Ui.List.ExpandableList.ElField all={1} name="Count" className="text-center">
+                                            <Ui.ExpandableList.Row key={row.id}>
+                                                <Ui.ExpandableList.Field all={1} name="Count" className="text-center">
                                                     <span className="badge badge-primary">{row.errorCount}</span>
-                                                </Ui.List.ExpandableList.ElField>
-                                                <Ui.List.ExpandableList.ElField all={5}
-                                                                                name="Error">{row.error}</Ui.List.ExpandableList.ElField>
-                                                <Ui.List.ExpandableList.ElField all={4}
-                                                                                name="Last Entry">{row.lastEntry}</Ui.List.ExpandableList.ElField>
+                                                </Ui.ExpandableList.Field>
+                                                <Ui.ExpandableList.Field all={5} name="Error">{row.error}</Ui.ExpandableList.Field>
+                                                <Ui.ExpandableList.Field all={4} name="Last Entry">{row.lastEntry}</Ui.ExpandableList.Field>
 
-                                                <Ui.List.ExpandableList.ElRowDetailsList title={row.error}>
+                                                <Ui.ExpandableList.RowDetailsList title={row.error}>
                                                     <ErrorGroup errorGroup={row}/>
-                                                </Ui.List.ExpandableList.ElRowDetailsList>
+                                                </Ui.ExpandableList.RowDetailsList>
 
-                                                <Ui.List.ExpandableList.ElActionSet>
-                                                    <Ui.List.ExpandableList.ElAction label="Resolve Group" icon="icon-check"/>
-                                                </Ui.List.ExpandableList.ElActionSet>
+                                                <Ui.ExpandableList.ActionSet>
+                                                    <Ui.ExpandableList.Action label="Resolve Group" icon="icon-check"/>
+                                                </Ui.ExpandableList.ActionSet>
 
-                                            </Ui.List.ExpandableList.ElRow>
+                                            </Ui.ExpandableList.Row>
 
                                         );
                                     })}
-                                </Ui.List.ExpandableList.ExpandableList>
+                                </Ui.ExpandableList>
                             </Ui.Grid.Col>
                             <Ui.Grid.Col all={12}>
                                 <Ui.List.Pagination/>
@@ -65,9 +62,7 @@ ListErrors.defaultProps = {
                         </Ui.Grid.Row>
                     );
                 }}
-
             </Ui.List.ApiContainer>
-
         );
     }
 };
