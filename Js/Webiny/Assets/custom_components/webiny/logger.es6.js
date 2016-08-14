@@ -30,7 +30,15 @@ class Logger {
                 // we want to log only responses that are not valid JSON objects
                 // 5xx response with a valid JSON object is probably an expected exception
                 try {
-                    JSON.parse(response.data);
+                    if (typeof response.data === 'string') {
+                        JSON.parse(response.data);
+                    }
+
+                    // if the status code is 503 and has errorCode of w1, it's a PHP error (this is caught by PHP logger)
+                    // in that case we just want to inform the user with a growl notification
+                    if (response.status === 503 && response.data.code === 'W1') {
+                        Webiny.Growl.danger(response.data.message, 'System Error', false, 10000);
+                    }
                 } catch (e) {
                     this.reportError('api', response.data, response.request.body, response.request.method + ' ' + response.request.url);
                 }
@@ -44,8 +52,6 @@ class Logger {
         const date = new Date();
         const errorHash = this.hashString(msg + url);
         url = (_.isNull(url) ? location.href : url);
-
-        console.log('reporting error: ' + msg);
 
         if (this.errorHashMap.indexOf(errorHash) < 0) {
             this.errors.push({
@@ -82,7 +88,6 @@ class Logger {
     pushErrors() {
         if (this.errors.length > 0) {
             this.stopInterval();
-            console.log('sending errors:' + this.errors.length);
             $.ajax({
                 method: 'POST',
                 url: webinyApiPath + '/entities/core/logger-error-group/save-report',

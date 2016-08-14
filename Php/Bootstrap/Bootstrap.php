@@ -77,6 +77,7 @@ class Bootstrap
         if ($response) {
             if ($response instanceof ApiResponse) {
                 $response->setErrors($this->errorHandler->getErrors());
+                $this->errorHandler->saveErrorsToLogger();
             }
             $this->processResponse($response);
         }

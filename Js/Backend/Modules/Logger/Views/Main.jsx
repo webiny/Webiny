@@ -23,6 +23,10 @@ Main.defaultProps = {
                             <ListErrors type="js"/>
                         </Ui.Tabs.Tab>
 
+                        <Ui.Tabs.Tab label="PHP" icon="fa-file-code-o">
+                            <ListErrors type="php"/>
+                        </Ui.Tabs.Tab>
+
                         <Ui.Tabs.Tab label="Api" icon="fa-rocket">
                             <ListErrors type="api"/>
                         </Ui.Tabs.Tab>

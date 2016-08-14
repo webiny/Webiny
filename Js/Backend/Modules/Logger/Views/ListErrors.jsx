@@ -40,7 +40,9 @@ ListErrors.defaultProps = {
                                                     <span className="badge badge-primary">{row.errorCount}</span>
                                                 </Ui.ExpandableList.Field>
                                                 <Ui.ExpandableList.Field all={5} name="Error">{row.error}</Ui.ExpandableList.Field>
-                                                <Ui.ExpandableList.Field all={4} name="Last Entry">{row.lastEntry}</Ui.ExpandableList.Field>
+                                                <Ui.ExpandableList.Field all={4} name="Last Entry">
+                                                    <Ui.Filters.DateTime value={row.lastEntry}/>
+                                                </Ui.ExpandableList.Field>
 
                                                 <Ui.ExpandableList.RowDetailsList title={row.error}>
                                                     <ErrorGroup errorGroup={row}/>
