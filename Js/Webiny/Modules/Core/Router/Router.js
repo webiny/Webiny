@@ -281,6 +281,10 @@ class Router {
 
         if (href.indexOf(this.appUrl) === 0) {
             href = href.replace(window.location.origin, '');
+            if (this.getBaseUrl() === '/' && !Utils.matchRoute(this, href)) {
+                return false;
+            }
+
             e.preventDefault();
             this.goToUrl(href);
         }
