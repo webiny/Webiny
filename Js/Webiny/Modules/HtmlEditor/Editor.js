@@ -59,7 +59,7 @@ class Editor extends Webiny.Ui.FormComponent {
 }
 
 Editor.defaultProps = {
-    svgPath: Webiny.Assets('Core.Backend', 'images/trumbowyg.svg'),
+    svgPath: Webiny.Assets('Core.Webiny', 'images/HTMLEditor/trumbowyg.svg'),
     renderer() {
         return (
             <div>
