@@ -13,7 +13,7 @@ class Editor extends Webiny.Ui.FormComponent {
     componentDidMount() {
         super.componentDidMount();
 
-        $.trumbowyg.svgPath = Webiny.Assets('Core.Backend', 'images/trumbowyg.svg');
+        $.trumbowyg.svgPath = this.props.svgPath;
 
         const options = {
             btnsDef: {
@@ -59,7 +59,7 @@ class Editor extends Webiny.Ui.FormComponent {
 }
 
 Editor.defaultProps = {
-
+    svgPath: Webiny.Assets('Core.Backend', 'images/trumbowyg.svg'),
     renderer() {
         return (
             <div>
