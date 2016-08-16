@@ -49,6 +49,16 @@ class LoggerErrorGroup extends AbstractEntity
             $errors = $this->wRequest()->payload('errors');
             $this->saveReport($errors, $clientData);
         });
+
+        $this->api('get', 'resolve/{group}', function (LoggerErrorGroup $group) {
+            $group->resolveGroup();
+        });
+    }
+
+    public function resolveGroup()
+    {
+        $this->errorEntries->delete();
+        $this->delete();
     }
 
 
@@ -88,12 +98,13 @@ class LoggerErrorGroup extends AbstractEntity
             // assign the error under the group
             $group->errorEntries->add($errorEntry);
             $group->lastEntry = time();
-            $group->errorCount = $group->errorCount+1;
+            $group->errorCount = $group->errorCount + 1;
             $group->save();
         }
     }
 
-    public function getStats(){
+    public function getStats()
+    {
         // errors today
         // errors in the last 7 days
         // total errors

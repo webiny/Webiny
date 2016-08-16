@@ -6,13 +6,16 @@ import ErrorDetailsPhp from './ErrorDetailsPhp';
 
 class ErrorGroup extends Webiny.Ui.View {
 
-    resolveError(error) {
-        /*const api = new Webiny.Api.Endpoint('/entities/logger-entry');
-         api.get('resolve/' + error.id).then((response) => {
-
-         });*/
+    resolveError(error, list) {
+        const api = new Webiny.Api.Endpoint('/entities/core/logger-entry');
+        api.get('resolve/' + error.id).then((response) => {
+            if (response.data.data.errorCount < 1) {
+                this.props.errorGroupList.loadData();
+            } else {
+                list.loadData();
+            }
+        });
     }
-
 }
 
 ErrorGroup.defaultProps = {
@@ -21,16 +24,23 @@ ErrorGroup.defaultProps = {
         const statProps = {
             api: '/entities/core/logger-entry',
             query: {errorGroup: this.props.errorGroup.id, '_sort': '-createdOn'},
-            fields: '*'
+            fields: '*',
+            layout: null
+        };
+
+        const ErrorDetails = {
+            js: ErrorDetailsJs,
+            php: ErrorDetailsPhp,
+            api: ErrorDetailsApi
         };
 
         return (
-            <Ui.Data {...statProps}>
-                {(errorData, filter) => (
+            <Ui.List.ApiContainer {...statProps}>
+                {(errorData, meta, list) => (
                     <Ui.ExpandableList>
-                        {errorData.list.map(row => {
+                        {errorData.map(row => {
                             return (
-                                <Ui.ExpandableList.Row key={row.id} ui={'error-' + row.id}>
+                                <Ui.ExpandableList.Row key={row.id}>
                                     <Ui.ExpandableList.Field all={6}>{row.url}</Ui.ExpandableList.Field>
                                     <Ui.ExpandableList.Field all={4}>
                                         <Ui.Filters.DateTime value={row.date}/>
@@ -38,19 +48,15 @@ ErrorGroup.defaultProps = {
 
                                     <Ui.ExpandableList.RowDetailsContent title={row.url}>
                                         {() => {
-                                            if (this.props.errorGroup.type === 'js') {
-                                                return (<ErrorDetailsJs errorEntry={row}/>);
-                                            } else if (this.props.errorGroup.type === 'php') {
-                                                return (<ErrorDetailsPhp errorEntry={row}/>);
-                                            } else {
-                                                return (<ErrorDetailsApi errorEntry={row}/>);
-                                            }
+                                            return React.createElement(ErrorDetails[this.props.errorGroup.type], {errorEntry: row});
                                         }}
                                     </Ui.ExpandableList.RowDetailsContent>
 
                                     <Ui.ExpandableList.ActionSet>
-                                        <Ui.ExpandableList.Action label="Resolve Item" icon="icon-check"
-                                                                  onClick={()=>this.resolveError(row)}/>
+                                        <Ui.ExpandableList.Action
+                                            label="Resolve Item"
+                                            icon="icon-check"
+                                            onClick={()=>this.resolveError(row, list)}/>
                                     </Ui.ExpandableList.ActionSet>
 
                                 </Ui.ExpandableList.Row>
@@ -58,7 +64,7 @@ ErrorGroup.defaultProps = {
                         })}
                     </Ui.ExpandableList>
                 )}
-            </Ui.Data>
+            </Ui.List.ApiContainer>
         );
     }
 };

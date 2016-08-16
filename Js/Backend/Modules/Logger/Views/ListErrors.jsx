@@ -4,6 +4,13 @@ const Ui = Webiny.Ui.Components;
 
 class ListErrors extends Webiny.Ui.View {
 
+    resolveGroup(error, list) {
+        const api = new Webiny.Api.Endpoint('/entities/core/logger-error-group');
+        api.get('resolve/' + error.id).then((response) => {
+            list.loadData();
+        });
+    }
+    
 }
 
 ListErrors.defaultProps = {
@@ -12,7 +19,6 @@ ListErrors.defaultProps = {
         const jsErrorList = {
             api: '/entities/core/logger-error-group',
             fields: '*',
-            connectToRouter: true,
             searchFields: 'error',
             query: {'_sort': '-lastEntry', 'type': this.props.type},
             layout: null
@@ -21,7 +27,7 @@ ListErrors.defaultProps = {
         return (
 
             <Ui.List.ApiContainer {...jsErrorList}>
-                {(data, meta) => {
+                {(data, meta, errorList) => {
                     return (
                         <Ui.Grid.Row>
                             <Ui.Grid.Col all={12}>
@@ -45,11 +51,14 @@ ListErrors.defaultProps = {
                                                 </Ui.ExpandableList.Field>
 
                                                 <Ui.ExpandableList.RowDetailsList title={row.error}>
-                                                    <ErrorGroup errorGroup={row}/>
+                                                    <ErrorGroup errorGroup={row} errorGroupList={errorList}/>
                                                 </Ui.ExpandableList.RowDetailsList>
 
                                                 <Ui.ExpandableList.ActionSet>
-                                                    <Ui.ExpandableList.Action label="Resolve Group" icon="icon-check"/>
+                                                    <Ui.ExpandableList.Action
+                                                        label="Resolve Group"
+                                                        icon="icon-check"
+                                                        onClick={()=>this.resolveGroup(row, errorList)}/>
                                                 </Ui.ExpandableList.ActionSet>
 
                                             </Ui.ExpandableList.Row>
