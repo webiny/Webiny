@@ -10,10 +10,13 @@ class ErrorGroup extends Webiny.Ui.View {
         const api = new Webiny.Api.Endpoint('/entities/core/logger-entry');
         api.get('resolve/' + error.id).then((response) => {
             if (response.data.data.errorCount < 1) {
+                // if we have 0 errors in this group, we have to refresh the parent table
                 this.props.errorGroupList.loadData();
             } else {
                 list.loadData();
             }
+
+            this.props.resolveCallback(response.data.data.errorGroup, response.data.data.errorCount);
         });
     }
 }

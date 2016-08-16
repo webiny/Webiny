@@ -1,8 +1,21 @@
 import Webiny from 'Webiny';
 import ErrorGroup from './ErrorGroup';
+import ErrorCount from './ErrorCount';
 const Ui = Webiny.Ui.Components;
 
 class ListErrors extends Webiny.Ui.View {
+
+    constructor(props) {
+        super(props);
+
+        this.bindMethods('populateState');
+
+        this.state = {};
+    }
+
+    populateState(id, count) {
+        this.state[id] = count;
+    }
 
     resolveGroup(error, list) {
         const api = new Webiny.Api.Endpoint('/entities/core/logger-error-group');
@@ -10,7 +23,11 @@ class ListErrors extends Webiny.Ui.View {
             list.loadData();
         });
     }
-    
+
+    resolveCallback(errorGroup, newErrorCount) {
+        console.log('updated: ' + errorGroup + ' => ' + newErrorCount);
+        this.populateState(errorGroup, newErrorCount);
+    }
 }
 
 ListErrors.defaultProps = {
@@ -39,11 +56,12 @@ ListErrors.defaultProps = {
                                 <Ui.List.Table.Empty renderIf={!data.length}/>
                                 <Ui.ExpandableList>
                                     {data.map(row => {
+                                        this.populateState(row.id, row.errorCount);
                                         return (
 
                                             <Ui.ExpandableList.Row key={row.id}>
                                                 <Ui.ExpandableList.Field all={1} name="Count" className="text-center">
-                                                    <span className="badge badge-primary">{row.errorCount}</span>
+                                                    <ErrorCount count={this.state[row.id]}/>
                                                 </Ui.ExpandableList.Field>
                                                 <Ui.ExpandableList.Field all={5} name="Error">{row.error}</Ui.ExpandableList.Field>
                                                 <Ui.ExpandableList.Field all={4} name="Last Entry">
@@ -51,7 +69,8 @@ ListErrors.defaultProps = {
                                                 </Ui.ExpandableList.Field>
 
                                                 <Ui.ExpandableList.RowDetailsList title={row.error}>
-                                                    <ErrorGroup errorGroup={row} errorGroupList={errorList}/>
+                                                    <ErrorGroup errorGroup={row} errorGroupList={errorList}
+                                                                resolveCallback={this.resolveCallback}/>
                                                 </Ui.ExpandableList.RowDetailsList>
 
                                                 <Ui.ExpandableList.ActionSet>

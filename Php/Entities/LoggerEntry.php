@@ -46,7 +46,8 @@ class LoggerEntry extends AbstractEntity
             }
 
             return [
-                'errorCount' => $entry->errorGroup->errorCount
+                'errorCount' => $entry->errorGroup->errorCount,
+                'errorGroup' => $entry->errorGroup->id,
             ];
         });
     }
