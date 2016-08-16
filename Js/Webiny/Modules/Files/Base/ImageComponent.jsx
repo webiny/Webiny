@@ -40,7 +40,7 @@ class Image extends Webiny.Ui.FormComponent {
         }
 
         if (_.has(file, 'src')) {
-            file.id = _.get(this.props.valueLink.value, 'id', this.lastId);
+            file.id = _.get(this.props, 'valueLink.value.id', this.lastId);
             if (this.props.cropper) {
                 this.setState({cropImage: file});
             } else {
