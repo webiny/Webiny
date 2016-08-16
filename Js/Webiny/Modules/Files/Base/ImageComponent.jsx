@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+const Ui = Webiny.Ui.Components;
 
 class Image extends Webiny.Ui.FormComponent {
 
@@ -14,6 +15,7 @@ class Image extends Webiny.Ui.FormComponent {
             'editFile',
             'removeFile',
             'getFiles',
+            'getCropper',
             'readActualImageSize'
         );
 
@@ -69,6 +71,40 @@ class Image extends Webiny.Ui.FormComponent {
             e.stopPropagation();
         }
         this.refs.reader.getFiles();
+    }
+
+    getCropper(children = null) {
+        const cropper = this.props.cropper;
+
+        if (!cropper) {
+            return null;
+        }
+
+        if (cropper.inline) {
+            return (
+                <Ui.Files.InlineFileCropper
+                    title={cropper.title}
+                    action={cropper.action}
+                    onHidden={this.onCropperHidden}
+                    onCrop={this.applyCropping}
+                    config={cropper.config}
+                    image={this.state.cropImage}>
+                    {children}
+                </Ui.Files.InlineFileCropper>
+            );
+        }
+
+        return (
+            <Ui.Files.ModalFileCropper
+                title={cropper.title}
+                action={cropper.action}
+                onHidden={this.onCropperHidden}
+                onCrop={this.applyCropping}
+                config={cropper.config}
+                image={this.state.cropImage}>
+                {children}
+            </Ui.Files.ModalFileCropper>
+        );
     }
 
     readActualImageSize(e) {

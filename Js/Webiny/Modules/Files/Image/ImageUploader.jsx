@@ -13,10 +13,6 @@ class ImageUploader extends ImageComponent {
         _.merge(this.state, {
             progress: null
         });
-
-        this.bindMethods(
-            'getCropper'
-        );
     }
 
     renderError() {
@@ -30,7 +26,7 @@ class ImageUploader extends ImageComponent {
     }
 
     applyCropping(image) {
-        image.jobId = this.uploader.upload(image, (percentage) => {
+        this.uploader.upload(image, (percentage) => {
             this.setState({progress: percentage});
         }, (newImage) => {
             this.props.onUploadSuccess(newImage);
@@ -39,40 +35,6 @@ class ImageUploader extends ImageComponent {
             this.props.onUploadFailure(apiResponse);
             this.setState({progress: null});
         });
-    }
-
-    getCropper(children = null) {
-        const cropper = this.props.cropper;
-
-        if (!cropper) {
-            return null;
-        }
-
-        if (cropper.inline) {
-            return (
-                <Ui.Files.InlineFileCropper
-                    title={cropper.title}
-                    action={cropper.action}
-                    onHidden={this.onCropperHidden}
-                    onCrop={this.applyCropping}
-                    config={cropper.config}
-                    image={this.state.cropImage}>
-                    {children}
-                </Ui.Files.InlineFileCropper>
-            );
-        }
-
-        return (
-            <Ui.Files.ModalFileCropper
-                title={cropper.title}
-                action={cropper.action}
-                onHidden={this.onCropperHidden}
-                onCrop={this.applyCropping}
-                config={cropper.config}
-                image={this.state.cropImage}>
-                {children}
-            </Ui.Files.ModalFileCropper>
-        );
     }
 }
 
