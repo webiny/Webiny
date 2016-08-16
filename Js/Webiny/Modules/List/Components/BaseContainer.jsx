@@ -339,11 +339,7 @@ class BaseContainer extends Webiny.Ui.Component {
                 params.unshift(this);
                 params.push(this);
             }
-            const content = children.call(...params);
-            if (_.isArray(content)) {
-                return content;
-            }
-            return content.props.children;
+            return children.call(...params);
         }
 
         return React.Children.toArray(children);
@@ -366,7 +362,7 @@ class BaseContainer extends Webiny.Ui.Component {
             });
         }
 
-        const props = _.omit(element.props, ['children', 'key', 'ref']);
+        const props = _.omit(element.props, ['key', 'ref']);
 
         if (element.type === Ui.List.Pagination) {
             return React.cloneElement(element, this.paginationProps(props));
@@ -380,7 +376,7 @@ class BaseContainer extends Webiny.Ui.Component {
             return React.cloneElement(element, this.multiActionsProps(props));
         }
 
-        if (element.props && element.props.children) {
+        if (element.props && element.props.children && !_.isFunction(element.props.children)) {
             return React.cloneElement(element, _.omit(element.props, ['key', 'ref']), React.Children.map(element.props.children, item => {
                 return this.registerElement(item);
             }));
