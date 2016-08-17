@@ -7,7 +7,7 @@ class Editor extends Webiny.Ui.FormComponent {
         this.mdEditor = null;
         this.options = null;
 
-        this.bindMethods('getTextareaElement');
+        this.bindMethods('getTextareaElement', 'setValue');
     }
 
     componentDidMount() {
@@ -28,6 +28,10 @@ class Editor extends Webiny.Ui.FormComponent {
         this.mdEditor.codemirror.on('change', () => {
             this.props.valueLink.requestChange(this.mdEditor.codemirror.getValue());
         });
+    }
+
+    setValue(value) {
+        this.mdEditor.codemirror.setValue(value);
     }
 
     componentWillReceiveProps(props) {
