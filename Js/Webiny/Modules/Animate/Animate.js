@@ -35,7 +35,12 @@ class Container extends Webiny.Ui.Component {
         const elements = ReactDOM.findDOMNode(this).childNodes;
 
         const hideCallback = () => {
-            callback();
+            try {
+                callback();
+            } catch (e) {
+                // ignore
+            }
+
             if (_.isFunction(this.props.onFinish)) {
                 this.props.onFinish();
             }

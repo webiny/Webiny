@@ -172,6 +172,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
         const config = {
             disabled: this.isDisabled(props),
             minimumResultsForSearch: props.minimumResultsForSearch,
+            minimumInputLength: props.minimumInputLength,
             placeholder: _.get(props.placeholder, 'props.children', props.placeholder),
             allowClear: props.allowClear,
             templateResult: item => this.itemRenderer(item, 'optionRenderer'),
@@ -203,6 +204,7 @@ SelectInput.defaultProps = {
     placeholder: null,
     onChange: _.noop,
     selectedValue: '',
+    minimumInputLength: 0,
     minimumResultsForSearch: 15,
     useDataAsValue: false,
     dropdownParent: '.dropdown-wrapper',
