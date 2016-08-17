@@ -1,10 +1,12 @@
 import Webiny from 'Webiny';
 import Icon from './Icon';
+import Picker from './Picker';
 
 class Module extends Webiny.Module {
 
     init() {
         Webiny.Ui.Components.Icon = Icon;
+        Webiny.Ui.Components.Icon.Picker = Picker;
     }
 }
 

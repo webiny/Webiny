@@ -12,7 +12,6 @@ Icon.defaultProps = {
             iconSet = 'fa icon';
         }
 
-
         return React.createElement(this.props.type, {className: this.classSet(iconSet + ' ' + this.props.icon, this.props.className)});
     }
 };
