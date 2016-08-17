@@ -1,3 +1,4 @@
+import ViewManager from './../Core/ViewManager';
 import Component from './../Core/Component';
 import Router from './../Router/Router';
 
@@ -22,31 +23,26 @@ class Placeholder extends Component {
 
 Placeholder.defaultProps = {
     renderer() {
-        if (!Router.getActiveRoute()) {
-            return null;
+        let components = ViewManager.getContent(this.props.name);
+        if (!_.isArray(components)) {
+            components = [components];
         }
-
-        const route = Router.getActiveRoute();
-        const components = route.getComponents(this.props.name);
-
-        let defComponents = [];
-        if (!route.skipDefaultComponents()) {
-            defComponents = Router.getDefaultComponents(this.props.name);
-        }
-
         const cmps = [];
-        _.compact(components.concat(defComponents)).forEach((item, index) => {
-            const props = {key: index};
-            if (!_.isFunction(item)) {
-                _.assign(props, item[1]);
-                item = item[0];
+        _.each(components, (item, index) => {
+            if (!item) {
+                return;
             }
-            cmps.push(React.createElement(item, props));
+            if (React.isValidElement(item)) {
+                cmps.push(item);
+            } else {
+                const props = {key: index};
+                if (!_.isFunction(item)) {
+                    _.assign(props, item[1]);
+                    item = item[0];
+                }
+                cmps.push(React.createElement(item, props));
+            }
         });
-
-        if (!cmps.length) {
-            return null;
-        }
 
         return (
             <webiny-placeholder>{cmps}</webiny-placeholder>

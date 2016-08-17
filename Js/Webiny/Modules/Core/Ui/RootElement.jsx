@@ -17,16 +17,22 @@ class RootElement extends View {
     }
 
     componentDidMount() {
-        this.unsubscribe = Dispatcher.on('RenderRoute', () => {
+        this.unsubscribe = Dispatcher.on('RenderView', () => {
             return this.setState({
                 time: new Date().getTime()
             });
         });
 
-        Router.start(window.location.pathname).then(() => {
+        this.hideLoader();
+        Router.start().then(() => {
             this.setState({loading: false});
             this.checkHash();
         });
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        this.unsubscribe();
     }
 
     checkHash() {
@@ -34,6 +40,20 @@ class RootElement extends View {
         if (hash.startsWith('#ui:')) {
             const ui = _.trimStart(hash, '#ui:');
             UiDispatcher.createSignal(this, ui)();
+        }
+    }
+
+    hideLoader() {
+        const loader = document.querySelector('.preloader-wrap');
+        if (loader) {
+            setTimeout(() => {
+                dynamics.animate(loader, {
+                    opacity: 0
+                }, {
+                    type: dynamics.easeOut,
+                    duration: 500
+                });
+            }, 200);
         }
     }
 

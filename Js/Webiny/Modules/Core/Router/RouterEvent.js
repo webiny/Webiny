@@ -2,6 +2,7 @@
  * RouterEvent instance is passed to all Router generated processes:
  * - beforeStart
  * - routeWillChange
+ * - routeNotMatched
  */
 class RouterEvent {
     constructor(route) {

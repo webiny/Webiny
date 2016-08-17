@@ -97,7 +97,7 @@ class Route {
             url += '?' + $.param(newParams);
         }
 
-        return Router.getBaseUrl() + url;
+        return _.trimEnd(Router.getBaseUrl(), '/') + url;
     }
 
     getPattern() {
@@ -129,8 +129,8 @@ class Route {
         return queryParams;
     }
 
-    getComponents(placeholder) {
-        return this.components[placeholder] || [];
+    getComponents() {
+        return this.components;
     }
 
     skipDefaultComponents(flag = null) {

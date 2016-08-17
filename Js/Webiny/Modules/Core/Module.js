@@ -12,6 +12,7 @@ import View from './Core/View';
 import Menu from './Core/Menu';
 import Dispatcher from './Core/Dispatcher';
 import UiDispatcher from './Core/UiDispatcher';
+import ViewManager from './Core/ViewManager';
 import Router from './Router/Router';
 import Route from './Router/Route';
 import Http from './Http/Http';
@@ -61,6 +62,7 @@ class Module extends WebinyModule {
             Model,
             Router,
             Route,
+            ViewManager,
             Dispatcher,
             Tools,
             i18n,

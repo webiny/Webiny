@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-import Dispatcher from './../Core/Dispatcher';
 import RouterEvent from './RouterEvent';
 
 class RouterUtils {
@@ -42,42 +41,15 @@ class RouterUtils {
      * @param route
      */
     renderRoute(route) {
-        return Dispatcher.dispatch('RenderRoute', route).then(() => {
+        const content = this.getRouteContent(route);
+        return Webiny.ViewManager.render(content).then(() => {
             document.title = Webiny.Router.getTitlePattern().replace('%s', route.getTitle() || route.getPattern());
             return route;
         });
     }
 
     sanitizeUrl(url) {
-        let sUrl = url.replace(this.baseUrl, '').split('?').shift();
-        if (sUrl === '') {
-            sUrl = '/';
-        }
-
-        // We must ensure that sanitized URL starts with forward slash
-        // These are the examples, top are /user-area routes, and bottom are routes that don't have a prefix
-
-        /**
-         * /user-area/me/account
-         * /me/account
-         *
-         * /user-area/me/company
-         * /me/company
-         *
-         * this.baseUrl = "/user-area"
-         */
-
-        /**
-         * /brands
-         * brands
-         *
-         * /lookbooks
-         * lookbooks
-         *
-         * this.baseUrl = "/"
-         */
-
-        return sUrl.charAt(0) === '/' ? sUrl : '/' + sUrl;
+        return '/' + _.trimStart(url.replace(this.baseUrl, '').split('?').shift(), '/');
     }
 
     /**
@@ -109,6 +81,49 @@ class RouterUtils {
         });
 
         return routeWillChangeChain;
+    }
+
+    getRouteContent(route) {
+        const components = route.getComponents();
+
+        let defComponents = [];
+        if (!route.skipDefaultComponents()) {
+            defComponents = Webiny.Router.getDefaultComponents();
+        }
+
+        return _.merge({}, defComponents, components);
+    }
+
+    handleRouteNotMatched(url, callbacks) {
+        const rEvent = new RouterEvent(url);
+        let routeNotMatchedChain = Q(rEvent);
+        callbacks.forEach(callback => {
+            routeNotMatchedChain = routeNotMatchedChain.then(() => {
+                return callback(rEvent);
+            }).catch(this.exceptionHandler);
+        });
+
+        routeNotMatchedChain = routeNotMatchedChain.then(() => {
+            if (!rEvent.isStopped()) {
+                // If URL starts with loaded app prefix, go to default route
+                if (this.baseUrl !== '/' && url.startsWith(this.baseUrl)) {
+                    url = Webiny.Router.getDefaultRoute().getHref();
+                    History.replaceState({url, replace: true}, null, url);
+                    return true;
+                }
+
+                // Else reload the page, it is a URL within our domain - but not handled by the current app
+                window.location.reload();
+            }
+
+            if (rEvent.goTo !== null) {
+                return Webiny.Router.goToRoute(rEvent.goTo, rEvent.goToParams);
+            }
+
+            return Q(true);
+        });
+
+        return routeNotMatchedChain;
     }
 }
 

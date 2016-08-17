@@ -1,3 +1,4 @@
+import Dispatcher from './../Core/Dispatcher';
 import RouterEvent from './RouterEvent';
 import Utils from './RouterUtils';
 
@@ -17,47 +18,44 @@ class Router {
         this.activeRoute = null;
         this.beforeStart = [];
         this.routeWillChange = [];
+        this.routeNotMatched = [];
+        this.started = false;
     }
 
-    start(url) {
-        this.hideLoader();
-
+    start() {
         if (!this.baseUrl) {
             return Q();
         }
 
-        /**
-         * Observe clicks on anchors and handle them accordingly
-         */
-        const $this = this;
-        $(document).on('click', 'a', function handleClick(e) {
-            $this.handleAnchorClick(this, e);
-        });
+        if (!this.started) {
+            this.started = true;
+            const $this = this;
+            $(document).on('click', 'a', function handleClick(e) {
+                $this.handleAnchorClick(this, e);
+            });
 
-        url = url || History.getState().data.url;
-        const matchedRoute = Utils.matchRoute(this, url);
+            History.Adapter.bind(window, 'statechange', () => {
+                const url = History.getState().data.url || History.getState().url;
+                const matched = Utils.matchRoute(this, url);
+                console.log(matched);
+                if (!matched) {
+                    return Utils.handleRouteNotMatched(url, this.routeNotMatched);
+                }
 
-        if (!matchedRoute) {
-            const route = _.isString(this.defaultRoute) ? this.getRoute(this.defaultRoute) : this.defaultRoute;
-            url = route.getHref();
-            History.replaceState({url, replace: true}, null, url);
-            return this.start();
+                this.activeRoute = matched;
+                Utils.routeWillChange(matched, this.routeWillChange).then(() => {
+                    Utils.renderRoute(matched);
+                }).catch(Utils.exceptionHandler);
+            });
         }
 
-        History.Adapter.bind(window, 'statechange', () => {
-            const matched = Utils.matchRoute(this, History.getState().data.url || History.getState().url);
-            this.activeRoute = matched;
-            Utils.routeWillChange(matched, this.routeWillChange).then(() => {
-                Utils.renderRoute(matched);
-            }).catch(Utils.exceptionHandler);
-        });
-
+        const url = window.location.pathname;
+        const matchedRoute = Utils.matchRoute(this, url);
         this.activeRoute = matchedRoute;
 
         /**
          * Execute beforeStart callbacks in a chain and see if start is prevented
          */
-
         const routerEvent = new RouterEvent(matchedRoute);
         let beforeStartChain = Q(routerEvent);
         this.beforeStart.forEach(callback => {
@@ -68,6 +66,9 @@ class Router {
 
         beforeStartChain = beforeStartChain.then(event => {
             if (!event.isStopped() || event.goTo === null) {
+                if (!matchedRoute) {
+                    return Utils.handleRouteNotMatched(url, this.routeNotMatched);
+                }
                 Utils.renderRoute(event.route);
             } else {
                 if (event.goTo !== null) {
@@ -86,6 +87,11 @@ class Router {
 
     onRouteWillChange(callback) {
         this.routeWillChange.push(callback);
+        return this;
+    }
+
+    onRouteNotMatched(callback) {
+        this.routeNotMatched.push(callback);
         return this;
     }
 
@@ -108,18 +114,8 @@ class Router {
         return this;
     }
 
-    getDefaultComponents(placeholder = false) {
-        let components;
-        if (placeholder) {
-            components = _.get(this.defaultComponents, placeholder, []);
-            return _.isArray(components) ? components : [components];
-        }
+    getDefaultComponents() {
         return this.defaultComponents;
-    }
-
-    addRoutes() {
-        _.forIn(arguments, route => this.addRoute(route));
-        return this;
     }
 
     addRoute(route) {
@@ -194,10 +190,9 @@ class Router {
         return this.getActiveRoute().getHref(params);
     }
 
-    goToRoute(name, params = {}) {
-        let route = this.activeRoute;
-        if (name !== 'current') {
-            route = _.find(this.routes, ['name', name]);
+    goToRoute(route, params = {}) {
+        if (_.isString(route)) {
+            route = route !== 'current' ? _.find(this.routes, ['name', route]) : this.activeRoute;
         }
 
         if (!route) {
@@ -232,10 +227,6 @@ class Router {
         return this.activeRoute;
     }
 
-    getCurrentPathName(addon = '') {
-        return window.location.pathname + addon;
-    }
-
     setBaseUrl(url) {
         if (!this.baseUrl) {
             this.baseUrl = url;
@@ -265,7 +256,7 @@ class Router {
     }
 
     getDefaultRoute() {
-        return this.defaultRoute;
+        return _.isString(this.defaultRoute) ? this.getRoute(this.defaultRoute) : this.defaultRoute;
     }
 
     getBaseUrl() {
@@ -273,20 +264,16 @@ class Router {
     }
 
     handleAnchorClick(a, e) {
-        let href = a.href;
+        let url = a.href;
 
-        if (_.endsWith(href, '#')) {
+        if (_.endsWith(url, '#')) {
             return e.preventDefault();
         }
 
-        if (href.indexOf(this.appUrl) === 0) {
-            href = href.replace(window.location.origin, '');
-            if (this.getBaseUrl() === '/' && !Utils.matchRoute(this, href)) {
-                return false;
-            }
-
+        if (url.indexOf(webinyWebPath) === 0) {
             e.preventDefault();
-            this.goToUrl(href);
+            url = url.replace(webinyWebPath, '');
+            History.pushState({url}, null, url);
         }
     }
 
@@ -300,35 +287,6 @@ class Router {
             }
         });
         return sort.length ? sort.join(',') : null;
-    }
-
-    sortersToObject(sorters) {
-        const object = {};
-        sorters.split(',').map(sorter => {
-            if (sorter === '') {
-                return;
-            }
-            if (_.startsWith(sorter, '-')) {
-                object[_.trimStart(sorter, '-')] = -1;
-            } else {
-                object[sorter] = 1;
-            }
-        });
-        return object;
-    }
-
-    hideLoader() {
-        const loader = document.querySelector('.preloader-wrap');
-        if (loader) {
-            setTimeout(() => {
-                dynamics.animate(loader, {
-                    opacity: 0
-                }, {
-                    type: dynamics.easeOut,
-                    duration: 500
-                });
-            }, 200);
-        }
     }
 }
 
