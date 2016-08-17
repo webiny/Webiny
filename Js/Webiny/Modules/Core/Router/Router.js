@@ -37,7 +37,6 @@ class Router {
             History.Adapter.bind(window, 'statechange', () => {
                 const url = History.getState().data.url || History.getState().url;
                 const matched = Utils.matchRoute(this, url);
-                console.log(matched);
                 if (!matched) {
                     return Utils.handleRouteNotMatched(url, this.routeNotMatched);
                 }
