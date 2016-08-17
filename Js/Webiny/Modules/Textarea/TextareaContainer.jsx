@@ -1,5 +1,6 @@
 import Webiny from 'Webiny';
 import Textarea from './Textarea';
+const Ui = Webiny.Ui.Components;
 
 class TextareaContainer extends Webiny.Ui.FormComponent {
 
@@ -15,7 +16,11 @@ TextareaContainer.defaultProps = {
 
         let label = null;
         if (this.props.label) {
-            label = <label key="label" className="control-label">{this.props.label}</label>;
+            let tooltip = null;
+            if(this.props.tooltop){
+                tooltip = <Ui.Tooltip target={<Ui.Icon icon="icon-info-circle"/>}>{this.props.tooltop}</Ui.Tooltip>;
+            }
+            label = <label key="label" className="control-label">{this.props.label}{tooltip}</label>;
         }
 
         let validationMessage = null;

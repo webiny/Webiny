@@ -1,5 +1,6 @@
 import Webiny from 'Webiny';
 import Input from './Input';
+const Ui = Webiny.Ui.Components;
 
 class InputContainer extends Webiny.Ui.FormComponent {
 
@@ -37,7 +38,11 @@ InputContainer.defaultProps = {
 
         let label = null;
         if (this.props.label) {
-            label = <label className="control-label">{this.props.label}</label>;
+            let tooltip = null;
+            if(this.props.tooltop){
+                tooltip = <Ui.Tooltip target={<Ui.Icon icon="icon-info-circle"/>}>{this.props.tooltop}</Ui.Tooltip>;
+            }
+            label = <label className="control-label">{this.props.label}{tooltip}</label>;
         }
 
         let validationIcon = null;
