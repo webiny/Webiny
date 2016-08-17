@@ -5,20 +5,7 @@ import ErrorDetailsApi from './ErrorDetailsApi';
 import ErrorDetailsPhp from './ErrorDetailsPhp';
 
 class ErrorGroup extends Webiny.Ui.View {
-
-    resolveError(error, list) {
-        const api = new Webiny.Api.Endpoint('/entities/core/logger-entry');
-        api.get('resolve/' + error.id).then((response) => {
-            if (response.data.data.errorCount < 1) {
-                // if we have 0 errors in this group, we have to refresh the parent table
-                this.props.errorGroupList.loadData();
-            } else {
-                list.loadData();
-            }
-
-            this.props.resolveCallback(response.data.data.errorGroup, response.data.data.errorCount);
-        });
-    }
+    
 }
 
 ErrorGroup.defaultProps = {
@@ -59,7 +46,7 @@ ErrorGroup.defaultProps = {
                                         <Ui.ExpandableList.Action
                                             label="Resolve Item"
                                             icon="icon-check"
-                                            onClick={()=>this.resolveError(row, list)}/>
+                                            onClick={()=>this.props.resolveError(row, list, this.props.parentList)}/>
                                     </Ui.ExpandableList.ActionSet>
 
                                 </Ui.ExpandableList.Row>

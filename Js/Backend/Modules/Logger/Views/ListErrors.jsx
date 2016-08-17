@@ -8,13 +8,9 @@ class ListErrors extends Webiny.Ui.View {
     constructor(props) {
         super(props);
 
-        this.bindMethods('populateState');
+        this.bindMethods('resolveError');
 
         this.state = {};
-    }
-
-    populateState(id, count) {
-        this.state[id] = count;
     }
 
     resolveGroup(error, list) {
@@ -24,9 +20,17 @@ class ListErrors extends Webiny.Ui.View {
         });
     }
 
-    resolveCallback(errorGroup, newErrorCount) {
-        console.log('updated: ' + errorGroup + ' => ' + newErrorCount);
-        this.populateState(errorGroup, newErrorCount);
+    resolveError(error, list, parentList) {
+        const api = new Webiny.Api.Endpoint('/entities/core/logger-entry');
+        api.get('resolve/' + error.id).then((response) => {
+            if (response.data.data.errorCount < 1) {
+                // if we have 0 errors in this group, we have to refresh the parent table
+                parentList.loadData();
+            } else {
+                list.loadData();
+                this.ui('errorCount-' + response.data.data.errorGroup).updateCount(response.data.data.errorCount);
+            }
+        });
     }
 }
 
@@ -56,12 +60,11 @@ ListErrors.defaultProps = {
                                 <Ui.List.Table.Empty renderIf={!data.length}/>
                                 <Ui.ExpandableList>
                                     {data.map(row => {
-                                        this.populateState(row.id, row.errorCount);
                                         return (
 
                                             <Ui.ExpandableList.Row key={row.id}>
                                                 <Ui.ExpandableList.Field all={1} name="Count" className="text-center">
-                                                    <ErrorCount count={this.state[row.id]}/>
+                                                    <ErrorCount count={row.errorCount} ui={'errorCount-' + row.id}/>
                                                 </Ui.ExpandableList.Field>
                                                 <Ui.ExpandableList.Field all={5} name="Error">{row.error}</Ui.ExpandableList.Field>
                                                 <Ui.ExpandableList.Field all={4} name="Last Entry">
@@ -69,8 +72,7 @@ ListErrors.defaultProps = {
                                                 </Ui.ExpandableList.Field>
 
                                                 <Ui.ExpandableList.RowDetailsList title={row.error}>
-                                                    <ErrorGroup errorGroup={row} errorGroupList={errorList}
-                                                                resolveCallback={this.resolveCallback}/>
+                                                    <ErrorGroup errorGroup={row} resolveError={this.resolveError} parentList={errorList}/>
                                                 </Ui.ExpandableList.RowDetailsList>
 
                                                 <Ui.ExpandableList.ActionSet>

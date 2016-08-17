@@ -8,6 +8,12 @@ class ErrorCount extends Webiny.Ui.View {
         this.state = {
             errorCount: this.props.count
         };
+
+        this.bindMethods('updateCount');
+    }
+
+    updateCount(count) {
+        this.setState({errorCount: count});
     }
 
 }
