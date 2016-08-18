@@ -39,10 +39,10 @@ InputContainer.defaultProps = {
         let label = null;
         if (this.props.label) {
             let tooltip = null;
-            if(this.props.tooltop){
-                tooltip = <Ui.Tooltip target={<Ui.Icon icon="icon-info-circle"/>}>{this.props.tooltop}</Ui.Tooltip>;
+            if (this.props.tooltip) {
+                tooltip = <Ui.Tooltip target={<Ui.Icon icon="icon-info-circle"/>}>{this.props.tooltip}</Ui.Tooltip>;
             }
-            label = <label className="control-label">{this.props.label}{tooltip}</label>;
+            label = <label className="control-label">{this.props.label} {tooltip}</label>;
         }
 
         let validationIcon = null;

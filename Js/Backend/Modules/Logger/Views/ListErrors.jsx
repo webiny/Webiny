@@ -15,7 +15,7 @@ class ListErrors extends Webiny.Ui.View {
 
     resolveGroup(error, list) {
         const api = new Webiny.Api.Endpoint('/entities/core/logger-error-group');
-        api.get('resolve/' + error.id).then((response) => {
+        api.get('resolve/' + error.id).then(() => {
             list.loadData();
         });
     }
@@ -79,7 +79,7 @@ ListErrors.defaultProps = {
                                                     <Ui.ExpandableList.Action
                                                         label="Resolve Group"
                                                         icon="icon-check"
-                                                        onClick={()=>this.resolveGroup(row, errorList)}/>
+                                                        onClick={() => this.resolveGroup(row, errorList)}/>
                                                 </Ui.ExpandableList.ActionSet>
 
                                             </Ui.ExpandableList.Row>

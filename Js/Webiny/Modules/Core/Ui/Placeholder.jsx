@@ -1,6 +1,5 @@
 import ViewManager from './../Core/ViewManager';
 import Component from './../Core/Component';
-import Router from './../Router/Router';
 
 class Placeholder extends Component {
 

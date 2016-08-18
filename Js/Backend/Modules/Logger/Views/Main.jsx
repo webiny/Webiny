@@ -7,12 +7,8 @@ class Main extends Webiny.Ui.View {
 }
 
 Main.defaultProps = {
-
     renderer() {
-
-
         return (
-
             <Ui.View.List>
                 <Ui.View.Header title="Logger"/>
 

@@ -5,7 +5,7 @@ import ErrorDetailsApi from './ErrorDetailsApi';
 import ErrorDetailsPhp from './ErrorDetailsPhp';
 
 class ErrorGroup extends Webiny.Ui.View {
-    
+
 }
 
 ErrorGroup.defaultProps = {
@@ -46,7 +46,7 @@ ErrorGroup.defaultProps = {
                                         <Ui.ExpandableList.Action
                                             label="Resolve Item"
                                             icon="icon-check"
-                                            onClick={()=>this.props.resolveError(row, list, this.props.parentList)}/>
+                                            onClick={() => this.props.resolveError(row, list, this.props.parentList)}/>
                                     </Ui.ExpandableList.ActionSet>
 
                                 </Ui.ExpandableList.Row>

@@ -1,5 +1,7 @@
 import Webiny from 'Webiny';
 
+const platform = window.platform || null;
+
 class Logger {
     constructor() {
         // config
