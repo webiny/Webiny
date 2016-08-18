@@ -9,14 +9,11 @@ namespace Apps\Core\Php\Dispatchers;
 
 use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
 use Apps\Core\Php\DevTools\Response\ApiResponse;
-use Apps\Core\Php\Dispatchers\ApiMethod;
 use Apps\Core\Php\RequestHandlers\ApiEvent;
 use Apps\Core\Php\RequestHandlers\ApiException;
 
 class ServiceDispatcher extends AbstractApiDispatcher
 {
-    use ParamsInjectorTrait;
-
     public function handle(ApiEvent $event)
     {
         if (!$event->getUrl()->startsWith('/services')) {

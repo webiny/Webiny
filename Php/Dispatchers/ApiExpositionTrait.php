@@ -41,6 +41,14 @@ trait ApiExpositionTrait
         $httpMethod = strtolower($httpMethod);
         $methods = $this->apiMethods->key($httpMethod) ?? [];
 
+        ksort($methods);
+        uksort($methods, function($a, $b){
+            if($a[0] === '{' && $b[0] !== '{'){
+                return 1;
+            }
+            return 0;
+        });
+
         if ($url === '' && isset($methods['/'])) {
             return new MatchedApiMethod($methods['/'], []);
         }

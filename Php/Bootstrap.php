@@ -2,7 +2,6 @@
 namespace Apps\Core\Php;
 
 use Apps\Core\Php\DevTools\BootstrapTrait;
-use Apps\Core\Php\DevTools\Entity\Event\EntityEvent;
 use Apps\Core\Php\Entities\User;
 use Webiny\Component\Mailer\Mailer;
 use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
@@ -36,8 +35,9 @@ class Bootstrap
             $user->save();
         });
 
-        User::onBeforeSave(function (User $user) {
-
-        });
+        /*$this->addSeo('/website/lookbooks/{lookbook}', function(Seo $seo, Lookbook $lookbook){
+            $seo->setTitle($lookbook->name);
+            $seo->setImage($lookbook->featuredImage->src);
+        });*/
     }
 }
