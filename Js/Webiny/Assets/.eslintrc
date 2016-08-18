@@ -1,0 +1,71 @@
+{
+    "extends": "airbnb",
+    "rules": {
+        "react/no-multi-comp": 0,
+        "react/react-in-jsx-scope": 0,
+        "react/sort-comp": 0,
+        "react/prop-types": 0,
+        "react/jsx-closing-bracket-location": [
+            2,
+            "after-props"
+        ],
+        "react/jsx-indent-props": [
+            2,
+            4
+        ],
+        "react/jsx-boolean-value": 0,
+        "indent": [
+            2,
+            4,
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "comma-dangle": [
+            2,
+            "never"
+        ],
+        "object-curly-spacing": 0,
+        "new-cap": 0,
+        "no-param-reassign": 0,
+        "radix": [
+            2,
+            "as-needed"
+        ],
+        "no-console": 0,
+        "eol-last": 0,
+        "dot-notation": 0,
+        "no-script-url": 0
+    },
+    "globals": {
+        "webinyWebPath": false,
+        "webinyApiPath": false,
+        "webinyConfig": false,
+        "webinyEnvironment": false,
+        "jQuery": false,
+        "$": false,
+        "Cookies": false,
+        "Webiny": false,
+        "WebinyBootstrap": false,
+        "React": false,
+        "ReactDOM": false,
+        "ReactDOMServer": false,
+        "Bottle": false,
+        "Baobab": false,
+        "_": false,
+        "Q": false,
+        "axios": false,
+        "moment": false,
+        "accounting": false,
+        "isMobile": false,
+        "filesize": true,
+        "c3": false,
+        "md5": true,
+        "google": true,
+        "SimpleMDE": false,
+        "CodeMirror": false,
+        "dynamics": false,
+        "Clipboard": false,
+        "hljs": false
+    }
+}
