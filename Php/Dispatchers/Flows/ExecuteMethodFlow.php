@@ -37,7 +37,7 @@ class ExecuteMethodFlow extends AbstractFlow
         $params = $matchedMethod->getParams();
 
         if (!$this->wAuth()->canExecute($entity, $apiMethod->getPattern() . '.' . $httpMethod)) {
-            $message = 'You don\'t have an EXECUTE permission on ' . $apiMethod->getPattern() . ' in ' . get_class($entity);
+            $message = 'You are not authorized to execute ' . $apiMethod->getPattern() . ' in ' . get_class($entity);
             throw new ApiException($message, 'WBY-AUTHORIZATION', 401);
         }
 
@@ -45,7 +45,6 @@ class ExecuteMethodFlow extends AbstractFlow
 
         $bindTo = null;
         if ($id) {
-            unset($params['id']);
             $entity = $entity->findById($id);
             if (!$entity) {
                 throw new ApiException(get_class($entity) . ' with id `' . $id . '` was not found!', 'WBY-ED-EXECUTE_METHOD_FLOW-2');
@@ -77,6 +76,6 @@ class ExecuteMethodFlow extends AbstractFlow
 
     public function canHandle($httpMethod, $params)
     {
-        return count($params) >= 1;
+        return true;
     }
 }

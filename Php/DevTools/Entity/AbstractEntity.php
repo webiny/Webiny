@@ -8,6 +8,8 @@
 namespace Apps\Core\Php\DevTools\Entity;
 
 use Apps\Core\Php\Dispatchers\ApiExpositionTrait;
+use Apps\Core\Php\Dispatchers\Flows\CrudListFormatter;
+use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\Attribute\AbstractAttribute;
 use Webiny\Component\Entity\Attribute\DateAttribute;
 use Apps\Core\Php\DevTools\WebinyTrait;
@@ -123,11 +125,112 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             new SingleIndex('createdOn', 'createdOn')
         ]);
 
+
         $this->attr('modifiedOn')->datetime()->setAutoUpdate(true);
 
         /*$this->api('POST', 'restore/{restore}', function ($restore) {
             return $this->restore($restore)->toArray();
         });*/
+
+        /**
+         * @api.name CRUD List
+         */
+        $this->api('GET', '/', function () {
+            $filters = $this->wRequest()->getFilters();
+            $sorter = $this->wRequest()->getSortFields();
+
+            $entities = $this->find($filters, $sorter, $this->wRequest()->getPerPage(), $this->wRequest()->getPage());
+            $formatter = new CrudListFormatter($entities);
+
+            return $formatter->format($this->wRequest()->getFields());
+        })->setAuthorization(function () {
+            if (!$this->wAuth()->canRead(__CLASS__)) {
+                throw new ApiException('You don\'t have a READ permission on ' . __CLASS__, 'WBY-AUTHORIZATION', 401);
+            }
+        });
+
+        /**
+         * @api.name CRUD Get
+         */
+        $this->api('GET', '/{id}', function () {
+            return $this->toArray($this->wRequest()->getFields());
+        })->setAuthorization(function () {
+            if (!$this->wAuth()->canRead(__CLASS__)) {
+                throw new ApiException('You don\'t have a READ permission on ' . __CLASS__, 'WBY-AUTHORIZATION', 401);
+            }
+        });
+
+        /**
+         * @api.name CRUD Create
+         */
+        $this->api('POST', '/', function () {
+            try {
+                $data = $this->wRequest()->getRequestData();
+
+                if (!$this->isArray($data) && !$this->isArrayObject($data)) {
+                    throw new ApiException('Invalid data provided', 'WBY-ED-CRUD_CREATE_FLOW-1', 400);
+                }
+                $this->populate($data)->save();
+            } catch (EntityException $e) {
+                if ($e->getCode() == EntityException::VALIDATION_FAILED) {
+                    throw new ApiException($e->getMessage(), 'WBY-ED-CRUD_CREATE_FLOW-2', 422, $e->getInvalidAttributes());
+                }
+
+                $code = $e->getCode();
+                if (!$code) {
+                    $code = 'WBY-ED-CRUD_CREATE_FLOW-2';
+                }
+                throw new ApiException($e->getMessage(), $code, 422);
+            }
+
+            return $this->toArray($this->wRequest()->getFields());
+        })->setAuthorization(function () {
+            if (!$this->wAuth()->canCreate(__CLASS__)) {
+                throw new ApiException('You don\'t have a CREATE permission on ' . __CLASS__, 'WBY-AUTHORIZATION', 401);
+            }
+        });
+
+        /**
+         * @api.name CRUD Update
+         */
+        $this->api('PATCH', '/{id}', function () {
+            try {
+                $this->populate($this->wRequest()->getRequestData())->save();
+
+                return $this->toArray($this->wRequest()->getFields());
+            } catch (EntityException $e) {
+                if ($e->getCode() == EntityException::VALIDATION_FAILED) {
+                    throw new ApiException($e->getMessage(), 'WBY-ED-CRUD_UPDATE-1', 422, $e->getInvalidAttributes());
+                }
+
+                $code = $e->getCode();
+                if (!$code) {
+                    $code = 'WBY-ED-CRUD_UPDATE_FLOW-1';
+                }
+                throw new ApiException($e->getMessage(), $code, 422);
+            }
+        })->setAuthorization(function () {
+            if (!$this->wAuth()->canUpdate(__CLASS__)) {
+                throw new ApiException('You don\'t have an UPDATE permission on ' . __CLASS__, 'WBY-AUTHORIZATION', 401);
+            }
+        });
+
+        /**
+         * @api.name CRUD Delete
+         */
+        $this->api('DELETE', '/{id}', function () {
+            try {
+                $this->delete();
+
+                return true;
+            } catch (EntityException $e) {
+                throw new ApiException('Failed to delete entity! ' . $e->getMessage(), $e->getCode(), 400);
+            }
+        })->setAuthorization(function () {
+            if (!$this->wAuth()->canDelete(__CLASS__)) {
+                throw new ApiException('You don\'t have a DELETE permission on ' . __CLASS__, 'WBY-AUTHORIZATION', 401);
+            }
+        });
 
         /**
          * Fire event for registering extra attributes

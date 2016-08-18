@@ -72,26 +72,6 @@ Services:
         Class: \Apps\Core\Php\Dispatchers\Flows\ExportFlow
         Tags: [entity-dispatcher-flow]
 
-    EntityFlowCrudList:
-        Class: \Apps\Core\Php\Dispatchers\Flows\CrudListFlow
-        Tags: [entity-dispatcher-flow]
-
-    EntityFlowCrudGet:
-        Class: \Apps\Core\Php\Dispatchers\Flows\CrudGetFlow
-        Tags: [entity-dispatcher-flow]
-
-    EntityFlowCrudCreate:
-        Class: \Apps\Core\Php\Dispatchers\Flows\CrudCreateFlow
-        Tags: [entity-dispatcher-flow]
-
-    EntityFlowCrudUpdate:
-        Class: \Apps\Core\Php\Dispatchers\Flows\CrudUpdateFlow
-        Tags: [entity-dispatcher-flow]
-
-    EntityFlowCrudDelete:
-        Class: \Apps\Core\Php\Dispatchers\Flows\CrudDeleteFlow
-        Tags: [entity-dispatcher-flow]
-
     EntityFlowExecuteMethod:
         Class: \Apps\Core\Php\Dispatchers\Flows\ExecuteMethodFlow
         Tags: [entity-dispatcher-flow]

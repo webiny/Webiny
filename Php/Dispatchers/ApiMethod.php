@@ -10,6 +10,7 @@ namespace Apps\Core\Php\Dispatchers;
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\DevTools\Services\AbstractService;
+use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Validation\Validation;
 use Webiny\Component\Validation\ValidationException;
@@ -23,7 +24,7 @@ use Webiny\Component\Validation\ValidationException;
  */
 class ApiMethod
 {
-    use ParamsInjectorTrait, StdLibTrait, WebinyTrait;
+    use StdLibTrait, WebinyTrait;
 
     private $httpMethod;
     private $pattern;
@@ -156,6 +157,60 @@ class ApiMethod
         $this->bodyValidators = array_merge($this->bodyValidators, $validators);
 
         return $this;
+    }
+
+    protected function injectParams($function, array $params)
+    {
+        $rm = new \ReflectionFunction($function);
+
+        $methodParams = [];
+        $methodRequiredParams = 0;
+        /* @var $p \ReflectionParameter */
+        foreach ($rm->getParameters() as $p) {
+            if ($p->getName() == 'parent') {
+                continue;
+            }
+            $pClass = $p->getClass();
+            $methodParams[$p->getName()] = [
+                'name'     => $p->getName(),
+                'class'    => $pClass ? $pClass->getName() : null,
+                'required' => !$p->allowsNull()
+            ];
+
+            if (!$p->allowsNull()) {
+                $methodRequiredParams++;
+            }
+        }
+
+        if (count($params) < $methodRequiredParams) {
+            $missingParams = array_slice(array_keys($methodParams), count($params));
+            throw new ApiException('Missing required params', 'WBY-PARAMS_INJECTOR-1', 400, $missingParams);
+        }
+
+        $index = 0;
+        $injectedParams = [];
+        foreach ($methodParams as $pName => $mp) {
+            if ($mp['class']) {
+                $requestedValue = $params[$pName];
+                // If parameter class is AbstractEntity, it means we need to replace it with the actual context class
+                if($mp['class'] === 'Apps\Core\Php\DevTools\Entity\AbstractEntity'){
+                    $mp['class'] = get_class($this->context);
+                }
+                $paramValue = call_user_func_array([$mp['class'], 'findById'], [$requestedValue]);
+                if ($mp['required'] && $paramValue === null) {
+                    $data = [];
+                    $data[$mp['name']] = $mp['class'] . ' with ID `' . $requestedValue . '` was not found!';
+                    throw new ApiException('Invalid parameters', 'WBY-PARAMS_INJECTOR-2', 400, $data);
+                }
+                $injectedParams[] = $paramValue;
+            } else {
+                $injectedParams[] = $params[$pName];
+            }
+
+            $index++;
+        }
+
+        return $injectedParams;
     }
 
     private function createParent($index)
