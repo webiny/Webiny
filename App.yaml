@@ -89,12 +89,8 @@ Events:
                 - {Handler: Php/Dispatchers/ServiceDispatcher}
 
 Services:
-    EntityFlowExport:
-        Class: \Apps\Core\Php\Dispatchers\Flows\ExportFlow
-        Tags: [entity-dispatcher-flow]
-
-    EntityFlowExecuteMethod:
-        Class: \Apps\Core\Php\Dispatchers\Flows\ExecuteMethodFlow
+    ExecuteEntityMethodFlow:
+        Class: \Apps\Core\Php\Dispatchers\Flows\ExecuteEntityMethodFlow
         Tags: [entity-dispatcher-flow]
 
     SmartyExtension:

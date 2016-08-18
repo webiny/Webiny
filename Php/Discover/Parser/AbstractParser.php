@@ -29,11 +29,11 @@ abstract class AbstractParser
 
     abstract public function getApiMethods();
 
-    function __construct(AppParser $app, $entity)
+    function __construct(AppParser $app, $endpoint)
     {
         $this->app = $app;
-        $this->class = $entity;
-        $this->name = $this->str($entity)->explode('\\')->last()->val();
+        $this->class = $endpoint['class'];
+        $this->name = $this->str($this->class)->explode('\\')->last()->val();
         $this->slug = $this->str($this->name)->kebabCase()->pluralize()->val();
     }
 

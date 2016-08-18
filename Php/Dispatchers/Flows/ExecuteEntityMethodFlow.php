@@ -10,7 +10,6 @@ namespace Apps\Core\Php\Dispatchers\Flows;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\DevTools\Reports\ReportInterface;
-use Apps\Core\Php\Dispatchers\AbstractFlow;
 use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\Attribute\Validation\ValidationException;
 use Webiny\Component\Entity\EntityException;
@@ -18,10 +17,17 @@ use Webiny\Component\StdLib\Exception\AbstractException;
 
 /**
  * Class ExecuteMethodFlow
- * @package Apps\Core\Php\Dispatchers
+ * @package Apps\Core\Php\Dispatchers\Flows
  */
-class ExecuteMethodFlow extends AbstractFlow
+class ExecuteEntityMethodFlow extends AbstractFlow
 {
+    private $patterns = [
+        '/.get'       => 'crudRead',
+        '{id}.get'    => 'crudRead',
+        '/.post'      => 'crudCreate',
+        '{id}.patch'  => 'crudUpdate',
+        '{id}.delete' => 'crudDelete'
+    ];
 
     public function handle(AbstractEntity $entity, $params)
     {
@@ -36,8 +42,9 @@ class ExecuteMethodFlow extends AbstractFlow
         $apiMethod = $matchedMethod->getApiMethod();
         $params = $matchedMethod->getParams();
 
-        if (!$this->wAuth()->canExecute($entity, $apiMethod->getPattern() . '.' . $httpMethod)) {
-            $message = 'You are not authorized to execute ' . $apiMethod->getPattern() . ' in ' . get_class($entity);
+        $pattern = $apiMethod->getPattern() . '.' . $httpMethod;
+        if (!$this->wAuth()->canExecute($entity, $this->patterns[$pattern] ?? $pattern)) {
+            $message = 'You are not authorized to execute ' . strtoupper($httpMethod) . ':' . $apiMethod->getPattern() . ' on ' . get_class($entity);
             throw new ApiException($message, 'WBY-AUTHORIZATION', 401);
         }
 

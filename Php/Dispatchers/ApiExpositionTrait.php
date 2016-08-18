@@ -8,6 +8,7 @@
 namespace Apps\Core\Php\Dispatchers;
 
 use Apps\Core\Php\RequestHandlers\ApiException;
+use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Router\Route\Route;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
@@ -26,6 +27,35 @@ trait ApiExpositionTrait
     private $apiMethods;
 
     /**
+     * Format given EntityCollection using $fields into a standard list response
+     *
+     * @param EntityCollection $collection
+     * @param string           $fields
+     *
+     * @return array
+     */
+    public static function apiFormatList(EntityCollection $collection, $fields)
+    {
+        $perPage = $collection->getLimit();
+        $offset = $collection->getOffset();
+        $page = 1;
+        if ($offset > 0) {
+            $page = ($offset / $perPage) + 1;
+        }
+
+        return [
+            'meta' => [
+                'totalCount'  => $collection->totalCount(),
+                'totalPages'  => ceil($collection->totalCount() / $perPage),
+                'perPage'     => $perPage,
+                'currentPage' => $page
+            ],
+            'list' => $collection->toArray($fields)
+        ];
+
+    }
+
+    /**
      *
      * @param string $httpMethod
      * @param string $url
@@ -42,10 +72,11 @@ trait ApiExpositionTrait
         $methods = $this->apiMethods->key($httpMethod) ?? [];
 
         ksort($methods);
-        uksort($methods, function($a, $b){
-            if($a[0] === '{' && $b[0] !== '{'){
+        uksort($methods, function ($a, $b) {
+            if ($a[0] === '{' && $b[0] !== '{') {
                 return 1;
             }
+
             return 0;
         });
 

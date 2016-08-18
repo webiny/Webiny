@@ -7,7 +7,9 @@
 
 namespace Apps\Core\Php\PackageManager;
 
+use Apps\Core\Php\DevTools\Interfaces\PublicApiInterface;
 use Webiny\Component\Config\ConfigObject;
+use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Storage\Directory\Directory;
 
 /**
@@ -118,9 +120,10 @@ class App extends AbstractPackage
             $serviceName = $this->str($file->getKey())->explode('/')->last()->replace('.php', '')->val();
             $id = $this->str($serviceClass)->replace('\\', '.')->val();
             $services[$serviceName] = [
-                'id'    => $id,
-                'name'  => $serviceName,
-                'class' => $serviceClass
+                'id'     => $id,
+                'name'   => $serviceName,
+                'class'  => $serviceClass,
+                'public' => $this->isInstanceOf(new $serviceClass, '\Apps\Core\Php\DevTools\Interfaces\PublicApiInterface')
             ];
 
             if ($withDetails) {

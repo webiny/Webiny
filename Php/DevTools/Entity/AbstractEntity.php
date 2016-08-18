@@ -8,7 +8,6 @@
 namespace Apps\Core\Php\DevTools\Entity;
 
 use Apps\Core\Php\Dispatchers\ApiExpositionTrait;
-use Apps\Core\Php\Dispatchers\Flows\CrudListFormatter;
 use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\Attribute\AbstractAttribute;
 use Webiny\Component\Entity\Attribute\DateAttribute;
@@ -133,35 +132,26 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         });*/
 
         /**
-         * @api.name CRUD List
+         * @api.name List records
          */
         $this->api('GET', '/', function () {
             $filters = $this->wRequest()->getFilters();
             $sorter = $this->wRequest()->getSortFields();
 
             $entities = $this->find($filters, $sorter, $this->wRequest()->getPerPage(), $this->wRequest()->getPage());
-            $formatter = new CrudListFormatter($entities);
 
-            return $formatter->format($this->wRequest()->getFields());
-        })->setAuthorization(function () {
-            if (!$this->wAuth()->canRead(__CLASS__)) {
-                throw new ApiException('You don\'t have a READ permission on ' . __CLASS__, 'WBY-AUTHORIZATION', 401);
-            }
+            return $this->apiFormatList($entities, $this->wRequest()->getFields());
         });
 
         /**
-         * @api.name CRUD Get
+         * @api.name Get a record by ID
          */
         $this->api('GET', '/{id}', function () {
             return $this->toArray($this->wRequest()->getFields());
-        })->setAuthorization(function () {
-            if (!$this->wAuth()->canRead(__CLASS__)) {
-                throw new ApiException('You don\'t have a READ permission on ' . __CLASS__, 'WBY-AUTHORIZATION', 401);
-            }
         });
 
         /**
-         * @api.name CRUD Create
+         * @api.name Create a new record
          */
         $this->api('POST', '/', function () {
             try {
@@ -184,14 +174,10 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             }
 
             return $this->toArray($this->wRequest()->getFields());
-        })->setAuthorization(function () {
-            if (!$this->wAuth()->canCreate(__CLASS__)) {
-                throw new ApiException('You don\'t have a CREATE permission on ' . __CLASS__, 'WBY-AUTHORIZATION', 401);
-            }
         });
 
         /**
-         * @api.name CRUD Update
+         * @api.name Update a record by ID
          */
         $this->api('PATCH', '/{id}', function () {
             try {
@@ -209,14 +195,10 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                 }
                 throw new ApiException($e->getMessage(), $code, 422);
             }
-        })->setAuthorization(function () {
-            if (!$this->wAuth()->canUpdate(__CLASS__)) {
-                throw new ApiException('You don\'t have an UPDATE permission on ' . __CLASS__, 'WBY-AUTHORIZATION', 401);
-            }
         });
 
         /**
-         * @api.name CRUD Delete
+         * @api.name Delete a record by ID
          */
         $this->api('DELETE', '/{id}', function () {
             try {
@@ -225,10 +207,6 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                 return true;
             } catch (EntityException $e) {
                 throw new ApiException('Failed to delete entity! ' . $e->getMessage(), $e->getCode(), 400);
-            }
-        })->setAuthorization(function () {
-            if (!$this->wAuth()->canDelete(__CLASS__)) {
-                throw new ApiException('You don\'t have a DELETE permission on ' . __CLASS__, 'WBY-AUTHORIZATION', 401);
             }
         });
 
@@ -379,10 +357,20 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             $data['attributes'][] = $attrData;
         }
 
+        $crudPatterns = [
+            '/.get',
+            '{id}.get',
+            '/.post',
+            '{id}.patch',
+            '{id}.delete'
+        ];
 
         foreach ($entity->getApiMethods() as $httpMethod => $methods) {
             /* @var $method \Apps\Core\Php\Dispatchers\ApiMethod */
             foreach ($methods as $pattern => $method) {
+                if (in_array($pattern . '.' . $httpMethod, $crudPatterns)) {
+                    continue;
+                }
                 $data['methods'][] = [
                     'key'        => $pattern . '.' . $httpMethod,
                     'httpMethod' => $httpMethod,

@@ -29,6 +29,9 @@ class UserGroupsForm extends Webiny.Ui.View {
     }
 
     renderService(service, model, container) {
+        if(service.public){
+            return null;
+        }
         return (
             <div key={service.id}>
                 <Ui.Form.Fieldset title={service.name}/>

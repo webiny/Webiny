@@ -1,28 +1,22 @@
 <?php
 namespace Apps\Core\Php\Discover\Parser;
 
-use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
-use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\Attribute\AbstractAttribute;
 use Webiny\Component\Entity\Attribute\AttributeType;
-use Webiny\Component\Mongo\MongoTrait;
-use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\StdObjectException;
-use Webiny\Component\Storage\File\File;
 
 class EntityParser extends AbstractParser
 {
     protected $baseClass = 'Apps\Core\Php\DevTools\Entity\AbstractEntity';
     private $apiMethods;
     private $defaultValues;
-    private $paramId;
     private $headerAuthorizationToken;
 
-    function __construct(AppParser $app, $entity)
+    function __construct(AppParser $app, $endpoint)
     {
-        parent::__construct($app, $entity);
+        parent::__construct($app, $endpoint);
         $this->url = '/entities/' . $app->getSlug() . '/' . $this->slug;
         $this->defaultValues = [
             'object'   => new \stdClass(),
@@ -32,14 +26,6 @@ class EntityParser extends AbstractParser
             'id'       => (string)$this->mongo()->id(),
             'boolean'  => true,
             'string'   => ''
-        ];
-
-        $this->paramId = [
-            'name'        => 'id',
-            'in'          => 'path',
-            'description' => 'Mongo ID of ' . $this->name,
-            'type'        => 'string',
-            'required'    => true
         ];
 
         $this->headerAuthorizationToken = [
@@ -60,15 +46,7 @@ class EntityParser extends AbstractParser
     public function getApiMethods()
     {
         if (!$this->apiMethods) {
-            $this->apiMethods = [
-                'crudList'   => $this->getCrudList(),
-                'crudGet'    => $this->getCrudGet(),
-                'crudCreate' => $this->getCrudCreate(),
-                'crudUpdate' => $this->getCrudUpdate(),
-                'crudDelete' => $this->getCrudDelete()
-            ];
-            $customMethods = $this->getCustomMethods();
-            $this->apiMethods = array_merge($this->apiMethods, $customMethods);
+            $this->apiMethods = $this->getCustomMethods();
         }
 
         return $this->apiMethods;
@@ -145,90 +123,6 @@ class EntityParser extends AbstractParser
         return $required;
     }
 
-    private function getCrudList()
-    {
-        return [
-            'path'       => $this->url,
-            'name'       => 'List ' . $this->str($this->name)->pluralize(),
-            'method'     => 'GET',
-            'parameters' => [],
-            'headers'    => [
-                $this->headerAuthorizationToken,
-                $this->headerApiToken
-            ],
-            'tests'      => [
-                'var jsonData = JSON . parse(responseBody);',
-                'tests["Status code is 200"] = responseCode . code === 200;',
-                'tests["Meta exists"] = jsonData . data !== undefined && jsonData . data . meta instanceof Object;',
-                'tests["List exists"] = jsonData . data !== undefined && jsonData . data . list instanceof Array;'
-            ]
-        ];
-    }
-
-    private function getCrudGet()
-    {
-        return [
-            'path'       => $this->url . '/{id}',
-            'name'       => 'Get a single ' . $this->name . ' by ID',
-            'method'     => 'GET',
-            'parameters' => [
-                $this->paramId
-            ],
-            'headers'    => [
-                $this->headerAuthorizationToken,
-                $this->headerApiToken
-            ]
-        ];
-    }
-
-    private function getCrudCreate()
-    {
-        return [
-            'path'       => $this->url,
-            'name'       => 'Create a ' . $this->name,
-            'method'     => 'POST',
-            'parameters' => [],
-            'headers'    => [
-                $this->headerAuthorizationToken,
-                $this->headerApiToken
-            ],
-            'body'       => $this->getRequiredAttributes()
-        ];
-    }
-
-    private function getCrudUpdate()
-    {
-        return [
-            'path'       => $this->url . '/{id}',
-            'name'       => 'Update a single ' . $this->name,
-            'method'     => 'PATCH',
-            'parameters' => [
-                $this->paramId
-            ],
-            'headers'    => [
-                $this->headerAuthorizationToken,
-                $this->headerApiToken
-            ],
-            'body'       => $this->getRequiredAttributes()
-        ];
-    }
-
-    private function getCrudDelete()
-    {
-        return [
-            'path'       => $this->url . '/{id}',
-            'name'       => 'Delete a single ' . $this->name . ' by ID',
-            'method'     => 'DELETE',
-            'parameters' => [
-                $this->paramId
-            ],
-            'headers'    => [
-                $this->headerAuthorizationToken,
-                $this->headerApiToken
-            ]
-        ];
-    }
-
     /**
      * Recursively parse entity classes to find all methods exposed to API
      */
@@ -245,7 +139,8 @@ class EntityParser extends AbstractParser
                     'description' => $config->key('description', '', true),
                     'method'      => strtoupper($httpMethod),
                     'headers'     => [
-                        'Api-Token' => $this->headerApiToken
+                        'Authorization' => $this->headerAuthorizationToken,
+                        'Api-Token'     => $this->headerApiToken
                     ]
                 ];
 

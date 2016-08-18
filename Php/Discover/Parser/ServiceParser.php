@@ -16,10 +16,18 @@ class ServiceParser extends AbstractParser
 {
     protected $baseClass = 'Apps\Core\Php\DevTools\Services\AbstractService';
 
-    function __construct(AppParser $app, $service)
+    function __construct(AppParser $app, $endpoint)
     {
-        parent::__construct($app, $service);
+        $this->public = $endpoint['public'];
+        parent::__construct($app, $endpoint);
         $this->url = '/services/' . $app->getSlug() . '/' . $this->slug;
+
+        $this->headerApiToken = [
+            'name'        => 'Api-Token',
+            'description' => 'API token',
+            'type'        => 'string',
+            'required'    => true
+        ];
     }
 
     public function getApiMethods()
@@ -34,7 +42,13 @@ class ServiceParser extends AbstractParser
                     'name'        => $config->key('name'),
                     'description' => $config->key('description', '', true),
                     'method'      => strtoupper($httpMethod),
+                    'headers'     => []
                 ];
+
+                if (!$this->public) {
+                    $definition['headers']['Api-Token'] = $this->headerApiToken;
+                }
+
 
                 if (count($config['query']) > 0) {
                     $definition['path'] .= '?' . http_build_query($config['query']);

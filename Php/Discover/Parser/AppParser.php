@@ -56,7 +56,7 @@ class AppParser
             // Check if abstract
             $cls = new \ReflectionClass($class);
             if (!$cls->isAbstract() && !$cls->isTrait()) {
-                $entities[] = new EntityParser($this, $class);
+                $entities[] = new EntityParser($this, $entity);
             }
         }
 
@@ -76,7 +76,7 @@ class AppParser
             // Check if abstract
             $cls = new \ReflectionClass($class);
             if (!$cls->isAbstract() && !$cls->isTrait()) {
-                $services[] = new ServiceParser($this, $class);
+                $services[] = new ServiceParser($this, $service);
             }
         }
 

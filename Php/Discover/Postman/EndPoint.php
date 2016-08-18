@@ -3,7 +3,6 @@ namespace Apps\Core\Php\Discover\Postman;
 
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\Discover\Parser\AbstractParser;
-use Apps\Core\Php\Discover\Parser\EntityParser;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
 
@@ -12,12 +11,12 @@ class EndPoint
     use WebinyTrait, StdLibTrait;
 
     /**
-     * @var EntityParser
+     * @var AbstractParser
      */
     private $parser;
 
     /**
-     * Entity API method
+     * API method
      * @var array
      */
     private $method;
