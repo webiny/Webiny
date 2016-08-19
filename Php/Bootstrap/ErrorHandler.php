@@ -31,7 +31,7 @@ class ErrorHandler
 
     function __construct()
     {
-        if($this->wConfig()->get('Application.Logger.Status', true)){
+        if($this->wConfig()->get('Application.Logger.Enabled', true)){
             set_error_handler([$this, 'logError'], E_ALL);
             set_exception_handler([$this, 'logException']);
             register_shutdown_function([$this, 'logFatalError']);
