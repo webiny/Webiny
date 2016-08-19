@@ -5,6 +5,7 @@ use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\DevTools\Services\AbstractService;
 use Apps\Core\Php\Dispatchers\ApiExpositionTrait;
+use Apps\Core\Php\PackageManager\App;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Storage\Directory\Directory;
 use Webiny\Component\Storage\File\File;
@@ -18,30 +19,31 @@ class Apps extends AbstractService
 {
     function __construct()
     {
-        $this->api('get', '{appName}', function ($appName = null) {
-            return $this->index($appName);
-        });
-    }
-
-    private function index($appName = null)
-    {
-        if (!$appName) {
+        /**
+         * @api.name Get all active apps meta
+         */
+        $this->api('get', '/', function () {
             return $this->getAppsMeta();
-        }
+        });
 
-        if ($appName === 'backend') {
-            // Get Backend apps
-            $apps = [];
-            foreach ($this->getAppsMeta() as $app => $assets) {
-                if ($this->str($app)->endsWith('.Backend') && $app != 'Core.Backend') {
-                    $apps[$app] = $assets;
+        /**
+         * @api.name Get single app/spa meta
+         */
+        $this->api('get', '{appName}', function ($appName = null) {
+            if ($appName === 'backend') {
+                // Get Backend apps
+                $apps = [];
+                foreach ($this->getAppsMeta() as $meta) {
+                    if ($this->str($meta['name'])->endsWith('.Backend') && $meta['name'] != 'Core.Backend') {
+                        $apps[] = $meta;
+                    }
                 }
+
+                return $apps;
             }
 
-            return $apps;
-        }
-
-        return $this->getAppsMeta($appName);
+            return $this->getAppsMeta($appName);
+        });
     }
 
     /**
@@ -54,48 +56,28 @@ class Apps extends AbstractService
      */
     public function getAppsMeta($app = null)
     {
-        if ($this->wIsProduction()) {
-            $storage = $this->wStorage('ProductionBuild');
-        } else {
-            $storage = $this->wStorage('DevBuild');
-        }
-
-        if (!$app) {
-            // If all apps are required we need to fetch meta only for versions currently enabled
-            $apps = ['Core' => null];
-            foreach ($this->wConfig()->get('Apps')->toArray() as $enabledApp => $version) {
-                $apps[$enabledApp] = !is_bool($version) ? $this->wApps($enabledApp)->getVersionPath() : false;
-            }
-        } else {
-            // If specific app is given, fetch only one meta.json of the active app version
-            list($appName, $jsApp) = explode('.', $app);
-            if ($appName === 'Core') {
-                $key = $appName . '/' . $jsApp;
-            } else {
-                $version = $this->wConfig()->get('Apps.' . $appName);
-                $version = !is_bool($version) ? $this->wApps($appName)->getVersionPath() : '';
-                $key = $appName . $version . '/' . $jsApp;
-            }
-            $meta = new File($key . '/meta.json', $storage);
-            if ($meta->exists()) {
-                return json_decode($meta->getContents(), true);
-            }
-
-            throw new AppException('meta.json was not found for ' . $app . '! Re-build the app and try again.');
-        }
-
-        // Fetch meta.json of each active app
         $assets = [];
-        foreach ($apps as $appName => $appVersion) {
-            $key = $appVersion ? $appName . '/' . $appVersion : $appName;
-            $files = new Directory($key, $storage, 1, '*meta.json');
-            /* @var $file File */
-            foreach ($files as $file) {
-                $data = json_decode($file->getContents(), true);
-                $assets[$data['name']] = $data;
+        /* @var $appObj App */
+        if (!$app) {
+            foreach ($this->wApps() as $appObj) {
+                $assets = array_merge($assets, $appObj->getBuildMeta());
             }
+
+            return $assets;
+        }
+
+        list($appName, $spaName) = explode('.', $app);
+        $appObj = $this->wApps($appName);
+        if ($appObj) {
+            if ($spaName) {
+                return $appObj->getBuildMeta($spaName);
+            }
+
+            return $appObj->getBuildMeta();
         }
 
         return $assets;
+
+        // throw new AppException('meta.json was not found for ' . $app . '! Re-build the app and try again.');
     }
 }

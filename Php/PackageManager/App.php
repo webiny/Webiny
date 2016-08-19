@@ -11,6 +11,7 @@ use Apps\Core\Php\DevTools\Interfaces\PublicApiInterface;
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Storage\Directory\Directory;
+use Webiny\Component\Storage\File\File;
 
 /**
  * Class that holds information about an application.
@@ -78,6 +79,28 @@ class App extends AbstractPackage
         $env = $this->wIsProduction() ? 'production' : 'development';
 
         return '/build/' . $env . '/' . $this->name . $this->getVersionPath();
+    }
+
+    public function getBuildMeta($jsApp = null)
+    {
+        if ($this->wIsProduction()) {
+            $storage = $this->wStorage('ProductionBuild');
+        } else {
+            $storage = $this->wStorage('DevBuild');
+        }
+
+        $files = new Directory($this->getName(), $storage, 1, '*meta.json');
+        $jsAppsMeta = [];
+        /* @var $file File */
+        foreach ($files as $file) {
+            $data = json_decode($file->getContents(), true);
+            if ($jsApp && $this->getName() . '.' . $jsApp === $data['name']) {
+                return $data;
+            }
+            $jsAppsMeta[] = $data;
+        }
+
+        return $jsAppsMeta;
     }
 
     public function getEntities($withDetails = false)

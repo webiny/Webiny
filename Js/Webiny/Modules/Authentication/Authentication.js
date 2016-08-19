@@ -24,7 +24,7 @@ class Module extends Webiny.Module {
         localStorage.loginRedirect = window.location.href;
         routerEvent.stop();
 
-        const isLoginRoute = routerEvent.route.name === 'Login';
+        const isLoginRoute = _.get(routerEvent.route, 'name') === 'Login';
 
         if (!isLoginRoute) {
             routerEvent.goToRoute('Login', {logout: 'not'});
