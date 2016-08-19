@@ -66,18 +66,16 @@ class Apps extends AbstractService
             return $assets;
         }
 
-        list($appName, $spaName) = explode('.', $app);
-        $appObj = $this->wApps($appName);
+        $parts = explode('.', $app);
+        $appObj = $this->wApps($parts[0]);
         if ($appObj) {
-            if ($spaName) {
-                return $appObj->getBuildMeta($spaName);
+            if (isset($parts[1])) {
+                return $appObj->getBuildMeta($parts[1]);
             }
 
             return $appObj->getBuildMeta();
         }
 
         return $assets;
-
-        // throw new AppException('meta.json was not found for ' . $app . '! Re-build the app and try again.');
     }
 }

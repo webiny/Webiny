@@ -7,6 +7,7 @@
 
 namespace Apps\Core\Php\DevTools;
 
+use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Webiny\Component\StdLib\SingletonTrait;
 
 /**
@@ -23,6 +24,10 @@ class Apps implements \IteratorAggregate
 
     public function getApp($name)
     {
+        if (!isset($this->apps['Apps/' . $name])) {
+            throw new AppException('App "' . $name . '" was not found!', 'WBY-APP_NOT_FOUND');
+        }
+
         return $this->apps['Apps/' . $name];
     }
 

@@ -7,6 +7,7 @@
 
 namespace Apps\Core\Php\PackageManager;
 
+use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\DevTools\Interfaces\PublicApiInterface;
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\StdLib\StdLibTrait;
@@ -98,6 +99,10 @@ class App extends AbstractPackage
                 return $data;
             }
             $jsAppsMeta[] = $data;
+        }
+
+        if ($jsApp) {
+            throw new AppException('App "' . $this->getName() . '.' . $jsApp . '" was not found!', 'WBY-APP_NOT_FOUND');
         }
 
         return $jsAppsMeta;
