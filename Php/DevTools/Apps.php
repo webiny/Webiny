@@ -23,8 +23,6 @@ class Apps implements \IteratorAggregate
 
     public function getApp($name)
     {
-        $pero = [];
-        echo $pero['asd'];
         return $this->apps['Apps/' . $name];
     }
 
