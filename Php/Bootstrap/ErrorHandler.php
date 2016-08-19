@@ -2,7 +2,9 @@
 namespace Apps\Core\Php\Bootstrap;
 
 use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
+use Apps\Core\Php\DevTools\Response\CliResponse;
 use Apps\Core\Php\DevTools\WebinyTrait;
+use Apps\Core\Php\Entities\LoggerErrorGroup;
 use Webiny\Component\Http\Response;
 
 class ErrorHandler
@@ -10,6 +12,7 @@ class ErrorHandler
     use WebinyTrait;
 
     private $isFatal = false;
+    private $lastStackTrace = [];
     private $errors = [];
     private $codes = [
         E_USER_NOTICE       => 'notice',
@@ -28,20 +31,32 @@ class ErrorHandler
 
     function __construct()
     {
-        set_error_handler([$this, 'logError'], E_ALL);
-        set_exception_handler([$this, 'logException']);
-        register_shutdown_function([$this, 'logFatalError']);
+        if($this->wConfig()->get('Application.Logger.Enabled', true)){
+            set_error_handler([$this, 'logError'], E_ALL);
+            set_exception_handler([$this, 'logException']);
+            register_shutdown_function([$this, 'logFatalError']);
+        }
+
+        if($this->wConfig()->get('Application.Logger.DisplayErrors', false)){
+            error_reporting(E_ALL);
+            ini_set('display_errors', 1);
+        }else{
+            error_reporting(0);
+            ini_set('display_errors', 0);
+        }
     }
 
     public function logError($errorCode, $errorMessage, $errorFile, $errorLine)
     {
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
         $error = [
             'msg'   => ($this->codes[$errorCode] ?? 'notice') . ': ' . $errorMessage,
-            'stack' => print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3), true)
+            'stack' => print_r($backtrace, true)
         ];
 
         if ($this->codes[$errorCode] == 'fatal') {
             $this->isFatal = true;
+            $this->lastStackTrace = $backtrace;
         }
 
         $this->saveError($error);
@@ -63,20 +78,23 @@ class ErrorHandler
         ];
 
         $this->isFatal = true;
+        $this->lastStackTrace = $backtrace;
         $this->saveError($error);
     }
 
     public function logFatalError()
     {
         $error = error_get_last();
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
 
         if (is_array($error) && $error['type'] != '') {
             $error = [
                 'msg'   => ($this->codes[$error['type']] ?? 'notice') . ': ' . $error['message'],
-                'stack' => print_r(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3), true)
+                'stack' => print_r($backtrace, true)
             ];
 
             $this->isFatal = true;
+            $this->lastStackTrace = true;
             $this->saveError($error);
         }
     }
@@ -109,16 +127,25 @@ class ErrorHandler
             $this->saveErrorsToLogger();
 
             // check if we want to display the errors or not
-            $displayErrors = $this->wConfig()->get('Application.DisplayErrors', false);
+            $displayErrors = $this->wConfig()->get('Application.Logger.DisplayErrors', false);
             if ($displayErrors) {
+                $error['stack'] = $this->lastStackTrace; // we display it as array so when json_encode happens that the output looks nicer
                 $data = $error;
             } else {
                 $data = '';
             }
 
-            // send the error response
-            $response = new ApiErrorResponse($data, 'An error occurred on URL: ' . $this->wRequest()->getCurrentUrl(), 'W1');
-            Response::create($response->output(), 503)->send();
+            // create the error response
+            if(php_sapi_name() === 'cli'){
+                $response = new CliResponse($data);
+                $response = $response->output();
+            }else{
+                $response = new ApiErrorResponse($data, 'An error occurred on URL: ' . $this->wRequest()->getCurrentUrl(), 'W1');
+                $response = $response->output(JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+            }
+
+            // send the response
+            Response::create($response, 503)->send();
 
             // exit the program after a fatal error
             die();
@@ -131,14 +158,12 @@ class ErrorHandler
             return;
         }
 
-        $url = $this->wConfig()->get('Application.ApiPath', false) . '/entities/core/logger-error-group/save-report';
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(['errors' => $this->errors]));
-        $result = curl_exec($ch);
-        curl_close($ch);
+        try{
+            $loggerErrorGroup = new LoggerErrorGroup();
+            $loggerErrorGroup->saveReport($this->errors, []);
+        }catch (\Exception $e){
+            // show the error in case the connection to database is failing
+            die(print_r($this->errors));
+        }
     }
 }

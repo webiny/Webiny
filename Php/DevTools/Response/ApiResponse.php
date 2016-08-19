@@ -33,11 +33,11 @@ class ApiResponse extends AbstractResponse implements \ArrayAccess
         return $this->data;
     }
 
-    public function output()
+    public function output($jsonOptions = 0)
     {
         $data = $this->formatResponse();
         header("Content-type: application/json");
-        return json_encode($data);
+        return json_encode($data, $jsonOptions);
     }
 
     public function setErrors(array $errors)

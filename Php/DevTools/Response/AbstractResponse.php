@@ -4,11 +4,9 @@ namespace Apps\Core\Php\DevTools\Response;
 /**
  * Class AbstractResponse
  */
-abstract class AbstractResponse
+abstract class AbstractResponse implements ResponseInterface
 {
     protected $statusCode = 200;
-
-    abstract public function output();
 
     public function getStatusCode(){
         return $this->statusCode;
