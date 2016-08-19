@@ -1,4 +1,24 @@
 {
     "name": "webiny/core",
-    "type": "webiny-app"
+    "type": "webiny-app",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Webiny/CronManager.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@bitbucket.org:webiny/selecto-app.git"
+        }
+    ],
+    "require": {
+        "webiny/framework": "dev-master",
+        "webiny/login": "dev-master",
+        "webiny/analytics-db": "dev-master",
+        "mikehaertl/phpwkhtmltopdf": "^2.0@dev",
+        "league/csv": "^7.1@dev",
+        "phpzip/phpzip": "dev-master"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
