@@ -47,9 +47,6 @@ class Bootstrap
             $this->buildConfiguration($configSet);
         }
 
-        // set the environment
-        $this->setEnvironment($this->wConfig()->get('Application.Environment', 'production'));
-
         // scan all components to register routes and event handlers
         PackageScanner::getInstance();
 
@@ -123,20 +120,6 @@ class Bootstrap
         }
 
         return $configSet;
-    }
-
-    private function setEnvironment($environment)
-    {
-        if ($environment == 'development') {
-            error_reporting(E_ALL);
-            ini_set('display_errors', 1);
-        } else {
-            error_reporting(0);
-            ini_set('display_errors', 0);
-        }
-
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
     }
 
     /**
