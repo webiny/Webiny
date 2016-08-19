@@ -36,8 +36,6 @@ class Bootstrap
 
     protected function init()
     {
-        $this->errorHandler = new ErrorHandler();
-
         // read production configs
         $this->buildConfiguration('Production');
 
@@ -46,6 +44,9 @@ class Bootstrap
         if ($configSet) {
             $this->buildConfiguration($configSet);
         }
+
+        // set error handler
+        $this->errorHandler = new ErrorHandler();
 
         // scan all components to register routes and event handlers
         PackageScanner::getInstance();
