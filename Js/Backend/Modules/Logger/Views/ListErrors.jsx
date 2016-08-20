@@ -15,14 +15,14 @@ class ListErrors extends Webiny.Ui.View {
 
     resolveGroup(error, list) {
         const api = new Webiny.Api.Endpoint('/entities/core/logger-error-group');
-        api.get('resolve/' + error.id).then(() => {
+        api.delete(error.id).then(() => {
             list.loadData();
         });
     }
 
     resolveError(error, list, parentList) {
         const api = new Webiny.Api.Endpoint('/entities/core/logger-entry');
-        api.get('resolve/' + error.id).then((response) => {
+        api.get(error.id + '/resolve').then((response) => {
             if (response.data.data.errorCount < 1) {
                 // if we have 0 errors in this group, we have to refresh the parent table
                 parentList.loadData();

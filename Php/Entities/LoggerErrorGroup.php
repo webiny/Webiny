@@ -49,16 +49,6 @@ class LoggerErrorGroup extends AbstractEntity
             $errors = $this->wRequest()->payload('errors');
             $this->saveReport($errors, $clientData);
         });
-
-        $this->api('get', 'resolve/{group}', function (LoggerErrorGroup $group) {
-            $group->resolveGroup();
-        });
-    }
-
-    public function resolveGroup()
-    {
-        $this->errorEntries->delete();
-        $this->delete();
     }
 
 
