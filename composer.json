@@ -1,7 +1,14 @@
 {
     "name": "webiny/core",
     "type": "webiny-app",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/Webiny/AppInstaller.git"
+        }
+    ],
     "require": {
+        "webiny/app-installer": "dev-master",
         "webiny/framework": "dev-master",
         "webiny/login": "dev-master",
         "webiny/analytics-db": "dev-master",
