@@ -1,0 +1,12 @@
+{
+    "webPath": "http://yourdomain.app:8001",
+    "webDriver": {
+        "browser": "chrome",
+        "tempFolder": "./Tests"
+    },
+    "login": {
+        "username": "user@domain.com",
+        "password": "dev",
+        "timeout": 5000
+    }
+}

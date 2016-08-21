@@ -1,0 +1,12 @@
+######################################################################################################
+# Define here a list of configuration folders,
+# and map them to their appropriate domains.
+#
+# All the yaml files from that folder will be loaded.
+#
+# "Production" configuration is required and it is always loaded.
+# All other configurations will overwrite the properties from "Production".
+#####################################################################################################
+
+ConfigSets:
+  Development: ''

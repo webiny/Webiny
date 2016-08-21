@@ -1,0 +1,11 @@
+Mongo:
+    Services:
+        Webiny:
+            Class: \Webiny\Component\Mongo\Mongo
+            Arguments:
+                Uri: 127.0.0.1:27017
+            Calls:
+                - [selectDatabase, null]
+
+Entity:
+    Database: Webiny

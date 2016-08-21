@@ -1,0 +1,30 @@
+Security:
+    UserProviders:
+        UserProvider:
+            Driver: \Webiny\Component\Security\User\Providers\Entity\Entity
+            Params:
+                Entity: \Apps\Core\Php\Entities\User
+                Username: email
+                Password: password
+    Tokens:
+        Webiny:
+            StorageDriver: \Webiny\Component\Security\Token\Storage\Stateless
+            SecurityKey: $3cR3tW3b1ny_#2015:!11
+    Firewalls:
+        Webiny:
+            RealmName: Webiny
+            Anonymous: true
+            RememberMe: true
+            Token: Webiny
+            UserProviders: [UserProvider]
+            AuthenticationProviders: [Form]
+
+Login:
+    SecurityFirewall: Webiny
+    2FactorAuth: false
+    BlockThreshold: 6
+    BlockTimelimit: 10
+    SessionTtl: 30
+    RateLimitWhitelist:
+        - 127.0.0.1
+        - 192.168.10.10

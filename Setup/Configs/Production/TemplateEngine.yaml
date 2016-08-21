@@ -1,0 +1,8 @@
+TemplateEngine:
+    Engines:
+        Smarty:
+            ForceCompile: true
+            CacheDir: __DIR__/../../Cache/Smarty/Cache
+            CompileDir: __DIR__/../../Cache/Smarty/Compile
+            AutoEscapeOutput: false
+            MergeCompiledIncludes: false
