@@ -50,6 +50,7 @@ class TemplateEngine
 
     /**
      * Set root template dir
+     *
      * @param string $dir
      *
      * @return $this
@@ -64,7 +65,7 @@ class TemplateEngine
     public function fetch($template, $parameters = [])
     {
         $template = $this->str($template);
-        if ($template->contains(':')) {
+        if ($template->contains(':') && !$template->startsWith('eval:')) {
             $parts = $template->explode(':');
             $template = $this->wApps($parts[0])->getPath() . '/' . $parts[1];
         }
