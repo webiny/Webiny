@@ -15,7 +15,8 @@ class StaticContainer extends BaseContainer {
     }
 
     loadData(props) {
-        let data = _.isEmpty(this.state.filters) ? props.data : _.filter(props.data, this.state.filters);
+        const propsData = _.get(props, 'data', this.props.data);
+        let data = _.isEmpty(this.state.filters) ? propsData : _.filter(propsData, this.state.filters);
         const fields = [];
         const order = [];
         _.each(this.state.sorters, (sort, field) => {
@@ -48,14 +49,6 @@ class StaticContainer extends BaseContainer {
             searchFields: this.state.searchFields
         });
     }
-
-    recordUpdate(id, attributes) {
-        return this.api.patch(id, attributes).then(this.loadData);
-    }
-
-    recordDelete(id) {
-        return this.api.delete(id).then(this.loadData);
-    }
 }
 
 StaticContainer.defaultProps = {
@@ -65,11 +58,11 @@ StaticContainer.defaultProps = {
     perPage: 10,
     layout: function layout() {
         return (
-            <div className="col-xs-12">
+            <webiny-list-layout>
                 <filters/>
                 <table/>
                 <pagination/>
-            </div>
+            </webiny-list-layout>
         );
     },
     renderer() {

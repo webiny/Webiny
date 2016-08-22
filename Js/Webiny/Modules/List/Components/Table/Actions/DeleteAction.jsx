@@ -12,8 +12,14 @@ DeleteAction.defaultProps = {
     message: 'Are you sure you want to delete this record?',
     hide: _.noop,
     afterDelete: _.noop,
+    onConfirm: (record, actions, modal) => {
+        return actions.delete(record.id, false).then(res => {
+            return Q(this.props.afterDelete(res)).then(() => res);
+        })
+    },
     renderer() {
         const message = this.props.message;
+        const $this = this;
 
         return (
             <Ui.List.Table.ModalAction {..._.pick(this.props, 'data', 'actions', 'label', 'hide', 'afterDelete', 'icon')}>
@@ -25,10 +31,8 @@ DeleteAction.defaultProps = {
                         onComplete: () => {
                             actions.reload();
                         },
-                        onConfirm: () => {
-                            return actions.delete(record.id, false).then(res => {
-                                return Q(this.props.afterDelete(res)).then(() => res);
-                            });
+                        onConfirm: (modal) => {
+                            $this.props.onConfirm(record, actions, modal)
                         }
                     };
                     return (

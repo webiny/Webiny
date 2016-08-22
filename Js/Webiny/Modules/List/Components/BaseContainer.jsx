@@ -404,7 +404,7 @@ BaseContainer.defaultProps = {
     customView: false,
     layout() {
         return (
-            <div className="col-xs-12">
+            <webiny-list-layout>
                 <loader/>
                 <filters/>
                 <table/>
@@ -416,7 +416,7 @@ BaseContainer.defaultProps = {
                         <pagination/>
                     </Ui.Grid.Col>
                 </Ui.Grid.Row>
-            </div>
+            </webiny-list-layout>
         );
     },
     renderer() {
