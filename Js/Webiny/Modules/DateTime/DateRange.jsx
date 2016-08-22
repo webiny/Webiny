@@ -88,7 +88,7 @@ class DateRange extends Webiny.Ui.FormComponent {
             this.options.startDate = start;
             this.options.endDate = end;
         }
-    };
+    }
 
     prepare() {
         this.element = $(this.refs.daterange);
