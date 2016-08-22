@@ -112,6 +112,14 @@
 }
 
 .label {
+  position: relative;
+  float: left;
+  margin: 2px 2px;
+
+  &:first-of-type {
+    margin-left: 0;
+  }
+
   &.label-default {
     color: #333;
   }
