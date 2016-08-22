@@ -14,7 +14,12 @@ abstract class AbstractPdfReport extends AbstractReport
      * Get report template
      * @return string
      */
-    abstract public function getTemplate();
+    public function getTemplate()
+    {
+        $app = $this->str(get_called_class())->explode('\\', 3);
+
+        return $app[1] . ':' . str_replace('\\', '/', $app[2]) . '.tpl';
+    }
 
     /**
      * Get report as an instance of File or send it to browser
@@ -42,7 +47,7 @@ abstract class AbstractPdfReport extends AbstractReport
         // Convert to PDF
         $pdf = new Pdf([
             'tmpDir' => $storage->getAbsolutePath(),
-            'binary' => 'wkhtmltopdf',
+            'binary' => '/usr/local/bin/wkhtmltopdf',
             'print-media-type'
         ]);
         $pdf->addPage($html);

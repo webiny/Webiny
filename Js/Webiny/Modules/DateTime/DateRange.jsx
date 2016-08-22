@@ -57,7 +57,7 @@ class DateRange extends Webiny.Ui.FormComponent {
             'alwaysShowCalendars'
         ];
 
-        this.bindMethods('prepare,onChange');
+        this.bindMethods('prepare,onChange,setInitialRange');
     }
 
     componentDidMount() {
@@ -74,8 +74,21 @@ class DateRange extends Webiny.Ui.FormComponent {
         super.componentWillReceiveProps(props);
         if (!props.valueLink.value) {
             this.refs.daterange.value = this.props.placeholder || '';
+        } else {
+            const dates = props.valueLink.value.split(this.props.rangeDelimiter);
+            this.element.data('daterangepicker').setStartDate(dates[0]);
+            this.element.data('daterangepicker').setEndDate(dates[1]);
         }
     }
+
+    setInitialRange(start, end) {
+        const from = moment(start, this.options.locale.format, true);
+        const to = moment(end, this.options.locale.format, true);
+        if (from.isValid() && to.isValid()) {
+            this.options.startDate = start;
+            this.options.endDate = end;
+        }
+    };
 
     prepare() {
         this.element = $(this.refs.daterange);
@@ -84,22 +97,12 @@ class DateRange extends Webiny.Ui.FormComponent {
         _.assign(this.options, this.props.options || {}, _.pick(this.props, this.availableOptions));
         this.options.locale.format = this.props.inputFormat;
 
-        const setInitialRange = (start, end) => {
-            const from = moment(start, this.options.locale.format, true);
-            const to = moment(end, this.options.locale.format, true);
-            if (from.isValid() && to.isValid()) {
-                this.options.startDate = start;
-                this.options.endDate = end;
-            }
-        };
-
         if (this.props.valueLink.value) {
             const parts = this.props.valueLink.value.split(this.props.rangeDelimiter);
-            setInitialRange(parts[0], parts[1]);
+            this.setInitialRange(parts[0], parts[1]);
         } else if (range) {
-            setInitialRange(range[0], range[1]);
+            this.setInitialRange(range[0], range[1]);
         }
-
 
         this.element.daterangepicker(this.options);
         this.element.on('apply.daterangepicker', (ev, picker) => {
