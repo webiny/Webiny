@@ -55,4 +55,16 @@ class Setting extends AbstractEntity
             return $record->toArray('*');
         });
     }
+
+    /**
+     * Load settings by key
+     *
+     * @param $key
+     *
+     * @return Setting|null
+     */
+    public static function load($key)
+    {
+        return static::findOne(['key' => $key]);
+    }
 }
