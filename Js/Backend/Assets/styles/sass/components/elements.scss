@@ -47,7 +47,7 @@
   overflow: hidden;
   font-weight: 300;
   text-align: left;
-  
+
   strong {
     font-weight: 600;
   }
@@ -78,7 +78,7 @@
   &.alert-warning {
     background: #FAA32E;
   }
-  >span.icon {
+  > span.icon {
     font-size: 26px;
     color: #fff;
     position: absolute;
@@ -115,11 +115,9 @@
   position: relative;
   float: left;
   margin: 2px 2px;
-
   &:first-of-type {
     margin-left: 0;
   }
-
   &.label-default {
     color: #333;
   }
