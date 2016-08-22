@@ -207,7 +207,7 @@ class Gallery extends ImageComponent {
     }
 
     deleteImage(image, index) {
-        this.api.delete(image.id).then(res => {
+        return this.api.delete(image.id).then(res => {
             if (res.getData() === true) {
                 const state = this.state;
                 state.images.splice(index, 1);
@@ -362,9 +362,12 @@ Gallery.defaultProps = {
             ref: 'confirm',
             title: 'Delete confirmation',
             message: 'This action is not reversable. Delete this image?',
-            onConfirm: (image, index, modal) => {
-                modal.hide();
-                this.deleteImage(image, index);
+            onConfirm: (modal) => {
+                return this.deleteImage(this.state.confirmDelete.image, this.state.confirmDelete.index).then(() => {
+                    return modal.hide().then(() => {
+                        this.setState({confirmDelete: null});
+                    });
+                });
             }
         };
 
@@ -382,7 +385,7 @@ Gallery.defaultProps = {
                                 onEdit: () => this.editImage(item, index),
                                 onDelete: () => {
                                     if (this.props.confirmDelete) {
-                                        this.refs.confirm.setData(item, index).show();
+                                        this.setState({confirmDelete: {image: item, index}}, this.refs.confirm.show);
                                     } else {
                                         this.deleteImage(item, index);
                                     }
