@@ -9,10 +9,6 @@ class MultiAction extends Webiny.Ui.Component {
     }
 
     onAction() {
-        if (!this.props.data.size && !this.props.allowEmpty) {
-            return;
-        }
-
         this.props.onAction(this.props.data, this.props.actions);
     }
 }
@@ -20,7 +16,18 @@ class MultiAction extends Webiny.Ui.Component {
 MultiAction.defaultProps = {
     allowEmpty: false,
     onAction: _.noop,
+    download: null,
     renderer() {
+        if (!this.props.data.size && !this.props.allowEmpty) {
+            return <Ui.Link onClick={_.noop}>{this.props.label}</Ui.Link>
+        }
+
+        if (this.props.download) {
+            return (
+                <Ui.DownloadLink download={this.props.download} data={this.props.data}>{this.props.label}</Ui.DownloadLink>
+            );
+        }
+
         return (
             <Ui.Link onClick={this.onAction}>{this.props.label}</Ui.Link>
         );
