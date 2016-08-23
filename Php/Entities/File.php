@@ -12,6 +12,21 @@ if (!defined('DS')) {
     define('DS', DIRECTORY_SEPARATOR);
 }
 
+/**
+ * Class File
+ *
+ * @property string $name File name (the original file name)
+ * @property string $title File title (optional)
+ * @property int    $size Size in bytes
+ * @property string $type File mime type
+ * @property string $ext Extension name, eg: jpg, png, pdf, etc.
+ * @property string $src Base64 encoded data string (when being created) or storage key after file is saved
+ * @property array  $tags Tags assigned to file
+ * @property string $ref Reference to entity
+ * @property int    $order Order of file (used in image galleries)
+ *
+ * @package Apps\Core\Php\Entities
+ */
 class File extends AbstractEntity
 {
     use StorageTrait, ImageTrait;
