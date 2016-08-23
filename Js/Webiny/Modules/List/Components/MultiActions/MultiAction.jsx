@@ -9,7 +9,7 @@ class MultiAction extends Webiny.Ui.Component {
     }
 
     onAction() {
-        if (!this.props.data.size) {
+        if (!this.props.data.size && !this.props.allowEmpty) {
             return;
         }
 
@@ -18,6 +18,7 @@ class MultiAction extends Webiny.Ui.Component {
 }
 
 MultiAction.defaultProps = {
+    allowEmpty: false,
     onAction: _.noop,
     renderer() {
         return (
