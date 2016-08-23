@@ -89,7 +89,7 @@ class Endpoint extends Base {
 
     getQuery(query = null) {
         const mergedQuery = normalizeParams(this.query);
-        return _.omitBy(_.merge({}, mergedQuery, query || this.tmpQuery), value => _.isNull(value) || _.isUndefined(value));
+        return _.merge({}, mergedQuery, _.omitBy(query || this.tmpQuery, value => _.isNull(value) || _.isUndefined(value)));
     }
 
     getBody(body = null) {
