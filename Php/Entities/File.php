@@ -176,9 +176,7 @@ class File extends AbstractEntity
      */
     public function getContents()
     {
-        $storage = $this->storage(self::STORAGE);
-
-        return $storage->getContents($this->src);
+        return $this->storage(self::STORAGE)->getContents($this->src);
     }
 
     private function generateNewName()
