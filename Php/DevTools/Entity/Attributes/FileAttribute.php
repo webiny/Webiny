@@ -16,6 +16,7 @@ use Webiny\Component\Entity\Attribute\Many2OneAttribute;
 class FileAttribute extends Many2OneAttribute
 {
     private $tags = [];
+    private $dimensions = [];
 
     /**
      * @inheritDoc
@@ -40,11 +41,19 @@ class FileAttribute extends Many2OneAttribute
         return $this;
     }
 
+    public function setDimensions(array $dimensions)
+    {
+        $this->dimensions = $dimensions;
+
+        return $this;
+    }
+
     public function getValue($params = [])
     {
         $value = parent::getValue($params);
         if ($this->isInstanceOf($value, $this->getEntity())) {
             $value->tags->merge($this->tags)->unique();
+            $value->setDimensions($this->dimensions);
         }
 
         return $this->processGetValue($value, $params);

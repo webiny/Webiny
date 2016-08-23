@@ -17,8 +17,8 @@ class File extends AbstractEntity
     use StorageTrait, ImageTrait;
 
     const STORAGE = 'Files';
-
     protected static $entityCollection = 'Files';
+    private $dimensions = [];
 
     public function __construct()
     {
@@ -31,8 +31,12 @@ class File extends AbstractEntity
         $this->attr('type')->char()->setToArrayDefault();
         $this->attr('ext')->char()->setToArrayDefault();
         $this->attr('src')->char()->setToArrayDefault()->onGet(function ($value, $width = null, $height = null) {
-            if (!$width || !$height) {
+            if (!$width && !$height) {
                 return $value;
+            }
+
+            if ($width && !$height) {
+                return $this->getSize($width);
             }
 
             return $this->getSize($width . 'x' . $height);
@@ -48,7 +52,7 @@ class File extends AbstractEntity
     public function toArray($fields = '', $nestedLevel = 1)
     {
         $data = parent::toArray($fields, $nestedLevel);
-        if(isset($data['src'])){
+        if (isset($data['src'])) {
             $src = $this->str($data['src']);
             if (!$src->startsWith('http://') && !$src->startsWith('https://')) {
                 $data['src'] = $this->getUrl();
@@ -148,6 +152,20 @@ class File extends AbstractEntity
         return $deleted;
     }
 
+    /**
+     * Set file dimensions
+     *
+     * @param array $dimensions
+     *
+     * @return $this
+     */
+    public function setDimensions(array $dimensions)
+    {
+        $this->dimensions = $dimensions;
+
+        return $this;
+    }
+
     private function generateNewName()
     {
         $ext = '';
@@ -169,9 +187,7 @@ class File extends AbstractEntity
     {
         $storage = $this->storage(self::STORAGE);
         // Predefined sizes
-        $width = $height = $cropWidth = $cropHeight = 0;
-        $extMap = ['thumb' => [200, 200, 173, 110]];
-
+        $width = $height = 0;
         $path = explode('/', $this->src);
         $fileName = array_pop($path);
         $path = join('/', $path);
@@ -192,22 +208,16 @@ class File extends AbstractEntity
         $currentFile = new StorageFile($this->src, $storage);
         $image = $this->image($currentFile);
 
-        if (isset($extMap[$imageExt])) {
-            list($width, $height, $cropWidth, $cropHeight) = $extMap[$imageExt];
-        } else {
-            $dimensions = explode('|', $imageExt);
-            list($width, $height) = explode('x', $dimensions[0]);
-            if (isset($dimensions[1])) {
-                list($cropWidth, $cropHeight) = explode('x', $dimensions[1]);
-            }
+        $sizes = $this->dimensions[$imageExt] ?? explode('x', $imageExt);
+        $width = $sizes[0] ?? null;
+        $height = $sizes[1] ?? null;
+
+        if (!$width || !$height) {
+            return $this->getUrl();
         }
 
         if ($width && $height) {
             $image->resize($width, $height);
-        }
-
-        if ($cropWidth && $cropHeight) {
-            $image->crop($cropWidth, $cropHeight);
         }
 
         $image->save($extFile);
