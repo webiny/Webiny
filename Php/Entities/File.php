@@ -166,6 +166,21 @@ class File extends AbstractEntity
         return $this;
     }
 
+    /**
+     * Get file contents
+     *
+     * @return bool|string
+     *
+     * @throws \Exception
+     * @throws \Webiny\Component\ServiceManager\ServiceManagerException
+     */
+    public function getContents()
+    {
+        $storage = $this->storage(self::STORAGE);
+
+        return $storage->getContents($this->src);
+    }
+
     private function generateNewName()
     {
         $ext = '';
