@@ -23,7 +23,7 @@ Action.defaultProps = {
         }
 
         return (
-            <Ui.Link data={this.props.data} onClick={() => this.props.onClick.call(this, this.props.data, this)}>
+            <Ui.Link data={this.props.data} onClick={() => this.props.onClick.call(this, this.props.data, this.props.actions, this)}>
                 {icon}
                 {this.props.label}
             </Ui.Link>

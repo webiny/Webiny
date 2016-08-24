@@ -62,7 +62,11 @@ Data.defaultProps = {
 
         const loader = this.state.loading ? <Ui.Loader/> : null;
 
-        return _.isFunction(this.props.children) ? this.props.children(this.state.data, this.filter, loader) : null;
+        return (
+            <webiny-data>
+                {_.isFunction(this.props.children) ? this.props.children.call(this, this.state.data, this.filter, loader, this) : null}
+            </webiny-data>
+        );
     }
 };
 
