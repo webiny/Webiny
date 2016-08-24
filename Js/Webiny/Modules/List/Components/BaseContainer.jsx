@@ -255,8 +255,9 @@ class BaseContainer extends Webiny.Ui.Component {
 
         React.Children.map(children, child => {
             if (child.type === Ui.List.Filters || child.type.prototype instanceof Ui.List.Filters) {
+                // Need to omit fields that are not actual filters
                 this.filtersElement = React.cloneElement(child, {
-                    filters: this.state.filters,
+                    filters: _.omit(this.state.filters, ['_page', '_perPage', '_sort', '_searchQuery', '_searchOperator', '_searchFields', '_fields']),
                     onFilter: this.setFilters
                 });
             }
