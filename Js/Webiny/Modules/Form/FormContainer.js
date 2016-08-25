@@ -156,14 +156,33 @@ class FormContainer extends Webiny.Ui.Component {
      */
     onSubmit(model) {
         this.showLoading();
-
         this.__removeKeys(model);
+        let progressBar = _.uniqueId('progress-');
+        const config = {
+            progress: pe => {
+                // If total size is larger than 500Kb...
+                if (pe.total > 500000) {
+                    // Create a growl to notify user of an upload progress
+                    if (!this.growlId) {
+                        const cmp = <div>Your data is being uploaded...<Ui.Progress ui={progressBar} value={0}/></div>;
+                        this.growlId = Webiny.Growl.info(cmp, 'Please be patient', true);
+                    }
+
+                    // Calculate percentage and update progress bar
+                    const percentage = Math.round(pe.loaded / pe.total * 100);
+                    const progress = this.ui(progressBar);
+                    if (progress) {
+                        progress.setValue(percentage);
+                    }
+                }
+            }
+        };
 
         if (model.id) {
-            return this.api.patch(this.api.url + '/' + model.id, model).then(res => this.__processSubmitResponse(model, res));
+            return this.api.setConfig(config).patch(this.api.url + '/' + model.id, model).then(res => this.__processSubmitResponse(model, res));
         }
 
-        return this.api.post(this.api.url, model).then(res => this.__processSubmitResponse(model, res));
+        return this.api.setConfig(config).post(this.api.url, model).then(res => this.__processSubmitResponse(model, res));
     }
 
     onInvalid() {
@@ -541,6 +560,10 @@ class FormContainer extends Webiny.Ui.Component {
     }
 
     __processSubmitResponse(model, apiResponse) {
+        if (this.growlId) {
+            Webiny.Growl.remove(this.growlId);
+            this.growlId = null;
+        }
         this.hideLoading();
         if (apiResponse.isError()) {
             this.handleApiError(apiResponse);

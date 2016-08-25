@@ -9,12 +9,20 @@ class GrowlContainer extends Webiny.Ui.Component {
             growls: []
         };
 
-        this.bindMethods('addGrowl,removeGrowl');
+        this.bindMethods('addGrowl,removeGrowl,removeById');
     }
 
     addGrowl(growl) {
-        this.state.growls.push(React.cloneElement(growl, {id: _.uniqueId('growl-')}));
+        const cmp = React.cloneElement(growl, {id: _.uniqueId('growl-')});
+        this.state.growls.push(cmp);
         this.setState({growls: this.state.growls});
+        return cmp.props.id;
+    }
+
+    removeById(id){
+        if(this.refs[id]){
+            this.removeGrowl(this.refs[id]);
+        }
     }
 
     removeGrowl(growl) {
@@ -33,7 +41,7 @@ GrowlContainer.defaultProps = {
             <div className="top-right growl">
                 <div className="growl-notification"></div>
                 {this.state.growls.map(growl => {
-                    return React.cloneElement(growl, {key: growl.props.id, onRemove: this.removeGrowl});
+                    return React.cloneElement(growl, {ref: growl.props.id, key: growl.props.id, onRemove: this.removeGrowl});
                 })}
             </div>
         );

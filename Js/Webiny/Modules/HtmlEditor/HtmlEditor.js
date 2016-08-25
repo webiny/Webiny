@@ -5,7 +5,6 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
     constructor(props) {
         super(props);
 
-        this.editor = null;
 
         this.toolbarOptions = [
             ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
@@ -24,15 +23,18 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
             ['clean']                                         // remove formatting button
         ];
 
+        this.editor = null;
+        this.delay = null;
         this.api = new Webiny.Api.Endpoint(props.imageApi);
         this.uploader = new Ui.Files.FileUploader(this.api);
 
         _.merge(this.state, {
             cropImage: null,
-            uploadPercentage: null
+            uploadPercentage: null,
+            value: props.valueLink.value
         });
 
-        this.bindMethods('getTextareaElement,getEditor,getCropper,onCropperHidden,uploadImage,fileChanged');
+        this.bindMethods('getTextareaElement,getEditor,getCropper,onCropperHidden,uploadImage,fileChanged,applyValue,changed');
     }
 
     componentDidMount() {
@@ -52,27 +54,44 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
         });
 
         this.editor.on('text-change', () => {
-            const contents = this.editor.root.innerHTML;
-            this.props.valueLink.requestChange(contents);
+            this.setState({value: this.editor.root.innerHTML}, this.changed);
         });
 
         this.editor.pasteHTML(this.props.valueLink.value);
+
+        window.qe = this.editor;
     }
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        if (props.valueLink.value != this.props.valueLink.value) {
+        if (!this.delay && props.valueLink.value != this.editor.root.innerHTML) {
             this.editor.pasteHTML(props.valueLink.value);
         }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        const imageChanges = nextState.cropImage != this.state.cropImage || nextState.uploadPercentage != this.state.uploadPercentage;
-        return !_.isEqual(nextProps.children, this.props.children) || imageChanges;
+        return nextState.cropImage != this.state.cropImage || nextState.uploadPercentage != this.state.uploadPercentage;
+    }
+
+    componentDidUpdate() {
+        super.componentDidUpdate();
+        this.editor.pasteHTML(this.state.value);
     }
 
     componentWillUnmount() {
         delete this.editor;
+    }
+
+    applyValue(value) {
+        clearTimeout(this.delay);
+        this.delay = null;
+        this.props.valueLink.requestChange(value);
+    }
+
+    changed() {
+        clearTimeout(this.delay);
+        this.delay = null;
+        this.delay = setTimeout(() => this.applyValue(this.state.value), 300);
     }
 
     fileChanged(file, error) {
@@ -148,6 +167,10 @@ HtmlEditor.defaultProps = {
     imageApi: '/entities/core/images',
     accept: ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'],
     sizeLimit: 2485760,
+    label: null,
+    description: null,
+    info: null,
+    tooltip: null,
     cropper: {
         title: 'Crop your image',
         action: 'Insert image',
@@ -171,16 +194,41 @@ HtmlEditor.defaultProps = {
             );
         }
 
+        let label = null;
+        if (this.props.label) {
+            let tooltip = null;
+            if (this.props.tooltip) {
+                tooltip = <Ui.Tooltip target={<Ui.Icon icon="icon-info-circle"/>}>{this.props.tooltip}</Ui.Tooltip>;
+            }
+            label = <label className="control-label">{this.props.label} {tooltip}</label>;
+        }
+
+        let info = this.props.info;
+        if (_.isFunction(info)) {
+            info = info(this);
+        }
+
+        let description = this.props.description;
+        if (_.isFunction(description)) {
+            description = description(this);
+        }
+
         return (
-            <div>
-                {uploader}
-                <div className="editor"></div>
-                <Ui.Files.FileReader
-                    accept={this.props.accept}
-                    ref="reader"
-                    sizeLimit={this.props.sizeLimit}
-                    onChange={this.fileChanged}/>
-                {this.getCropper(<Ui.Alert type="info" title="Hint">Scroll to zoom in/out</Ui.Alert>)}
+            <div className="form-group">
+                {label}
+                <span className="info-text">{info}</span>
+
+                <div className="input-group">
+                    {uploader}
+                    <div className="editor"></div>
+                    <Ui.Files.FileReader
+                        accept={this.props.accept}
+                        ref="reader"
+                        sizeLimit={this.props.sizeLimit}
+                        onChange={this.fileChanged}/>
+                    {this.getCropper(<Ui.Alert type="info" title="Hint">Scroll to zoom in/out</Ui.Alert>)}
+                </div>
+                <span className="help-block">{description}</span>
             </div>
         );
     }

@@ -16,50 +16,54 @@ function getGrowler() {
     return growler;
 }
 
-const Growler = function Growler(element) {
-    getGrowler().addGrowl(element);
-};
+export default {
+    remove(growlId){
+        const growler = getGrowler();
 
-_.assign(Growler, {
+        if (!growler) {
+            return null;
+        }
+
+        growler.removeById(growlId);
+    },
+
     info(message, title = 'Info', sticky = false, ttl = 3000) {
         const growler = getGrowler();
 
         if (!growler) {
-            return;
+            return null;
         }
 
-        growler.addGrowl(<InfoGrowl {...{message, title, sticky, ttl}}/>);
+        return growler.addGrowl(<InfoGrowl {...{message, title, sticky, ttl}}/>);
     },
 
     success(message, title = 'Success', sticky = false, ttl = 3000) {
         const growler = getGrowler();
 
         if (!growler) {
-            return;
+            return null;
         }
 
-        growler.addGrowl(<SuccessGrowl {...{message, title, sticky, ttl}}/>);
+        return growler.addGrowl(<SuccessGrowl {...{message, title, sticky, ttl}}/>);
     },
 
     danger(message, title = 'Danger', sticky = true, ttl = 3000) {
         const growler = getGrowler();
 
         if (!growler) {
-            return;
+            return null;
         }
 
-        growler.addGrowl(<DangerGrowl {...{message, title, sticky, ttl}}/>);
+        return growler.addGrowl(<DangerGrowl {...{message, title, sticky, ttl}}/>);
     },
 
     warning(message, title = 'Warning', sticky = true, ttl = 3000) {
         const growler = getGrowler();
 
         if (!growler) {
-            return;
+            return null;
         }
 
-        growler.addGrowl(<WarningGrowl {...{message, title, sticky, ttl}}/>);
+        return growler.addGrowl(<WarningGrowl {...{message, title, sticky, ttl}}/>);
     }
-});
-
-export default Growler;
+};
