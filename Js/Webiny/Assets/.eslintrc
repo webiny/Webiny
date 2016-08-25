@@ -50,11 +50,9 @@
         "React": false,
         "ReactDOM": false,
         "ReactDOMServer": false,
-        "Bottle": false,
         "Baobab": false,
         "_": false,
         "Q": false,
-        "axios": false,
         "moment": false,
         "accounting": false,
         "isMobile": false,
@@ -66,6 +64,7 @@
         "CodeMirror": false,
         "dynamics": false,
         "Clipboard": false,
-        "hljs": false
+        "hljs": false,
+        "Quill": false
     }
 }

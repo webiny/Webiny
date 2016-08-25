@@ -43,7 +43,7 @@
     "tag": "1.1.1",
     "commit": "f6d59c44053c65cab63b6e8329c731af632249e8"
   },
-  "_source": "git://github.com/blueimp/JavaScript-MD5.git",
+  "_source": "https://github.com/blueimp/JavaScript-MD5.git",
   "_target": "~1.1.1",
   "_originalSource": "blueimp-md5"
 }

@@ -28,8 +28,7 @@
     "tag": "2.2.1",
     "commit": "f230939bd85ce36e5d0a6304ad211244cb22b817"
   },
-  "_source": "git://github.com/Yomguithereal/baobab.git",
+  "_source": "https://github.com/Yomguithereal/baobab.git",
   "_target": "~2.2.1",
-  "_originalSource": "baobab",
-  "_direct": true
+  "_originalSource": "baobab"
 }

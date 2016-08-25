@@ -23,7 +23,7 @@
     "tag": "v2.0.4",
     "commit": "6a739a3593c018e60691687a22f37fcaa6f2bb85"
   },
-  "_source": "git://github.com/js-cookie/js-cookie.git",
+  "_source": "https://github.com/js-cookie/js-cookie.git",
   "_target": "~2.0.4",
   "_originalSource": "js-cookie"
 }
