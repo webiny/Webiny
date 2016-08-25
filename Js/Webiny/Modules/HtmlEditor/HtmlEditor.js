@@ -34,7 +34,7 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
             value: props.valueLink.value
         });
 
-        this.bindMethods('getTextareaElement,getEditor,getCropper,onCropperHidden,uploadImage,fileChanged,applyValue,changed');
+        this.bindMethods('getTextareaElement,getEditor,getCropper,onCropperHidden,uploadImage,fileChanged,applyValue,changed,renderError');
     }
 
     componentDidMount() {
@@ -70,7 +70,9 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return nextState.cropImage != this.state.cropImage || nextState.uploadPercentage != this.state.uploadPercentage;
+        const oldState = _.pick(this.state, ['cropImage', 'uploadPercentage', 'error']);
+        const newState = _.pick(nextState, ['cropImage', 'uploadPercentage', 'error']);
+        return !_.isEqual(oldState, newState);
     }
 
     componentDidUpdate() {
@@ -99,6 +101,8 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
             this.setState({error});
             return;
         }
+
+        this.setState({error: null});
 
         if (this.props.cropper) {
             this.setState({cropImage: file});
@@ -161,6 +165,16 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
     getTextareaElement() {
         return ReactDOM.findDOMNode(this).querySelector('.editor');
     }
+
+    renderError() {
+        let error = null;
+        if (this.state.error) {
+            error = (
+                <Ui.Alert type="error">{this.state.error.message}</Ui.Alert>
+            );
+        }
+        return error;
+    }
 }
 
 HtmlEditor.defaultProps = {
@@ -219,6 +233,7 @@ HtmlEditor.defaultProps = {
                 <span className="info-text">{info}</span>
 
                 <div className="input-group">
+                    {this.renderError()}
                     {uploader}
                     <div className="editor"></div>
                     <Ui.Files.FileReader
