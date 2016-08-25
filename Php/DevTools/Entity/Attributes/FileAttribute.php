@@ -8,6 +8,7 @@
 namespace Apps\Core\Php\DevTools\Entity\Attributes;
 
 use Webiny\Component\Entity\Attribute\Many2OneAttribute;
+use Webiny\Component\Storage\Storage;
 
 /**
  * File attribute
@@ -15,8 +16,8 @@ use Webiny\Component\Entity\Attribute\Many2OneAttribute;
  */
 class FileAttribute extends Many2OneAttribute
 {
-    private $tags = [];
-    private $dimensions = [];
+    protected $storage = null;
+    protected $tags = [];
 
     /**
      * @inheritDoc
@@ -41,28 +42,36 @@ class FileAttribute extends Many2OneAttribute
         return $this;
     }
 
-    public function setDimensions(array $dimensions)
+    /**
+     * Set storage to use with this attribute
+     *
+     * @param Storage $storage
+     *
+     * @return $this
+     */
+    public function setStorage(Storage $storage)
     {
-        $this->dimensions = $dimensions;
+        $this->storage = $storage;
 
         return $this;
     }
 
-    public function getValue($params = [])
+    public function getValue($params = [], $processCallbacks = true)
     {
         $value = parent::getValue($params);
         if ($this->isInstanceOf($value, $this->getEntity())) {
             $value->tags->merge($this->tags)->unique();
-            $value->setDimensions($this->dimensions);
+            if ($this->storage) {
+                $value->setStorage($this->storage);
+            }
         }
 
-        return $this->processGetValue($value, $params);
+        return $processCallbacks ? $this->processGetValue($value, $params) : $value;
     }
 
     public function setValue($value = null, $fromDb = false)
     {
         $currentValue = $this->getValue();
-
         parent::setValue($value, $fromDb);
 
         // If new files is being assigned and there is an existing file - delete the existing file

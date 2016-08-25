@@ -2,10 +2,8 @@
 namespace Apps\Core\Php\Entities;
 
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
-use Webiny\Component\Image\ImageTrait;
 use Webiny\Component\Mongo\Index\SingleIndex;
-use Webiny\Component\Storage\Directory\Directory;
-use Webiny\Component\Storage\File\File as StorageFile;
+use Webiny\Component\Storage\Storage;
 use Webiny\Component\Storage\StorageTrait;
 
 if (!defined('DS')) {
@@ -29,15 +27,19 @@ if (!defined('DS')) {
  */
 class File extends AbstractEntity
 {
-    use StorageTrait, ImageTrait;
+    use StorageTrait;
 
-    const STORAGE = 'Files';
+    const DEFAULT_STORAGE = 'Files';
     protected static $entityCollection = 'Files';
-    private $dimensions = [];
+    /**
+     * @var Storage
+     */
+    protected $storage = null;
 
     public function __construct()
     {
         parent::__construct();
+        $this->storage = $this->wStorage(self::DEFAULT_STORAGE);
         $this->index(new SingleIndex('ref', 'ref'));
         $this->getAttribute('modifiedOn')->setToArrayDefault();
         $this->attr('name')->char()->setRequired()->setToArrayDefault();
@@ -45,17 +47,7 @@ class File extends AbstractEntity
         $this->attr('size')->integer()->setToArrayDefault();
         $this->attr('type')->char()->setToArrayDefault();
         $this->attr('ext')->char()->setToArrayDefault();
-        $this->attr('src')->char()->setToArrayDefault()->onGet(function ($value, $width = null, $height = null) {
-            if (!$width && !$height) {
-                return $value;
-            }
-
-            if ($width && !$height) {
-                return $this->getSize($width);
-            }
-
-            return $this->getSize($width . 'x' . $height);
-        });
+        $this->attr('src')->char()->setToArrayDefault();
         $this->attr('tags')->arr()->setToArrayDefault();
         $this->attr('ref')->char()->setToArrayDefault();
         $this->attr('order')->integer()->setDefaultValue(0)->setToArrayDefault();
@@ -77,18 +69,14 @@ class File extends AbstractEntity
         return $data;
     }
 
-    public function getUrl($ext = null)
+    public function getUrl()
     {
-        if (!$ext) {
-            return $this->storage(self::STORAGE)->getURL($this->src);
-        }
-
-        return $this->getSize($ext);
+        return $this->storage->getURL($this->src);
     }
 
     public function getAbsolutePath()
     {
-        return $this->storage(self::STORAGE)->getAbsolutePath($this->src);
+        return $this->storage->getAbsolutePath($this->src);
     }
 
     /**
@@ -96,8 +84,7 @@ class File extends AbstractEntity
      */
     public function populate($data)
     {
-        $fromDb = isset($data['__webiny_db__']);
-        if ($fromDb) {
+        if (isset($data['__webiny_db__'])) {
             return parent::populate($data);
         }
 
@@ -108,7 +95,7 @@ class File extends AbstractEntity
             if ($newContent) {
                 // Delete current file
                 if ($newName != $this->name) {
-                    $this->storage(self::STORAGE)->deleteKey($this->src);
+                    $this->storage->deleteKey($this->src);
                 }
             } else {
                 // These keys should not change if file content is not changing
@@ -125,14 +112,14 @@ class File extends AbstractEntity
      */
     public function save()
     {
-        $storage = $this->storage(self::STORAGE);
+        $storage = $this->storage;
         $content = $this->str($this->src);
         $newContent = $content->startsWith('data:');
         if ($newContent) {
             // Make sure file names do not clash
             if (!$this->exists()) {
                 $name = $this->name;
-                while ($storage->keyExists($this->getKey($name))) {
+                while ($storage->keyExists($this->createKey($name))) {
                     $name = $this->generateNewName();
                     continue;
                 }
@@ -156,27 +143,22 @@ class File extends AbstractEntity
     {
         $deleted = parent::delete();
         if ($deleted) {
-            $this->storage(self::STORAGE)->deleteKey($this->src);
-
-            /* @var $file StorageFile */
-            foreach ($this->getSizes() as $file) {
-                $file->delete();
-            }
+            $this->storage->deleteKey($this->src);
         }
 
         return $deleted;
     }
 
     /**
-     * Set file dimensions
+     * Set File storage
      *
-     * @param array $dimensions
+     * @param Storage $storage
      *
      * @return $this
      */
-    public function setDimensions(array $dimensions)
+    public function setStorage(Storage $storage)
     {
-        $this->dimensions = $dimensions;
+        $this->storage = $storage;
 
         return $this;
     }
@@ -191,10 +173,16 @@ class File extends AbstractEntity
      */
     public function getContents()
     {
-        return $this->storage(self::STORAGE)->getContents($this->src);
+        return $this->storage->getContents($this->src);
     }
 
-    private function generateNewName()
+    /**
+     * Generate new file name
+     *
+     * @return string
+     * @throws \Webiny\Component\StdLib\StdObject\StringObject\StringObjectException
+     */
+    protected function generateNewName()
     {
         $ext = '';
         $name = $this->str($this->name)->explode('.')->removeLast($ext)->join('.');
@@ -202,70 +190,19 @@ class File extends AbstractEntity
         return $name . '-' . time() . '.' . $ext;
     }
 
-    private function getKey($name)
+    /**
+     * Create file storage key
+     *
+     * @param $name
+     *
+     * @return string
+     */
+    protected function createKey($name)
     {
-        if ($this->storage(self::STORAGE)->getDriver()->createDateFolderStructure()) {
+        if ($this->storage->getDriver()->createDateFolderStructure()) {
             $name = date('Y' . DS . 'm' . DS . 'd') . DS . $name;
         }
 
         return $name;
-    }
-
-    private function getSize($imageExt)
-    {
-        $storage = $this->storage(self::STORAGE);
-        // Predefined sizes
-        $width = $height = 0;
-        $path = explode('/', $this->src);
-        $fileName = array_pop($path);
-        $path = join('/', $path);
-
-        // Build extension key
-        $lastDot = strrpos($fileName, '.');
-        $name = substr($fileName, 0, $lastDot);
-        $ext = substr($fileName, $lastDot);
-        $extPath = $name . '-size-' . $imageExt . $ext;
-
-        // Check if file exists
-        $extFile = new StorageFile($path . '/' . $extPath, $storage);
-        if ($extFile->exists()) {
-            return $extFile->getUrl();
-        }
-
-        // Create new image size
-        $currentFile = new StorageFile($this->src, $storage);
-        $image = $this->image($currentFile);
-
-        $sizes = $this->dimensions[$imageExt] ?? explode('x', $imageExt);
-        $width = $sizes[0] ?? null;
-        $height = $sizes[1] ?? null;
-
-        if (!$width || !$height) {
-            return $this->getUrl();
-        }
-
-        if ($width && $height) {
-            $image->resize($width, $height);
-        }
-
-        $image->save($extFile);
-
-        return $extFile->getUrl();
-    }
-
-    /**
-     * @return Directory
-     * @throws \Exception
-     * @throws \Webiny\Component\ServiceManager\ServiceManagerException
-     * @throws \Webiny\Component\StdLib\StdObject\StringObject\StringObjectException
-     */
-    private function getSizes()
-    {
-        $path = explode('/', $this->src);
-        $fileName = array_pop($path);
-        $path = join('/', $path);
-        $pattern = $this->str($fileName)->explode('.')->first() . '-size-*';
-
-        return new Directory($path, $this->storage(self::STORAGE), false, $pattern);
     }
 }
