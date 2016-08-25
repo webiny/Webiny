@@ -22,7 +22,7 @@
     "tag": "0.18.17",
     "commit": "164cb7b247b0d45dd3204350073b82dbc5338dc3"
   },
-  "_source": "git://github.com/systemjs/systemjs.git",
+  "_source": "https://github.com/systemjs/systemjs.git",
   "_target": "~0.18.4",
   "_originalSource": "system.js"
 }

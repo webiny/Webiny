@@ -73,6 +73,19 @@ describe 'dynamics.animate', ->
       done()
     , 50
 
+  it 'animate scrollTop of a DOM element', (done) ->
+    el = document.createElement('div')
+    dynamics.animate(el, {
+      scrollTop: 100,
+    }, {
+      duration: 25,
+      type: dynamics.easeInOut
+    })
+    setTimeout ->
+      expect(el.scrollTop).eql('100')
+      done()
+    , 50
+
   it 'animate with a delay', (done) ->
     el = document.createElement('div')
     el.style.left = 0
@@ -239,6 +252,30 @@ describe 'dynamics.animate', ->
       expect(el.getAttribute("points")).to.be.equal("M50,10 C88.11,20.45")
       done()
     , 150
+
+
+  it 'animates the points of a svg path correctly', (done) ->
+    el = document.createElement('path')
+
+    # On chrome 52 getComputedStyle give a "d" property for path
+    # Mock window.getComputedStyle
+    style = window.getComputedStyle(el, null)
+    style.setProperty('d', 'path(10 20 30)')
+    oldComputed = window.getComputedStyle
+    window.getComputedStyle = (el, pseudoElt) -> style
+
+    dynamics.tests.isSVG = (el) -> true
+    el.setAttribute("d", "M101.88,22 C101.88,18.25")
+    dynamics.animate(el, {
+      d: "M50,10 C88.11,20.45"
+    }, {
+      duration: 100
+    })
+    setTimeout ->
+      expect(el.getAttribute("d")[0]).to.be.equal('M')
+      window.getComputedStyle = oldComputed # remove mock to avoid conflict for the next test
+      done()
+    , 50
 
   it 'animates properties of an object correctly', (done) ->
     assertTypes = (object) ->

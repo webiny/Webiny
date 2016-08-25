@@ -116,6 +116,8 @@
         }
         if (isSVG && svgProperties.contains(k)) {
           el.setAttribute(k, v);
+        } else if (k in el) {
+          el[k] = v;
         } else {
           el.style[propertyWithPrefix(k)] = v;
         }
@@ -258,7 +260,7 @@
           }
         } else {
           v = style[key];
-          if ((v == null) && svgProperties.contains(key)) {
+          if (((v == null) || key === 'd') && svgProperties.contains(key)) {
             v = el.getAttribute(key);
           }
           if (v === "" || (v == null)) {

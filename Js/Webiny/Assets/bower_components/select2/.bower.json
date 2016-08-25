@@ -17,7 +17,7 @@
     "tag": "4.0.0",
     "commit": "80eb44bec78568b152dc5547269c164cb7b5363c"
   },
-  "_source": "git://github.com/ivaynberg/select2.git",
+  "_source": "https://github.com/ivaynberg/select2.git",
   "_target": "4.0.0",
   "_originalSource": "select2"
 }

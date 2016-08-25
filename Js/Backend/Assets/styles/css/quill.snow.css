@@ -1,0 +1,11 @@
+.ql-editor {
+	min-height: 300px;
+}
+
+.ql-snow .ql-tooltip {
+	z-index: 10000;
+}
+
+.ql-snow .ql-out-bottom, .ql-snow .ql-out-top {
+	visibility: visible;
+}
