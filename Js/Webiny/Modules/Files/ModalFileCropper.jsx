@@ -29,8 +29,8 @@ class ModalFileCropper extends FileCropper {
         }
     }
 
-    shouldComponentUpdate(nextProps) {
-        return !_.isEqual(nextProps.image, this.props.image);
+    shouldComponentUpdate(nextProps, nextState) {
+        return !_.isEqual(nextProps.image, this.props.image) || !_.isEqual(nextState, this.state);
     }
 
     applyCropping() {
@@ -86,6 +86,7 @@ ModalFileCropper.defaultProps = _.merge({}, FileCropper.defaultProps, {
                         <img className="img-cropper" width="100%" src={props.image && props.image.src + this.getCacheBust()}/>
                     </div>
                     <div className="clearfix"></div>
+                    Cropped image size: <strong>{this.state.width}x{this.state.height}</strong>
                 </Ui.Modal.Body>
                 <Ui.Modal.Footer>
                     <Ui.Button type="primary" className="pull-right ml5" onClick={this.applyCropping}>{props.action}</Ui.Button>

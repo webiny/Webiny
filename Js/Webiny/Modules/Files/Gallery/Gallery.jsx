@@ -316,7 +316,7 @@ class Gallery extends ImageComponent {
 }
 
 Gallery.defaultProps = {
-    api: '/entities/core/files',
+    api: '/entities/core/images',
     accept: ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'],
     sizeLimit: 10000000,
     newCropper: {},

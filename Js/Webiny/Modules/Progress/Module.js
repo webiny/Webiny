@@ -1,10 +1,10 @@
 import Webiny from 'Webiny';
-import HtmlEditor from './HtmlEditor';
+import Progress from './Progress';
 
 class Module extends Webiny.Module {
 
     init() {
-        Webiny.Ui.Components.HtmlEditor = HtmlEditor;
+        Webiny.Ui.Components.Progress = Progress;
     }
 }
 

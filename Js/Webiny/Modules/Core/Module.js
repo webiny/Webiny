@@ -6,7 +6,6 @@ import FormComponent from './Core/FormComponent';
 import OptionComponent from './Core/OptionComponent';
 import ModalComponent from './Core/ModalComponent';
 import ApiComponent from './Core/ApiComponent';
-import Injector from './Core/Injector';
 import Model from './Core/Model';
 import View from './Core/View';
 import Menu from './Core/Menu';
@@ -58,7 +57,6 @@ class Module extends WebinyModule {
                 View,
                 Views: {}
             },
-            Injector,
             Model,
             Router,
             Route,
