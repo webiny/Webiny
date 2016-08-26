@@ -352,6 +352,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                     'target' => self::str($attr->getEntity())->replace('\\', '.')->trimLeft('.')->val(),
                     'type'   => $attributeType($attr)
                 ];
+                $attrData['entity'] = $attr->getEntity();
             }
 
             $data['attributes'][] = $attrData;

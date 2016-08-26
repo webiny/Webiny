@@ -220,6 +220,11 @@ HtmlEditor.defaultProps = {
             description = description(this);
         }
 
+        if (description) {
+            description = <span className="help-block">{description}</span>;
+        }
+
+
         return (
             <div className="form-group">
                 {label}
@@ -236,7 +241,7 @@ HtmlEditor.defaultProps = {
                         onChange={this.fileChanged}/>
                     {this.getCropper(<Ui.Alert type="info" title="Hint">Scroll to zoom in/out</Ui.Alert>)}
                 </div>
-                <span className="help-block">{description}</span>
+                {description}
             </div>
         );
     }
