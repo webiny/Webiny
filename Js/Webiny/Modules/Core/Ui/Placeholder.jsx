@@ -32,7 +32,7 @@ Placeholder.defaultProps = {
                 return;
             }
             if (React.isValidElement(item)) {
-                cmps.push(item);
+                cmps.push(React.cloneElement(item, {key: index}));
             } else {
                 const props = {key: index};
                 if (!_.isFunction(item)) {
