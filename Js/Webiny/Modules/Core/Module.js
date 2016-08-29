@@ -11,6 +11,7 @@ import View from './Core/View';
 import Menu from './Core/Menu';
 import Dispatcher from './Core/Dispatcher';
 import UiDispatcher from './Core/UiDispatcher';
+import Injector from './Core/Injector';
 import ViewManager from './Core/ViewManager';
 import Router from './Router/Router';
 import Route from './Router/Route';
@@ -62,6 +63,7 @@ class Module extends WebinyModule {
             Route,
             ViewManager,
             Dispatcher,
+            Injector,
             Tools,
             i18n,
             Cookies, // from js-cookies
