@@ -46,7 +46,7 @@ Alert.defaultProps = {
             );
         }
 
-        const title = this.props.title ? <strong>{this.props.title}</strong> : null;
+        const title = this.props.title ? <strong>{_.trimEnd(this.props.title, ':')}:</strong> : null;
 
         return (
             <div className={classes}>

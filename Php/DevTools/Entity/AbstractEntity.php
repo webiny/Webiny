@@ -325,6 +325,11 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             'methods'    => []
         ];
 
+        $reflection = new \ReflectionClass($entity);
+        $comments = $reflection->getDocComment();
+        $attributeDescription = [];
+        preg_match_all('#@property[a-zA-Z\s]+\$([a-zA-Z]+)(.*)?#m', $comments, $attributeDescription);
+
         $attributeType = function (AbstractAttribute $attr) {
             if ($attr instanceof Many2OneAttribute) {
                 return 'many2one';
@@ -346,6 +351,12 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                 //'validationMessages' => $attr->getValidationMessages(),
                 'defaultValue' => $attr->getDefaultValue()
             ];
+
+            foreach ($attributeDescription[1] as $descIndex => $descAttr) {
+                if ($descAttr == $attrName) {
+                    $attrData['description'] = trim($attributeDescription[2][$descIndex]);
+                }
+            }
 
             if ($attr instanceof Many2OneAttribute || $attr instanceof One2ManyAttribute) {
                 $data['relations'][] = [
