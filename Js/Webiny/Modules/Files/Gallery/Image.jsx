@@ -48,7 +48,7 @@ Image.defaultProps = {
                 {editBtn}
                 <Ui.Link onClick={this.deleteImage} className="tray-bin__file-remove"/>
                 <span className="tray-bin__file-name">{image.name}</span>
-                <span className="tray-bin__file-size">{filesize(image.size)}</span>
+                <span className="tray-bin__file-size">{image.id ? filesize(image.size) : '-'}</span>
             </div>
         );
     }
