@@ -10,8 +10,6 @@ namespace Apps\Core\Php\RequestHandlers;
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
-use Apps\Core\Php\DevTools\Response\ApiRawResponse;
-use Apps\Core\Php\Discover\Parser\AppParser;
 use Apps\Core\Php\Discover\Postman;
 use Webiny\Component\StdLib\StdLibTrait;
 
@@ -24,9 +22,8 @@ class Api
 
     public function handle()
     {
-        $url = $this->wRequest()->getCurrentUrl();
-        if (!$this->str($url)->startsWith($this->wConfig()->get('Application.ApiPath'))) {
-            return false;
+        if (!$this->wRequest()->isApi()) {
+            return null;
         }
 
         try {

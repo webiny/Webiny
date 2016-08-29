@@ -19,10 +19,25 @@ class TemplateEngine
 {
     use SingletonTrait, TemplateEngineTrait, StdLibTrait, WebinyTrait;
 
+    private $beforeRenderCallbacks = [];
+
     /**
      * @var \Webiny\Component\TemplateEngine\Bridge\TemplateEngineInterface
      */
     static private $templateEngine;
+
+    /**
+     * Add callback to process smarty data before render
+     * @param $callable
+     *
+     * @return $this
+     */
+    public function onBeforeRender($callable)
+    {
+        $this->beforeRenderCallbacks[] = $callable;
+
+        return $this;
+    }
 
     protected function init()
     {
@@ -68,6 +83,13 @@ class TemplateEngine
         if ($template->contains(':') && !$template->startsWith('eval:')) {
             $parts = $template->explode(':');
             $template = $this->wApps($parts[0])->getPath() . '/' . $parts[1];
+        }
+
+        foreach ($this->beforeRenderCallbacks as $cb) {
+            $res = $cb($parameters);
+            if (is_array($res)) {
+                $parameters = $res;
+            }
         }
 
         return self::$templateEngine->fetch((string)$template, $parameters);

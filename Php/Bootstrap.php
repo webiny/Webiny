@@ -34,10 +34,5 @@ class Bootstrap
             $user->lastLogin = $user->lastActive;
             $user->save();
         });
-
-        /*$this->addSeo('/website/lookbooks/{lookbook}', function(Seo $seo, Lookbook $lookbook){
-            $seo->setTitle($lookbook->name);
-            $seo->setImage($lookbook->featuredImage->src);
-        });*/
     }
 }

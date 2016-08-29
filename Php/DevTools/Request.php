@@ -22,6 +22,21 @@ class Request extends \Webiny\Component\Http\Request
     ];
 
     /**
+     * Is it a request to an API?
+     *
+     * @return bool
+     */
+    public function isApi()
+    {
+        $url = $this->getCurrentUrl();
+        if (!$this->str($url)->startsWith(Config::getInstance()->get('Application.ApiPath'))) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Get query filters
      *
      * @return array

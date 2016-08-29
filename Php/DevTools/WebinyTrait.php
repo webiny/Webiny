@@ -149,7 +149,7 @@ trait WebinyTrait
     /**
      * Get template engine
      *
-     * @return \Webiny\Component\TemplateEngine\Bridge\TemplateEngineInterface
+     * @return TemplateEngine
      */
     static protected function wTemplateEngine()
     {
