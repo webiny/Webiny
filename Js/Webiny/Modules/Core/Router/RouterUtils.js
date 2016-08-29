@@ -106,6 +106,7 @@ class RouterUtils {
         routeNotMatchedChain = routeNotMatchedChain.then(() => {
             if (!rEvent.isStopped()) {
                 // If URL starts with loaded app prefix, go to default route
+
                 if (this.baseUrl !== '/' && url.startsWith(this.baseUrl)) {
                     url = Webiny.Router.getDefaultRoute().getHref();
                     History.replaceState({url, replace: true}, null, url);
