@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
-import FileUploader from './../FileUploader';
 import ImageComponent from './../Base/ImageComponent';
 import Image from './Image';
 
@@ -17,7 +16,6 @@ class Gallery extends ImageComponent {
 
         this.bindMethods(
             'saveImage',
-            'cancelUpload',
             'applyCropping',
             'onCropperHidden',
             'filesChanged',
@@ -33,14 +31,11 @@ class Gallery extends ImageComponent {
         );
 
         _.assign(this.state, {
-            dragOver: false,
             images: [],
+            dragOver: false,
             cropImage: null,
             errors: []
         });
-
-        Webiny.Mixins.ApiComponent.extend(this);
-        this.uploader = new FileUploader(this.api);
     }
 
     componentDidMount() {
@@ -77,54 +72,13 @@ class Gallery extends ImageComponent {
     saveImage(image) {
         const index = this.getImageIndex(image);
         const state = this.state;
-        image.progress = 0;
         if (index !== null) {
             _.set(state, 'images.' + index, image);
         } else {
             image.order = state.images.length;
-        }
-
-        if (this.props.form) {
-            this.props.form.disableSubmit('Files are being uploaded...');
-        }
-
-        image.jobId = this.uploader.upload(image, (percentage) => {
-            const newState = this.state;
-            newState.images[this.getImageIndex(image)].progress = percentage;
-            this.setState({images: state.images});
-        }, (newImage) => {
-            if (this.props.form) {
-                this.props.form.enableSubmit();
-            }
-            const newState = this.state;
-            newImage.key = image.key;
-            newState.images[this.getImageIndex(image)] = newImage;
-            this.props.valueLink.requestChange(state.images);
-        }, (apiResponse, failedImage, jobId) => {
-            if (this.props.form) {
-                this.props.form.enableSubmit();
-            }
-            if (apiResponse.isAborted()) {
-                const images = this.state.images;
-                images.splice(_.findIndex(images, {jobId}), 1);
-                this.setState({images});
-            }
-        });
-
-        if (!image.id) {
             state.images.push(image);
         }
-
-        this.setState({images: state.images});
-    }
-
-    cancelUpload(image) {
-        if (!this.uploader.isInProgress(image.jobId)) {
-            const state = this.state;
-            state.images.splice(_.findIndex(state.images, {jobId: image.jobId}), 1);
-            this.setState({images: state.images});
-        }
-        this.uploader.abort(image.jobId);
+        this.props.valueLink.requestChange(state.images);
     }
 
     applyCropping(newImage) {
@@ -207,14 +161,13 @@ class Gallery extends ImageComponent {
     }
 
     deleteImage(image, index) {
-        return this.api.delete(image.id).then(res => {
-            if (res.getData() === true) {
-                const state = this.state;
-                state.images.splice(index, 1);
-                this.props.valueLink.requestChange(state.images);
-                Webiny.Growl.success(<span>Image <strong>{image.name}</strong> deleted succesfully!</span>, 'Gallery');
-            }
+        const state = this.state;
+        state.images.splice(index, 1);
+        state.images = state.images.map((item, index) => {
+            item.order = index;
+            return item;
         });
+        this.props.valueLink.requestChange(state.images);
     }
 
     onImageDragStart(e) {
@@ -316,12 +269,10 @@ class Gallery extends ImageComponent {
 }
 
 Gallery.defaultProps = {
-    api: '/entities/core/images',
     accept: ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'],
     sizeLimit: 10000000,
     newCropper: {},
     editCropper: {},
-    confirmDelete: false,
     renderer() {
         let message = null;
         if (this.state.images.length === 0) {
@@ -358,19 +309,6 @@ Gallery.defaultProps = {
             );
         }
 
-        const confirmationProps = {
-            ref: 'confirm',
-            title: 'Delete confirmation',
-            message: 'This action is not reversable. Delete this image?',
-            onConfirm: (modal) => {
-                return this.deleteImage(this.state.confirmDelete.image, this.state.confirmDelete.index).then(() => {
-                    return modal.hide().then(() => {
-                        this.setState({confirmDelete: null});
-                    });
-                });
-            }
-        };
-
         return (
             <div className="form-group">
                 <div className={this.classSet(css)} {...props}>
@@ -384,13 +322,8 @@ Gallery.defaultProps = {
                                 image: item,
                                 onEdit: () => this.editImage(item, index),
                                 onDelete: () => {
-                                    if (this.props.confirmDelete) {
-                                        this.setState({confirmDelete: {image: item, index}}, this.refs.confirm.show);
-                                    } else {
-                                        this.deleteImage(item, index);
-                                    }
+                                    this.deleteImage(item, index)
                                 },
-                                onCancelUpload: () => this.cancelUpload(item),
                                 onDragStart: this.onImageDragStart,
                                 onDragEnd: this.onImageDragEnd,
                                 onDragOver: this.onImageDragOver
@@ -412,7 +345,6 @@ Gallery.defaultProps = {
                         <span>Dragging not convenient?</span>&nbsp;
                         <a href="#" onClick={this.getFiles}>SELECT FILES HERE</a>
                     </div>
-                    <Ui.Modal.Confirmation {...confirmationProps}/>
                 </div>
             </div>
         );
