@@ -12,8 +12,6 @@ abstract class AbstractReport implements ReportInterface
 {
     use WebinyTrait, StdLibTrait;
 
-    private $data = [];
-
     abstract public function getFileName();
 
     /**
@@ -22,19 +20,4 @@ abstract class AbstractReport implements ReportInterface
      * @return mixed
      */
     abstract public function getReport($asFile = false);
-
-    function __get($name)
-    {
-        return $this->data[$name];
-    }
-
-    public function set($key, $value)
-    {
-        $this->data[$key] = $value;
-    }
-
-    public function getData()
-    {
-        return $this->data;
-    }
 }

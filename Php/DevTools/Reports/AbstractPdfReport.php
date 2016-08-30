@@ -10,6 +10,18 @@ use Webiny\Component\Storage\File\File;
  */
 abstract class AbstractPdfReport extends AbstractReport
 {
+    private $data = [];
+
+    function __get($name)
+    {
+        return $this->data[$name];
+    }
+
+    public function set($key, $value)
+    {
+        $this->data[$key] = $value;
+    }
+
     /**
      * Get report template
      * @return string
@@ -31,7 +43,7 @@ abstract class AbstractPdfReport extends AbstractReport
      */
     public function getReport($asFile = false)
     {
-        return $this->getPdf($this->getTemplate(), $this->getData(), $this->getFileName(), $asFile);
+        return $this->getPdf($this->getTemplate(), $this->data, $this->getFileName(), $asFile);
     }
 
     private function getPdf($template, $data, $filename, $asFile)
