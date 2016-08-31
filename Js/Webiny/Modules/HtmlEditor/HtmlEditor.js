@@ -228,7 +228,7 @@ HtmlEditor.defaultProps = {
         return (
             <div className="form-group">
                 {label}
-                <span className="info-text">{info}</span>
+                <span className="info-txt">{info}</span>
 
                 <div className="input-group">
                     {this.renderError()}
