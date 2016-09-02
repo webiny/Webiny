@@ -6,7 +6,7 @@ class TextareaContainer extends Webiny.Ui.FormComponent {
 
 }
 
-TextareaContainer.defaultProps = {
+TextareaContainer.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     renderer() {
         const cssConfig = {
             'form-group': true,
@@ -58,6 +58,6 @@ TextareaContainer.defaultProps = {
             </div>
         );
     }
-};
+});
 
 export default TextareaContainer;
