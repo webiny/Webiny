@@ -20,12 +20,13 @@ class FormFilters extends Filters {
 }
 
 FormFilters.defaultProps = {
+    defaultModel: null,
     renderer() {
         const applyFilters = () => (e) => this.refs.form.submit(e);
         const resetFilters = () => () => this.applyFilters({});
 
         return (
-            <Ui.Form.Container ref="form" model={this.props.filters} onSubmit={this.applyFilters}>
+            <Ui.Form.Container ref="form" defaultModel={this.props.defaultModel} model={this.props.filters} onSubmit={this.applyFilters}>
                 {() => this.props.children(applyFilters, resetFilters)}
             </Ui.Form.Container>
         );

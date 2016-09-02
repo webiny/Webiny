@@ -273,7 +273,7 @@ class Search extends Webiny.Ui.FormComponent {
             preview: this.renderPreview(item),
             selectedData: item
         }, () => {
-            const value = this.props.useDataAsValue ? item : item[this.props.valueAttr];
+            const value = this.props.formatValue(this.props.useDataAsValue ? item : item[this.props.valueAttr]);
             if (this.props.valueLink) {
                 // This will be handled by FormContainer, which will in turn call your onChange callback (if any)
                 this.props.valueLink.requestChange(value);
@@ -372,7 +372,7 @@ class Search extends Webiny.Ui.FormComponent {
     }
 }
 
-Search.defaultProps = {
+Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     searchOperator: 'or',
     valueAttr: 'id',
     textAttr: 'name',
@@ -384,6 +384,7 @@ Search.defaultProps = {
     loadingIcon: 'icon-search',
     placeholder: 'Type to search',
     useDataAsValue: false,
+    formatValue: value => value,
     allowFreeInput: false,
     optionRenderer: function optionRenderer(item) {
         const value = this.fetchValue(item);
@@ -464,6 +465,16 @@ Search.defaultProps = {
             validationIcon = <span className="icon icon-bad"></span>;
         }
 
+        let description = this.props.description;
+        if (_.isFunction(description)) {
+            description = description(this);
+        }
+
+        let info = this.props.info;
+        if (_.isFunction(info)) {
+            info = info(this);
+        }
+
         const cssConfig = {
             'form-group': true,
             'search-container': true,
@@ -474,12 +485,16 @@ Search.defaultProps = {
         return (
             <div className={this.classSet(cssConfig)}>
                 {label}
-                {this.props.renderSearchInput.call(this)}
-                {validationIcon}
-                {validationMessage}
+                <span className="info-txt">{info}</span>
+                <div className="input-group">
+                    {this.props.renderSearchInput.call(this)}
+                    {this.props.showValidationIcon ? validationIcon : null}
+                </div>
+                <span className="help-block">{description}</span>
+                {this.props.showValidationMessage ? validationMessage : null}
             </div>
         );
     }
-};
+});
 
 export default Search;
