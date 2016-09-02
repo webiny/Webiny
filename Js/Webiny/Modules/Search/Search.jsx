@@ -188,6 +188,10 @@ class Search extends Webiny.Ui.FormComponent {
     onKeyUp(e) {
         this.key = e.key;
 
+        if (e.metaKey || e.ctrlKey) {
+            return;
+        }
+
         switch (this.key) {
             case 'Backspace':
                 if (_.isEmpty(this.state.query) || _.get(this.props, 'valueLink.value')) {
@@ -486,6 +490,7 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             <div className={this.classSet(cssConfig)}>
                 {label}
                 <span className="info-txt">{info}</span>
+
                 <div className="input-group">
                     {this.props.renderSearchInput.call(this)}
                     {this.props.showValidationIcon ? validationIcon : null}
