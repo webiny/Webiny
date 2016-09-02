@@ -5,6 +5,10 @@ const Ui = Webiny.Ui.Components;
 class InputContainer extends Webiny.Ui.FormComponent {
 
     onKeyDown(e) {
+        if (e.metaKey || e.ctrlKey) {
+            return;
+        }
+
         switch (e.key) {
             case 'Enter':
                 if (this.props.onEnter) {
@@ -21,7 +25,6 @@ class InputContainer extends Webiny.Ui.FormComponent {
 InputContainer.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     delay: 400,
     description: null,
-    hideAnimation: {translateY: 0, opacity: 0, duration: 225},
     info: null,
     label: null,
     name: null,
@@ -31,9 +34,6 @@ InputContainer.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, 
     onChange: _.noop,
     placeholder: null,
     readOnly: false,
-    showAnimation: {translateY: 50, opacity: 1, duration: 225},
-    showValidationIcon: true,
-    showValidationMessage: true,
     tooltip: null,
     type: 'text',
     value: null,
