@@ -6,10 +6,15 @@ class Fieldset extends Webiny.Ui.Component {
 
 Fieldset.defaultProps = {
     renderer() {
+        let icon = null;
+        if (_.get(this.props, 'icon', false)) {
+            icon = <Webiny.Ui.Components.Icon icon={this.props.icon}/>;
+        }
+
         return (
             <div className="options-section">
                 <div className="options-header">
-                    <h5 className="options-title">{this.props.title}</h5>
+                    <h5 className="options-title">{icon}{this.props.title}</h5>
 
                     <div className="form-group form-group--inline-label search-container">{this.props.children}</div>
                 </div>
