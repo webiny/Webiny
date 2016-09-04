@@ -19,14 +19,16 @@ Alert.defaultProps = {
             info: 'alert-info',
             success: 'alert-success',
             warning: 'alert-warning',
-            error: 'alert-error'
+            error: 'alert-error',
+            danger: 'alert-error'
         };
 
         const iconClasses = {
             info: 'icon-info',
             success: 'icon-check-circle-o',
             warning: 'icon-exclamation-circle',
-            error: 'icon-cancel'
+            error: 'icon-cancel',
+            danger: 'icon-cancel'
         };
 
         const classes = this.classSet(
