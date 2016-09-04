@@ -5,9 +5,10 @@ class Fieldset extends Webiny.Ui.Component {
 }
 
 Fieldset.defaultProps = {
+    icon: null,
     renderer() {
         let icon = null;
-        if (_.get(this.props, 'icon', false)) {
+        if (this.props.icon) {
             icon = <Webiny.Ui.Components.Icon icon={this.props.icon}/>;
         }
 
