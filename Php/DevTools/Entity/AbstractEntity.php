@@ -457,11 +457,10 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     {
         $className = get_called_class();
         $classes = array_values([$className] + class_parents($className));
-        array_unshift($params, $this);
         foreach ($classes as $class) {
             $callbacks = static::$classCallbacks[$class][$eventName] ?? [];
             foreach ($callbacks as $callback) {
-                $callback(...$params);
+                $callback($this, ...$params);
             }
 
             if ($class == 'Apps\Core\Php\DevTools\Entity\AbstractEntity') {
