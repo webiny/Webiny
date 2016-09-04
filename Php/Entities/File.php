@@ -129,7 +129,9 @@ class File extends AbstractEntity
             $key = str_replace(' ', '-', $this->name);
             $storage->setContents($key, $content->explode(',')->last()->base64Decode()->val());
             $this->src = $storage->getRecentKey();
-            $this->size = $storage->getSize($this->src);
+            if($storage->supportsSize()){
+                $this->size = $storage->getSize($this->src);
+            }
             $this->ext = $this->str(basename($this->src))->explode('.')->last()->val();
         }
 

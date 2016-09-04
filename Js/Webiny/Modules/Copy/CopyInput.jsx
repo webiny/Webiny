@@ -47,7 +47,7 @@ CopyInput.defaultProps = {
         return (
             <div className={this.classSet('form-group', this.props.className)}>
                 {label}
-                <span className="info-text">{info}</span>
+                <span className="info-txt">{info}</span>
 
                 <div className="input-group">
                     <input {...props}/>

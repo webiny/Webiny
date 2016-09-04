@@ -100,4 +100,16 @@ class FormComponent extends Component {
     }
 }
 
+FormComponent.defaultProps = {
+    disabled: null,
+    disabledBy: null,
+    form: null,
+    validate: null,
+    valueLink: null,
+    hideAnimation: {translateY: 0, opacity: 0, duration: 225},
+    showAnimation: {translateY: 50, opacity: 1, duration: 225},
+    showValidationMessage: true,
+    showValidationIcon: true
+};
+
 export default FormComponent;

@@ -42,9 +42,20 @@ class Confirmation extends Webiny.Ui.ModalComponent {
             data.push(this);
             this.showLoading();
             return Q(this.props.onConfirm(...data)).then(result => {
-                this.hideLoading();
+                if (this.isMounted()) {
+                    this.hideLoading();
+                }
                 if (this.props.autoHide) {
-                    return this.hide().then(() => this.props.onComplete(result));
+                    return this.hide().then(() => {
+                        // If the result of confirmation is a function, it means we need to hide the dialog before executing it.
+                        // This is often necessary if the function will set a new state in the view - it will re-render itself and the modal
+                        // animation will be aborted (most common case is delete confirmation).
+                        if (_.isFunction(result)) {
+                            // The result of the function will be passed to `onComplete` and not the function itself
+                            result = result();
+                        }
+                        this.props.onComplete(result);
+                    });
                 }
             });
         }

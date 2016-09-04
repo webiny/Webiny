@@ -1,6 +1,11 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
+/**
+ * If onClick function we are handling returns a function, the confirmation dialog will be hidden before executing the function.
+ * This will prevent unwanted unmounts and execution of code on unmounted components.
+ */
+
 class ClickConfirm extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
@@ -36,10 +41,6 @@ class ClickConfirm extends Webiny.Ui.Component {
 
     onConfirm() {
         return Q(this.realOnClick(this));
-    }
-
-    hide() {
-        return this.refs.dialog.hide();
     }
 }
 

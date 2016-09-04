@@ -46,7 +46,7 @@ class Editor extends Webiny.Ui.FormComponent {
     }
 
     getTextareaElement() {
-        return $(ReactDOM.findDOMNode(this)).find('textarea')[0];
+        return ReactDOM.findDOMNode(this).querySelector('textarea');
     }
 }
 

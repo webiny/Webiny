@@ -1,10 +1,10 @@
 import Webiny from 'Webiny';
-import Editor from './Editor';
+import MarkdownEditor from './MarkdownEditor';
 
 class Module extends Webiny.Module {
 
     init() {
-        Webiny.Ui.Components.MarkdownEditor = Editor;
+        Webiny.Ui.Components.MarkdownEditor = MarkdownEditor;
     }
 }
 

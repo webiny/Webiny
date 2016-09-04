@@ -5,6 +5,10 @@ const Ui = Webiny.Ui.Components;
 class InputContainer extends Webiny.Ui.FormComponent {
 
     onKeyDown(e) {
+        if (e.metaKey || e.ctrlKey) {
+            return;
+        }
+
         switch (e.key) {
             case 'Enter':
                 if (this.props.onEnter) {
@@ -18,17 +22,21 @@ class InputContainer extends Webiny.Ui.FormComponent {
     }
 }
 
-InputContainer.defaultProps = {
-    type: 'text',
+InputContainer.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     delay: 400,
-    readOnly: false,
-    onEnter: null,
     description: null,
     info: null,
-    showValidationIcon: true,
-    showValidationMessage: true,
-    showAnimation: {translateY: 50, opacity: 1, duration: 225},
-    hideAnimation: {translateY: 0, opacity: 0, duration: 225},
+    label: null,
+    name: null,
+    onEnter: _.noop,
+    onKeyDown: _.noop,
+    onKeyUp: _.noop,
+    onChange: _.noop,
+    placeholder: null,
+    readOnly: false,
+    tooltip: null,
+    type: 'text',
+    value: null,
     renderer() {
         const cssConfig = {
             'form-group': true,
@@ -65,10 +73,10 @@ InputContainer.defaultProps = {
             value: this.props.value || null,
             valueLink: this.props.valueLink,
             placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder),
-            onKeyUp: this.props.onKeyUp || null,
-            onKeyDown: this.props.onKeyDown || this.onKeyDown.bind(this),
+            onKeyUp: this.props.onKeyUp,
+            onKeyDown: this.props.onKeyDown !== _.noop ? this.props.onKeyDown : this.onKeyDown.bind(this),
             onEnter: this.props.onEnter,
-            onChange: this.props.onChange || _.noop
+            onChange: this.props.onChange
         };
 
         let description = this.props.description;
@@ -93,7 +101,7 @@ InputContainer.defaultProps = {
         return (
             <div className={this.classSet(cssConfig, this.props.className)}>
                 {label}
-                <span className="info-text">{info}</span>
+                <span className="info-txt">{info}</span>
 
                 <div className="input-group">
                     {input}
@@ -109,6 +117,6 @@ InputContainer.defaultProps = {
             </div>
         );
     }
-};
+});
 
 export default InputContainer;

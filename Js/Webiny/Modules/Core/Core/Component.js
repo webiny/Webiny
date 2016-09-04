@@ -10,6 +10,7 @@ class Component extends React.Component {
 
         this.__listeners = [];
         this.__cursors = [];
+        this.__mounted = false;
         this.bindMethods('bindTo,isRendered');
     }
 
@@ -21,6 +22,7 @@ class Component extends React.Component {
 
     componentDidMount() {
         // Reserved for future system-wide functionality
+        this.__mounted = true;
     }
 
     /* eslint-disable */
@@ -64,6 +66,7 @@ class Component extends React.Component {
         if (this.props.ui) {
             UiDispatcher.unregister(this.props.ui);
         }
+        this.__mounted = false;
     }
 
     setState(key, value = null, callback = null) {
@@ -76,6 +79,10 @@ class Component extends React.Component {
             _.set(state, key, value);
             return super.setState(state, callback);
         }
+    }
+
+    isMounted() {
+        return this.__mounted;
     }
 
     isRendered() {

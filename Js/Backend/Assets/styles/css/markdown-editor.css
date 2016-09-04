@@ -118,8 +118,8 @@
 .smde .editor-toolbar a {
 	display: inline-block;
 	text-align: center;
-	text-decoration: none!important;
-	color: #2c3e50!important;
+	text-decoration: none !important;
+	color: #2c3e50 !important;
 	width: 30px;
 	height: 30px;
 	margin: 0;
@@ -221,7 +221,7 @@
 	height: 100%;
 	top: 0;
 	left: 0;
-	background: #fafafa;
+	background: #ffffff;
 	z-index: 7;
 	overflow: auto;
 	display: none;
@@ -251,23 +251,30 @@
 	display: block
 }
 
-.smde .editor-preview>p,
-.smde .editor-preview-side>p {
+.smde .editor-preview > p,
+.smde .editor-preview-side > p {
 	margin-top: 0
 }
 
 .smde .editor-preview pre,
 .smde .editor-preview-side pre {
-	background: #eee;
+	background: #f7f7f7;
 	margin-bottom: 10px;
+	padding: 10px;
+}
+
+.smde .editor-preview table tr:nth-child(2n) {
+	background-color: #f8f8f8;
 }
 
 .smde .editor-preview table td,
 .smde .editor-preview table th,
 .smde .editor-preview-side table td,
 .smde .editor-preview-side table th {
+	padding: 10px 18px;
 	border: 1px solid #ddd;
-	padding: 5px;
+	font-size: 16px;
+	line-height: 1.5;
 }
 
 .smde .CodeMirror .CodeMirror-code .cm-tag {
@@ -325,4 +332,8 @@
 
 .smde .CodeMirror .CodeMirror-placeholder {
 	opacity: .5;
+}
+
+.smde .CodeMirror .CodeMirror-line {
+	font-size: 16px;
 }

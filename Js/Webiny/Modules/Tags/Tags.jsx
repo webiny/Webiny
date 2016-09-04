@@ -28,6 +28,9 @@ class Tags extends Webiny.Ui.FormComponent {
     }
 
     addTag(e) {
+        if (e.ctrlKey || e.metaKey) {
+            return;
+        }
         let tags = this.props.valueLink.value;
         const input = this.refs.tagInput;
         const emptyField = !input.value;

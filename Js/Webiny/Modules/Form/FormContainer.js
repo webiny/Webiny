@@ -38,7 +38,6 @@ class FormContainer extends Webiny.Ui.Component {
             'cancel',
             'validate',
             'onSubmit',
-            'onCancel',
             'onInvalid',
             'isSubmitDisabled',
             'enableSubmit',
@@ -46,7 +45,8 @@ class FormContainer extends Webiny.Ui.Component {
             'handleApiError',
             '__renderContent',
             '__processSubmitResponse',
-            '__focusTab'
+            '__focusTab',
+            '__onKeyDown'
         );
     }
 
@@ -191,15 +191,6 @@ class FormContainer extends Webiny.Ui.Component {
         }
     }
 
-    onCancel() {
-        console.log('Form Container [ON CANCEL]');
-        if (_.isString(this.props.onCancel)) {
-            Webiny.Router.goToRoute(this.props.onCancel);
-        } else if (_.isFunction(this.props.onCancel)) {
-            this.props.onCancel();
-        }
-    }
-
     /**
      * MODEL METHODS
      */
@@ -334,7 +325,7 @@ class FormContainer extends Webiny.Ui.Component {
         if (_.isString(this.props.onCancel)) {
             Webiny.Router.goToRoute(this.props.onCancel);
         } else if (_.isFunction(this.props.onCancel)) {
-            this.props.onCancel();
+            this.props.onCancel(this);
         }
     }
 
@@ -613,6 +604,16 @@ class FormContainer extends Webiny.Ui.Component {
 
         return _.cloneDeepWith(collection, omitFn);
     }
+
+    __onKeyDown(e) {
+        if ((e.metaKey || e.ctrlKey) && (['s', 'Enter'].indexOf(e.key) > -1)) {
+            // Need to blur current target in case of input fields to trigger validation
+            e.target.blur();
+            e.preventDefault();
+            e.stopPropagation();
+            this.submit();
+        }
+    }
 }
 
 FormContainer.defaultProps = {
@@ -629,7 +630,7 @@ FormContainer.defaultProps = {
     },
     renderer() {
         return (
-            <webiny-form-container>{this.__renderContent()}</webiny-form-container>
+            <webiny-form-container onKeyDown={this.__onKeyDown}>{this.__renderContent()}</webiny-form-container>
         );
     }
 };
