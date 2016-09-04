@@ -267,6 +267,10 @@ class Router {
     handleAnchorClick(a, e) {
         let url = a.href;
 
+        if (a.target === '_blank') {
+            return;
+        }
+
         if (_.endsWith(url, '#')) {
             return e.preventDefault();
         }
