@@ -17,6 +17,7 @@ use Webiny\Component\Storage\Storage;
 class FilesAttribute extends One2ManyAttribute
 {
     protected $storage = null;
+    protected $storageFolder = '/';
     protected $tags = [];
 
     /**
@@ -56,6 +57,20 @@ class FilesAttribute extends One2ManyAttribute
         return $this;
     }
 
+    /**
+     * Set folder in which the files will be stored (relative to the root of your storage)
+     *
+     * @param string $folder
+     *
+     * @return $this
+     */
+    public function setFolder($folder)
+    {
+        $this->storageFolder = $folder;
+
+        return $this;
+    }
+
     public function getValue($params = [], $processCallbacks = true)
     {
         $values = parent::getValue($params, false);
@@ -63,7 +78,7 @@ class FilesAttribute extends One2ManyAttribute
         foreach ($values as $value) {
             $value->tags->merge($this->tags)->unique();
             if ($this->storage) {
-                $value->setStorage($this->storage);
+                $value->setStorage($this->storage)->setStorageFolder($this->storageFolder);
             }
         }
 

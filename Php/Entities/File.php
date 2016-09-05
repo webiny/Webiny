@@ -35,6 +35,7 @@ class File extends AbstractEntity
      * @var Storage
      */
     protected $storage = null;
+    protected $storageFolder = '/';
 
     public function __construct()
     {
@@ -127,9 +128,9 @@ class File extends AbstractEntity
             }
 
             $key = str_replace(' ', '-', $this->name);
-            $storage->setContents($key, $content->explode(',')->last()->base64Decode()->val());
+            $storage->setContents(trim($this->storageFolder, '/') . '/' . trim($key, '/'), $content->explode(',')->last()->base64Decode()->val());
             $this->src = $storage->getRecentKey();
-            if($storage->supportsSize()){
+            if ($storage->supportsSize()) {
                 $this->size = $storage->getSize($this->src);
             }
             $this->ext = $this->str(basename($this->src))->explode('.')->last()->val();
@@ -161,6 +162,20 @@ class File extends AbstractEntity
     public function setStorage(Storage $storage)
     {
         $this->storage = $storage;
+
+        return $this;
+    }
+
+    /**
+     * Set storage folder
+     *
+     * @param string $folder
+     *
+     * @return $this
+     */
+    public function setStorageFolder($folder)
+    {
+        $this->storageFolder = $folder;
 
         return $this;
     }
