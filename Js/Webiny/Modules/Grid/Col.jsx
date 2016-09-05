@@ -32,6 +32,7 @@ class Col extends Webiny.Ui.Component {
 
 Col.defaultProps = {
     className: '',
+    style: null,
     renderer() {
         const props = _.clone(this.props);
         let cssClasses = [];
@@ -49,7 +50,7 @@ Col.defaultProps = {
             }
         });
 
-        return <div {...this.props} className={this.classSet(cssClasses)}/>;
+        return <div style={this.props.style} className={this.classSet(cssClasses)}>{this.props.children}</div>;
     }
 };
 

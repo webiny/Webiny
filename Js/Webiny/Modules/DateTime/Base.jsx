@@ -83,7 +83,6 @@ Base.defaultProps = {
         const props = {
             onBlur: this.validate,
             disabled: this.isDisabled(),
-            stepping: this.props.stepping,
             readOnly: this.props.readOnly,
             type: 'text',
             className: this.classSet('form-control', {placeholder: !this.props.valueLink.value}),

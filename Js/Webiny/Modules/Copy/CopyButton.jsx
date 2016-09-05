@@ -52,6 +52,7 @@ CopyButton.defaultProps = {
     label: 'Copy',
     onSuccessMessage: 'Copied to clipboard!',
     onCopy: _.noop,
+    style: null,
     renderer() {
         const props = _.clone(this.props);
         props.ref = 'button';
@@ -83,9 +84,9 @@ CopyButton.defaultProps = {
             props.className
         );
 
-        props['data-clipboard-text'] = _.has(this.props, 'value') ? this.props.value || '' : _.get(this.props, 'valueLink.value') || '';
+        const text = _.has(this.props, 'value') ? this.props.value || '' : _.get(this.props, 'valueLink.value') || '';
 
-        return <button {...props} type="button" className={classes}>{this.getContent()}</button>;
+        return <button style={this.props.style} data-clipboard-text={text} type="button" className={classes}>{this.getContent()}</button>;
     }
 };
 

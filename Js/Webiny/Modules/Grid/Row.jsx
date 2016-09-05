@@ -6,8 +6,9 @@ class Row extends Webiny.Ui.Component {
 
 
 Row.defaultProps = {
+    style: null,
     renderer() {
-        return <div {...this.props} className={this.classSet('row', this.props.className)}>{this.props.children}</div>;
+        return <div style={this.props.style} className={this.classSet('row', this.props.className)}>{this.props.children}</div>;
     }
 };
 

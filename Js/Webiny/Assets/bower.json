@@ -15,7 +15,7 @@
         "system.js": "~0.18.4",
         "js-cookie": "~2.0.4",
         "baobab": "~2.2.1",
-        "react": "https://github.com/reactjs/react-bower.git#15.1.0",
+        "react": "https://github.com/reactjs/react-bower.git",
         "select2": "4.0.0",
         "eonasdan-bootstrap-datetimepicker": "4.15.35",
         "bootstrap-daterangepicker": "~2.1.19",

@@ -13,7 +13,7 @@ class Textarea extends Webiny.Ui.Component {
 
 Textarea.defaultProps = {
     renderer() {
-        const props = _.omit(this.props, ['valueLink', 'value']);
+        const props = _.omit(this.props, ['valueLink', 'value', 'renderer']);
         props.value = _.has(this.props, 'valueLink') ? _.get(this.props, 'valueLink.value') || '' : this.props.value || '';
         props.onChange = this.onChange.bind(this);
         return <textarea {...props}/>;

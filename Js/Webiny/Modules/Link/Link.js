@@ -77,7 +77,7 @@ class Link extends Webiny.Ui.Component {
         }
 
         props.className = this.classSet(classes);
-        return props;
+        return _.omit(props, ['route', 'url', 'params', 'separate', 'renderer', 'align']);
     }
 }
 

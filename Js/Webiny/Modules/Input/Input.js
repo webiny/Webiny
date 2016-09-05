@@ -16,7 +16,7 @@ Input.defaultProps = {
         const props = _.omit(this.props, ['valueLink', 'value']);
         props.value = _.has(this.props, 'valueLink') ? _.get(this.props, 'valueLink.value') || '' : this.props.value || '';
         props.onChange = this.onChange.bind(this);
-        return <input {...props}/>;
+        return <input {..._.omit(props, ['renderer', 'onEnter'])}/>;
     }
 };
 
