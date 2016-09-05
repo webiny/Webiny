@@ -2,11 +2,12 @@ import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
 class PasswordContainer extends Webiny.Ui.Component {
+    constructor(props){
+        super(props);
 
-    togglePassword() {
-        console.log('toggling');
-
-        return true;
+        this.state = {
+            showPassword: false
+        };
     }
 
 }
@@ -14,11 +15,12 @@ class PasswordContainer extends Webiny.Ui.Component {
 PasswordContainer.defaultProps = {
     renderer() {
         const props = _.omit(this.props, ['renderer']);
+        const type = this.state.showPassword ? 'text' : 'password';
 
         return (
             <w-password>
-                <Ui.Input type="password" {...props}/>
-                <Ui.Checkbox label="Single checkbox" name="singleCheckbox" onChange={this.togglePassword} grid={12}/>
+                <Ui.Input type={type} {...props}/>
+                <Ui.Checkbox label="Show password" valueLink={this.bindTo('showPassword')} grid={12}/>
             </w-password>
         );
     }
