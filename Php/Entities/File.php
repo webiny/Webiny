@@ -59,9 +59,9 @@ class File extends AbstractEntity
     public function toArray($fields = '', $nestedLevel = 1)
     {
         $data = parent::toArray($fields, $nestedLevel);
-        if (isset($data['src'])) {
+        if (isset($data['src']) && is_String($data['src'])) {
             $src = $this->str($data['src']);
-            if (!$src->startsWith('http://') && !$src->startsWith('https://')) {
+            if (!$src->containsAny(['http://', 'https://'])) {
                 $data['src'] = $this->getUrl();
             }
         }

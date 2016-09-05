@@ -19,17 +19,37 @@ class Image extends File
     public function __construct()
     {
         parent::__construct();
-        $this->getAttribute('src')->onGet(function ($value, $width = null, $height = null) {
-            if (!$width && !$height) {
+        $this->getAttribute('src')->onGet(function ($value, ...$dimensions) {
+            if (!$dimensions) {
                 return $value;
             }
 
-            if ($width && !$height) {
-                return $this->getSize($width);
+            if (count($dimensions) === 1) {
+                return $this->getSize($dimensions[0]);
             }
 
-            return $this->getSize($width . 'x' . $height);
+            $urls = [];
+            foreach ($dimensions as $d) {
+                $urls[$d] = $this->getSize($d);
+            }
+
+            return $urls;
         });
+    }
+
+    public function toArray($fields = '', $nestedLevel = 1)
+    {
+        $data = parent::toArray($fields, $nestedLevel);
+        if (is_array($data['src'])) {
+            foreach ($data['src'] as $dimension => $key) {
+                $src = $this->str($key);
+                if (!$src->containsAny(['http://', 'https://'])) {
+                    $data['src'][$dimension] = $this->storage->getURL($key);
+                }
+            }
+        }
+
+        return $data;
     }
 
     public function getUrl($ext = null)
@@ -73,6 +93,10 @@ class Image extends File
 
     private function getSize($imageExt)
     {
+        if ($imageExt === 'original') {
+            return $this->getUrl();
+        }
+
         // Predefined sizes
         $path = explode('/', $this->src);
         $fileName = array_pop($path);
