@@ -5,7 +5,7 @@ const container = {};
  */
 class Injector {
 
-    debug(){
+    debug() {
         console.log(container);
     }
 

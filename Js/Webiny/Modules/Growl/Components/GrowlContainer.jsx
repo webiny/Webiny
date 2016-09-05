@@ -19,8 +19,8 @@ class GrowlContainer extends Webiny.Ui.Component {
         return cmp.props.id;
     }
 
-    removeById(id){
-        if(this.refs[id]){
+    removeById(id) {
+        if (this.refs[id]) {
             this.removeGrowl(this.refs[id]);
         }
     }

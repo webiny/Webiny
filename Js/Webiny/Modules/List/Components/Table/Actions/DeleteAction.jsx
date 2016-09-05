@@ -12,10 +12,10 @@ DeleteAction.defaultProps = {
     message: 'Are you sure you want to delete this record?',
     hide: _.noop,
     afterDelete: _.noop,
-    onConfirm: (record, actions, modal) => {
+    onConfirm: (record, actions) => {
         return actions.delete(record.id, false).then(res => {
             return Q(this.props.afterDelete(res)).then(() => res);
-        })
+        });
     },
     renderer() {
         const message = this.props.message;
@@ -32,7 +32,7 @@ DeleteAction.defaultProps = {
                             actions.reload();
                         },
                         onConfirm: (modal) => {
-                            $this.props.onConfirm(record, actions, modal)
+                            $this.props.onConfirm(record, actions, modal);
                         }
                     };
                     return (

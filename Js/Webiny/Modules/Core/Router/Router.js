@@ -272,7 +272,8 @@ class Router {
         }
 
         if (_.endsWith(url, '#')) {
-            return e.preventDefault();
+            e.preventDefault();
+            return;
         }
 
         if (url.indexOf(webinyWebPath) === 0) {

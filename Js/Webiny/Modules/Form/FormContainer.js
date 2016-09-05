@@ -157,7 +157,7 @@ class FormContainer extends Webiny.Ui.Component {
     onSubmit(model) {
         this.showLoading();
         this.__removeKeys(model);
-        let progressBar = _.uniqueId('progress-');
+        const progressBar = _.uniqueId('progress-');
         const config = {
             progress: pe => {
                 // If total size is larger than 500Kb...

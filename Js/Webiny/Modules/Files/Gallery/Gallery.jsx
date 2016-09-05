@@ -163,8 +163,8 @@ class Gallery extends ImageComponent {
     deleteImage(image, index) {
         const state = this.state;
         state.images.splice(index, 1);
-        state.images = state.images.map((item, index) => {
-            item.order = index;
+        state.images = state.images.map((item, i) => {
+            item.order = i;
             return item;
         });
         this.props.valueLink.requestChange(state.images);
@@ -322,7 +322,7 @@ Gallery.defaultProps = {
                                 image: item,
                                 onEdit: () => this.editImage(item, index),
                                 onDelete: () => {
-                                    this.deleteImage(item, index)
+                                    this.deleteImage(item, index);
                                 },
                                 onDragStart: this.onImageDragStart,
                                 onDragEnd: this.onImageDragEnd,

@@ -45,7 +45,7 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        if (!this.delay && props.valueLink.value != this.editor.root.innerHTML) {
+        if (!this.delay && props.valueLink.value !== this.editor.root.innerHTML) {
             this.editor.pasteHTML(props.valueLink.value);
         }
     }
@@ -192,7 +192,7 @@ HtmlEditor.defaultProps = {
     },
     renderer() {
         let uploader = null;
-        if (this.state.uploadPercentage != null) {
+        if (this.state.uploadPercentage !== null) {
             uploader = (
                 <div>
                     <strong>Your image is being uploaded...</strong>
