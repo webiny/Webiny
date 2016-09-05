@@ -82,6 +82,7 @@ class Animate extends Webiny.Ui.Component {
 }
 
 Animate.defaultProps = {
+    trigger: null,
     onFinish: _.noop,
     show: 'fadeIn',
     hide: 'fadeOut',
