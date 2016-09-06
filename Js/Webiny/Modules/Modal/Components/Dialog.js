@@ -215,12 +215,18 @@ class Dialog extends Webiny.Ui.Component {
             return child;
         }
 
-        const props = {dialog: this};
-        if (child.type === Ui.Modal.Header) {
-            props['onClose'] = this.hide;
+        if ([Ui.Modal.Header, Ui.Modal.Body, Ui.Modal.Footer].indexOf(child.type) > -1) {
+            const props = {dialog: this};
+            if (child.type === Ui.Modal.Header) {
+                props['onClose'] = this.hide;
+            }
+            return React.cloneElement(child, props);
         }
 
-        return React.cloneElement(child, props);
+        if (child.props.children) {
+            return React.cloneElement(child, _.omit(child.props, ['ref', 'key']), this.prepareChildren(child.props.children));
+        }
+        return child;
     }
 
     prepareChildren(children) {
