@@ -34,7 +34,7 @@ class Gallery extends ImageComponent {
             images: [],
             dragOver: false,
             cropImage: null,
-            errors: []
+            errors: null
         });
     }
 
@@ -70,6 +70,14 @@ class Gallery extends ImageComponent {
     }
 
     saveImage(image) {
+        const numberOfImages = this.props.valueLink.value.length + 1;
+        if (this.props.maxImages && numberOfImages > this.props.maxImages) {
+            const errors = this.state.errors || [];
+            errors.push({name: image.name, message: this.props.maxImagesMessage});
+            this.setState({errors});
+            return;
+        }
+
         const index = this.getImageIndex(image);
         const state = this.state;
         if (index !== null) {
@@ -94,6 +102,8 @@ class Gallery extends ImageComponent {
     filesChanged(files, errors) {
         if (errors && errors.length) {
             this.setState({errors});
+        } else {
+            this.setState({errors: null});
         }
 
         if (files.length === 1) {
@@ -271,6 +281,8 @@ class Gallery extends ImageComponent {
 Gallery.defaultProps = {
     accept: ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'],
     sizeLimit: 10000000,
+    maxImages: null,
+    maxImagesMessage: 'Maximum number of images reached!',
     newCropper: {},
     editCropper: {},
     renderer() {
@@ -296,14 +308,14 @@ Gallery.defaultProps = {
         };
 
         let errors = null;
-        if (this.state.errors.length) {
+        if (this.state.errors) {
             const data = [];
             _.each(this.state.errors, (err, key) => {
                 data.push(<li key={key}><strong>{err.name}</strong>: {err.message}</li>);
             });
 
             errors = (
-                <Ui.Alert title="Some files could not be uploaded" type="error">
+                <Ui.Alert title="Some files could not be added to the gallery" type="error">
                     {data && <ul>{data}</ul>}
                 </Ui.Alert>
             );
@@ -311,9 +323,9 @@ Gallery.defaultProps = {
 
         return (
             <div className="form-group">
-                <div className={this.classSet(css)} {...props}>
+                <div className={this.classSet(css)}>
                     {errors}
-                    <div className="tray-bin__container">
+                    <div className="tray-bin__container" {...props}>
                         {message}
                         {this.state.images.map((item, index) => {
                             const imageProps = {
