@@ -7,7 +7,7 @@ class Editor extends Webiny.Ui.FormComponent {
         this.mdEditor = null;
         this.options = null;
 
-        this.bindMethods('getTextareaElement', 'setValue');
+        this.bindMethods('getTextareaElement', 'setValue', 'getEditor');
     }
 
     componentDidMount() {
@@ -30,10 +30,6 @@ class Editor extends Webiny.Ui.FormComponent {
         });
     }
 
-    setValue(value) {
-        this.mdEditor.codemirror.setValue(value);
-    }
-
     componentWillReceiveProps(props) {
         if (this.mdEditor.codemirror.getValue() !== props.valueLink.value && !_.isNull(props.valueLink.value)) {
             // the "+ ''" sort a strange with splitLines method within CodeMirror
@@ -43,6 +39,14 @@ class Editor extends Webiny.Ui.FormComponent {
 
     shouldComponentUpdate() {
         return false;
+    }
+
+    setValue(value) {
+        this.mdEditor.codemirror.setValue(value);
+    }
+
+    getEditor() {
+        return this.mdEditor;
     }
 
     getTextareaElement() {

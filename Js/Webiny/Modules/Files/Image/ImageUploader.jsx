@@ -49,15 +49,18 @@ ImageUploader.defaultProps = {
     renderer() {
         const props = {
             onClick: this.getFiles,
-            type: this.props.type
+            type: this.props.type,
+            disabled: this.state.progress !== null
         };
 
+        const description = this.props.description ? <span className="help-block">{this.props.description}</span> : null;
         const label = this.state.progress ? 'Uploading...' + this.state.progress + '%' : this.props.label;
 
         return (
             <div>
                 {this.renderError()}
                 <Ui.Button {...props}>{label}</Ui.Button>
+                {description}
 
                 <Ui.Files.FileReader
                     accept={this.props.accept}

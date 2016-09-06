@@ -460,6 +460,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         foreach ($classes as $class) {
             $callbacks = static::$classCallbacks[$class][$eventName] ?? [];
             foreach ($callbacks as $callback) {
+                // Static callbacks require an instance of entity that triggered the event as first parameter
                 $callback($this, ...$params);
             }
 

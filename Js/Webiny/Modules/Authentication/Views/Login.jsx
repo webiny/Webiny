@@ -26,11 +26,6 @@ class Login extends Webiny.Ui.View {
         super.componentDidMount();
         $('body').addClass('sign-in');
         $('input:first').focus();
-        $('input').keypress(e => {
-            if (e.which === 13) {
-                this.ui('loginForm').submit();
-            }
-        });
     }
 
     componentWillUnmount() {
@@ -106,8 +101,8 @@ Login.defaultProps = {
                         <Ui.Form.Error container={container}/>
 
                         <div className="clear"></div>
-                        <Ui.Input name="username" placeholder="Enter email" label="Email address *" validate="required,email"/>
-                        <Ui.Input {...passwordProps}/>
+                        <Ui.Input name="username" placeholder="Enter email" label="Email address *" validate="required,email" onEnter={container.submit}/>
+                        <Ui.Input {...passwordProps} onEnter={container.submit}/>
 
                         <div className="form-footer">
                             <div className="submit-wrapper">

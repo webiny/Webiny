@@ -11,7 +11,7 @@ class InputContainer extends Webiny.Ui.FormComponent {
 
         switch (e.key) {
             case 'Enter':
-                if (this.props.onEnter) {
+                if (this.props.onEnter && this.props.onEnter !== _.noop) {
                     e.preventDefault();
                     this.props.onEnter(e);
                 }
