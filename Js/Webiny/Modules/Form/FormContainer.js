@@ -17,6 +17,7 @@ class FormContainer extends Webiny.Ui.Component {
         this.watches = {};
         this.inputs = {};
         this.tabs = {};
+        this.growlId = _.uniqueId('growl-');
 
         this.parsingTabsIndex = 0;
 
@@ -150,30 +151,18 @@ class FormContainer extends Webiny.Ui.Component {
         return this.state.loading;
     }
 
-
     /**
      * "ON" CALLBACK METHODS
      */
     onSubmit(model) {
         this.showLoading();
         this.__removeKeys(model);
-        const progressBar = _.uniqueId('progress-');
         const config = {
             progress: pe => {
                 // If total size is larger than 500Kb...
                 if (pe.total > 500000) {
-                    // Create a growl to notify user of an upload progress
-                    if (!this.growlId) {
-                        const cmp = <div>Your data is being uploaded...<Ui.Progress ui={progressBar} value={0}/></div>;
-                        this.growlId = Webiny.Growl.info(cmp, 'Please be patient', true);
-                    }
-
-                    // Calculate percentage and update progress bar
-                    const percentage = Math.round(pe.loaded / pe.total * 100);
-                    const progress = this.ui(progressBar);
-                    if (progress) {
-                        progress.setValue(percentage);
-                    }
+                    pe.progress = Math.round(pe.loaded / pe.total * 100);
+                    this.props.onProgress.call(this, pe, this);
                 }
             }
         };
@@ -551,10 +540,7 @@ class FormContainer extends Webiny.Ui.Component {
     }
 
     __processSubmitResponse(model, apiResponse) {
-        if (this.growlId) {
-            Webiny.Growl.remove(this.growlId);
-            this.growlId = null;
-        }
+        Webiny.Growl.remove(this.growlId);
         this.hideLoading();
         if (apiResponse.isError()) {
             this.handleApiError(apiResponse);
@@ -621,6 +607,10 @@ FormContainer.defaultProps = {
     connectToRouter: false,
     onSubmitSuccess: null,
     onFailure: _.noop,
+    onProgress: function (pe) {
+        const cmp = <div>Your data is being uploaded...<Ui.Progress value={pe.progress}/></div>;
+        Webiny.Growl(<Ui.Growl.Info id={this.growlId} title="Please be patient" sticky={true}>{cmp}</Ui.Growl.Info>);
+    },
     injectInto: () => [
         Ui.Form.Loader,
         Ui.Form.Error

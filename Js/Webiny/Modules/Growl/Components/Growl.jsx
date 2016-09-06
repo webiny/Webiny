@@ -30,7 +30,8 @@ Growl.defaultProps = {
     title: null,
     ttl: 3000,
     sticky: false,
-    renderer: function renderer() {
+    message: null,
+    renderer() {
         const classes = this.classSet('growl-notification', this.props.className);
         const title = this.props.title ? <div className="growl-header">{this.props.title}</div> : null;
         let messages = [];

@@ -16,7 +16,12 @@ function getGrowler() {
     return growler;
 }
 
-export default {
+function Growler(component) {
+    const growler = getGrowler();
+    return growler.addGrowl(component);
+}
+
+_.assign(Growler, {
     remove(growlId){
         const growler = getGrowler();
 
@@ -66,4 +71,6 @@ export default {
 
         return growler.addGrowl(<WarningGrowl {...{message, title, sticky, ttl}}/>);
     }
-};
+});
+
+export default Growler;

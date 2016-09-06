@@ -13,10 +13,21 @@ class GrowlContainer extends Webiny.Ui.Component {
     }
 
     addGrowl(growl) {
-        const cmp = React.cloneElement(growl, {id: _.uniqueId('growl-')});
-        this.state.growls.push(cmp);
+        let growlIndex = null;
+        if (growl.props.id) {
+            growlIndex = _.findIndex(this.state.growls, g => g.props.id === growl.props.id);
+        }
+
+        if (growlIndex > -1) {
+            this.state.growls[growlIndex] = growl;
+        } else {
+            if (!growl.props.id) {
+                growl = React.cloneElement(growl, {id: _.uniqueId('growl-')});
+            }
+            this.state.growls.push(growl);
+        }
         this.setState({growls: this.state.growls});
-        return cmp.props.id;
+        return growl.props.id;
     }
 
     removeById(id) {
