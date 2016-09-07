@@ -13,12 +13,17 @@ List.defaultProps = {
             fields: 'id,name,slug,createdOn,description',
             connectToRouter: true,
             query: {_sort: 'name'},
+            searchFields: 'name,slug',
             perPage: 25
         };
 
+        const rolesLink = <Ui.Link route="UserRoles.List">Roles</Ui.Link>;
+
         return (
             <Ui.View.List>
-                <Ui.View.Header title="ACL - Permissions">
+                <Ui.View.Header
+                    title="ACL - Permissions"
+                    description={<span>Permissions define what a user is allowed to do with entities and services. Define permissions and then group them into {rolesLink}.</span>}>
                     <Ui.Link type="primary" route="UserPermissions.Create" align="right">
                         <Ui.Icon icon="icon-plus-circled"/>
                         Create permission
@@ -26,12 +31,28 @@ List.defaultProps = {
                 </Ui.View.Header>
                 <Ui.View.Body>
                     <Ui.List.ApiContainer {...listProps}>
+                        <Ui.List.FormFilters>
+                            {(apply, reset) => (
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={12}>
+                                        <Ui.Input
+                                            name="_searchQuery"
+                                            placeholder="Search by name or slug"
+                                            onEnter={apply()}/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                            )}
+                        </Ui.List.FormFilters>
                         <Table.Table>
                             <Table.Row>
-                                <Table.Field name="name" label="Name" sort="name" route="UserPermissions.Edit">
+                                <Table.Field name="name" label="Name" sort="name">
                                     {data => (
                                         <span>
-                                            <strong>{data.name}</strong><br/>{data.description}
+                                            <Ui.Link route="UserPermissions.Edit" params={{id: data.id}}>
+                                                <strong>{data.name}</strong>
+                                            </Ui.Link>
+                                            <br/>
+                                            {data.description}
                                         </span>
                                     )}
                                 </Table.Field>

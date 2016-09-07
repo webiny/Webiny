@@ -51,7 +51,10 @@ class RootElement extends View {
                     opacity: 0
                 }, {
                     type: dynamics.easeOut,
-                    duration: 500
+                    duration: 500,
+                    complete: () => {
+                        loader.style.display = 'none';
+                    }
                 });
             }, 200);
         }

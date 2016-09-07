@@ -24,7 +24,7 @@ ApiTokensList.defaultProps = {
                     {showView => (
                         <Ui.View.List>
                             <Ui.View.Header
-                                title="API Tokens"
+                                title="ACL - API Tokens"
                                 description="If you want to grant access to your API to users outside of your domain, create an API token">
                                 <Ui.Button
                                     type="primary"

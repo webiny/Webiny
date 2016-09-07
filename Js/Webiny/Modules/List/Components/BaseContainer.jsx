@@ -94,16 +94,19 @@ class BaseContainer extends Webiny.Ui.Component {
             });
 
             // Get limit and page
-            state.page = params._page || props.page || 1;
+            state.page = parseInt(params._page || props.page || 1);
             state.perPage = params._perPage || props.perPage || 10;
             state.searchQuery = params._searchQuery || null;
 
             // Get filters
             _.each(params, (value, name) => {
-                if (!_.startsWith('_', name)) {
+                if (!_.startsWith(name, '_')) {
                     state.filters[name] = value;
                 }
             });
+
+            // Add _searchQuery to filters even if it starts with '_' - it's a special system parameter and is in fact a filter
+            state.filters._searchQuery = state.searchQuery;
         } else {
             state.sorters = props.sorters || {};
             state.filters = props.filters || {};
@@ -257,7 +260,7 @@ class BaseContainer extends Webiny.Ui.Component {
             if (child.type === Ui.List.Filters || child.type.prototype instanceof Ui.List.Filters) {
                 // Need to omit fields that are not actual filters
                 this.filtersElement = React.cloneElement(child, {
-                    filters: _.omit(this.state.filters, ['_page', '_perPage', '_sort', '_searchQuery', '_searchOperator', '_searchFields', '_fields']),
+                    filters: this.state.filters,
                     onFilter: this.setFilters
                 });
             }
