@@ -1,15 +1,19 @@
 import UsersForm from './UsersForm';
 import UsersList from './UsersList';
 import UsersAccount from './UsersAccount';
-import UserGroupsForm from './UserGroupsForm';
-import UserGroupsList from './UserGroupsList';
+import UserPermissionsForm from './UserPermissionsForm';
+import UserPermissionsList from './UserPermissionsList';
+import UserRolesForm from './UserRolesForm';
+import UserRolesList from './UserRolesList';
 import ApiTokensList from './ApiTokensList';
 
 export default {
     UsersList,
     UsersForm,
     UsersAccount,
-    UserGroupsList,
-    UserGroupsForm,
+    UserRolesList,
+    UserRolesForm,
+    UserPermissionsList,
+    UserPermissionsForm,
     ApiTokensList
 };

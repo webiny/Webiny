@@ -4,7 +4,7 @@ namespace Apps\Core\Php\DevTools\Authorization;
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\Entities\User;
-use Apps\Core\Php\Entities\UserGroup;
+use Apps\Core\Php\Entities\UserRole;
 use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Security\Security;
 use Webiny\Component\Security\SecurityTrait;
@@ -169,16 +169,16 @@ class Authorization
         }
 
         $user = $this->getUser();
-        $groups = [UserGroup::findOne(['tag' => 'public'])];
+        $roles = [UserRole::findOne(['slug' => 'public'])];
         if ($user) {
-            foreach ($user->getUserGroups() as $group) {
-                $groups[] = $group;
+            foreach ($user->getUserRoles() as $role) {
+                $roles[] = $role;
             }
         }
 
-        /* @var $group UserGroup */
-        foreach ($groups as $group) {
-            if ($group->checkPermission($class, $permission)) {
+        /* @var $role UserRole */
+        foreach ($roles as $role) {
+            if ($role->checkPermission($class, $permission)) {
                 return true;
             }
         }

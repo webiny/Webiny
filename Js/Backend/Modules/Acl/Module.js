@@ -8,8 +8,11 @@ class Module extends Webiny.Module {
 
         this.registerMenus(
             new Menu('ACL', [
-                new Menu('Users', 'Users.List'),
-                new Menu('User Groups', 'UserGroups.List'),
+                new Menu('User Management', [
+                    new Menu('Users', 'Users.List'),
+                    new Menu('Roles', 'UserRoles.List'),
+                    new Menu('Permissions', 'UserPermissions.List')
+                ]),
                 new Menu('API Tokens', 'ApiTokens.List')
             ], 'icon-users')
         );
@@ -19,9 +22,12 @@ class Module extends Webiny.Module {
             new Webiny.Route('Users.Create', '/acl/users/new', Views.UsersForm, 'Create User'),
             new Webiny.Route('Users.Edit', '/acl/users/:id', Views.UsersForm, 'Edit User'),
             new Webiny.Route('Users.List', '/acl/users', Views.UsersList, 'Users'),
-            new Webiny.Route('UserGroups.Create', '/acl/groups/new', Views.UserGroupsForm, 'New User Group'),
-            new Webiny.Route('UserGroups.Edit', '/acl/groups/:id', Views.UserGroupsForm, 'Edit User Group'),
-            new Webiny.Route('UserGroups.List', '/acl/groups', Views.UserGroupsList, 'User Groups'),
+            new Webiny.Route('UserRoles.Create', '/acl/roles/new', Views.UserRolesForm, 'New User Role'),
+            new Webiny.Route('UserRoles.Edit', '/acl/roles/:id', Views.UserRolesForm, 'Edit User Role'),
+            new Webiny.Route('UserRoles.List', '/acl/roles', Views.UserRolesList, 'User Roles'),
+            new Webiny.Route('UserPermissions.Create', '/acl/permissions/new', Views.UserPermissionsForm, 'New User Permission'),
+            new Webiny.Route('UserPermissions.Edit', '/acl/permissions/:id', Views.UserPermissionsForm, 'Edit User Permission'),
+            new Webiny.Route('UserPermissions.List', '/acl/permissions', Views.UserPermissionsList, 'User Permissions'),
             new Webiny.Route('ApiTokens.List', '/acl/api-tokens', Views.ApiTokensList, 'API Tokens')
         );
 

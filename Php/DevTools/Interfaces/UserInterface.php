@@ -6,9 +6,9 @@ use Webiny\Component\Entity\EntityCollection;
 interface UserInterface
 {
     /**
-     * Get user's user groups
+     * Get user's user roles
      *
      * @return EntityCollection|array
      */
-    public function getUserGroups();
+    public function getUserRoles();
 }

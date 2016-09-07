@@ -9,8 +9,8 @@ class List extends Webiny.Ui.View {
 List.defaultProps = {
     renderer: function render() {
         const listProps = {
-            api: '/entities/core/user-groups',
-            fields: 'id,name,tag,createdOn',
+            api: '/entities/core/user-permissions',
+            fields: 'id,name,slug,createdOn',
             connectToRouter: true,
             query: {_sort: 'name'},
             perPage: 25
@@ -18,30 +18,29 @@ List.defaultProps = {
 
         return (
             <Ui.View.List>
-                <Ui.View.Header title="User Groups List">
-                    <Ui.Link type="primary" route="UserGroups.Create" align="right">
+                <Ui.View.Header title="ACL - Permissions">
+                    <Ui.Link type="primary" route="UserPermissions.Create" align="right">
                         <Ui.Icon icon="icon-plus-circled"/>
-                        Create user group
+                        Create user permission
                     </Ui.Link>
                 </Ui.View.Header>
                 <Ui.View.Body>
                     <Ui.List.ApiContainer {...listProps}>
                         <Table.Table>
                             <Table.Row>
-                                <Table.Field name="name" label="Name" sort="name">
+                                <Table.Field name="name" label="Name" sort="name" route="UserPermissions.Edit">
                                     {data => (
                                         <span>
-                                        <strong>{data.name}</strong><br/>{data.id}
-                                    </span>
+                                            <strong>{data.name}</strong><br/>{data.id}
+                                        </span>
                                     )}
                                 </Table.Field>
-                                <Table.Field name="tag" label="Tag" sort="tag"/>
+                                <Table.Field name="slug" label="Slug" sort="slug"/>
                                 <Table.Actions>
-                                    <Table.EditAction route="UserGroups.Edit"/>
+                                    <Table.EditAction route="UserPermissions.Edit"/>
                                     <Table.DeleteAction/>
                                 </Table.Actions>
                             </Table.Row>
-                            <Table.Footer/>
                         </Table.Table>
                         <Ui.List.Pagination/>
                     </Ui.List.ApiContainer>

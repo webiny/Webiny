@@ -17,7 +17,7 @@ List.defaultProps = {
 
         return (
             <Ui.View.List>
-                <Ui.View.Header title="Users List">
+                <Ui.View.Header title="ACL - Users">
                     <Ui.Link type="primary" route="Users.Create" align="right">
                         <Ui.Icon icon="icon-plus-circled"/>
                         Create user

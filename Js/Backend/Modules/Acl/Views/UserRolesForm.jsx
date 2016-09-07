@@ -4,11 +4,11 @@ const Ui = Webiny.Ui.Components;
 const Table = Ui.List.Table;
 
 class Form extends Webiny.Ui.View {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
-            roles: []
+            permissions: []
         };
 
         this.bindMethods();
@@ -16,27 +16,27 @@ class Form extends Webiny.Ui.View {
 
     componentWillMount() {
         super.componentWillMount();
-        new Webiny.Api.Endpoint('/entities/core/user-roles').get('/', {_perPage: 100, _sort: 'name'}).then(apiResponse => {
-            this.setState({roles: apiResponse.getData('list')});
+        new Webiny.Api.Endpoint('/entities/core/user-permissions').get().then(apiResponse => {
+            this.setState({permissions: apiResponse.getData('list')});
         });
     }
 
-    renderRole(role, model, container) {
-        const checkedIndex = _.findIndex(model.roles, {id: role.id});
+    renderPermission(permission, model, container) {
+        const checkedIndex = _.findIndex(model.permissions, {id: permission.id});
         return (
-            <tr key={role.id}>
+            <tr key={permission.id}>
                 <td className="text-left">
                     <Ui.SwitchButton value={checkedIndex > -1} onChange={enabled => {
                         if(enabled){
-                            model.roles.push(role);
+                            model.permissions.push(permission);
                         } else {
-                            model.roles.splice(checkedIndex, 1);
+                            model.permissions.splice(checkedIndex, 1);
                         }
                         container.setModel(model);
                     }}/>
                 </td>
-                <td className="text-left">{role.name}</td>
-                <td className="text-left">{role.description || '-'}</td>
+                <td className="text-left">{permission.name}</td>
+                <td className="text-left">{permission.description || '-'}</td>
             </tr>
         );
     }
@@ -45,13 +45,13 @@ class Form extends Webiny.Ui.View {
 Form.defaultProps = {
     renderer() {
         const containerProps = {
-            api: '/entities/core/users',
-            fields: 'id,firstName,lastName,email,roles,enabled',
+            api: '/entities/core/user-roles',
+            fields: '*,permissions',
             connectToRouter: true,
-            onSubmitSuccess: 'Users.List',
-            onCancel: 'Users.List',
+            onSubmitSuccess: 'UserRoles.List',
+            onCancel: 'UserRoles.List',
             onSuccessMessage: (record) => {
-                return <span>User <strong>{record.firstName}</strong> was saved successfully!</span>;
+                return <span>Role <strong>{record.name}</strong> was saved successfully!</span>;
             }
         };
 
@@ -59,37 +59,33 @@ Form.defaultProps = {
             <Ui.Form.Container ui="myForm" {...containerProps}>
                 {(model, container) => (
                     <Ui.View.Form>
-                        <Ui.View.Header title={model.id ? 'ACL - Edit User' : 'ACL - Create User'}/>
-                        <Ui.Form.Error message="Something went wrong during save"/>
+                        <Ui.View.Header title={model.id ? 'ACL - Edit Role' : 'ACL - Create Role'}/>
                         <Ui.View.Body noPadding>
                             <Ui.Tabs.Tabs>
                                 <Ui.Tabs.Tab label="General">
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={6}>
-                                            <Ui.Input label="First name" name="firstName" validate="required"/>
+                                            <Ui.Input label="Name" name="name" validate="required"/>
                                         </Ui.Grid.Col>
                                         <Ui.Grid.Col all={6}>
-                                            <Ui.Input label="Last name" name="lastName" validate="required"/>
-                                        </Ui.Grid.Col>
-                                        <Ui.Grid.Col all={6}>
-                                            <Ui.Input label="Email" name="email" description="Your email" validate="required,email"/>
+                                            <Ui.Input label="Slug" name="slug" validate="required"/>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={12}>
-                                            <Ui.Switch label="Enabled" name="enabled"/>
+                                            <Ui.Input label="Description" name="description" validate="required"/>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>
                                     <table className="table table-simple">
                                         <thead>
                                         <tr>
                                             <th className="text-left" style={{width: 140}}></th>
-                                            <th className="text-left">Role</th>
+                                            <th className="text-left">Permission</th>
                                             <th className="text-left">Description</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {this.state.roles.map(r => this.renderRole(r, model, container))}
+                                        {this.state.permissions.map(p => this.renderPermission(p, model, container))}
                                         </tbody>
                                     </table>
                                 </Ui.Tabs.Tab>
@@ -97,7 +93,7 @@ Form.defaultProps = {
                         </Ui.View.Body>
                         <Ui.View.Footer>
                             <Ui.Button type="default" onClick={container.cancel} label="Go back"/>
-                            <Ui.Button type="primary" onClick={container.submit} label="Save user" align="right"/>
+                            <Ui.Button type="primary" onClick={container.submit} label="Save role" align="right"/>
                         </Ui.View.Footer>
                     </Ui.View.Form>
                 )}

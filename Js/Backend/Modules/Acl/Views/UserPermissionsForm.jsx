@@ -3,7 +3,7 @@ import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 const Table = Ui.List.Table;
 
-class UserGroupsForm extends Webiny.Ui.View {
+class UserPermissionsForm extends Webiny.Ui.View {
     constructor(props) {
         super(props);
 
@@ -57,22 +57,22 @@ class UserGroupsForm extends Webiny.Ui.View {
     }
 }
 
-UserGroupsForm.defaultProps = {
+UserPermissionsForm.defaultProps = {
     renderer() {
         const formProps = {
-            api: '/entities/core/user-groups',
-            fields: 'id,name,tag,permissions',
+            api: '/entities/core/user-permissions',
+            fields: 'id,name,slug,description,permissions',
             connectToRouter: true,
-            onSubmitSuccess: 'UserGroups.List',
-            onCancel: 'UserGroups.List',
+            onSubmitSuccess: 'UserPermissions.List',
+            onCancel: 'UserPermissions.List',
             onSuccessMessage: (record) => {
-                return <span>User group <strong>{record.name}</strong> saved!</span>;
+                return <span>Permission <strong>{record.name}</strong> saved!</span>;
             }
         };
 
         return (
 
-            <Ui.Form.Container ui="notificationForm" {...formProps}>
+            <Ui.Form.Container {...formProps}>
                 {(model, container) => {
                     const entities = [];
                     const services = [];
@@ -131,7 +131,7 @@ UserGroupsForm.defaultProps = {
 
                     return (
                         <Ui.View.Form>
-                            <Ui.View.Header title={model.id ? 'Edit user group' : 'Create user group'}/>
+                            <Ui.View.Header title={model.id ? 'ACL - Edit permission' : 'ACL - Create permission'}/>
                             <Ui.View.Body>
                                 <Ui.Form.Fieldset title="General"/>
                                 <Ui.Grid.Row>
@@ -139,7 +139,12 @@ UserGroupsForm.defaultProps = {
                                         <Ui.Input label="Name" name="name" validate="required"/>
                                     </Ui.Grid.Col>
                                     <Ui.Grid.Col all={6}>
-                                        <Ui.Input label="Tag" name="tag" readOnly={true}/>
+                                        <Ui.Input label="Slug" name="slug" readOnly={true}/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={12}>
+                                        <Ui.Input label="Description" name="description" validate="required"/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                                 <Ui.Grid.Row>
@@ -190,7 +195,7 @@ UserGroupsForm.defaultProps = {
                             </Ui.View.Body>
                             <Ui.View.Footer>
                                 <Ui.Button type="default" onClick={container.cancel} label="Go back"/>
-                                <Ui.Button type="primary" onClick={container.submit} label="Save user group" align="right"/>
+                                <Ui.Button type="primary" onClick={container.submit} label="Save permission" align="right"/>
                             </Ui.View.Footer>
                         </Ui.View.Form>
                     );
@@ -200,4 +205,4 @@ UserGroupsForm.defaultProps = {
     }
 };
 
-export default UserGroupsForm;
+export default UserPermissionsForm;

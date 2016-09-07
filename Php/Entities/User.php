@@ -21,7 +21,7 @@ use Webiny\Component\Mongo\Index\SingleIndex;
  * @property string           $password
  * @property string           $firstName
  * @property string           $lastName
- * @property EntityCollection $groups
+ * @property EntityCollection $roles
  * @property bool             $enabled
  *
  * @package Apps\Core\Php\Entities
@@ -59,24 +59,24 @@ class User extends AbstractEntity implements UserInterface
         });
         $this->attr('passwordRecoveryCode')->char();
         $this->attr('enabled')->boolean()->setDefaultValue(true);
-        $userGroup = '\Apps\Core\Php\Entities\UserGroup';
-        $this->attr('groups')->many2many('User2Group')->setEntity($userGroup)->setValidators('minLength:1')->onSet(function ($groups) {
-            // If not mongo Ids - load groups by tags
-            if (is_array($groups)) {
-                foreach ($groups as $i => $group) {
-                    if (!$this->wDatabase()->isId($group)) {
-                        if (is_string($group)) {
-                            $groups[$i] = UserGroup::findOne(['tag' => $group]);
-                        } elseif (isset($group['id'])) {
-                            $groups[$i] = $group['id'];
-                        } elseif (isset($group['tag'])) {
-                            $groups[$i] = UserGroup::findOne(['tag' => $group['tag']]);
+        $userRole = '\Apps\Core\Php\Entities\UserRole';
+        $this->attr('roles')->many2many('User2UserRole')->setEntity($userRole)->setValidators('minLength:1')->onSet(function ($roles) {
+            // If not mongo Ids - load roles by slugs
+            if (is_array($roles)) {
+                foreach ($roles as $i => $role) {
+                    if (!$this->wDatabase()->isId($role)) {
+                        if (is_string($role)) {
+                            $roles[$i] = UserRole::findOne(['slug' => $role]);
+                        } elseif (isset($role['id'])) {
+                            $roles[$i] = $role['id'];
+                        } elseif (isset($role['slug'])) {
+                            $roles[$i] = UserRole::findOne(['slug' => $role['slug']]);
                         }
                     }
                 }
             }
 
-            return $groups;
+            return $roles;
         });
         $this->attr('lastActive')->datetime();
         $this->attr('lastLogin')->datetime();
@@ -185,11 +185,6 @@ class User extends AbstractEntity implements UserInterface
         })->setBodyValidators(['code' => 'required', 'password' => 'required']);
     }
 
-    public function getUserGroups()
-    {
-        return $this->groups;
-    }
-
     public function save()
     {
         $new = !$this->exists();
@@ -199,6 +194,11 @@ class User extends AbstractEntity implements UserInterface
         }
 
         return $res;
+    }
+
+    public function getUserRoles()
+    {
+        return $this->roles;
     }
 
     /**

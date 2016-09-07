@@ -7,7 +7,7 @@ class Module extends Webiny.Module {
     }
 
     /**
-     * Triggerred when user is not authenticated
+     * Triggered when user is not authenticated
      *
      * @param routerEvent
      * @param apiResponse
@@ -35,7 +35,7 @@ class Module extends Webiny.Module {
 
     onVerifyUser(routerEvent, apiResponse) {
         const data = apiResponse.getData();
-        if (!_.find(data.groups, {tag: 'administrators'})) {
+        if (!_.find(data.roles, {slug: 'administrator'})) {
             Webiny.Cookies.remove(this.getCookieName());
             return this.goToLogin(routerEvent);
         }
@@ -55,7 +55,7 @@ class Module extends Webiny.Module {
     }
 
     getUserFields() {
-        return '*,groups.tag';
+        return '*,roles.slug';
     }
 
     getUser(routerEvent) {

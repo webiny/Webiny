@@ -1,6 +1,6 @@
 <?php
 use Apps\Core\Php\Entities\User;
-use Apps\Core\Php\Entities\UserGroup;
+use Apps\Core\Php\Entities\UserRole;
 use Webiny\Component\StdLib\Exception\AbstractException;
 
 if (php_sapi_name() !== 'cli') {
@@ -12,7 +12,7 @@ $autoloader->addPsr4('Apps\\Core\\', getcwd() . '/Apps/Core');
 
 $publicUserGroup = [
     'name'        => 'Public',
-    'tag'         => 'public',
+    'slug'         => 'public',
     'permissions' => [
         'entities' => [
             'Apps\\Core\\Php\\Entities\\User' => [
@@ -38,7 +38,7 @@ $publicUserGroup = [
 ];
 $adminUserGroup = [
     'name'        => 'Administrators',
-    'tag'         => 'administrators',
+    'slug'         => 'administrators',
     'permissions' => [
         'entities' => [
             'Apps\\Core\\Php\\Entities\\User'             => [
@@ -51,7 +51,13 @@ $adminUserGroup = [
                     'patch' => true
                 ]
             ],
-            'Apps\\Core\\Php\\Entities\\UserGroup'        => [
+            'Apps\\Core\\Php\\Entities\\UserRole'         => [
+                'crudCreate' => true,
+                'crudRead'   => true,
+                'crudUpdate' => true,
+                'crudDelete' => true
+            ],
+            'Apps\\Core\\Php\\Entities\\UserPermission'   => [
                 'crudCreate' => true,
                 'crudRead'   => true,
                 'crudUpdate' => true,
@@ -99,7 +105,7 @@ $adminUserGroup = [
         ],
         'services' => [
             'Apps\\Core\\Php\\Services\\Entities' => [
-                '/' => [
+                '/'          => [
                     'get' => true
                 ],
                 'attributes' => [
@@ -110,7 +116,7 @@ $adminUserGroup = [
                 ]
             ],
             'Apps\\Core\\Php\\Services\\Services' => [
-                '/'          => [
+                '/' => [
                     'get' => true
                 ]
             ]
@@ -120,7 +126,7 @@ $adminUserGroup = [
 
 $usersUserGroup = [
     'name'        => 'Users',
-    'tag'         => 'users',
+    'slug'         => 'users',
     'permissions' => [
         'entities' => [
             'Apps\\Core\\Php\\Entities\\User' => [
@@ -140,25 +146,25 @@ $_SERVER['SERVER_NAME'] = $argv[1];
 
 // Create 'public', 'users' and 'administrators' user groups
 try {
-    $publicGroup = new UserGroup();
+    $publicGroup = new UserRole();
     $publicGroup->populate($publicUserGroup)->save();
 } catch (AbstractException $e) {
     // Public group exists
 }
 
 try {
-    $publicGroup = new UserGroup();
+    $publicGroup = new UserRole();
     $publicGroup->populate($usersUserGroup)->save();
 } catch (AbstractException $e) {
     // Users group exists
 }
 
 try {
-    $adminGroup = new UserGroup();
+    $adminGroup = new UserRole();
     $adminGroup->populate($adminUserGroup)->save();
 } catch (AbstractException $e) {
     // Admin group exists
-    $adminGroup = UserGroup::findOne(['tag' => 'administrators']);
+    $adminGroup = UserRole::findOne(['slug' => 'administrators']);
 }
 
 // Create admin user

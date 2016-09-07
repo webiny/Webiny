@@ -71,7 +71,8 @@ class Gallery extends ImageComponent {
 
     saveImage(image) {
         const numberOfImages = this.props.valueLink.value.length + 1;
-        if (this.props.maxImages && numberOfImages > this.props.maxImages) {
+        // Show error message if maximum images limit is reached and the image being saved does not yet exists in the gallery
+        if (this.props.maxImages && numberOfImages > this.props.maxImages && !_.find(this.props.valueLink.value, {name: image.name})) {
             const errors = this.state.errors || [];
             errors.push({name: image.name, message: this.props.maxImagesMessage});
             this.setState({errors});
