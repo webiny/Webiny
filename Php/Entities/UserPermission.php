@@ -7,9 +7,9 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 /**
  * Class UserPermission
  *
- * @property string           $name
- * @property string           $slug
- * @property ArrayObject      $permissions
+ * @property string      $name
+ * @property string      $slug
+ * @property ArrayObject $permissions
  *
  * @package Apps\Core\Php\Entities
  *
@@ -24,14 +24,19 @@ class UserPermission extends AbstractEntity
     {
         parent::__construct();
 
-        $this->attr('name')->char()->setValidators('required')->setToArrayDefault()->onSet(function($name){
+        $this->attr('name')->char()->setValidators('required')->setToArrayDefault()->onSet(function ($name) {
             if (!$this->slug && !$this->exists()) {
                 $this->slug = $this->str($name)->slug()->val();
             }
+
             return $name;
         });
 
         $this->attr('slug')->char()->setValidators('required,unique')->onSet(function ($slug) {
+            if (!$slug) {
+                return $this->slug;
+            }
+
             return $this->str($slug)->slug()->val();
         })->setToArrayDefault();
 

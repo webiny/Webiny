@@ -29,7 +29,7 @@ class UserPermissionsForm extends Webiny.Ui.View {
     }
 
     renderService(service, model, container) {
-        if(service.public){
+        if (service.public) {
             return null;
         }
         return (
@@ -40,9 +40,9 @@ class UserPermissionsForm extends Webiny.Ui.View {
                         <Ui.Grid.Row key={m.key}>
                             <Ui.Grid.Col all={2}>
                                 <Ui.SwitchButton value={m.exposed} onChange={v => {
-                                    const permissions = _.get(model.permissions, 'services.' + service.name, {});
+                                    const permissions = _.get(model, 'permissions.services.' + service.name, {});
                                     _.set(permissions, m.key, v);
-                                    _.set(model.permissions, 'services.' + service.name, permissions);
+                                    _.set(model, 'permissions.services.' + service.name, permissions);
                                     container.setModel(model);
                                 }}/>
                             </Ui.Grid.Col>
@@ -66,7 +66,7 @@ UserPermissionsForm.defaultProps = {
             onSubmitSuccess: 'UserPermissions.List',
             onCancel: 'UserPermissions.List',
             onSuccessMessage: (record) => {
-                return <span>Permission <strong>{record.name}</strong> saved!</span>;
+                return <span>Permission <strong>{record.name}</strong> was saved!</span>;
             }
         };
 
@@ -121,10 +121,10 @@ UserPermissionsForm.defaultProps = {
 
                     const entityActions = {
                         update: (id, attrs) => {
-                            const permissions = _.get(model.permissions, 'entities.' + id, {});
+                            const permissions = _.get(model, 'permissions.entities.' + id, {});
                             const parts = _.toPairs(attrs)[0];
                             _.set(permissions, parts[0], parts[1]);
-                            _.set(model.permissions, 'entities.' + id, permissions);
+                            _.set(model, 'permissions.entities.' + id, permissions);
                             container.setModel(model);
                         }
                     };
@@ -139,7 +139,7 @@ UserPermissionsForm.defaultProps = {
                                         <Ui.Input label="Name" name="name" validate="required"/>
                                     </Ui.Grid.Col>
                                     <Ui.Grid.Col all={6}>
-                                        <Ui.Input label="Slug" name="slug" readOnly={true}/>
+                                        <Ui.Input label="Slug" name="slug"/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                                 <Ui.Grid.Row>

@@ -51,7 +51,7 @@ class ApiMethod
         return $this->pattern;
     }
 
-    public function getUrl($params = [])
+    public function getUrl($params = [], $replace = true)
     {
         // Determine if this method belongs to entity or service
         $parts = $this->str(get_class($this->context))->explode('\\')->val();
@@ -63,13 +63,16 @@ class ApiMethod
         }
 
         $url = $this->str($this->pattern)->trimLeft('/');
-        foreach ($params as $k => $v) {
-            $url->replace('{' . $k . '}', $v);
+        if ($replace) {
+            foreach ($params as $k => $v) {
+                $url->replace('{' . $k . '}', $v);
+            }
+
+            if ($url->startsWith('{id}') && $this->context) {
+                $url->replace('{id}', $this->context->id);
+            }
         }
 
-        if ($url->startsWith('{id}')) {
-            $url->replace('{id}', $this->context->id);
-        }
 
         $url = $this->str($this->wConfig()->get('Application.ApiPath') . '/' . $contextUrl . '/' . $url)->trimRight('/');
 
@@ -193,7 +196,7 @@ class ApiMethod
             if ($mp['class']) {
                 $requestedValue = $params[$pName];
                 // If parameter class is AbstractEntity, it means we need to replace it with the actual context class
-                if($mp['class'] === 'Apps\Core\Php\DevTools\Entity\AbstractEntity'){
+                if ($mp['class'] === 'Apps\Core\Php\DevTools\Entity\AbstractEntity') {
                     $mp['class'] = get_class($this->context);
                 }
                 $paramValue = call_user_func_array([$mp['class'], 'findById'], [$requestedValue]);

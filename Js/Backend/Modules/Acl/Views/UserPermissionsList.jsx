@@ -10,7 +10,7 @@ List.defaultProps = {
     renderer: function render() {
         const listProps = {
             api: '/entities/core/user-permissions',
-            fields: 'id,name,slug,createdOn',
+            fields: 'id,name,slug,createdOn,description',
             connectToRouter: true,
             query: {_sort: 'name'},
             perPage: 25
@@ -21,7 +21,7 @@ List.defaultProps = {
                 <Ui.View.Header title="ACL - Permissions">
                     <Ui.Link type="primary" route="UserPermissions.Create" align="right">
                         <Ui.Icon icon="icon-plus-circled"/>
-                        Create user permission
+                        Create permission
                     </Ui.Link>
                 </Ui.View.Header>
                 <Ui.View.Body>
@@ -31,7 +31,7 @@ List.defaultProps = {
                                 <Table.Field name="name" label="Name" sort="name" route="UserPermissions.Edit">
                                     {data => (
                                         <span>
-                                            <strong>{data.name}</strong><br/>{data.id}
+                                            <strong>{data.name}</strong><br/>{data.description}
                                         </span>
                                     )}
                                 </Table.Field>

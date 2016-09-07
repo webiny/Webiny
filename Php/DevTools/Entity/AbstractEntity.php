@@ -211,6 +211,20 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         });
 
         /**
+         * @api.name Delete multiple records by given ids
+         */
+        $this->api('POST', 'delete', function () {
+            $ids = $this->wRequest()->getRequestData()['ids'];
+            try {
+                static::find(['id' => $ids])->delete();
+
+                return true;
+            } catch (EntityException $e) {
+                throw new ApiException('Failed to delete entity! ' . $e->getMessage(), $e->getCode(), 400);
+            }
+        })->setBodyValidators(['ids' => 'required']);
+
+        /**
          * Fire event for registering extra attributes
          */
         $this->trigger('onExtend');
@@ -387,7 +401,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                     'key'        => $pattern . '.' . $httpMethod,
                     'httpMethod' => $httpMethod,
                     'pattern'    => $pattern,
-                    'url'        => $method->getUrl()
+                    'url'        => $method->getUrl([], false)
                 ];
             }
         }

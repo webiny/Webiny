@@ -10,7 +10,7 @@ List.defaultProps = {
     renderer: function render() {
         const listProps = {
             api: '/entities/core/user-roles',
-            fields: 'id,name,slug,createdOn',
+            fields: 'id,name,slug,description,createdOn',
             connectToRouter: true,
             query: {_sort: 'name'},
             perPage: 25
@@ -31,7 +31,7 @@ List.defaultProps = {
                                 <Table.Field name="name" label="Name" sort="name" route="UserRoles.Edit">
                                     {data => (
                                         <span>
-                                            <strong>{data.name}</strong><br/>{data.id}
+                                            <strong>{data.name}</strong><br/>{data.description}
                                         </span>
                                     )}
                                 </Table.Field>

@@ -27,6 +27,7 @@ class Form extends Webiny.Ui.View {
             <tr key={permission.id}>
                 <td className="text-left">
                     <Ui.SwitchButton value={checkedIndex > -1} onChange={enabled => {
+                        model.permissions = _.get(model, 'permissions', []);
                         if(enabled){
                             model.permissions.push(permission);
                         } else {
