@@ -2,14 +2,33 @@ import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
 class PasswordContainer extends Webiny.Ui.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
-            showPassword: false
+            showPassword: false,
+            icon: 'fa-eye',
+            msg: 'Show content'
         };
+
+        this.bindMethods('togglePassword');
     }
 
+    togglePassword() {
+        if (this.state.showPassword === true) {
+            this.setState({
+                showPassword: false,
+                icon: 'fa-eye',
+                msg: 'Show content'
+            });
+        } else {
+            this.setState({
+                showPassword: true,
+                icon: 'fa-eye-slash',
+                msg: 'Hide content'
+            });
+        }
+    }
 }
 
 PasswordContainer.defaultProps = {
@@ -19,8 +38,7 @@ PasswordContainer.defaultProps = {
 
         return (
             <w-password>
-                <Ui.Input type={type} {...props}/>
-                <Ui.Checkbox label="Show password" valueLink={this.bindTo('showPassword')} grid={12}/>
+                <Ui.Input type={type} {...props} info={<Ui.Link onClick={this.togglePassword}><Ui.Icon icon={this.state.icon}/> {this.state.msg}</Ui.Link>}/>
             </w-password>
         );
     }
