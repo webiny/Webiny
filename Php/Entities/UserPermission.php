@@ -24,11 +24,18 @@ class UserPermission extends AbstractEntity
     {
         parent::__construct();
 
-        $this->attr('name')->char()->setValidators('required')->setToArrayDefault();
-        $this->attr('description')->char()->setToArrayDefault();
+        $this->attr('name')->char()->setValidators('required')->setToArrayDefault()->onSet(function($name){
+            if (!$this->slug && !$this->exists()) {
+                $this->slug = $this->str($name)->slug()->val();
+            }
+            return $name;
+        });
+
         $this->attr('slug')->char()->setValidators('required,unique')->onSet(function ($slug) {
             return $this->str($slug)->slug()->val();
         })->setToArrayDefault();
+
+        $this->attr('description')->char()->setToArrayDefault();
         $this->attr('roles')->many2many('UserRole2UserPermission')->setEntity('\Apps\Core\Php\Entities\UserRole');
         $this->attr('permissions')->object();
     }
