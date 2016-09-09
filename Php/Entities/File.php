@@ -35,6 +35,12 @@ class File extends AbstractEntity
      * @var Storage
      */
     protected $storage = null;
+
+    /**
+     * Target folder inside the storage
+     *
+     * @var string
+     */
     protected $storageFolder = '/';
 
     public function __construct()
@@ -90,16 +96,12 @@ class File extends AbstractEntity
         }
 
         $content = $this->str(isset($data['src']) ? $data['src'] : '');
-        $newContent = $content->startsWith('data:');
-        $newName = $data['name'] ?? $this->name;
+        $newContents = $content->startsWith('data:');
         if ($this->exists()) {
-            if ($newContent) {
-                // Delete current file
-                if ($newName != $this->name) {
-                    $this->storage->deleteKey($this->src);
-                }
+            if ($newContents) {
+                $this->deleteFileFromStorage();
             } else {
-                // These keys should not change if file content is not changing
+                // These keys should not change if file contents is not changing
                 unset($data['src']);
                 unset($data['name']);
             }
@@ -117,18 +119,9 @@ class File extends AbstractEntity
         $content = $this->str($this->src);
         $newContent = $content->startsWith('data:');
         if ($newContent) {
-            // Make sure file names do not clash
-            if (!$this->exists()) {
-                $name = $this->name;
-                while ($storage->keyExists($this->createKey($name))) {
-                    $name = $this->generateNewName();
-                    continue;
-                }
-                $this->name = $name;
-            }
-
-            $key = str_replace(' ', '-', $this->name);
-            $storage->setContents(trim($this->storageFolder, '/') . '/' . trim($key, '/'), $content->explode(',')->last()->base64Decode()->val());
+            $key = $this->createKey($this->name);
+            $storage->setContents(trim($this->storageFolder, '/') . '/' . trim($key, '/'),
+                $content->explode(',')->last()->base64Decode()->val());
             $this->src = $storage->getRecentKey();
             if ($storage->supportsSize()) {
                 $this->size = $storage->getSize($this->src);
@@ -146,7 +139,7 @@ class File extends AbstractEntity
     {
         $deleted = parent::delete();
         if ($deleted) {
-            $this->storage->deleteKey($this->src);
+            $this->deleteFileFromStorage();
         }
 
         return $deleted;
@@ -194,20 +187,6 @@ class File extends AbstractEntity
     }
 
     /**
-     * Generate new file name
-     *
-     * @return string
-     * @throws \Webiny\Component\StdLib\StdObject\StringObject\StringObjectException
-     */
-    protected function generateNewName()
-    {
-        $ext = '';
-        $name = $this->str($this->name)->explode('.')->removeLast($ext)->join('.');
-
-        return $name . '-' . time() . '.' . $ext;
-    }
-
-    /**
      * Create file storage key
      *
      * @param $name
@@ -216,10 +195,17 @@ class File extends AbstractEntity
      */
     protected function createKey($name)
     {
-        if ($this->storage->getDriver()->createDateFolderStructure()) {
-            $name = date('Y' . DS . 'm' . DS . 'd') . DS . $name;
-        }
+        $ext = '';
+        $name = $this->str($name)->explode('.')->removeLast($ext)->join('.')->slug();
 
-        return $name;
+        return uniqid() . '-' . $name . '.' . $ext;
+    }
+
+    /**
+     * Delete current file from storage
+     */
+    protected function deleteFileFromStorage()
+    {
+        return $this->storage->deleteKey($this->src);
     }
 }

@@ -1,8 +1,8 @@
 <?php
 namespace Apps\Core\Php\Entities;
 
+use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Image\ImageTrait;
-use Webiny\Component\Storage\Directory\Directory;
 use Webiny\Component\Storage\File\File as StorageFile;
 
 /**
@@ -52,13 +52,13 @@ class Image extends File
         return $data;
     }
 
-    public function getUrl($ext = null)
+    public function getUrl($size = null)
     {
-        if (!$ext) {
+        if (!$size) {
             return $this->storage->getURL($this->src);
         }
 
-        return $this->getSize($ext);
+        return $this->getSize($size);
     }
 
     /**
@@ -91,34 +91,35 @@ class Image extends File
         return $this;
     }
 
-    private function getSize($imageExt)
+    private function getSize($size)
     {
-        if ($imageExt === 'original') {
+        if ($size === 'original') {
             return $this->getUrl();
         }
 
-        // Predefined sizes
+        /* @var $sizeFile Image */
+        $sizeFile = static::findOne(['ref' => $this->id, 'tags' => ['size', $size]]);
+        if ($sizeFile) {
+            return $sizeFile->setStorage($this->storage)->getUrl();
+        }
+
+        // Build size key
         $path = explode('/', $this->src);
         $fileName = array_pop($path);
         $path = join('/', $path);
-
-        // Build extension key
         $lastDot = strrpos($fileName, '.');
         $name = substr($fileName, 0, $lastDot);
         $ext = substr($fileName, $lastDot);
-        $extPath = $name . '-size-' . $imageExt . $ext;
+        $sizeKey = $name . '-' . $size . $ext;
 
-        // Check if file exists
-        $extFile = new StorageFile($path . '/' . $extPath, $this->storage);
-        if ($extFile->exists()) {
-            return $extFile->getUrl();
-        }
+        // Image size file object
+        $extFile = new StorageFile($path . '/' . $sizeKey, $this->storage);
 
         // Create new image size
         $currentFile = new StorageFile($this->src, $this->storage);
         $image = $this->image($currentFile);
 
-        $sizes = $this->dimensions[$imageExt] ?? explode('x', $imageExt);
+        $sizes = $this->dimensions[$size] ?? explode('x', $size);
         $width = $sizes[0] ?? null;
         $height = $sizes[1] ?? null;
 
@@ -132,22 +133,42 @@ class Image extends File
 
         $image->save($extFile);
 
+        // Create new record in DB
+        $newSize = new static;
+        $newSize->src = $this->storage->getRecentKey();
+        $newSize->tags = ['size', $size];
+        $newSize->ref = $this->id;
+        $newSize->name = $this->name;
+        $newSize->size = $extFile->getSize();
+        $newSize->type = $this->type;
+        $newSize->ext = $this->ext;
+        $newSize->save();
+
         return $extFile->getUrl();
     }
 
+    protected function deleteFileFromStorage()
+    {
+        if (!$this->tags->inArray('size')) {
+            /* @var $image Image */
+            foreach ($this->getSizes() as $image) {
+                $image->delete();
+            }
+        }
+
+        return parent::deleteFileFromStorage();
+    }
+
+
     /**
-     * @return Directory
-     * @throws \Exception
-     * @throws \Webiny\Component\ServiceManager\ServiceManagerException
-     * @throws \Webiny\Component\StdLib\StdObject\StringObject\StringObjectException
+     * Get existing sizes of this file
+     *
+     * @return EntityCollection
      */
     private function getSizes()
     {
-        $path = explode('/', $this->src);
-        $fileName = array_pop($path);
-        $path = join('/', $path);
-        $pattern = $this->str($fileName)->explode('.')->first() . '-size-*';
-
-        return new Directory($path, $this->storage, false, $pattern);
+        return array_map(function (Image $image) {
+            return $image->setStorage($this->storage);
+        }, static::find(['tags' => 'size', 'ref' => $this->id])->getData());
     }
 }
