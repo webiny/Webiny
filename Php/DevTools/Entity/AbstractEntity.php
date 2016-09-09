@@ -261,11 +261,28 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         return $deleted;
     }
 
+    /**
+     * @return bool
+     */
     public function save()
     {
+        $isNew = !$this->exists();
+
+        if ($isNew) {
+            $this->trigger('onBeforeCreate');
+        } else {
+            $this->trigger('onBeforeUpdate');
+        }
+
         $this->trigger('onBeforeSave');
         $save = parent::save();
         $this->trigger('onAfterSave');
+
+        if ($isNew) {
+            $this->trigger('onAfterCreate');
+        } else {
+            $this->trigger('onAfterUpdate');
+        }
 
         return $save;
     }
@@ -280,6 +297,26 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         static::on('onExtend', $callback);
     }
 
+    public static function onBeforeCreate($callback)
+    {
+        static::on('onBeforeCreate', $callback);
+    }
+
+    public static function onAfterCreate($callback)
+    {
+        static::on('onAfterCreate', $callback);
+    }
+
+    public static function onBeforeUpdate($callback)
+    {
+        static::on('onBeforeUpdate', $callback);
+    }
+
+    public static function onAfterUpdate($callback)
+    {
+        static::on('onAfterUpdate', $callback);
+    }
+    
     public static function onBeforeSave($callback)
     {
         static::on('onBeforeSave', $callback);
