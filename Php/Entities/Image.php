@@ -8,6 +8,8 @@ use Webiny\Component\Storage\File\File as StorageFile;
 /**
  * Class Image
  *
+ * @property string $imageSize
+ *
  * @package Apps\Core\Php\Entities
  */
 class Image extends File
@@ -19,6 +21,7 @@ class Image extends File
     public function __construct()
     {
         parent::__construct();
+        $this->attr('imageSize')->char()->setDefaultValue('original');
         $this->getAttribute('src')->onGet(function ($value, ...$dimensions) {
             if (!$dimensions) {
                 return $value;
@@ -98,7 +101,7 @@ class Image extends File
         }
 
         /* @var $sizeFile Image */
-        $sizeFile = static::findOne(['ref' => $this->id, 'tags' => ['size', $size]]);
+        $sizeFile = static::findOne(['ref' => $this->id, 'imageSize' => $size]);
         if ($sizeFile) {
             return $sizeFile->setStorage($this->storage)->getUrl();
         }
@@ -142,6 +145,7 @@ class Image extends File
         $newSize->size = $extFile->getSize();
         $newSize->type = $this->type;
         $newSize->ext = $this->ext;
+        $newSize->imageSize = $size;
         $newSize->save();
 
         return $extFile->getUrl();
