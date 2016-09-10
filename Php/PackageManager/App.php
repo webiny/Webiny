@@ -7,6 +7,7 @@
 
 namespace Apps\Core\Php\PackageManager;
 
+use Apps\Core\Php\DevTools\AbstractInstall;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\DevTools\Interfaces\PublicApiInterface;
 use Webiny\Component\Config\ConfigObject;
@@ -180,7 +181,22 @@ class App extends AbstractPackage
     {
         if (file_exists($this->getPath(true) . '/Php/Bootstrap.php')) {
             $class = 'Apps\\' . $this->getName() . '\\Php\\Bootstrap';
-            if (in_array('Apps\Core\Php\DevTools\BootstrapTrait', class_uses($class))) {
+            if (in_array('Apps\Core\Php\DevTools\AbstractBootstrap', class_parents($class))) {
+                return new $class;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @return null|AbstractInstall
+     */
+    public function getInstall()
+    {
+        if (file_exists($this->getPath(true) . '/Php/Install.php')) {
+            $class = 'Apps\\' . $this->getName() . '\\Php\\Install';
+            if (in_array('Apps\Core\Php\DevTools\AbstractInstall', class_parents($class))) {
                 return new $class;
             }
         }

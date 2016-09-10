@@ -1,0 +1,228 @@
+[
+    {
+        "name": "User profile",
+        "permissions": {
+            "entities": {
+                "Apps\\Core\\Php\\Entities\\User": {
+                    "login": {
+                        "post": true
+                    },
+                    "reset-password": {
+                        "post": true
+                    },
+                    "set-password": {
+                        "post": true
+                    },
+                    "me": {
+                        "get": true,
+                        "patch": true
+                    }
+                }
+            }
+        },
+        "slug": "user-profile",
+        "description": "Allows the user to login and update his profile"
+    },
+    {
+        "name": "Log errors",
+        "slug": "log-errors",
+        "description": "Allows user to log JS/PHP/API errors",
+        "permissions": {
+            "entities": {
+                "Apps\\Core\\Php\\Entities\\LoggerEntry": {
+                    "crudCreate": true
+                },
+                "Apps\\Core\\Php\\Entities\\LoggerErrorGroup": {
+                    "save-report": {
+                        "post": true
+                    },
+                    "crudCreate": true
+                }
+            },
+            "services": {
+                "Apps\\Core\\Php\\Services\\Apps": {
+                    "/": {
+                        "get": false
+                    },
+                    "{appName}": {
+                        "get": false
+                    }
+                }
+            }
+        }
+    },
+    {
+        "name": "Access Apps",
+        "slug": "access-apps",
+        "description": "Allows users to read data about system apps (needed for app bootstrap!)",
+        "permissions": {
+            "entities": {
+                "Apps\\BackupApp\\Php\\Entities\\Backup": {
+                    "crudCreate": false
+                }
+            },
+            "services": {
+                "Apps\\Core\\Php\\Services\\Apps": {
+                    "/": {
+                        "get": true
+                    },
+                    "{appName}": {
+                        "get": true
+                    }
+                }
+            }
+        }
+    },
+    {
+        "name": "Manage API tokens",
+        "slug": "manage-api-tokens",
+        "description": "Allows user to manage API tokens",
+        "permissions": {
+            "entities": {
+                "Apps\\Core\\Php\\Entities\\ApiToken": {
+                    "crudCreate": true,
+                    "crudRead": true,
+                    "crudUpdate": true,
+                    "crudDelete": true
+                },
+                "Apps\\Core\\Php\\Entities\\ApiTokenLog": {
+                    "crudDelete": true,
+                    "crudUpdate": true,
+                    "crudRead": true,
+                    "crudCreate": true
+                }
+            }
+        }
+    },
+    {
+        "name": "Manage settings",
+        "slug": "manage-settings",
+        "description": "Allows user to manage settings (Setting is an entity responsible for storing arbitrary data from different apps and modules)",
+        "permissions": {
+            "entities": {
+                "Apps\\Core\\Php\\Entities\\Setting": {
+                    "crudCreate": true,
+                    "crudRead": true,
+                    "crudUpdate": true,
+                    "crudDelete": true,
+                    "key/{key}": {
+                        "get": true,
+                        "patch": true
+                    }
+                }
+            }
+        }
+    },
+    {
+        "name": "Discover system Entities and Services",
+        "slug": "discover-entities-services",
+        "description": "Allows user to get info about system entities and services (their class names, attributes, methods, etc.)",
+        "permissions": {
+            "services": {
+                "Apps\\Core\\Php\\Services\\Services": {
+                    "/": {
+                        "get": true
+                    }
+                },
+                "Apps\\Core\\Php\\Services\\Entities": {
+                    "/": {
+                        "get": true
+                    },
+                    "attributes": {
+                        "get": true
+                    },
+                    "methods": {
+                        "get": true
+                    }
+                }
+            }
+        }
+    },
+    {
+        "name": "Manage users",
+        "slug": "manage-users",
+        "description": "Allows user to manage user accounts (create, read, update and delete them)",
+        "permissions": {
+            "entities": {
+                "Apps\\Core\\Php\\Entities\\User": {
+                    "crudCreate": true,
+                    "crudRead": true,
+                    "crudUpdate": true,
+                    "crudDelete": true
+                },
+                "Apps\\Core\\Php\\Entities\\UserPermission": {
+                    "crudCreate": false,
+                    "crudRead": false,
+                    "crudUpdate": false,
+                    "crudDelete": false
+                },
+                "Apps\\Core\\Php\\Entities\\UserRole": {
+                    "crudDelete": false,
+                    "crudUpdate": false,
+                    "crudRead": true,
+                    "crudCreate": false
+                }
+            }
+        }
+    },
+    {
+        "name": "Manage user roles",
+        "slug": "manage-roles",
+        "description": "Allow user to manage user roles",
+        "permissions": {
+            "entities": {
+                "Apps\\Core\\Php\\Entities\\UserRole": {
+                    "crudCreate": true,
+                    "crudRead": true,
+                    "crudUpdate": true,
+                    "crudDelete": true
+                },
+                "Apps\\Core\\Php\\Entities\\UserPermission": {
+                    "crudRead": true
+                }
+            }
+        }
+    },
+    {
+        "name": "Manage permissions",
+        "slug": "manage-permissions",
+        "description": "Allow user to manage user permissions",
+        "permissions": {
+            "entities": {
+                "Apps\\Core\\Php\\Entities\\UserPermission": {
+                    "crudCreate": true,
+                    "crudRead": true,
+                    "crudUpdate": true,
+                    "crudDelete": true
+                }
+            }
+        }
+    },
+    {
+        "name": "Manage error logs",
+        "slug": "manage-error-logs",
+        "description": "Allow user to manage error logs",
+        "permissions": {
+            "entities": {
+                "Apps\\Core\\Php\\Entities\\LoggerEntry": {
+                    "crudCreate": true,
+                    "crudRead": true,
+                    "crudUpdate": true,
+                    "crudDelete": true,
+                    "{id}/resolve": {
+                        "get": true
+                    }
+                },
+                "Apps\\Core\\Php\\Entities\\LoggerErrorGroup": {
+                    "crudDelete": true,
+                    "crudUpdate": true,
+                    "crudCreate": true,
+                    "crudRead": true,
+                    "save-report": {
+                        "post": true
+                    }
+                }
+            }
+        }
+    }
+]

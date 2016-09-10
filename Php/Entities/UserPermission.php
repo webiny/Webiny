@@ -2,6 +2,7 @@
 namespace Apps\Core\Php\Entities;
 
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
+use Webiny\Component\Mongo\Index\SingleIndex;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
 /**
@@ -24,6 +25,7 @@ class UserPermission extends AbstractEntity
     {
         parent::__construct();
 
+        $this->index(new SingleIndex('slug', 'slug', false, true));
         $this->attr('name')->char()->setValidators('required')->setToArrayDefault()->onSet(function ($name) {
             if (!$this->slug && !$this->exists()) {
                 $this->slug = $this->str($name)->slug()->val();

@@ -1,0 +1,32 @@
+[
+    {
+        "id": "57cfe5722ae9490248102b0f",
+        "name": "Administrator",
+        "slug": "administrator",
+        "description": "This is the main administrative role which serves for identifying a user as an administrator. It carries no permissions."
+    },
+    {
+        "name": "Public",
+        "slug": "public",
+        "description": "This role is assumed for all public (anonymous) requests. Whatever is allowed here is becoming publicly accessible so be careful with it!",
+        "permissions": ["user-profile", "log-errors", "access-apps"]
+    },
+    {
+        "name": "User Manager",
+        "slug": "acl-manage-users",
+        "description": "This role allows management of users, roles and permissions.",
+        "permissions": ["discover-entities-services", "manage-users", "manage-roles", "manage-permissions"]
+    },
+    {
+        "name": "API Token Manager",
+        "slug": "acl-manage-api-tokens",
+        "description": "This role allows management of API tokens.",
+        "permissions": ["manage-api-tokens"]
+    },
+    {
+        "name": "Logger Manager",
+        "slug": "logger-manager",
+        "description": "This roles allows user to manage system error logger.",
+        "permissions": ["manage-error-logs"]
+    }
+]

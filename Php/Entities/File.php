@@ -48,6 +48,8 @@ class File extends AbstractEntity
         parent::__construct();
         $this->storage = $this->wStorage(self::DEFAULT_STORAGE);
         $this->index(new SingleIndex('ref', 'ref'));
+        $this->index(new SingleIndex('tags', 'tags'));
+        $this->index(new SingleIndex('order', 'order'));
         $this->getAttribute('modifiedOn')->setToArrayDefault();
         $this->attr('name')->char()->setRequired()->setToArrayDefault();
         $this->attr('title')->char()->setToArrayDefault();

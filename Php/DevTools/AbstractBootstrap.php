@@ -11,11 +11,11 @@ use Apps\Core\Php\DevTools\Response\HtmlResponse;
 use Apps\Core\Php\PackageManager\App;
 
 /**
- * BootstrapTrait
+ * Class AbstractBootstrap
  *
- * This trait contains a few helper methods to simplify app bootstrap
+ * This class contains a few helper methods to simplify app bootstrap
  */
-trait BootstrapTrait
+abstract class AbstractBootstrap
 {
     use WebinyTrait;
 
