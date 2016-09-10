@@ -4,6 +4,7 @@ class Menu {
         Object.assign(this, {label, route, icon});
         this.key = key ? key : label;
         this.action = null;
+        this.role = null;
         this.overrideExisting = false;
     }
 
@@ -14,6 +15,11 @@ class Menu {
 
     setOverrideExisting() {
         this.overrideExisting = true;
+        return this;
+    }
+
+    setRole(role) {
+        this.role = role;
         return this;
     }
 }
