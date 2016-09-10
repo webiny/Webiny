@@ -27,8 +27,8 @@ class ConfigLoader
         if(count($matches[0])){
             foreach($matches[0] as $item){
                 $value = $this->wConfig()->get(trim($item, '_'));
-                if($value != null){
-                    $config = str_replace($item, $value, $config);
+                if($value !== null){
+                    $config = str_replace($item, ''.$value, $config);
                 }
 
                 if($item == '__DIR__'){

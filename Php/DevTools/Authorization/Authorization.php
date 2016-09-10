@@ -158,7 +158,7 @@ class Authorization
 
     private function checkPermission($class, $permission)
     {
-        if(!$this->wConfig()->get('Application.ApiDispatchers.CheckUserPermissions', true)){
+        if(!$this->wConfig()->get('Application.Acl.CheckUserPermissions', true)){
             return true;
         }
 

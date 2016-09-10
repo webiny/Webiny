@@ -60,7 +60,7 @@ class User extends AbstractEntity implements UserInterface
         $this->attr('passwordRecoveryCode')->char();
         $this->attr('enabled')->boolean()->setDefaultValue(true);
         $userRole = '\Apps\Core\Php\Entities\UserRole';
-        $this->attr('roles')->many2many('User2UserRole')->setEntity($userRole)->setValidators('minLength:1')->onSet(function ($roles) {
+        $this->attr('roles')->many2many('User2UserRole')->setEntity($userRole)->onSet(function ($roles) {
             // If not mongo Ids - load roles by slugs
             if (is_array($roles)) {
                 foreach ($roles as $i => $role) {

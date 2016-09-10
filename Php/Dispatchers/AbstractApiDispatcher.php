@@ -22,7 +22,7 @@ abstract class AbstractApiDispatcher
 
     protected function checkApiToken($instance = null)
     {
-        if (!$this->wConfig()->getConfig()->get('Application.ApiTokenControl')) {
+        if (!$this->wConfig()->getConfig()->get('Application.Acl.ApiTokenControl')) {
             return;
         }
 
