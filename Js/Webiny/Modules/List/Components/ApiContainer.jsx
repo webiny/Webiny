@@ -73,6 +73,11 @@ class ApiContainer extends BaseContainer {
                     data.list = this.props.prepareLoadedData(data.list);
                 }
             }
+
+            if(apiResponse.isError()){
+                Webiny.Growl.danger(apiResponse.getMessage(), 'That didn\'t go as expected...', true);
+            }
+
             this.setState(data);
 
             return data;

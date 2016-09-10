@@ -13,7 +13,7 @@ class GrowlContainer extends Webiny.Ui.Component {
     }
 
     addGrowl(growl) {
-        let growlIndex = null;
+        let growlIndex = -1;
         if (growl.props.id) {
             growlIndex = _.findIndex(this.state.growls, g => g.props.id === growl.props.id);
         }

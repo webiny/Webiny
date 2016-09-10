@@ -6,7 +6,7 @@ class ContainerError extends Webiny.Ui.Component {
 }
 
 ContainerError.defaultProps = {
-    title: 'Oops!',
+    title: 'Oops',
     type: 'error',
     message: null,
     renderer() {
@@ -17,6 +17,10 @@ ContainerError.defaultProps = {
 
         if (_.isFunction(this.props.children)) {
             return this.props.children(error);
+        }
+
+        if (_.isString(error)) {
+            return <Ui.Alert title={this.props.title} type={this.props.type}>{error}</Ui.Alert>;
         }
 
         const data = [];
