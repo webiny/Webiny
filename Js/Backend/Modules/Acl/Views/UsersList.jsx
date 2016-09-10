@@ -15,9 +15,14 @@ List.defaultProps = {
             searchFields: 'firstName,lastName,email'
         };
 
+        const roles = <Ui.Link route="UserRoles.List">Roles</Ui.Link>;
+        const permissions = <Ui.Link route="UserPermissions.List">Permissions</Ui.Link>;
+
         return (
             <Ui.View.List>
-                <Ui.View.Header title="ACL - Users">
+                <Ui.View.Header
+                    title="ACL - Users"
+                    description={<span>Once your system {permissions} and {roles} are defined, you can create your system users here.</span>}>
                     <Ui.Link type="primary" route="Users.Create" align="right">
                         <Ui.Icon icon="icon-plus-circled"/>
                         Create user

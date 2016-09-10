@@ -12,8 +12,8 @@ class Module extends Webiny.Module {
                     new Menu('Users', 'Users.List'),
                     new Menu('Roles', 'UserRoles.List'),
                     new Menu('Permissions', 'UserPermissions.List')
-                ]),
-                new Menu('API Tokens', 'ApiTokens.List')
+                ]).setRole('acl-manage-users'),
+                new Menu('API Tokens', 'ApiTokens.List').setRole('acl-manage-api-tokens')
             ], 'icon-users')
         );
 
