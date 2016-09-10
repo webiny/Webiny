@@ -53,6 +53,18 @@ class Navigation extends Webiny.Ui.Component {
         return active;
     }
 
+    canAccess(menu) {
+        if (!webinyConfig.CheckUserRoles) {
+            return true;
+        }
+
+        const user = Webiny.Model.get('User');
+        if (menu.role && (!user || !_.find(user.roles, {slug: menu.role}))) {
+            return false;
+        }
+        return true;
+    }
+
     renderMainMenu(menu) {
         const menuIconClass = this.classSet('icon app-icon', {'fa': _.includes(menu.icon, 'fa-')}, menu.icon);
         const linkProps = {
@@ -108,6 +120,9 @@ class Navigation extends Webiny.Ui.Component {
     }
 
     renderSubMenuItem(menu, index) {
+        if (!this.canAccess(menu)) {
+            return null;
+        }
         const mainAction = this.getLink(menu.route, {key: index, label: menu.label});
         let secondaryAction = null;
         let caret = null;
@@ -132,6 +147,9 @@ class Navigation extends Webiny.Ui.Component {
             items = (
                 <ul>
                     {menu.route.map((i, key) => {
+                        if (!this.canAccess(i)) {
+                            return null;
+                        }
                         return (
                             <li key={key}>
                                 <Link route={i.route}>{i.label}</Link>
@@ -161,7 +179,9 @@ Navigation.defaultProps = {
 
         const menu = [];
         _.each(Webiny.Menu.getMenu(), m => {
-            menu.push(this.renderMainMenu(m));
+            if (this.canAccess(m)) {
+                menu.push(this.renderMainMenu(m));
+            }
         });
 
         const submenu = [];
