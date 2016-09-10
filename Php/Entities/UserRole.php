@@ -9,6 +9,7 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  * Class UserRole
  *
  * @property string           $name
+ * @property string           $description
  * @property string           $slug
  * @property ArrayObject      $permissions
  * @property EntityCollection $users
