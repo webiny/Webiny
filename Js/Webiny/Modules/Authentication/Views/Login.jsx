@@ -52,7 +52,7 @@ class Login extends Webiny.Ui.View {
 
 Login.defaultProps = {
     api: '/entities/core/users',
-    fields: '*',
+    fields: '*,roles.slug',
     cookieName: 'webiny-token',
     onSubmit(model, container) {
         container.setState({error: null});
@@ -62,6 +62,11 @@ Login.defaultProps = {
             }
 
             const data = apiResponse.getData();
+            // Verify user - must have an administrator role
+            if (!_.find(data.user.roles, {slug: 'administrator'})) {
+                return container.setState({error: 'Some of your input isn\'t quite right.'});
+            }
+
             Webiny.Cookies.set(this.props.cookieName, data.authToken, {expires: 30, path: '/'});
             Webiny.Model.set({User: data.user});
 
