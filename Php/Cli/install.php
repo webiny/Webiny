@@ -14,23 +14,31 @@ class Install
 {
     use \Webiny\Component\StdLib\StdLibTrait, \Apps\Core\Php\DevTools\WebinyTrait;
 
+    private $host = null;
+
     public function __construct($autoloader)
     {
         $this->autoloader = $autoloader;
         $this->absPath = getcwd() . '/';
-        
+
         // Install script can only be executed using Local config set
         try {
-            $this->config = $this->wConfig()->parseConfig('Configs/Local/Application.yaml');
+            $config = $this->wConfig()->parseConfig('Configs/Local/Application.yaml');
+            $this->host = $config->get('Application.WebPath');
         } catch (ConfigException $e) {
-            die('Missing Local config set! Make sure you have a "Local" config set present in your project');
+            // In case no Local config set is present, use domain in Production config set
+        } finally {
+            if (empty($this->host)) {
+                $config = $this->wConfig()->parseConfig('Configs/Production/Application.yaml');
+                $this->host = $this->url($config->get('Application.WebPath'))->getHost();
+            }
         }
     }
 
     public function run($app)
     {
         $_SERVER = [];
-        $_SERVER['SERVER_NAME'] = $this->url($this->config->get('Application.WebPath'))->getHost();
+        $_SERVER['SERVER_NAME'] = $this->host;
         \Apps\Core\Php\Bootstrap\Bootstrap::getInstance();
         $appInstance = $this->wApps($app);
         $installer = $appInstance->getInstall();

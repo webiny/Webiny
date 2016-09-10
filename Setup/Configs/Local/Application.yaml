@@ -1,5 +1,5 @@
 Application:
   Environment: development
-  ApiDispatchers:
-      CheckUserPermissions: false
-  ApiTokenControl: false
+  Acl:
+    CheckUserPermissions: false
+    ApiTokenControl: false

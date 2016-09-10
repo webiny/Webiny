@@ -35,7 +35,7 @@ class Form extends Webiny.Ui.View {
                         container.setModel(model);
                     }}/>
                 </td>
-                <td className="text-left">{role.name}</td>
+                <td className="text-left"><strong>{role.name}</strong><br/>{role.slug}</td>
                 <td className="text-left">{role.description || '-'}</td>
             </tr>
         );

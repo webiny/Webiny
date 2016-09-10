@@ -4,6 +4,6 @@ Application:
   WebPath: ''
   ApiPath: ''
   Backend: admin
-  ApiDispatchers:
-        CheckUserPermissions: true
-  ApiTokenControl: true
+  Acl:
+    CheckUserPermissions: true
+    ApiTokenControl: true

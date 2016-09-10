@@ -9,7 +9,7 @@ use Webiny\Component\Entity\EntityException;
 
 class Install extends AbstractInstall
 {
-    public function run(App $app)
+    protected function run(App $app)
     {
         // Insert permissions
         $permissions = json_decode(file_get_contents(__DIR__ . '/Install/UserPermissions.json'), true);
