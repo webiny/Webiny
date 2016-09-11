@@ -1,5 +1,4 @@
 Application:
   Environment: development
   Acl:
-    CheckUserPermissions: false
     ApiTokenControl: false
