@@ -1,0 +1,3 @@
+Js:
+    LogErrors: true
+    CheckUserRoles: __Application.Acl.CheckUserPermissions__
