@@ -14,6 +14,13 @@ class Navigation extends Webiny.Ui.Component {
         this.bindMethods('renderMainMenu,renderSubMenu,renderSubMenuItem,mainMenuItemClick');
     }
 
+    componentDidMount() {
+        super.componentDidMount();
+        this.watch('User', () => {
+            this.setState({time: new Date().getTime()})
+        });
+    }
+
     getLink(route, linkProps = {}) {
         route = _.isString(route) ? route : null;
 
@@ -112,9 +119,15 @@ class Navigation extends Webiny.Ui.Component {
             'data-this-menu': menu.key
         };
 
+        const subMenuItems = _.without(items.map(this.renderSubMenuItem), null);
+
+        if (!subMenuItems.length) {
+            return null;
+        }
+
         return (
             <ul {...menuProps}>
-                {items.map(this.renderSubMenuItem)}
+                {subMenuItems}
             </ul>
         );
     }
@@ -187,6 +200,13 @@ Navigation.defaultProps = {
         const submenu = [];
         _.each(Webiny.Menu.getMenu(), m => {
             submenu.push(this.renderSubMenu(m));
+        });
+
+        // In case the submenu is empty - remove the main menu item
+        _.each(submenu, (s, index) => {
+            if (!s) {
+                menu[index] = null;
+            }
         });
 
         return (

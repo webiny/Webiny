@@ -60,6 +60,7 @@ class RouterUtils {
      */
     routeWillChange(matchedRoute, callbacks) {
         function createLink(callback) {
+            // Each chain link will receive a routerEvent instance from previous link
             return function chainLink(routerEvent) {
                 if (!routerEvent.isStopped()) {
                     return callback(routerEvent);
@@ -80,7 +81,14 @@ class RouterUtils {
             routeWillChangeChain = routeWillChangeChain.then(createLink(callback), this.exceptionHandler);
         });
 
-        return routeWillChangeChain;
+        // In the end we need to check if routerEvent is stopped and redirect to another route if requested
+        return routeWillChangeChain.then(routerEvent => {
+            if (routerEvent.isStopped() && routerEvent.goTo !== null) {
+                Webiny.Router.goToRoute(routerEvent.goTo, routerEvent.goToParams);
+            }
+
+            return routerEvent;
+        });
     }
 
     getRouteContent(route) {

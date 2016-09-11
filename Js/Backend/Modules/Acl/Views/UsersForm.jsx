@@ -16,7 +16,7 @@ class Form extends Webiny.Ui.View {
 
     componentWillMount() {
         super.componentWillMount();
-        new Webiny.Api.Endpoint('/entities/core/user-roles').get('/', {_perPage: 100, _sort: 'name'}).then(apiResponse => {
+        new Webiny.Api.Endpoint('/entities/core/user-roles').get('/', {_perPage: 1000, _sort: 'name'}).then(apiResponse => {
             this.setState({roles: _.filter(apiResponse.getData('list'), r => r.slug !== 'public')});
         });
     }

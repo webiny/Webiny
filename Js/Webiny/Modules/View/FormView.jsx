@@ -19,6 +19,7 @@ class FormView extends Webiny.Ui.Component {
             return children;
         }
 
+        // Loop through View elements and detect header/body/footer components
         React.Children.map(children, child => {
             if (child.type === Ui.View.Header) {
                 this.headerComponent = child;
@@ -35,8 +36,10 @@ class FormView extends Webiny.Ui.Component {
                 });
 
                 if (loader) {
+                    // We have our body element
                     this.bodyComponent = child;
                 } else {
+                    // We need to create form loader ourselves
                     const bodyChildren = React.Children.toArray(child.props.children);
                     bodyChildren.push(<Ui.Form.Loader key="loader" container={this.props.container}/>);
                     this.bodyComponent = React.cloneElement(child, child.props, bodyChildren);

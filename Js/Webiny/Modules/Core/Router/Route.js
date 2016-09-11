@@ -108,6 +108,11 @@ class Route {
         return this.title;
     }
 
+    setTitle(title) {
+        this.title = title;
+        return this;
+    }
+
     getParams(name = null) {
         if (name) {
             if (_.isUndefined(this.paramValues[name])) {
@@ -151,6 +156,10 @@ class Route {
         return this.module;
     }
 
+    setRole(role) {
+        this.role = role;
+        return this;
+    }
 }
 
 export default Route;

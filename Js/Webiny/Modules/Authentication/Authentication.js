@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import Forbidden from './Views/Forbidden';
 
 class Module extends Webiny.Module {
 
@@ -64,6 +65,10 @@ class Module extends Webiny.Module {
         });
     }
 
+    renderForbidden() {
+        return <Forbidden/>;
+    }
+
     goToLogin(routerEvent) {
         localStorage.loginRedirect = window.location.href;
         routerEvent.stop();
@@ -99,9 +104,18 @@ class Module extends Webiny.Module {
         Webiny.Router.onRouteWillChange(this.checkUser.bind(this));
     }
 
+    checkRouteRole(routerEvent) {
+        const user = Webiny.Model.get('User');
+        if (_.has(routerEvent.route, 'role') && !_.find(user.roles, {slug: routerEvent.route.role})) {
+            routerEvent.stop();
+            routerEvent.goToRoute('Forbidden');
+        }
+        return routerEvent;
+    }
+
     checkUser(routerEvent) {
         if (Webiny.Model.get('User')) {
-            return false;
+            return this.checkRouteRole(routerEvent);
         }
 
         const token = Webiny.Cookies.get(this.getCookieName());
@@ -112,7 +126,7 @@ class Module extends Webiny.Module {
         }
 
         // Try fetching user data
-        return this.getUser(routerEvent);
+        return this.getUser(routerEvent).then(this.checkRouteRole.bind(this));
     }
 }
 

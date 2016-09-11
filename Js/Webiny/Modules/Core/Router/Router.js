@@ -44,8 +44,10 @@ class Router {
                 }
 
                 this.activeRoute = matched;
-                Utils.routeWillChange(matched, this.routeWillChange).then(() => {
-                    Utils.renderRoute(matched);
+                Utils.routeWillChange(matched, this.routeWillChange).then(routerEvent => {
+                    if(!routerEvent.isStopped()){
+                        Utils.renderRoute(matched);
+                    }
                 }).catch(Utils.exceptionHandler);
             });
         }

@@ -16,7 +16,7 @@ class Form extends Webiny.Ui.View {
 
     componentWillMount() {
         super.componentWillMount();
-        new Webiny.Api.Endpoint('/entities/core/user-permissions').get().then(apiResponse => {
+        new Webiny.Api.Endpoint('/entities/core/user-permissions').get('/', {_perPage: 1000}).then(apiResponse => {
             this.setState({permissions: apiResponse.getData('list')});
         });
     }
