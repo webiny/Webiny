@@ -17,18 +17,17 @@ class Module extends Webiny.Module {
         Q.all([
             Webiny.Dispatcher.dispatch('Logout')
         ]).then(() => {
-            Webiny.Router.goToRoute('Login', {logout: 'expired'});
+            Webiny.Router.goToRoute('Login');
         });
     }
 
     onNoToken(routerEvent) {
-        localStorage.loginRedirect = window.location.href;
-        routerEvent.stop();
-
         const isLoginRoute = _.get(routerEvent.route, 'name') === 'Login';
 
         if (!isLoginRoute) {
-            routerEvent.goToRoute('Login', {logout: 'not'});
+            localStorage.loginRedirect = window.location.href;
+            routerEvent.stop();
+            routerEvent.goToRoute('Login');
         }
 
         return routerEvent;
@@ -106,7 +105,8 @@ class Module extends Webiny.Module {
 
     checkRouteRole(routerEvent) {
         const user = Webiny.Model.get('User');
-        if (_.has(routerEvent.route, 'role') && !_.find(user.roles, {slug: routerEvent.route.role})) {
+
+        if (user && _.has(routerEvent.route, 'role') && !_.find(user.roles, {slug: routerEvent.route.role})) {
             routerEvent.stop();
             routerEvent.goToRoute('Forbidden');
         }
