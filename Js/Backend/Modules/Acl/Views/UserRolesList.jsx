@@ -33,7 +33,7 @@ List.defaultProps = {
                 <Ui.View.Body>
                     <Ui.List.ApiContainer {...listProps}>
                         <Ui.List.FormFilters>
-                            {(apply, reset) => (
+                            {(apply) => (
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
                                         <Ui.Input

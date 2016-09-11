@@ -22,7 +22,7 @@ function Growler(component) {
 }
 
 _.assign(Growler, {
-    remove(growlId){
+    remove(growlId) {
         const growler = getGrowler();
 
         if (!growler) {

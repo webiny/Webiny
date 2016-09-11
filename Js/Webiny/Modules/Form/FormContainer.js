@@ -607,7 +607,7 @@ FormContainer.defaultProps = {
     connectToRouter: false,
     onSubmitSuccess: null,
     onFailure: _.noop,
-    onProgress: function (pe) {
+    onProgress(pe) {
         const cmp = <div>Your data is being uploaded...<Ui.Progress value={pe.progress}/></div>;
         Webiny.Growl(<Ui.Growl.Info id={this.growlId} title="Please be patient" sticky={true}>{cmp}</Ui.Growl.Info>);
     },

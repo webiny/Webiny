@@ -74,7 +74,7 @@ class ApiContainer extends BaseContainer {
                 }
             }
 
-            if(apiResponse.isError()){
+            if (apiResponse.isError()) {
                 Webiny.Growl.danger(apiResponse.getMessage(), 'That didn\'t go as expected...', true);
             }
 
