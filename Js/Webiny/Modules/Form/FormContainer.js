@@ -453,8 +453,8 @@ class FormContainer extends Webiny.Ui.Component {
     }
 
     attachValidators(props) {
-        this.inputs[props.name].validators = Webiny.Tools.Validator.parseValidateProperty(props.validate);
-        this.inputs[props.name].messages = Webiny.Tools.Validator.parseCustomValidationMessages(props.children);
+        this.inputs[props.name].validators = Webiny.Validator.parseValidateProperty(props.validate);
+        this.inputs[props.name].messages = Webiny.Validator.parseCustomValidationMessages(props.children);
     }
 
     attachToForm(component) {
@@ -480,7 +480,7 @@ class FormContainer extends Webiny.Ui.Component {
         const hasValidators = _.keys(validators).length;
         const messages = this.inputs[component.props.name].messages;
         // Validate input
-        return Q(Webiny.Tools.Validator.validate(component.getValue(), validators, this.inputs)).then(validationResults => {
+        return Q(Webiny.Validator.validate(component.getValue(), validators, this.inputs)).then(validationResults => {
             if (hasValidators) {
                 const isValid = component.getValue() === null ? null : true;
                 component.setState({isValid, validationResults});

@@ -7,7 +7,7 @@ class Module extends Webiny.Module {
 
     constructor(app) {
         super(app);
-        Webiny.Tools.Filter = Filter;
+        Webiny.Filter = Filter;
         Webiny.Ui.Components.Filters.DateTime = DateTime;
         Webiny.Ui.Components.Filters.FileSize = FileSize;
     }

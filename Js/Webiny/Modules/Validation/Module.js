@@ -5,7 +5,7 @@ class Module extends Webiny.Module {
 
     constructor(app) {
         super(app);
-        Webiny.Tools.Validator = Validator;
+        Webiny.Validator = Validator;
     }
 }
 
