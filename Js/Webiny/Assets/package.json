@@ -1,0 +1,5 @@
+{
+    "dependencies": {
+        "quill": "^1.0.3"
+    }
+}

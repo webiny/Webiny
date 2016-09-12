@@ -1,7 +1,8 @@
 Assets:
-    Styles:
-        Sass: styles/sass/webiny.scss
-        Replacements:
-            '../../': ''
-            '/font/': '/fonts/'
-            '/img/': '/images/'
+    App:
+        Styles:
+            Sass: styles/sass/webiny.scss
+            Replacements:
+                '../../': ''
+                '/font/': '/fonts/'
+                '/img/': '/images/'
