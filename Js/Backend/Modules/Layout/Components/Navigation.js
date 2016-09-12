@@ -189,22 +189,22 @@ class Navigation extends Webiny.Ui.Component {
 Navigation.defaultProps = {
     renderer() {
         const Layout = Webiny.Apps.Core.Backend.Layout.Components;
-
+        const menus = Webiny.Menu.getMenu();
         const menu = [];
-        _.each(Webiny.Menu.getMenu(), m => {
+        _.each(menus, m => {
             if (this.canAccess(m)) {
                 menu.push(this.renderMainMenu(m));
             }
         });
 
         const submenu = [];
-        _.each(Webiny.Menu.getMenu(), m => {
+        _.each(menus, m => {
             submenu.push(this.renderSubMenu(m));
         });
 
-        // In case the submenu is empty - remove the main menu item
+        // In case the submenu is empty and it is supposed to have submenu items - remove the main menu item
         _.each(submenu, (s, index) => {
-            if (!s) {
+            if (!s && !_.isString(menus[index].route)) {
                 menu[index] = null;
             }
         });
