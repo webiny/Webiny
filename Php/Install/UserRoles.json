@@ -1,6 +1,5 @@
 [
     {
-        "id": "57cfe5722ae9490248102b0f",
         "name": "Administrator",
         "slug": "administrator",
         "description": "This is the main administrative role which serves for identifying a user as an administrator. It carries no permissions."
