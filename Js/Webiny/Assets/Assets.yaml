@@ -26,14 +26,14 @@ Assets:
             - bower_components/moment/min/moment.min.js
             - bower_components/baobab/build/baobab.min.js
             - bower_components/blueimp-md5/js/md5.min.js
-            - bower_components/react/react.js
-            - bower_components/react/react-with-addons.js
-            - bower_components/react/react-dom.js
-            - bower_components/react/react-dom-server.js
-            - bower_components/react/react.min.js
-            - bower_components/react/react-with-addons.min.js
-            - bower_components/react/react-dom.min.js
-            - bower_components/react/react-dom-server.min.js
+            - D:bower_components/react/react.js
+            - D:bower_components/react/react-with-addons.js
+            - D:bower_components/react/react-dom.js
+            - D:bower_components/react/react-dom-server.js
+            - P:bower_components/react/react.min.js
+            - P:bower_components/react/react-with-addons.min.js
+            - P:bower_components/react/react-dom.min.js
+            - P:bower_components/react/react-dom-server.min.js
             - bower_components/accounting/accounting.min.js
             - bower_components/bootstrap-daterangepicker/daterangepicker.js
             - bower_components/c3/c3.min.js
