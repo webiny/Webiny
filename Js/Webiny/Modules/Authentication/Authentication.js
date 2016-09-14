@@ -87,7 +87,6 @@ class Module extends Webiny.Module {
         Webiny.Router.onBeforeStart(routerEvent => {
             Webiny.Http.addRequestInterceptor(http => {
                 http.addHeader('X-Webiny-Authorization', Webiny.Cookies.get(this.getCookieName()));
-                console.log(http);
             });
 
             // Watch if we got a forbidden request - then log out
