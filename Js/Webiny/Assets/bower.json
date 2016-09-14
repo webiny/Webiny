@@ -1,4 +1,5 @@
 {
+    "name": "Core.Webiny",
     "dependencies": {
         "accounting": "~0.3.2",
         "blueimp-md5": "~1.1.1",
