@@ -19,7 +19,7 @@ function runWebiny() {
     // Include required apps
     let boot = Q();
     _.each(config.require || [], depName => {
-        boot = WebinyBootstrap.includeApp(depName, true);
+        boot = boot.then(() => WebinyBootstrap.includeApp(depName, true));
     });
 
     return boot.then(() => {
