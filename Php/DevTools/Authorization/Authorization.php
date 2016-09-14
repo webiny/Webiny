@@ -81,7 +81,7 @@ class Authorization
     public function getUser()
     {
         if (!$this->user) {
-            $authCookie = $this->wRequest()->header('Authorization');
+            $authCookie = $this->wRequest()->header('X-Webiny-Token');
 
             try {
                 /* @var $class AbstractEntity */

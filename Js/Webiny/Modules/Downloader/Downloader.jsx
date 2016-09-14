@@ -53,7 +53,7 @@ Downloader.defaultProps = {
 
         let authorization = null;
         if (this.state.httpMethod !== 'GET') {
-            authorization = <input type="hidden" name="Authorization" value={Webiny.Cookies.get('webiny-token')}/>;
+            authorization = <input type="hidden" name="X-Webiny-Authorization" value={Webiny.Cookies.get('webiny-token')}/>;
         }
 
         this.downloaded = true;

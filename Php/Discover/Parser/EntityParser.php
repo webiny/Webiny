@@ -29,14 +29,14 @@ class EntityParser extends AbstractParser
         ];
 
         $this->headerAuthorizationToken = [
-            'name'        => 'Authorization',
+            'name'        => 'X-Webiny-Authorization',
             'description' => 'Authorization token',
             'type'        => 'string',
             'required'    => true
         ];
 
         $this->headerApiToken = [
-            'name'        => 'Api-Token',
+            'name'        => 'X-Webiny-Api-Token',
             'description' => 'API token',
             'type'        => 'string',
             'required'    => true
@@ -139,8 +139,8 @@ class EntityParser extends AbstractParser
                     'description' => $config->key('description', '', true),
                     'method'      => strtoupper($httpMethod),
                     'headers'     => [
-                        'Authorization' => $this->headerAuthorizationToken,
-                        'Api-Token'     => $this->headerApiToken
+                        'X-Webiny-Authorization' => $this->headerAuthorizationToken,
+                        'X-Webiny-Api-Token'     => $this->headerApiToken
                     ]
                 ];
 
