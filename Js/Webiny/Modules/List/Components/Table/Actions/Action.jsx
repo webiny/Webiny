@@ -9,6 +9,7 @@ Action.defaultProps = {
     icon: null,
     onClick: _.noop,
     download: null,
+    actions: null,
     renderer() {
         if (_.isFunction(this.props.children)) {
             return this.props.children.call(this, this.props.data, this);

@@ -6,19 +6,19 @@ class Module extends Webiny.Module {
     init() {
         const Menu = Webiny.Ui.Menu;
 
+        const aclManageUsers = 'core-acl-user-manager';
+        const aclApiTokens = 'core-acl-api-token-manager';
+
         this.registerMenus(
             new Menu('ACL', [
                 new Menu('User Management', [
                     new Menu('Users', 'Users.List'),
                     new Menu('Roles', 'UserRoles.List'),
                     new Menu('Permissions', 'UserPermissions.List')
-                ]).setRole('acl-manage-users'),
-                new Menu('API Tokens', 'ApiTokens.List').setRole('acl-manage-api-tokens')
+                ]).setRole(aclManageUsers),
+                new Menu('API Tokens', 'ApiTokens.List').setRole(aclApiTokens)
             ], 'icon-users')
         );
-
-        const aclManageUsers = 'acl-manage-users';
-        const aclApiTokens = 'acl-manage-api-tokens';
 
         this.registerRoutes(
             new Webiny.Route('Users.Account', '/acl/users/account', Views.UsersAccount, 'Account Settings'),

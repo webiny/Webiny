@@ -7,8 +7,12 @@
 
 namespace Apps\Core\Php\DevTools;
 
+use Apps\Core\Php\Entities\UserPermission;
+use Apps\Core\Php\Entities\UserRole;
 use Apps\Core\Php\PackageManager\App;
+use Closure;
 use MongoDB\Driver\Exception\RuntimeException;
+use Webiny\Component\Entity\EntityException;
 
 /**
  * Class AbstractInstall
@@ -36,6 +40,46 @@ abstract class AbstractInstall
         $this->app = $app;
         $this->installIndexes();
         $this->run($app);
+    }
+
+    /**
+     * Create user permissions
+     *
+     * @param array        $permissions
+     * @param null|Closure $exceptionHandler Takes an exception and permission being inserted as parameters
+     */
+    protected function createUserPermissions($permissions, Closure $exceptionHandler = null)
+    {
+        foreach ($permissions as $perm) {
+            $p = new UserPermission();
+            try {
+                $p->populate($perm)->save();
+            } catch (EntityException $e) {
+                if (is_callable($exceptionHandler)) {
+                    $exceptionHandler($e, $p);
+                }
+            }
+        }
+    }
+
+    /**
+     * Create user roles
+     *
+     * @param array        $roles
+     * @param null|Closure $exceptionHandler Takes an exception and role being inserted as parameters
+     */
+    protected function createUserRoles($roles, Closure $exceptionHandler = null)
+    {
+        foreach ($roles as $role) {
+            $r = new UserRole();
+            try {
+                $r->populate($role)->save();
+            } catch (EntityException $e) {
+                if (is_callable($exceptionHandler)) {
+                    $exceptionHandler($e, $r);
+                }
+            }
+        }
     }
 
     private function installIndexes()

@@ -62,8 +62,8 @@ Form.defaultProps = {
                         <Ui.View.Header title={model.id ? 'ACL - Edit User' : 'ACL - Create User'}/>
                         <Ui.Form.Error message="Something went wrong during save"/>
                         <Ui.View.Body noPadding>
-                            <Ui.Tabs.Tabs>
-                                <Ui.Tabs.Tab label="General">
+                            <Ui.Tabs.Tabs size="large">
+                                <Ui.Tabs.Tab label="General" icon="fa-user">
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={6}>
                                             <Ui.Input label="First name" name="firstName" validate="required"/>

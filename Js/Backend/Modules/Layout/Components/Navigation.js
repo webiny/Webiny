@@ -66,7 +66,7 @@ class Navigation extends Webiny.Ui.Component {
         }
 
         const user = Webiny.Model.get('User');
-        if (menu.role && (!user || !_.find(user.roles, {slug: menu.role}))) {
+        if (menu.role && menu.role.length && (!user || !_.find(user.roles, (r) => menu.role.indexOf(r.slug) > -1))) {
             return false;
         }
         return true;

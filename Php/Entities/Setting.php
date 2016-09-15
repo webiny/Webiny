@@ -3,7 +3,6 @@ namespace Apps\Core\Php\Entities;
 
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
-use Webiny\Component\Entity\EntityException;
 
 /**
  * Class Setting

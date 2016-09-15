@@ -30,15 +30,19 @@ class Install
         } finally {
             if (empty($this->host)) {
                 $config = $this->wConfig()->parseConfig('Configs/Production/Application.yaml');
-                $this->host = $this->url($config->get('Application.WebPath'))->getHost();
+                $this->host = $config->get('Application.WebPath');
             }
         }
     }
 
-    public function run($app)
+    public function run($app, $host = null)
     {
+        if (!$host) {
+            $host = $this->host;
+        }
+
         $_SERVER = [];
-        $_SERVER['SERVER_NAME'] = $this->host;
+        $_SERVER['SERVER_NAME'] = $this->url($host)->getHost();
         \Apps\Core\Php\Bootstrap\Bootstrap::getInstance();
         $appInstance = $this->wApps($app);
         $installer = $appInstance->getInstall();
@@ -49,5 +53,5 @@ class Install
 }
 
 $release = new Install($autoloader);
-$release->run($argv[1]);
+$release->run($argv[1], $argv[2] ?? null);
 

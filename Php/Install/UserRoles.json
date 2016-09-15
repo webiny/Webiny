@@ -8,24 +8,24 @@
         "name": "Public",
         "slug": "public",
         "description": "This role is assumed for all public (anonymous) requests. Whatever is allowed here is becoming publicly accessible so be careful with it!",
-        "permissions": ["user-profile", "log-errors", "access-apps"]
+        "permissions": ["core-acl-user-profile", "core-logger-log-errors", "core-access-apps"]
     },
     {
         "name": "User Manager",
-        "slug": "acl-manage-users",
+        "slug": "core-acl-user-manager",
         "description": "This role allows management of users, roles and permissions.",
-        "permissions": ["discover-entities-services", "manage-users", "manage-roles", "manage-permissions"]
+        "permissions": ["core-discover-entities-services", "core-acl-manage-users", "core-acl-manage-roles", "core-acl-manage-permissions"]
     },
     {
         "name": "API Token Manager",
-        "slug": "acl-manage-api-tokens",
+        "slug": "core-acl-api-token-manager",
         "description": "This role allows management of API tokens.",
-        "permissions": ["manage-api-tokens"]
+        "permissions": ["core-acl-manage-api-tokens"]
     },
     {
         "name": "Logger Manager",
-        "slug": "logger-manager",
+        "slug": "core-logger-manager",
         "description": "This roles allows user to manage system error logger.",
-        "permissions": ["manage-error-logs"]
+        "permissions": ["core-logger-manage-logs"]
     }
 ]

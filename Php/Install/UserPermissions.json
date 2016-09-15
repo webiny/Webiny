@@ -1,6 +1,7 @@
 [
     {
         "name": "User profile",
+        "slug": "core-acl-user-profile",
         "permissions": {
             "entities": {
                 "Apps\\Core\\Php\\Entities\\User": {
@@ -20,12 +21,11 @@
                 }
             }
         },
-        "slug": "user-profile",
         "description": "Allows the user to login and update his profile"
     },
     {
         "name": "Log errors",
-        "slug": "log-errors",
+        "slug": "core-logger-log-errors",
         "description": "Allows user to log JS/PHP/API errors",
         "permissions": {
             "entities": {
@@ -53,7 +53,7 @@
     },
     {
         "name": "Access Apps",
-        "slug": "access-apps",
+        "slug": "core-access-apps",
         "description": "Allows users to read data about system apps (needed for app bootstrap!)",
         "permissions": {
             "entities": {
@@ -75,7 +75,7 @@
     },
     {
         "name": "Manage API tokens",
-        "slug": "manage-api-tokens",
+        "slug": "core-acl-manage-api-tokens",
         "description": "Allows user to manage API tokens",
         "permissions": {
             "entities": {
@@ -95,27 +95,8 @@
         }
     },
     {
-        "name": "Manage settings",
-        "slug": "manage-settings",
-        "description": "Allows user to manage settings (Setting is an entity responsible for storing arbitrary data from different apps and modules)",
-        "permissions": {
-            "entities": {
-                "Apps\\Core\\Php\\Entities\\Setting": {
-                    "crudCreate": true,
-                    "crudRead": true,
-                    "crudUpdate": true,
-                    "crudDelete": true,
-                    "key/{key}": {
-                        "get": true,
-                        "patch": true
-                    }
-                }
-            }
-        }
-    },
-    {
         "name": "Discover system Entities and Services",
-        "slug": "discover-entities-services",
+        "slug": "core-discover-entities-services",
         "description": "Allows user to get info about system entities and services (their class names, attributes, methods, etc.)",
         "permissions": {
             "services": {
@@ -140,7 +121,7 @@
     },
     {
         "name": "Manage users",
-        "slug": "manage-users",
+        "slug": "core-acl-manage-users",
         "description": "Allows user to manage user accounts (create, read, update and delete them)",
         "permissions": {
             "entities": {
@@ -167,7 +148,7 @@
     },
     {
         "name": "Manage user roles",
-        "slug": "manage-roles",
+        "slug": "core-acl-manage-roles",
         "description": "Allow user to manage user roles",
         "permissions": {
             "entities": {
@@ -185,7 +166,7 @@
     },
     {
         "name": "Manage permissions",
-        "slug": "manage-permissions",
+        "slug": "core-acl-manage-permissions",
         "description": "Allow user to manage user permissions",
         "permissions": {
             "entities": {
@@ -200,7 +181,7 @@
     },
     {
         "name": "Manage error logs",
-        "slug": "manage-error-logs",
+        "slug": "core-logger-manage-logs",
         "description": "Allow user to manage error logs",
         "permissions": {
             "entities": {

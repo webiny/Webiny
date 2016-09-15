@@ -16,7 +16,7 @@ class Form extends Webiny.Ui.View {
 
     componentWillMount() {
         super.componentWillMount();
-        new Webiny.Api.Endpoint('/entities/core/user-permissions').get('/', {_perPage: 1000}).then(apiResponse => {
+        new Webiny.Api.Endpoint('/entities/core/user-permissions').get('/', {_perPage: 1000, _sort: 'name'}).then(apiResponse => {
             this.setState({permissions: apiResponse.getData('list')});
         });
     }
@@ -62,8 +62,8 @@ Form.defaultProps = {
                     <Ui.View.Form>
                         <Ui.View.Header title={model.id ? 'ACL - Edit Role' : 'ACL - Create Role'}/>
                         <Ui.View.Body noPadding>
-                            <Ui.Tabs.Tabs>
-                                <Ui.Tabs.Tab label="General">
+                            <Ui.Tabs.Tabs size="large">
+                                <Ui.Tabs.Tab label="General" icon="fa-unlock-alt">
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={6}>
                                             <Ui.Input label="Name" name="name" validate="required"/>

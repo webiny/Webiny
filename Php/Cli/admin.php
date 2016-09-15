@@ -21,7 +21,7 @@ try {
     $user = new User();
     $user->email = $argv[2];
     $user->password = $argv[3];
-    $user->roles = ['administrator', 'acl-manage-api-tokens', 'logger-manager', 'acl-manage-users'];
+    $user->roles = ['administrator', 'core-acl-api-token-manager', 'core-logger-manager', 'core-acl-user-manager'];
     $user->firstName = '';
     $user->lastName = '';
     $user->save();

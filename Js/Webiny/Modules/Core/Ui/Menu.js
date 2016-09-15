@@ -19,6 +19,9 @@ class Menu {
     }
 
     setRole(role) {
+        if(_.isString(role)){
+            role = role.split(',');
+        }
         this.role = role;
         return this;
     }
