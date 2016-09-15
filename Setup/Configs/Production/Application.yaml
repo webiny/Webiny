@@ -7,3 +7,6 @@ Application:
   Acl:
     CheckUserPermissions: true
     ApiTokenControl: true
+  Logger:
+    DisplayErrors: false
+    Enabled: true
