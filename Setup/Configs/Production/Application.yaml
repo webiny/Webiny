@@ -5,5 +5,5 @@ Application:
   ApiPath: ''
   Backend: admin
   Acl:
-    CheckUserPermissions: true
-    ApiTokenControl: true
+    CheckUserPermissions: false
+    ApiTokenControl: false
