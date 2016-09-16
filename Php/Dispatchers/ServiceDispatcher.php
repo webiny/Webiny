@@ -7,6 +7,7 @@
 
 namespace Apps\Core\Php\Dispatchers;
 
+use Apps\Core\Php\DevTools\Interfaces\PublicApiInterface;
 use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
 use Apps\Core\Php\DevTools\Response\ApiResponse;
 use Apps\Core\Php\RequestHandlers\ApiEvent;
@@ -48,7 +49,8 @@ class ServiceDispatcher extends AbstractApiDispatcher
             throw new ApiException($message, 'WBY-SD-NO_METHODS_EXPOSED', 404);
         }
 
-        if (!$this->wAuth()->canExecute($serviceClass, $matchedServiceMethod->getApiMethod()->getPattern())) {
+        $isPublic = $service instanceof PublicApiInterface;
+        if (!$isPublic && !$this->wAuth()->canExecute($serviceClass, $matchedServiceMethod->getApiMethod()->getPattern())) {
             throw new ApiException('You don\'t have an EXECUTE permission on ' . $serviceClass, 'WBY-AUTHORIZATION');
         }
 
