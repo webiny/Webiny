@@ -135,7 +135,7 @@ class App extends AbstractPackage
             $cls = new \ReflectionClass($entityClass);
             if (!$cls->isAbstract() && !$cls->isTrait()) {
                 $entities[$entityName] = [
-                    'app' => $this->getName(),
+                    'app'   => $this->getName(),
                     'name'  => $this->getName() . '.' . $entityName,
                     'class' => $entityClass,
                 ];
@@ -160,7 +160,7 @@ class App extends AbstractPackage
             $cls = new \ReflectionClass($serviceClass);
             if (!$cls->isAbstract()) {
                 $services[$serviceName] = [
-                    'id'     => $id,
+                    'app'    => $this->getName(),
                     'name'   => $serviceName,
                     'class'  => $serviceClass,
                     'public' => $this->isInstanceOf(new $serviceClass, '\Apps\Core\Php\DevTools\Interfaces\PublicApiInterface')
