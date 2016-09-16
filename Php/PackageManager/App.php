@@ -9,9 +9,7 @@ namespace Apps\Core\Php\PackageManager;
 
 use Apps\Core\Php\DevTools\AbstractInstall;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
-use Apps\Core\Php\DevTools\Interfaces\PublicApiInterface;
 use Webiny\Component\Config\ConfigObject;
-use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Storage\Directory\Directory;
 use Webiny\Component\Storage\File\File;
 
@@ -122,7 +120,7 @@ class App extends AbstractPackage
         return $this->wConfig()->get('Application.WebPath') . $this->getBuildPath() . '/' . $app . '/' . $asset;
     }
 
-    public function getEntities($withDetails = false)
+    public function getEntities()
     {
         $version = $this->getVersionPath();
         $entitiesDir = $this->getName() . $version . '/Php/Entities';
@@ -132,25 +130,22 @@ class App extends AbstractPackage
         foreach ($dir as $file) {
             $entityClass = 'Apps\\' . $this->str($file->getKey())->replace(['.php', $version], '')->replace('/', '\\')->val();
             $entityName = $this->str($file->getKey())->explode('/')->last()->replace('.php', '')->val();
-            $id = $this->str($entityClass)->replace('\\', '.')->val();
-            $entities[$entityName] = [
-                'id'    => $id,
-                'name'  => $this->getName() . '.' . $entityName,
-                'class' => $entityClass,
-            ];
 
-            if ($withDetails) {
-                $meta = $entities[$entityName]['class']::meta();
-                $entities[$entityName]['attributes'] = $meta['attributes'];
-                $entities[$entityName]['methods'] = $meta['methods'];
-                $entities[$entityName]['relations'] = $meta['relations'];
+            // Check if abstract or trait
+            $cls = new \ReflectionClass($entityClass);
+            if (!$cls->isAbstract() && !$cls->isTrait()) {
+                $entities[$entityName] = [
+                    'app' => $this->getName(),
+                    'name'  => $this->getName() . '.' . $entityName,
+                    'class' => $entityClass,
+                ];
             }
         }
 
         return $entities;
     }
 
-    public function getServices($withDetails = false)
+    public function getServices()
     {
         $version = $this->getVersionPath();
         $servicesDir = $this->getName() . $version . '/Php/Services';
@@ -161,16 +156,15 @@ class App extends AbstractPackage
             $serviceClass = 'Apps\\' . $this->str($file->getKey())->replace(['.php', $version], '')->replace('/', '\\')->val();
             $serviceName = $this->str($file->getKey())->explode('/')->last()->replace('.php', '')->val();
             $id = $this->str($serviceClass)->replace('\\', '.')->val();
-            $services[$serviceName] = [
-                'id'     => $id,
-                'name'   => $serviceName,
-                'class'  => $serviceClass,
-                'public' => $this->isInstanceOf(new $serviceClass, '\Apps\Core\Php\DevTools\Interfaces\PublicApiInterface')
-            ];
-
-            if ($withDetails) {
-                $meta = $services[$serviceName]['class']::meta();
-                $services[$serviceName]['methods'] = $meta['methods'] ?? [];
+            // Check if abstract
+            $cls = new \ReflectionClass($serviceClass);
+            if (!$cls->isAbstract()) {
+                $services[$serviceName] = [
+                    'id'     => $id,
+                    'name'   => $serviceName,
+                    'class'  => $serviceClass,
+                    'public' => $this->isInstanceOf(new $serviceClass, '\Apps\Core\Php\DevTools\Interfaces\PublicApiInterface')
+                ];
             }
         }
 

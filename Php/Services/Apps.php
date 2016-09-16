@@ -16,6 +16,7 @@ class Apps extends AbstractService
     {
         /**
          * @api.name Get all active apps meta
+         * @api.description This method returns a list of meta data for each active app
          */
         $this->api('get', '/', function () {
             return $this->getAppsMeta();
@@ -23,6 +24,7 @@ class Apps extends AbstractService
 
         /**
          * @api.name Get single app/spa meta
+         * @api.description This method returns a set of meta data for given app name or all backend apps (if {appName} == "backend")
          */
         $this->api('get', '{appName}', function ($appName = null) {
             if ($appName === 'backend') {

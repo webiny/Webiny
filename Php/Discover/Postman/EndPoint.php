@@ -2,7 +2,7 @@
 namespace Apps\Core\Php\Discover\Postman;
 
 use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\Discover\Parser\AbstractParser;
+use Apps\Core\Php\PackageManager\App;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
 
@@ -11,19 +11,14 @@ class EndPoint
     use WebinyTrait, StdLibTrait;
 
     /**
-     * @var AbstractParser
-     */
-    private $parser;
-
-    /**
      * API method
      * @var array
      */
     private $method;
 
-    function __construct(AbstractParser $parser, $method)
+    function __construct(App $app, $method)
     {
-        $this->parser = $parser;
+        $this->app = $app;
         $this->method = $method;
     }
 
@@ -38,8 +33,8 @@ class EndPoint
             'name'        => $this->method['name'],
             'description' => $this->method['description'],
             'time'        => time(),
-            'version'     => (string)$this->parser->getApp()->getVersion(),
-            'tests'       => join("\n", $this->method['tests'])
+            'version'     => (string)$this->app->getVersion(),
+            'tests'       => join("\n", $this->method['tests'] ?? [])
         ];
 
         if (in_array($this->method['method'], ['POST', 'PATCH'])) {
@@ -63,7 +58,7 @@ class EndPoint
     private function formatBody()
     {
         $body = [];
-        foreach ($this->method['body'] as $name => $p) {
+        foreach ($this->method['body'] ?? [] as $name => $p) {
             $body[$name] = $p['value'];
         }
 

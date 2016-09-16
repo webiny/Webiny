@@ -1,25 +1,16 @@
 <?php
-namespace Apps\Core\Php\Discover\Parser;
+namespace Apps\Core\Php\PackageManager\Parser;
 
 use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
-use Apps\Core\Php\RequestHandlers\ApiException;
-use Webiny\Component\Entity\Attribute\AbstractAttribute;
-use Webiny\Component\Entity\Attribute\AttributeType;
 use Webiny\Component\Mongo\MongoTrait;
 use Webiny\Component\StdLib\StdLibTrait;
-use Webiny\Component\StdLib\StdObject\StdObjectException;
 use Webiny\Component\Storage\File\File;
 
 abstract class AbstractParser
 {
     use WebinyTrait, StdLibTrait, MongoTrait;
 
-    /**
-     * @var AppParser
-     */
-    protected $app;
     protected $class;
     protected $name;
     protected $slug;
@@ -29,21 +20,18 @@ abstract class AbstractParser
 
     abstract public function getApiMethods();
 
-    function __construct(AppParser $app, $endpoint)
+    function __construct($class)
     {
-        $this->app = $app;
-        $this->class = $endpoint['class'];
+        $this->class = $class;
         $this->name = $this->str($this->class)->explode('\\')->last()->val();
         $this->slug = $this->str($this->name)->kebabCase()->pluralize()->val();
     }
 
-
-    /**
-     * @return AppParser
-     */
-    public function getApp()
+    public function getAppSlug()
     {
-        return $this->app;
+        $appName = $this->str($this->class)->explode('\\')[1];
+
+        return $this->str($appName)->kebabCase()->val();
     }
 
     /**
@@ -139,6 +127,7 @@ abstract class AbstractParser
                 }
                 $httpMethod = strtolower($match->keyNested('1.0'));
                 $methodName = $match->keyNested('2.0');
+                $methodName = $methodName != '/' ? trim($methodName, '/') : '/';
                 if ($methodName) {
                     $apiDocs[$methodName][$httpMethod] = $tmpDoc->val();
                 }

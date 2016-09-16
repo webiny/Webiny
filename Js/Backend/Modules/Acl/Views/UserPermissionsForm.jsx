@@ -47,7 +47,8 @@ class UserPermissionsForm extends Webiny.Ui.View {
                                 }}/>
                             </Ui.Grid.Col>
                             <Ui.Grid.Col all={10}>
-                                <strong>{m.httpMethod.toUpperCase()}</strong> {m.url}
+                                <a><strong>{m.method.toUpperCase()}</strong> {m.url}</a>
+                                <br/><span>{m.description}</span>
                             </Ui.Grid.Col>
                         </Ui.Grid.Row>
                     );
@@ -174,7 +175,8 @@ UserPermissionsForm.defaultProps = {
                                                                                     }}/>
                                                                                 </Ui.Grid.Col>
                                                                                 <Ui.Grid.Col all={10}>
-                                                                                    <strong>{m.httpMethod.toUpperCase()}</strong> {m.url}
+                                                                                    <a><strong>{m.method.toUpperCase()}</strong> {m.url}</a>
+                                                                                    <br/><span>{m.description}</span>
                                                                                 </Ui.Grid.Col>
                                                                             </Ui.Grid.Row>
                                                                         );

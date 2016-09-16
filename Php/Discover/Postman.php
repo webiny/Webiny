@@ -2,9 +2,8 @@
 namespace Apps\Core\Php\Discover;
 
 use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\Discover\Parser\AppParser;
-use Apps\Core\Php\Discover\Parser\EntityParser;
-use Apps\Core\Php\Discover\Parser\ServiceParser;
+use Apps\Core\Php\PackageManager\Parser\EntityParser;
+use Apps\Core\Php\PackageManager\Parser\ServiceParser;
 use Apps\Core\Php\Discover\Postman\EndPoint;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
@@ -13,19 +12,21 @@ class Postman
 {
     use WebinyTrait, StdLibTrait;
 
-    public function generate(AppParser $app)
+    public function generate($appName)
     {
         $collectionId = StringObject::uuid();
-        $collectionName = 'Webiny ' . $app->getName();
+        $collectionName = 'Webiny ' . $appName;
 
         $folders = [];
         $requests = [];
 
-        /* @var $entity EntityParser */
+        $app = $this->wApps($appName);
+
         foreach ($app->getEntities() as $entity) {
             $order = [];
-            foreach ($entity->getApiMethods() as $method) {
-                $endpoint = new EndPoint($entity, $method);
+            $entityParser = new EntityParser($entity['class']);
+            foreach ($entityParser->getApiMethods() as $method) {
+                $endpoint = new EndPoint($app, $method);
                 $request = $endpoint->getRequest();
                 $requests[] = $request;
                 $order[] = $request['id'];
@@ -34,17 +35,17 @@ class Postman
             // Each Entity is stored in its own folder
             $folders[] = [
                 'id'          => StringObject::uuid(),
-                'name'        => '(E) ' . $entity->getName(),
+                'name'        => '(E) ' . $entityParser->getName(),
                 'description' => '',
                 'order'       => $order
             ];
         }
 
-        /* @var $service ServiceParser */
         foreach ($app->getServices() as $service) {
             $order = [];
-            foreach ($service->getApiMethods() as $method) {
-                $endpoint = new EndPoint($service, $method);
+            $serviceParser = new ServiceParser($service['class']);
+            foreach ($serviceParser->getApiMethods() as $method) {
+                $endpoint = new EndPoint($app, $method);
                 $request = $endpoint->getRequest();
                 $requests[] = $request;
                 $order[] = $request['id'];
@@ -53,7 +54,7 @@ class Postman
             // Each Service is stored in its own folder
             $folders[] = [
                 'id'          => StringObject::uuid(),
-                'name'        => '(S) ' . $service->getName(),
+                'name'        => '(S) ' . $serviceParser->getName(),
                 'description' => '',
                 'order'       => $order
             ];
@@ -66,7 +67,7 @@ class Postman
         return [
             'id'          => $collectionId,
             'name'        => $collectionName,
-            'description' => 'Webiny ' . $app->getName() . ' API docs',
+            'description' => 'Webiny ' . $appName . ' API docs',
             'order'       => [],
             'timestamp'   => time(),
             'owner'       => 0,

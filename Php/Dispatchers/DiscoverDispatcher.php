@@ -9,7 +9,6 @@ namespace Apps\Core\Php\Dispatchers;
 
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Response\ApiRawResponse;
-use Apps\Core\Php\Discover\Parser\AppParser;
 use Apps\Core\Php\Discover\Postman;
 use Apps\Core\Php\RequestHandlers\ApiEvent;
 
@@ -23,10 +22,9 @@ class DiscoverDispatcher extends AbstractApiDispatcher
         if ($apiUrl->startsWith('/discover')) {
             $this->checkApiToken();
             $app = $apiUrl->replace('/discover/', '')->pascalCase()->val();
-            $appParser = new AppParser($app);
             $docs = new Postman();
 
-            return new ApiRawResponse($docs->generate($appParser));
+            return new ApiRawResponse($docs->generate($app));
         }
     }
 }

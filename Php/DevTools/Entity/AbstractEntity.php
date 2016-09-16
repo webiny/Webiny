@@ -212,6 +212,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 
         /**
          * @api.name Delete multiple records by given ids
+         * @api.description This method will delete multiple records given by an array of entity IDs
          */
         $this->api('POST', 'delete', function () {
             $ids = $this->wRequest()->getRequestData()['ids'];
@@ -362,88 +363,6 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     public static function findOne(array $conditions = [])
     {
         return parent::findOne($conditions);
-    }
-
-    public static function meta()
-    {
-        $entity = new static();
-
-        $data = [
-            'class'      => get_class($entity),
-            'mask'       => $entity::$entityMask,
-            'relations'  => [],
-            'attributes' => [],
-            'methods'    => []
-        ];
-
-        $reflection = new \ReflectionClass($entity);
-        $comments = $reflection->getDocComment();
-        $attributeDescription = [];
-        preg_match_all('#@property[a-zA-Z\s]+\$([a-zA-Z]+)(.*)?#m', $comments, $attributeDescription);
-
-        $attributeType = function (AbstractAttribute $attr) {
-            if ($attr instanceof Many2OneAttribute) {
-                return 'many2one';
-            }
-
-            if ($attr instanceof One2ManyAttribute) {
-                return 'one2many';
-            }
-
-            return self::str(get_class($attr))->explode('\\')->last()->replace('Attribute', '')->caseLower()->val();
-        };
-
-        /* @var $attr AbstractAttribute */
-        foreach ($entity->getAttributes() as $attrName => $attr) {
-            $attrData = [
-                'name'         => $attrName,
-                'type'         => self::str(get_class($attr))->explode('\\')->last()->replace('Attribute', '')->caseLower()->val(),
-                //'validators'         => join(',', $attr->getValidators()), // TODO: need to detect closure validators
-                //'validationMessages' => $attr->getValidationMessages(),
-                'defaultValue' => $attr->getDefaultValue()
-            ];
-
-            foreach ($attributeDescription[1] as $descIndex => $descAttr) {
-                if ($descAttr == $attrName) {
-                    $attrData['description'] = trim($attributeDescription[2][$descIndex]);
-                }
-            }
-
-            if ($attr instanceof Many2OneAttribute || $attr instanceof One2ManyAttribute) {
-                $data['relations'][] = [
-                    'target' => self::str($attr->getEntity())->replace('\\', '.')->trimLeft('.')->val(),
-                    'type'   => $attributeType($attr)
-                ];
-                $attrData['entity'] = $attr->getEntity();
-            }
-
-            $data['attributes'][] = $attrData;
-        }
-
-        $crudPatterns = [
-            '/.get',
-            '{id}.get',
-            '/.post',
-            '{id}.patch',
-            '{id}.delete'
-        ];
-
-        foreach ($entity->getApiMethods() as $httpMethod => $methods) {
-            /* @var $method \Apps\Core\Php\Dispatchers\ApiMethod */
-            foreach ($methods as $pattern => $method) {
-                if (in_array($pattern . '.' . $httpMethod, $crudPatterns)) {
-                    continue;
-                }
-                $data['methods'][] = [
-                    'key'        => $pattern . '.' . $httpMethod,
-                    'httpMethod' => $httpMethod,
-                    'pattern'    => $pattern,
-                    'url'        => $method->getUrl([], false)
-                ];
-            }
-        }
-
-        return $data;
     }
 
     protected static function prepareFilters($filters)

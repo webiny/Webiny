@@ -1,29 +1,18 @@
 <?php
-namespace Apps\Core\Php\Discover\Parser;
-
-use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\DevTools\Entity\AbstractEntity;
-use Apps\Core\Php\DevTools\Exceptions\AppException;
-use Apps\Core\Php\RequestHandlers\ApiException;
-use Webiny\Component\Entity\Attribute\AbstractAttribute;
-use Webiny\Component\Entity\Attribute\AttributeType;
-use Webiny\Component\Mongo\MongoTrait;
-use Webiny\Component\StdLib\StdLibTrait;
-use Webiny\Component\StdLib\StdObject\StdObjectException;
-use Webiny\Component\Storage\File\File;
+namespace Apps\Core\Php\PackageManager\Parser;
 
 class ServiceParser extends AbstractParser
 {
     protected $baseClass = 'Apps\Core\Php\DevTools\Services\AbstractService';
 
-    function __construct(AppParser $app, $endpoint)
+    function __construct($class)
     {
-        $this->public = $endpoint['public'];
-        parent::__construct($app, $endpoint);
-        $this->url = '/services/' . $app->getSlug() . '/' . $this->slug;
+        $this->public = $this->isInstanceOf(new $class, '\Apps\Core\Php\DevTools\Interfaces\PublicApiInterface');
+        parent::__construct($class);
+        $this->url = '/services/' . $this->getAppSlug() . '/' . $this->slug;
 
         $this->headerApiToken = [
-            'name'        => 'Api-Token',
+            'name'        => 'X-Webiny-Api-Token',
             'description' => 'API token',
             'type'        => 'string',
             'required'    => true
@@ -37,26 +26,30 @@ class ServiceParser extends AbstractParser
         foreach ($apiDocs as $name => $httpMethods) {
             foreach ($httpMethods as $httpMethod => $config) {
                 $config = $this->arr($config);
+                $key = $name . '.' . $httpMethod;
                 $definition = [
+                    'key'         => $key,
                     'path'        => rtrim($this->url . '/' . ltrim($name, '/'), '/'),
-                    'name'        => $config->key('name'),
+                    'url'         => $this->wConfig()->get('Application.ApiPath') . rtrim($this->url . '/' . ltrim($name, '/'), '/'),
+                    'name'        => $config->key('name', '', true),
                     'description' => $config->key('description', '', true),
                     'method'      => strtoupper($httpMethod),
                     'headers'     => []
                 ];
 
                 if (!$this->public) {
-                    $definition['headers']['Api-Token'] = $this->headerApiToken;
+                    $definition['headers'][] = $this->headerApiToken;
                 }
 
-
                 if (count($config['query']) > 0) {
-                    $definition['path'] .= '?' . http_build_query($config['query']);
+                    $queryParams = http_build_query($config['query']);
+                    $definition['path'] .= '?' . $queryParams;
+                    $definition['url'] .= '?' . $queryParams;
                 }
 
                 // Build path, body and header parameters
-                foreach ($config['path'] as $pName => $pConfig) {
-                    $definition['parameters'][$pName] = [
+                foreach ($config->key('path', [], true) as $pName => $pConfig) {
+                    $definition['parameters'][] = [
                         'name'        => $pName,
                         'in'          => 'path',
                         'description' => $pConfig['description'],
@@ -64,14 +57,14 @@ class ServiceParser extends AbstractParser
                     ];
                 }
 
-                foreach ($config['body'] as $pName => $pConfig) {
-                    $definition['body'][$pName] = [
+                foreach ($config->key('body', [], true) as $pName => $pConfig) {
+                    $definition['body'][] = [
                         'type'  => $pConfig['type'],
-                        'value' => $pConfig['value']
+                        'value' => $pConfig['value'] ?? null
                     ];
                 }
-                foreach ($config['headers'] as $pName => $pConfig) {
-                    $definition['headers'][$pName] = [
+                foreach ($config->key('headers', [], true) as $pName => $pConfig) {
+                    $definition['headers'][] = [
                         'name'        => $pName,
                         'description' => $pConfig['description'],
                         'type'        => $pConfig['type'],
@@ -79,7 +72,7 @@ class ServiceParser extends AbstractParser
                     ];
                 }
 
-                $methods[$name . ' . ' . $httpMethod] = $definition;
+                $methods[] = $definition;
             }
         }
 
