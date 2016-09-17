@@ -142,7 +142,8 @@ footer {
 @media (min-width: 768px) {
   footer {
     z-index: 1500;
-    position: relative;
+    position: absolute;
+    border-top: 1px solid #bfbfbf;
     .links.secondary {
       z-index: 1900;
       position: relative;
@@ -162,7 +163,7 @@ footer {
   footer {
     clear: both;
     padding: 0 0 0 15px;
-    position: fixed;
+    position: absolute;
     bottom: 0;
     height: 49px;
     z-index: 1500;
