@@ -106,7 +106,7 @@ class Module extends Webiny.Module {
     checkRouteRole(routerEvent) {
         const user = Webiny.Model.get('User');
 
-        if (user && _.has(routerEvent.route, 'role') && !_.find(user.roles, r => routerEvent.route.role.indexOf(r.slug) > -1)) {
+        if (webinyConfig.CheckUserRoles && user && _.has(routerEvent.route, 'role') && !_.find(user.roles, r => routerEvent.route.role.indexOf(r.slug) > -1)) {
             routerEvent.stop();
             routerEvent.goToRoute('Forbidden');
         }
