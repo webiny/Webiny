@@ -14,6 +14,7 @@ class Apps extends AbstractService
 {
     function __construct()
     {
+        parent::__construct();
         /**
          * @api.name Get all active apps meta
          * @api.description This method returns a list of meta data for each active app

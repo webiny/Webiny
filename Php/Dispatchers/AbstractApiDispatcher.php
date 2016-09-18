@@ -8,6 +8,7 @@
 namespace Apps\Core\Php\Dispatchers;
 
 use Apps\Core\Php\DevTools\Interfaces\PublicApiInterface;
+use Apps\Core\Php\DevTools\Services\AbstractService;
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
 use Apps\Core\Php\Entities\ApiToken;
@@ -34,8 +35,13 @@ abstract class AbstractApiDispatcher
         $myHost = $this->wConfig()->getConfig()->get('Application.WebPath');
         if ($this->url($myHost)->getHost() != $requestHost) {
             // Check if referrer has an ApiToken
-            $requestToken = $req->header('Api-Token');
-            $publicAccess = $instance ? $instance instanceof PublicApiInterface : false;
+            $requestToken = $req->query('token');
+            if (!$requestToken) {
+                $requestToken = $req->header('X-Webiny-Api-Token');
+            }
+
+            $isService = $instance instanceof AbstractService;
+            $publicAccess = $instance && $isService ? $instance instanceof PublicApiInterface : false;
 
             if ($publicAccess) {
                 return;
@@ -43,6 +49,12 @@ abstract class AbstractApiDispatcher
 
             if (!$requestToken && !$publicAccess) {
                 throw new ApiException('The request must include a valid API token', 'INVALID_API_TOKEN');
+            }
+
+            // First check if system token is used
+            $systemToken = $this->wConfig()->getConfig()->get('Application.Acl.Token');
+            if($systemToken && $systemToken == $requestToken){
+                return;
             }
 
             $token = ApiToken::findOne(['token' => $requestToken, 'enabled' => true]);

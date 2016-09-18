@@ -15,7 +15,7 @@ class Confirmation extends Webiny.Ui.ModalComponent {
     }
 
     show() {
-        this.setState({time: new Date().getTime()});
+        this.setState({time: _.now()});
         return super.show();
     }
 

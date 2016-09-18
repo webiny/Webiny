@@ -4,19 +4,17 @@ namespace Apps\Core\Php\PackageManager\Parser;
 class ServiceParser extends AbstractParser
 {
     protected $baseClass = 'Apps\Core\Php\DevTools\Services\AbstractService';
+    protected $publicApiInterface;
+    protected $noAuthorizationInterface;
 
     function __construct($class)
     {
-        $this->public = $this->isInstanceOf(new $class, '\Apps\Core\Php\DevTools\Interfaces\PublicApiInterface');
         parent::__construct($class);
         $this->url = '/services/' . $this->getAppSlug() . '/' . $this->slug;
 
-        $this->headerApiToken = [
-            'name'        => 'X-Webiny-Api-Token',
-            'description' => 'API token',
-            'type'        => 'string',
-            'required'    => true
-        ];
+        $interfaces = class_implements($class);
+        $this->publicApiInterface = in_array('Apps\Core\Php\DevTools\Interfaces\PublicApiInterface', $interfaces);
+        $this->noAuthorizationInterface = in_array('Apps\Core\Php\DevTools\Interfaces\NoAuthorizationInterface', $interfaces);
     }
 
     public function getApiMethods()
@@ -37,8 +35,11 @@ class ServiceParser extends AbstractParser
                     'headers'     => []
                 ];
 
-                if (!$this->public) {
+                if (!$this->publicApiInterface) {
                     $definition['headers'][] = $this->headerApiToken;
+                    if (!$this->noAuthorizationInterface) {
+                        $definition['headers'][] = $this->headerAuthorizationToken;
+                    }
                 }
 
                 if (count($config['query']) > 0) {

@@ -28,7 +28,7 @@ class ClickConfirm extends Webiny.Ui.Component {
         }
 
         this.message = msg;
-        this.setState({time: new Date().getTime()}, this.refs.dialog.show);
+        this.setState({time: _.now()}, this.refs.dialog.show);
     }
 
     getInput(props) {

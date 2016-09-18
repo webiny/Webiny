@@ -155,15 +155,19 @@ class App extends AbstractPackage
         foreach ($dir as $file) {
             $serviceClass = 'Apps\\' . $this->str($file->getKey())->replace(['.php', $version], '')->replace('/', '\\')->val();
             $serviceName = $this->str($file->getKey())->explode('/')->last()->replace('.php', '')->val();
-            $id = $this->str($serviceClass)->replace('\\', '.')->val();
             // Check if abstract
             $cls = new \ReflectionClass($serviceClass);
             if (!$cls->isAbstract()) {
+                $interfaces = class_implements($serviceClass);
+                $public = in_array('Apps\Core\Php\DevTools\Interfaces\PublicApiInterface', $interfaces);
+                $authorization = !in_array('Apps\Core\Php\DevTools\Interfaces\NoAuthorizationInterface', $interfaces);
+
                 $services[$serviceName] = [
-                    'app'    => $this->getName(),
-                    'name'   => $serviceName,
-                    'class'  => $serviceClass,
-                    'public' => $this->isInstanceOf(new $serviceClass, '\Apps\Core\Php\DevTools\Interfaces\PublicApiInterface')
+                    'app'           => $this->getName(),
+                    'name'          => $serviceName,
+                    'class'         => $serviceClass,
+                    'public'        => $public,
+                    'authorization' => $public ? false : $authorization
                 ];
             }
         }

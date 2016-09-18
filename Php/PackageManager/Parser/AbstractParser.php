@@ -17,6 +17,8 @@ abstract class AbstractParser
     protected $url;
     protected $baseClass;
     protected $queryParams = [];
+    protected $headerAuthorizationToken;
+    protected $headerApiToken;
 
     abstract public function getApiMethods();
 
@@ -24,7 +26,21 @@ abstract class AbstractParser
     {
         $this->class = $class;
         $this->name = $this->str($this->class)->explode('\\')->last()->val();
-        $this->slug = $this->str($this->name)->kebabCase()->pluralize()->val();
+        $this->slug = $this->str($this->name)->kebabCase()->val();
+
+        $this->headerAuthorizationToken = [
+            'name'        => 'X-Webiny-Authorization',
+            'description' => 'Authorization token',
+            'type'        => 'string',
+            'required'    => true
+        ];
+
+        $this->headerApiToken = [
+            'name'        => 'X-Webiny-Api-Token',
+            'description' => 'API token to identify 3rd party clients',
+            'type'        => 'string',
+            'required'    => true
+        ];
     }
 
     public function getAppSlug()

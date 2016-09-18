@@ -2,9 +2,25 @@ import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 const Table = Ui.List.Table;
 import ApiTokenModalForm from './Modal/ApiTokenForm';
+import SystemApiTokenModal from './Modal/SystemApiToken';
 
 class ApiTokensList extends Webiny.Ui.View {
+    constructor(props) {
+        super(props);
 
+        this.state = {
+            apiToken: null
+        };
+    }
+
+    componentWillMount() {
+        super.componentWillMount();
+        new Webiny.Api.Endpoint('/services/core/acl').get('token').then(apiResponse => {
+            if (!apiResponse.isError()) {
+                this.setState({apiToken: apiResponse.getData('token')});
+            }
+        });
+    }
 }
 
 ApiTokensList.defaultProps = {
@@ -17,6 +33,16 @@ ApiTokensList.defaultProps = {
             connectToRouter: true,
             perPage: 100
         };
+
+        let systemApiToken = null;
+        if (this.state.apiToken) {
+            systemApiToken = (
+                <Ui.Button type="secondary" align="right" onClick={this.ui('systemApiToken:show')}>
+                    <Ui.Icon icon="fa-key"/>
+                    System API token
+                </Ui.Button>
+            );
+        }
 
         return (
             <Ui.ViewSwitcher.Container>
@@ -32,6 +58,8 @@ ApiTokensList.defaultProps = {
                                     onClick={showView('tokenModalView')}
                                     icon="icon-plus-circled"
                                     label="Create new token"/>
+                                {systemApiToken}
+                                <SystemApiTokenModal ui="systemApiToken" token={this.state.apiToken} createToken={showView('tokenModalView')}/>
                             </Ui.View.Header>
                             <Ui.View.Body>
                                 <Ui.List.ApiContainer {...listProps}>

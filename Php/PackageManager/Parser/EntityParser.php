@@ -1,25 +1,22 @@
 <?php
 namespace Apps\Core\Php\PackageManager\Parser;
 
-use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Webiny\Component\Entity\Attribute\AbstractAttribute;
-use Webiny\Component\Entity\Attribute\AttributeType;
 use Webiny\Component\Entity\Attribute\Many2OneAttribute;
 use Webiny\Component\Entity\Attribute\One2ManyAttribute;
-use Webiny\Component\StdLib\StdObject\StdObjectException;
 
 class EntityParser extends AbstractParser
 {
     protected $baseClass = 'Apps\Core\Php\DevTools\Entity\AbstractEntity';
     private $apiMethods;
     private $defaultValues;
-    private $headerAuthorizationToken;
     private $attributeDescription;
 
     function __construct($class)
     {
         parent::__construct($class);
+        $this->slug = $this->str($this->name)->kebabCase()->pluralize()->val();
         $this->url = '/entities/' . $this->getAppSlug() . '/' . $this->slug;
         $this->defaultValues = [
             'object'   => new \stdClass(),
@@ -29,20 +26,6 @@ class EntityParser extends AbstractParser
             'id'       => (string)$this->mongo()->id(),
             'boolean'  => true,
             'string'   => ''
-        ];
-
-        $this->headerAuthorizationToken = [
-            'name'        => 'X-Webiny-Authorization',
-            'description' => 'Authorization token',
-            'type'        => 'string',
-            'required'    => true
-        ];
-
-        $this->headerApiToken = [
-            'name'        => 'X-Webiny-Api-Token',
-            'description' => 'API token',
-            'type'        => 'string',
-            'required'    => true
         ];
     }
 
@@ -149,8 +132,8 @@ class EntityParser extends AbstractParser
                     'description' => $config->key('description', '', true),
                     'method'      => strtoupper($httpMethod),
                     'headers'     => [
-                        'X-Webiny-Authorization' => $this->headerAuthorizationToken,
-                        'X-Webiny-Api-Token'     => $this->headerApiToken
+                        $this->headerApiToken,
+                        $this->headerAuthorizationToken
                     ]
                 ];
 

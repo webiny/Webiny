@@ -17,7 +17,7 @@ class Navigation extends Webiny.Ui.Component {
     componentDidMount() {
         super.componentDidMount();
         this.watch('User', () => {
-            this.setState({time: new Date().getTime()})
+            this.setState({time: _.now()})
         });
     }
 

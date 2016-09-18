@@ -19,6 +19,7 @@ class Entities extends AbstractService
 
     function __construct()
     {
+        parent::__construct();
         /**
          * @api.name List all entities registered in the system
          * @api.description This method returns a list of all system entities

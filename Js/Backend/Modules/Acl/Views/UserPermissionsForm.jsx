@@ -29,9 +29,6 @@ class UserPermissionsForm extends Webiny.Ui.View {
     }
 
     renderService(service, model, container) {
-        if (service.public) {
-            return null;
-        }
         return (
             <div key={service.id}>
                 <Ui.Form.Fieldset title={service.name}/>
@@ -103,7 +100,7 @@ UserPermissionsForm.defaultProps = {
                     });
 
                     this.state.services.map(service => {
-                        if (service.class.toLowerCase().indexOf(this.state.serviceFilter.toLowerCase()) === -1) {
+                        if (!service.authorization || service.class.toLowerCase().indexOf(this.state.serviceFilter.toLowerCase()) === -1) {
                             return;
                         }
 

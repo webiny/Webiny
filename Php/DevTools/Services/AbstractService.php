@@ -18,6 +18,12 @@ abstract class AbstractService
 {
     use WebinyTrait, ApiExpositionTrait, StdLibTrait;
 
+    function __construct()
+    {
+        // Does nothing yet, but is here for possible future upgrades
+    }
+
+
     public static function meta()
     {
         $service = new static();

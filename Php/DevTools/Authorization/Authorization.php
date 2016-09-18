@@ -158,7 +158,7 @@ class Authorization
 
     private function checkPermission($class, $permission)
     {
-        if(!$this->wConfig()->get('Application.Acl.CheckUserPermissions', true)){
+        if (!$this->wConfig()->get('Application.Acl.CheckUserPermissions', true)) {
             return true;
         }
 
@@ -166,6 +166,11 @@ class Authorization
             $class = get_class($class);
         } else {
             $class = trim($class, '\\');
+        }
+
+        $isService = in_array('Apps\Core\Php\DevTools\Services\AbstractService', class_parents($class));
+        if ($isService && in_array('Apps\Core\Php\DevTools\Interfaces\NoAuthorizationInterface', class_implements($class))) {
+            return true;
         }
 
         $user = $this->getUser();

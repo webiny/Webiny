@@ -17,6 +17,9 @@ class Menu {
         if (menuIndex > -1) {
             // Get existing top-level menu
             const topLevelMenu = this.menu[menuIndex];
+            if (menu.order !== 100) {
+                topLevelMenu.setOrder(menu.order);
+            }
             // Assign new sub-menu items to existing top-level menu
             _.map(menu.route, subMenu => {
                 const subMenuIndex = _.findIndex(topLevelMenu.route, {key: subMenu.key});
@@ -33,8 +36,8 @@ class Menu {
             this.menu.push(menu);
         }
 
-        // Sort 1st-level menu
-        this.menu = _.sortBy(this.menu, ['label']);
+        // Sort 1st-level menu by order
+        this.menu = _.sortBy(this.menu, ['order', 'label']);
         // Sort 2nd-level menu
         _.each(this.menu, sndMenu => {
             if (_.isArray(sndMenu.route)) {

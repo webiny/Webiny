@@ -19,7 +19,7 @@ class RootElement extends View {
     componentDidMount() {
         this.unsubscribe = Dispatcher.on('RenderView', () => {
             return this.setState({
-                time: new Date().getTime()
+                time: _.now()
             });
         });
 

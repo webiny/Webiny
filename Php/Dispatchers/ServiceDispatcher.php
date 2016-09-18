@@ -50,8 +50,9 @@ class ServiceDispatcher extends AbstractApiDispatcher
         }
 
         $isPublic = $service instanceof PublicApiInterface;
-        if (!$isPublic && !$this->wAuth()->canExecute($serviceClass, $matchedServiceMethod->getApiMethod()->getPattern())) {
-            throw new ApiException('You don\'t have an EXECUTE permission on ' . $serviceClass, 'WBY-AUTHORIZATION');
+        $pattern = $matchedServiceMethod->getApiMethod()->getPattern() . '.' . $httpMethod;
+        if (!$isPublic && !$this->wAuth()->canExecute($serviceClass, $pattern)) {
+            throw new ApiException('You don\'t have an EXECUTE permission on ' . $serviceClass, 'WBY-AUTHORIZATION', 401);
         }
 
         $apiMethod = $matchedServiceMethod->getApiMethod();
