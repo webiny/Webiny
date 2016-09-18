@@ -355,14 +355,14 @@
       border-radius: 3px;
       color: #fa5722;
     }
-    &.active a {
+    &.active a{
       background: #ECECEC;
       -webkit-border-radius: 3px;
       -moz-border-radius: 3px;
       border-radius: 3px;
       color: #fa5722;
       z-index: inherit;
-      &:hover {
+      &:hover, &:focus {
         background: #ECECEC;
         -webkit-border-radius: 3px;
         -moz-border-radius: 3px;
@@ -375,13 +375,13 @@
       float: left;
       transform: rotate(90deg);
       -webkit-transform: rotate(90deg);
-      margin-top: -4px;
+      margin-top: -1px;
       clear: none;
     }
     &.next span.icon {
       transform: rotate(-90deg);
       -webkit-transform: rotate(-90deg);
-      margin-top: 4px;
+      margin-top: 7px;
     }
     span {
       float: left;
@@ -403,9 +403,6 @@
       font-size: 14px;
       color: #787878;
       padding: 8px;
-    }
-    &.next a {
-      padding-bottom: 4px;
     }
   }
 }

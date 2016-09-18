@@ -53,7 +53,7 @@ CopyInput.defaultProps = {
                     <input {...props}/>
                     <button
                         style={this.props.style}
-                        className="btn btn-primary"
+                        className="btn btn-primary btn--copy"
                         ref="button">
                         {this.props.actionLabel}
                     </button>

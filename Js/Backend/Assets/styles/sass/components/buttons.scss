@@ -129,6 +129,11 @@ button.btn {
       background: #ED4005;
       box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.9);
     }
+    &.btn--copy{
+      &:hover, &:active, &.active {
+        box-shadow: none;
+      }
+    }
   }
   &.btn-success {
     background: #3FBFB0;
