@@ -196,10 +196,12 @@ Table.defaultProps = {
     selectedRows: new Set(),
     sorters: {},
     showHeader: true,
+    className: null,
     renderer() {
         const className = this.classSet([
             'table',
-            'table-' + this.props.type
+            'table-' + this.props.type,
+            this.props.className
         ]);
 
         if (!this.props.data || !this.props.data.length && this.props.showEmpty) {
