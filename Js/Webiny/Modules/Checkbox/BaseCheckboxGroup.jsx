@@ -6,77 +6,52 @@ class BaseCheckboxGroup extends Webiny.Ui.FormComponent {
 
     constructor(props) {
         super(props);
-        this.checkboxChildren = [];
-        _.assign(this.state, {
-            data: {},
-            options: []
-        });
-
-        this.bindMethods('registerOptions', 'prepareComponent', 'onChange');
-    }
-
-    componentWillMount() {
-        super.componentWillMount();
-        this.prepareComponent(this.props);
+        this.bindMethods('onChange');
     }
 
     onChange(key, newValue) {
-        // This flag tells us whether this was called from nested checkbox group
-        const isComplex = _.isArray(newValue) || _.isPlainObject(newValue);
-
-        // If empty array or empty object - convert it to boolean
-        if (isComplex && _.keys(newValue).length === 0) {
-            newValue = true;
-        }
-
-        let partialState = this.state.data;
-
-        if (!newValue) {
-            delete partialState[key];
+        const value = this.props.options[key];
+        const newState = this.props.valueLink.value || [];
+        if (newValue) {
+            newValue = this.props.formatValue(value);
+            newState.push(newValue);
         } else {
-            if (_.isBoolean(partialState)) {
-                partialState = {};
-            }
-            partialState[key] = newValue;
-        }
+            const currentIndex = _.findIndex(newState, opt => {
+                return _.get(opt, this.props.valueKey) == value.id;
+            });
 
-        // Set internal checkbox group state
-        this.setState({data: partialState});
-
-        // If this group does not have nested groups, we need to convert the model representation to array
-        if (!this.checkboxChildren.length) {
-            partialState = Object.keys(partialState);
+            newState.splice(currentIndex, 1);
         }
 
         // Notify main form of a new checkbox group state
         if (this.props.valueLink) {
-            this.props.valueLink.requestChange(partialState, this.validate);
+            this.props.valueLink.requestChange(newState, this.validate);
         } else {
-            this.props.onChange(this.props.stateKey, partialState);
+            this.props.onChange(this.props.stateKey, newState);
         }
     }
 
     /**
-     * Create options elements and handle nested checkbox groups if they exist
+     * Create options elements
      * @returns {Array}
      */
     getOptions() {
         const items = [];
-        _.forEach(this.state.options, (item, key) => {
-            let children = null;
-            if (this.checkboxChildren.length) {
-                children = this.checkboxChildren;
-            }
-
+        _.forEach(this.props.options, (item, key) => {
+            const checked = _.find(this.props.valueLink.value, opt => {
+                if (_.isPlainObject(opt)) {
+                    return _.get(opt, this.props.valueKey) == item.id;
+                }
+                return opt == item.id;
+            });
             const props = {
                 form: this.props.form || null,
                 key, // React key
-                stateKey: item.key, // key to update when checked/unchecked
                 grid: item.grid || this.props.grid,
-                label: item.label,
-                children,
+                label: item.text,
                 disabled: this.isDisabled(),
-                state: this.state.data[item.key], // true/false (checked/unchecked)
+                stateKey: key,
+                state: checked, // true/false (checked/unchecked)
                 onChange: this.onChange
             };
 
@@ -88,85 +63,17 @@ class BaseCheckboxGroup extends Webiny.Ui.FormComponent {
         });
         return items;
     }
-
-    /**
-     * Parse <option> tags or use {items} object to build checkboxes
-     * @param items
-     * @param children
-     */
-    registerOptions(items = null, children = null) {
-        const checkboxes = [];
-
-        if (items) {
-            _.each(items, item => {
-                checkboxes.push({
-                    key: item.id,
-                    label: item.text,
-                    bind: 'data.' + item.id
-                });
-            });
-        } else if (children) {
-            React.Children.map(children, (child) => {
-                if (child.type === 'option') {
-                    const key = child.props.value;
-
-                    checkboxes.push({
-                        key,
-                        label: child.props.children,
-                        bind: 'data.' + key
-                    });
-                }
-
-                if (child.type === Ui.CheckboxGroup && !this.checkboxChildren.length) {
-                    this.checkboxChildren.push(child);
-                }
-            });
-        }
-
-        this.setState({options: checkboxes});
-    }
-
-    /**
-     * When we receive new props, we need to convert array into an object for easier checkbox handling
-     * and use that as local state.
-     *
-     * @param nextProps
-     */
-    componentWillReceiveProps(nextProps) {
-        this.prepareComponent(nextProps);
-    }
-
-    /**
-     * Format data for single or nested checkbox groups
-     * @param nextProps
-     */
-    prepareComponent(nextProps) {
-        const value = _.get(nextProps, 'valueLink.value') || nextProps.state;
-        let data = {};
-        if (value) {
-            if (_.isArray(value)) {
-                _.keys(value).forEach(key => {
-                    if (_.isPlainObject(value[key])) {
-                        data[value[key][this.props.valueAttr]] = true;
-                    } else {
-                        data[value[key]] = true;
-                    }
-                });
-            } else {
-                data = value;
-            }
-        }
-        this.setState({data});
-        this.registerOptions(nextProps.options, nextProps.children);
-    }
 }
 
 BaseCheckboxGroup.defaultProps = {
     disabled: false,
     label: '',
     grid: 12,
+    valueKey: 'id',
     valueAttr: 'id',
-    checkboxRenderer: null
+    textAttr: 'name',
+    checkboxRenderer: null,
+    formatValue: value => value.id
 };
 
 export default BaseCheckboxGroup;

@@ -67,10 +67,10 @@ class Image extends File
     /**
      * @inheritDoc
      */
-    public function delete()
+    public function delete($permanent = false)
     {
-        $deleted = parent::delete();
-        if ($deleted) {
+        $deleted = parent::delete($permanent);
+        if ($deleted && $permanent) {
             /* @var $file StorageFile */
             foreach ($this->getSizes() as $file) {
                 $file->delete();

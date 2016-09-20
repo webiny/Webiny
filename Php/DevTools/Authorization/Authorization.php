@@ -131,6 +131,11 @@ class Authorization
         return $this;
     }
 
+    public function getUserClass()
+    {
+        return $this->userClass;
+    }
+
     public function canCreate($class)
     {
         return $this->checkPermission($class, 'crudCreate');

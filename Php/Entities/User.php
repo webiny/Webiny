@@ -46,7 +46,7 @@ class User extends AbstractEntity implements UserInterface
             'unique' => 'Given e-mail address already exists.'
         ])->setToArrayDefault();
 
-        $this->attr('avatar')->smart(new FileAttribute())->setTags('user', 'avatar');
+        $this->attr('avatar')->smart(new FileAttribute())->setTags('user', 'avatar')->setOnDelete('cascade');
         $this->attr('gravatar')->dynamic(function () {
             return md5($this->email);
         });
