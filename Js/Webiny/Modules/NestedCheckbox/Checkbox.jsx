@@ -5,14 +5,28 @@ class Checkbox extends Webiny.Ui.FormComponent {
     constructor(props) {
         super(props);
         this.id = _.uniqueId('checkbox-');
-        this.bindMethods('onChange,isChecked');
+        this.bindMethods('onChange,childChanged,isChecked');
+    }
+
+    /**
+     * This method is used as an onChange callback for child CheckboxGroup elements
+     *
+     * @param key Key in parent state to update
+     * @param newValue
+     */
+    childChanged(key, newValue) {
+        if (this.props.valueLink) {
+            this.props.valueLink.requestChange(newValue);
+        } else {
+            this.props.onChange(key, newValue);
+        }
     }
 
     onChange(e) {
         if (this.props.valueLink) {
             this.props.valueLink.requestChange(e.target.checked);
         } else {
-            if (this.props.stateKey !== null) {
+            if (this.props.stateKey) {
                 this.props.onChange(this.props.stateKey, e.target.checked);
             } else {
                 this.props.onChange(e.target.checked);
@@ -32,7 +46,6 @@ Checkbox.defaultProps = {
     grid: 3,
     className: '',
     addon: null,
-    stateKey: null,
     renderer() {
         const css = this.classSet(
             'checkbox-custom checkbox-default',
@@ -40,6 +53,21 @@ Checkbox.defaultProps = {
             this.props.className,
             'col-sm-' + this.props.grid
         );
+        let children = null;
+
+        if (this.props.children) {
+            children = React.Children.map(this.props.children, (child, key) => {
+                const newProps = {
+                    key,
+                    form: this.props.form || null,
+                    onChange: this.childChanged,
+                    stateKey: this.props.stateKey,
+                    state: this.props.state,
+                    disabled: this.isDisabled()
+                };
+                return React.cloneElement(child, newProps, child.props.children);
+            });
+        }
 
         const checkboxProps = {
             disabled: this.isDisabled(),
@@ -50,7 +78,7 @@ Checkbox.defaultProps = {
         return (
             <div className={css}>
                 <input id={this.id} type="checkbox" {...checkboxProps}/>
-                <label htmlFor={this.id}>{this.props.label} {this.props.children}</label>
+                <label htmlFor={this.id}>{this.props.label} {children}</label>
                 {this.props.addon || null}
             </div>
         );

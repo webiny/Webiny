@@ -106,7 +106,7 @@ GoogleMaps.defaultProps = {
     renderer() {
         return (
             <div className="google-map--container">
-                <div className="google-map" style={{width: '100%', height: '100%'}} {...this.props}></div>
+                <div className="google-map" style={{width: '100%', height: '100%'}}>{this.props.children}</div>
             </div>
         );
     }
