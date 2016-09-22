@@ -9,12 +9,13 @@ namespace Apps\Core\Php\Dispatchers\Flows;
 
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
+use Apps\Core\Php\Dispatchers\ApiTokenControlTrait;
 use Webiny\Component\Mongo\MongoTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 
 abstract class AbstractFlow
 {
-    use WebinyTrait, StdLibTrait, MongoTrait;
+    use WebinyTrait, StdLibTrait, MongoTrait, ApiTokenControlTrait;
 
     abstract public function canHandle($httpMethod, $params);
 

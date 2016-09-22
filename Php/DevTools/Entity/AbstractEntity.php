@@ -341,21 +341,6 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         });
 
         /**
-         * @api.name Delete multiple records by given ids
-         * @api.description This method will delete multiple records given by an array of entity IDs
-         */
-        $this->api('POST', 'delete', function () {
-            $ids = $this->wRequest()->getRequestData()['ids'];
-            try {
-                static::find(['id' => $ids])->delete();
-
-                return true;
-            } catch (EntityException $e) {
-                throw new ApiException('Failed to delete entity! ' . $e->getMessage(), $e->getCode(), 400);
-            }
-        })->setBodyValidators(['ids' => 'required']);
-
-        /**
          * Fire event for registering extra attributes
          */
         $this->trigger('onExtend');
@@ -589,48 +574,50 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         /**
          * First check all one2many records to see if deletion is restricted
          */
-        $deleteAttributes = [];
+        $one2manyDelete = [];
+        $many2oneDelete = [];
+        $many2manyDelete = [];
         foreach ($this->getAttributes() as $key => $attr) {
             if ($this->isInstanceOf($attr, AttributeType::ONE2MANY)) {
                 /* @var $attr One2ManyAttribute */
                 if ($attr->getOnDelete() == 'restrict' && $this->getAttribute($key)->getValue()->count() > 0) {
                     throw new EntityException(EntityException::ENTITY_DELETION_RESTRICTED, [$key]);
                 }
-                $deleteAttributes[] = $key;
+                $one2manyDelete[] = $attr;
+            }
+
+            if ($this->isInstanceOf($attr, AttributeType::MANY2ONE) && $attr->getOnDelete() === 'cascade') {
+                $many2oneDelete[] = $attr;
+            }
+
+            if ($this->isInstanceOf($attr, AttributeType::MANY2MANY)) {
+                $many2manyDelete[] = $attr;
+            }
+        }
+
+        /**
+         * Delete one2many records
+         */
+        foreach ($one2manyDelete as $attr) {
+            foreach ($attr->getValue() as $item) {
+                $item->delete($permanent);
             }
         }
 
         /**
          * Delete many2many records
          */
-        /*foreach ($this->getAttributes() as $attr) {
-            // @var $attr Many2ManyAttribute
-            if ($this->isInstanceOf($attr, AttributeType::MANY2MANY)) {
-                $firstClassName = $this->extractClassName($attr->getParentEntity());
-                $query = [$firstClassName => $this->id];
-                // TODO: sta radim sa $permanent ovdje?
-                $this->entity()->getDatabase()->delete($attr->getIntermediateCollection(), $query);
-            }
-        }*/
-
-        /**
-         * Delete one2many records
-         */
-        foreach ($deleteAttributes as $attr) {
-            foreach ($this->getAttribute($attr)->getValue() as $item) {
-                $item->delete($permanent);
-            }
+        foreach ($many2manyDelete as $attr) {
+            $attr->unlinkAll($permanent);
         }
 
         /**
          * Delete many2one records that are set to 'cascade'
          */
-        foreach ($this->getAttributes() as $attr) {
-            if ($this->isInstanceOf($attr, AttributeType::MANY2ONE) && $attr->getOnDelete() === 'cascade') {
-                $value = $attr->getValue();
-                if ($value && $value instanceof AbstractEntity) {
-                    $value->delete($permanent);
-                }
+        foreach ($many2oneDelete as $attr) {
+            $value = $attr->getValue();
+            if ($value && $value instanceof AbstractEntity) {
+                $value->delete($permanent);
             }
         }
 

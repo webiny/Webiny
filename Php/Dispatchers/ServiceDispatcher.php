@@ -34,9 +34,7 @@ class ServiceDispatcher extends AbstractApiDispatcher
             return new ApiErrorResponse([], 'Service class ' . $serviceClass . ' does not exist!', 'WBY-CLASS_NOT_FOUND');
         }
 
-
         $service = new $serviceClass;
-        $this->checkApiToken($service);
         if (!method_exists($service, 'getApiMethod')) {
             throw new ApiException('Services must use `ApiExpositionTrait` to expose public API!', 'WBY-SD-INVALID_SERVICE');
         }
@@ -49,13 +47,18 @@ class ServiceDispatcher extends AbstractApiDispatcher
             throw new ApiException($message, 'WBY-SD-NO_METHODS_EXPOSED', 404);
         }
 
+        $apiMethod = $matchedServiceMethod->getApiMethod();
         $isPublic = $service instanceof PublicApiInterface;
-        $pattern = $matchedServiceMethod->getApiMethod()->getPattern() . '.' . $httpMethod;
-        if (!$isPublic && !$this->wAuth()->canExecute($serviceClass, $pattern)) {
-            throw new ApiException('You don\'t have an EXECUTE permission on ' . $serviceClass, 'WBY-AUTHORIZATION', 401);
+        if (!$isPublic && !$apiMethod->getPublic()) {
+            $this->checkApiToken($service);
         }
 
-        $apiMethod = $matchedServiceMethod->getApiMethod();
+        if (!$isPublic && $apiMethod->getAuthorization()) {
+            $pattern = $apiMethod->getPattern() . '.' . $httpMethod;
+            if (!$this->wAuth()->canExecute($serviceClass, $pattern)) {
+                throw new ApiException('You don\'t have an EXECUTE permission on ' . $serviceClass, 'WBY-AUTHORIZATION', 401);
+            }
+        }
 
         return new ApiResponse($apiMethod($matchedServiceMethod->getParams()));
     }
