@@ -23,6 +23,7 @@ class Form extends Webiny.Ui.View {
 
     renderRole(role, model, container) {
         const checkedIndex = _.findIndex(model.roles, {id: role.id});
+        model.roles = model.roles || [];
         return (
             <tr key={role.id}>
                 <td className="text-left">
