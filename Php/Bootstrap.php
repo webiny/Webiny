@@ -5,7 +5,6 @@ use Apps\Core\Php\DevTools\AbstractBootstrap;
 use Apps\Core\Php\Entities\User;
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\Entity\Entity;
-use Webiny\Component\Mailer\Mailer;
 use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
 
 class Bootstrap extends AbstractBootstrap
@@ -22,15 +21,12 @@ class Bootstrap extends AbstractBootstrap
         ]));
         Entity::setConfig($entityConfig);
 
-        $mailer = $app->getConfig()->get('Mailer');
-        if ($mailer) {
-            Mailer::setConfig($mailer);
-        }
-
         /**
          * @see http://php.net/manual/en/mongodb.setprofilinglevel.php
          */
-        $this->wDatabase()->command(['profile' => 2]);
+        if (!$this->wIsProduction()) {
+            $this->wDatabase()->command(['profile' => 2]);
+        }
 
         User::onActivity(function (User $user) {
             $user->lastActive = new DateTimeObject('now');

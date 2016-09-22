@@ -341,21 +341,6 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         });
 
         /**
-         * @api.name Delete multiple records by given ids
-         * @api.description This method will delete multiple records given by an array of entity IDs
-         */
-        $this->api('POST', 'delete', function () {
-            $ids = $this->wRequest()->getRequestData()['ids'];
-            try {
-                static::find(['id' => $ids])->delete();
-
-                return true;
-            } catch (EntityException $e) {
-                throw new ApiException('Failed to delete entity! ' . $e->getMessage(), $e->getCode(), 400);
-            }
-        })->setBodyValidators(['ids' => 'required']);
-
-        /**
          * Fire event for registering extra attributes
          */
         $this->trigger('onExtend');

@@ -34,7 +34,8 @@ class ApiMethod
     private $context;
     private $callbacks = [];
     private $bodyValidators;
-    private $authorizationCallback;
+    private $authorization = true;
+    private $public = false;
 
     function __construct($httpMethod, $methodName, $context, $callable = null)
     {
@@ -81,20 +82,6 @@ class ApiMethod
 
     public function __invoke($params, $bindTo = null)
     {
-        if (!$params) {
-            $params = [];
-        }
-
-        // Call authorization callback if any
-        if (is_callable($this->authorizationCallback)) {
-            $callback = $this->authorizationCallback;
-            if ($bindTo) {
-                $callback = $callback->bindTo($bindTo);
-            }
-            $callback();
-
-        }
-
         if (($this->httpMethod === 'post' || $this->httpMethod === 'patch') && count($this->bodyValidators)) {
             $this->validateBody($this->wRequest()->getRequestData());
         }
@@ -104,6 +91,10 @@ class ApiMethod
             $callback = $callback->bindTo($bindTo);
         }
         $callbackCount = count($this->callbacks);
+
+        if (!$params) {
+            $params = [];
+        }
         $params = $this->injectParams($callback, $params);
         if ($callbackCount > 1) {
             $params[] = $this->createParent(1);
@@ -134,17 +125,50 @@ class ApiMethod
     }
 
     /**
-     * Set a custom authorization callback
+     * Enable or disable the authorization for this API method.
+     * Authorization is enabled by default.
      *
-     * @param $callable
+     * @param bool $flag
      *
      * @return $this
      */
-    public function setAuthorization($callable)
+    public function setAuthorization($flag = true)
     {
-        $this->authorizationCallback = $callable;
+        $this->authorization = boolval($flag);
 
         return $this;
+    }
+
+    /**
+     * Is authorization enabled?
+     *
+     * @return bool
+     */
+    public function getAuthorization()
+    {
+        return $this->authorization;
+    }
+
+    /**
+     * This method is public and does not require an API token or authorization
+     *
+     * @return $this
+     */
+    public function setPublic()
+    {
+        $this->public = true;
+
+        return $this;
+    }
+
+    /**
+     * Is this API method public?
+     *
+     * @return bool
+     */
+    public function getPublic()
+    {
+        return $this->public;
     }
 
     /**
@@ -160,6 +184,16 @@ class ApiMethod
         $this->bodyValidators = array_merge($this->bodyValidators, $validators);
 
         return $this;
+    }
+
+    /**
+     * Does this method requires authorization?
+     *
+     * @return bool
+     */
+    public function requiresAuthorization()
+    {
+        return !($this->public || $this->noAuthorization);
     }
 
     protected function injectParams($function, array $params)

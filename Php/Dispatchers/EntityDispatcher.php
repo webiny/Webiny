@@ -24,16 +24,12 @@ class EntityDispatcher extends AbstractApiDispatcher
             return false;
         }
 
-        $this->checkApiToken();
-
-        $result = null;
         $request = $this->parseUrl($event->getUrl()->replace('/entities', ''));
-
         $httpMethod = $this->wRequest()->getRequestMethod();
         $params = $request['params'];
 
         $entityClass = '\\Apps\\' . $request['app'] . '\\Php\\Entities\\' . $this->str($request['class'])->singularize();
-        if (!$this->fileExists($entityClass)) {
+        if (!$this->fileExists($entityClass) || !class_exists($entityClass)) {
             return new ApiErrorResponse([], 'Entity class ' . $entityClass . ' does not exist!', 'WBY-CLASS_NOT_FOUND');
         }
 
