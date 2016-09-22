@@ -466,7 +466,10 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 
         // If we have a static filter, let's apply those too
         if ($staticFilter) {
-            $conditions = array_merge($conditions, $staticFilter());
+            $staticFilterConditions = $staticFilter();
+            if (is_array($staticFilterConditions)) {
+                $conditions = array_merge($conditions, $staticFilter());
+            }
         }
 
         return $conditions;
