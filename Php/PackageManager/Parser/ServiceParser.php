@@ -24,8 +24,6 @@ class ServiceParser extends AbstractParser
         $serviceInstance = new $this->class;
         foreach ($apiDocs as $name => $httpMethods) {
             foreach ($httpMethods as $httpMethod => $config) {
-                $serviceMethod = $serviceInstance->api($httpMethod, $name);
-                $isPublic = $serviceMethod->getPublic();
                 $config = $this->arr($config);
                 $key = $name . '.' . $httpMethod;
                 $definition = [
@@ -35,16 +33,38 @@ class ServiceParser extends AbstractParser
                     'name'          => $config->key('name', '', true),
                     'description'   => $config->key('description', '', true),
                     'method'        => strtoupper($httpMethod),
-                    'public'        => $isPublic,
-                    'authorization' => $isPublic ? false : $serviceMethod->getAuthorization(),
+                    'public'        => false,
+                    'authorization' => true,
                     'headers'       => []
                 ];
 
-                if (!$this->publicApiInterface) {
+                if ($this->publicApiInterface) {
+                    $definition['public'] = true;
+                    $definition['authorization'] = false;
+                }
+
+                if ($this->noAuthorizationInterface) {
+                    $definition['authorization'] = false;
+                }
+
+                // There may be a case when a developer uses a trait with extra api methods and parser registers those methods
+                // but if those methods are not initialized, this following check may fail with an error.
+                // To avoid it - we check if method is initialized before doing anything else.
+                $serviceMethod = $serviceInstance->api($httpMethod, $name);
+                if ($serviceMethod && !$this->publicApiInterface) {
+                    $definition['public'] = $serviceMethod->getPublic();
+                }
+
+                if ($serviceMethod && !$this->publicApiInterface && !$this->noAuthorizationInterface) {
+                    $definition['authorization'] = $definition['public'] ? false : $serviceMethod->getAuthorization();
+                }
+
+                if (!$definition['public']) {
                     $definition['headers'][] = $this->headerApiToken;
-                    if (!$this->noAuthorizationInterface) {
-                        $definition['headers'][] = $this->headerAuthorizationToken;
-                    }
+                }
+
+                if ($definition['authorization']) {
+                    $definition['headers'][] = $this->headerAuthorizationToken;
                 }
 
                 if (count($config['query']) > 0) {

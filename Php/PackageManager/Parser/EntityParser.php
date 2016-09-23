@@ -124,8 +124,7 @@ class EntityParser extends AbstractParser
                 if (!$includeCrudMethods && in_array($key, $crudPatterns)) {
                     continue;
                 }
-                $entityMethod = $entityInstance->api($httpMethod, $name);
-                $isPublic = $entityMethod->getPublic();
+
                 $config = $this->arr($config);
                 $definition = [
                     'key'           => $key,
@@ -134,14 +133,30 @@ class EntityParser extends AbstractParser
                     'name'          => $config->key('name'),
                     'description'   => $config->key('description', '', true),
                     'method'        => strtoupper($httpMethod),
-                    'public'        => $isPublic,
-                    'authorization' => $isPublic ? false : $entityMethod->getAuthorization(),
-                    'headers'       => [
-                        $this->headerApiToken,
-                        $this->headerAuthorizationToken
-                    ]
+                    'public'        => false,
+                    'authorization' => true,
+                    'headers'       => []
                 ];
 
+                // There may be a case when a developer uses a trait with extra api methods and parser registers those methods
+                // but if those methods are not initialized, this following check may fail with an error.
+                // To avoid it - we check if method is initialized before doing anything else.
+                $entityMethod = $entityInstance->api($httpMethod, $name);
+                if ($entityMethod) {
+                    $isPublic = $entityMethod->getPublic();
+                    $definition['public'] = $isPublic;
+                    $definition['authorization'] = $isPublic ? false : $entityMethod->getAuthorization();
+                }
+
+                if (!$definition['public']) {
+                    $definition['headers'][] = $this->headerApiToken;
+                }
+
+                if ($definition['authorization']) {
+                    $definition['headers'][] = $this->headerAuthorizationToken;
+                }
+
+                // Build query params and add them to URL
                 if (count($config['query']) > 0) {
                     $queryParams = http_build_query($config['query']);
                     $definition['path'] .= '?' . $queryParams;
