@@ -21,18 +21,23 @@ class ServiceParser extends AbstractParser
     {
         $apiDocs = $this->parseApi($this->class);
         $methods = [];
+        $serviceInstance = new $this->class;
         foreach ($apiDocs as $name => $httpMethods) {
             foreach ($httpMethods as $httpMethod => $config) {
+                $serviceMethod = $serviceInstance->api($httpMethod, $name);
+                $isPublic = $serviceMethod->getPublic();
                 $config = $this->arr($config);
                 $key = $name . '.' . $httpMethod;
                 $definition = [
-                    'key'         => $key,
-                    'path'        => rtrim($this->url . '/' . ltrim($name, '/'), '/'),
-                    'url'         => $this->wConfig()->get('Application.ApiPath') . rtrim($this->url . '/' . ltrim($name, '/'), '/'),
-                    'name'        => $config->key('name', '', true),
-                    'description' => $config->key('description', '', true),
-                    'method'      => strtoupper($httpMethod),
-                    'headers'     => []
+                    'key'           => $key,
+                    'path'          => rtrim($this->url . '/' . ltrim($name, '/'), '/'),
+                    'url'           => $this->wConfig()->get('Application.ApiPath') . rtrim($this->url . '/' . ltrim($name, '/'), '/'),
+                    'name'          => $config->key('name', '', true),
+                    'description'   => $config->key('description', '', true),
+                    'method'        => strtoupper($httpMethod),
+                    'public'        => $isPublic,
+                    'authorization' => $isPublic ? false : $serviceMethod->getAuthorization(),
+                    'headers'       => []
                 ];
 
                 if (!$this->publicApiInterface) {

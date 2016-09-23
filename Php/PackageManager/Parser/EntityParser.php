@@ -117,21 +117,26 @@ class EntityParser extends AbstractParser
         ];
         $apiDocs = $this->parseApi($this->class);
         $methods = [];
+        $entityInstance = new $this->class;
         foreach ($apiDocs as $name => $httpMethods) {
             foreach ($httpMethods as $httpMethod => $config) {
                 $key = $name . '.' . $httpMethod;
                 if (!$includeCrudMethods && in_array($key, $crudPatterns)) {
                     continue;
                 }
+                $entityMethod = $entityInstance->api($httpMethod, $name);
+                $isPublic = $entityMethod->getPublic();
                 $config = $this->arr($config);
                 $definition = [
-                    'key'         => $key,
-                    'path'        => $this->url . '/' . ltrim($name, '/'),
-                    'url'         => $this->wConfig()->get('Application.ApiPath') . $this->url . '/' . ltrim($name, '/'),
-                    'name'        => $config->key('name'),
-                    'description' => $config->key('description', '', true),
-                    'method'      => strtoupper($httpMethod),
-                    'headers'     => [
+                    'key'           => $key,
+                    'path'          => $this->url . '/' . ltrim($name, '/'),
+                    'url'           => $this->wConfig()->get('Application.ApiPath') . $this->url . '/' . ltrim($name, '/'),
+                    'name'          => $config->key('name'),
+                    'description'   => $config->key('description', '', true),
+                    'method'        => strtoupper($httpMethod),
+                    'public'        => $isPublic,
+                    'authorization' => $isPublic ? false : $entityMethod->getAuthorization(),
+                    'headers'       => [
                         $this->headerApiToken,
                         $this->headerAuthorizationToken
                     ]
@@ -148,22 +153,22 @@ class EntityParser extends AbstractParser
                     $definition['parameters'][$pName] = [
                         'name'        => $pName,
                         'in'          => 'path',
-                        'description' => $pConfig['description'],
-                        'type'        => $pConfig['type']
+                        'description' => $pConfig['description'] ?? '',
+                        'type'        => $pConfig['type'] ?? ''
                     ];
                 }
 
                 foreach ($config->key('body', [], true) as $pName => $pConfig) {
                     $definition['body'][$pName] = [
-                        'type'  => $pConfig['type'],
+                        'type'  => $pConfig['type'] ?? '',
                         'value' => $pConfig['value'] ?? null
                     ];
                 }
                 foreach ($config->key('headers', [], true) as $pName => $pConfig) {
                     $definition['headers'][$pName] = [
                         'name'        => $pName,
-                        'description' => $pConfig['description'],
-                        'type'        => $pConfig['type'],
+                        'description' => $pConfig['description'] ?? '',
+                        'type'        => $pConfig['type'] ?? '',
                         'required'    => true
                     ];
                 }

@@ -11,6 +11,7 @@ abstract class AbstractParser
 {
     use WebinyTrait, StdLibTrait, MongoTrait;
 
+    protected static $classApi = [];
     protected $class;
     protected $name;
     protected $slug;
@@ -94,88 +95,126 @@ abstract class AbstractParser
      */
     protected function parseApi($class)
     {
-        try {
-            $reflectionClass = new \ReflectionClass($class);
-            $method = $reflectionClass->getMethod('__construct');
-        } catch (\ReflectionException $e) {
-            return [];
+        $classes = [$class];
+        $classes = array_merge($classes, $this->readClassParents($class));
+        foreach ($classes as $c) {
+            if ($c === 'Apps\Core\Php\DevTools\Entity\AbstractEntity') {
+                break;
+            }
+            $classes = array_merge($classes, $this->readTraits($c));
         }
-
-        $startLine = $method->getStartLine() + 1;
-        $endLine = $method->getEndLine() - 1;
 
         $storage = $this->wStorage('Root');
-        $classPath = $this->str($class)->explode('\\')->filter();
-        $classFile = $this->wApps($classPath[1])->getPath(false) . '/' . $classPath->slice(2)->implode('\\')->replace('\\', '/');
+        $apiDocs = $this->arr();
+        foreach ($classes as $apiClass) {
+            $classApi = self::$classApi[$apiClass] ?? null;
+            if ($classApi) {
+                $apiDocs->mergeSmart($classApi);
+                continue;
+            }
 
-        $classFile = new File($classFile . '.php', $storage);
-        if (!$classFile->exists()) {
-            return [];
-        }
+            $classPath = $this->str($apiClass)->explode('\\')->filter();
+            $classFile = $this->wApps($classPath[1])->getPath(false) . '/' . $classPath->slice(2)->implode('\\')->replace('\\', '/');
 
-        $classContents = $classFile->getContents();
-        $classLines = $this->str($classContents)->explode("\n");
+            $classFile = new File($classFile . '.php', $storage);
+            if (!$classFile->exists()) {
+                return [];
+            }
 
-        $entityApiLines = $classLines->slice($startLine, $endLine - $startLine, false);
+            $classContents = $classFile->getContents();
+            $classLines = $this->str($classContents)->explode("\n");
 
-        $apiDocs = [];
-        $tmpDoc = $this->arr();
-        foreach ($entityApiLines as $line => $code) {
-            $code = $this->str($code)->trim();
-            if ($code->trim()->contains('parent::__construct') && $class !== $this->baseClass) {
-                $parentClass = $reflectionClass->getParentClass()->getName();
-                $parentApi = $this->parseApi($parentClass);
-                foreach ($parentApi as $key => $api) {
-                    if (!array_key_exists($key, $apiDocs)) {
-                        $apiDocs[$key] = $api;
+            $tmpDoc = $this->arr();
+            $classApi = [];
+            foreach ($classLines as $line => $code) {
+                $code = $this->str($code)->trim();
+                if (!$code->containsAny(['@api', '$this->api('])) {
+                    continue;
+                }
+
+                if ($code->startsWith('/*') || $code->endsWith('*/')) {
+                    continue;
+                }
+
+                if ($code->startsWith('$this->api(')) {
+                    $match = $code->match('\'(\w+)\',\s?\'([\w+-{}/]+)\'');
+                    if (!$match) {
+                        continue;
+                        // throw new AppException('Failed to parse API method definition: `' . $code->val() . '`', 'WBY-DISCOVER-FAILED');
+                    }
+                    $httpMethod = strtolower($match->keyNested('1.0'));
+                    $methodName = $match->keyNested('2.0');
+                    $methodName = $methodName != '/' ? trim($methodName, '/') : '/';
+                    if ($methodName) {
+                        $classApi[$methodName][$httpMethod] = $tmpDoc->val();
+                    }
+                    $tmpDoc = $this->arr();
+                    continue;
+                }
+
+                if ($code->startsWith('* @api')) {
+                    $annotationLine = $code->replace('* @api.', '')->explode(' ', 2)->val();
+                    $line = $this->str($annotationLine[0]);
+                    // Parse parameters and fetch the appropriate value for given parameter type
+                    if ($line->startsWith('body.') || $line->startsWith('path.') || $line->startsWith('headers.')) {
+                        $param = [
+                            'name'        => $line->replace(['body.', 'path.'], '')->val(),
+                            'type'        => '',
+                            'description' => ''
+                        ];
+
+                        if (isset($annotationLine[1])) {
+                            $paramLine = $this->str($annotationLine[1])->explode(' ', 2);
+                            $param['type'] = $paramLine[0];
+                            $param['description'] = $paramLine[1];
+                        }
+
+                        $tmpDoc->keyNested($annotationLine[0], $param);
+                        continue;
+                    }
+                    $tmpDoc->keyNested($annotationLine[0], $annotationLine[1]);
+
+                    // Query params will be appended to URL in the EntityParser/ServiceParser classes
+                    if ($line->startsWith('query.')) {
+                        $paramLine = $this->str($annotationLine[1])->explode(' ', 2);
+                        $tmpDoc->keyNested($annotationLine[0], $paramLine[0]);
                     }
                 }
             }
+            self::$classApi[$apiClass] = $classApi;
+            $apiDocs->mergeSmart($classApi);
+        }
+        
+        return $apiDocs;
+    }
 
-            if ($code->startsWith('/*') || $code->endsWith('*/')) {
-                continue;
-            }
-
-            if ($code->startsWith('$this->api(')) {
-                $match = $code->match('\'(\w+)\',\s?\'([\w+-{}/]+)\'');
-                if (!$match) {
-                    throw new AppException('Failed to parse API method definition: `' . $code->val() . '`', 'WBY-DISCOVER-FAILED');
-                }
-                $httpMethod = strtolower($match->keyNested('1.0'));
-                $methodName = $match->keyNested('2.0');
-                $methodName = $methodName != '/' ? trim($methodName, '/') : '/';
-                if ($methodName) {
-                    $apiDocs[$methodName][$httpMethod] = $tmpDoc->val();
-                }
-                $tmpDoc = $this->arr();
-                continue;
-            }
-
-            if ($code->startsWith('* @api')) {
-                $annotationLine = $code->replace('* @api.', '')->explode(' ', 2)->val();
-                $line = $this->str($annotationLine[0]);
-                // Parse parameters and fetch the appropriate value for given parameter type
-                if ($line->startsWith('body.') || $line->startsWith('path.') || $line->startsWith('headers.')) {
-                    $paramLine = $this->str($annotationLine[1])->explode(' ', 2);
-                    $param = [
-                        'type'        => $paramLine[0],
-                        'name'        => $line->replace(['body.', 'path.'], '')->val(),
-                        'description' => $paramLine[1]
-                    ];
-
-                    $tmpDoc->keyNested($annotationLine[0], $param);
-                    continue;
-                }
-                $tmpDoc->keyNested($annotationLine[0], $annotationLine[1]);
-
-                // Query params will be appended to URL in the EntityParser/ServiceParser classes
-                if ($line->startsWith('query.')) {
-                    $paramLine = $this->str($annotationLine[1])->explode(' ', 2);
-                    $tmpDoc->keyNested($annotationLine[0], $paramLine[0]);
+    private function readTraits($class)
+    {
+        $traits = $this->readClassUses($class);
+        foreach ($traits as $trait) {
+            $traitUses = $this->readClassUses($trait);
+            if (count($traitUses)) {
+                $traits = array_merge($traits, $traitUses);
+                foreach ($traitUses as $traitUse) {
+                    $traits = array_merge($traits, $this->readTraits($traitUse));
                 }
             }
         }
 
-        return $apiDocs;
+        return $traits;
+    }
+
+    private function readClassParents($class)
+    {
+        return array_filter(array_values(class_parents($class)), function ($t) {
+            return $this->str($t)->startsWith('Apps\\');
+        });
+    }
+
+    private function readClassUses($class)
+    {
+        return array_filter(array_values(class_uses($class)), function ($t) {
+            return $this->str($t)->startsWith('Apps\\');
+        });
     }
 }
