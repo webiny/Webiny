@@ -34,6 +34,10 @@ class Data extends Webiny.Ui.Component {
     }
 
     setData(apiResponse) {
+        if (!this.isMounted()) {
+            return;
+        }
+
         this.setState({loading: false});
 
         if (apiResponse.isAborted()) {
