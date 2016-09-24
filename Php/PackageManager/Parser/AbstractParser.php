@@ -133,7 +133,7 @@ abstract class AbstractParser
                 $newApiLine = $code->containsAny(['@api', '$this->api(']);
                 if (!$newApiLine && !$descriptionStarted) {
                     continue;
-                } elseif (!$newApiLine && $descriptionStarted && $code->val() !== '*/') {
+                } elseif (!$newApiLine && $descriptionStarted && $code->val() !== '*/' && !$code->startsWith('* @')) {
                     $description .= $code->trimLeft('*');
                     continue;
                 } elseif ($descriptionStarted) {
@@ -165,7 +165,7 @@ abstract class AbstractParser
                     $line = $this->str($annotationLine[0]);
 
                     if ($line->startsWith('name')) {
-                        $tmpDoc->keyNested($annotationLine[0], $annotationLine[1]);
+                        $tmpDoc->keyNested($annotationLine[0], trim($annotationLine[1]));
                         continue;
                     }
 
