@@ -45,7 +45,7 @@ class Filter
             // Let's check if any of the Closure parameters are instance of AbstractEntity
             $function = new \ReflectionFunction($this->filter);
             foreach ($function->getParameters() as $parameter) {
-                $entityClass = $parameter->getClass()->name;
+                $entityClass = $parameter->getClass()->name ?? null;
                 if ($entityClass && is_subclass_of($entityClass, 'Apps\Core\Php\DevTools\Entity\AbstractEntity')) {
                     /* @var AbstractEntity $entityClass */
                     if ($entity = $entityClass::findById($filterValue)) {
