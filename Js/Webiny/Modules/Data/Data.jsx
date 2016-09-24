@@ -34,15 +34,11 @@ class Data extends Webiny.Ui.Component {
     }
 
     setData(apiResponse) {
-        if (!this.isMounted()) {
+        if (apiResponse.isAborted() || !this.isMounted()) {
             return;
         }
 
         this.setState({loading: false});
-
-        if (apiResponse.isAborted()) {
-            return;
-        }
 
         if (apiResponse.isError()) {
             Webiny.Growl.info(apiResponse.getError(), 'Could not fetch data', true);

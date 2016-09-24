@@ -126,10 +126,19 @@ abstract class AbstractParser
 
             $tmpDoc = $this->arr();
             $classApi = [];
+            $description = '';
+            $descriptionStarted = false;
             foreach ($classLines as $line => $code) {
                 $code = $this->str($code)->trim();
-                if (!$code->containsAny(['@api', '$this->api('])) {
+                $newApiLine = $code->containsAny(['@api', '$this->api(']);
+                if (!$newApiLine && !$descriptionStarted) {
                     continue;
+                } elseif (!$newApiLine && $descriptionStarted && $code->val() !== '*/') {
+                    $description .= $code->trimLeft('*');
+                    continue;
+                } elseif ($descriptionStarted) {
+                    $tmpDoc->key('description', $description);
+                    $descriptionStarted = false;
                 }
 
                 if ($code->startsWith('/*') || $code->endsWith('*/')) {
@@ -140,7 +149,6 @@ abstract class AbstractParser
                     $match = $code->match('\'(\w+)\',\s?\'([\w+-{}/]+)\'');
                     if (!$match) {
                         continue;
-                        // throw new AppException('Failed to parse API method definition: `' . $code->val() . '`', 'WBY-DISCOVER-FAILED');
                     }
                     $httpMethod = strtolower($match->keyNested('1.0'));
                     $methodName = $match->keyNested('2.0');
@@ -155,10 +163,27 @@ abstract class AbstractParser
                 if ($code->startsWith('* @api')) {
                     $annotationLine = $code->replace('* @api.', '')->explode(' ', 2)->val();
                     $line = $this->str($annotationLine[0]);
+
+                    if ($line->startsWith('name')) {
+                        $tmpDoc->keyNested($annotationLine[0], $annotationLine[1]);
+                        continue;
+                    }
+
+                    if ($line->startsWith('description')) {
+                        $descriptionStarted = true;
+                        $description = $annotationLine[1] ?? '';
+                        continue;
+                    }
+
                     // Parse parameters and fetch the appropriate value for given parameter type
                     if ($line->startsWith('body.') || $line->startsWith('path.') || $line->startsWith('headers.')) {
+                        $paramName = $line->replace(['body.', 'path.', 'headers.'], '')->val();
+                        if (!strlen($paramName)) {
+                            continue;
+                        }
+
                         $param = [
-                            'name'        => $line->replace(['body.', 'path.'], '')->val(),
+                            'name'        => $paramName,
                             'type'        => '',
                             'description' => ''
                         ];
@@ -172,7 +197,6 @@ abstract class AbstractParser
                         $tmpDoc->keyNested($annotationLine[0], $param);
                         continue;
                     }
-                    $tmpDoc->keyNested($annotationLine[0], $annotationLine[1]);
 
                     // Query params will be appended to URL in the EntityParser/ServiceParser classes
                     if ($line->startsWith('query.')) {
@@ -180,11 +204,15 @@ abstract class AbstractParser
                         $tmpDoc->keyNested($annotationLine[0], $paramLine[0]);
                     }
                 }
+
+                if ($descriptionStarted) {
+                    $description .= $line;
+                }
             }
             self::$classApi[$apiClass] = $classApi;
             $apiDocs->mergeSmart($classApi);
         }
-        
+
         return $apiDocs;
     }
 
