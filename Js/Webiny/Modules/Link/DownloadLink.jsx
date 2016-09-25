@@ -22,13 +22,14 @@ class DownloadLink extends Link {
 }
 
 DownloadLink.defaultProps = {
+    method: 'GET',
     renderer() {
         const props = this.getLinkProps();
 
         const downloader = <Ui.Downloader ref="downloader"/>;
         props.onClick = () => {
             if (_.isString(this.props.download)) {
-                this.refs.downloader.download('GET', this.props.download);
+                this.refs.downloader.download(this.props.method, this.props.download);
             } else {
                 const result = this.props.download(this.refs.downloader.download, this.props.data || null);
                 if (result && result.type && result.type === Ui.Modal.Dialog) {
