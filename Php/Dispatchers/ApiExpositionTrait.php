@@ -71,13 +71,18 @@ trait ApiExpositionTrait
         $httpMethod = strtolower($httpMethod);
         $methods = $this->apiMethods->key($httpMethod) ?? [];
 
-        ksort($methods);
         uksort($methods, function ($a, $b) {
             if ($a[0] === '{' && $b[0] !== '{') {
                 return 1;
             }
 
-            return 0;
+            $position = -($this->str($a)->explode('/')->count() <=> $this->str($b)->explode('/')->count());
+            if ($position !== 0) {
+                return $position;
+            }
+
+            // Compare number of variables
+            return $this->str($a)->subStringCount('{') <=> $this->str($b)->subStringCount('{');
         });
 
         if ($url === '' && isset($methods['/'])) {
