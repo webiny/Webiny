@@ -82,6 +82,9 @@ class Authorization
     {
         if (!$this->user) {
             $authCookie = $this->wRequest()->header('X-Webiny-Authorization');
+            if (!$authCookie) {
+                $authCookie = $this->wRequest()->getRequestData()['X-Webiny-Authorization'] ?? null;
+            }
 
             try {
                 /* @var $class AbstractEntity */
