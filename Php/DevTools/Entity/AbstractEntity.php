@@ -245,7 +245,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             return $value;
         });
         $this->attr('modifiedBy')->many2one()->setEntity($userClass)->onToDb(function ($value) {
-            if ($this->exists() && !$this->deletedOn) {
+            if ($this->exists() && !$this->deletedOn && $this->wAuth()->getUser()) {
                 return $this->wAuth()->getUser()->id;
             }
 
