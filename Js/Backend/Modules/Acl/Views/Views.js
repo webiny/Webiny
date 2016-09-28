@@ -6,6 +6,7 @@ import UserPermissionsList from './UserPermissionsList';
 import UserRolesForm from './UserRolesForm';
 import UserRolesList from './UserRolesList';
 import ApiTokensList from './ApiTokensList';
+import ApiTokensLogs from './ApiTokensLogs';
 
 export default {
     UsersList,
@@ -15,5 +16,6 @@ export default {
     UserRolesForm,
     UserPermissionsList,
     UserPermissionsForm,
-    ApiTokensList
+    ApiTokensList,
+    ApiTokensLogs
 };
