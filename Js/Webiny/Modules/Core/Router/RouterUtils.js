@@ -82,12 +82,12 @@ class RouterUtils {
         });
 
         // In the end we need to check if routerEvent is stopped and redirect to another route if requested
-        return routeWillChangeChain.then(routerEvent => {
-            if (routerEvent.isStopped() && routerEvent.goTo !== null) {
-                Webiny.Router.goToRoute(routerEvent.goTo, routerEvent.goToParams);
+        return routeWillChangeChain.then(re => {
+            if (re.isStopped() && re.goTo !== null) {
+                Webiny.Router.goToRoute(re.goTo, re.goToParams);
             }
 
-            return routerEvent;
+            return re;
         });
     }
 

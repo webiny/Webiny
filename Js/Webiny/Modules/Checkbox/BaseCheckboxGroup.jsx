@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 import Checkbox from './Checkbox';
 
 class BaseCheckboxGroup extends Webiny.Ui.FormComponent {
@@ -17,7 +16,7 @@ class BaseCheckboxGroup extends Webiny.Ui.FormComponent {
             newState.push(newValue);
         } else {
             const currentIndex = _.findIndex(newState, opt => {
-                return _.get(opt, this.props.valueKey) == value.id;
+                return _.get(opt, this.props.valueKey) === value.id;
             });
 
             newState.splice(currentIndex, 1);
@@ -40,9 +39,9 @@ class BaseCheckboxGroup extends Webiny.Ui.FormComponent {
         _.forEach(this.props.options, (item, key) => {
             const checked = _.find(this.props.valueLink.value, opt => {
                 if (_.isPlainObject(opt)) {
-                    return _.get(opt, this.props.valueKey) == item.id;
+                    return _.get(opt, this.props.valueKey) === item.id;
                 }
-                return opt == item.id;
+                return opt === item.id;
             });
             const props = {
                 form: this.props.form || null,

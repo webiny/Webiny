@@ -25,7 +25,7 @@ CheckboxGroup.defaultProps = _.merge({}, BaseCheckboxGroup.defaultProps, {
         }
         return label;
     },
-    renderValidationMessage(){
+    renderValidationMessage() {
         let validationMessage = null;
         if (this.state.isValid === false) {
             validationMessage = <span className="help-block">{this.state.validationMessage}</span>;

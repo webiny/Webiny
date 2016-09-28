@@ -56,10 +56,10 @@ class Many2ManyAttribute extends \Webiny\Component\Entity\Attribute\Many2ManyAtt
             }
 
             $existingIds[] = $secondEntityId;
-
+            $user = $this->wAuth()->getUser();
             $data = [
                 'createdOn'      => $this->datetime()->getMongoDate(),
-                'createdBy'      => $this->wAuth()->getUser()->id,
+                'createdBy'      => $user ? $user->id : null,
                 'deletedOn'      => null,
                 'deletedBy'      => null,
                 $firstClassName  => $firstEntityId,
@@ -166,9 +166,11 @@ class Many2ManyAttribute extends \Webiny\Component\Entity\Attribute\Many2ManyAtt
             $secondClassName => $item
         ])->sortKey()->val();
 
+        $user = $this->wAuth()->getUser();
+
         $update = [
             'deletedOn' => $this->datetime()->getMongoDate(),
-            'deletedBy' => $this->wAuth()->getUser()->id
+            'deletedBy' => $user ? $user->id : null
         ];
 
         if (!$permanent) {
