@@ -21,6 +21,7 @@ use Webiny\Component\StdLib\StdObject\UrlObject\UrlObjectException;
 use Webiny\Component\StdLib\SingletonTrait;
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\PackageManager\PackageScanner;
+use Webiny\Component\Storage\Storage;
 
 /**
  * This class is included in the index.php and it responsible to bootstrap the application.
@@ -57,13 +58,15 @@ class Bootstrap
         // set error handler
         $this->errorHandler = new ErrorHandler();
 
-        // scan all components to register routes and event handlers
-        PackageScanner::getInstance();
 
-        // Register database
+        // Set component configs
         Mongo::setConfig($this->wConfig()->get('Mongo'));
         Entity::setConfig($this->wConfig()->get('Entity'));
         Security::setConfig($this->wConfig()->get('Security'));
+        Storage::setConfig($this->wConfig()->get('Storage'));
+
+        // scan all components to register routes and event handlers
+        PackageScanner::getInstance();
 
         /* @var $app App */
         foreach ($this->wApps() as $app) {
@@ -72,6 +75,7 @@ class Bootstrap
                 $bootstrap->run($app);
             }
         }
+
 
         $this->wEvents()->fire('Core.Bootstrap.End');
     }
@@ -129,6 +133,9 @@ class Bootstrap
                 if ($currentDomain == $this->url($domain)->getDomain()) {
                     $configSet = $name;
                 }
+            }
+            if (!$configSet) {
+                $configSet = 'Production';
             }
         } catch (UrlObjectException $e) {
             $configSet = 'Production';
