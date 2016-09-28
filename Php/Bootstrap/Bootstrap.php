@@ -33,16 +33,25 @@ class Bootstrap
      * @var ErrorHandler
      */
     private $errorHandler;
+    /**
+     * @var array Js configs to merge after config set is loaded completely
+     */
+    private $jsConfigs = [];
 
     protected function init()
     {
         // read production configs
-        $this->buildConfiguration('Production');
+        $this->buildConfiguration('Base');
 
         // get additional config set
         $configSet = $this->getConfigSet();
         if ($configSet) {
             $this->buildConfiguration($configSet);
+        }
+
+        // Append Js configs (these need to be loaded at the very end to inject proper values)
+        foreach ($this->jsConfigs as $jsConfig) {
+            $this->wConfig()->appendConfig($jsConfig);
         }
 
         // set error handler
@@ -93,7 +102,12 @@ class Bootstrap
 
             // insert them into the global configuration object
             foreach ($dir as &$file) {
-                $this->wConfig()->appendConfig($file->getKey());
+                $key = $this->str($file->getKey());
+                if ($key->endsWith('Js.yaml')) {
+                    $this->jsConfigs[] = $key->val();
+                    continue;
+                }
+                $this->wConfig()->appendConfig($key->val());
             }
 
             // append config sets
