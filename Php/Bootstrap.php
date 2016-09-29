@@ -12,13 +12,11 @@ class Bootstrap extends AbstractBootstrap
     {
         $this->addAppRoute('/^\/' . $this->wConfig()->get('Application.Backend') . '/', 'Core:Templates/Webiny.tpl', 380);
 
-        $entityConfig = Entity::getConfig();
-        $entityConfig->mergeWith([
+        Entity::appendConfig([
             'Attributes' => [
                 'many2many' => '\Apps\Core\Php\DevTools\Entity\Attributes\Many2ManyAttribute'
             ]
         ]);
-        Entity::setConfig($entityConfig);
 
         /**
          * @see http://php.net/manual/en/mongodb.setprofilinglevel.php
