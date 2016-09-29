@@ -12,6 +12,7 @@ use Apps\Core\Php\DevTools\Response\HtmlResponse;
 use Apps\Core\Php\DevTools\Response\AbstractResponse;
 use Apps\Core\Php\DevTools\Response\ResponseEvent;
 use Apps\Core\Php\PackageManager\App;
+use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\Entity\Entity;
 use Webiny\Component\Http\Response;
 use Webiny\Component\Mongo\Mongo;
@@ -60,10 +61,11 @@ class Bootstrap
 
 
         // Set component configs
-        Mongo::setConfig($this->wConfig()->get('Mongo'));
-        Entity::setConfig($this->wConfig()->get('Entity'));
-        Security::setConfig($this->wConfig()->get('Security'));
-        Storage::setConfig($this->wConfig()->get('Storage'));
+        $emptyConfig = new ConfigObject();
+        Mongo::setConfig($this->wConfig()->get('Mongo', $emptyConfig));
+        Entity::setConfig($this->wConfig()->get('Entity', $emptyConfig));
+        Security::setConfig($this->wConfig()->get('Security', $emptyConfig));
+        Storage::setConfig($this->wConfig()->get('Storage', $emptyConfig));
 
         // scan all components to register routes and event handlers
         PackageScanner::getInstance();
@@ -75,7 +77,6 @@ class Bootstrap
                 $bootstrap->run($app);
             }
         }
-
 
         $this->wEvents()->fire('Core.Bootstrap.End');
     }

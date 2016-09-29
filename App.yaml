@@ -30,6 +30,9 @@ Storage:
                     Object: \Webiny\Component\Storage\Driver\Local\LocalStorageDriver
                     ObjectArguments:
                         - __DIR__/../../Temp
+                        - null
+                        - false
+                        - true
         DevBuild:
             Class: \Webiny\Component\Storage\Storage
             Arguments:
