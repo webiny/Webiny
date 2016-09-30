@@ -8,4 +8,4 @@ Application:
     Logger:
         DisplayErrors: false
         Enabled: true
-Apps: []
+Apps: {}

@@ -80,7 +80,7 @@ class EntityParser extends AbstractParser
             if ($attr instanceof Many2OneAttribute || $attr instanceof One2ManyAttribute) {
                 $relations[] = [
                     'attribute' => $attrName,
-                    'class'     => $attr->getEntity(),
+                    'class'     => trim($attr->getEntity(), '\\'),
                     'type'      => $attributeType($attr)
                 ];
             }
