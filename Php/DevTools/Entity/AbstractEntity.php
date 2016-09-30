@@ -430,6 +430,9 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
      */
     protected static function setEntityFilters($conditions)
     {
+        // We must ensure original filter values are always sent to each defined filter
+        $originalConditions = $conditions;
+
         $customFilters = static::entityFilters();
         $staticFilter = null;
         /* @var Filter $filter */
@@ -442,8 +445,8 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                 $staticFilter = $filter;
                 continue;
             }
-            if (isset($conditions[$key])) {
-                $filterValue = $conditions[$key];
+            if (isset($originalConditions[$key])) {
+                $filterValue = $originalConditions[$key];
                 unset($conditions[$key]);
                 $conditions = array_merge($conditions, $filter($filterValue));
             }
