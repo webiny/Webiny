@@ -23,7 +23,11 @@ class Data extends Webiny.Ui.Component {
 
     componentDidMount() {
         super.componentDidMount();
-        this.request = this.api.execute().then(this.setData);
+        this.request = this.api.execute().then(apiResponse => {
+            this.setData(apiResponse);
+            return apiResponse.getData();
+        });
+        return this.request;
     }
 
     componentWillUnmount() {
