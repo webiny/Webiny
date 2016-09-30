@@ -22,7 +22,10 @@ class Button extends Webiny.Ui.Component {
 Button.defaultProps = {
     size: 'normal',
     type: 'default',
+    align: 'normal',
     icon: null,
+    className: null,
+    label: null,
     renderer() {
         const props = _.clone(this.props);
 
