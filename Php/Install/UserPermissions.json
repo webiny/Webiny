@@ -86,6 +86,9 @@
                 "Apps\\Core\\Php\\Services\\Acl": {
                     "token": {
                         "get": true
+                    },
+                    "token-logs": {
+                        "get": true
                     }
                 }
             }

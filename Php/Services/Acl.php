@@ -4,6 +4,7 @@ namespace Apps\Core\Php\Services;
 
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Services\AbstractService;
+use Apps\Core\Php\Entities\ApiTokenLog;
 use Webiny\Component\StdLib\StdLibTrait;
 
 /**
@@ -23,6 +24,23 @@ class Acl extends AbstractService
          */
         $this->api('get', '/token', function () {
             return ['token' => $this->wConfig()->get('Application.Acl.Token')];
+        });
+
+        /**
+         * @api.name Get system API token logs
+         * @api.description Returns a list of logs for system API token
+         */
+        $this->api('get', '/token-logs', function () {
+            $query = $this->wRequest()->getFilters();
+            $query['token'] = 'system';
+
+            $sort = $this->wRequest()->getSortFields();
+            $limit = $this->wRequest()->getPerPage();
+            $page = $this->wRequest()->getPage();
+
+            $logs = ApiTokenLog::find($query, $sort, $limit, $page);
+
+            return $this->apiFormatList($logs, $this->wRequest()->getFields());
         });
     }
 }

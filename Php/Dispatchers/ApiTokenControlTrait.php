@@ -8,6 +8,7 @@
 namespace Apps\Core\Php\Dispatchers;
 
 use Apps\Core\Php\DevTools\Interfaces\PublicApiInterface;
+use Apps\Core\Php\DevTools\Request;
 use Apps\Core\Php\DevTools\Services\AbstractService;
 use Apps\Core\Php\Entities\ApiToken;
 use Apps\Core\Php\Entities\ApiTokenLog;
@@ -48,6 +49,8 @@ trait ApiTokenControlTrait
             // First check if system token is used
             $systemToken = $this->wConfig()->getConfig()->get('Application.Acl.Token');
             if ($systemToken && $systemToken == $requestToken) {
+                $this->saveTokenLog($req, 'system');
+
                 return;
             }
 
@@ -59,19 +62,23 @@ trait ApiTokenControlTrait
             $token->requests = $token->requests + 1;
             $token->save();
 
-            // Save API token log
-            $apiTokenLog = new ApiTokenLog();
-            $apiTokenLog->token = $token;
-            $apiTokenLog->method = $req->getRequestMethod();
-            $apiTokenLog->request = [
-                'url'     => $req->getCurrentUrl(),
-                'method'  => $req->getRequestMethod(),
-                'headers' => $req->header(),
-                'query'   => $req->query(),
-                'body'    => $req->getRequestData(),
-                'server'  => $req->server()->getAll()
-            ];
-            $apiTokenLog->save();
+            $this->saveTokenLog($req, $token);
         }
+    }
+
+    private function saveTokenLog(Request $req, $token)
+    {
+        $apiTokenLog = new ApiTokenLog();
+        $apiTokenLog->token = is_string($token) ? $token : $token->id;
+        $apiTokenLog->method = $req->getRequestMethod();
+        $apiTokenLog->request = [
+            'url'     => $req->getCurrentUrl(),
+            'method'  => $req->getRequestMethod(),
+            'headers' => $req->header(),
+            'query'   => $req->query(),
+            'body'    => $req->getRequestData(),
+            'server'  => $req->server()->getAll()
+        ];
+        $apiTokenLog->save();
     }
 }

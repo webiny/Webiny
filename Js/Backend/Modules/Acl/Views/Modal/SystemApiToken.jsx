@@ -31,6 +31,7 @@ class SystemApiTokenModal extends Webiny.Ui.ModalComponent {
                         To grant access to your API to 3rd party clients,&nbsp;
                         <Ui.Link onClick={() => this.hide().then(() => this.props.createToken())}>create a new API token</Ui.Link>.
                     </Ui.Alert>
+
                     <p>
                         System API token allows its bearer to access resources exposed by your API.
                         <br/>This system token is not meant to be shared, it is for your system only!
@@ -45,6 +46,7 @@ class SystemApiTokenModal extends Webiny.Ui.ModalComponent {
                     </Ui.Grid.Row>
                 </Ui.Modal.Body>
                 <Ui.Modal.Footer>
+                    <Ui.Link type="default" align="left" route="ApiTokens.Logs" params={{token: 'system'}}>View logs</Ui.Link>
                     <Ui.Button type="secondary" label="Close" onClick={this.hide}/>
                 </Ui.Modal.Footer>
             </Ui.Modal.Dialog>

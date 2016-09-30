@@ -12,6 +12,16 @@ class ApiTokensLogs extends Webiny.Ui.View {
 
     componentWillMount() {
         super.componentWillMount();
+        const token = Webiny.Router.getParams('token');
+        if (token === 'system') {
+            return this.setState({
+                token: {
+                    id: 'system',
+                    description: 'System Token'
+                }
+            });
+        }
+
         new Webiny.Api.Endpoint('/entities/core/api-tokens').get(Webiny.Router.getParams('token')).then(apiResponse => {
             this.setState({token: apiResponse.getData()});
         });
@@ -20,12 +30,13 @@ class ApiTokensLogs extends Webiny.Ui.View {
 
 ApiTokensLogs.defaultProps = {
     renderer() {
+        const tokenId = _.get(this.state.token, 'id');
         const listProps = {
             ui: 'apiTokenList',
-            api: '/entities/core/api-token-logs',
+            api: tokenId === 'system' ? '/services/core/acl/token-logs' : '/entities/core/api-token-logs',
             fields: '*,createdOn',
             query: {
-                token: Webiny.Router.getParams('token'),
+                token: tokenId === 'system' ? null : Webiny.Router.getParams('token'),
                 _sort: '-createdOn'
             },
             searchFields: 'request.method,request.url',
@@ -37,10 +48,11 @@ ApiTokensLogs.defaultProps = {
                 <Ui.View.Header
                     title={this.state.token ? `ACL - API Token Logs: ${this.state.token.description}` : 'ACL - API Token Logs'}
                     description={<span>Here you can view all request made by an API token.</span>}>
+                    <Ui.Link type="default" align="right" route="ApiTokens.List">Back to API tokens</Ui.Link>
                 </Ui.View.Header>
                 <Ui.View.Body>
                     <Ui.List.ApiContainer {...listProps}>
-                        {(data, meta) => {
+                        {data => {
                             return (
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
@@ -65,7 +77,7 @@ ApiTokensLogs.defaultProps = {
                                                 return (
                                                     <Ui.ExpandableList.Row key={row.id}>
                                                         <Ui.ExpandableList.Field all={1} name="Method" className="text-center">
-                                                            <Ui.Label type="info" inline>{row.request.method}</Ui.Label>
+                                                            <Ui.Label type="info" inline>{row.method}</Ui.Label>
                                                         </Ui.ExpandableList.Field>
                                                         <Ui.ExpandableList.Field all={8} name="URL" className="text-left">
                                                             {row.request.url}
