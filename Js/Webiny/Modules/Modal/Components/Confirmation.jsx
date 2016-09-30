@@ -37,7 +37,7 @@ class Confirmation extends Webiny.Ui.ModalComponent {
     }
 
     onConfirm() {
-        if (_.isFunction(this.props.onConfirm)) {
+        if (!this.isAnimating() && _.isFunction(this.props.onConfirm)) {
             const data = _.clone(this.data);
             data.push(this);
             this.showLoading();
@@ -98,6 +98,7 @@ Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
     onComplete: _.noop,
     onCancel: null,
     autoHide: true,
+    closeOnClick: false,
     renderLoader() {
         return (
             <div className="loading-overlay">
@@ -109,7 +110,7 @@ Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
     },
     renderDialog(confirm, cancel) {
         return (
-            <Ui.Modal.Dialog modalContainerTag="confirmation-modal" className="alert-modal" onCancel={cancel}>
+            <Ui.Modal.Dialog modalContainerTag="confirmation-modal" className="alert-modal" onCancel={cancel} closeOnClick={this.props.closeOnClick}>
                 {this.renderLoader()}
                 <Ui.Modal.Body>
                     <div className="text-center">

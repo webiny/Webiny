@@ -101,7 +101,7 @@ class Dialog extends Webiny.Ui.Component {
         const namespace = '.' + this.id;
         $(this.props.modalContainerTag).on('keyup' + namespace, '.modal', e => {
             // Listen for ESC button
-            if (e.keyCode === 27 && !this.animating) {
+            if (e.keyCode === 27 && !this.animating && this.props.closeOnClick) {
                 Q(this.props.onCancel()).then(this.hide);
             }
         }).on('mousedown' + namespace, '.modal', e => {
