@@ -57,13 +57,10 @@ class ChangeConfirm extends Webiny.Ui.Component {
     }
 
     onCancel() {
-        const cancelValue = this.props.onCancel && this.props.onCancel(this.getInput(this.props).props.form) || undefined;
+        const cancelValue = this.props.onCancel(this.getInput(this.props).props.form);
+        const callback = this.hasValueLink ? this.realValueLink.requestChange : this.realOnChange;
         if (!_.isUndefined(cancelValue)) {
-            if (this.hasValueLink) {
-                this.realValueLink.requestChange(cancelValue);
-            } else {
-                this.realOnChange(cancelValue);
-            }
+            callback(cancelValue);
         } else {
             if (this.hasValueLink) {
                 this.realValueLink.requestChange(this.realValueLink.value);
@@ -73,16 +70,15 @@ class ChangeConfirm extends Webiny.Ui.Component {
     }
 
     onConfirm() {
-        if (this.hasValueLink) {
-            this.realValueLink.requestChange(this.value);
-        } else {
-            this.realOnChange(this.value);
-        }
-        this.refs.dialog.hide();
+        const callback = this.hasValueLink ? this.realValueLink.requestChange : this.realOnChange;
+        return callback(this.value);
     }
 }
 
 ChangeConfirm.defaultProps = {
+    onComplete: _.noop,
+    onCancel: _.noop,
+    renderDialog: null,
     renderer() {
         // Input
         const input = this.getInput(this.props);
@@ -99,10 +95,22 @@ ChangeConfirm.defaultProps = {
             return input;
         }
 
+        const dialogProps = {
+            ref: 'dialog',
+            message: () => this.message,
+            onConfirm: this.onConfirm,
+            onCancel: this.onCancel,
+            onComplete: this.props.onComplete
+        };
+
+        if (_.isFunction(this.props.renderDialog)) {
+            dialogProps['renderDialog'] = this.props.renderDialog;
+        }
+
         return (
             <webiny-change-confirm>
                 {React.cloneElement(input, props)}
-                <Ui.Modal.Confirmation ref="dialog" message={() => this.message} onConfirm={this.onConfirm} onCancel={this.onCancel}/>
+                <Ui.Modal.Confirmation {...dialogProps}/>
             </webiny-change-confirm>
         );
     }
