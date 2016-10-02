@@ -1,12 +1,12 @@
 import Webiny from 'Webiny';
-import SelectContainer from './SelectContainer';
-import SelectInput from './SelectInput';
+import Select from './Select';
+import SimpleSelect from './SimpleSelect';
 
 class Module extends Webiny.Module {
 
     init() {
-        Webiny.Ui.Components.Select = SelectContainer;
-        Webiny.Ui.Components.SelectInput = SelectInput;
+        Webiny.Ui.Components.Select = Select;
+        Webiny.Ui.Components.SimpleSelect = SimpleSelect;
     }
 }
 

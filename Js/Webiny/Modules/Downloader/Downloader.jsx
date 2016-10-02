@@ -26,6 +26,7 @@ class Downloader extends Webiny.Ui.Component {
 Downloader.defaultProps = {
     debug: false,
     debugKey: 'PHPSTORM',
+    tokenCookie: 'webiny-token',
     renderer() {
         if (this.downloaded) {
             return null;
@@ -53,7 +54,7 @@ Downloader.defaultProps = {
 
         let authorization = null;
         if (this.state.httpMethod !== 'GET') {
-            authorization = <input type="hidden" name="X-Webiny-Authorization" value={Webiny.Cookies.get('webiny-token')}/>;
+            authorization = <input type="hidden" name="X-Webiny-Authorization" value={Webiny.Cookies.get(this.props.tokenCookie)}/>;
         }
 
         this.downloaded = true;

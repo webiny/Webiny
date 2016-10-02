@@ -54,6 +54,7 @@ class Data extends Webiny.Ui.Component {
     filter(filters = {}) {
         this.setState({loading: true});
         this.request = this.api.setQuery(filters).execute().then(this.setData);
+        return this.request;
     }
 }
 

@@ -7,12 +7,12 @@ import Link from './Link';
 class Module extends Webiny.Module {
 
     init() {
-        Webiny.Ui.Components.Dropdown = {
-            Dropdown,
+        Webiny.Ui.Components.Dropdown = Dropdown;
+        _.assign(Dropdown, {
             Header,
             Divider,
             Link
-        };
+        });
     }
 }
 

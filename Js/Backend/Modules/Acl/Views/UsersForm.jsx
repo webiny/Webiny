@@ -57,13 +57,13 @@ Form.defaultProps = {
         };
 
         return (
-            <Ui.Form.Container ui="myForm" {...containerProps}>
+            <Ui.Form ui="myForm" {...containerProps}>
                 {(model, container) => (
                     <Ui.View.Form>
                         <Ui.View.Header title={model.id ? 'ACL - Edit User' : 'ACL - Create User'}/>
                         <Ui.Form.Error message="Something went wrong during save"/>
                         <Ui.View.Body noPadding>
-                            <Ui.Tabs.Tabs size="large">
+                            <Ui.Tabs size="large">
                                 <Ui.Tabs.Tab label="General" icon="fa-user">
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={6}>
@@ -94,7 +94,7 @@ Form.defaultProps = {
                                         </tbody>
                                     </table>
                                 </Ui.Tabs.Tab>
-                            </Ui.Tabs.Tabs>
+                            </Ui.Tabs>
                         </Ui.View.Body>
                         <Ui.View.Footer>
                             <Ui.Button type="default" onClick={container.cancel} label="Go back"/>
@@ -102,7 +102,7 @@ Form.defaultProps = {
                         </Ui.View.Footer>
                     </Ui.View.Form>
                 )}
-            </Ui.Form.Container>
+            </Ui.Form>
         );
     }
 };

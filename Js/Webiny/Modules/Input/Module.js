@@ -1,10 +1,12 @@
 import Webiny from 'Webiny';
-import InputContainer from './InputContainer';
+import Input from './Input';
+import SimpleInput from './SimpleInput';
 
 class Module extends Webiny.Module {
 
     init() {
-        Webiny.Ui.Components.Input = InputContainer;
+        Webiny.Ui.Components.Input = Input;
+        Webiny.Ui.Components.SimpleInput = SimpleInput;
     }
 }
 

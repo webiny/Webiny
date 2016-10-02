@@ -81,10 +81,10 @@ FormView.defaultProps = {
                 {this.headerComponent}
                 <div className="view-content">
                     {this.errorComponent}
-                    <Ui.Panel.Panel className={'panel--boxed'}>
+                    <Ui.Panel className={'panel--boxed'}>
                         {this.bodyComponent}
                         {this.footerComponent}
-                    </Ui.Panel.Panel>
+                    </Ui.Panel>
                 </div>
             </view>
         );

@@ -47,7 +47,7 @@ ListErrors.defaultProps = {
 
         return (
 
-            <Ui.List.ApiContainer {...jsErrorList}>
+            <Ui.List {...jsErrorList}>
                 {(data, meta, errorList) => {
                     return (
                         <Ui.Grid.Row>
@@ -94,7 +94,7 @@ ListErrors.defaultProps = {
                         </Ui.Grid.Row>
                     );
                 }}
-            </Ui.List.ApiContainer>
+            </Ui.List>
         );
     }
 };

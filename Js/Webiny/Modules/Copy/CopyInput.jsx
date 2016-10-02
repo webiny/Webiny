@@ -38,7 +38,7 @@ CopyInput.defaultProps = {
             className: 'form-control',
             readOnly: true,
             type: 'text',
-            value: _.has(this.props, 'value') ? this.props.value || '' : _.get(this.props, 'valueLink.value') || '',
+            value: this.props.value || '',
             style: {
                 paddingRight: 95
             }

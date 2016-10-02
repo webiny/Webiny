@@ -7,10 +7,9 @@ class ChangeConfirm extends Webiny.Ui.Component {
 
         const input = this.getInput(props);
         this.state = {
-            value: input.props.valueLink ? input.props.valueLink.value : input.props.value
+            value: input.props.value
         };
 
-        this.hasValueLink = _.has(input.props, 'valueLink');
         this.message = null;
 
         this.bindMethods('onChange,onConfirm,onCancel');
@@ -19,7 +18,7 @@ class ChangeConfirm extends Webiny.Ui.Component {
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
         const input = this.getInput(props);
-        this.setState({value: input.props.valueLink ? input.props.valueLink.value : input.props.value});
+        this.setState({value: input.props.value});
     }
 
     shouldComponentUpdate(nextProps) {
@@ -35,15 +34,11 @@ class ChangeConfirm extends Webiny.Ui.Component {
 
         let msg = this.props.message;
         if (_.isFunction(msg)) {
-            msg = msg(value, this.hasValueLink ? this.realValueLink.value : input.props.value, component);
+            msg = msg(value, input.props.value, component);
         }
 
         if (!msg) {
-            if (this.hasValueLink) {
-                this.realValueLink.requestChange(value);
-            } else {
-                this.realOnChange(value);
-            }
+            this.realOnChange(value);
             return;
         }
 
@@ -58,20 +53,16 @@ class ChangeConfirm extends Webiny.Ui.Component {
 
     onCancel() {
         const cancelValue = this.props.onCancel(this.getInput(this.props).props.form);
-        const callback = this.hasValueLink ? this.realValueLink.requestChange : this.realOnChange;
         if (!_.isUndefined(cancelValue)) {
-            callback(cancelValue);
+            this.realOnChange(cancelValue);
         } else {
-            if (this.hasValueLink) {
-                this.realValueLink.requestChange(this.realValueLink.value);
-            }
+            this.realOnChange(this.state.value);
         }
         this.refs.dialog.hide();
     }
 
     onConfirm() {
-        const callback = this.hasValueLink ? this.realValueLink.requestChange : this.realOnChange;
-        return callback(this.value);
+        return this.realOnChange(this.value);
     }
 }
 
@@ -82,18 +73,9 @@ ChangeConfirm.defaultProps = {
     renderer() {
         // Input
         const input = this.getInput(this.props);
-        let props = null;
-        if (this.hasValueLink) {
-            this.realValueLink = input.props.valueLink;
-            props = _.omit(input.props, ['valueLink']);
-            props.valueLink = this.bindTo('value', this.onChange);
-        } else if (input.props.onChange) {
-            this.realOnChange = input.props.onChange;
-            props = _.omit(input.props, ['onChange']);
-            props.onChange = this.onChange;
-        } else {
-            return input;
-        }
+        this.realOnChange = input.props.onChange;
+        const props = _.omit(input.props, ['onChange']);
+        props.onChange = this.onChange;
 
         const dialogProps = {
             ref: 'dialog',

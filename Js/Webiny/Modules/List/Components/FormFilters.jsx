@@ -26,9 +26,9 @@ FormFilters.defaultProps = {
         const resetFilters = () => () => this.applyFilters({});
 
         return (
-            <Ui.Form.Container ref="form" defaultModel={this.props.defaultModel} model={this.props.filters} onSubmit={this.applyFilters}>
+            <Ui.Form ref="form" defaultModel={this.props.defaultModel} model={this.props.filters} onSubmit={this.applyFilters}>
                 {() => this.props.children(applyFilters, resetFilters)}
-            </Ui.Form.Container>
+            </Ui.Form>
         );
     }
 };

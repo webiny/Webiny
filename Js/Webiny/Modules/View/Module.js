@@ -16,9 +16,9 @@ class Module extends Webiny.Module {
         View.Body = Body;
         View.Footer = Footer;
 
-        // Add FormView into list of components that will receive a `container` prop when used inside of Form.Container
-        const injectInto = Webiny.Ui.Components.Form.Container.defaultProps.injectInto;
-        Webiny.Ui.Components.Form.Container.defaultProps.injectInto = () => {
+        // Add FormView into list of components that will receive a `container` prop when used inside of Form
+        const injectInto = Webiny.Ui.Components.Form.defaultProps.injectInto;
+        Webiny.Ui.Components.Form.defaultProps.injectInto = () => {
             const injects = injectInto();
             injects.push(FormView);
             return injects;

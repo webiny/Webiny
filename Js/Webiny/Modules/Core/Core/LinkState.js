@@ -10,7 +10,7 @@ class LinkState {
     create() {
         return {
             value: this.__getValue(this.key),
-            requestChange: this.__createStateKeySetter()
+            onChange: this.__createStateKeySetter()
         };
     }
 

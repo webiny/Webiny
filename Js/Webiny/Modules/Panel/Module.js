@@ -8,7 +8,8 @@ import Menu from './Menu';
 class Module extends Webiny.Module {
 
     init() {
-        Webiny.Ui.Components.Panel = {Panel, Header, Body, Footer, Menu};
+        Webiny.Ui.Components.Panel = Panel;
+        _.assign(Panel, {Header, Body, Footer, Menu});
     }
 }
 

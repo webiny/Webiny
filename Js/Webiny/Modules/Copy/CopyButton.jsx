@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-class CopyButton extends Webiny.Ui.Component {
+class CopyButton extends Webiny.Ui.FormComponent {
     constructor(props) {
         super(props);
 
@@ -84,9 +84,7 @@ CopyButton.defaultProps = {
             props.className
         );
 
-        const text = _.has(this.props, 'value') ? this.props.value || '' : _.get(this.props, 'valueLink.value') || '';
-
-        return <button style={this.props.style} data-clipboard-text={text} type="button" className={classes}>{this.getContent()}</button>;
+        return <button style={this.props.style} data-clipboard-text={this.props.value || ''} type="button" className={classes}>{this.getContent()}</button>;
     }
 };
 

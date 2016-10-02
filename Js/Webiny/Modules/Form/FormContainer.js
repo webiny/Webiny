@@ -25,6 +25,10 @@ class FormContainer extends Webiny.Ui.Component {
             Webiny.Mixins.ApiComponent.extend(this);
         }
 
+        this.noParsing = [
+            Ui.List.Table
+        ];
+
         this.bindMethods(
             'getModel',
             'setModel',
@@ -366,12 +370,12 @@ class FormContainer extends Webiny.Ui.Component {
      * @returns {*}
      */
     registerComponent(input) {
-        if (typeof input !== 'object' || input === null) {
+        if (typeof input !== 'object' || input === null || this.noParsing.indexOf(input.type) > -1) {
             return input;
         }
 
-        // Do not descend into nested Form.Container
-        if (input.type && input.type === Ui.Form.Container) {
+        // Do not descend into nested Form
+        if (input.type && input.type === Ui.Form) {
             return input;
         }
 
@@ -389,7 +393,7 @@ class FormContainer extends Webiny.Ui.Component {
                 form: this
             };
 
-            // Add onChange callback passed through props to component valueLink
+            // Create an onChange callback
             const callback = _.get(input.props, 'onChange', _.noop);
 
             // Input changed callback, triggered on each input change
@@ -407,7 +411,9 @@ class FormContainer extends Webiny.Ui.Component {
                 }
             };
 
-            newProps['valueLink'] = this.bindTo(input.props.name, changeCallback.bind(this), input.props.defaultValue);
+            const vl = this.bindTo(input.props.name, changeCallback.bind(this), input.props.defaultValue);
+            newProps['value'] = vl.value;
+            newProps['onChange'] = vl.onChange;
             if (this.parsingTabsIndex > 0) {
                 newProps['__tabs'] = {id: 'tabs-' + this.parsingTabsIndex, tab: this.parsingTabIndex};
             }
@@ -416,7 +422,7 @@ class FormContainer extends Webiny.Ui.Component {
         }
 
         // Track Tabs to be able to focus the relevant tab when validation fails
-        if (input.type && input.type === Ui.Tabs.Tabs) {
+        if (input.type && input.type === Ui.Tabs) {
             this.parsingTabsIndex++;
             this.parsingTabIndex = -1;
 
@@ -534,7 +540,7 @@ class FormContainer extends Webiny.Ui.Component {
     __renderContent() {
         const children = this.props.children;
         if (!_.isFunction(children)) {
-            throw new Error('Form.Container must have a function as its only child!');
+            throw new Error('Form must have a function as its only child!');
         }
         return this.registerComponents(children.call(this, _.clone(this.state.model), this));
     }

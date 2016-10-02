@@ -14,7 +14,7 @@ Main.defaultProps = {
 
                 <Ui.View.Body noPadding={true}>
 
-                    <Ui.Tabs.Tabs size="large">
+                    <Ui.Tabs size="large">
                         <Ui.Tabs.Tab label="JavaScript" icon="fa-code">
                             <ListErrors type="js"/>
                         </Ui.Tabs.Tab>
@@ -26,7 +26,7 @@ Main.defaultProps = {
                         <Ui.Tabs.Tab label="Api" icon="fa-rocket">
                             <ListErrors type="api"/>
                         </Ui.Tabs.Tab>
-                    </Ui.Tabs.Tabs>
+                    </Ui.Tabs>
 
                 </Ui.View.Body>
             </Ui.View.List>

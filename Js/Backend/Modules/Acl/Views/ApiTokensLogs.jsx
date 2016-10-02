@@ -51,7 +51,7 @@ ApiTokensLogs.defaultProps = {
                     <Ui.Link type="default" align="right" route="ApiTokens.List">Back to API tokens</Ui.Link>
                 </Ui.View.Header>
                 <Ui.View.Body>
-                    <Ui.List.ApiContainer {...listProps}>
+                    <Ui.List {...listProps}>
                         {data => {
                             return (
                                 <Ui.Grid.Row>
@@ -101,7 +101,7 @@ ApiTokensLogs.defaultProps = {
                                 </Ui.Grid.Row>
                             );
                         }}
-                    </Ui.List.ApiContainer>
+                    </Ui.List>
                 </Ui.View.Body>
             </Ui.View.List>
         );

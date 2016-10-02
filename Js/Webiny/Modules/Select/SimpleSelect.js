@@ -21,7 +21,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        if (props.valueLink && props.valueLink.value !== this.props.valueLink.value) {
+        if (props.value !== this.props.value) {
             this.previousData = _.clone(this.getCurrentData());
         }
     }
@@ -83,7 +83,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
     }
 
     getValue() {
-        const value = this.props.valueLink ? this.props.valueLink.value : this.props.selectedValue;
+        const value = this.props.value;
         if (value === null || value === undefined) {
             return value;
         }
@@ -93,16 +93,16 @@ class SelectInput extends Webiny.Ui.FormComponent {
 
     getCurrentData() {
         if (this.props.useDataAsValue) {
-            return this.props.valueLink.value;
+            return this.props.value;
         }
 
         let data = null;
-        const option = _.find(this.options, {id: this.props.valueLink.value});
+        const option = _.find(this.options, {id: this.props.value});
         if (option) {
             data = option.data;
         }
 
-        return this.props.valueLink.value ? data : null;
+        return this.props.value ? data : null;
     }
 
     getPreviousData() {
@@ -119,23 +119,19 @@ class SelectInput extends Webiny.Ui.FormComponent {
             }
         }
 
-        if (this.props.valueLink) {
-            // Save previous selection data so it can be accessed from onChange handlers
-            const prevValue = this.getValue();
-            if (this.props.useDataAsValue) {
-                this.previousData = prevValue ? _.clone(prevValue) : null;
-            } else {
-                let data = null;
-                const option = _.find(this.options, {id: prevValue});
-                if (option) {
-                    data = option.data;
-                }
-                this.previousData = data ? _.clone(data) : null;
-            }
-            this.props.valueLink.requestChange(value, !this.isValid() ? this.validate : _.noop);
+        // Save previous selection data so it can be accessed from onChange handlers
+        const prevValue = this.getValue();
+        if (this.props.useDataAsValue) {
+            this.previousData = prevValue ? _.clone(prevValue) : null;
         } else {
-            this.props.onChange(value);
+            let data = null;
+            const option = _.find(this.options, {id: prevValue});
+            if (option) {
+                data = option.data;
+            }
+            this.previousData = data ? _.clone(data) : null;
         }
+        this.props.onChange(value, !this.isValid() ? this.validate : _.noop);
     }
 
     getOptionText(text) {
@@ -204,7 +200,6 @@ SelectInput.defaultProps = {
     allowClear: false,
     placeholder: null,
     onChange: _.noop,
-    selectedValue: '',
     minimumInputLength: 0,
     minimumResultsForSearch: 15,
     useDataAsValue: false,

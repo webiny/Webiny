@@ -1,96 +1,49 @@
 import Webiny from 'Webiny';
+import SimpleTags from './SimpleTags';
 
-class Tags extends Webiny.Ui.FormComponent {
+class Container extends Webiny.Ui.FormComponent {
 
-    constructor(props) {
-        super(props);
-
-        this.bindMethods('focusTagInput,removeTag,addTag');
-    }
-
-    componentDidMount() {
-        super.componentDidMount();
-        this.refs.tagInput.focus();
-    }
-
-    focusTagInput() {
-        this.refs.tagInput.focus();
-    }
-
-    removeTag(index) {
-        const value = this.props.valueLink.value;
-        value.splice(index, 1);
-        this.props.valueLink.requestChange(value);
-    }
-
-    tagExists(tag) {
-        return _.find(this.props.valueLink.value, data => data === tag);
-    }
-
-    addTag(e) {
-        if (e.ctrlKey || e.metaKey) {
-            return;
-        }
-        let tags = this.props.valueLink.value;
-        const input = this.refs.tagInput;
-        const emptyField = !input.value;
-        const canRemove = emptyField && e.keyCode === 8 || e.keyCode === 46;
-        const skipAdd = e.key !== 'Tab' && e.key !== 'Enter';
-
-        if (canRemove) {
-            this.removeTag(_.findLastIndex(tags));
-        }
-
-        if (skipAdd) {
-            return;
-        }
-
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (emptyField || this.tagExists(input.value)) {
-            return;
-        }
-
-        if (!_.isArray(tags)) {
-            tags = [];
-        }
-        tags.push(input.value);
-        input.value = '';
-        this.props.valueLink.requestChange(tags);
-        this.setState({tag: ''});
-    }
 }
 
-Tags.defaultProps = {
-    placeholder: 'Type and hit ENTER',
+Container.defaultProps = {
     renderer() {
-        const input = {
-            type: 'text',
-            className: 'keyword-input',
-            ref: 'tagInput',
-            onKeyDown: this.addTag,
-            placeholder: this.props.placeholder,
-            style: {
-                border: 'none',
-                outline: 'none'
-            }
+        const cssConfig = {
+            'form-group': true,
+            'error': this.state.isValid === false,
+            'success': this.state.isValid === true
+        };
+
+        let label = null;
+        if (this.props.label) {
+            label = <label key="label" className="control-label">{this.props.label}</label>;
+        }
+
+        let validationMessage = null;
+
+        if (this.state.isValid === false) {
+            validationMessage = <span className="help-block">{this.state.validationMessage}</span>;
+        }
+
+        const props = {
+            onBlur: this.validate,
+            className: 'form-control form-group--keywords',
+            value: this.props.value,
+            onChange: this.props.onChange,
+            placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder),
+            style: this.props.style,
+            mode: this.props.mode,
+            readOnly: _.get(this.props, 'readOnly', false)
         };
 
         return (
-            <div className="keyword-container" onClick={this.focusTagInput}>
-                <div className="tags-container">
-                    {_.isArray(this.props.valueLink.value) && this.props.valueLink.value.map((tag, index) => (
-                        <div key={tag} className="keyword-block">
-                            <p>{tag}</p>
-                            <i className="icon icon-cancel" onClick={this.removeTag.bind(this, index)}></i>
-                        </div>
-                    ))}
-                    <input {...input}/>
-                </div>
+            <div className={this.classSet(cssConfig)}>
+                {label}
+                <SimpleTags {...props}/>
+                <span className="help-block">{this.props.description}</span>
+                {validationMessage}
             </div>
         );
     }
 };
 
-export default Tags;
+export default Container;

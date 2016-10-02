@@ -9,14 +9,14 @@ import Webiny from 'Webiny';
  * The logic behind this component is to serve as a middleman between Form and Input/Textarea, and only notify form of a change when
  * a user stops typing for given period of time (200ms by default).
  */
-class DelayedValueLink extends Webiny.Ui.Component {
+class DelayedOnChange extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);
 
         this.delay = null;
         this.state = {
-            value: props.children.props.valueLink.value
+            value: props.children.props.value
         };
 
         this.bindMethods('applyValue,changed');
@@ -25,14 +25,14 @@ class DelayedValueLink extends Webiny.Ui.Component {
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
         if (!this.delay) {
-            this.setState({value: props.children.props.valueLink.value});
+            this.setState({value: props.children.props.value});
         }
     }
 
     applyValue(value, callback = _.noop) {
         clearTimeout(this.delay);
         this.delay = null;
-        this.realValueLink.requestChange(value, callback);
+        this.realOnChange(value, callback);
     }
 
     changed() {
@@ -42,9 +42,12 @@ class DelayedValueLink extends Webiny.Ui.Component {
     }
 
     render() {
-        this.realValueLink = this.props.children.props.valueLink;
-        const props = _.omit(this.props.children.props, ['valueLink']);
-        props.valueLink = this.bindTo('value', this.changed);
+        this.realOnChange = this.props.children.props.onChange;
+        const props = _.omit(this.props.children.props, ['onChange']);
+        props.value = this.state.value;
+        props.onChange = e => {
+            this.setState({value: e.target.value}, this.changed);
+        };
         const realOnKeyDown = props.onKeyDown || _.noop;
         const realOnBlur = props.onBlur || _.noop;
 
@@ -70,8 +73,8 @@ class DelayedValueLink extends Webiny.Ui.Component {
     }
 }
 
-DelayedValueLink.defaultProps = {
+DelayedOnChange.defaultProps = {
     delay: 400
 };
 
-export default DelayedValueLink;
+export default DelayedOnChange;

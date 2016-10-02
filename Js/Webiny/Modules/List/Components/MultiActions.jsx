@@ -8,7 +8,7 @@ MultiActions.defaultProps = {
     label: 'With selected...',
     renderer() {
         return (
-            <Ui.Dropdown.Dropdown title={this.props.label}>
+            <Ui.Dropdown title={this.props.label}>
                 <Ui.Dropdown.Header title="Actions"/>
                 {React.Children.map(this.props.children, child => {
                     if (child.type === Ui.Dropdown.Divider || child.type === Ui.Dropdown.Header) {
@@ -24,7 +24,7 @@ MultiActions.defaultProps = {
                         </li>
                     );
                 })}
-            </Ui.Dropdown.Dropdown>
+            </Ui.Dropdown>
         );
     }
 };

@@ -266,7 +266,7 @@ class BaseContainer extends Webiny.Ui.Component {
             }
 
             const props = _.omit(child.props, ['children', 'key', 'ref']);
-            if (child.type === Ui.List.Table.Table) {
+            if (child.type === Ui.List.Table) {
                 this.tableElement = React.cloneElement(child, this.tableProps(props), child.props.children);
             }
 

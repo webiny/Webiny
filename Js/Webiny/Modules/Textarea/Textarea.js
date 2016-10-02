@@ -1,12 +1,11 @@
 import Webiny from 'Webiny';
-import Textarea from './Textarea';
 const Ui = Webiny.Ui.Components;
 
-class TextareaContainer extends Webiny.Ui.FormComponent {
+class Textarea extends Webiny.Ui.FormComponent {
 
 }
 
-TextareaContainer.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
+Textarea.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     renderer() {
         const cssConfig = {
             'form-group': true,
@@ -33,26 +32,18 @@ TextareaContainer.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProp
             onBlur: this.validate,
             disabled: this.isDisabled(),
             className: 'form-control',
-            value: this.props.value || null,
-            valueLink: this.props.valueLink,
+            value: this.props.value || '',
             placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder),
             style: this.props.style,
-            onChange: this.props.onChange || _.noop
+            onChange: this.props.onChange
         };
-
-        if (!props.valueLink) {
-            delete props['valueLink'];
-        }
-
-        let textarea = <Textarea {...props}/>;
-        if (props.valueLink) {
-            textarea = <Webiny.Ui.Components.DelayedValueLink>{textarea}</Webiny.Ui.Components.DelayedValueLink>;
-        }
 
         return (
             <div className={this.classSet(cssConfig)}>
                 {label}
-                {textarea}
+                <Webiny.Ui.Components.DelayedOnChange>
+                    <textarea {...props}/>
+                </Webiny.Ui.Components.DelayedOnChange>
                 <span className="help-block">{this.props.description}</span>
                 {validationMessage}
             </div>
@@ -60,4 +51,4 @@ TextareaContainer.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProp
     }
 });
 
-export default TextareaContainer;
+export default Textarea;

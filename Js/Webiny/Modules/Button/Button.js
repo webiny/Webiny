@@ -26,6 +26,7 @@ Button.defaultProps = {
     icon: null,
     className: null,
     label: null,
+    onClick: _.noop,
     renderer() {
         const props = _.clone(this.props);
 
@@ -64,7 +65,7 @@ Button.defaultProps = {
         if (icon) {
             content = <span>{content}</span>;
         }
-        return <button {..._.omit(props, ['align', 'renderer'])} type="button" className={classes}>{icon} {content}</button>;
+        return <button {..._.pick(props, ['style', 'onClick'])} type="button" className={classes}>{icon} {content}</button>;
     }
 };
 

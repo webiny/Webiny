@@ -11,7 +11,7 @@ class FormComponent extends Component {
             validationResults: {}
         };
 
-        this.bindMethods('isRequired', 'validate', 'getValue', 'hasValue', 'onChange', 'isDisabled');
+        this.bindMethods('isRequired', 'validate', 'getValue', 'hasValue', 'isDisabled');
     }
 
     componentWillMount() {
@@ -60,27 +60,26 @@ class FormComponent extends Component {
             return true;
         }
 
-        if (_.isNumber(this.props.valueLink.value)) {
+        if (_.isNumber(this.props.value)) {
             return true;
         }
 
-        return !_.isEmpty(this.props.valueLink.value);
+        return !_.isEmpty(this.props.value);
     }
 
     setInvalid(message) {
         this.setState({isValid: false, validationMessage: message});
     }
 
-    getValue() {
-        return this.props.valueLink.value;
+    getValue(props = null) {
+        if (!props) {
+            props = this.props;
+        }
+        return props.value;
     }
 
     isRequired() {
         return this.props.validate && this.props.validate.indexOf('required') > -1;
-    }
-
-    onChange(e) {
-        this.props.valueLink.requestChange(e.target.value);
     }
 
     isDisabled(props = this.props) {
@@ -105,9 +104,10 @@ FormComponent.defaultProps = {
     disabledBy: null,
     form: null,
     validate: null,
-    valueLink: null,
-    hideAnimation: {translateY: 0, opacity: 0, duration: 225},
-    showAnimation: {translateY: 50, opacity: 1, duration: 225},
+    value: null,
+    onChange: _.noop,
+    hideValidationAnimation: {translateY: 0, opacity: 0, duration: 225},
+    showValidationAnimation: {translateY: 50, opacity: 1, duration: 225},
     showValidationMessage: true,
     showValidationIcon: true
 };

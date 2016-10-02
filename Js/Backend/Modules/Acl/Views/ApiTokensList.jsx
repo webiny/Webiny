@@ -62,7 +62,7 @@ ApiTokensList.defaultProps = {
                                 <SystemApiTokenModal ui="systemApiToken" token={this.state.apiToken} createToken={showView('tokenModalView')}/>
                             </Ui.View.Header>
                             <Ui.View.Body>
-                                <Ui.List.ApiContainer {...listProps}>
+                                <Ui.List {...listProps}>
                                     <Ui.List.FormFilters>
                                         {(applyFilters) => (
                                             <Ui.Input
@@ -71,7 +71,7 @@ ApiTokensList.defaultProps = {
                                                 onEnter={applyFilters()}/>
                                         )}
                                     </Ui.List.FormFilters>
-                                    <Table.Table>
+                                    <Table>
                                         <Table.Row>
                                             <Table.Field name="token" align="left" label="Token">
                                                 {data => (
@@ -117,9 +117,9 @@ ApiTokensList.defaultProps = {
                                             </Table.Actions>
                                         </Table.Row>
                                         <Table.Footer/>
-                                    </Table.Table>
+                                    </Table>
                                     <Ui.List.Pagination/>
-                                </Ui.List.ApiContainer>
+                                </Ui.List>
                             </Ui.View.Body>
                         </Ui.View.List>
                     )}

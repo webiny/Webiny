@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
 
-class Editor extends Webiny.Ui.FormComponent {
+class MarkdownEditor extends Webiny.Ui.FormComponent {
     constructor(props) {
         super(props);
 
@@ -26,14 +26,14 @@ class Editor extends Webiny.Ui.FormComponent {
         this.mdEditor = new SimpleMDE(mdConfig);
 
         this.mdEditor.codemirror.on('change', () => {
-            this.props.valueLink.requestChange(this.mdEditor.codemirror.getValue());
+            this.props.onChange(this.mdEditor.codemirror.getValue());
         });
     }
 
     componentWillReceiveProps(props) {
-        if (this.mdEditor.codemirror.getValue() !== props.valueLink.value && !_.isNull(props.valueLink.value)) {
+        if (this.mdEditor.codemirror.getValue() !== props.value && !_.isNull(props.value)) {
             // the "+ ''" sort a strange with splitLines method within CodeMirror
-            this.mdEditor.codemirror.setValue(props.valueLink.value + '');
+            this.mdEditor.codemirror.setValue(props.value + '');
         }
     }
 
@@ -54,7 +54,7 @@ class Editor extends Webiny.Ui.FormComponent {
     }
 }
 
-Editor.defaultProps = {
+MarkdownEditor.defaultProps = {
 
     renderer() {
         return (
@@ -65,4 +65,4 @@ Editor.defaultProps = {
     }
 };
 
-export default Editor;
+export default MarkdownEditor;

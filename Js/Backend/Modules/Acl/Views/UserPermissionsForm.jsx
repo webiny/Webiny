@@ -80,7 +80,7 @@ UserPermissionsForm.defaultProps = {
 
         return (
 
-            <Ui.Form.Container {...formProps}>
+            <Ui.Form {...formProps}>
                 {(model, container) => {
                     const entities = [];
                     const services = [];
@@ -157,10 +157,10 @@ UserPermissionsForm.defaultProps = {
                                 </Ui.Grid.Row>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
-                                        <Ui.Tabs.Tabs>
+                                        <Ui.Tabs>
                                             <Ui.Tabs.Tab label="Entities">
-                                                <Ui.Input placeholder="Filter entities" valueLink={this.bindTo('entityFilter')} delay={0}/>
-                                                <Table.Table data={entities} actions={entityActions} className="no-hover">
+                                                <Ui.Input placeholder="Filter entities" {...this.bindTo('entityFilter')} delay={0}/>
+                                                <Table data={entities} actions={entityActions} className="no-hover">
                                                     <Table.Row>
                                                         <Table.RowDetailsField hide={data => !data.custom}/>
                                                         <Table.Field name="name" label="Entity"/>
@@ -203,13 +203,13 @@ UserPermissionsForm.defaultProps = {
                                                             );
                                                         }}
                                                     </Table.RowDetails>
-                                                </Table.Table>
+                                                </Table>
                                             </Ui.Tabs.Tab>
                                             <Ui.Tabs.Tab label="Services">
-                                                <Ui.Input placeholder="Filter services" valueLink={this.bindTo('serviceFilter')} delay={0}/>
+                                                <Ui.Input placeholder="Filter services" {...this.bindTo('serviceFilter')} delay={0}/>
                                                 {services.map(service => this.renderService(service, model, container))}
                                             </Ui.Tabs.Tab>
-                                        </Ui.Tabs.Tabs>
+                                        </Ui.Tabs>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                             </Ui.View.Body>
@@ -220,7 +220,7 @@ UserPermissionsForm.defaultProps = {
                         </Ui.View.Form>
                     );
                 }}
-            </Ui.Form.Container>
+            </Ui.Form>
         );
     }
 };

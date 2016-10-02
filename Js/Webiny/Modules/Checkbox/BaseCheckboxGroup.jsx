@@ -9,25 +9,20 @@ class BaseCheckboxGroup extends Webiny.Ui.FormComponent {
     }
 
     onChange(key, newValue) {
-        const value = this.props.options[key];
-        const newState = this.props.valueLink.value || [];
+        const option = this.props.options[key];
+        const newState = this.props.value || [];
         if (newValue) {
-            newValue = this.props.formatValue(value);
+            newValue = this.props.formatValue(option);
             newState.push(newValue);
         } else {
             const currentIndex = _.findIndex(newState, opt => {
-                return _.get(opt, this.props.valueKey) === value.id;
+                const optValue = this.props.valueKey ? _.get(opt, this.props.valueKey) : opt;
+                return optValue === option.id;
             });
 
             newState.splice(currentIndex, 1);
         }
-
-        // Notify main form of a new checkbox group state
-        if (this.props.valueLink) {
-            this.props.valueLink.requestChange(newState, this.validate);
-        } else {
-            this.props.onChange(this.props.stateKey, newState);
-        }
+        this.props.onChange(newState, this.validate);
     }
 
     /**
@@ -37,7 +32,7 @@ class BaseCheckboxGroup extends Webiny.Ui.FormComponent {
     getOptions() {
         const items = [];
         _.forEach(this.props.options, (item, key) => {
-            const checked = _.find(this.props.valueLink.value, opt => {
+            const checked = _.find(this.props.value, opt => {
                 if (_.isPlainObject(opt)) {
                     return _.get(opt, this.props.valueKey) === item.id;
                 }
@@ -68,7 +63,7 @@ BaseCheckboxGroup.defaultProps = {
     disabled: false,
     label: '',
     grid: 12,
-    valueKey: 'id',
+    valueKey: null,
     valueAttr: 'id',
     textAttr: 'name',
     checkboxRenderer: null,

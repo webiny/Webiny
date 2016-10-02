@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
-import SelectInput from './SelectInput';
+import SimpleSelect from './SimpleSelect';
 
-class SelectContainer extends Webiny.Ui.OptionComponent {
+class Select extends Webiny.Ui.OptionComponent {
 
     constructor(props) {
         super(props);
@@ -18,9 +18,9 @@ class SelectContainer extends Webiny.Ui.OptionComponent {
 
     render() {
         return (
-            <SelectInput ref="input" {..._.omit(this.props, ['ui'])} options={this.state.options}/>
+            <SimpleSelect ref="input" {..._.omit(this.props, ['ui'])} options={this.state.options}/>
         );
     }
 }
 
-export default SelectContainer;
+export default Select;

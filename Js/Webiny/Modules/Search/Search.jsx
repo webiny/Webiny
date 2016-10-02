@@ -8,7 +8,7 @@ class Search extends Webiny.Ui.FormComponent {
 
         _.assign(this.state, {
             query: '', // Value being searched
-            preview: '', // Rendered value of selected value (value from valueLink)
+            preview: '', // Rendered value of selected value
             options: [],
             loading: false,
             selectedOption: -1, // Selected option index
@@ -63,11 +63,8 @@ class Search extends Webiny.Ui.FormComponent {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        if (!props.valueLink) {
-            return;
-        }
 
-        if (_.isEqual(props.valueLink.value, this.props.valueLink.value)) {
+        if (_.isEqual(props.value, this.props.value)) {
             return;
         }
 
@@ -95,11 +92,7 @@ class Search extends Webiny.Ui.FormComponent {
      * @param props
      */
     normalizeValue(props) {
-        if (!props.valueLink) {
-            return;
-        }
-
-        const value = props.valueLink.value;
+        const value = props.value;
 
         const newState = {
             options: [],
@@ -172,8 +165,8 @@ class Search extends Webiny.Ui.FormComponent {
     }
 
     inputChanged(e) {
-        if (this.props.valueLink && this.props.valueLink.value && this.currentValueIsId && this.props.allowFreeInput) {
-            this.props.valueLink.requestChange(e.target.value);
+        if (this.props.value && this.currentValueIsId && this.props.allowFreeInput) {
+            this.props.onChange(e.target.value);
         }
         this.setState({
             query: e.target.value,
@@ -194,9 +187,9 @@ class Search extends Webiny.Ui.FormComponent {
 
         switch (this.key) {
             case 'Backspace':
-                if (_.isEmpty(this.state.query) || _.get(this.props, 'valueLink.value')) {
+                if (_.isEmpty(this.state.query) || _.get(this.props, 'value')) {
                     // Reset only if it is a selected value with valid mongo ID or data object
-                    const id = _.get(this.props, 'valueLink.value');
+                    const id = _.get(this.props, 'value');
                     if (this.props.allowFreeInput && _.isString(id) && !id.match(/^[0-9a-fA-F]{24}$/)) {
                         this.inputChanged(e);
                         break;
@@ -244,7 +237,7 @@ class Search extends Webiny.Ui.FormComponent {
 
         if (!this.props.allowFreeInput) {
             const state = {options: []};
-            if (!_.get(this.props, 'valueLink.value')) {
+            if (!_.get(this.props, 'value')) {
                 state['query'] = '';
                 state['selectedOption'] = -1;
             }
@@ -257,14 +250,9 @@ class Search extends Webiny.Ui.FormComponent {
     }
 
     applyFreeInput() {
-        if (this.props.valueLink) {
-            if (!this.state.selectedData && !(this.state.query === '' && this.state.preview !== '')) {
-                this.props.valueLink.requestChange(this.state.query);
-                setTimeout(this.validate, 10);
-            }
-        } else {
-            this.props.onChange(this.state.query, this.props.container);
-            this.props.container.reset();
+        if (!this.state.selectedData && !(this.state.query === '' && this.state.preview !== '')) {
+            this.props.onChange(this.state.query);
+            setTimeout(this.validate, 10);
         }
     }
 
@@ -278,14 +266,8 @@ class Search extends Webiny.Ui.FormComponent {
             selectedData: item
         }, () => {
             const value = this.props.formatValue(this.props.useDataAsValue ? item : item[this.props.valueAttr]);
-            if (this.props.valueLink) {
-                // This will be handled by FormContainer, which will in turn call your onChange callback (if any)
-                this.props.valueLink.requestChange(value);
-                setTimeout(this.validate, 10);
-            } else {
-                this.props.onChange(value, this);
-                this.reset();
-            }
+            this.props.onChange(value);
+            setTimeout(this.validate, 10);
             this.preventBlur = false;
         });
     }
@@ -347,10 +329,7 @@ class Search extends Webiny.Ui.FormComponent {
             options: [],
             selectedData: null
         }, () => {
-            if (this.props.valueLink) {
-                this.props.valueLink.requestChange(null);
-            }
-
+            this.props.onChange(null);
             this.props.onReset();
         });
     }

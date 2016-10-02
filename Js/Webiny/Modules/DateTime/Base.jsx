@@ -10,12 +10,12 @@ class Base extends Webiny.Ui.FormComponent {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        const omit = ['children', 'key', 'ref', 'valueLink'];
+        const omit = ['children', 'key', 'ref', 'onChange'];
         const oldProps = _.omit(this.props, omit);
         const newProps = _.omit(nextProps, omit);
 
-        const newValue = nextProps.valueLink.value;
-        const oldValue = this.props.valueLink.value;
+        const newValue = nextProps.value;
+        const oldValue = this.props.value;
 
         return !_.isEqual(newProps, oldProps) || !_.isEqual(newValue, oldValue) || !_.isEqual(nextState, this.state);
     }
@@ -36,19 +36,19 @@ class Base extends Webiny.Ui.FormComponent {
             viewMode: this.props.viewMode
         }).on('dp.hide', e => {
             if (this.valueChanged) {
-                this.onChange(e);
+                this.props.onChange(e.target.value);
             }
             this.valueChanged = false;
         }).on('dp.change', () => {
             this.valueChanged = true;
         });
 
-        this.setValue(this.props.valueLink.value);
+        this.setValue(this.props.value);
     }
 
     componentDidUpdate() {
         super.componentDidUpdate();
-        this.setValue(this.props.valueLink.value);
+        this.setValue(this.props.value);
     }
 
     setValue(newValue) {
@@ -85,9 +85,9 @@ Base.defaultProps = {
             disabled: this.isDisabled(),
             readOnly: this.props.readOnly,
             type: 'text',
-            className: this.classSet('form-control', {placeholder: !this.props.valueLink.value}),
-            value: this.props.valueLink.value || '',
-            onChange: this.onChange,
+            className: this.classSet('form-control', {placeholder: !this.props.value}),
+            value: this.props.value || '',
+            onChange: e => this.props.onChange(e.target.value),
             placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder)
         };
 

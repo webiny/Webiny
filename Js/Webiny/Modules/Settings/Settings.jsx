@@ -19,7 +19,7 @@ Settings.defaultProps = {
             children: this.props.children
         };
 
-        return <Ui.Form.Container {...formProps}/>;
+        return <Ui.Form {...formProps}/>;
     }
 };
 

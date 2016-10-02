@@ -28,11 +28,11 @@ class GoogleMaps extends Webiny.Ui.Component {
     }
 
     shouldComponentUpdate(newProps) {
-        if (!this.props.valueLink) {
+        if (!this.props.value) {
             return false;
         }
 
-        return !_.isEqual(this.props.valueLink.value, newProps.valueLink.value);
+        return !_.isEqual(this.props.value, newProps.value);
     }
 
     componentDidUpdate() {
@@ -58,7 +58,7 @@ class GoogleMaps extends Webiny.Ui.Component {
 
         if (!this.props.readOnly) {
             google.maps.event.addListener(this.marker, 'dragend', () => {
-                this.props.valueLink.requestChange({
+                this.props.onChange({
                     lat: this.marker.getPosition().lat(),
                     lng: this.marker.getPosition().lng()
                 });
@@ -69,8 +69,8 @@ class GoogleMaps extends Webiny.Ui.Component {
     }
 
     positionMarker() {
-        const lat = _.get(this, 'props.valueLink.value.lat');
-        const lng = _.get(this, 'props.valueLink.value.lng');
+        const lat = _.get(this, 'props.value.lat');
+        const lng = _.get(this, 'props.value.lng');
 
         if (lat && lng) {
             const latLng = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
@@ -88,7 +88,7 @@ class GoogleMaps extends Webiny.Ui.Component {
         this.geoCoder.geocode({address: query}, results => {
             if (!_.isEmpty(results)) {
                 const location = _.get(results[0], 'geometry.location');
-                this.props.valueLink.requestChange({
+                this.props.onChange({
                     lat: location.lat(),
                     lng: location.lng()
                 });

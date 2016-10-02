@@ -5,7 +5,8 @@ class Module extends Webiny.Module {
 
     constructor(app) {
         super(app);
-        Webiny.Ui.Components.Tabs = {Tabs, Tab};
+        Webiny.Ui.Components.Tabs = Tabs;
+        Tabs.Tab = Tab;
     }
 }
 

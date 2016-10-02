@@ -25,7 +25,7 @@ ErrorGroup.defaultProps = {
         };
 
         return (
-            <Ui.List.ApiContainer {...statProps}>
+            <Ui.List {...statProps}>
                 {(errorData, meta, list) => (
                     <Ui.ExpandableList>
                         {errorData.map(row => {
@@ -54,7 +54,7 @@ ErrorGroup.defaultProps = {
                         })}
                     </Ui.ExpandableList>
                 )}
-            </Ui.List.ApiContainer>
+            </Ui.List>
         );
     }
 };

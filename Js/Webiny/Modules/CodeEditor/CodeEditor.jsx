@@ -1,53 +1,48 @@
 import Webiny from 'Webiny';
+import SimpleCodeEditor from './SimpleCodeEditor';
 
 class CodeEditor extends Webiny.Ui.FormComponent {
-    constructor(props) {
-        super(props);
 
-        this.codeMirror = null;
-        this.options = {
-            lineNumbers: true,
-            htmlMode: true,
-            mode: 'text/html', // needs to be loaded via bower.json
-            theme: 'monokai' // needs to be loaded via bower.json
-        };
-
-        this.bindMethods('getTextareaElement');
-    }
-
-    componentDidMount() {
-        super.componentDidMount();
-
-        this.options = _.merge(this.options, this.props);
-
-        this.codeMirror = CodeMirror.fromTextArea(this.getTextareaElement(), this.options);
-
-        this.codeMirror.on('change', () => {
-            this.props.valueLink.requestChange(this.codeMirror.getValue());
-        });
-    }
-
-    componentWillReceiveProps(props) {
-        if (this.codeMirror.getValue() !== props.valueLink.value && !_.isNull(props.valueLink.value)) {
-            // the "+ ''" sort a strange with splitLines method within CodeMirror
-            this.codeMirror.setValue(props.valueLink.value + '');
-        }
-    }
-
-    shouldComponentUpdate() {
-        return false;
-    }
-
-    getTextareaElement() {
-        return $(ReactDOM.findDOMNode(this)).find('textarea')[0];
-    }
 }
 
 CodeEditor.defaultProps = {
     renderer() {
+        const cssConfig = {
+            'form-group': true,
+            'error': this.state.isValid === false,
+            'success': this.state.isValid === true
+        };
+
+        let label = null;
+        if (this.props.label) {
+            label = <label key="label" className="control-label">{this.props.label}</label>;
+        }
+
+        let validationMessage = null;
+
+        if (this.state.isValid === false) {
+            validationMessage = <span className="help-block">{this.state.validationMessage}</span>;
+        }
+
+        const props = {
+            onBlur: this.validate,
+            className: 'form-control',
+            value: this.props.value,
+            onChange: this.props.onChange,
+            placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder),
+            style: this.props.style,
+            mode: this.props.mode,
+            readOnly: _.get(this.props, 'readOnly', false)
+        };
+
         return (
-            <div>
-                <textarea></textarea>
+            <div className={this.classSet(cssConfig)}>
+                {label}
+                <Webiny.Ui.Components.DelayedOnChange>
+                    <CodeEditor {...props}/>
+                </Webiny.Ui.Components.DelayedOnChange>
+                <span className="help-block">{this.props.description}</span>
+                {validationMessage}
             </div>
         );
     }

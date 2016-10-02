@@ -43,15 +43,15 @@ class OptionComponent extends Component {
     componentDidMount() {
         super.componentDidMount();
 
-        if (!this.props.filterBy || this.props.valueLink.value !== null || this.filterName && this.props.form.getModel(this.filterName)) {
+        if (!this.props.filterBy || this.props.value !== null || this.filterName && this.props.form.getModel(this.filterName)) {
             this.prepareOptions(this.props);
         }
     }
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        const omit = ['valueLink'];
-        const oldProps = _.omit(props, omit);
+        const omit = ['onChange'];
+        const oldProps = _.omit(this.props, omit);
         const newProps = _.omit(props, omit);
         if (!_.isEqual(newProps, oldProps)) {
             this.prepareOptions(props);
@@ -72,7 +72,7 @@ class OptionComponent extends Component {
     applyFilter(newValue, name, filter, loadIfEmpty) {
         if (newValue === null && !loadIfEmpty) {
             this.setState({options: []});
-            this.props.valueLink.requestChange(null);
+            this.props.onChange(null);
             return;
         }
 

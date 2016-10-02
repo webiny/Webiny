@@ -14,7 +14,7 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
         _.merge(this.state, {
             cropImage: null,
             uploadPercentage: null,
-            value: props.valueLink.value
+            value: props.value
         });
 
         this.bindMethods('getTextareaElement,getEditor,getCropper,onCropperHidden,uploadImage,fileChanged,applyValue,changed,renderError');
@@ -40,13 +40,13 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
             this.setState({value: this.editor.root.innerHTML}, this.changed);
         });
 
-        this.editor.pasteHTML(this.props.valueLink.value);
+        this.editor.pasteHTML(this.props.value);
     }
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        if (!this.delay && props.valueLink.value !== this.editor.root.innerHTML) {
-            this.editor.pasteHTML(props.valueLink.value);
+        if (!this.delay && props.value !== this.editor.root.innerHTML) {
+            this.editor.pasteHTML(props.value);
         }
     }
 
@@ -68,7 +68,7 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
     applyValue(value) {
         clearTimeout(this.delay);
         this.delay = null;
-        this.props.valueLink.requestChange(value);
+        this.props.onChange(value);
     }
 
     changed() {

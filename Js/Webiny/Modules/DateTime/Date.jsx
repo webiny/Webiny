@@ -20,8 +20,8 @@ class Date extends BaseDateTime {
             newValue = moment(newValue, this.props.inputFormat).format(format);
         }
 
-        if (newValue !== this.props.valueLink.value) {
-            this.props.valueLink.requestChange(newValue, this.validate);
+        if (newValue !== this.props.value) {
+            this.props.onChange(newValue, this.validate);
         }
     }
 }

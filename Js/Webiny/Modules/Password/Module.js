@@ -1,10 +1,10 @@
 import Webiny from 'Webiny';
-import PasswordContainer from './PasswordContainer';
+import Password from './Password';
 
 class Module extends Webiny.Module {
 
     init() {
-        Webiny.Ui.Components.Password = PasswordContainer;
+        Webiny.Ui.Components.Password = Password;
     }
 }
 

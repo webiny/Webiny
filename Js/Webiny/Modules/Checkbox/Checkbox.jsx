@@ -9,19 +9,15 @@ class Checkbox extends Webiny.Ui.FormComponent {
     }
 
     onChange(e) {
-        if (this.props.valueLink) {
-            this.props.valueLink.requestChange(e.target.checked);
+        if (this.props.stateKey !== null) {
+            this.props.onChange(this.props.stateKey, e.target.checked);
         } else {
-            if (this.props.stateKey !== null) {
-                this.props.onChange(this.props.stateKey, e.target.checked);
-            } else {
-                this.props.onChange(e.target.checked);
-            }
+            this.props.onChange(e.target.checked);
         }
     }
 
     isChecked() {
-        const value = _.get(this.props, 'valueLink.value') || this.props.state;
+        const value = this.props.value || this.props.state;
         return !_.isNull(value) && value !== false && value !== undefined;
     }
 }

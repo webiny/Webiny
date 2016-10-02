@@ -8,8 +8,8 @@ class DateTime extends DateComponent {
             newValue = moment(newValue, this.props.inputFormat).format(this.props.modelFormat);
         }
 
-        if (newValue !== this.props.valueLink.value) {
-            this.props.valueLink.requestChange(newValue, this.validate);
+        if (newValue !== this.props.value) {
+            this.props.onChange(newValue, this.validate);
         }
     }
 }
