@@ -39,7 +39,7 @@ CodeEditor.defaultProps = {
             <div className={this.classSet(cssConfig)}>
                 {label}
                 <Webiny.Ui.Components.DelayedOnChange>
-                    <CodeEditor {...props}/>
+                    <SimpleCodeEditor {...props}/>
                 </Webiny.Ui.Components.DelayedOnChange>
                 <span className="help-block">{this.props.description}</span>
                 {validationMessage}

@@ -10,9 +10,9 @@ List.defaultProps = {
     renderer() {
         const props = _.omit(this.props, ['renderer']);
         if (_.has(props, 'api') && props.api) {
-            return <ApiContainer {...props}/>
+            return <ApiContainer {...props}/>;
         }
-        return <StaticContainer {...props}/>
+        return <StaticContainer {...props}/>;
     }
 };
 
