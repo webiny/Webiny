@@ -10,10 +10,13 @@ class Base extends Webiny.Ui.FormComponent {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        const omit = ['children', 'key', 'ref', 'onChange'];
+        if(nextProps['disabledBy']){
+            return true;
+        }
+
+        const omit = ['children', 'key', 'ref', 'value', 'onChange'];
         const oldProps = _.omit(this.props, omit);
         const newProps = _.omit(nextProps, omit);
-
         const newValue = nextProps.value;
         const oldValue = this.props.value;
 

@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
 
-const validProps = ['value', 'onChange', 'className', 'style', 'placeholder', 'disabled', 'readonly'];
+const validProps = ['value', 'onChange', 'className', 'style', 'placeholder', 'disabled', 'readonly', 'onKeyDown', 'onKeyUp', 'onBlur'];
 
 class SimpleInput extends Webiny.Ui.Component {
 
