@@ -436,28 +436,6 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         );
     },
     renderer() {
-        let label = null;
-        if (this.props.label) {
-            label = <label className="control-label">{this.props.label}</label>;
-        }
-
-        let validationMessage = null;
-        let validationIcon = null;
-        if (!this.isValid()) {
-            validationMessage = <span className="help-block">{this.state.validationMessage}</span>;
-            validationIcon = <span className="icon icon-bad"></span>;
-        }
-
-        let description = this.props.description;
-        if (_.isFunction(description)) {
-            description = description(this);
-        }
-
-        let info = this.props.info;
-        if (_.isFunction(info)) {
-            info = info(this);
-        }
-
         const cssConfig = {
             'form-group': true,
             'search-container': true,
@@ -467,15 +445,15 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
 
         return (
             <div className={this.classSet(cssConfig)}>
-                {label}
-                <span className="info-txt">{info}</span>
+                {this.renderLabel()}
+                {this.renderInfo()}
 
                 <div className="input-group">
                     {this.props.renderSearchInput.call(this)}
-                    {this.props.showValidationIcon ? validationIcon : null}
+                    {this.renderValidationIcon()}
                 </div>
-                <span className="help-block">{description}</span>
-                {this.props.showValidationMessage ? validationMessage : null}
+                {this.renderDescription()}
+                {this.renderValidationMessage()}
             </div>
         );
     }

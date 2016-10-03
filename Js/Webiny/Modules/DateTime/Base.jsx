@@ -65,7 +65,7 @@ class Base extends Webiny.Ui.FormComponent {
     }
 }
 
-Base.defaultProps = {
+Base.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     debug: false,
     withTimezone: true,
     renderer() {
@@ -74,16 +74,6 @@ Base.defaultProps = {
             'error': this.state.isValid === false,
             'success': this.state.isValid === true
         };
-
-        let label = null;
-        if (this.props.label) {
-            label = <label key="label" className="control-label">{this.props.label}</label>;
-        }
-
-        let validationMessage = null;
-        if (this.state.isValid === false) {
-            validationMessage = <span className="help-block">{this.state.validationMessage}</span>;
-        }
 
         const props = {
             onBlur: this.validate,
@@ -98,17 +88,17 @@ Base.defaultProps = {
 
         return (
             <div className={this.classSet(cssConfig)}>
-                {label}
+                {this.renderLabel()}
                 <div className="input-group date">
                     <input {...props}/>
                     <span className="input-group-addon cursor">
                         <i className="icon-calendar icon_c"></i>
                     </span>
                 </div>
-                {validationMessage}
+                {this.renderValidationMessage()}
             </div>
         );
     }
-};
+});
 
 export default Base;

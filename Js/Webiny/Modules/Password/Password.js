@@ -38,9 +38,7 @@ Password.defaultProps = {
         props.type = this.state.showPassword ? 'text' : 'password';
 
         return (
-            <w-password>
-                <Ui.Input {...props}/>
-            </w-password>
+            <Ui.Input {...props}/>
         );
     }
 };

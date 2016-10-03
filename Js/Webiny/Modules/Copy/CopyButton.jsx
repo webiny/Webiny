@@ -1,17 +1,17 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-class CopyButton extends Webiny.Ui.FormComponent {
+class CopyButton extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
 
-        this.bindMethods('getContent,getTarget');
+        this.bindMethods('getContent');
     }
 
     componentDidMount() {
         super.componentDidMount();
 
-        this.clipboard = new Clipboard(this.getTarget(), {
+        this.clipboard = new Clipboard(ReactDOM.findDOMNode(this), {
             text: () => {
                 return this.props.value;
             }
@@ -30,10 +30,6 @@ class CopyButton extends Webiny.Ui.FormComponent {
     componentWillUnmount() {
         super.componentWillUnmount();
         this.clipboard.destroy();
-    }
-
-    getTarget() {
-        return ReactDOM.findDOMNode(this);
     }
 
     getContent() {

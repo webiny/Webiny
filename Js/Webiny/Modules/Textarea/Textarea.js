@@ -13,21 +13,6 @@ Textarea.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             'success': this.state.isValid === true
         };
 
-        let label = null;
-        if (this.props.label) {
-            let tooltip = null;
-            if (this.props.tooltip) {
-                tooltip = <Ui.Tooltip target={<Ui.Icon icon="icon-info-circle"/>}>{this.props.tooltip}</Ui.Tooltip>;
-            }
-            label = <label key="label" className="control-label">{this.props.label} {tooltip}</label>;
-        }
-
-        let validationMessage = null;
-
-        if (this.state.isValid === false) {
-            validationMessage = <span className="help-block">{this.state.validationMessage}</span>;
-        }
-
         const props = {
             onBlur: this.validate,
             disabled: this.isDisabled(),
@@ -40,12 +25,12 @@ Textarea.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
 
         return (
             <div className={this.classSet(cssConfig)}>
-                {label}
+                {this.renderLabel()}
                 <Webiny.Ui.Components.DelayedOnChange>
                     <textarea {...props}/>
                 </Webiny.Ui.Components.DelayedOnChange>
-                <span className="help-block">{this.props.description}</span>
-                {validationMessage}
+                {this.renderDescription()}
+                {this.renderValidationMessage()}
             </div>
         );
     }

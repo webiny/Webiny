@@ -196,7 +196,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
     }
 }
 
-SelectInput.defaultProps = {
+SelectInput.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     allowClear: false,
     placeholder: null,
     onChange: _.noop,
@@ -213,32 +213,17 @@ SelectInput.defaultProps = {
             'success': this.state.isValid === true
         };
 
-        let label = null;
-        if (this.props.label) {
-            let tooltip = null;
-            if (this.props.tooltip) {
-                tooltip = <Ui.Tooltip target={<Ui.Icon icon="icon-info-circle"/>}>{this.props.tooltip}</Ui.Tooltip>;
-            }
-            label = <label key="label" className="control-label">{this.props.label} {tooltip}</label>;
-        }
-
-        let validationMessage = null;
-
-        if (this.state.isValid === false) {
-            validationMessage = <span className="help-block">{this.state.validationMessage}</span>;
-        }
-
         return (
             <div className={this.classSet(cssConfig)}>
-                {label}
+                {this.renderLabel()}
                 <select style={{'width': '100%'}}/>
 
                 <div className="dropdown-wrapper"></div>
-                <span className="help-block">{this.props.description}</span>
-                {validationMessage}
+                {this.renderDescription()}
+                {this.renderValidationMessage()}
             </div>
         );
     }
-};
+});
 
 export default SelectInput;

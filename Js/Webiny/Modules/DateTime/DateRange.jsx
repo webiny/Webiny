@@ -152,7 +152,7 @@ class DateRange extends Webiny.Ui.FormComponent {
     }
 }
 
-DateRange.defaultProps = {
+DateRange.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     onChange: _.noop,
     inputFormat: 'YYYY-MM-DD',
     modelFormat: 'YYYY-MM-DD',
@@ -168,34 +168,24 @@ DateRange.defaultProps = {
             'success': this.state.isValid === true
         };
 
-        let label = null;
-        if (this.props.label) {
-            label = <label className="control-label">{this.props.label}</label>;
-        }
-
-        let validationMessage = false;
-        if (this.state.isValid === false) {
-            validationMessage = <span className="help-block w-anim">{this.state.validationMessage}</span>;
-        }
-
         const css = this.classSet('form-control', {placeholder: !this.props.value});
 
         return (
             <div className={this.classSet(cssConfig)}>
-                {label}
+                {this.renderLabel()}
                 <div className="picker-holder">
                     <input type="text" ref="daterange" className={css} data-toggle="dropdown"/>
                     <span className="icon-calendar icon_c"></span>
                 </div>
                 <Webiny.Ui.Components.Animate
-                    trigger={validationMessage}
+                    trigger={this.renderValidationMessage()}
                     show={this.props.showValidationAnimation}
                     hide={this.props.hideValidationAnimation}>
-                    {this.props.showValidationMessage ? validationMessage : null}
+                    {this.renderValidationMessage()}
                 </Webiny.Ui.Components.Animate>
             </div>
         );
     }
-};
+});
 
 export default DateRange;

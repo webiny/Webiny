@@ -59,7 +59,7 @@ class BaseCheckboxGroup extends Webiny.Ui.FormComponent {
     }
 }
 
-BaseCheckboxGroup.defaultProps = {
+BaseCheckboxGroup.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     disabled: false,
     label: '',
     grid: 12,
@@ -68,6 +68,6 @@ BaseCheckboxGroup.defaultProps = {
     textAttr: 'name',
     checkboxRenderer: null,
     formatValue: value => value.id
-};
+});
 
 export default BaseCheckboxGroup;
