@@ -2,8 +2,7 @@ import DateComponent from './Date';
 
 class DateTime extends DateComponent {
 
-    onChange(e) {
-        let newValue = e.target.value;
+    onChange(newValue) {
         if (newValue) {
             newValue = moment(newValue, this.props.inputFormat).format(this.props.modelFormat);
         }

@@ -13,8 +13,7 @@ class Date extends BaseDateTime {
         super.setValue(newValue);
     }
 
-    onChange(e) {
-        let newValue = e.target.value;
+    onChange(newValue) {
         if (newValue) {
             const format = this.props.withTimezone ? 'YYYY-MM-DDTHH:mm:ssZ' : this.props.modelFormat;
             newValue = moment(newValue, this.props.inputFormat).format(format);

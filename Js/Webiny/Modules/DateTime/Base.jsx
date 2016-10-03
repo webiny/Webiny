@@ -37,7 +37,7 @@ class Base extends Webiny.Ui.FormComponent {
             viewMode: this.props.viewMode
         }).on('dp.hide', e => {
             if (this.valueChanged) {
-                this.props.onChange(e.target.value);
+                this.onChange(e.target.value);
             }
             this.valueChanged = false;
         }).on('dp.change', () => {
@@ -60,8 +60,8 @@ class Base extends Webiny.Ui.FormComponent {
         }
     }
 
-    onChange(e) {
-        this.props.onChange(e.target.value, this.validate);
+    onChange(value) {
+        this.props.onChange(value, this.validate);
     }
 }
 
@@ -92,7 +92,7 @@ Base.defaultProps = {
             type: 'text',
             className: this.classSet('form-control', {placeholder: !this.props.value}),
             value: this.props.value || '',
-            onChange: this.onChange,
+            onChange: _.noop,
             placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder)
         };
 
