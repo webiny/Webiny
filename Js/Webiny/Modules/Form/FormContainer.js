@@ -411,9 +411,9 @@ class FormContainer extends Webiny.Ui.Component {
                 }
             };
 
-            const vl = this.bindTo(input.props.name, changeCallback.bind(this), input.props.defaultValue);
-            newProps['value'] = vl.value;
-            newProps['onChange'] = vl.onChange;
+            // Assign value and onChange props
+            _.assign(newProps, this.bindTo(input.props.name, changeCallback.bind(this), input.props.defaultValue));
+
             if (this.parsingTabsIndex > 0) {
                 newProps['__tabs'] = {id: 'tabs-' + this.parsingTabsIndex, tab: this.parsingTabIndex};
             }

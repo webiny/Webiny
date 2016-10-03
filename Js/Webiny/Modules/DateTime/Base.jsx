@@ -10,17 +10,15 @@ class Base extends Webiny.Ui.FormComponent {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if(nextProps['disabledBy']){
+        if (nextProps['disabledBy']) {
             return true;
         }
 
-        const omit = ['children', 'key', 'ref', 'value', 'onChange'];
+        const omit = ['children', 'key', 'ref', 'onChange'];
         const oldProps = _.omit(this.props, omit);
         const newProps = _.omit(nextProps, omit);
-        const newValue = nextProps.value;
-        const oldValue = this.props.value;
 
-        return !_.isEqual(newProps, oldProps) || !_.isEqual(newValue, oldValue) || !_.isEqual(nextState, this.state);
+        return !_.isEqual(newProps, oldProps) || !_.isEqual(nextState, this.state);
     }
 
     /**
@@ -61,6 +59,10 @@ class Base extends Webiny.Ui.FormComponent {
             this.input.data('DateTimePicker').minDate(new Date(this.props.minDate));
         }
     }
+
+    onChange(e) {
+        this.props.onChange(e.target.value, this.validate);
+    }
 }
 
 Base.defaultProps = {
@@ -90,7 +92,7 @@ Base.defaultProps = {
             type: 'text',
             className: this.classSet('form-control', {placeholder: !this.props.value}),
             value: this.props.value || '',
-            onChange: e => this.props.onChange(e.target.value),
+            onChange: this.onChange,
             placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder)
         };
 
