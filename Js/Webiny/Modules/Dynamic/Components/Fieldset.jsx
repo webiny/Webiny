@@ -5,12 +5,21 @@ function insertKey(data) {
     if (!data) {
         data = [];
     }
-    _.each(data, (v, i) => {
-        if (!_.has(data[i], '$key')) {
-            data[i]['$key'] = _.uniqueId('dynamic-fieldset-');
+    const model = {};
+    _.each(data, (object, i) => {
+        if (_.isArray(object)) {
+            object = {};
         }
+        if (!_.has(object, '$key')) {
+            const $key = _.uniqueId('dynamic-fieldset-');
+            object['$key'] = $key;
+            model[$key] = object;
+        } else {
+            model[object['$key']] = object;
+        }
+        model[object['$key']]['$index'] = i;
     });
-    return data;
+    return model;
 }
 
 class Fieldset extends Webiny.Ui.FormComponent {
@@ -18,17 +27,17 @@ class Fieldset extends Webiny.Ui.FormComponent {
     constructor(props) {
         super(props);
 
-        this.currentIndex = 0;
+        this.currentKey = 0;
         this.rowTemplate = null;
         this.headerTemplate = _.noop;
         this.emptyTemplate = null;
 
         this.actions = {
-            add: index => () => this.addData(index),
-            remove: index => () => this.removeData(index)
+            add: (record = null) => () => this.addData(record),
+            remove: record => () => this.removeData(record)
         };
 
-        this.bindMethods('parseLayout,registerInputs,registerInput,addData,removeData');
+        this.bindMethods('parseLayout', 'registerInputs', 'registerInput', 'addData', 'removeData');
     }
 
     componentWillMount() {
@@ -39,8 +48,8 @@ class Fieldset extends Webiny.Ui.FormComponent {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        this.parseLayout(props.children);
         this.setState({model: insertKey(_.clone(props.value))});
+        this.parseLayout(props.children);
     }
 
     parseLayout(children) {
@@ -63,16 +72,21 @@ class Fieldset extends Webiny.Ui.FormComponent {
         });
     }
 
-    removeData(index) {
-        const model = _.clone(this.props.value);
-        model.splice(index, 1);
-        this.props.onChange(model);
+    removeData(record) {
+        delete this.state.model[record.$key];
+        this.props.onChange(_.values(this.state.model));
     }
 
-    addData(index) {
-        const model = this.props.value ? _.clone(this.props.value) : [];
-        model.splice(index + 1, 0, {$key: _.uniqueId('dynamic-fieldset-')});
-        this.props.onChange(model);
+    addData(record = null) {
+        const $key = _.uniqueId('dynamic-fieldset-');
+        if (!record) {
+            this.state.model[$key] = {$key};
+            this.props.onChange(_.values(this.state.model));
+        } else {
+            const model = _.values(this.state.model);
+            model.splice(record.$index + 1, 0, {$key});
+            this.props.onChange(model);
+        }
     }
 
     registerInput(child) {
@@ -81,9 +95,7 @@ class Fieldset extends Webiny.Ui.FormComponent {
         }
 
         if (child.props && child.props.name) {
-            const vl = this.bindTo('model.' + this.currentIndex + '.' + child.props.name, () => {
-                this.props.onChange(this.state.model);
-            });
+            const $key = this.currentKey;
             const newProps = _.assign({}, child.props, {
                 __tabs: this.props.__tabs,
                 attachToForm: this.props.attachToForm,
@@ -91,10 +103,12 @@ class Fieldset extends Webiny.Ui.FormComponent {
                 detachFromForm: this.props.detachFromForm,
                 validateInput: this.props.validateInput,
                 form: this.props.form,
-                // give the component a full name to register with the form, to trigger validation properly
-                name: this.props.name + '.' + this.currentIndex + '.' + child.props.name,
-                value: vl.value,
-                onChange: vl.onChange
+                value: _.get(this.state.model, $key + '.' + child.props.name),
+                name: $key + '.' + child.props.name,
+                onChange: newValue => {
+                    _.set(this.state.model, $key + '.' + child.props.name, newValue);
+                    this.props.onChange(_.values(this.state.model));
+                }
             });
 
             return React.cloneElement(child, newProps);
@@ -113,15 +127,17 @@ class Fieldset extends Webiny.Ui.FormComponent {
 Fieldset.defaultProps = {
     defaultValue: [],
     renderer() {
-        if (this.state.model && this.state.model.length) {
+        const model = this.state.model;
+        if (Object.keys(model).length) {
             return (
                 <div className="form-group">
                     {this.headerTemplate(this.actions)}
-                    {this.state.model.map((r, i) => {
-                        this.currentIndex = i;
+                    {Object.keys(model).map(key => {
+                        const record = model[key];
+                        this.currentKey = key;
                         return (
-                            <webiny-dynamic-fieldset-row key={r['$key']}>
-                                {this.registerInputs(this.rowTemplate(r, i, this.actions))}
+                            <webiny-dynamic-fieldset-row key={key}>
+                                {this.registerInputs(this.rowTemplate(record, this.actions))}
                             </webiny-dynamic-fieldset-row>
                         );
                     })}

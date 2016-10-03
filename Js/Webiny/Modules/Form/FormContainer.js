@@ -469,11 +469,7 @@ class FormContainer extends Webiny.Ui.Component {
             this.tabs[component.props.__tabsId] = component;
             return;
         }
-
-        this.inputs[component.props.name] = {
-            component,
-            model: component.getValue()
-        };
+        this.inputs[component.props.name] = {component};
         this.attachValidators(component.props);
     }
 
@@ -585,7 +581,7 @@ class FormContainer extends Webiny.Ui.Component {
         });
     }
 
-    __removeKeys(collection, excludeKeys = ['$key']) {
+    __removeKeys(collection, excludeKeys = ['$key', '$index']) {
         function omitFn(value) {
             if (value && typeof value === 'object') {
                 excludeKeys.forEach(key => {
