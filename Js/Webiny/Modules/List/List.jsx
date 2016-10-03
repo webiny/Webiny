@@ -3,7 +3,12 @@ import ApiContainer from './Components/ApiContainer';
 import StaticContainer from './Components/StaticContainer';
 
 class List extends Webiny.Ui.Component {
-
+    componentWillMount() {
+        super.componentWillMount();
+        if (this.props.ui) {
+            Webiny.Ui.Dispatcher.unregister(this.props.ui, this);
+        }
+    }
 }
 
 List.defaultProps = {
