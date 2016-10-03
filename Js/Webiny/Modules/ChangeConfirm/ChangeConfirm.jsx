@@ -67,6 +67,7 @@ class ChangeConfirm extends Webiny.Ui.Component {
 }
 
 ChangeConfirm.defaultProps = {
+    message: 'You really want to change this value?',
     onComplete: _.noop,
     onCancel: _.noop,
     renderDialog: null,
