@@ -5,7 +5,7 @@ class Select extends Webiny.Ui.OptionComponent {
 
     constructor(props) {
         super(props);
-        this.bindMethods('getCurrentData,getPreviousData');
+        this.bindMethods('getCurrentData,getPreviousData,renderSelect');
     }
 
     getCurrentData() {
@@ -14,6 +14,20 @@ class Select extends Webiny.Ui.OptionComponent {
 
     getPreviousData() {
         return this.refs.input.getPreviousData();
+    }
+
+    renderSelect() {
+        const props = _.pick(this.props, _.keys(_.omit(SimpleSelect.defaultProps, ['renderer'])));
+        _.assign(props, {
+            ref: 'input',
+            options: this.state.options,
+            disabled: this.isDisabled(),
+            onChange: newValue => {
+                this.props.onChange(newValue, !this.isValid() ? this.validate : _.noop)
+            }
+        });
+
+        return <SimpleSelect {...props}/>;
     }
 }
 
@@ -25,33 +39,10 @@ Select.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
             'success': this.state.isValid === true
         };
 
-        const selectProps = [
-            'value',
-            'onChange',
-            'allowClear',
-            'placeholder',
-            'minimumInputLength',
-            'minimumResultsForSearch',
-            'useDataAsValue',
-            'dropdownParent',
-            'dropdownClassName',
-            'optionRenderer',
-            'selectedRenderer'
-        ];
-
-        const props = _.pick(this.props, selectProps);
-        _.assign(props, {
-            options: this.state.options,
-            disabled: this.isDisabled(),
-            onChange: newValue => {
-                this.props.onChange(newValue, !this.isValid() ? this.validate : _.noop)
-            }
-        });
-
         return (
             <div className={this.classSet(cssConfig)}>
                 {this.renderLabel()}
-                <SimpleSelect ref="input" {...props}/>
+                {this.renderSelect()}
                 {this.renderDescription()}
                 {this.renderValidationMessage()}
             </div>
