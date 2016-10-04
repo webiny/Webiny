@@ -1,7 +1,6 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
-class SelectInput extends Webiny.Ui.FormComponent {
+class SimpleSelect extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);
@@ -46,7 +45,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
             }, 100);
         }
 
-        $(ReactDOM.findDOMNode(this)).find('select').prop('disabled', !!this.isDisabled());
+        $(ReactDOM.findDOMNode(this)).find('select').prop('disabled', !!this.props.disabled);
 
         if (value !== null && !inPossibleValues && possibleValues.length > 0) {
             this.triggerChange(null);
@@ -131,7 +130,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
             }
             this.previousData = data ? _.clone(data) : null;
         }
-        this.props.onChange(value, !this.isValid() ? this.validate : _.noop);
+        this.props.onChange(value);
     }
 
     getOptionText(text) {
@@ -167,7 +166,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
 
     getConfig(props) {
         const config = {
-            disabled: this.isDisabled(props),
+            disabled: props.disabled,
             minimumResultsForSearch: props.minimumResultsForSearch,
             minimumInputLength: props.minimumInputLength,
             placeholder: _.get(props.placeholder, 'props.children', props.placeholder),
@@ -196,7 +195,8 @@ class SelectInput extends Webiny.Ui.FormComponent {
     }
 }
 
-SelectInput.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
+SimpleSelect.defaultProps = {
+    value: null,
     allowClear: false,
     placeholder: null,
     onChange: _.noop,
@@ -205,25 +205,16 @@ SelectInput.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     useDataAsValue: false,
     dropdownParent: '.dropdown-wrapper',
     dropdownClassName: '',
-    description: null,
+    optionRenderer: null,
+    selectedRenderer: null,
     renderer() {
-        const cssConfig = {
-            'form-group': true,
-            'error': this.state.isValid === false,
-            'success': this.state.isValid === true
-        };
-
         return (
-            <div className={this.classSet(cssConfig)}>
-                {this.renderLabel()}
+            <webiny-select>
                 <select style={{'width': '100%'}}/>
-
                 <div className="dropdown-wrapper"></div>
-                {this.renderDescription()}
-                {this.renderValidationMessage()}
-            </div>
+            </webiny-select>
         );
     }
-});
+};
 
-export default SelectInput;
+export default SimpleSelect;
