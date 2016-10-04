@@ -23,7 +23,7 @@ class Select extends Webiny.Ui.OptionComponent {
             options: this.state.options,
             disabled: this.isDisabled(),
             onChange: newValue => {
-                this.props.onChange(newValue, !this.isValid() ? this.validate : _.noop)
+                this.props.onChange(newValue, !this.isValid() ? this.validate : _.noop);
             }
         });
 
