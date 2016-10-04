@@ -1,11 +1,11 @@
 import Webiny from 'Webiny';
-import RadioGroupContainer from './RadioGroupContainer';
+import RadioGroup from './RadioGroup';
 import Radio from './Radio';
 
 class Module extends Webiny.Module {
 
     init() {
-        Webiny.Ui.Components.RadioGroup = RadioGroupContainer;
+        Webiny.Ui.Components.RadioGroup = RadioGroup;
         Webiny.Ui.Components.Radio = Radio;
     }
 }
