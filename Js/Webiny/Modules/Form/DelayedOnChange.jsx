@@ -46,7 +46,8 @@ class DelayedOnChange extends Webiny.Ui.Component {
         const props = _.omit(this.props.children.props, ['onChange']);
         props.value = this.state.value;
         props.onChange = e => {
-            this.setState({value: e.target.value}, this.changed);
+            const value = _.isString(e) ? e : e.target.value;
+            this.setState({value}, this.changed);
         };
         const realOnKeyDown = props.onKeyDown || _.noop;
         const realOnBlur = props.onBlur || _.noop;

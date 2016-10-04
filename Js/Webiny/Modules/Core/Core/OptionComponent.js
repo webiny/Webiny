@@ -1,16 +1,16 @@
 import Webiny from 'Webiny';
-import Component from './Component';
+import FormComponent from './FormComponent';
 
-class OptionComponent extends Component {
+class OptionComponent extends FormComponent {
 
     constructor(props) {
         super(props);
 
-        this.state = {
+        _.assign(this.state, {
             options: []
-        };
+        });
 
-        this.bindMethods('prepareOptions,renderOptions,setFilters,applyFilter');
+        this.bindMethods('prepareOptions,normalizeOptions,setFilters,applyFilter');
         Webiny.Mixins.ApiComponent.extend(this);
 
         if (this.props.filterBy) {
@@ -115,7 +115,7 @@ class OptionComponent extends Component {
             }
 
             if (_.isArray(props.options)) {
-                options = this.renderOptions(props, props.options);
+                options = this.normalizeOptions(props, props.options);
             }
 
 
@@ -156,7 +156,7 @@ class OptionComponent extends Component {
                     data = this.props.prepareLoadedData(data);
                 }
 
-                this.setState({options: this.renderOptions(props, data)});
+                this.setState({options: this.normalizeOptions(props, data)});
             });
 
             return this.request;
@@ -175,7 +175,7 @@ class OptionComponent extends Component {
         }
     }
 
-    renderOptions(props, data) {
+    normalizeOptions(props, data) {
         const options = [];
         _.each(data, (option, key) => {
             if (_.isString(key) && _.isString(option) || _.isNumber(option)) {
@@ -203,9 +203,9 @@ class OptionComponent extends Component {
     }
 }
 
-OptionComponent.defaultProps = {
+OptionComponent.defaultProps = _.merge({}, FormComponent.defaultProps, {
     valueAttr: 'id',
     textAttr: 'name'
-};
+});
 
 export default OptionComponent;
