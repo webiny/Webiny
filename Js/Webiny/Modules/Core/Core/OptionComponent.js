@@ -130,8 +130,8 @@ class OptionComponent extends FormComponent {
                 const filteredByValue = this.props.form.getModel(this.filterName);
 
                 // Do not load options if `loadIfEmpty` is `false`
-                if(!filteredByValue && !this.filterLoadIfEmpty){
-                    return;
+                if (!filteredByValue && !this.filterLoadIfEmpty) {
+                    return null;
                 }
 
                 if (_.isFunction(this.filterField)) {
@@ -150,7 +150,7 @@ class OptionComponent extends FormComponent {
 
             this.request = this.api.execute().then(apiResponse => {
                 if (apiResponse.isAborted()) {
-                    return;
+                    return null;
                 }
 
                 let data = apiResponse.getData();
