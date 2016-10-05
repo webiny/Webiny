@@ -29,6 +29,9 @@ Checkbox.defaultProps = {
     className: '',
     addon: null,
     stateKey: null,
+    labelRenderer(){
+        return <span>{this.props.label} {this.props.children}</span>
+    },
     renderer() {
         const css = this.classSet(
             'checkbox-custom checkbox-default',
@@ -46,7 +49,7 @@ Checkbox.defaultProps = {
         return (
             <div className={css}>
                 <input id={this.id} type="checkbox" {...checkboxProps}/>
-                <label htmlFor={this.id}>{this.props.label} {this.props.children}</label>
+                <label htmlFor={this.id}>{this.renderLabel()}</label>
                 {this.props.addon || null}
             </div>
         );

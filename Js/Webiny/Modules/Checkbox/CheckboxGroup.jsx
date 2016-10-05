@@ -45,11 +45,16 @@ class CheckboxGroup extends Webiny.Ui.OptionComponent {
                 disabled: this.isDisabled(),
                 stateKey: key,
                 state: checked, // true/false (checked/unchecked)
-                onChange: this.onChange
+                onChange: this.onChange,
+                option: item
             };
 
             if (_.isFunction(this.props.checkboxRenderer)) {
                 props.renderer = this.props.checkboxRenderer;
+            }
+
+            if (_.isFunction(this.props.checkboxLabelRenderer)) {
+                props.labelRenderer = this.props.checkboxLabelRenderer;
             }
 
             return <Checkbox {...props}/>;
@@ -64,6 +69,7 @@ CheckboxGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps,
     textAttr: 'name',
     disabledClass: 'disabled',
     checkboxRenderer: null,
+    checkboxLabelRenderer: null,
     formatValue: value => value.id,
     renderer() {
         const cssConfig = {
