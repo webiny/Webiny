@@ -10,7 +10,7 @@ class OptionComponent extends FormComponent {
             options: []
         });
 
-        this.bindMethods('prepareOptions,normalizeOptions,setFilters,applyFilter');
+        this.bindMethods('loadOptions,normalizeOptions,setFilters,applyFilter');
         Webiny.Mixins.ApiComponent.extend(this);
 
         if (this.props.filterBy) {
@@ -44,7 +44,7 @@ class OptionComponent extends FormComponent {
         super.componentDidMount();
 
         if (!this.props.filterBy || this.props.value !== null || this.filterName && this.props.form.getModel(this.filterName)) {
-            this.prepareOptions(this.props);
+            this.loadOptions(this.props);
         }
     }
 
@@ -54,7 +54,7 @@ class OptionComponent extends FormComponent {
         const oldProps = _.omit(this.props, omit);
         const newProps = _.omit(props, omit);
         if (!_.isEqual(newProps, oldProps)) {
-            this.prepareOptions(props);
+            this.loadOptions(props);
         }
     }
 
@@ -82,7 +82,7 @@ class OptionComponent extends FormComponent {
             if (_.isPlainObject(config)) {
                 this.setFilters(config);
             } else {
-                this.prepareOptions();
+                this.loadOptions();
             }
         } else {
             // If filter is a string, create a filter object using that string as field name
@@ -94,11 +94,11 @@ class OptionComponent extends FormComponent {
 
     setFilters(filters) {
         this.api.setQuery(filters);
-        this.prepareOptions();
+        this.loadOptions();
         return this;
     }
 
-    prepareOptions(props = null) {
+    loadOptions(props = null) {
         let options = [];
         if (!props) {
             props = this.props;
@@ -128,6 +128,12 @@ class OptionComponent extends FormComponent {
                 // Get current value of the field that filters current field
                 let filter = null;
                 const filteredByValue = this.props.form.getModel(this.filterName);
+
+                // Do not load options if `loadIfEmpty` is `false`
+                if(!filteredByValue && !this.filterLoadIfEmpty){
+                    return;
+                }
+
                 if (_.isFunction(this.filterField)) {
                     filter = this.filterField(filteredByValue, this.api);
                     if (_.isPlainObject(filter)) {
@@ -205,7 +211,8 @@ class OptionComponent extends FormComponent {
 
 OptionComponent.defaultProps = _.merge({}, FormComponent.defaultProps, {
     valueAttr: 'id',
-    textAttr: 'name'
+    textAttr: 'name',
+    filterBy: null
 });
 
 export default OptionComponent;
