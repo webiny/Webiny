@@ -57,6 +57,15 @@ class SimpleSelect extends Webiny.Ui.Component {
             return;
         }
 
+        // Select first value if model is empty and "autoSelectFirstOptionOption" is enabled
+        if (value === null && this.props.autoSelectFirstOption) {
+            const firstValue = _.get(this.props.options, '0.id');
+            if (firstValue) {
+                this.triggerChange(firstValue);
+            }
+            return;
+        }
+
         this.select2.val('').trigger('change');
     }
 
@@ -198,6 +207,7 @@ class SimpleSelect extends Webiny.Ui.Component {
 SimpleSelect.defaultProps = {
     value: null,
     allowClear: false,
+    autoSelectFirstOption: false,
     placeholder: null,
     onChange: _.noop,
     minimumInputLength: 0,
@@ -211,6 +221,7 @@ SimpleSelect.defaultProps = {
         return (
             <webiny-select>
                 <select style={{'width': '100%'}}/>
+
                 <div className="dropdown-wrapper"></div>
             </webiny-select>
         );
