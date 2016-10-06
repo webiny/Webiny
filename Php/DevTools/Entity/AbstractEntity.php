@@ -530,13 +530,17 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             $callbacks = static::$classCallbacks[$class][$eventName] ?? [];
             foreach ($callbacks as $callback) {
                 // Static callbacks require an instance of entity that triggered the event as first parameter
-                $callback($this, ...$params);
+                if (is_callable($callback)) {
+                    $callback($this, ...$params);
+                }
             }
 
             if ($class == 'Apps\Core\Php\DevTools\Entity\AbstractEntity') {
                 $callbacks = $this->instanceCallbacks[$eventName] ?? [];
                 foreach ($callbacks as $callback) {
-                    $callback(...$params);
+                    if (is_callable($callback)) {
+                        $callback(...$params);
+                    }
                 }
 
                 return;
