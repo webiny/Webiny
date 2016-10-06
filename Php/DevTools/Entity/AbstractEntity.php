@@ -368,13 +368,14 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 
         $this->trigger('onBeforeDelete');
         $this->processDelete($permanent);
-        $this->trigger('onAfterDelete');
+
         if (!$permanent) {
             $this->deletedOn = $this->datetime()->getMongoDate();
             $this->deletedBy = $this->wAuth()->getUser();
             $this->save();
         }
 
+        $this->trigger('onAfterDelete');
 
         return true;
     }
