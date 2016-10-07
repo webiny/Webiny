@@ -456,7 +456,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         if ($staticFilter) {
             $staticFilterConditions = is_callable($staticFilter) ? $staticFilter($conditions) : $staticFilter;
             if (is_array($staticFilterConditions)) {
-                $conditions = array_merge($conditions, $staticFilter());
+                $conditions = array_merge($conditions, $staticFilterConditions);
             }
         }
 
