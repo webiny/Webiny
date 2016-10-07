@@ -27,10 +27,6 @@ class ApiTokenLog extends AbstractEntity
     {
         return [
             new Filter('*', function ($conditions) {
-                if (isset($conditions['token']) && $conditions['token'] === 'system') {
-                    throw new AppException('You can not access system token logs using this entity!');
-                }
-
                 if (!isset($conditions['token'])) {
                     $conditions['token'] = ['$ne' => 'system'];
                 }
@@ -39,7 +35,6 @@ class ApiTokenLog extends AbstractEntity
             })
         ];
     }
-
 
     public function __construct()
     {
@@ -54,5 +49,14 @@ class ApiTokenLog extends AbstractEntity
         $this->attr('method')->char()->setToArrayDefault();
 
         $this->attributes->removeKey('modifiedOn');
+
+        $this->api('GET', '/', function ($parent) {
+            $filters = $this->wRequest()->getFilters();
+            if (isset($filters['token']) && $filters['token'] === 'system') {
+                throw new AppException('You can not access system token logs using this entity!');
+            }
+
+            return $parent();
+        });
     }
 }
