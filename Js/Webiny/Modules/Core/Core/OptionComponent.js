@@ -7,7 +7,8 @@ class OptionComponent extends FormComponent {
         super(props);
 
         _.assign(this.state, {
-            options: []
+            options: [],
+            loading: false
         });
 
         this.bindMethods('loadOptions,normalizeOptions,setFilters,applyFilter');
@@ -148,8 +149,10 @@ class OptionComponent extends FormComponent {
                 this.api.setQuery(query);
             }
 
+            this.setState({loading: true});
             this.request = this.api.execute().then(apiResponse => {
                 if (apiResponse.isAborted()) {
+                    this.setState({loading: false});
                     return null;
                 }
 
@@ -162,7 +165,7 @@ class OptionComponent extends FormComponent {
                     data = this.props.prepareLoadedData(data);
                 }
 
-                this.setState({options: this.normalizeOptions(props, data)});
+                this.setState({options: this.normalizeOptions(props, data), loading: false});
             });
 
             return this.request;
