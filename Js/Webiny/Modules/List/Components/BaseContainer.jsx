@@ -228,6 +228,7 @@ class BaseContainer extends Webiny.Ui.Component {
     paginationProps(paginationProps) {
         _.assign(paginationProps, {
             onPageChange: this.setPage,
+            onPerPageChange: this.setPerPage,
             currentPage: this.state.page,
             perPage: this.state.perPage,
             count: _.get(this.state.list, 'length', 0),

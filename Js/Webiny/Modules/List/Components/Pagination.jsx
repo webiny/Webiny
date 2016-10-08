@@ -6,7 +6,7 @@ class Pagination extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
 
-        this.bindMethods('renderPages');
+        this.bindMethods('renderPages,renderPerPage');
     }
 
     pageChanged(page) {
@@ -15,6 +15,10 @@ class Pagination extends Webiny.Ui.Component {
         }
 
         this.props.onPageChange(page);
+    }
+
+    renderPerPage(){
+        return this.props.perPageRenderer.call(this);
     }
 
     renderPages() {
@@ -71,12 +75,23 @@ class Pagination extends Webiny.Ui.Component {
 
 Pagination.defaultProps = {
     onPageChange: _.noop,
+    onPerPageChange: _.noop,
     totalPages: 0,
     currentPage: 0,
     perPage: 0,
     count: 0,
     totalCount: 0,
     size: 'large', // large or small
+    perPageRenderer(){
+        return (
+            <Ui.Dropdown title={<span><strong>{this.props.perPage}</strong> per page</span>} className="balloon">
+                <Ui.Dropdown.Header title="Results per page"/>
+                <Ui.Dropdown.Link title="10" onClick={() => this.props.onPerPageChange(10)}/>
+                <Ui.Dropdown.Link title="25" onClick={() => this.props.onPerPageChange(25)}/>
+                <Ui.Dropdown.Link title="50" onClick={() => this.props.onPerPageChange(50)}/>
+            </Ui.Dropdown>
+        );
+    },
     renderer() {
         if (!this.props.count) {
             return null;
@@ -99,7 +114,8 @@ Pagination.defaultProps = {
             <webiny-list-pagination>
                 <Ui.Grid.Row>
                     <Ui.Grid.Col all={12} className="text-right">
-                        <ul className="pagination">
+                        {this.renderPerPage()}
+                        <ul className="pagination pull-right">
                             <li className={previousClasses} onClick={previousPage}>
                                 <a href="javascript:void(0)">
                                     <span className="icon icon-caret-down"></span>
