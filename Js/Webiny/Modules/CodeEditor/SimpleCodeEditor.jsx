@@ -8,8 +8,8 @@ class CodeEditor extends Webiny.Ui.Component {
         this.options = {
             lineNumbers: true,
             htmlMode: true,
-            mode: 'text/html', // needs to be loaded via bower.json
-            theme: 'monokai' // needs to be loaded via bower.json
+            mode: props.mode, // needs to be loaded via bower.json
+            theme: props.theme // needs to be loaded via bower.json
         };
 
         this.bindMethods('getTextareaElement');
@@ -44,6 +44,10 @@ class CodeEditor extends Webiny.Ui.Component {
 }
 
 CodeEditor.defaultProps = {
+    mode: 'text/html',
+    theme: 'monokai',
+    value: null,
+    onChange: _.noop,
     renderer() {
         return (
             <div>

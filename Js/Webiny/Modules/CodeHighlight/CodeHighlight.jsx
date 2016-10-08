@@ -6,7 +6,7 @@ class CodeHighlight extends Webiny.Ui.Component {
 
         this.options = {
             innerHTML: false,
-            className: _.get(this.props, 'language', 'html')
+            className: this.props.language
         };
 
         this.bindMethods('doHighlight');
@@ -21,13 +21,13 @@ class CodeHighlight extends Webiny.Ui.Component {
     }
 
     doHighlight() {
-        const nodes = ReactDOM.findDOMNode(this).querySelectorAll('pre code');
-        hljs.highlightBlock(nodes[0]);
+        hljs.highlightBlock(ReactDOM.findDOMNode(this).querySelector('pre code'));
     }
 }
 
 
 CodeHighlight.defaultProps = {
+    language: 'html',
     renderer() {
         return <pre><code className={this.options.className}>{this.props.children}</code></pre>;
     }

@@ -10,7 +10,6 @@ class Confirmation extends Webiny.Ui.ModalComponent {
             loading: false
         };
 
-        this.data = [];
         this.bindMethods('showLoading,renderContent,renderLoader,renderDialog,onCancel,onConfirm');
     }
 
@@ -36,12 +35,10 @@ class Confirmation extends Webiny.Ui.ModalComponent {
         }
     }
 
-    onConfirm() {
+    onConfirm(data = {}) {
         if (!this.isAnimating() && _.isFunction(this.props.onConfirm)) {
-            const data = _.clone(this.data);
-            data.push(this);
             this.showLoading();
-            return Q(this.props.onConfirm(...data)).then(result => {
+            return Q(this.props.onConfirm(data, this)).then(result => {
                 if (this.isMounted()) {
                     this.hideLoading();
                 }
@@ -78,11 +75,6 @@ class Confirmation extends Webiny.Ui.ModalComponent {
             content = content();
         }
         return content;
-    }
-
-    setData(...data) {
-        this.data = data;
-        return this;
     }
 
     renderDialog() {

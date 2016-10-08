@@ -6,6 +6,9 @@ class CodeEditor extends Webiny.Ui.FormComponent {
 }
 
 CodeEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
+    mode: 'text/html',
+    theme: 'monokai',
+    readOnly: false,
     renderer() {
         const cssConfig = {
             'form-group': true,
@@ -19,9 +22,9 @@ CodeEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             value: this.props.value,
             onChange: this.props.onChange,
             placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder),
-            style: this.props.style,
+            theme: this.props.theme,
             mode: this.props.mode,
-            readOnly: _.get(this.props, 'readOnly', false)
+            readOnly: this.props.readOnly
         };
 
         return (
