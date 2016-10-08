@@ -71,6 +71,7 @@ class Pagination extends Webiny.Ui.Component {
 
 Pagination.defaultProps = {
     onPageChange: _.noop,
+    onPerPageChange: _.noop,
     totalPages: 0,
     currentPage: 0,
     perPage: 0,
@@ -95,11 +96,21 @@ Pagination.defaultProps = {
             disabled: cp === this.props.totalPages
         });
 
+        const perPage = (
+            <Ui.Dropdown title={<span><strong>{this.props.perPage}</strong> per page</span>} className="balloon">
+                <Ui.Dropdown.Header title="Results per page"/>
+                <Ui.Dropdown.Link title="10" onClick={() => this.props.onPerPageChange(10)}/>
+                <Ui.Dropdown.Link title="25" onClick={() => this.props.onPerPageChange(25)}/>
+                <Ui.Dropdown.Link title="50" onClick={() => this.props.onPerPageChange(50)}/>
+            </Ui.Dropdown>
+        );
+
         return (
             <webiny-list-pagination>
                 <Ui.Grid.Row>
                     <Ui.Grid.Col all={12} className="text-right">
-                        <ul className="pagination">
+                        {perPage}
+                        <ul className="pagination pull-right">
                             <li className={previousClasses} onClick={previousPage}>
                                 <a href="javascript:void(0)">
                                     <span className="icon icon-caret-down"></span>
