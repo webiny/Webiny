@@ -33,7 +33,9 @@ class LinkState {
                 let partialState = component.state;
                 _.set(partialState, key, value);
                 component.setState(partialState, () => {
-                    callback(value, oldValue);
+                    if (_.isFunction(callback)) {
+                        callback(value, oldValue);
+                    }
                     partialState = null;
 
                     if (_this.callback) {

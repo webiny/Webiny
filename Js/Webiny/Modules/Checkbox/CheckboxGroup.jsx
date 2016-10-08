@@ -43,10 +43,10 @@ class CheckboxGroup extends Webiny.Ui.OptionComponent {
                 grid: item.grid || this.props.grid,
                 label: item.text,
                 disabled: this.isDisabled(),
-                stateKey: key,
                 state: checked, // true/false (checked/unchecked)
                 onChange: this.onChange,
-                option: item
+                option: item,
+                optionIndex: key
             };
 
             if (_.isFunction(this.props.checkboxRenderer)) {

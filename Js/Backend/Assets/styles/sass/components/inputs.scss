@@ -223,6 +223,9 @@ textarea.form-control {
     transition: all 225ms;
     font-size: 41px;
     line-height: 98%;
+    &.icon-good {
+      transform: translateY(-52%);
+    }
   }
 }
 

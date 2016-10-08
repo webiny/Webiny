@@ -368,13 +368,14 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 
         $this->trigger('onBeforeDelete');
         $this->processDelete($permanent);
-        $this->trigger('onAfterDelete');
+
         if (!$permanent) {
             $this->deletedOn = $this->datetime()->getMongoDate();
             $this->deletedBy = $this->wAuth()->getUser();
             $this->save();
         }
 
+        $this->trigger('onAfterDelete');
 
         return true;
     }
@@ -456,7 +457,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         if ($staticFilter) {
             $staticFilterConditions = is_callable($staticFilter) ? $staticFilter($conditions) : $staticFilter;
             if (is_array($staticFilterConditions)) {
-                $conditions = array_merge($conditions, $staticFilter());
+                $conditions = array_merge($conditions, $staticFilterConditions);
             }
         }
 
@@ -529,13 +530,17 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             $callbacks = static::$classCallbacks[$class][$eventName] ?? [];
             foreach ($callbacks as $callback) {
                 // Static callbacks require an instance of entity that triggered the event as first parameter
-                $callback($this, ...$params);
+                if (is_callable($callback)) {
+                    $callback($this, ...$params);
+                }
             }
 
             if ($class == 'Apps\Core\Php\DevTools\Entity\AbstractEntity') {
                 $callbacks = $this->instanceCallbacks[$eventName] ?? [];
                 foreach ($callbacks as $callback) {
-                    $callback(...$params);
+                    if (is_callable($callback)) {
+                        $callback(...$params);
+                    }
                 }
 
                 return;
