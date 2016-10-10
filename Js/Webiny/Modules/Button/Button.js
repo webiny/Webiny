@@ -25,6 +25,7 @@ Button.defaultProps = {
     align: 'normal',
     icon: null,
     className: null,
+    style: null,
     label: null,
     onClick: _.noop,
     renderer() {
