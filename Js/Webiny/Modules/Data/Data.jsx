@@ -19,6 +19,7 @@ class Data extends Webiny.Ui.Component {
         if (!_.isFunction(this.props.children)) {
             console.warn('Warning: Data component only accepts a function as its child element!');
         }
+        this.setState({loading: true});
     }
 
     componentDidMount() {
@@ -42,13 +43,12 @@ class Data extends Webiny.Ui.Component {
             return;
         }
 
-        this.setState({loading: false});
-
         if (apiResponse.isError()) {
+            this.setState({loading: false});
             Webiny.Growl.info(apiResponse.getError(), 'Could not fetch data', true);
             return;
         }
-        this.setState({data: apiResponse.getData()});
+        this.setState({data: apiResponse.getData(), loading: false});
     }
 
     filter(filters = {}) {
