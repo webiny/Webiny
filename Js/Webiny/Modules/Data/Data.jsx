@@ -28,7 +28,6 @@ class Data extends Webiny.Ui.Component {
             this.setData(apiResponse);
             return apiResponse.getData();
         });
-        return this.request;
     }
 
     componentWillUnmount() {
