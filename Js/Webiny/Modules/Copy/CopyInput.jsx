@@ -29,9 +29,7 @@ class CopyInput extends Webiny.Ui.FormComponent {
 
 CopyInput.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     actionLabel: 'Copy',
-    onSuccessMessage: 'Copied to clipboard!',
-    onCopy: _.noop,
-    style: {
+    actionStyle: {
         position: 'absolute',
         right: -5,
         zIndex: 100,
@@ -39,6 +37,8 @@ CopyInput.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         top: 4,
         lineHeight: 0.5
     },
+    onSuccessMessage: 'Copied to clipboard!',
+    onCopy: _.noop,
     renderer() {
         const props = {
             className: 'form-control',
@@ -57,7 +57,7 @@ CopyInput.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                 <div className="input-group">
                     <input {...props}/>
                     <button
-                        style={this.props.style}
+                        style={this.props.actionStyle}
                         className="btn btn-primary btn--copy"
                         ref="button">
                         {this.props.actionLabel}
