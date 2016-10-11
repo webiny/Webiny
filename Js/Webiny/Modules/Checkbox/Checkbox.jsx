@@ -29,12 +29,12 @@ Checkbox.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     grid: 3,
     className: null,
     optionIndex: null,
-    labelRenderer(){
+    labelRenderer() {
         let tooltip = null;
         if (this.props.tooltip) {
             tooltip = <Ui.Tooltip key="label" target={<Ui.Icon icon="icon-info-circle"/>}>{this.props.tooltip}</Ui.Tooltip>;
         }
-        return <span>{this.props.label} {tooltip}</span>
+        return <span>{this.props.label} {tooltip}</span>;
     },
     renderer() {
         const css = this.classSet(
