@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
-
-class GoogleMaps extends Webiny.Ui.Component {
+class GoogleMap extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);
@@ -28,7 +27,7 @@ class GoogleMaps extends Webiny.Ui.Component {
     }
 
     shouldComponentUpdate(newProps) {
-        if (!this.props.value) {
+        if (!newProps.value) {
             return false;
         }
 
@@ -44,7 +43,7 @@ class GoogleMaps extends Webiny.Ui.Component {
     }
 
     setupMap() {
-        this.map = new google.maps.Map($(ReactDOM.findDOMNode(this)).find('.google-map')[0], {
+        this.map = new google.maps.Map(ReactDOM.findDOMNode(this).querySelector('.google-map'), {
             center: new google.maps.LatLng(this.props.lat, this.props.lng),
             zoom: this.props.zoom,
             mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -69,8 +68,8 @@ class GoogleMaps extends Webiny.Ui.Component {
     }
 
     positionMarker() {
-        const lat = _.get(this, 'props.value.lat');
-        const lng = _.get(this, 'props.value.lng');
+        const lat = _.get(this.props, 'value.lat');
+        const lng = _.get(this.props, 'value.lng');
 
         if (lat && lng) {
             const latLng = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
@@ -97,19 +96,20 @@ class GoogleMaps extends Webiny.Ui.Component {
     }
 }
 
-GoogleMaps.defaultProps = {
+GoogleMap.defaultProps = {
     key: null,
     zoom: 4,
     lat: 0,
     lng: 0,
     readOnly: false,
+    style: null,
     renderer() {
         return (
-            <div className="google-map--container">
+            <div className="google-map--container" style={this.props.style}>
                 <div className="google-map" style={{width: '100%', height: '100%'}}>{this.props.children}</div>
             </div>
         );
     }
 };
 
-export default GoogleMaps;
+export default GoogleMap;
