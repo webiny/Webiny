@@ -12,6 +12,7 @@ class Router {
         this.appUrl = '';
         this.routes = [];
         this.defaultComponents = {};
+        this.layouts = {};
         this.defaultRoute = null; // If router didn't match anything, it will reroute here
         this.titlePattern = '{title}';
         this.activeRoute = null;
@@ -100,6 +101,18 @@ class Router {
 
     reloadRoute() {
         Utils.renderRoute(this.activeRoute);
+    }
+
+    addLayout(name, component) {
+        this.layouts[name] = component;
+        return this;
+    }
+
+    getLayout(name) {
+        if (!_.has(this.layouts, name)) {
+            console.warn('Layout "' + name + '" not found in Webiny.Router! Make sure you have registered your layout before using it.');
+        }
+        return this.layouts[name] || null;
     }
 
     addDefaultComponents(components) {

@@ -87,6 +87,16 @@ class Module {
         return this;
     }
 
+    registerDefaultLayout(component) {
+        this.registerLayout('default', component);
+        return this;
+    }
+
+    registerLayout(name, component) {
+        Webiny.Router.addLayout(name, component);
+        return this;
+    }
+
     /**
      * Override if needed
      * @returns {Module}

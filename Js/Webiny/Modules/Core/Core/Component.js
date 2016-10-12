@@ -269,4 +269,6 @@ class Component extends React.Component {
     }
 }
 
+Component.defaultProps = {};
+
 export default Component;

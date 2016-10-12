@@ -5,12 +5,8 @@ class Authentication extends Webiny.Modules.Authentication {
 
     init() {
         this.registerRoutes(
-            new Webiny.Route('Login', '/login', {
-                MasterLayout: Login
-            }, 'Login').skipDefaultComponents(true),
-            new Webiny.Route('Forbidden', '/forbidden', {
-                MasterContent: this.renderForbidden()
-            }, 'Forbidden')
+            new Webiny.Route('Login', '/login', Login, 'Login').setLayout('empty'),
+            new Webiny.Route('Forbidden', '/forbidden', this.renderForbidden(), 'Forbidden')
         );
 
         // Periodically check if logged in user is still an administrator and update his most recent data

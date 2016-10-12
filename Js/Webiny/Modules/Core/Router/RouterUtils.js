@@ -99,7 +99,7 @@ class RouterUtils {
             defComponents = Webiny.Router.getDefaultComponents();
         }
 
-        return _.merge({}, defComponents, components);
+        return _.merge({Layout: Webiny.Router.getLayout(route.layout)}, defComponents, components);
     }
 
     handleRouteNotMatched(url, callbacks) {

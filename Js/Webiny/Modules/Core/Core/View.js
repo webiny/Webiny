@@ -7,4 +7,6 @@ class View extends Component {
     }
 }
 
+View.defaultProps = _.merge({}, Component.defaultProps);
+
 export default View;

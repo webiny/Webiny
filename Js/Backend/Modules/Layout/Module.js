@@ -1,13 +1,16 @@
 import Webiny from 'Webiny';
 import Components from './Components/Components';
-import Main from './Main';
+import Layout from './Layout';
+import EmptyLayout from './EmptyLayout';
 
 class Module extends Webiny.Module {
 
     init() {
+        this.registerDefaultLayout(Layout);
+        this.registerLayout('empty', EmptyLayout);
+
         this.registerDefaultComponents({
-            Header: Components.Navigation,
-            MasterLayout: Main
+            Header: Components.Navigation
         });
     }
 }
