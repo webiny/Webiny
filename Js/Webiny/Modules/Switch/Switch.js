@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
 import SwitchButton from './SwitchButton';
-const Ui = Webiny.Ui.Components;
 
 class Switch extends Webiny.Ui.FormComponent {
 

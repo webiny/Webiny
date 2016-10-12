@@ -17,7 +17,7 @@ class Pagination extends Webiny.Ui.Component {
         this.props.onPageChange(page);
     }
 
-    renderPerPage(){
+    renderPerPage() {
         return this.props.perPageRenderer.call(this);
     }
 
@@ -82,7 +82,7 @@ Pagination.defaultProps = {
     count: 0,
     totalCount: 0,
     size: 'large', // large or small
-    perPageRenderer(){
+    perPageRenderer() {
         return (
             <Ui.Dropdown title={<span><strong>{this.props.perPage}</strong> per page</span>} className="balloon">
                 <Ui.Dropdown.Header title="Results per page"/>
