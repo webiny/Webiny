@@ -1,6 +1,7 @@
 <?php
 namespace Apps\Core\Php\Entities;
 
+use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Image\ImageTrait;
 use Webiny\Component\Storage\File\File as StorageFile;
@@ -106,6 +107,14 @@ class Image extends File
             return $sizeFile->setStorage($this->storage)->getUrl();
         }
 
+        $sizes = $this->dimensions[$size] ?? explode('x', $size);
+        $width = $sizes[0] ?? null;
+        $height = $sizes[1] ?? null;
+
+        if (!$width || !$height) {
+            throw new AppException('Invalid image dimensions (' . $size . ')');
+        }
+
         // Build size key
         $path = explode('/', $this->src);
         $fileName = array_pop($path);
@@ -121,14 +130,6 @@ class Image extends File
         // Create new image size
         $currentFile = new StorageFile($this->src, $this->storage);
         $image = $this->image($currentFile);
-
-        $sizes = $this->dimensions[$size] ?? explode('x', $size);
-        $width = $sizes[0] ?? null;
-        $height = $sizes[1] ?? null;
-
-        if (!$width || !$height) {
-            return $this->getUrl();
-        }
 
         if ($width && $height) {
             $image->resize($width, $height);
