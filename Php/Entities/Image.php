@@ -111,7 +111,7 @@ class Image extends File
         $width = $sizes[0] ?? null;
         $height = $sizes[1] ?? null;
 
-        if (!$width || !$height) {
+        if (!is_numeric($width)) {
             throw new AppException('Invalid image dimensions (' . $size . ')');
         }
 
@@ -131,11 +131,14 @@ class Image extends File
         $currentFile = new StorageFile($this->src, $this->storage);
         $image = $this->image($currentFile);
 
-        if ($width && $height) {
-            $image->resize($width, $height);
+        // If height was not defined, that means only width was given and height has to calculated automatically (aspect ratio kept)
+        if (!$height) {
+            $dimensions = $image->getSize();
+            $aspectRatio = $dimensions['width'] / $dimensions['height'];
+            $height = $dimensions['width'] / $aspectRatio;
         }
 
-        $image->save($extFile);
+        $image->resize($width, $height)->save($extFile);
 
         // Create new record in DB
         $newSize = new static;
