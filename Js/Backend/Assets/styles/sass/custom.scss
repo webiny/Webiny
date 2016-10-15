@@ -379,3 +379,18 @@
   }
 }
 /** END OF: DASHBOARD - ONLY PARTS WE NEED **/
+
+/** building-blocks.scss overrides **/
+
+.block-title-light {
+  display: inline-block;
+  font-size: 13px;
+  opacity: 1;
+  text-transform: uppercase;
+  vertical-align: middle;
+  float: right;
+  @media (max-width: 486px){
+    float: left;
+    width: 100%;
+  }
+}
