@@ -79,10 +79,10 @@
   }
 }
 .block-title-light {
-  margin:5px 0 0 0;
   display: inline-block;
   font-size: 13px;
-  opacity: 0.8;
+  opacity: 1;
+  text-transform: uppercase;
   vertical-align: middle;
   float: right;
   @media (max-width: 486px){

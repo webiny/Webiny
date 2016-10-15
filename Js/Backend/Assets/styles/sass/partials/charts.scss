@@ -1,6 +1,6 @@
 .line-chart {
   height: 265px;
-  margin: 20px 0 0 0;
+  margin: 0 0 20px 0;
   padding: 0 10px;
 
   .c3-ygrid {
@@ -11,7 +11,7 @@
     width: 100%;
   }
   path.domain {
-    stroke: white;
+    stroke: #d5d5d5;
   }
   .tick {
     line {
@@ -27,6 +27,10 @@
   }
   .c3-tooltip td {
     color: #313131;
+  }
+
+  .c3-line {
+    stroke-width: 2px;
   }
 
   @media (max-width: 486px){
