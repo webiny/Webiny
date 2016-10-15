@@ -4,7 +4,6 @@ namespace Apps\Core\Php\Entities;
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\Crypt\CryptTrait;
-use Webiny\Component\Entity\EntityException;
 use Webiny\Component\Mongo\Index\SingleIndex;
 
 /**

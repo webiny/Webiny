@@ -14,6 +14,7 @@ use Apps\Core\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\Attribute\AttributeType;
 use Webiny\Component\Entity\Attribute\DateAttribute;
 use Apps\Core\Php\DevTools\WebinyTrait;
+use Webiny\Component\Entity\Attribute\DateTimeAttribute;
 use Webiny\Component\Entity\Attribute\Many2ManyAttribute;
 use Webiny\Component\Entity\Attribute\One2ManyAttribute;
 use Webiny\Component\Entity\EntityCollection;
@@ -477,14 +478,21 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                 ];
             }
 
-            $dateAttr = isset($attributes[$fName]) && ($attributes[$fName] instanceof DateAttribute || $attributes[$fName] instanceof DateAttribute);
+            $dateAttr = isset($attributes[$fName]) && ($attributes[$fName] instanceof DateAttribute || $attributes[$fName] instanceof DateTimeAttribute);
             if (array_key_exists($fName, $attributes) && $dateAttr && is_string($fValue)) {
                 $from = $to = $fValue;
-                if (self::str($fValue)->contains(':')) {
+                if (self::str($fValue)->contains(':-:')) {
+                    list($from, $to) = explode(':-:', $fValue);
+                } elseif (self::str($fValue)->contains(':')) {
                     list($from, $to) = explode(':', $fValue);
                 }
 
-                if ($attributes[$fName] instanceof DateAttribute) {
+                if ($attributes[$fName] instanceof DateTimeAttribute) {
+                    $fValue = [
+                        '$gte' => self::datetime($from)->getMongoDate(),
+                        '$lte' => self::datetime($to)->getMongoDate()
+                    ];
+                } elseif ($attributes[$fName] instanceof DateAttribute) {
                     $fValue = [
                         '$gte' => self::datetime($from)->setTime(0, 0, 0)->getMongoDate(),
                         '$lte' => self::datetime($to)->setTime(23, 59, 59)->getMongoDate()

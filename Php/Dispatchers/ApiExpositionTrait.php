@@ -46,7 +46,7 @@ trait ApiExpositionTrait
         return [
             'meta' => [
                 'totalCount'  => $collection->totalCount(),
-                'totalPages'  => ceil($collection->totalCount() / $perPage),
+                'totalPages'  => $perPage > 0 ? ceil($collection->totalCount() / $perPage) : 1,
                 'perPage'     => $perPage,
                 'currentPage' => $page
             ],
