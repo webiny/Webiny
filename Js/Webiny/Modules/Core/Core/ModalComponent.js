@@ -9,6 +9,13 @@ class ModalComponent extends Component {
         this.bindMethods('show,hide,renderDialog');
     }
 
+    shouldComponentUpdate(nextProps, nextState){
+        const newProps = _.omit(nextProps, ['renderer', 'renderDialog']);
+        const oldProps = _.omit(nextProps, ['renderer', 'renderDialog']);
+
+        return !_.isEqual(newProps, oldProps);
+    }
+
     hide() {
         return this.refs.dialog.hide();
     }
