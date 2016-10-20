@@ -1,7 +1,6 @@
 import Webiny from 'Webiny';
 import Component from './Component'; // Need to import this file directly because at this point `Webiny` is not fully populated
 
-
 class ModalComponent extends Component {
 
     constructor(props) {
@@ -9,11 +8,11 @@ class ModalComponent extends Component {
         this.bindMethods('show,hide,renderDialog');
     }
 
-    shouldComponentUpdate(nextProps) {
-        const newProps = _.omit(nextProps, ['renderer', 'renderDialog']);
-        const oldProps = _.omit(nextProps, ['renderer', 'renderDialog']);
-
-        return !_.isEqual(newProps, oldProps);
+    shouldComponentUpdate(nextProps, nextState) {
+        const omitProps = ['renderer', 'renderDialog'];
+        const newProps = _.omit(nextProps, omitProps);
+        const oldProps = _.omit(this.props, omitProps);
+        return !_.isEqual(newProps, oldProps) || !_.isEqual(nextState, this.state);
     }
 
     hide() {
