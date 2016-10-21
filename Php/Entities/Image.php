@@ -134,8 +134,8 @@ class Image extends File
         // If height was not defined, that means only width was given and height has to calculated automatically (aspect ratio kept)
         if (!$height) {
             $dimensions = $image->getSize();
-            $aspectRatio = $dimensions['width'] / $dimensions['height'];
-            $height = $dimensions['width'] / $aspectRatio;
+            $aspectRatio = round($dimensions['width'] / $dimensions['height']);
+            $height = $width / $aspectRatio;
         }
 
         $image->resize($width, $height)->save($extFile);
