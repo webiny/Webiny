@@ -95,7 +95,7 @@ class Image extends File
         return $this;
     }
 
-    private function getSize($size)
+    public function getSize($size)
     {
         if ($size === 'original') {
             return $this->getUrl();
