@@ -55,7 +55,7 @@ class Module extends Webiny.Module {
     }
 
     getUserFields() {
-        return '*,roles.slug';
+        return '*,roles.slug,gravatar';
     }
 
     getUser(routerEvent) {

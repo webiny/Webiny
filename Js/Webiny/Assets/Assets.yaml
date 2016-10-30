@@ -14,6 +14,7 @@ Assets:
             - node_modules/quill/dist/quill.core.css
             - node_modules/quill/dist/quill.snow.css
             - bower_components/select2/dist/css/select2.min.css
+            - bower_components/owl.carousel/dist/assets/owl.carousel.css
         Js:
             - bower_components/system.js/dist/system.src.js
             - bower_components/history.js/scripts/bundled-uncompressed/html5/native.history.js
@@ -26,6 +27,7 @@ Assets:
             - bower_components/moment/min/moment.min.js
             - bower_components/baobab/build/baobab.min.js
             - bower_components/blueimp-md5/js/md5.min.js
+            - bower_components/owl.carousel/dist/owl.carousel.js
             - D:bower_components/react/react.js
             - D:bower_components/react/react-with-addons.js
             - D:bower_components/react/react-dom.js
