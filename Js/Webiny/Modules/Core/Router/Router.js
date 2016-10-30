@@ -12,6 +12,7 @@ class Router {
         this.appUrl = '';
         this.routes = [];
         this.defaultComponents = {};
+        this.layouts = {};
         this.defaultRoute = null; // If router didn't match anything, it will reroute here
         this.titlePattern = '{title}';
         this.activeRoute = null;
@@ -34,6 +35,7 @@ class Router {
             });
 
             History.Adapter.bind(window, 'statechange', () => {
+                this.activeRoute = null;
                 const url = History.getState().data.url || History.getState().url;
                 if (!url.startsWith(this.baseUrl)) {
                     return Utils.handleRouteNotMatched(url, this.routeNotMatched);
@@ -102,6 +104,18 @@ class Router {
         Utils.renderRoute(this.activeRoute);
     }
 
+    addLayout(name, component) {
+        this.layouts[name] = component;
+        return this;
+    }
+
+    getLayout(name) {
+        if (!_.has(this.layouts, name)) {
+            console.warn('Layout "' + name + '" not found in Webiny.Router! Make sure you have registered your layout before using it.');
+        }
+        return this.layouts[name] || null;
+    }
+
     addDefaultComponents(components) {
         _.each(components, (component, placeholder) => {
             if (!this.defaultComponents[placeholder]) {
@@ -122,38 +136,12 @@ class Router {
     }
 
     addRoute(route) {
-        // Validate route
-        const samePattern = this.getRouteByPattern(route.getPattern());
-        const sameName = this.getRoute(route.getName());
-        if (samePattern || sameName) {
-            // Name and pattern must match, otherwise we throw an error
-            const nameMismatch = samePattern && samePattern.getName() !== route.getName();
-            const patternMistmatch = sameName && sameName.getPattern() !== route.getPattern();
-            if (nameMismatch) {
-                return console.error('Route with URL `' + route.getPattern() + '` already exists! Either change your URL or use the existing name `' + samePattern.getName() + '`');
-            }
-
-            if (patternMistmatch) {
-                return console.error('Route with name `' + route.getName() + '` already exists! Either change your name or use the existing URL `' + sameName.getPattern() + '`');
-            }
-        }
-
-        const existingRoute = samePattern || sameName;
-
-        if (existingRoute) {
-            console.log('%c[Route][Merge]: ' + route.getName() + ' %c' + route.getPattern(), 'color: #666; font-weight: bold', 'color: blue; font-weight: bold');
-            // Merge components
-            _.forIn(route.components, (cmps, placeholder) => {
-                if (!_.has(existingRoute.components, placeholder)) {
-                    existingRoute.components[placeholder] = [];
-                }
-                existingRoute.components[placeholder] = cmps;
-            });
+        const index = _.findIndex(this.routes, {name: route.name});
+        if (index > -1) {
+            this.routes[index] = route;
         } else {
-            console.log('%c[Route][Add]: ' + route.getName() + ' %c' + route.getPattern(), 'color: #666; font-weight: bold', 'color: blue; font-weight: bold');
             this.routes.push(route);
         }
-
         return this;
     }
 
@@ -269,15 +257,23 @@ class Router {
     handleAnchorClick(a, e) {
         let url = a.href;
 
+        // _blank links should not be intercepted
         if (a.target === '_blank') {
             return;
         }
 
+        // Prevent scrolling to top when clicking on '#' link
         if (_.endsWith(url, '#')) {
             e.preventDefault();
             return;
         }
 
+        // Check if it's an anchor link
+        if (url.indexOf('#') > -1) {
+            return;
+        }
+
+        // Push state and let the Router process the rest
         if (url.indexOf(webinyWebPath) === 0) {
             e.preventDefault();
             url = url.replace(webinyWebPath, '');

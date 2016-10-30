@@ -38,16 +38,6 @@
                     },
                     "crudCreate": true
                 }
-            },
-            "services": {
-                "Apps\\Core\\Php\\Services\\Apps": {
-                    "/": {
-                        "get": false
-                    },
-                    "{appName}": {
-                        "get": false
-                    }
-                }
             }
         }
     },
@@ -90,6 +80,16 @@
                     "crudUpdate": true,
                     "crudRead": true,
                     "crudCreate": true
+                }
+            },
+            "services": {
+                "Apps\\Core\\Php\\Services\\Acl": {
+                    "token": {
+                        "get": true
+                    },
+                    "token-logs": {
+                        "get": true
+                    }
                 }
             }
         }

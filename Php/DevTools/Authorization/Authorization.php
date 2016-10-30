@@ -82,6 +82,9 @@ class Authorization
     {
         if (!$this->user) {
             $authCookie = $this->wRequest()->header('X-Webiny-Authorization');
+            if (!$authCookie) {
+                $authCookie = $this->wRequest()->getRequestData()['X-Webiny-Authorization'] ?? null;
+            }
 
             try {
                 /* @var $class AbstractEntity */
@@ -131,6 +134,11 @@ class Authorization
         return $this;
     }
 
+    public function getUserClass()
+    {
+        return $this->userClass;
+    }
+
     public function canCreate($class)
     {
         return $this->checkPermission($class, 'crudCreate');
@@ -158,7 +166,7 @@ class Authorization
 
     private function checkPermission($class, $permission)
     {
-        if(!$this->wConfig()->get('Application.Acl.CheckUserPermissions', true)){
+        if (!$this->wConfig()->get('Application.Acl.CheckUserPermissions', true)) {
             return true;
         }
 
@@ -166,6 +174,11 @@ class Authorization
             $class = get_class($class);
         } else {
             $class = trim($class, '\\');
+        }
+
+        $isService = in_array('Apps\Core\Php\DevTools\Services\AbstractService', class_parents($class));
+        if ($isService && in_array('Apps\Core\Php\DevTools\Interfaces\NoAuthorizationInterface', class_implements($class))) {
+            return true;
         }
 
         $user = $this->getUser();

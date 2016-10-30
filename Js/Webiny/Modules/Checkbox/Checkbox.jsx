@@ -1,51 +1,41 @@
 import Webiny from 'Webiny';
+const Ui = Webiny.Ui.Components;
 
 class Checkbox extends Webiny.Ui.FormComponent {
 
     constructor(props) {
         super(props);
         this.id = _.uniqueId('checkbox-');
-        this.bindMethods('onChange,childChanged,isChecked');
-    }
-
-    /**
-     * This method is used as an onChange callback for child CheckboxGroup elements
-     *
-     * @param key Key in parent state to update
-     * @param newValue
-     */
-    childChanged(key, newValue) {
-        if (this.props.valueLink) {
-            this.props.valueLink.requestChange(newValue);
-        } else {
-            this.props.onChange(key, newValue);
-        }
+        this.bindMethods('onChange,isChecked');
     }
 
     onChange(e) {
-        if (this.props.valueLink) {
-            this.props.valueLink.requestChange(e.target.checked);
+        if (this.props.optionIndex !== null) {
+            this.props.onChange(this.props.optionIndex, e.target.checked);
         } else {
-            if (this.props.stateKey) {
-                this.props.onChange(this.props.stateKey, e.target.checked);
-            } else {
-                this.props.onChange(e.target.checked);
-            }
+            const callback = this.props.validate ? this.validate : _.noop;
+            this.props.onChange(e.target.checked, callback);
         }
     }
 
     isChecked() {
-        const value = _.get(this.props, 'valueLink.value') || this.props.state;
+        const value = this.props.value || this.props.state;
         return !_.isNull(value) && value !== false && value !== undefined;
     }
 }
 
-Checkbox.defaultProps = {
-    disabled: false,
+Checkbox.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     label: '',
     grid: 3,
-    className: '',
-    addon: null,
+    className: null,
+    optionIndex: null,
+    labelRenderer() {
+        let tooltip = null;
+        if (this.props.tooltip) {
+            tooltip = <Ui.Tooltip key="label" target={<Ui.Icon icon="icon-info-circle"/>}>{this.props.tooltip}</Ui.Tooltip>;
+        }
+        return <span>{this.props.label} {tooltip}</span>;
+    },
     renderer() {
         const css = this.classSet(
             'checkbox-custom checkbox-default',
@@ -53,21 +43,6 @@ Checkbox.defaultProps = {
             this.props.className,
             'col-sm-' + this.props.grid
         );
-        let children = null;
-
-        if (this.props.children) {
-            children = React.Children.map(this.props.children, (child, key) => {
-                const newProps = {
-                    key,
-                    form: this.props.form || null,
-                    onChange: this.childChanged,
-                    stateKey: this.props.stateKey,
-                    state: this.props.state,
-                    disabled: this.isDisabled()
-                };
-                return React.cloneElement(child, newProps, child.props.children);
-            });
-        }
 
         const checkboxProps = {
             disabled: this.isDisabled(),
@@ -78,11 +53,11 @@ Checkbox.defaultProps = {
         return (
             <div className={css}>
                 <input id={this.id} type="checkbox" {...checkboxProps}/>
-                <label htmlFor={this.id}>{this.props.label} {children}</label>
-                {this.props.addon || null}
+                <label htmlFor={this.id}>{this.renderLabel()}</label>
+                {this.renderValidationMessage()}
             </div>
         );
     }
-};
+});
 
 export default Checkbox;

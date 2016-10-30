@@ -31,7 +31,8 @@ class Module extends Webiny.Module {
             new Webiny.Route('UserPermissions.Create', '/acl/permissions/new', Views.UserPermissionsForm, 'ACL - Create Permission').setRole(aclManageUsers),
             new Webiny.Route('UserPermissions.Edit', '/acl/permissions/:id', Views.UserPermissionsForm, 'ACL - Edit Permission').setRole(aclManageUsers),
             new Webiny.Route('UserPermissions.List', '/acl/permissions', Views.UserPermissionsList, 'ACL - Permissions').setRole(aclManageUsers),
-            new Webiny.Route('ApiTokens.List', '/acl/api-tokens', Views.ApiTokensList, 'ACL - API Tokens').setRole(aclApiTokens)
+            new Webiny.Route('ApiTokens.List', '/acl/api-tokens', Views.ApiTokensList, 'ACL - API Tokens').setRole(aclApiTokens),
+            new Webiny.Route('ApiTokens.Logs', '/acl/api-tokens/logs/:token', Views.ApiTokensLogs, 'ACL - API Tokens - Logs').setRole(aclApiTokens)
         );
 
         Webiny.Dispatcher.on('Acl.Account.Refresh', () => {

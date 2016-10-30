@@ -19,7 +19,7 @@ class RootElement extends View {
     componentDidMount() {
         this.unsubscribe = Dispatcher.on('RenderView', () => {
             return this.setState({
-                time: new Date().getTime()
+                time: _.now()
             });
         });
 
@@ -69,7 +69,7 @@ class RootElement extends View {
 
     render() {
         if (!this.state.loading) {
-            return <Placeholder onDidUpdate={this.onDidUpdate} name="MasterLayout"/>;
+            return <Placeholder onDidUpdate={this.onDidUpdate} name="Layout"/>;
         }
         return null;
     }

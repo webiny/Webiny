@@ -3,7 +3,6 @@ namespace Apps\Core\Php\Entities;
 
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\Entity\EntityCollection;
-use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
 /**
  * Class UserRole
@@ -11,7 +10,7 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  * @property string           $name
  * @property string           $description
  * @property string           $slug
- * @property ArrayObject      $permissions
+ * @property EntityCollection $permissions
  * @property EntityCollection $users
  *
  * @package Apps\Core\Php\Entities

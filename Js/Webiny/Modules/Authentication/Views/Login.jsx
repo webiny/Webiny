@@ -127,9 +127,9 @@ Login.defaultProps = {
     },
     renderer() {
         return (
-            <Ui.Form.Container api={this.props.api} ui="loginForm" onSubmit={this.onSubmit}>
+            <Ui.Form api={this.props.api} ui="loginForm" onSubmit={this.onSubmit}>
                 {(model, container) => this.renderForm(model, container)}
-            </Ui.Form.Container>
+            </Ui.Form>
         );
     }
 };

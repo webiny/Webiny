@@ -1,3 +1,4 @@
+import Webiny from 'Webiny';
 import Component from './Component';
 
 class FormComponent extends Component {
@@ -11,7 +12,18 @@ class FormComponent extends Component {
             validationResults: {}
         };
 
-        this.bindMethods('isRequired', 'validate', 'getValue', 'hasValue', 'onChange', 'isDisabled');
+        this.bindMethods(
+            'isRequired',
+            'validate',
+            'getValue',
+            'hasValue',
+            'isDisabled',
+            'renderLabel',
+            'renderInfo',
+            'renderDescription',
+            'renderValidationIcon',
+            'renderValidationMessage'
+        );
     }
 
     componentWillMount() {
@@ -60,27 +72,26 @@ class FormComponent extends Component {
             return true;
         }
 
-        if (_.isNumber(this.props.valueLink.value)) {
+        if (_.isNumber(this.props.value)) {
             return true;
         }
 
-        return !_.isEmpty(this.props.valueLink.value);
+        return !_.isEmpty(this.props.value);
     }
 
     setInvalid(message) {
         this.setState({isValid: false, validationMessage: message});
     }
 
-    getValue() {
-        return this.props.valueLink.value;
+    getValue(props = null) {
+        if (!props) {
+            props = this.props;
+        }
+        return props.value;
     }
 
     isRequired() {
         return this.props.validate && this.props.validate.indexOf('required') > -1;
-    }
-
-    onChange(e) {
-        this.props.valueLink.requestChange(e.target.value);
     }
 
     isDisabled(props = this.props) {
@@ -98,18 +109,88 @@ class FormComponent extends Component {
 
         return this.props.disabled;
     }
+
+    renderLabel() {
+        return this.props.labelRenderer.call(this);
+    }
+
+    renderInfo() {
+        return this.props.infoRenderer.call(this);
+    }
+
+    renderDescription() {
+        return this.props.descriptionRenderer.call(this);
+    }
+
+    renderValidationMessage() {
+        return this.props.validationMessageRenderer.call(this);
+    }
+
+    renderValidationIcon() {
+        return this.props.validationIconRenderer.call(this);
+    }
 }
 
 FormComponent.defaultProps = {
     disabled: null,
     disabledBy: null,
+    label: null,
+    info: null,
+    description: null,
     form: null,
     validate: null,
-    valueLink: null,
-    hideAnimation: {translateY: 0, opacity: 0, duration: 225},
-    showAnimation: {translateY: 50, opacity: 1, duration: 225},
+    value: null,
+    onChange: _.noop,
+    hideValidationAnimation: {translateY: 0, opacity: 0, duration: 225},
+    showValidationAnimation: {translateY: 50, opacity: 1, duration: 225},
     showValidationMessage: true,
-    showValidationIcon: true
+    showValidationIcon: true,
+    tooltip: null,
+    labelRenderer() {
+        let label = null;
+        if (this.props.label) {
+            let tooltip = null;
+            if (this.props.tooltip) {
+                const Ui = Webiny.Ui.Components;
+                tooltip = <Ui.Tooltip key="label" target={<Ui.Icon icon="icon-info-circle"/>}>{this.props.tooltip}</Ui.Tooltip>;
+            }
+            label = <label key="label" className="control-label">{this.props.label} {tooltip}</label>;
+        }
+
+        return label;
+    },
+    validationMessageRenderer() {
+        if (!this.props.showValidationMessage || this.state.isValid !== false) {
+            return null;
+        }
+        return <span className="help-block w-anim">{this.state.validationMessage}</span>;
+    },
+    validationIconRenderer() {
+        if (!this.props.showValidationIcon || this.state.isValid === null) {
+            return null;
+        }
+
+        if (this.state.isValid === true) {
+            return <span className="icon icon-good"></span>;
+        }
+        return <span className="icon icon-bad"></span>;
+    },
+    infoRenderer() {
+        let info = this.props.info;
+        if (_.isFunction(info)) {
+            info = info(this);
+        }
+
+        return info ? <span className="info-txt">{info}</span> : null;
+    },
+    descriptionRenderer() {
+        let description = this.props.description;
+        if (_.isFunction(description)) {
+            description = description(this);
+        }
+
+        return description ? <span className="help-block">{description}</span> : null;
+    }
 };
 
 export default FormComponent;

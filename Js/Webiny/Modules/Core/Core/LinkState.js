@@ -10,7 +10,7 @@ class LinkState {
     create() {
         return {
             value: this.__getValue(this.key),
-            requestChange: this.__createStateKeySetter()
+            onChange: this.__createStateKeySetter()
         };
     }
 
@@ -33,7 +33,9 @@ class LinkState {
                 let partialState = component.state;
                 _.set(partialState, key, value);
                 component.setState(partialState, () => {
-                    callback(value, oldValue);
+                    if (_.isFunction(callback)) {
+                        callback(value, oldValue);
+                    }
                     partialState = null;
 
                     if (_this.callback) {

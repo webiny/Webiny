@@ -1,25 +1,22 @@
 <?php
 namespace Apps\Core\Php\PackageManager\Parser;
 
-use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Webiny\Component\Entity\Attribute\AbstractAttribute;
-use Webiny\Component\Entity\Attribute\AttributeType;
 use Webiny\Component\Entity\Attribute\Many2OneAttribute;
 use Webiny\Component\Entity\Attribute\One2ManyAttribute;
-use Webiny\Component\StdLib\StdObject\StdObjectException;
 
 class EntityParser extends AbstractParser
 {
     protected $baseClass = 'Apps\Core\Php\DevTools\Entity\AbstractEntity';
     private $apiMethods;
     private $defaultValues;
-    private $headerAuthorizationToken;
     private $attributeDescription;
 
     function __construct($class)
     {
         parent::__construct($class);
+        $this->slug = $this->str($this->name)->kebabCase()->pluralize()->val();
         $this->url = '/entities/' . $this->getAppSlug() . '/' . $this->slug;
         $this->defaultValues = [
             'object'   => new \stdClass(),
@@ -29,20 +26,6 @@ class EntityParser extends AbstractParser
             'id'       => (string)$this->mongo()->id(),
             'boolean'  => true,
             'string'   => ''
-        ];
-
-        $this->headerAuthorizationToken = [
-            'name'        => 'X-Webiny-Authorization',
-            'description' => 'Authorization token',
-            'type'        => 'string',
-            'required'    => true
-        ];
-
-        $this->headerApiToken = [
-            'name'        => 'X-Webiny-Api-Token',
-            'description' => 'API token',
-            'type'        => 'string',
-            'required'    => true
         ];
     }
 
@@ -97,7 +80,7 @@ class EntityParser extends AbstractParser
             if ($attr instanceof Many2OneAttribute || $attr instanceof One2ManyAttribute) {
                 $relations[] = [
                     'attribute' => $attrName,
-                    'class'     => $attr->getEntity(),
+                    'class'     => trim($attr->getEntity(), '\\'),
                     'type'      => $attributeType($attr)
                 ];
             }
@@ -134,26 +117,46 @@ class EntityParser extends AbstractParser
         ];
         $apiDocs = $this->parseApi($this->class);
         $methods = [];
+        $entityInstance = new $this->class;
         foreach ($apiDocs as $name => $httpMethods) {
             foreach ($httpMethods as $httpMethod => $config) {
                 $key = $name . '.' . $httpMethod;
                 if (!$includeCrudMethods && in_array($key, $crudPatterns)) {
                     continue;
                 }
+
                 $config = $this->arr($config);
                 $definition = [
-                    'key'         => $key,
-                    'path'        => $this->url . '/' . ltrim($name, '/'),
-                    'url'         => $this->wConfig()->get('Application.ApiPath') . $this->url . '/' . ltrim($name, '/'),
-                    'name'        => $config->key('name'),
-                    'description' => $config->key('description', '', true),
-                    'method'      => strtoupper($httpMethod),
-                    'headers'     => [
-                        'X-Webiny-Authorization' => $this->headerAuthorizationToken,
-                        'X-Webiny-Api-Token'     => $this->headerApiToken
-                    ]
+                    'key'           => $key,
+                    'path'          => $this->url . '/' . ltrim($name, '/'),
+                    'url'           => $this->wConfig()->get('Application.ApiPath') . $this->url . '/' . ltrim($name, '/'),
+                    'name'          => $config->key('name'),
+                    'description'   => $config->key('description', '', true),
+                    'method'        => strtoupper($httpMethod),
+                    'public'        => false,
+                    'authorization' => true,
+                    'headers'       => []
                 ];
 
+                // There may be a case when a developer uses a trait with extra api methods and parser registers those methods
+                // but if those methods are not initialized, this following check may fail with an error.
+                // To avoid it - we check if method is initialized before doing anything else.
+                $entityMethod = $entityInstance->api($httpMethod, $name);
+                if ($entityMethod) {
+                    $isPublic = $entityMethod->getPublic();
+                    $definition['public'] = $isPublic;
+                    $definition['authorization'] = $isPublic ? false : $entityMethod->getAuthorization();
+                }
+
+                if (!$definition['public']) {
+                    $definition['headers'][] = $this->headerApiToken;
+                }
+
+                if ($definition['authorization']) {
+                    $definition['headers'][] = $this->headerAuthorizationToken;
+                }
+
+                // Build query params and add them to URL
                 if (count($config['query']) > 0) {
                     $queryParams = http_build_query($config['query']);
                     $definition['path'] .= '?' . $queryParams;
@@ -165,22 +168,22 @@ class EntityParser extends AbstractParser
                     $definition['parameters'][$pName] = [
                         'name'        => $pName,
                         'in'          => 'path',
-                        'description' => $pConfig['description'],
-                        'type'        => $pConfig['type']
+                        'description' => $pConfig['description'] ?? '',
+                        'type'        => $pConfig['type'] ?? ''
                     ];
                 }
 
                 foreach ($config->key('body', [], true) as $pName => $pConfig) {
                     $definition['body'][$pName] = [
-                        'type'  => $pConfig['type'],
+                        'type'  => $pConfig['type'] ?? '',
                         'value' => $pConfig['value'] ?? null
                     ];
                 }
                 foreach ($config->key('headers', [], true) as $pName => $pConfig) {
                     $definition['headers'][$pName] = [
                         'name'        => $pName,
-                        'description' => $pConfig['description'],
-                        'type'        => $pConfig['type'],
+                        'description' => $pConfig['description'] ?? '',
+                        'type'        => $pConfig['type'] ?? '',
                         'required'    => true
                     ];
                 }

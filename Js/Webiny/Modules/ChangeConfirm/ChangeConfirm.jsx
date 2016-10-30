@@ -7,10 +7,9 @@ class ChangeConfirm extends Webiny.Ui.Component {
 
         const input = this.getInput(props);
         this.state = {
-            value: input.props.valueLink ? input.props.valueLink.value : input.props.value
+            value: input.props.value
         };
 
-        this.hasValueLink = _.has(input.props, 'valueLink');
         this.message = null;
 
         this.bindMethods('onChange,onConfirm,onCancel');
@@ -19,7 +18,7 @@ class ChangeConfirm extends Webiny.Ui.Component {
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
         const input = this.getInput(props);
-        this.setState({value: input.props.valueLink ? input.props.valueLink.value : input.props.value});
+        this.setState({value: input.props.value});
     }
 
     shouldComponentUpdate(nextProps) {
@@ -35,15 +34,11 @@ class ChangeConfirm extends Webiny.Ui.Component {
 
         let msg = this.props.message;
         if (_.isFunction(msg)) {
-            msg = msg(value, this.hasValueLink ? this.realValueLink.value : input.props.value, component);
+            msg = msg(value, input.props.value, component);
         }
 
         if (!msg) {
-            if (this.hasValueLink) {
-                this.realValueLink.requestChange(value);
-            } else {
-                this.realOnChange(value);
-            }
+            this.realOnChange(value);
             return;
         }
 
@@ -57,52 +52,48 @@ class ChangeConfirm extends Webiny.Ui.Component {
     }
 
     onCancel() {
-        const cancelValue = this.props.onCancel && this.props.onCancel(this.getInput(this.props).props.form) || undefined;
+        const cancelValue = this.props.onCancel(this.getInput(this.props).props.form);
         if (!_.isUndefined(cancelValue)) {
-            if (this.hasValueLink) {
-                this.realValueLink.requestChange(cancelValue);
-            } else {
-                this.realOnChange(cancelValue);
-            }
+            this.realOnChange(cancelValue);
         } else {
-            if (this.hasValueLink) {
-                this.realValueLink.requestChange(this.realValueLink.value);
-            }
+            this.realOnChange(this.state.value);
         }
         this.refs.dialog.hide();
     }
 
     onConfirm() {
-        if (this.hasValueLink) {
-            this.realValueLink.requestChange(this.value);
-        } else {
-            this.realOnChange(this.value);
-        }
-        this.refs.dialog.hide();
+        return this.realOnChange(this.value);
     }
 }
 
 ChangeConfirm.defaultProps = {
+    message: 'You really want to change this value?',
+    onComplete: _.noop,
+    onCancel: _.noop,
+    renderDialog: null,
     renderer() {
         // Input
         const input = this.getInput(this.props);
-        let props = null;
-        if (this.hasValueLink) {
-            this.realValueLink = input.props.valueLink;
-            props = _.omit(input.props, ['valueLink']);
-            props.valueLink = this.bindTo('value', this.onChange);
-        } else if (input.props.onChange) {
-            this.realOnChange = input.props.onChange;
-            props = _.omit(input.props, ['onChange']);
-            props.onChange = this.onChange;
-        } else {
-            return input;
+        this.realOnChange = input.props.onChange;
+        const props = _.omit(input.props, ['onChange']);
+        props.onChange = this.onChange;
+
+        const dialogProps = {
+            ref: 'dialog',
+            message: () => this.message,
+            onConfirm: this.onConfirm,
+            onCancel: this.onCancel,
+            onComplete: this.props.onComplete
+        };
+
+        if (_.isFunction(this.props.renderDialog)) {
+            dialogProps['renderDialog'] = this.props.renderDialog;
         }
 
         return (
             <webiny-change-confirm>
                 {React.cloneElement(input, props)}
-                <Ui.Modal.Confirmation ref="dialog" message={() => this.message} onConfirm={this.onConfirm} onCancel={this.onCancel}/>
+                <Ui.Modal.Confirmation {...dialogProps}/>
             </webiny-change-confirm>
         );
     }

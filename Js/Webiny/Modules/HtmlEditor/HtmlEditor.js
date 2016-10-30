@@ -14,7 +14,7 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
         _.merge(this.state, {
             cropImage: null,
             uploadPercentage: null,
-            value: props.valueLink.value
+            value: props.value
         });
 
         this.bindMethods('getTextareaElement,getEditor,getCropper,onCropperHidden,uploadImage,fileChanged,applyValue,changed,renderError');
@@ -40,13 +40,13 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
             this.setState({value: this.editor.root.innerHTML}, this.changed);
         });
 
-        this.editor.pasteHTML(this.props.valueLink.value);
+        this.editor.pasteHTML(this.props.value);
     }
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        if (!this.delay && props.valueLink.value !== this.editor.root.innerHTML) {
-            this.editor.pasteHTML(props.valueLink.value);
+        if (!this.delay && props.value !== this.editor.root.innerHTML) {
+            this.editor.pasteHTML(props.value);
         }
     }
 
@@ -68,7 +68,7 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
     applyValue(value) {
         clearTimeout(this.delay);
         this.delay = null;
-        this.props.valueLink.requestChange(value);
+        this.props.onChange(value);
     }
 
     changed() {
@@ -158,7 +158,7 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
     }
 }
 
-HtmlEditor.defaultProps = {
+HtmlEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     imageApi: '/entities/core/images',
     accept: ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'],
     sizeLimit: 2485760,
@@ -201,35 +201,10 @@ HtmlEditor.defaultProps = {
             );
         }
 
-        let label = null;
-        if (this.props.label) {
-            let tooltip = null;
-            if (this.props.tooltip) {
-                tooltip = <Ui.Tooltip target={<Ui.Icon icon="icon-info-circle"/>}>{this.props.tooltip}</Ui.Tooltip>;
-            }
-            label = <label className="control-label">{this.props.label} {tooltip}</label>;
-        }
-
-        let info = this.props.info;
-        if (_.isFunction(info)) {
-            info = info(this);
-        }
-
-        let description = this.props.description;
-        if (_.isFunction(description)) {
-            description = description(this);
-        }
-
-        if (description) {
-            description = <span className="help-block">{description}</span>;
-        }
-
-
         return (
             <div className="form-group">
-                {label}
-                <span className="info-txt">{info}</span>
-
+                {this.renderLabel()}
+                {this.renderInfo()}
                 <div className="input-group">
                     {this.renderError()}
                     {uploader}
@@ -241,10 +216,10 @@ HtmlEditor.defaultProps = {
                         onChange={this.fileChanged}/>
                     {this.getCropper(<Ui.Alert type="info" title="Hint">Scroll to zoom in/out</Ui.Alert>)}
                 </div>
-                {description}
+                {this.renderDescription()}
             </div>
         );
     }
-};
+});
 
 export default HtmlEditor;

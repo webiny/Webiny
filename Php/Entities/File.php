@@ -137,10 +137,10 @@ class File extends AbstractEntity
     /**
      * @inheritDoc
      */
-    public function delete()
+    public function delete($permanent = false)
     {
-        $deleted = parent::delete();
-        if ($deleted) {
+        $deleted = parent::delete($permanent);
+        if ($deleted && $permanent) {
             $this->deleteFileFromStorage();
         }
 

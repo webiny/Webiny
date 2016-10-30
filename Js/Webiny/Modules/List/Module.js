@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
-import ApiContainer from './Components/ApiContainer';
-import StaticContainer from './Components/StaticContainer';
+import List from './List';
 import Table from './Components/Table/Table';
 import Row from './Components/Table/Row';
 import RowDetails from './Components/Table/RowDetails';
@@ -55,38 +54,9 @@ class Module extends Webiny.Module {
 
     init() {
         Webiny.Ui.Components.ExpandableList = ExpandableList;
-        Webiny.Ui.Components.List = {
-            ApiContainer,
-            StaticContainer,
-            Table: {
-                Table,
-                Header,
-                Row,
-                RowDetails,
-                Field,
-                FieldInfo,
-                Footer,
-                Empty,
-                SelectAll,
-                SelectRow,
-                DateTimeField,
-                DateField,
-                TimeField,
-                FileSizeField,
-                CaseField,
-                ToggleField,
-                TimeAgoField,
-                PriceField,
-                GravatarField,
-                RowDetailsField,
-                Actions,
-                Action,
-                EditAction,
-                RouteAction,
-                ModalAction,
-                DeleteAction,
-                EditModalAction
-            },
+        Webiny.Ui.Components.List = List;
+        _.assign(List, {
+            Table,
             MultiActions,
             MultiAction,
             ModalMultiAction,
@@ -95,7 +65,36 @@ class Module extends Webiny.Module {
             FormFilters,
             Pagination,
             Loader
-        };
+        });
+
+        _.assign(Table, {
+            Header,
+            Row,
+            RowDetails,
+            Field,
+            FieldInfo,
+            Footer,
+            Empty,
+            SelectAll,
+            SelectRow,
+            DateTimeField,
+            DateField,
+            TimeField,
+            FileSizeField,
+            CaseField,
+            ToggleField,
+            TimeAgoField,
+            PriceField,
+            GravatarField,
+            RowDetailsField,
+            Actions,
+            Action,
+            EditAction,
+            RouteAction,
+            ModalAction,
+            DeleteAction,
+            EditModalAction
+        });
     }
 }
 

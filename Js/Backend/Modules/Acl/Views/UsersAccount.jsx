@@ -33,7 +33,7 @@ UsersAccount.defaultProps = {
         };
 
         return (
-            <Ui.Form.Container ui="myForm" {...this.props.configureContainer(formContainer)}>
+            <Ui.Form ui="myForm" {...this.props.configureContainer(formContainer)}>
                 {(model, container) => (
                     <Ui.View.Form>
                         <Ui.View.Header title="Account Settings"/>
@@ -77,7 +77,7 @@ UsersAccount.defaultProps = {
                         </Ui.View.Footer>
                     </Ui.View.Form>
                 )}
-            </Ui.Form.Container>
+            </Ui.Form>
         );
     }
 };

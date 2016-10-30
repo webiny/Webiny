@@ -253,7 +253,8 @@
 
 .smde .editor-preview > p,
 .smde .editor-preview-side > p {
-	margin-top: 0
+	margin-top: 0;
+	margin-bottom: 10px;
 }
 
 .smde .editor-preview pre,

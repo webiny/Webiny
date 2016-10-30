@@ -6,7 +6,7 @@ class Route {
         // Normalize components
         const nComponents = {};
         if (!_.isPlainObject(components)) {
-            nComponents['MasterContent'] = _.isArray(components) ? components : [components];
+            nComponents['Content'] = _.isArray(components) ? components : [components];
         } else {
             _.forIn(components, (cmp, placeholder) => {
                 if (_.isArray(cmp)) {
@@ -18,6 +18,7 @@ class Route {
         }
 
         this.name = name;
+        this.layout = 'default';
         this.module = false;
         this.pattern = pattern;
         this.components = nComponents;
@@ -161,6 +162,11 @@ class Route {
             role = role.split(',');
         }
         this.role = role;
+        return this;
+    }
+
+    setLayout(name) {
+        this.layout = name;
         return this;
     }
 }

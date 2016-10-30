@@ -7,8 +7,8 @@ class Logger extends Webiny.Module {
         const Menu = Webiny.Ui.Menu;
 
         this.registerMenus(
-            new Menu('DevTools', [
-                new Menu('Logger', 'Logger.ListErrors')
+            new Menu('System', [
+                new Menu('Error Logger', 'Logger.ListErrors')
             ], 'icon-tools').setRole('core-logger-manager')
         );
 

@@ -1,7 +1,6 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
-class SelectInput extends Webiny.Ui.FormComponent {
+class SimpleSelect extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);
@@ -21,7 +20,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        if (props.valueLink && props.valueLink.value !== this.props.valueLink.value) {
+        if (props.value !== this.props.value) {
             this.previousData = _.clone(this.getCurrentData());
         }
     }
@@ -46,7 +45,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
             }, 100);
         }
 
-        $(ReactDOM.findDOMNode(this)).find('select').prop('disabled', !!this.isDisabled());
+        $(ReactDOM.findDOMNode(this)).find('select').prop('disabled', !!this.props.disabled);
 
         if (value !== null && !inPossibleValues && possibleValues.length > 0) {
             this.triggerChange(null);
@@ -55,6 +54,15 @@ class SelectInput extends Webiny.Ui.FormComponent {
 
         if (value !== null && inPossibleValues) {
             this.select2.val(value).trigger('change');
+            return;
+        }
+
+        // Select first value if model is empty and "autoSelectFirstOptionOption" is enabled
+        if (value === null && this.props.autoSelectFirstOption) {
+            const firstValue = _.get(this.props.options, '0.id');
+            if (firstValue) {
+                this.triggerChange(firstValue);
+            }
             return;
         }
 
@@ -83,7 +91,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
     }
 
     getValue() {
-        const value = this.props.valueLink ? this.props.valueLink.value : this.props.selectedValue;
+        const value = this.props.value;
         if (value === null || value === undefined) {
             return value;
         }
@@ -93,16 +101,16 @@ class SelectInput extends Webiny.Ui.FormComponent {
 
     getCurrentData() {
         if (this.props.useDataAsValue) {
-            return this.props.valueLink.value;
+            return this.props.value;
         }
 
         let data = null;
-        const option = _.find(this.options, {id: this.props.valueLink.value});
+        const option = _.find(this.options, {id: this.props.value});
         if (option) {
             data = option.data;
         }
 
-        return this.props.valueLink.value ? data : null;
+        return this.props.value ? data : null;
     }
 
     getPreviousData() {
@@ -119,23 +127,19 @@ class SelectInput extends Webiny.Ui.FormComponent {
             }
         }
 
-        if (this.props.valueLink) {
-            // Save previous selection data so it can be accessed from onChange handlers
-            const prevValue = this.getValue();
-            if (this.props.useDataAsValue) {
-                this.previousData = prevValue ? _.clone(prevValue) : null;
-            } else {
-                let data = null;
-                const option = _.find(this.options, {id: prevValue});
-                if (option) {
-                    data = option.data;
-                }
-                this.previousData = data ? _.clone(data) : null;
-            }
-            this.props.valueLink.requestChange(value, !this.isValid() ? this.validate : _.noop);
+        // Save previous selection data so it can be accessed from onChange handlers
+        const prevValue = this.getValue();
+        if (this.props.useDataAsValue) {
+            this.previousData = prevValue ? _.clone(prevValue) : null;
         } else {
-            this.props.onChange(value);
+            let data = null;
+            const option = _.find(this.options, {id: prevValue});
+            if (option) {
+                data = option.data;
+            }
+            this.previousData = data ? _.clone(data) : null;
         }
+        this.props.onChange(value);
     }
 
     getOptionText(text) {
@@ -171,7 +175,7 @@ class SelectInput extends Webiny.Ui.FormComponent {
 
     getConfig(props) {
         const config = {
-            disabled: this.isDisabled(props),
+            disabled: props.disabled,
             minimumResultsForSearch: props.minimumResultsForSearch,
             minimumInputLength: props.minimumInputLength,
             placeholder: _.get(props.placeholder, 'props.children', props.placeholder),
@@ -200,50 +204,28 @@ class SelectInput extends Webiny.Ui.FormComponent {
     }
 }
 
-SelectInput.defaultProps = {
+SimpleSelect.defaultProps = {
+    value: null,
     allowClear: false,
+    autoSelectFirstOption: false,
     placeholder: null,
     onChange: _.noop,
-    selectedValue: '',
     minimumInputLength: 0,
     minimumResultsForSearch: 15,
     useDataAsValue: false,
     dropdownParent: '.dropdown-wrapper',
     dropdownClassName: '',
-    description: null,
+    optionRenderer: null,
+    selectedRenderer: null,
     renderer() {
-        const cssConfig = {
-            'form-group': true,
-            'error': this.state.isValid === false,
-            'success': this.state.isValid === true
-        };
-
-        let label = null;
-        if (this.props.label) {
-            let tooltip = null;
-            if (this.props.tooltip) {
-                tooltip = <Ui.Tooltip target={<Ui.Icon icon="icon-info-circle"/>}>{this.props.tooltip}</Ui.Tooltip>;
-            }
-            label = <label key="label" className="control-label">{this.props.label} {tooltip}</label>;
-        }
-
-        let validationMessage = null;
-
-        if (this.state.isValid === false) {
-            validationMessage = <span className="help-block">{this.state.validationMessage}</span>;
-        }
-
         return (
-            <div className={this.classSet(cssConfig)}>
-                {label}
+            <webiny-select>
                 <select style={{'width': '100%'}}/>
 
                 <div className="dropdown-wrapper"></div>
-                <span className="help-block">{this.props.description}</span>
-                {validationMessage}
-            </div>
+            </webiny-select>
         );
     }
 };
 
-export default SelectInput;
+export default SimpleSelect;

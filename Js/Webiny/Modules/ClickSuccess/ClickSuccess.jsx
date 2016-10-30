@@ -38,6 +38,7 @@ class ClickSuccess extends Webiny.Ui.Component {
 
 ClickSuccess.defaultProps = {
     onClose: _.noop,
+    message: null,
     renderer() {
         return (
             <webiny-click-success>

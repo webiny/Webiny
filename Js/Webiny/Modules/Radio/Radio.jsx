@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
 
-class Radio extends Webiny.Ui.FormComponent {
+class Radio extends Webiny.Ui.Component {
 
     constructor() {
         super();
@@ -14,19 +14,11 @@ class Radio extends Webiny.Ui.FormComponent {
     }
 
     onChange() {
-        this.props.onChange(this.props.stateKey);
+        this.props.onChange(this.props.value);
     }
 
     isChecked() {
-        let state = this.props.stateKey;
-
-        if (state === 'false') {
-            state = false;
-        } else if (state === 'true') {
-            state = true;
-        }
-
-        return state === this.props.state;
+        return this.props.checked;
     }
 
 
@@ -55,20 +47,11 @@ Radio.defaultProps = {
     label: '',
     className: '',
     renderer() {
-        let state = this.props.stateKey;
-
-        if (state === 'false') {
-            state = false;
-        } else if (state === 'true') {
-            state = true;
-        }
-
-        const checked = state === this.props.state;
         const css = this.classSet('radio-custom mt10', this.props.className, 'col-sm-' + this.props.grid);
 
         return (
             <div className={css}>
-                <input type="radio" disabled={this.props.disabled} onChange={this.onChange} checked={checked} id={this.id}/>
+                <input type="radio" disabled={this.props.disabled} onChange={this.onChange} checked={this.isChecked()} id={this.id}/>
                 <label htmlFor={this.id}>{this.props.label}</label>
             </div>
         );

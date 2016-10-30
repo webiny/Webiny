@@ -16,23 +16,16 @@ class SwitchButton extends Webiny.Ui.Component {
     switch() {
         const el = ReactDOM.findDOMNode(this).querySelector('input');
         const checked = !el.checked;
-        if (this.props.valueLink) {
-            this.props.valueLink.requestChange(checked);
-        } else {
-            if (this.props.onChange) {
-                this.props.onChange(checked);
-            }
-        }
+        this.props.onChange(checked);
     }
 }
 
 SwitchButton.defaultProps = {
+    value: false,
+    onChange: _.noop,
     style: {},
     renderer() {
-        let value = this.props.value || null;
-        if (this.props.valueLink) {
-            value = this.props.valueLink.value;
-        }
+        const value = this.props.value || null;
         let classes = this.classSet('switch switch--inline');
         if (this.props.disabled) {
             classes += ' disabled';

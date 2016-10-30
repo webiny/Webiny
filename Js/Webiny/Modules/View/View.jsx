@@ -52,10 +52,10 @@ View.defaultProps = {
             <view>
                 {this.headerComponent}
                 <div className="view-content">
-                    <Ui.Panel.Panel className={'panel--boxed'}>
+                    <Ui.Panel className={'panel--boxed'}>
                         {this.bodyComponent}
                         {this.footerComponent}
-                    </Ui.Panel.Panel>
+                    </Ui.Panel>
                 </div>
             </view>
         );

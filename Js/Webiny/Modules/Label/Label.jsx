@@ -5,7 +5,10 @@ class Label extends Webiny.Ui.Component {
 }
 
 Label.defaultProps = {
+    inline: false,
     type: 'default',
+    style: {},
+    className: null,
     renderer() {
         const props = _.clone(this.props);
 
@@ -24,8 +27,13 @@ Label.defaultProps = {
             props.className
         );
 
+        const styles = _.clone(this.props.style);
+        if (this.props.inline) {
+            styles['float'] = 'none';
+        }
+
         return (
-            <span className={classes}>
+            <span className={classes} style={styles}>
                 {props.children}
             </span>
         );

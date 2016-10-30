@@ -55,7 +55,7 @@ Image.defaultProps = {
     sizeLimit: 2485760,
     renderer() {
         let message = null;
-        if (!this.props.valueLink.value) {
+        if (!this.props.value) {
             message = (
                 <div className="dz-default dz-message">
                     <span className="tray-bin__main-text">DRAG A FILE HERE</span>
@@ -72,13 +72,13 @@ Image.defaultProps = {
 
         const css = {
             'tray-bin': true,
-            'tray-bin--empty': !this.props.valueLink.value
+            'tray-bin--empty': !this.props.value
         };
 
         let image = null;
-        if (this.props.valueLink.value) {
+        if (this.props.value) {
             const imageProps = {
-                image: this.props.valueLink.value,
+                image: this.props.value,
                 onEdit: this.editFile,
                 onDelete: this.removeFile,
                 onDragStart: this.onImageDragStart,

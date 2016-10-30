@@ -50,8 +50,8 @@ class Gallery extends ImageComponent {
 
     setupComponent(props) {
         this.dom = ReactDOM.findDOMNode(this);
-        if (props.valueLink.value) {
-            const images = props.valueLink.value.map(img => {
+        if (props.value) {
+            const images = props.value.map(img => {
                 img.key = _.uniqueId('image-');
                 return img;
             });
@@ -70,9 +70,9 @@ class Gallery extends ImageComponent {
     }
 
     saveImage(image) {
-        const numberOfImages = this.props.valueLink.value.length + 1;
+        const numberOfImages = _.get(this.props, 'value.length', 0) + 1;
         // Show error message if maximum images limit is reached and the image being saved does not yet exists in the gallery
-        if (this.props.maxImages && numberOfImages > this.props.maxImages && !_.find(this.props.valueLink.value, {name: image.name})) {
+        if (this.props.maxImages && numberOfImages > this.props.maxImages && !_.find(this.props.value, {name: image.name})) {
             const errors = this.state.errors || [];
             errors.push({name: image.name, message: this.props.maxImagesMessage});
             this.setState({errors});
@@ -87,7 +87,7 @@ class Gallery extends ImageComponent {
             image.order = state.images.length;
             state.images.push(image);
         }
-        this.props.valueLink.requestChange(state.images);
+        this.props.onChange(state.images);
     }
 
     applyCropping(newImage) {
@@ -178,7 +178,7 @@ class Gallery extends ImageComponent {
             item.order = i;
             return item;
         });
-        this.props.valueLink.requestChange(state.images);
+        this.props.onChange(state.images);
     }
 
     onImageDragStart(e) {
@@ -212,7 +212,7 @@ class Gallery extends ImageComponent {
             item.order = index;
             return item;
         });
-        this.props.valueLink.requestChange(data);
+        this.props.onChange(data);
     }
 
     onImageDragOver(e) {
@@ -351,7 +351,7 @@ Gallery.defaultProps = {
                             sizeLimit={this.props.sizeLimit}
                             onChange={this.filesChanged}/>
                         {this.getCropper(
-                            <Ui.Input label="Title" placeholder="Type in an image title" valueLink={this.bindTo('cropImage.title')}/>
+                            <Ui.Input label="Title" placeholder="Type in an image title" {...this.bindTo('cropImage.title')}/>
                         )}
                     </div>
                     <div className="txt_b">

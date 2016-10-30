@@ -31,7 +31,7 @@ List.defaultProps = {
                     </Ui.Link>
                 </Ui.View.Header>
                 <Ui.View.Body>
-                    <Ui.List.ApiContainer {...listProps}>
+                    <Ui.List {...listProps}>
                         <Ui.List.FormFilters>
                             {(apply) => (
                                 <Ui.Grid.Row>
@@ -44,7 +44,7 @@ List.defaultProps = {
                                 </Ui.Grid.Row>
                             )}
                         </Ui.List.FormFilters>
-                        <Table.Table>
+                        <Table>
                             <Table.Row>
                                 <Table.Field name="name" label="Name" sort="name">
                                     {data => (
@@ -63,9 +63,9 @@ List.defaultProps = {
                                     <Table.DeleteAction/>
                                 </Table.Actions>
                             </Table.Row>
-                        </Table.Table>
+                        </Table>
                         <Ui.List.Pagination/>
-                    </Ui.List.ApiContainer>
+                    </Ui.List>
                 </Ui.View.Body>
             </Ui.View.List>
         );

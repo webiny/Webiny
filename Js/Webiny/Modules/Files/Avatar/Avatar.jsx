@@ -57,7 +57,7 @@ Avatar.defaultProps = {
     height: 250,
     empty: 'x',
     renderer() {
-        const model = this.props.valueLink.value;
+        const model = this.props.value;
 
         let imageSrc = this.props.defaultImage;
         if (model) {

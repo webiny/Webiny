@@ -86,7 +86,7 @@ class LoggerErrorGroup extends AbstractEntity
             $errorEntry->save();
 
             // assign the error under the group
-            $group->errorEntries->add($errorEntry);
+            $group->errorEntries[] = $errorEntry;
             $group->lastEntry = time();
             $group->errorCount = $group->errorCount + 1;
             $group->save();

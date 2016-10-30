@@ -78,7 +78,7 @@ class ApiContainer extends BaseContainer {
                 Webiny.Growl.danger(apiResponse.getMessage(), 'That didn\'t go as expected...', true);
             }
 
-            if(this.isMounted()){
+            if (this.isMounted()) {
                 this.setState(data);
             }
 
@@ -95,7 +95,14 @@ class ApiContainer extends BaseContainer {
     }
 
     recordUpdate(id, attributes) {
-        return this.api.patch(id, attributes).then(this.loadData);
+        return this.api.patch(id, attributes).then(apiResponse => {
+            if (!apiResponse.isError()) {
+                this.loadData();
+            } else {
+                Webiny.Growl.danger(apiResponse.getMessage(), 'That didn\'t go as expected...', true);
+            }
+            return apiResponse;
+        });
     }
 
     recordDelete(id, autoRefresh = true) {

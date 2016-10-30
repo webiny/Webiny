@@ -12,6 +12,7 @@ use Apps\Core\Php\DevTools\Response\HtmlResponse;
 use Apps\Core\Php\DevTools\Response\AbstractResponse;
 use Apps\Core\Php\DevTools\Response\ResponseEvent;
 use Apps\Core\Php\PackageManager\App;
+use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\Entity\Entity;
 use Webiny\Component\Http\Response;
 use Webiny\Component\Mongo\Mongo;
@@ -21,6 +22,7 @@ use Webiny\Component\StdLib\StdObject\UrlObject\UrlObjectException;
 use Webiny\Component\StdLib\SingletonTrait;
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\PackageManager\PackageScanner;
+use Webiny\Component\Storage\Storage;
 
 /**
  * This class is included in the index.php and it responsible to bootstrap the application.
@@ -33,11 +35,15 @@ class Bootstrap
      * @var ErrorHandler
      */
     private $errorHandler;
+    /**
+     * @var array Js configs to merge after config set is loaded completely
+     */
+    private $jsConfigs = [];
 
     protected function init()
     {
         // read production configs
-        $this->buildConfiguration('Production');
+        $this->buildConfiguration('Base');
 
         // get additional config set
         $configSet = $this->getConfigSet();
@@ -45,16 +51,24 @@ class Bootstrap
             $this->buildConfiguration($configSet);
         }
 
+        // Append Js configs (these need to be loaded at the very end to inject proper values)
+        foreach ($this->jsConfigs as $jsConfig) {
+            $this->wConfig()->appendConfig($jsConfig);
+        }
+
         // set error handler
         $this->errorHandler = new ErrorHandler();
 
+
+        // Set component configs
+        $emptyConfig = new ConfigObject();
+        Mongo::setConfig($this->wConfig()->get('Mongo', $emptyConfig));
+        Entity::setConfig($this->wConfig()->get('Entity', $emptyConfig));
+        Security::setConfig($this->wConfig()->get('Security', $emptyConfig));
+        Storage::setConfig($this->wConfig()->get('Storage', $emptyConfig));
+
         // scan all components to register routes and event handlers
         PackageScanner::getInstance();
-
-        // Register database
-        Mongo::setConfig($this->wConfig()->get('Mongo'));
-        Entity::setConfig($this->wConfig()->get('Entity'));
-        Security::setConfig($this->wConfig()->get('Security'));
 
         /* @var $app App */
         foreach ($this->wApps() as $app) {
@@ -93,7 +107,12 @@ class Bootstrap
 
             // insert them into the global configuration object
             foreach ($dir as &$file) {
-                $this->wConfig()->appendConfig($file->getKey());
+                $key = $this->str($file->getKey());
+                if ($key->endsWith('Js.yaml')) {
+                    $this->jsConfigs[] = $key->val();
+                    continue;
+                }
+                $this->wConfig()->appendConfig($key->val());
             }
 
             // append config sets
@@ -115,6 +134,9 @@ class Bootstrap
                 if ($currentDomain == $this->url($domain)->getDomain()) {
                     $configSet = $name;
                 }
+            }
+            if (!$configSet) {
+                $configSet = 'Production';
             }
         } catch (UrlObjectException $e) {
             $configSet = 'Production';

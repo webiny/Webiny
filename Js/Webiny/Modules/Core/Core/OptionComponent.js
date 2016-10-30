@@ -1,16 +1,17 @@
 import Webiny from 'Webiny';
-import Component from './Component';
+import FormComponent from './FormComponent';
 
-class OptionComponent extends Component {
+class OptionComponent extends FormComponent {
 
     constructor(props) {
         super(props);
 
-        this.state = {
-            options: []
-        };
+        _.assign(this.state, {
+            options: [],
+            loading: false
+        });
 
-        this.bindMethods('prepareOptions,renderOptions,setFilters,applyFilter');
+        this.bindMethods('loadOptions,normalizeOptions,setFilters,applyFilter');
         Webiny.Mixins.ApiComponent.extend(this);
 
         if (this.props.filterBy) {
@@ -43,18 +44,18 @@ class OptionComponent extends Component {
     componentDidMount() {
         super.componentDidMount();
 
-        if (!this.props.filterBy || this.props.valueLink.value !== null || this.filterName && this.props.form.getModel(this.filterName)) {
-            this.prepareOptions(this.props);
+        if (!this.props.filterBy || this.props.value !== null || this.filterName && this.props.form.getModel(this.filterName)) {
+            this.loadOptions(this.props);
         }
     }
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        const omit = ['valueLink'];
-        const oldProps = _.omit(props, omit);
+        const omit = ['onChange'];
+        const oldProps = _.omit(this.props, omit);
         const newProps = _.omit(props, omit);
         if (!_.isEqual(newProps, oldProps)) {
-            this.prepareOptions(props);
+            this.loadOptions(props);
         }
     }
 
@@ -72,7 +73,7 @@ class OptionComponent extends Component {
     applyFilter(newValue, name, filter, loadIfEmpty) {
         if (newValue === null && !loadIfEmpty) {
             this.setState({options: []});
-            this.props.valueLink.requestChange(null);
+            this.props.onChange(null);
             return;
         }
 
@@ -82,7 +83,7 @@ class OptionComponent extends Component {
             if (_.isPlainObject(config)) {
                 this.setFilters(config);
             } else {
-                this.prepareOptions();
+                this.loadOptions();
             }
         } else {
             // If filter is a string, create a filter object using that string as field name
@@ -94,11 +95,11 @@ class OptionComponent extends Component {
 
     setFilters(filters) {
         this.api.setQuery(filters);
-        this.prepareOptions();
+        this.loadOptions();
         return this;
     }
 
-    prepareOptions(props = null) {
+    loadOptions(props = null) {
         let options = [];
         if (!props) {
             props = this.props;
@@ -115,7 +116,7 @@ class OptionComponent extends Component {
             }
 
             if (_.isArray(props.options)) {
-                options = this.renderOptions(props, props.options);
+                options = this.normalizeOptions(props, props.options);
             }
 
 
@@ -128,6 +129,12 @@ class OptionComponent extends Component {
                 // Get current value of the field that filters current field
                 let filter = null;
                 const filteredByValue = this.props.form.getModel(this.filterName);
+
+                // Do not load options if `loadIfEmpty` is `false`
+                if (!filteredByValue && !this.filterLoadIfEmpty) {
+                    return null;
+                }
+
                 if (_.isFunction(this.filterField)) {
                     filter = this.filterField(filteredByValue, this.api);
                     if (_.isPlainObject(filter)) {
@@ -142,9 +149,11 @@ class OptionComponent extends Component {
                 this.api.setQuery(query);
             }
 
+            this.setState({loading: true});
             this.request = this.api.execute().then(apiResponse => {
                 if (apiResponse.isAborted()) {
-                    return;
+                    this.setState({loading: false});
+                    return null;
                 }
 
                 let data = apiResponse.getData();
@@ -156,7 +165,7 @@ class OptionComponent extends Component {
                     data = this.props.prepareLoadedData(data);
                 }
 
-                this.setState({options: this.renderOptions(props, data)});
+                this.setState({options: this.normalizeOptions(props, data), loading: false});
             });
 
             return this.request;
@@ -175,7 +184,7 @@ class OptionComponent extends Component {
         }
     }
 
-    renderOptions(props, data) {
+    normalizeOptions(props, data) {
         const options = [];
         _.each(data, (option, key) => {
             if (_.isString(key) && _.isString(option) || _.isNumber(option)) {
@@ -203,9 +212,10 @@ class OptionComponent extends Component {
     }
 }
 
-OptionComponent.defaultProps = {
+OptionComponent.defaultProps = _.merge({}, FormComponent.defaultProps, {
     valueAttr: 'id',
-    textAttr: 'name'
-};
+    textAttr: 'name',
+    filterBy: null
+});
 
 export default OptionComponent;

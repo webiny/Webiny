@@ -19,11 +19,15 @@ class Data extends Webiny.Ui.Component {
         if (!_.isFunction(this.props.children)) {
             console.warn('Warning: Data component only accepts a function as its child element!');
         }
+        this.setState({loading: true});
     }
 
     componentDidMount() {
         super.componentDidMount();
-        this.request = this.api.execute().then(this.setData);
+        this.request = this.api.execute().then(apiResponse => {
+            this.setData(apiResponse);
+            return apiResponse.getData();
+        });
     }
 
     componentWillUnmount() {
@@ -34,22 +38,22 @@ class Data extends Webiny.Ui.Component {
     }
 
     setData(apiResponse) {
-        this.setState({loading: false});
-
-        if (apiResponse.isAborted()) {
+        if (apiResponse.isAborted() || !this.isMounted()) {
             return;
         }
 
         if (apiResponse.isError()) {
+            this.setState({loading: false});
             Webiny.Growl.info(apiResponse.getError(), 'Could not fetch data', true);
             return;
         }
-        this.setState({data: apiResponse.getData()});
+        this.setState({data: apiResponse.getData(), loading: false});
     }
 
     filter(filters = {}) {
         this.setState({loading: true});
         this.request = this.api.setQuery(filters).execute().then(this.setData);
+        return this.request;
     }
 }
 

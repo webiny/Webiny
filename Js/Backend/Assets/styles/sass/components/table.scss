@@ -33,6 +33,16 @@ table.table {
       border-right: none;
     }
   }
+  &.no-hover {
+    tbody tr {
+      &.active td.sorted, &:hover {
+        background: transparent !important;
+      }
+    }
+    > tbody > tr:hover > td {
+      background: transparent !important;
+    }
+  }
   thead {
     th {
       padding: 10px 15px;
@@ -362,6 +372,6 @@ table.table .list-group-item-text {
   line-height: 140%;
 }
 
-table.table tbody tr.no-hover:hover td{
+table.table tbody tr.no-hover:hover td {
   background-color: #fff !important;
 }

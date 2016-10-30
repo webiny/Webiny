@@ -7,13 +7,17 @@
 
 namespace Apps\Core\Php\DevTools\Entity;
 
+use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\Dispatchers\ApiExpositionTrait;
+use Apps\Core\Php\Entities\User;
 use Apps\Core\Php\RequestHandlers\ApiException;
-use Webiny\Component\Entity\Attribute\AbstractAttribute;
+use Webiny\Component\Entity\Attribute\AttributeType;
 use Webiny\Component\Entity\Attribute\DateAttribute;
 use Apps\Core\Php\DevTools\WebinyTrait;
-use Webiny\Component\Entity\Attribute\Many2OneAttribute;
+use Webiny\Component\Entity\Attribute\DateTimeAttribute;
+use Webiny\Component\Entity\Attribute\Many2ManyAttribute;
 use Webiny\Component\Entity\Attribute\One2ManyAttribute;
+use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Entity\EntityException;
 use Webiny\Component\Mongo\Index\AbstractIndex;
 use Webiny\Component\Mongo\Index\SingleIndex;
@@ -26,8 +30,13 @@ use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
  *
  * @property string         $id
  * @property DateTimeObject $createdOn
+ * @property User           $createdBy
  * @property DateTimeObject $modifiedOn
+ * @property User           $modifiedBy
+ * @property DateTimeObject $deletedOn
+ * @property User           $deletedBy
  * @method void on (string $eventName, \Closure $callback)
+ * @package Apps\Core\Php\DevTools\Entity
  */
 abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 {
@@ -37,23 +46,147 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     protected $instanceCallbacks = [];
     protected static $classCallbacks = [];
 
-    /**
-     * Restore entity from archive.
-     * Entity is inserted back to original collection(s) with all IDs preserved.
-     *
-     * @param $id
-     *
-     * @return null|\Webiny\Component\Entity\AbstractEntity AbstractEntity instance on success, or NULL on failure
-     */
-    public static function restore($id)
+    public static function onExtend($callback)
     {
-        $archiver = Archiver::getInstance();
-        $entity = $archiver->restore(get_called_class(), $id);
-        if ($entity && $entity->save()) {
-            $archiver->remove(get_called_class(), $id);
+        static::on('onExtend', $callback);
+    }
+
+    public static function onBeforeCreate($callback)
+    {
+        static::on('onBeforeCreate', $callback);
+    }
+
+    public static function onAfterCreate($callback)
+    {
+        static::on('onAfterCreate', $callback);
+    }
+
+    public static function onBeforeUpdate($callback)
+    {
+        static::on('onBeforeUpdate', $callback);
+    }
+
+    public static function onAfterUpdate($callback)
+    {
+        static::on('onAfterUpdate', $callback);
+    }
+
+    public static function onBeforeSave($callback)
+    {
+        static::on('onBeforeSave', $callback);
+    }
+
+    public static function onAfterSave($callback)
+    {
+        static::on('onAfterSave', $callback);
+    }
+
+    public static function onBeforeDelete($callback)
+    {
+        static::on('onBeforeDelete', $callback);
+    }
+
+    public static function onAfterDelete($callback)
+    {
+        static::on('onAfterDelete', $callback);
+    }
+
+    /**
+     * Find entity by ID - deleted entities won't be included in search by default
+     *
+     * @param string $id
+     *
+     * @param bool   $includeDeleted
+     *
+     * @return AbstractEntity|null
+     * @throws \Webiny\Component\Entity\EntityException
+     */
+    public static function findById($id, $includeDeleted = false)
+    {
+        if (!$id || strlen($id) != 24) {
+            return null;
+        }
+        $instance = static::entity()->get(get_called_class(), $id);
+        if ($instance) {
+            return $instance;
+        }
+        $mongo = static::entity()->getDatabase();
+
+        $criteria = self::setEntityFilters(['_id' => $mongo->id($id)]);
+
+        if (!$includeDeleted) {
+            $criteria['deletedOn'] = null;
         }
 
-        return $entity;
+        $data = $mongo->findOne(static::$entityCollection, $criteria);
+        if (!$data) {
+            return null;
+        }
+        $instance = new static;
+        $data['__webiny_db__'] = true;
+        $instance->populate($data);
+
+        return static::entity()->add($instance);
+    }
+
+    /**
+     * Find one recotd by given conditions
+     *
+     * @param array $conditions
+     * @param bool  $includeDeleted
+     *
+     * @return AbstractEntity|null
+     */
+    public static function findOne(array $conditions = [], $includeDeleted = false)
+    {
+        $conditions = self::setEntityFilters(self::prepareFilters($conditions));
+
+        if (!$includeDeleted) {
+            $conditions['deletedOn'] = null;
+        }
+
+        return parent::findOne($conditions);
+    }
+
+    /**
+     * Find entities
+     *
+     * @param mixed $conditions
+     *
+     * @param array $order Example: ['-name', '+title']
+     * @param int   $limit
+     * @param int   $page
+     *
+     * @param bool  $includeDeleted
+     *
+     * @return EntityCollection
+     */
+    public static function find(array $conditions = [], array $order = [], $limit = 0, $page = 0, $includeDeleted = false)
+    {
+        $conditions = static::setEntityFilters(static::prepareFilters($conditions));
+        if (!$includeDeleted) {
+            $conditions['deletedOn'] = null;
+        }
+
+        return parent::find($conditions, $order, $limit, $page);
+    }
+
+    /**
+     * Count records using given criteria
+     *
+     * @param array $conditions
+     *
+     * @param bool  $includeDeleted
+     *
+     * @return int
+     */
+    public static function count(array $conditions = [], $includeDeleted = false)
+    {
+        if (!$includeDeleted) {
+            $conditions['deletedOn'] = null;
+        }
+
+        return parent::count($conditions);
     }
 
     /**
@@ -91,24 +224,6 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         return $this->indexes;
     }
 
-    /**
-     * Get createdOn attribute
-     * @return DateAttribute
-     */
-    public function getCreatedOn()
-    {
-        return $this->getAttribute('createdOn');
-    }
-
-    /**
-     * Get modifiedOn attribute
-     * @return DateAttribute
-     */
-    public function getModifiedOn()
-    {
-        return $this->getAttribute('modifiedOn');
-    }
-
     public function __construct()
     {
         parent::__construct();
@@ -118,18 +233,34 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
          * Add the following built-in system attributes:
          * createdOn, modifiedOn, deletedOn, deleted and user
          */
+        $userClass = $this->wAuth()->getUserClass();
         $this->attr('createdOn')->datetime()->setDefaultValue('now')->setToArrayDefault();
+        $this->attr('createdBy')->many2one()->setEntity($userClass)->setDefaultValue(function () {
+            return $this->wAuth()->getUser();
+        });
+        $this->attr('modifiedOn')->datetime()->onToDb(function ($value) {
+            if ($this->exists() && !$this->deletedOn) {
+                return $this->datetime()->getMongoDate();
+            }
+
+            return $value;
+        });
+        $this->attr('modifiedBy')->many2one()->setEntity($userClass)->onToDb(function ($value) {
+            if ($this->exists() && !$this->deletedOn && $this->wAuth()->getUser()) {
+                return $this->wAuth()->getUser()->id;
+            }
+
+            return $value;
+        });
+        $this->attr('deletedOn')->datetime();
+        $this->attr('deletedBy')->many2one()->setEntity($userClass);
+
         $this->index([
             new SingleIndex('id', 'id', false, true),
-            new SingleIndex('createdOn', 'createdOn')
+            new SingleIndex('createdOn', 'createdOn'),
+            new SingleIndex('createdBy', 'createdBy'),
+            new SingleIndex('deletedOn', 'deletedOn')
         ]);
-
-
-        $this->attr('modifiedOn')->datetime()->setAutoUpdate(true);
-
-        /*$this->api('POST', 'restore/{restore}', function ($restore) {
-            return $this->restore($restore)->toArray();
-        });*/
 
         /**
          * @api.name List records
@@ -146,7 +277,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         /**
          * @api.name Get a record by ID
          */
-        $this->api('GET', '/{id}', function () {
+        $this->api('GET', '{id}', function () {
             return $this->toArray($this->wRequest()->getFields());
         });
 
@@ -179,7 +310,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         /**
          * @api.name Update a record by ID
          */
-        $this->api('PATCH', '/{id}', function () {
+        $this->api('PATCH', '{id}', function () {
             try {
                 $this->populate($this->wRequest()->getRequestData())->save();
 
@@ -200,7 +331,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         /**
          * @api.name Delete a record by ID
          */
-        $this->api('DELETE', '/{id}', function () {
+        $this->api('DELETE', '{id}', function () {
             try {
                 $this->delete();
 
@@ -211,27 +342,21 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         });
 
         /**
-         * @api.name Delete multiple records by given ids
-         * @api.description This method will delete multiple records given by an array of entity IDs
-         */
-        $this->api('POST', 'delete', function () {
-            $ids = $this->wRequest()->getRequestData()['ids'];
-            try {
-                static::find(['id' => $ids])->delete();
-
-                return true;
-            } catch (EntityException $e) {
-                throw new ApiException('Failed to delete entity! ' . $e->getMessage(), $e->getCode(), 400);
-            }
-        })->setBodyValidators(['ids' => 'required']);
-
-        /**
          * Fire event for registering extra attributes
          */
         $this->trigger('onExtend');
     }
 
-    public function delete()
+    /**
+     * This will be called before trying to delete an entity. Here you can define your own business rules to allow/prevent deletion.
+     * If you want to prevent deletion - throw an AppException
+     * @throws AppException
+     */
+    public function canDelete()
+    {
+    }
+
+    public function delete($permanent = false)
     {
         /**
          * Make sure the entity instance has an ID
@@ -240,26 +365,20 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             return false;
         }
 
-        /**
-         * Fire "BeforeDelete" event
-         */
+        $this->canDelete();
+
         $this->trigger('onBeforeDelete');
+        $this->processDelete($permanent);
 
-        /**
-         * Store entity to archive.
-         * When "archive" method is called, it returns an "archive process id". After first call to "archive" method,
-         * Archiver blocks further calls to that method until the entity that initiated archiving unblocks it by calling "unblock".
-         * To perform unblocking, "archive process id" is required, to identify entity instance that initiated the archiving process.
-         */
-        // $archiveProcessId = Archiver::getInstance()->archive($this);
-        $deleted = parent::delete();
-        // Archiver::getInstance()->unblock($archiveProcessId);
-
-        if ($deleted) {
-            $this->trigger('onAfterDelete');
+        if (!$permanent) {
+            $this->deletedOn = $this->datetime()->getMongoDate();
+            $this->deletedBy = $this->wAuth()->getUser();
+            $this->save();
         }
 
-        return $deleted;
+        $this->trigger('onAfterDelete');
+
+        return true;
     }
 
     /**
@@ -293,76 +412,57 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         $this->processCallbacks($eventName, ...$params);
     }
 
-    public static function onExtend($callback)
-    {
-        static::on('onExtend', $callback);
-    }
-
-    public static function onBeforeCreate($callback)
-    {
-        static::on('onBeforeCreate', $callback);
-    }
-
-    public static function onAfterCreate($callback)
-    {
-        static::on('onAfterCreate', $callback);
-    }
-
-    public static function onBeforeUpdate($callback)
-    {
-        static::on('onBeforeUpdate', $callback);
-    }
-
-    public static function onAfterUpdate($callback)
-    {
-        static::on('onAfterUpdate', $callback);
-    }
-    
-    public static function onBeforeSave($callback)
-    {
-        static::on('onBeforeSave', $callback);
-    }
-
-    public static function onAfterSave($callback)
-    {
-        static::on('onAfterSave', $callback);
-    }
-
-    public static function onBeforeDelete($callback)
-    {
-        static::on('onBeforeDelete', $callback);
-    }
-
-    public static function onAfterDelete($callback)
-    {
-        static::on('onAfterDelete', $callback);
-    }
-
-    public static function find(array $conditions = [], array $order = [], $limit = 0, $page = 0)
-    {
-        $conditions = self::prepareFilters($conditions);
-
-        return parent::find($conditions, $order, $limit, $page);
-    }
-
     /**
-     * @param $id
+     * Get array of entity filters
      *
-     * @return null|AbstractEntity
+     * @return array
      */
-    public static function findById($id)
+    protected static function entityFilters()
     {
-        return parent::findById($id);
+        return [];
     }
 
     /**
+     * Sets custom filters that can be sent to find and findOne methods
+     *
      * @param array $conditions
      *
-     * @return null|AbstractEntity
+     * @return array
+     * @throws AppException
      */
-    public static function findOne(array $conditions = [])
+    protected static function setEntityFilters($conditions)
     {
-        return parent::findOne($conditions);
+        // We must ensure original filter values are always sent to each defined filter
+        $originalConditions = $conditions;
+
+        $customFilters = static::entityFilters();
+        $staticFilter = null;
+        /* @var Filter $filter */
+        foreach ($customFilters as $filter) {
+            if (!($filter instanceof Filter)) {
+                continue;
+            }
+            $key = $filter->getName();
+            if ($key === '*') {
+                $staticFilter = $filter;
+                continue;
+            }
+            if (isset($originalConditions[$key])) {
+                $filterValue = $originalConditions[$key];
+                unset($conditions[$key]);
+                $conditions = array_merge($conditions, $filter($filterValue));
+            }
+        }
+
+        // If we have a static filter, let's apply those too
+        if ($staticFilter) {
+            $staticFilterConditions = is_callable($staticFilter) ? $staticFilter($conditions) : $staticFilter;
+            if (is_array($staticFilterConditions)) {
+                $conditions = array_merge($conditions, $staticFilterConditions);
+            }
+        }
+
+        return $conditions;
     }
 
     protected static function prepareFilters($filters)
@@ -378,14 +478,21 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                 ];
             }
 
-            $dateAttr = isset($attributes[$fName]) && ($attributes[$fName] instanceof DateAttribute || $attributes[$fName] instanceof DateAttribute);
+            $dateAttr = isset($attributes[$fName]) && ($attributes[$fName] instanceof DateAttribute || $attributes[$fName] instanceof DateTimeAttribute);
             if (array_key_exists($fName, $attributes) && $dateAttr && is_string($fValue)) {
                 $from = $to = $fValue;
-                if (self::str($fValue)->contains(':')) {
+                if (self::str($fValue)->contains(':-:')) {
+                    list($from, $to) = explode(':-:', $fValue);
+                } elseif (self::str($fValue)->contains(':')) {
                     list($from, $to) = explode(':', $fValue);
                 }
 
-                if ($attributes[$fName] instanceof DateAttribute) {
+                if ($attributes[$fName] instanceof DateTimeAttribute) {
+                    $fValue = [
+                        '$gte' => self::datetime($from)->getMongoDate(),
+                        '$lte' => self::datetime($to)->getMongoDate()
+                    ];
+                } elseif ($attributes[$fName] instanceof DateAttribute) {
                     $fValue = [
                         '$gte' => self::datetime($from)->setTime(0, 0, 0)->getMongoDate(),
                         '$lte' => self::datetime($to)->setTime(23, 59, 59)->getMongoDate()
@@ -431,17 +538,114 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             $callbacks = static::$classCallbacks[$class][$eventName] ?? [];
             foreach ($callbacks as $callback) {
                 // Static callbacks require an instance of entity that triggered the event as first parameter
-                $callback($this, ...$params);
+                if (is_callable($callback)) {
+                    $callback($this, ...$params);
+                }
             }
 
             if ($class == 'Apps\Core\Php\DevTools\Entity\AbstractEntity') {
                 $callbacks = $this->instanceCallbacks[$eventName] ?? [];
                 foreach ($callbacks as $callback) {
-                    $callback(...$params);
+                    if (is_callable($callback)) {
+                        $callback(...$params);
+                    }
                 }
 
                 return;
             }
         }
+    }
+
+    private function processDelete($permanent)
+    {
+        /**
+         * Check for many2many attributes and make sure related Entity has a corresponding many2many attribute defined.
+         * If not - deleting is not allowed.
+         */
+
+        /* @var $attr Many2ManyAttribute */
+        $thisClass = get_class($this);
+        foreach ($this->getAttributes() as $attrName => $attr) {
+            if ($this->isInstanceOf($attr, AttributeType::MANY2MANY)) {
+                $foundMatch = false;
+                $relatedClass = $attr->getEntity();
+                $relatedEntity = new $relatedClass;
+                /* @var $relAttr Many2ManyAttribute */
+                foreach ($relatedEntity->getAttributes() as $relAttr) {
+                    if ($this->isInstanceOf($relAttr, AttributeType::MANY2MANY) && $this->isInstanceOf($this, $relAttr->getEntity())) {
+                        $foundMatch = true;
+                    }
+                }
+
+                if (!$foundMatch) {
+                    throw new EntityException(EntityException::NO_MATCHING_MANY2MANY_ATTRIBUTE_FOUND, [
+                        $thisClass,
+                        $relatedClass,
+                        $attrName
+                    ]);
+                }
+            }
+        }
+
+        /**
+         * First check all one2many records to see if deletion is restricted
+         */
+        $one2manyDelete = [];
+        $many2oneDelete = [];
+        $many2manyDelete = [];
+        foreach ($this->getAttributes() as $key => $attr) {
+            if ($this->isInstanceOf($attr, AttributeType::ONE2MANY)) {
+                /* @var $attr One2ManyAttribute */
+                if ($attr->getOnDelete() == 'restrict' && $this->getAttribute($key)->getValue()->count() > 0) {
+                    throw new EntityException(EntityException::ENTITY_DELETION_RESTRICTED, [$key]);
+                }
+                $one2manyDelete[] = $attr;
+            }
+
+            if ($this->isInstanceOf($attr, AttributeType::MANY2ONE) && $attr->getOnDelete() === 'cascade') {
+                $many2oneDelete[] = $attr;
+            }
+
+            if ($this->isInstanceOf($attr, AttributeType::MANY2MANY)) {
+                $many2manyDelete[] = $attr;
+            }
+        }
+
+        /**
+         * Delete one2many records
+         */
+        foreach ($one2manyDelete as $attr) {
+            foreach ($attr->getValue() as $item) {
+                $item->delete($permanent);
+            }
+        }
+
+        /**
+         * Delete many2many records
+         */
+        foreach ($many2manyDelete as $attr) {
+            $attr->unlinkAll($permanent);
+        }
+
+        /**
+         * Delete many2one records that are set to 'cascade'
+         */
+        foreach ($many2oneDelete as $attr) {
+            $value = $attr->getValue();
+            if ($value && $value instanceof AbstractEntity) {
+                $value->delete($permanent);
+            }
+        }
+
+        /**
+         * Delete $this if it is a permanent delete
+         */
+        if ($permanent) {
+            $this->entity()->getDatabase()->delete(static::$entityCollection, ['_id' => $this->entity()->getDatabase()->id($this->id)]);
+
+            static::entity()->remove($this);
+        }
+
+        return true;
     }
 }

@@ -10,14 +10,15 @@ class Base extends Webiny.Ui.FormComponent {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        const omit = ['children', 'key', 'ref', 'valueLink'];
+        if (nextProps['disabledBy']) {
+            return true;
+        }
+
+        const omit = ['children', 'key', 'ref', 'onChange'];
         const oldProps = _.omit(this.props, omit);
         const newProps = _.omit(nextProps, omit);
 
-        const newValue = nextProps.valueLink.value;
-        const oldValue = this.props.valueLink.value;
-
-        return !_.isEqual(newProps, oldProps) || !_.isEqual(newValue, oldValue) || !_.isEqual(nextState, this.state);
+        return !_.isEqual(newProps, oldProps) || !_.isEqual(nextState, this.state);
     }
 
     /**
@@ -36,19 +37,19 @@ class Base extends Webiny.Ui.FormComponent {
             viewMode: this.props.viewMode
         }).on('dp.hide', e => {
             if (this.valueChanged) {
-                this.onChange(e);
+                this.onChange(e.target.value);
             }
             this.valueChanged = false;
         }).on('dp.change', () => {
             this.valueChanged = true;
         });
 
-        this.setValue(this.props.valueLink.value);
+        this.setValue(this.props.value);
     }
 
     componentDidUpdate() {
         super.componentDidUpdate();
-        this.setValue(this.props.valueLink.value);
+        this.setValue(this.props.value);
     }
 
     setValue(newValue) {
@@ -58,9 +59,13 @@ class Base extends Webiny.Ui.FormComponent {
             this.input.data('DateTimePicker').minDate(new Date(this.props.minDate));
         }
     }
+
+    onChange(value) {
+        this.props.onChange(value, this.validate);
+    }
 }
 
-Base.defaultProps = {
+Base.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     debug: false,
     withTimezone: true,
     renderer() {
@@ -70,40 +75,30 @@ Base.defaultProps = {
             'success': this.state.isValid === true
         };
 
-        let label = null;
-        if (this.props.label) {
-            label = <label key="label" className="control-label">{this.props.label}</label>;
-        }
-
-        let validationMessage = null;
-        if (this.state.isValid === false) {
-            validationMessage = <span className="help-block">{this.state.validationMessage}</span>;
-        }
-
         const props = {
             onBlur: this.validate,
             disabled: this.isDisabled(),
             readOnly: this.props.readOnly,
             type: 'text',
-            className: this.classSet('form-control', {placeholder: !this.props.valueLink.value}),
-            value: this.props.valueLink.value || '',
-            onChange: this.onChange,
+            className: this.classSet('form-control', {placeholder: !this.props.value}),
+            value: this.props.value || '',
+            onChange: _.noop,
             placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder)
         };
 
         return (
             <div className={this.classSet(cssConfig)}>
-                {label}
+                {this.renderLabel()}
                 <div className="input-group date">
                     <input {...props}/>
                     <span className="input-group-addon cursor">
                         <i className="icon-calendar icon_c"></i>
                     </span>
                 </div>
-                {validationMessage}
+                {this.renderValidationMessage()}
             </div>
         );
     }
-};
+});
 
 export default Base;

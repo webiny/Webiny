@@ -6,7 +6,7 @@ class Forbidden extends Webiny.Ui.View {
 }
 
 Forbidden.defaultProps = {
-    renderer(){
+    renderer() {
         return (
             <Ui.View.List>
                 <Ui.View.Body>

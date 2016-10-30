@@ -228,6 +228,7 @@ class BaseContainer extends Webiny.Ui.Component {
     paginationProps(paginationProps) {
         _.assign(paginationProps, {
             onPageChange: this.setPage,
+            onPerPageChange: this.setPerPage,
             currentPage: this.state.page,
             perPage: this.state.perPage,
             count: _.get(this.state.list, 'length', 0),
@@ -266,7 +267,7 @@ class BaseContainer extends Webiny.Ui.Component {
             }
 
             const props = _.omit(child.props, ['children', 'key', 'ref']);
-            if (child.type === Ui.List.Table.Table) {
+            if (child.type === Ui.List.Table) {
                 this.tableElement = React.cloneElement(child, this.tableProps(props), child.props.children);
             }
 

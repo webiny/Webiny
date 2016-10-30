@@ -29,7 +29,7 @@ List.defaultProps = {
                     </Ui.Link>
                 </Ui.View.Header>
                 <Ui.View.Body>
-                    <Ui.List.ApiContainer {...listProps}>
+                    <Ui.List {...listProps}>
                         <Ui.List.FormFilters>
                             {(applyFilters) => (
                                 <Ui.Input
@@ -38,7 +38,7 @@ List.defaultProps = {
                                     onEnter={applyFilters()}/>
                             )}
                         </Ui.List.FormFilters>
-                        <Table.Table>
+                        <Table>
                             <Table.Row>
                                 <Table.GravatarField name="gravatar"/>
                                 <Table.Field name="firstName" label="First Name" sort="firstName" route="Users.Edit">
@@ -62,9 +62,9 @@ List.defaultProps = {
                                 </Table.Actions>
                             </Table.Row>
                             <Table.Footer/>
-                        </Table.Table>
+                        </Table>
                         <Ui.List.Pagination/>
-                    </Ui.List.ApiContainer>
+                    </Ui.List>
                 </Ui.View.Body>
             </Ui.View.List>
         );

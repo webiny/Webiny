@@ -10,12 +10,11 @@ class Confirmation extends Webiny.Ui.ModalComponent {
             loading: false
         };
 
-        this.data = [];
         this.bindMethods('showLoading,renderContent,renderLoader,renderDialog,onCancel,onConfirm');
     }
 
     show() {
-        this.setState({time: new Date().getTime()});
+        this.setState({time: _.now()});
         return super.show();
     }
 
@@ -36,12 +35,10 @@ class Confirmation extends Webiny.Ui.ModalComponent {
         }
     }
 
-    onConfirm() {
-        if (_.isFunction(this.props.onConfirm)) {
-            const data = _.clone(this.data);
-            data.push(this);
+    onConfirm(data = {}) {
+        if (!this.isAnimating() && _.isFunction(this.props.onConfirm)) {
             this.showLoading();
-            return Q(this.props.onConfirm(...data)).then(result => {
+            return Q(this.props.onConfirm(data, this)).then(result => {
                 if (this.isMounted()) {
                     this.hideLoading();
                 }
@@ -80,11 +77,6 @@ class Confirmation extends Webiny.Ui.ModalComponent {
         return content;
     }
 
-    setData(...data) {
-        this.data = data;
-        return this;
-    }
-
     renderDialog() {
         return this.props.renderDialog.call(this, this.onConfirm, this.onCancel, this);
     }
@@ -98,6 +90,7 @@ Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
     onComplete: _.noop,
     onCancel: null,
     autoHide: true,
+    closeOnClick: false,
     renderLoader() {
         return (
             <div className="loading-overlay">
@@ -109,7 +102,7 @@ Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
     },
     renderDialog(confirm, cancel) {
         return (
-            <Ui.Modal.Dialog modalContainerTag="confirmation-modal" className="alert-modal" onCancel={cancel}>
+            <Ui.Modal.Dialog modalContainerTag="confirmation-modal" className="alert-modal" onCancel={cancel} closeOnClick={this.props.closeOnClick}>
                 {this.renderLoader()}
                 <Ui.Modal.Body>
                     <div className="text-center">

@@ -18,7 +18,7 @@ class ApiTokenForm extends Webiny.Ui.ModalComponent {
             <Ui.Modal.Dialog>
                 <Ui.Modal.Header title="API Token"/>
                 <Ui.Modal.Body>
-                    <Ui.Form.Container {...formProps}>
+                    <Ui.Form {...formProps}>
                         {model => (
                             <Ui.Grid.Row>
                                 <Ui.Grid.Col all={12}>
@@ -34,7 +34,7 @@ class ApiTokenForm extends Webiny.Ui.ModalComponent {
                                 </Ui.Grid.Col>
                             </Ui.Grid.Row>
                         )}
-                    </Ui.Form.Container>
+                    </Ui.Form>
                 </Ui.Modal.Body>
                 <Ui.Modal.Footer>
                     <Ui.Button type="secondary" label="Cancel" onClick={this.hide}/>

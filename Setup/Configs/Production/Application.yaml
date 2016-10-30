@@ -1,12 +1,2 @@
 Application:
-  Environment: production
-  AbsolutePath: __DIR__/../../
-  WebPath: ''
-  ApiPath: ''
-  Backend: admin
-  Acl:
-    CheckUserPermissions: true
-    ApiTokenControl: true
-  Logger:
-    DisplayErrors: false
-    Enabled: true
+    Environment: production

@@ -1,8 +1,3 @@
-/* When we reach the final version of Master Layout - merge these changes into core files */
-.cropper-container {
-  //overflow: visible;
-}
-
 .tray-bin__file.placeholder {
   width: 163px;
   height: 210px;
@@ -307,4 +302,95 @@
 
   /* Uncomment for 3D effect */
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
+}
+
+/** DASHBOARD - ONLY PARTS WE NEED **/
+.hl-element{
+  color: $highlightColor;
+}
+
+.chart-block {
+  margin-bottom: 20px;
+  margin-top: 0;
+  background-color: white;
+  height: 369px;
+  overflow: visible;
+  padding: 0 20px;
+  position: relative;
+}
+
+.dash-table{
+  height: 100%;
+}
+
+.view-switch{
+  font-size: 18px;
+  float: right;
+  margin: 5px 0 0 15px;
+  color: $smallLabelFontColor;
+
+  .active{
+    color: $highlightColor;
+  }
+
+  .switch-graph{
+    cursor: pointer;
+    &:hover{
+      color: $highlightColor;
+    }
+  }
+  .switch-list{
+    cursor: pointer;
+    &:hover{
+      color: $highlightColor;
+    }
+  }
+  @media (max-width: 486px){
+    margin: 5px 0 0 0;
+  }
+}
+
+.list-switch-drop{
+  margin-top: 10px;
+  .btn{
+  }
+}
+
+.mark-as-read{
+  margin-left: 25px;
+}
+
+
+@media (min-width: 485px) and (max-width: 767px)  {
+  .counter-block-element {
+    display: inline-block;
+    width: calc(100% / 2 - 2px);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .master-content__header {
+    clear: left;
+  }
+
+  .counter-block-element {
+    display: inline-block;
+    width: calc(100% / 2 - 2px);
+  }
+}
+/** END OF: DASHBOARD - ONLY PARTS WE NEED **/
+
+/** building-blocks.scss overrides **/
+
+.block-title-light {
+  display: inline-block;
+  font-size: 13px;
+  opacity: 1;
+  text-transform: uppercase;
+  vertical-align: middle;
+  float: right;
+  @media (max-width: 486px){
+    float: left;
+    width: 100%;
+  }
 }

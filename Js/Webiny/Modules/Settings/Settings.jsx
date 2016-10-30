@@ -9,6 +9,7 @@ Settings.defaultProps = {
     id: null,
     api: '/entities/core/settings',
     onSuccessMessage: () => 'Settings saved!',
+    onSubmitSuccess: null,
     renderer() {
         const formProps = {
             api: this.props.api,
@@ -16,10 +17,11 @@ Settings.defaultProps = {
             url: 'key',
             id: this.props.id,
             onSuccessMessage: this.props.onSuccessMessage,
+            onSubmitSuccess: this.props.onSubmitSuccess,
             children: this.props.children
         };
 
-        return <Ui.Form.Container {...formProps}/>;
+        return <Ui.Form {...formProps}/>;
     }
 };
 

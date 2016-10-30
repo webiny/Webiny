@@ -2,6 +2,9 @@ import Webiny from 'Webiny';
 import View from './View';
 import FormView from './FormView';
 import ListView from './ListView';
+import DashboardView from './DashboardView';
+import ChartBlock from './ChartBlock';
+import InfoBlock from './InfoBlock';
 import Body from './Body';
 import Header from './Header';
 import Footer from './Footer';
@@ -12,13 +15,17 @@ class Module extends Webiny.Module {
         Webiny.Ui.Components.View = View;
         View.Form = FormView;
         View.List = ListView;
+        View.Dashboard = DashboardView;
         View.Header = Header;
         View.Body = Body;
         View.Footer = Footer;
 
-        // Add FormView into list of components that will receive a `container` prop when used inside of Form.Container
-        const injectInto = Webiny.Ui.Components.Form.Container.defaultProps.injectInto;
-        Webiny.Ui.Components.Form.Container.defaultProps.injectInto = () => {
+        View.ChartBlock = ChartBlock;
+        View.InfoBlock = InfoBlock;
+
+        // Add FormView into list of components that will receive a `container` prop when used inside of Form
+        const injectInto = Webiny.Ui.Components.Form.defaultProps.injectInto;
+        Webiny.Ui.Components.Form.defaultProps.injectInto = () => {
             const injects = injectInto();
             injects.push(FormView);
             return injects;

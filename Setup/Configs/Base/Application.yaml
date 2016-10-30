@@ -1,0 +1,11 @@
+Application:
+    AbsolutePath: __DIR__/../../
+    Backend: admin
+    Acl:
+        Token: ''
+        CheckUserPermissions: true
+        ApiTokenControl: true
+    Logger:
+        DisplayErrors: false
+        Enabled: true
+Apps: {}

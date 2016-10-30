@@ -6,6 +6,18 @@ class Picker extends Webiny.Ui.Component {
 }
 
 Picker.defaultProps = {
+    minimumInputLength: 2,
+    tooltip: 'Visit http://fontawesome.io for full list',
+    optionRenderer: option => {
+        return (
+            <div><Ui.Icon icon={'fa ' + option.id}/> {option.text}</div>
+        );
+    },
+    selectedRenderer: option => {
+        return (
+            <div><Ui.Icon icon={'fa ' + option.id}/> {option.text}</div>
+        );
+    },
     renderer() {
         const icons = {
             'fa-500px': '500px',
@@ -595,31 +607,9 @@ Picker.defaultProps = {
             'fa-youtube-square': 'Youtube square'
         };
 
-        let iconPicker = {
-            options: icons,
-            minimumInputLength: 2,
-            tooltop: 'Visit http://fontawesome.io for full list',
-            optionRenderer: option => {
-                return (
-                    <div>
-                        <Ui.Icon icon={'fa ' + option.id}/>
-                        {option.text}
-                    </div>
-                );
-            },
-            selectedRenderer: option => {
-                return (
-                    <div>
-                        <Ui.Icon icon={'fa ' + option.id}/>
-                        {option.text}
-                    </div>
-                );
-            }
-        };
+        const props = _.omit(this.props, ['renderer']);
 
-        iconPicker = _.merge(iconPicker, _.omit(this.props, ['renderer']));
-
-        return <Ui.Select {...iconPicker}/>;
+        return <Ui.Select {...props} options={icons}/>;
     }
 };
 

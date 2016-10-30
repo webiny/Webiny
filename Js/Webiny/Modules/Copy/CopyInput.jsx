@@ -1,16 +1,34 @@
-import CopyButton from './CopyButton';
+import Webiny from 'Webiny';
 
-class CopyInput extends CopyButton {
-    getTarget() {
-        return this.refs.button;
+class CopyInput extends Webiny.Ui.FormComponent {
+    componentDidMount() {
+        super.componentDidMount();
+
+        this.clipboard = new Clipboard(this.refs.button, {
+            text: () => {
+                return this.props.value;
+            }
+        });
+
+        this.clipboard.on('success', () => {
+            const onSuccessMessage = this.props.onSuccessMessage;
+            if (_.isFunction(onSuccessMessage)) {
+                onSuccessMessage();
+            } else if (_.isString(onSuccessMessage)) {
+                Webiny.Growl.info(onSuccessMessage);
+            }
+        });
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        this.clipboard.destroy();
     }
 }
 
-CopyInput.defaultProps = {
+CopyInput.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     actionLabel: 'Copy',
-    onSuccessMessage: 'Copied to clipboard!',
-    onCopy: _.noop,
-    style: {
+    actionStyle: {
         position: 'absolute',
         right: -5,
         zIndex: 100,
@@ -18,27 +36,14 @@ CopyInput.defaultProps = {
         top: 4,
         lineHeight: 0.5
     },
+    onSuccessMessage: 'Copied to clipboard!',
+    onCopy: _.noop,
     renderer() {
-        let label = null;
-        if (this.props.label) {
-            label = <label className="control-label">{this.props.label}</label>;
-        }
-
-        let description = this.props.description;
-        if (_.isFunction(description)) {
-            description = description(this);
-        }
-
-        let info = this.props.info;
-        if (_.isFunction(info)) {
-            info = info(this);
-        }
-
         const props = {
             className: 'form-control',
             readOnly: true,
             type: 'text',
-            value: _.has(this.props, 'value') ? this.props.value || '' : _.get(this.props, 'valueLink.value') || '',
+            value: this.props.value || '',
             style: {
                 paddingRight: 95
             }
@@ -46,22 +51,21 @@ CopyInput.defaultProps = {
 
         return (
             <div className={this.classSet('form-group', this.props.className)}>
-                {label}
-                <span className="info-txt">{info}</span>
-
+                {this.renderLabel()}
+                {this.renderInfo()}
                 <div className="input-group">
                     <input {...props}/>
                     <button
-                        style={this.props.style}
+                        style={this.props.actionStyle}
                         className="btn btn-primary btn--copy"
                         ref="button">
                         {this.props.actionLabel}
                     </button>
                 </div>
-                <span className="help-block">{description}</span>
+                {this.renderDescription()}
             </div>
         );
     }
-};
+});
 
 export default CopyInput;

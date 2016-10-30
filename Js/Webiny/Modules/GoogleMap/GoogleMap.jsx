@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
-
-class GoogleMaps extends Webiny.Ui.Component {
+class GoogleMap extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);
@@ -28,11 +27,11 @@ class GoogleMaps extends Webiny.Ui.Component {
     }
 
     shouldComponentUpdate(newProps) {
-        if (!this.props.valueLink) {
+        if (!newProps.value) {
             return false;
         }
 
-        return !_.isEqual(this.props.valueLink.value, newProps.valueLink.value);
+        return !_.isEqual(this.props.value, newProps.value);
     }
 
     componentDidUpdate() {
@@ -44,7 +43,7 @@ class GoogleMaps extends Webiny.Ui.Component {
     }
 
     setupMap() {
-        this.map = new google.maps.Map($(ReactDOM.findDOMNode(this)).find('.google-map')[0], {
+        this.map = new google.maps.Map(ReactDOM.findDOMNode(this).querySelector('.google-map'), {
             center: new google.maps.LatLng(this.props.lat, this.props.lng),
             zoom: this.props.zoom,
             mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -58,7 +57,7 @@ class GoogleMaps extends Webiny.Ui.Component {
 
         if (!this.props.readOnly) {
             google.maps.event.addListener(this.marker, 'dragend', () => {
-                this.props.valueLink.requestChange({
+                this.props.onChange({
                     lat: this.marker.getPosition().lat(),
                     lng: this.marker.getPosition().lng()
                 });
@@ -69,8 +68,8 @@ class GoogleMaps extends Webiny.Ui.Component {
     }
 
     positionMarker() {
-        const lat = _.get(this, 'props.valueLink.value.lat');
-        const lng = _.get(this, 'props.valueLink.value.lng');
+        const lat = _.get(this.props, 'value.lat');
+        const lng = _.get(this.props, 'value.lng');
 
         if (lat && lng) {
             const latLng = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
@@ -88,7 +87,7 @@ class GoogleMaps extends Webiny.Ui.Component {
         this.geoCoder.geocode({address: query}, results => {
             if (!_.isEmpty(results)) {
                 const location = _.get(results[0], 'geometry.location');
-                this.props.valueLink.requestChange({
+                this.props.onChange({
                     lat: location.lat(),
                     lng: location.lng()
                 });
@@ -97,19 +96,20 @@ class GoogleMaps extends Webiny.Ui.Component {
     }
 }
 
-GoogleMaps.defaultProps = {
+GoogleMap.defaultProps = {
     key: null,
     zoom: 4,
     lat: 0,
     lng: 0,
     readOnly: false,
+    style: null,
     renderer() {
         return (
-            <div className="google-map--container">
-                <div className="google-map" style={{width: '100%', height: '100%'}} {...this.props}></div>
+            <div className="google-map--container" style={this.props.style}>
+                <div className="google-map" style={{width: '100%', height: '100%'}}>{this.props.children}</div>
             </div>
         );
     }
 };
 
-export default GoogleMaps;
+export default GoogleMap;

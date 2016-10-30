@@ -1,13 +1,13 @@
 import Webiny from 'Webiny';
 /**
- * Main is the main container that will hold all other components.
+ * Layout is the main container that will hold all other components.
  * This component is the first one to render in the <body> element.
  */
-class Main extends Webiny.Ui.View {
+class Layout extends Webiny.Ui.View {
 
 }
 
-Main.defaultProps = {
+Layout.defaultProps = {
     renderer() {
         return (
             <div className="master minimized">
@@ -16,7 +16,7 @@ Main.defaultProps = {
 
                 <div className="master-content">
                     <div className="container-fluid">
-                        <Webiny.Ui.Placeholder name="MasterContent"/>
+                        <Webiny.Ui.Placeholder name="Content"/>
                     </div>
                 </div>
                 <Webiny.Apps.Core.Backend.Layout.Components.Footer/>
@@ -25,4 +25,4 @@ Main.defaultProps = {
     }
 };
 
-export default Main;
+export default Layout;

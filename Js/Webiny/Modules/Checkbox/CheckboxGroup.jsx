@@ -1,11 +1,76 @@
-import BaseCheckboxGroup from './BaseCheckboxGroup';
+import Webiny from 'Webiny';
+import Checkbox from './Checkbox';
 
-class CheckboxGroup extends BaseCheckboxGroup {
+class CheckboxGroup extends Webiny.Ui.OptionComponent {
+    constructor(props) {
+        super(props);
 
+        this.bindMethods('renderOptions,onChange');
+    }
+
+    onChange(key, newValue) {
+        const option = this.state.options[key];
+        const newState = this.props.value || [];
+        if (newValue) {
+            newValue = this.props.formatValue(option);
+            newState.push(newValue);
+        } else {
+            const currentIndex = _.findIndex(newState, opt => {
+                const optValue = this.props.valueKey ? _.get(opt, this.props.valueKey) : opt;
+                return optValue === option.id;
+            });
+
+            newState.splice(currentIndex, 1);
+        }
+        this.props.onChange(newState, this.validate);
+    }
+
+    /**
+     * Create options elements
+     * @returns {Array}
+     */
+    renderOptions() {
+        return this.state.options.map((item, key) => {
+            const checked = _.find(this.props.value, opt => {
+                if (_.isPlainObject(opt)) {
+                    return _.get(opt, this.props.valueKey) === item.id;
+                }
+                return opt === item.id;
+            });
+
+            const props = {
+                key, // React key
+                grid: item.grid || this.props.grid,
+                label: item.text,
+                disabled: this.isDisabled(),
+                state: checked, // true/false (checked/unchecked)
+                onChange: this.onChange,
+                option: item,
+                optionIndex: key
+            };
+
+            if (_.isFunction(this.props.checkboxRenderer)) {
+                props.renderer = this.props.checkboxRenderer;
+            }
+
+            if (_.isFunction(this.props.checkboxLabelRenderer)) {
+                props.labelRenderer = this.props.checkboxLabelRenderer;
+            }
+
+            return <Checkbox {...props}/>;
+        });
+    }
 }
 
-CheckboxGroup.defaultProps = _.merge({}, BaseCheckboxGroup.defaultProps, {
+CheckboxGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
+    grid: 12,
+    valueKey: null,
+    valueAttr: 'id',
+    textAttr: 'name',
     disabledClass: 'disabled',
+    checkboxRenderer: null,
+    checkboxLabelRenderer: null,
+    formatValue: value => value.id,
     renderer() {
         const cssConfig = {
             'form-group': true,
@@ -17,23 +82,14 @@ CheckboxGroup.defaultProps = _.merge({}, BaseCheckboxGroup.defaultProps, {
             cssConfig[this.props.disabledClass] = true;
         }
 
-        let label = null;
-        if (this.props.label) {
-            label = <label key="label" className="control-label">{this.props.label}</label>;
-        }
-
-        let validationMessage = null;
-        if (this.state.isValid === false) {
-            validationMessage = <span className="help-block">{this.state.validationMessage}</span>;
-        }
-
         return (
             <div className={this.classSet(this.props.className)}>
-                <div className={this.classSet(cssConfig)}>{label}
+                <div className={this.classSet(cssConfig)}>
+                    {this.renderLabel()}
                     <div className="clearfix"></div>
-                    {this.getOptions()}
+                    {this.renderOptions()}
                 </div>
-                {validationMessage}
+                {this.renderValidationMessage()}
             </div>
         );
     }

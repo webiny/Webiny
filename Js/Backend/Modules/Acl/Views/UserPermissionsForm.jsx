@@ -21,38 +21,45 @@ class UserPermissionsForm extends Webiny.Ui.View {
         super.componentWillMount();
         new Webiny.Api.Endpoint('/services/core/entities', {query: {withDetails: true}}).get().then(apiResponse => {
             this.setState({entities: apiResponse.getData()});
-        });
-
-        new Webiny.Api.Endpoint('/services/core/services', {query: {withDetails: true}}).get().then(apiResponse => {
-            this.setState({services: apiResponse.getData()});
+            return new Webiny.Api.Endpoint('/services/core/services', {query: {withDetails: true}}).get().then(apiResponse => {
+                this.setState({services: apiResponse.getData()});
+            });
         });
     }
 
     renderService(service, model, container) {
-        if (service.public) {
-            return null;
-        }
         return (
             <div key={service.id}>
-                <Ui.Form.Fieldset title={service.name}/>
-                {service.methods.map(m => {
-                    return (
-                        <Ui.Grid.Row key={m.key}>
-                            <Ui.Grid.Col all={2}>
-                                <Ui.SwitchButton value={m.exposed} onChange={v => {
+                <h5><strong>{service.name}</strong></h5>
+                <table className="table table-simple no-hover">
+                    <thead>
+                    <tr>
+                        <th className="text-left" style={{width: 140}}></th>
+                        <th className="text-left">Method</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {service.methods.map(m => {
+                        return (
+                            <tr key={m.key}>
+                                <td className="text-left">
+                                    <Ui.SwitchButton value={m.exposed} onChange={enabled => {
                                     const permissions = _.get(model, 'permissions.services.' + service.name, {});
-                                    _.set(permissions, m.key, v);
+                                    _.set(permissions, m.key, enabled);
                                     _.set(model, 'permissions.services.' + service.name, permissions);
                                     container.setModel(model);
                                 }}/>
-                            </Ui.Grid.Col>
-                            <Ui.Grid.Col all={10}>
-                                <a><strong>{m.method.toUpperCase()}</strong> {m.url}</a>
-                                <br/><span>{m.description}</span>
-                            </Ui.Grid.Col>
-                        </Ui.Grid.Row>
-                    );
-                })}
+                                </td>
+                                <td className="text-left">
+                                    {m.description || 'No description available'}<br/>
+                                    <Ui.Label type="info"><strong>{m.method.toUpperCase()}</strong></Ui.Label>
+                                    <a>{m.url}</a>
+                                </td>
+                            </tr>
+                        );
+                    })}
+                    </tbody>
+                </table>
             </div>
         );
     }
@@ -73,7 +80,7 @@ UserPermissionsForm.defaultProps = {
 
         return (
 
-            <Ui.Form.Container {...formProps}>
+            <Ui.Form {...formProps}>
                 {(model, container) => {
                     const entities = [];
                     const services = [];
@@ -103,7 +110,7 @@ UserPermissionsForm.defaultProps = {
                     });
 
                     this.state.services.map(service => {
-                        if (service.class.toLowerCase().indexOf(this.state.serviceFilter.toLowerCase()) === -1) {
+                        if (!service.authorization || service.class.toLowerCase().indexOf(this.state.serviceFilter.toLowerCase()) === -1) {
                             return;
                         }
 
@@ -150,10 +157,10 @@ UserPermissionsForm.defaultProps = {
                                 </Ui.Grid.Row>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
-                                        <Ui.Tabs.Tabs>
+                                        <Ui.Tabs>
                                             <Ui.Tabs.Tab label="Entities">
-                                                <Ui.Input placeholder="Filter entities" valueLink={this.bindTo('entityFilter')} delay={0}/>
-                                                <Table.Table data={entities} actions={entityActions}>
+                                                <Ui.Input placeholder="Filter entities" {...this.bindTo('entityFilter')} delay={0}/>
+                                                <Table data={entities} actions={entityActions} className="no-hover">
                                                     <Table.Row>
                                                         <Table.RowDetailsField hide={data => !data.custom}/>
                                                         <Table.Field name="name" label="Entity"/>
@@ -166,32 +173,43 @@ UserPermissionsForm.defaultProps = {
                                                         {data => {
                                                             return (
                                                                 <div style={{padding: '10px 40px 0px 0px'}}>
-                                                                    {data.custom.map(m => {
-                                                                        return (
-                                                                            <Ui.Grid.Row key={m.key}>
-                                                                                <Ui.Grid.Col all={2}>
-                                                                                    <Ui.SwitchButton value={m.exposed} onChange={v => {
-                                                                                        entityActions.update(data.id, {[m.key]: v});
-                                                                                    }}/>
-                                                                                </Ui.Grid.Col>
-                                                                                <Ui.Grid.Col all={10}>
-                                                                                    <a><strong>{m.method.toUpperCase()}</strong> {m.url}</a>
-                                                                                    <br/><span>{m.description}</span>
-                                                                                </Ui.Grid.Col>
-                                                                            </Ui.Grid.Row>
-                                                                        );
-                                                                    })}
+                                                                    <table className="table table-simple no-hover">
+                                                                        <thead>
+                                                                        <tr>
+                                                                            <th className="text-left" style={{width: 140}}></th>
+                                                                            <th className="text-left">Method</th>
+                                                                        </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                        {data.custom.map(m => {
+                                                                            return (
+                                                                                <tr key={m.key}>
+                                                                                    <td className="text-left">
+                                                                                        <Ui.SwitchButton value={m.exposed} onChange={enabled => {
+                                                                                            entityActions.update(data.id, {[m.key]: enabled});
+                                                                                        }}/>
+                                                                                    </td>
+                                                                                    <td className="text-left">
+                                                                                        {m.description || 'No description available'}<br/>
+                                                                                        <Ui.Label type="info"><strong>{m.method.toUpperCase()}</strong></Ui.Label>
+                                                                                        <a>{m.url}</a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            );
+                                                                        })}
+                                                                        </tbody>
+                                                                    </table>
                                                                 </div>
                                                             );
                                                         }}
                                                     </Table.RowDetails>
-                                                </Table.Table>
+                                                </Table>
                                             </Ui.Tabs.Tab>
                                             <Ui.Tabs.Tab label="Services">
-                                                <Ui.Input placeholder="Filter services" valueLink={this.bindTo('serviceFilter')} delay={0}/>
+                                                <Ui.Input placeholder="Filter services" {...this.bindTo('serviceFilter')} delay={0}/>
                                                 {services.map(service => this.renderService(service, model, container))}
                                             </Ui.Tabs.Tab>
-                                        </Ui.Tabs.Tabs>
+                                        </Ui.Tabs>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                             </Ui.View.Body>
@@ -202,7 +220,7 @@ UserPermissionsForm.defaultProps = {
                         </Ui.View.Form>
                     );
                 }}
-            </Ui.Form.Container>
+            </Ui.Form>
         );
     }
 };
