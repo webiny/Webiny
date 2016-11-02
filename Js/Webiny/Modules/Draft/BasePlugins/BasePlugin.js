@@ -1,9 +1,9 @@
 import Webiny from 'Webiny';
 
 class BasePlugin {
-    constructor() {
+    constructor(config = {}) {
         this.name = '';
-        this.config = {};
+        this.config = config;
         this.editor = null;
     }
 
@@ -15,11 +15,11 @@ class BasePlugin {
     }
 
     isDisabled() {
-        return this.editor.getPreview();
+        return this.editor.getReadOnly();
     }
 
     setConfig(config) {
-        this.config = config;
+        _.merge(this.config, config);
         return this;
     }
 
