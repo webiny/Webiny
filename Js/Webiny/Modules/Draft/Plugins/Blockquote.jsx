@@ -3,8 +3,8 @@ const Ui = Webiny.Ui.Components;
 import BlockTypePlugin from './../BasePlugins/BlockTypePlugin';
 
 class BlockquotePlugin extends BlockTypePlugin {
-    constructor() {
-        super();
+    constructor(config) {
+        super(config);
         this.name = 'blockquote';
         this.block = 'blockquote';
     }

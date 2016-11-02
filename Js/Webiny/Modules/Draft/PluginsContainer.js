@@ -3,18 +3,39 @@ import PluginBlock from './PluginBlock';
 export default class PluginsContainer {
     constructor(plugins, editor) {
         this.editor = editor;
-        this.blockRenderMap = {};
-        this.blockRendererFn = [];
-        this.blockStyleFn = [];
-        this.customStyleMap = {};
-        this.decorators = [];
-        this.handleKeyCommand = [];
-        this.keyBindingFn = [];
-        this.handleReturn = [];
-        this.handlePastedText = [];
-        this.onTab = [];
+        this.plugins = plugins;
+        this.config = {
+            edit: {
+                toolbar: [],
+                blockRenderMap: {},
+                blockRendererFn: [],
+                blockStyleFn: [],
+                customStyleMap: {},
+                decorators: [],
+                handleKeyCommand: [],
+                keyBindingFn: [],
+                handleReturn: [],
+                handlePastedText: [],
+                onTab: []
+            },
+            preview: {
+                toolbar: [],
+                blockRenderMap: {},
+                blockRendererFn: [],
+                blockStyleFn: [],
+                customStyleMap: {},
+                decorators: [],
+                handleKeyCommand: [],
+                keyBindingFn: [],
+                handleReturn: [],
+                handlePastedText: [],
+                onTab: []
+            }
+        };
 
-        const props = [
+        this.mode = 'edit';
+
+        this.props = [
             'blockRenderMap',
             'blockRendererFn',
             'blockStyleFn',
@@ -23,38 +44,56 @@ export default class PluginsContainer {
             'handlePastedText',
             'keyBindingFn',
             'handleReturn',
-            'onTab'
+            'onTab',
+            'toolbar'
         ];
 
         plugins.map(plugin => {
             if (!plugin) {
                 return;
             }
-            plugin.editor = this.editor;
-            props.map(prop => {
-                if (_.has(plugin, prop)) {
-                    const value = plugin[prop];
-                    if (_.isPlainObject(value)) {
-                        _.assign(this[prop], value);
-                    }
-                    if (_.isFunction(value)) {
-                        this[prop].push(value);
-                    }
-                }
-            });
+            plugin.setEditor(this.editor);
+            this.buildPlugin(plugin.getEditConfig(), this.config.edit);
+            this.buildPlugin(plugin.getPreviewConfig(), this.config.preview);
+        });
 
-            const decorators = _.get(plugin, 'decorators');
-            if (decorators) {
-                decorators.map(d => {
-                    this.decorators.push(this.createDecorator(d));
-                });
+        this.config.edit.compositeDecorator = new Draft.CompositeDecorator(this.config.edit.decorators);
+        this.config.preview.compositeDecorator = new Draft.CompositeDecorator(this.config.preview.decorators);
+
+        this.config.edit.extendedBlockRenderMap = Draft.DefaultDraftBlockRenderMap.merge(Immutable.Map(this.config.edit.blockRenderMap));
+        this.config.preview.extendedBlockRenderMap = Draft.DefaultDraftBlockRenderMap.merge(Immutable.Map(this.config.preview.blockRenderMap));
+    }
+
+    getPlugin(name) {
+        const pluginIndex = _.findIndex(this.plugins, p => p.name === name);
+        return this.plugins[pluginIndex];
+    }
+
+    buildPlugin(plugin, target) {
+        this.props.map(prop => {
+            if (_.has(plugin, prop)) {
+                const value = plugin[prop];
+                if (React.isValidElement(value)) {
+                    target[prop].push(value);
+                } else if (_.isPlainObject(value)) {
+                    _.assign(target[prop], value);
+                } else if (_.isFunction(value)) {
+                    target[prop].push(value);
+                }
             }
         });
 
-        this.compositeDecorator = new Draft.CompositeDecorator(this.decorators);
+        const decorators = _.get(plugin, 'decorators');
+        if (decorators) {
+            decorators.map(d => {
+                target.decorators.push(this.createDecorator(d));
+            });
+        }
+    }
 
-        const blockRenderMap = Immutable.Map(this.blockRenderMap);
-        this.extendedBlockRenderMap = Draft.DefaultDraftBlockRenderMap.merge(blockRenderMap);
+    setPreview(preview) {
+        this.mode = preview ? 'preview' : 'edit';
+        return this;
     }
 
     createDecorator(decorator) {
@@ -76,7 +115,7 @@ export default class PluginsContainer {
     getHandleKeyCommandFn() {
         return (command) => {
             let result = false;
-            _.each(this.handleKeyCommand, fn => {
+            _.each(this.config[this.mode].handleKeyCommand, fn => {
                 result = fn(command, this.editor);
                 if (result === true) {
                     return false;
@@ -98,7 +137,7 @@ export default class PluginsContainer {
     getHandleReturnFn() {
         return (e) => {
             let result = false;
-            _.each(this.handleReturn, fn => {
+            _.each(this.config[this.mode].handleReturn, fn => {
                 result = fn(e, this.editor);
                 if (result === true) {
                     return false;
@@ -114,7 +153,7 @@ export default class PluginsContainer {
     getHandlePastedTextFn() {
         return (text, html) => {
             let result = false;
-            _.each(this.handlePastedText, fn => {
+            _.each(this.config[this.mode].handlePastedText, fn => {
                 result = fn(text, html, this.editor);
                 if (result === true) {
                     return false;
@@ -130,7 +169,7 @@ export default class PluginsContainer {
     getOnTabFn() {
         return (e) => {
             let result = false;
-            _.each(this.onTab, fn => {
+            _.each(this.config[this.mode].onTab, fn => {
                 result = fn(e, this.editor);
                 if (result === true) {
                     return false;
@@ -148,17 +187,17 @@ export default class PluginsContainer {
     }
 
     getDecorators() {
-        return this.compositeDecorator;
+        return this.config[this.mode].compositeDecorator;
     }
 
     getBlockRenderMap() {
-        return this.extendedBlockRenderMap;
+        return this.config[this.mode].extendedBlockRenderMap;
     }
 
     getBlockRendererFn() {
         return (contentBlock) => {
             let renderer = null;
-            _.each(this.blockRendererFn, br => {
+            _.each(this.config[this.mode].blockRendererFn, br => {
                 const plugin = br(contentBlock, this.editor);
                 if (plugin) {
                     renderer = {
@@ -180,7 +219,7 @@ export default class PluginsContainer {
     getBlockStyleFn() {
         return (contentBlock) => {
             let renderer = null;
-            _.each(this.blockStyleFn, bs => {
+            _.each(this.config[this.mode].blockStyleFn, bs => {
                 renderer = bs(contentBlock, this.editor);
                 if (renderer) {
                     return false;
@@ -191,13 +230,13 @@ export default class PluginsContainer {
     }
 
     getCustomStyleMap() {
-        return this.customStyleMap;
+        return this.config[this.mode].customStyleMap;
     }
 
     getKeyBindingFn() {
         return (e) => {
             let command = null;
-            _.each(this.keyBindingFn, kb => {
+            _.each(this.config[this.mode].keyBindingFn, kb => {
                 command = kb(e, this.editor);
                 if (_.isString(command)) {
                     return false;
@@ -206,5 +245,9 @@ export default class PluginsContainer {
 
             return command || Draft.getDefaultKeyBinding(e);
         };
+    }
+
+    getToolbarActions() {
+        return this.config[this.mode].toolbar;
     }
 }

@@ -2,23 +2,17 @@ import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
 class BlockType extends Webiny.Ui.Component {
-    toggleBlockType() {
-        const editorState = this.props.editor.getEditorState();
-        this.props.editor.setEditorState(Draft.RichUtils.toggleBlockType(editorState, this.props.block));
-    }
-
-    isActive() {
-        const editorState = this.props.editor.getEditorState();
-        const selection = editorState.getSelection();
-        return this.props.block === editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getType();
-    }
 }
 
 BlockType.defaultProps = {
+    icon: null,
+    plugin: null,
     renderer(){
-        const isActive = this.isActive.call(this);
+        const isActive = this.props.plugin.isActive();
+        const disabled = this.props.plugin.isDisabled();
+        const onClick = () => this.props.plugin.toggleBlockType();
         return (
-            <Ui.Button disabled={this.props.editor.getReadOnly()} type={isActive ? 'primary' : 'default'} onClick={this.toggleBlockType.bind(this)} icon={this.props.icon}/>
+            <Ui.Button disabled={disabled} type={isActive ? 'primary' : 'default'} onClick={onClick} icon={this.props.icon}/>
         );
     }
 };

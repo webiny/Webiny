@@ -2,7 +2,9 @@ import Webiny from 'Webiny';
 import SimpleCodeEditor from './SimpleCodeEditor';
 
 class CodeEditor extends Webiny.Ui.FormComponent {
-
+    focus() {
+        this.refs.editor.focus();
+    }
 }
 
 CodeEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
@@ -17,6 +19,7 @@ CodeEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         };
 
         const props = {
+            ref: 'editor',
             onBlur: this.validate,
             className: 'form-control',
             value: this.props.value,

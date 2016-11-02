@@ -1,15 +1,14 @@
 import Webiny from 'Webiny';
 import PluginsContainer from './PluginsContainer';
 const Ui = Webiny.Ui.Components;
-const {Editor} = Draft;
 
-class WebinyDraftEditor extends Webiny.Ui.Component {
+class Editor extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
 
-        this.bindMethods('initialize', 'focus', 'onChange', 'getEditorState', 'setReadOnly', 'setPlugins');
+        this.bindMethods('initialize', 'focus', 'onChange', 'getEditorState', 'setReadOnly');
 
-        this.setPlugins(props, true);
+        this.plugins = new PluginsContainer(props.plugins, this.getEditorMethods());
 
         this.state = {
             readOnly: props.readOnly,
@@ -42,22 +41,16 @@ class WebinyDraftEditor extends Webiny.Ui.Component {
         }
 
         if (props.preview !== this.props.preview) {
-            this.plugins = props.preview ? this.renderPlugins : this.editPlugins;
+            this.plugins.setPreview(props.preview);
             return this.setState({
                 readOnly: props.preview,
                 editorState: Draft.EditorState.createWithContent(this.state.editorState.getCurrentContent(), this.plugins.getDecorators())
-            });
+            }, this.forceRerender);
         }
 
         return this.setState({
             readOnly: props.preview ? true : props.readOnly
         });
-    }
-
-    setPlugins(props) {
-        this.editPlugins = new PluginsContainer(props.editPlugins, this.getEditorMethods());
-        this.renderPlugins = new PluginsContainer(props.renderPlugins, this.getEditorMethods());
-        this.plugins = props.preview ? this.renderPlugins : this.editPlugins;
     }
 
     forceRerender() {
@@ -80,7 +73,6 @@ class WebinyDraftEditor extends Webiny.Ui.Component {
     }
 
     onChange(editorState) {
-        //this.setState({editorState}, this.focus);
         this.props.onChange(editorState);
     }
 
@@ -99,8 +91,10 @@ class WebinyDraftEditor extends Webiny.Ui.Component {
             getEditorState: this.getEditorState,
             setEditorState: this.onChange,
             setReadOnly: this.setReadOnly,
+            setPluginConfig: (name, config) => this.plugins.getPlugin(name).setConfig(config),
             getReadOnly: () => this.state.readOnly,
             getDecorators: () => this.plugins.getDecorators(),
+            getPreview: () => this.props.preview,
             updateBlockData: (block, data) => {
                 const {editorState} = this.state;
                 const selection = new Draft.SelectionState({
@@ -119,10 +113,9 @@ class WebinyDraftEditor extends Webiny.Ui.Component {
     }
 }
 
-WebinyDraftEditor.defaultProps = {
+Editor.defaultProps = {
     value: null,
-    editPlugins: [],
-    renderPlugins: [],
+    plugins: [],
     preview: false,
     readOnly: false,
     renderer() {
@@ -131,12 +124,14 @@ WebinyDraftEditor.defaultProps = {
             return null;
         }
 
-        return (
-            <div className="rich-editor rich-editor__root">
-                <Toolbar readOnly={this.state.readOnly} plugins={this.props.editPlugins} editorMethods={this.getEditorMethods()}/>
+        this.plugins.setPreview(this.props.preview);
 
-                <div className="rich-editor__editor" onClick={this.focus}>
-                    <Editor
+        return (
+            <div className="rich-editor rich-editor__root" onMouseDown={this.focus}>
+                <Toolbar readOnly={this.state.readOnly} plugins={this.plugins} editorMethods={this.getEditorMethods()}/>
+
+                <div className={this.classSet(this.props.className, 'rich-editor__editor')}>
+                    <Draft.Editor
                         blockRenderMap={this.plugins.getBlockRenderMap()}
                         blockRendererFn={this.plugins.getBlockRendererFn()}
                         blockStyleFn={this.plugins.getBlockStyleFn()}
@@ -162,14 +157,10 @@ WebinyDraftEditor.defaultProps = {
 const Toolbar = (props) => {
     return (
         <div className="editor-toolbar">
-            {props.plugins.map(plugin => {
-                if (!plugin || !plugin.toolbar) {
-                    return null;
-                }
-
+            {props.plugins.getToolbarActions().map((action, i) => {
                 return (
-                    <span key={plugin.name} className="toolbar-action">
-                        {React.cloneElement(plugin.toolbar, {editor: props.editorMethods})}
+                    <span key={i} className="toolbar-action">
+                        {React.cloneElement(action, {editor: props.editorMethods})}
                     </span>
                 );
             })}
@@ -177,6 +168,6 @@ const Toolbar = (props) => {
     );
 };
 
-export default WebinyDraftEditor;
+export default Editor;
 
 // Bold, Italic, Headings, quote (blockquote), unordered list, ordered list, link, image

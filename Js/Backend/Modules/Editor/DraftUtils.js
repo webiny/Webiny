@@ -1,11 +1,5 @@
-/*
- * Copyright (c) 2016, Globo.com (https://github.com/globocom)
- * Copyright (c) 2016, Andrew Coelho <info@andrewcoelho.com>
- *
- * License: MIT
- */
-
-const {convertToRaw, convertFromRaw, getVisibleSelectionRect, EditorState, SelectionState, Entity} = Draft;
+const {genKey, convertToRaw, ContentBlock, Modifier, BlockMapBuilder, convertFromRaw, getVisibleSelectionRect, EditorState, SelectionState, Entity} = Draft;
+const {List, Map} = Immutable;
 
 function filterKey(entityKey) {
     if (entityKey) {
@@ -15,7 +9,61 @@ function filterKey(entityKey) {
     return null;
 }
 
-export default {
+const utils = {
+    insertDataBlock: (editorState, data) => {
+        const contentState = editorState.getCurrentContent();
+        const selectionState = editorState.getSelection();
+
+        const afterRemoval = Modifier.removeRange(
+            contentState,
+            selectionState,
+            "backward"
+        );
+
+        const targetSelection = afterRemoval.getSelectionAfter();
+        const afterSplit = Modifier.splitBlock(afterRemoval, targetSelection);
+        const insertionTarget = afterSplit.getSelectionAfter();
+
+        const asAtomicBlock = Modifier.setBlockType(
+            afterSplit,
+            insertionTarget,
+            "atomic"
+        );
+
+        const block = new ContentBlock({
+            key: genKey(),
+            type: "atomic",
+            text: "",
+            characterList: List(),
+            data: new Map(data)
+        });
+
+
+        const fragmentArray = [
+            block,
+            new ContentBlock({
+                key: genKey(),
+                type: "unstyled",
+                text: "",
+                characterList: List()
+            })
+        ];
+
+        const fragment = BlockMapBuilder.createFromArray(fragmentArray);
+
+        const withAtomicBlock = Modifier.replaceWithFragment(
+            asAtomicBlock,
+            insertionTarget,
+            fragment
+        );
+
+        const newContent = withAtomicBlock.merge({
+            selectionBefore: selectionState,
+            selectionAfter: withAtomicBlock.getSelectionAfter().set("hasFocus", true)
+        });
+
+        return EditorState.push(editorState, newContent, "insert-fragment");
+    },
     getRangesForDraftEntity: (block, key) => {
         var ranges = [];
         block.findEntityRanges(function (c) {
@@ -56,7 +104,7 @@ export default {
         const blockKey = block.getKey();
 
         let entitySelection;
-        getRangesForDraftEntity(block, entityKey).forEach((range) => {
+        utils.getRangesForDraftEntity(block, entityKey).forEach((range) => {
             if (range.start <= selectionOffset && selectionOffset <= range.end) {
                 entitySelection = new SelectionState({
                     anchorOffset: range.start,
@@ -101,6 +149,28 @@ export default {
         const offsetLeft = (rangeBounds.left - editorBounds.left) + (rangeWidth / 2);
         const offsetTop = rangeBounds.top - editorBounds.top - (toolbarHeight + 14);
         return {offsetLeft, offsetTop};
-    }
-}
+    },
+    toHtml: (editorState, plugins) => {
+        const contentState = Draft.convertToRaw(editorState.getCurrentContent());
+        const renderedBlocks = [];
+        contentState.blocks.map(block => {
+            const children = null;
+            plugins.map(plugin => {
+                if (_.isFunction(plugin.toHtml)) {
+                    const element = plugin.toHtml(block, children);
+                    if (element) {
+                        renderedBlocks.push(_.isString(element) ? element : ReactDOMServer.renderToStaticMarkup(element));
+                    }
+                }
+            })
+        });
+
+        return renderedBlocks.join('\n');
+
+    },
+    toHtmlOld: DraftJsConverters.toHtml,
+    toMarkdownOld: DraftJsConverters.toMarkdown
+};
+
+export default utils;
 
