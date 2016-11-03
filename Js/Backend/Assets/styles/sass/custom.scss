@@ -305,7 +305,7 @@
 }
 
 /** DASHBOARD - ONLY PARTS WE NEED **/
-.hl-element{
+.hl-element {
   color: $highlightColor;
 }
 
@@ -319,49 +319,48 @@
   position: relative;
 }
 
-.dash-table{
+.dash-table {
   height: 100%;
 }
 
-.view-switch{
+.view-switch {
   font-size: 18px;
   float: right;
   margin: 5px 0 0 15px;
   color: $smallLabelFontColor;
 
-  .active{
+  .active {
     color: $highlightColor;
   }
 
-  .switch-graph{
+  .switch-graph {
     cursor: pointer;
-    &:hover{
+    &:hover {
       color: $highlightColor;
     }
   }
-  .switch-list{
+  .switch-list {
     cursor: pointer;
-    &:hover{
+    &:hover {
       color: $highlightColor;
     }
   }
-  @media (max-width: 486px){
+  @media (max-width: 486px) {
     margin: 5px 0 0 0;
   }
 }
 
-.list-switch-drop{
+.list-switch-drop {
   margin-top: 10px;
-  .btn{
+  .btn {
   }
 }
 
-.mark-as-read{
+.mark-as-read {
   margin-left: 25px;
 }
 
-
-@media (min-width: 485px) and (max-width: 767px)  {
+@media (min-width: 485px) and (max-width: 767px) {
   .counter-block-element {
     display: inline-block;
     width: calc(100% / 2 - 2px);
@@ -378,6 +377,7 @@
     width: calc(100% / 2 - 2px);
   }
 }
+
 /** END OF: DASHBOARD - ONLY PARTS WE NEED **/
 
 /** building-blocks.scss overrides **/
@@ -389,8 +389,123 @@
   text-transform: uppercase;
   vertical-align: middle;
   float: right;
-  @media (max-width: 486px){
+  @media (max-width: 486px) {
     float: left;
     width: 100%;
   }
 }
+
+/** CODEMIRROR **/
+.CodeMirror {
+  min-height: 50px;
+}
+
+/** END OF CODEMIRROR**/
+
+/** DRAFT EDITOR **/
+.rich-editor {
+  &__root {
+    background: #fff;
+    border: 1px solid #ddd;
+    font-family: 'Georgia', serif;
+    font-size: 14px;
+    padding: 15px;
+
+    .toolbar-action > button {
+      padding: 7px;
+      border-radius: 0;
+    }
+  }
+
+  &__editor {
+    // border-top: 1px solid #ddd;
+    cursor: text;
+    //font-size: 16px;
+    margin-top: 10px;
+
+    .public-DraftEditorPlaceholder-root, .public-DraftEditor-content {
+      margin: 0 -15px -15px;
+      padding: 15px;
+    }
+
+    .public-DraftEditor-content {
+      min-height: 100px;
+    }
+
+    .public-DraftEditorPlaceholder-root {
+      display: none;
+    }
+
+    .public-DraftStyleDefault-pre {
+      background-color: rgba(0, 0, 0, 0.05);
+      font-family: 'Inconsolata', 'Menlo', 'Consolas', monospace;
+      font-size: 16px;
+      padding: 20px;
+    }
+
+    &__blockquote {
+      border-left: 5px solid #eee;
+      color: #666;
+      font-family: 'Hoefler Text', 'Georgia', serif;
+      font-style: italic;
+      margin: 16px 0;
+      padding: 10px 20px;
+    }
+  }
+
+  .component-plugin-wrapper {
+    padding: 20px;
+    border-radius: 0px;
+    //-webkit-box-shadow: inset -1px 2px 20px -5px rgba(135, 135, 135, 1);
+    //-moz-box-shadow: inset -1px 2px 20px -5px rgba(135, 135, 135, 1);
+    //box-shadow: inset -1px 2px 20px -5px rgba(135, 135, 135, 1);
+    float: left;
+    width: 100%;
+    border: 1px solid grey;
+
+    .form-group {
+      .clearfix::before, .clearfix::after {
+        content: ''
+      }
+    }
+  }
+
+  .code-block .rich-editor {
+    display: block;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 100%;
+    line-height: 1.42857143;
+    word-break: break-all;
+    word-wrap: break-word;
+    background-color: inherit;
+    border: none;
+    border-radius: 4px;
+    font-family: Monaco, Consolas, "Courier New", monospace;
+  }
+
+  .code-block {
+    &--preview {
+      pre {
+        background-color: #23241f;
+      }
+    }
+  }
+
+  .plugin-block-wrapper {
+    position: relative;
+  }
+
+  .plugin-block-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+  }
+}
+
+/** END OF DRAFT EDITOR **/
+
+@import "highlightjs/monokai.css";

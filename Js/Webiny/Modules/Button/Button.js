@@ -31,7 +31,7 @@ Button.defaultProps = {
     renderer() {
         const props = _.clone(this.props);
 
-        if (!this.state.enabled) {
+        if (props.disabled || !this.state.enabled) {
             props['disabled'] = true;
         }
 
@@ -66,7 +66,7 @@ Button.defaultProps = {
         if (icon) {
             content = <span>{content}</span>;
         }
-        return <button {..._.pick(props, ['style', 'onClick'])} type="button" className={classes}>{icon} {content}</button>;
+        return <button {..._.pick(props, ['style', 'onClick', 'disabled'])} type="button" className={classes}>{icon} {content}</button>;
     }
 };
 

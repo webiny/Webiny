@@ -42,13 +42,13 @@ class Fieldset extends Webiny.Ui.FormComponent {
 
     componentWillMount() {
         super.componentWillMount();
-        this.setState({model: insertKey(_.clone(this.props.value))});
+        this.setState({model: insertKey(_.cloneDeep(this.props.value))});
         this.parseLayout(this.props.children);
     }
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        this.setState({model: insertKey(_.clone(props.value))});
+        this.setState({model: insertKey(_.cloneDeep(props.value))});
         this.parseLayout(props.children);
     }
 

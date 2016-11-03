@@ -63,7 +63,7 @@ class FormContainer extends Webiny.Ui.Component {
         if (this.props.loadModel) {
             return this.props.loadModel.call(this, this).then(customModel => {
                 const mergedModel = _.merge({}, this.props.defaultModel || {}, customModel);
-                this.setState({model: mergedModel, loading: false, initialModel: _.clone(mergedModel)});
+                this.setState({model: mergedModel, loading: false, initialModel: _.cloneDeep(mergedModel)});
             });
         }
 
@@ -194,7 +194,7 @@ class FormContainer extends Webiny.Ui.Component {
      * @returns {*}
      */
     getModel(key = null) {
-        const data = _.clone(this.state.model);
+        const data = _.cloneDeep(this.state.model);
         if (key) {
             return _.get(data, key);
         }
@@ -208,7 +208,7 @@ class FormContainer extends Webiny.Ui.Component {
      * @returns {*}
      */
     getInitialModel(key = null) {
-        const data = _.clone(this.state.initialModel);
+        const data = _.cloneDeep(this.state.initialModel);
         if (key) {
             return _.get(data, key);
         }
@@ -263,11 +263,11 @@ class FormContainer extends Webiny.Ui.Component {
 
                 if (this.props.prepareLoadedData) {
                     const newModel = _.merge({}, this.props.defaultModel || {}, this.props.prepareLoadedData(apiResponse.getData()));
-                    this.setState({model: newModel, initialModel: _.clone(newModel), loading: false}, this.__processWatches);
+                    this.setState({model: newModel, initialModel: _.cloneDeep(newModel), loading: false}, this.__processWatches);
                     return;
                 }
                 const newModel = _.merge({}, this.props.defaultModel || {}, apiResponse.getData());
-                this.setState({model: newModel, initialModel: _.clone(newModel), loading: false}, this.__processWatches);
+                this.setState({model: newModel, initialModel: _.cloneDeep(newModel), loading: false}, this.__processWatches);
             });
             return this.request;
         }
@@ -282,7 +282,7 @@ class FormContainer extends Webiny.Ui.Component {
                 }
             });
 
-            this.setState({model, initialModel: _.clone(model)}, () => this.__processWatches(changes));
+            this.setState({model, initialModel: _.cloneDeep(model)}, () => this.__processWatches(changes));
         }
     }
 
@@ -538,7 +538,7 @@ class FormContainer extends Webiny.Ui.Component {
         if (!_.isFunction(children)) {
             throw new Error('Form must have a function as its only child!');
         }
-        return this.registerComponents(children.call(this, _.clone(this.state.model), this));
+        return this.registerComponents(children.call(this, _.cloneDeep(this.state.model), this));
     }
 
     __processSubmitResponse(model, apiResponse) {
@@ -550,7 +550,7 @@ class FormContainer extends Webiny.Ui.Component {
         }
 
         const newModel = apiResponse.getData();
-        this.setState({model: newModel, initialModel: _.clone(newModel), error: null});
+        this.setState({model: newModel, initialModel: _.cloneDeep(newModel), error: null});
         if (_.isFunction(this.props.onSuccessMessage)) {
             Webiny.Growl.success(this.props.onSuccessMessage(model));
         }

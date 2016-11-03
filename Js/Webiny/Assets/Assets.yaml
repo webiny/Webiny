@@ -10,7 +10,6 @@ Assets:
             - bower_components/codemirror/theme/dracula.css
             - bower_components/codemirror/theme/monokai.css
             - bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css
-            - bower_components/highlightjs/styles/default.css
             - node_modules/quill/dist/quill.core.css
             - node_modules/quill/dist/quill.snow.css
             - bower_components/select2/dist/css/select2.min.css
@@ -44,13 +43,16 @@ Assets:
             - bower_components/codemirror/mode/xml/xml.js
             - bower_components/codemirror/mode/css/css.js
             - bower_components/codemirror/mode/javascript/javascript.js
+            - bower_components/codemirror/mode/jsx/jsx.js
+            - bower_components/codemirror/mode/clike/clike.js
+            - bower_components/codemirror/mode/php/php.js
+            - bower_components/codemirror/mode/yaml/yaml.js
             - bower_components/codemirror/mode/htmlmixed/htmlmixed.js
             - bower_components/cropper/dist/cropper.min.js
             - bower_components/d3/d3.min.js
             - bower_components/dynamics.js/lib/dynamics.min.js
             - bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js
             - bower_components/filesize/lib/filesize.min.js
-            - bower_components/highlightjs/highlight.pack.min.js
             - bower_components/platform.js/platform.js
             - node_modules/quill/dist/quill.min.js
             - bower_components/select2/dist/js/select2.min.js
@@ -60,6 +62,11 @@ Assets:
             - webiny/WebinyBootstrap.es6.js
             - webiny/webinyBootstrap.js
             - webiny/logger.es6.js
+            - node_modules/immutable/dist/immutable.min.js
+            - node_modules/draft-js/dist/Draft.min.js
+            - scripts/draft-js-converters.js
+            - scripts/draft-js-code-block.js
+            - scripts/highlight.pack.min.js
         Fonts:
             - bower_components/font-awesome/fonts/fontawesome-webfont.*
             - bower_components/bootstrap/fonts/*

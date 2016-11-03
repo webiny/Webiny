@@ -40,7 +40,7 @@ Select.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
         };
 
         return (
-            <div className={this.classSet(cssConfig)}>
+            <div className={this.classSet(cssConfig)} style={this.props.style}>
                 {this.renderLabel()}
                 {this.renderSelect()}
                 {this.renderDescription()}
