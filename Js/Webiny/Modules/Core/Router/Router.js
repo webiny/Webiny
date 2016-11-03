@@ -277,7 +277,6 @@ class Router {
         if (url.indexOf(webinyWebPath) === 0) {
             e.preventDefault();
             url = url.replace(webinyWebPath, '');
-            console.log('pusham', url);
             History.pushState({url}, null, url);
         }
     }
