@@ -35,9 +35,27 @@ PluginBlock.defaultProps = {
             onClick: this.onClick
         };
 
+        const props = {
+            block,
+            entity: null,
+            data,
+            editor,
+            updateData: this.updateData,
+            container: this
+        };
+
+        const entityKey = block.getEntityAt(0);
+        if (entityKey) {
+            const entityData = Draft.Entity.get(entityKey).get('data');
+            props.entity = {
+                key: entityKey,
+                data: entityData
+            };
+        }
+
         return (
             <div className="plugin-block-wrapper" {...eventHandlers}>
-                <Plugin data={data} editor={editor} updateData={this.updateData} container={this} block={block}/>
+                <Plugin {...props}/>
             </div>
         );
     }

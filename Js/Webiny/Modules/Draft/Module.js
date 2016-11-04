@@ -12,8 +12,12 @@ import Atomic from './Toolbar/Atomic';
 import Bold from './Plugins/Bold';
 import Italic from './Plugins/Italic';
 import Underline from './Plugins/Underline';
+import AlignLeft from './Plugins/AlignLeft';
+import AlignCenter from './Plugins/AlignCenter';
+import AlignRight from './Plugins/AlignRight';
 import Link from './Plugins/Link';
 import Blockquote from './Plugins/Blockquote';
+import Code from './Plugins/Code';
 import CodeBlock from './Plugins/CodeBlock';
 import ReactSandbox from './Plugins/ReactSandbox';
 import Table from './Plugins/Table';
@@ -43,8 +47,12 @@ class Module extends Webiny.Module {
                 Bold,
                 Italic,
                 Underline,
+                AlignLeft,
+                AlignCenter,
+                AlignRight,
                 Link,
                 Blockquote,
+                Code,
                 CodeBlock,
                 ReactSandbox,
                 Table,

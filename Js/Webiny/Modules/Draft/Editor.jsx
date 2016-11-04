@@ -77,7 +77,7 @@ class Editor extends Webiny.Ui.Component {
     }
 
     getEditorState() {
-        return this.state.editorState;
+        return this.state.editorState || null;
     }
 
     setReadOnly(readOnly) {
@@ -92,7 +92,7 @@ class Editor extends Webiny.Ui.Component {
             setEditorState: this.onChange,
             setReadOnly: this.setReadOnly,
             setPluginConfig: (name, config) => this.plugins.getPlugin(name).setConfig(config),
-            getReadOnly: () => this.state.readOnly,
+            getReadOnly: () => _.get(this.state, 'readOnly', this.props.readOnly),
             getDecorators: () => this.plugins.getDecorators(),
             getPreview: () => this.props.preview,
             updateBlockData: (block, data) => {
