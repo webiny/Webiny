@@ -15,48 +15,52 @@ Storage:
                 Driver:
                     Object: \Webiny\Component\Storage\Driver\Local\LocalStorageDriver
                     ObjectArguments:
-                        - __DIR__/../..
+                        Config:
+                            Directory: __DIR__/../..
         Apps:
             Class: \Webiny\Component\Storage\Storage
             Arguments:
                 Driver:
                     Object: \Webiny\Component\Storage\Driver\Local\LocalStorageDriver
                     ObjectArguments:
-                        - __DIR__/..
+                        Config:
+                            Directory: __DIR__/..
         Temp:
             Class: \Webiny\Component\Storage\Storage
             Arguments:
                 Driver:
                     Object: \Webiny\Component\Storage\Driver\Local\LocalStorageDriver
                     ObjectArguments:
-                        - __DIR__/../../Temp
-                        - null
-                        - false
-                        - true
+                        Config:
+                            Directory: __DIR__/../../Temp
+                            Create: true
         DevBuild:
             Class: \Webiny\Component\Storage\Storage
             Arguments:
                 Driver:
                     Object: \Webiny\Component\Storage\Driver\Local\LocalStorageDriver
                     ObjectArguments:
-                        - __DIR__/../../public_html/build/development
+                        Config:
+                            Directory: __DIR__/../../public_html/build/development
         ProductionBuild:
             Class: \Webiny\Component\Storage\Storage
             Arguments:
                 Driver:
                     Object: \Webiny\Component\Storage\Driver\Local\LocalStorageDriver
                     ObjectArguments:
-                        - __DIR__/../../public_html/build/production
+                        Config:
+                            Directory: __DIR__/../../public_html/build/production
         Files:
             Class: \Webiny\Component\Storage\Storage
             Arguments:
                 Driver:
                     Object: \Webiny\Component\Storage\Driver\Local\LocalStorageDriver
                     ObjectArguments:
-                        - __DIR__/../../public_html/uploads
-                        - __Application.WebPath__/uploads
-                        - true
-                        - true
+                        Config:
+                            Directory: __DIR__/../../public_html/uploads
+                            PublicUrl: __Application.WebPath__/uploads
+                            DateFolderStructure: true
+                            Create: true
 
 Events:
     Core:

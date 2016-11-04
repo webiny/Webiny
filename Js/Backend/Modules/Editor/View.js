@@ -12,8 +12,9 @@ class EditorView extends Webiny.Ui.View {
             new Webiny.Draft.Plugins.Underline(),
             new Webiny.Draft.Plugins.Link(),
             new Webiny.Draft.Plugins.Blockquote(),
-            new Webiny.Draft.Plugins.CodeBlock(),
-            new Webiny.Draft.Plugins.ReactSandbox(),
+            new Webiny.Draft.Plugins.Table(),
+            //new Webiny.Draft.Plugins.CodeBlock(),
+            //new Webiny.Draft.Plugins.ReactSandbox(),
             new Webiny.Draft.Plugins.ToJSON()
         ];
 

@@ -407,8 +407,6 @@
   &__root {
     background: #fff;
     border: 1px solid #ddd;
-    font-family: 'Georgia', serif;
-    font-size: 14px;
     padding: 15px;
 
     .toolbar-action > button {
@@ -420,7 +418,6 @@
   &__editor {
     // border-top: 1px solid #ddd;
     cursor: text;
-    //font-size: 16px;
     margin-top: 10px;
 
     .public-DraftEditorPlaceholder-root, .public-DraftEditor-content {
@@ -504,6 +501,23 @@
     top: 0;
     left: 0;
   }
+}
+
+.table {
+  .rich-editor__root {
+    padding: 0;
+    border: none;
+    background-color: transparent;
+  }
+  .rich-editor__editor {
+    margin: 0;
+
+    .public-DraftEditor-content {
+      padding-top: 0;
+      min-height: 40px;
+    }
+  }
+
 }
 
 /** END OF DRAFT EDITOR **/

@@ -16,6 +16,7 @@ import Link from './Plugins/Link';
 import Blockquote from './Plugins/Blockquote';
 import CodeBlock from './Plugins/CodeBlock';
 import ReactSandbox from './Plugins/ReactSandbox';
+import Table from './Plugins/Table';
 import ToJSON from './Plugins/ToJSON';
 import SyntaxHighlight from './Plugins/SyntaxHighlight';
 
@@ -46,6 +47,7 @@ class Module extends Webiny.Module {
                 Blockquote,
                 CodeBlock,
                 ReactSandbox,
+                Table,
                 ToJSON,
                 SyntaxHighlight
             }

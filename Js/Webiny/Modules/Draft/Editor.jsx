@@ -118,18 +118,23 @@ Editor.defaultProps = {
     plugins: [],
     preview: false,
     readOnly: false,
+    toolbar: true,
     renderer() {
         const {editorState} = this.state;
         if (!editorState) {
             return null;
         }
 
+        let toolbar = null;
+        if (this.props.toolbar) {
+            toolbar = <Toolbar readOnly={this.state.readOnly} plugins={this.plugins} editorMethods={this.getEditorMethods()}/>;
+        }
+
         this.plugins.setPreview(this.props.preview);
 
         return (
             <div className="rich-editor rich-editor__root" onMouseDown={this.focus}>
-                <Toolbar readOnly={this.state.readOnly} plugins={this.plugins} editorMethods={this.getEditorMethods()}/>
-
+                {toolbar}
                 <div className={this.classSet(this.props.className, 'rich-editor__editor')}>
                     <Draft.Editor
                         blockRenderMap={this.plugins.getBlockRenderMap()}
