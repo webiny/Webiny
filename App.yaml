@@ -69,10 +69,14 @@ Events:
                 - {Handler: Php/RequestHandlers/Api, Priority: 400}
                 - {Handler: Php/RequestHandlers/Routes, Priority: 390}
         Api:
+            Before:
+                - {Handler: Php/Dispatchers/ApiCache::cacheRead}
             Request:
                 - {Handler: Php/Dispatchers/DiscoverDispatcher}
                 - {Handler: Php/Dispatchers/EntityDispatcher}
                 - {Handler: Php/Dispatchers/ServiceDispatcher}
+            After:
+                - {Handler: Php/Dispatchers/ApiCache::cacheSave}
 
 Services:
     ExecuteEntityMethodFlow:
@@ -87,3 +91,13 @@ Services:
         Class: \Webiny\AnalyticsDb\AnalyticsDb
         Arguments:
             Mongo: @Mongo.Webiny
+    Hrc:
+        Class: \Webiny\Hrc\Hrc
+        Arguments:
+            CacheRules: []
+            CacheStorage:
+                Object: \Webiny\Hrc\CacheStorage\Mongo
+                ObjectArguments: [@Mongo.Webiny]
+            IndexStorage:
+                Object: \Webiny\Hrc\IndexStorage\Mongo
+                ObjectArguments: [@Mongo.Webiny]
