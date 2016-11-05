@@ -7,8 +7,12 @@ class TableEditComponent extends Webiny.Ui.Component {
         super(props);
 
         this.state = {
-            rows: props.entity.data.rows || [[]],
-            headers: props.entity.data.headers || [],
+            rows: props.entity.data.rows || [{
+                key: Draft.genKey(), columns: [
+                    {key: Draft.genKey(), data: null}
+                ]
+            }],
+            headers: props.entity.data.headers || [{key: Draft.genKey(), data: null}],
             numberOfColumns: props.entity.data.numberOfColumns || 1,
             focusedEditor: null
         };
@@ -37,19 +41,19 @@ class TableEditComponent extends Webiny.Ui.Component {
     }
 
     updateRowData(editorState, rowI, colI) {
-        this.state.rows[rowI][colI] = editorState;
+        this.state.rows[rowI].columns[colI].data = editorState;
         this.setState({rows: this.state.rows}, () => {
             const entityData = this.props.entity.data;
-            entityData.rows[rowI][colI] = Draft.convertToRaw(editorState.getCurrentContent());
+            entityData.rows[rowI].columns[colI].data = Draft.convertToRaw(editorState.getCurrentContent());
             Draft.Entity.mergeData(this.props.entity.key, entityData);
         });
     }
 
     updateHeaderData(editorState, colI) {
-        this.state.headers[colI] = editorState;
+        this.state.headers[colI].data = editorState;
         this.setState({headers: this.state.headers}, () => {
             const entityData = this.props.entity.data;
-            entityData.headers[colI] = Draft.convertToRaw(editorState.getCurrentContent());
+            entityData.headers[colI].data = Draft.convertToRaw(editorState.getCurrentContent());
             Draft.Entity.mergeData(this.props.entity.key, entityData);
         });
     }
@@ -73,16 +77,16 @@ class TableEditComponent extends Webiny.Ui.Component {
     }
 
     editColumn(index, insert = true) {
-        let spliceArgs = [index, 0, null];
-        if (!insert) {
-            spliceArgs = [index, 1];
-        }
         const rows = _.cloneDeep(this.state.rows);
+        // Insert a new column into each row
         _.each(rows, row => {
-            row.splice(...spliceArgs);
+            let spliceArgs = insert ? [index, 0, {key: Draft.genKey(), data: null}] : [index, 1];
+            row.columns.splice(...spliceArgs);
         });
 
+        // Insert header column
         const headers = _.cloneDeep(this.state.headers);
+        let spliceArgs = insert ? [index, 0, {key: Draft.genKey(), data: null}] : [index, 1];
         headers.splice(...spliceArgs);
         const numberOfColumns = headers.length;
         const entityData = this.props.entity.data;
@@ -109,9 +113,14 @@ class TableEditComponent extends Webiny.Ui.Component {
     }
 
     editRow(index, insert = true) {
-        let spliceArgs = [index, 0, []];
-        if (!insert) {
-            spliceArgs = [index, 1];
+        let spliceArgs = [index, 1];
+        if (insert) {
+            const columns = Array.from(new Array(this.state.numberOfColumns), (x, i) => i);
+            spliceArgs = [index, 0, {
+                key: Draft.genKey(), columns: columns.map(() => {
+                    return {key: Draft.genKey(), data: null};
+                })
+            }];
         }
         const rows = _.cloneDeep(this.state.rows);
         const entityData = this.props.entity.data;
@@ -151,13 +160,13 @@ TableEditComponent.defaultProps = {
                                 readOnly = !_.isEqual(this.state.focusedEditor, key);
                             }
                             return (
-                                <th key={colI} onMouseDown={() => this.setFocus('head', 0, colI)}>
+                                <th key={headers[colI].key} onMouseDown={() => this.setFocus('head', 0, colI)}>
                                     <Editor
                                         preview={this.props.editor.getPreview()}
                                         readOnly={readOnly}
                                         toolbar="floating"
                                         plugins={this.plugins()}
-                                        value={headers[colI]}
+                                        value={headers[colI].data}
                                         convertToRaw={false}
                                         delay={1}
                                         onChange={editorState => this.updateHeaderData(editorState, colI)}/>
@@ -169,7 +178,7 @@ TableEditComponent.defaultProps = {
                     <tbody>
                     {rows.map((row, rowI) => {
                         return (
-                            <tr key={rowI}>
+                            <tr key={row.key}>
                                 {columns.map((col, colI) => {
                                     let readOnly = !this.props.editor.getReadOnly();
                                     if (!readOnly) {
@@ -178,13 +187,13 @@ TableEditComponent.defaultProps = {
                                     }
 
                                     return (
-                                        <td key={colI} onMouseDown={() => this.setFocus('body', rowI, colI)}>
+                                        <td key={row.columns[colI].key} onMouseDown={() => this.setFocus('body', rowI, colI)}>
                                             <Editor
                                                 preview={this.props.editor.getPreview()}
                                                 readOnly={readOnly}
                                                 toolbar="floating"
                                                 plugins={this.plugins()}
-                                                value={row[colI]}
+                                                value={row.columns[colI].data}
                                                 convertToRaw={false}
                                                 delay={1}
                                                 onChange={editorState => this.updateRowData(editorState, rowI, colI)}/>

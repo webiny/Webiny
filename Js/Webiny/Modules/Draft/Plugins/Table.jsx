@@ -22,9 +22,18 @@ class TablePlugin extends AtomicPlugin {
                 type: this.name,
                 mutability: 'IMMUTABLE',
                 data: {
-                    headers: [],
-                    rows: [[],[]],
-                    numberOfColumns: 2
+                    headers: [
+                        {key: Draft.genKey(), data: null}
+                    ],
+                    rows: [
+                        {
+                            key: Draft.genKey(),
+                            columns: [
+                                {key: Draft.genKey(), data: null}
+                            ]
+                        }
+                    ],
+                    numberOfColumns: 1
                 }
             }
         };
