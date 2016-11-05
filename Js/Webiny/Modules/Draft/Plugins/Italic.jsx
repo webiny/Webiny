@@ -10,14 +10,14 @@ class ItalicPlugin extends InlineStylePlugin {
     }
 
     getEditConfig() {
-        return _.merge(super.getEditConfig(), {
+        return {
             toolbar: <Ui.Draft.Toolbar.InlineStyle icon="fa-italic" plugin={this}/>,
             handleKeyCommand: (command, editor) => {
                 if (command === 'italic' && editor.getEditorState().getSelection().isCollapsed()) {
                     return true;
                 }
             }
-        });
+        };
     }
 }
 

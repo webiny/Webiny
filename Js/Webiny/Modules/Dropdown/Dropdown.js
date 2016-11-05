@@ -30,6 +30,7 @@ class Dropdown extends Webiny.Ui.Component {
 
 Dropdown.defaultProps = {
     closeOnClick: true,
+    disabled: false,
     renderer() {
         const props = _.clone(this.props);
 
@@ -46,9 +47,11 @@ Dropdown.defaultProps = {
             this.id
         );
 
+        const buttonClasses = this.classSet('btn btn-default dropdown-toggle', {disabled: this.props.disabled});
+
         return (
             <div className={classes}>
-                <button className="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                <button className={buttonClasses} type="button" data-toggle="dropdown">
                     {props.title}
                     <span className="caret"></span>
                 </button>

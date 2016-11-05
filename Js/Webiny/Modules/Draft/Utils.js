@@ -61,7 +61,7 @@ const utils = {
                 characterList: Immutable.List(Immutable.Repeat(charData, text.length || 1)) // eslint-disable-line new-cap
             }),
 
-            // new contentblock so we can continue wrting right away after inserting the block
+            // new contentblock so we can continue writing right away after inserting the block
             new Draft.ContentBlock({
                 key: Draft.genKey(),
                 type: 'unstyled',
@@ -156,7 +156,7 @@ const utils = {
         }
     },
 
-    getSelectionCoords: (editor, toolbar) => {
+    getSelectionCoords: (editor) => {
         const editorBounds = editor.getBoundingClientRect();
         const rangeBounds = Draft.getVisibleSelectionRect(window);
 
@@ -165,11 +165,9 @@ const utils = {
         }
 
         const rangeWidth = rangeBounds.right - rangeBounds.left;
-        const toolbarHeight = toolbar.offsetHeight;
-        // const rangeHeight = rangeBounds.bottom - rangeBounds.top;
-        const offsetLeft = (rangeBounds.left - editorBounds.left) + (rangeWidth / 2);
-        const offsetTop = rangeBounds.top - editorBounds.top - (toolbarHeight + 14);
-        return {offsetLeft, offsetTop};
+        const left = (rangeBounds.left - editorBounds.left) + (rangeWidth / 2);
+        const top = rangeBounds.top - editorBounds.top;
+        return {left, top};
     },
     toHtml: (editorState, plugins) => {
         const contentState = Draft.convertToRaw(editorState.getCurrentContent());

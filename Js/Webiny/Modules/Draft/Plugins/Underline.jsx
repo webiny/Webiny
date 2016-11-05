@@ -10,14 +10,14 @@ class UnderlinePlugin extends InlineStylePlugin {
     }
 
     getEditConfig() {
-        return _.merge(super.getEditConfig(), {
+        return {
             toolbar: <Ui.Draft.Toolbar.InlineStyle icon="fa-underline" plugin={this}/>,
             handleKeyCommand: (command, editor) => {
                 if (command === 'underline' && editor.getEditorState().getSelection().isCollapsed()) {
                     return true;
                 }
             }
-        });
+        };
     }
 }
 

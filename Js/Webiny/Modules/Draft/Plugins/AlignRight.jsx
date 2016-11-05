@@ -10,15 +10,15 @@ class AlignRightPlugin extends BlockTypePlugin {
     }
 
     getEditConfig() {
-        return _.merge(super.getEditConfig(), {
-            toolbar: <Ui.Draft.Toolbar.BlockType icon="fa-align-right" plugin={this}/>,
+        return {
+            toolbar: <Ui.Draft.Toolbar.BlockType icon="fa-align-right" plugin={this} tooltip="Align block to the right"/>,
             blockRenderMap: {
                 'align-right': {
                     element: null,
                     wrapper: <span className="text-right"/>
                 }
             }
-        });
+        };
     }
 }
 

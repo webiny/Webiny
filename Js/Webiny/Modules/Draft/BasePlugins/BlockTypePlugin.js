@@ -17,9 +17,7 @@ class BlockTypePlugin extends BasePlugin {
         if (this.editor.getReadOnly()) {
             return false;
         }
-        const editorState = this.editor.getEditorState();
-        const selection = editorState.getSelection();
-        return this.block === editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getType();
+        return this.block === this.getStartBlockType();
     }
 }
 

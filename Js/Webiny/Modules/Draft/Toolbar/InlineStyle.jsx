@@ -10,9 +10,15 @@ InlineStyle.defaultProps = {
     renderer(){
         const isActive = this.props.plugin.isActive();
         const disabled = this.props.plugin.isDisabled();
-        const onClick = () => this.props.plugin.toggleStyle();
+        const props = {
+            disabled,
+            type: isActive ? 'primary' : 'default',
+            onClick: () => this.props.plugin.toggleStyle(),
+            icon: this.props.icon,
+            tooltip: this.props.tooltip
+        };
         return (
-            <Ui.Button disabled={disabled} type={isActive ? 'primary' : 'default'} onClick={onClick} icon={this.props.icon}/>
+            <Ui.Button {...props}/>
         );
     }
 };

@@ -26,7 +26,7 @@ class SyntaxHighlightPlugin extends BasePlugin {
     getEditConfig() {
         let render = {};
         let renderIndex = {};
-        return _.merge(super.getEditConfig(), {
+        return {
             decorators: [
                 {
                     strategy: (contentBlock, callback) => {
@@ -92,7 +92,7 @@ class SyntaxHighlightPlugin extends BasePlugin {
                 this.editor.setEditorState(DraftCodeBlock.handleTab(e, editorState));
                 return true;
             }
-        });
+        };
     }
 }
 

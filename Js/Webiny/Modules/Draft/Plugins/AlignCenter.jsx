@@ -10,15 +10,15 @@ class AlignCenterPlugin extends BlockTypePlugin {
     }
 
     getEditConfig() {
-        return _.merge(super.getEditConfig(), {
-            toolbar: <Ui.Draft.Toolbar.BlockType icon="fa-align-center" plugin={this}/>,
+        return {
+            toolbar: <Ui.Draft.Toolbar.BlockType icon="fa-align-center" plugin={this} tooltip="Align block to the center"/>,
             blockRenderMap: {
                 'align-center': {
                     element: null,
                     wrapper: <span className="text-center"/>
                 }
             }
-        });
+        };
     }
 }
 

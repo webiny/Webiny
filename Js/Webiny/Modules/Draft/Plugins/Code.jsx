@@ -26,8 +26,8 @@ class CodePlugin extends EntityPlugin {
     }
 
     getEditConfig() {
-        return _.merge(super.getEditConfig(), {
-            toolbar: <Ui.Draft.Toolbar.Entity icon="fa-terminal" plugin={this}/>,
+        return {
+            toolbar: <Ui.Draft.Toolbar.Entity icon="fa-terminal" plugin={this} tooltip="Code quote"/>,
             decorators: [
                 {
                     strategy: this.entity,
@@ -38,7 +38,7 @@ class CodePlugin extends EntityPlugin {
                     }
                 }
             ]
-        });
+        };
     }
 }
 

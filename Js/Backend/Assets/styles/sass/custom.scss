@@ -395,21 +395,18 @@
   }
 }
 
-/** CODEMIRROR **/
-.CodeMirror {
-  min-height: 50px;
-}
-
-/** END OF CODEMIRROR**/
-
 /** DRAFT EDITOR **/
 .rich-editor {
+  .CodeMirror {
+    min-height: 45px;
+    height: auto;
+  }
   &__root {
     background: #fff;
     border: 1px solid #ddd;
     padding: 15px;
 
-    .toolbar-action > button {
+    .toolbar-action button:not(.dropdown-toggle) {
       padding: 7px;
       border-radius: 0;
     }
@@ -508,6 +505,7 @@
     padding: 0;
     border: none;
     background-color: transparent;
+    position: relative;
   }
   .rich-editor__editor {
     margin: 0;
@@ -518,6 +516,29 @@
     }
   }
 
+  .editor-toolbar {
+    position: absolute;
+    top: -80px;
+    z-index: 200;
+    background-color: #fff;
+    padding: 6px 0 6px 8px;
+    border-top: 4px solid #FA5723;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    .btn {
+      font-size: 12px;
+      font-weight: 400;
+      &.btn-primary {
+        color: white;
+      }
+    }
+  }
+}
+
+.editor-toolbar {
+  .dropdown > .btn {
+    height: 28px;
+    line-height: 100%;
+  }
 }
 
 /** END OF DRAFT EDITOR **/

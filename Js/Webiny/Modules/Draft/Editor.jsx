@@ -1,5 +1,8 @@
 import Webiny from 'Webiny';
+import Utils from './Utils';
 import PluginsContainer from './PluginsContainer';
+import Toolbar from './Toolbar';
+import FloatingToolbar from './FloatingToolbar';
 const Ui = Webiny.Ui.Components;
 
 class Editor extends Webiny.Ui.Component {
@@ -12,40 +15,33 @@ class Editor extends Webiny.Ui.Component {
 
         this.state = {
             readOnly: props.readOnly,
-            editorState: this.initialize(props)
+            editorState: Draft.EditorState.createEmpty(this.plugins.getDecorators())
         };
+
+        this.state.editorState = this.initialize(props);
     }
 
     initialize(props) {
-        let editorState = null;
-        if (!props.value) {
-            editorState = Draft.EditorState.createEmpty(this.plugins.getDecorators());
+        if (_.isPlainObject(props.value) && _.has(props.value, 'blocks')) {
+            const newEditorState = Draft.EditorState.createWithContent(Draft.convertFromRaw(props.value), this.plugins.getDecorators());
+            return Draft.EditorState.forceSelection(newEditorState, this.state.editorState.getSelection());
         }
 
-        if (props.value) {
-            if (_.isPlainObject(props.value)) {
-                editorState = Draft.EditorState.createWithContent(Draft.convertFromRaw(props.value), this.plugins.getDecorators());
-            } else {
-                editorState = props.value;
-            }
-        }
-
-        return editorState;
+        return this.state.editorState;
     }
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        const editorState = this.initialize(props);
-        if (editorState) {
-            this.setState({editorState});
+        if(!_.has(this.props.value, 'blocks')){
+            const editorState = this.initialize(props);
+            if (editorState) {
+                this.setState({editorState});
+            }
         }
 
         if (props.preview !== this.props.preview) {
             this.plugins.setPreview(props.preview);
-            return this.setState({
-                readOnly: props.preview,
-                editorState: Draft.EditorState.createWithContent(this.state.editorState.getCurrentContent(), this.plugins.getDecorators())
-            }, this.forceRerender);
+            return this.setState({readOnly: props.preview}, this.forceRerender);
         }
 
         return this.setState({
@@ -73,7 +69,12 @@ class Editor extends Webiny.Ui.Component {
     }
 
     onChange(editorState) {
-        this.props.onChange(editorState);
+        clearTimeout(this.delay);
+        this.delay = null;
+        this.delay = setTimeout(() => {
+            this.props.onChange(this.props.convertToRaw ? Draft.convertToRaw(editorState.getCurrentContent()) : editorState)
+        }, this.props.delay);
+        this.setState({editorState});
     }
 
     getEditorState() {
@@ -91,7 +92,6 @@ class Editor extends Webiny.Ui.Component {
             getEditorState: this.getEditorState,
             setEditorState: this.onChange,
             setReadOnly: this.setReadOnly,
-            setPluginConfig: (name, config) => this.plugins.getPlugin(name).setConfig(config),
             getReadOnly: () => _.get(this.state, 'readOnly', this.props.readOnly),
             getDecorators: () => this.plugins.getDecorators(),
             getPreview: () => this.props.preview,
@@ -114,7 +114,9 @@ class Editor extends Webiny.Ui.Component {
 }
 
 Editor.defaultProps = {
+    delay: 400,
     value: null,
+    convertToRaw: true,
     plugins: [],
     preview: false,
     readOnly: false,
@@ -126,8 +128,13 @@ Editor.defaultProps = {
         }
 
         let toolbar = null;
-        if (this.props.toolbar) {
-            toolbar = <Toolbar readOnly={this.state.readOnly} plugins={this.plugins} editorMethods={this.getEditorMethods()}/>;
+        if (this.props.toolbar === true) {
+            toolbar = <Toolbar readOnly={this.state.readOnly} plugins={this.plugins}/>;
+        }
+
+        if (this.props.toolbar === 'floating') {
+            const show = !editorState.getSelection().isCollapsed() && !this.state.readOnly;
+            toolbar = <FloatingToolbar editor={this} show={show} plugins={this.plugins}/>;
         }
 
         this.plugins.setPreview(this.props.preview);
@@ -153,26 +160,13 @@ Editor.defaultProps = {
                         onTab={this.plugins.getOnTabFn()}
                         placeholder={this.props.placeholder}
                         spellCheck={true}/>
+                    {this.plugins.getCustomViews().map((view, i) => {
+                        return <div className="custom-view" key={i}>{view}</div>;
+                    })}
                 </div>
             </div>
         );
     }
 };
 
-const Toolbar = (props) => {
-    return (
-        <div className="editor-toolbar">
-            {props.plugins.getToolbarActions().map((action, i) => {
-                return (
-                    <span key={i} className="toolbar-action">
-                        {React.cloneElement(action, {editor: props.editorMethods})}
-                    </span>
-                );
-            })}
-        </div>
-    );
-};
-
 export default Editor;
-
-// Bold, Italic, Headings, quote (blockquote), unordered list, ordered list, link, image

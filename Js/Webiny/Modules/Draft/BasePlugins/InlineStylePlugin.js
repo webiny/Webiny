@@ -38,15 +38,17 @@ class InlineStylePlugin extends BasePlugin {
         if (this.editor.getReadOnly()) {
             return false;
         }
+
         const editorState = this.editor.getEditorState();
-        const contentState = editorState.getCurrentContent();
         const selection = editorState.getSelection();
 
         if (selection.isCollapsed()) {
-            const blockKey = selection.getStartKey();
-            return contentState.getBlockForKey(blockKey).getInlineStyleAt(selection.getAnchorOffset()).has(this.style);
+            const block = this.getStartBlock();
+            if (block) {
+                return block.getInlineStyleAt(selection.getAnchorOffset()).has(this.style);
+            }
+            return null;
         }
-
         return editorState.getCurrentInlineStyle().has(this.style);
     }
 }
