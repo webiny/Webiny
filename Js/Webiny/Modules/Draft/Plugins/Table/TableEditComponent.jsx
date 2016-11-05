@@ -145,10 +145,10 @@ TableEditComponent.defaultProps = {
                     <Ui.Dropdown.Link onClick={this.insertColumnBefore} icon="fa-plus" title="Insert before"/>
                     <Ui.Dropdown.Link onClick={this.insertColumnAfter} icon="fa-plus" title="Insert after"/>
                     <Ui.Dropdown.Link onClick={this.deleteColumn} icon="fa-remove" title="Delete" renderIf={headers.length > 1}/>
-                    <Ui.Dropdown.Header title="Row" renderIf={isBody && rows.length > 1}/>
+                    <Ui.Dropdown.Header title="Row" renderIf={isBody}/>
                     <Ui.Dropdown.Link onClick={this.insertRowBefore} icon="fa-plus" title="Insert before" renderIf={isBody}/>
                     <Ui.Dropdown.Link onClick={this.insertRowAfter} icon="fa-plus" title="Insert after" renderIf={isBody}/>
-                    <Ui.Dropdown.Link onClick={this.deleteRow} icon="fa-remove" title="Delete" renderIf={isBody}/>
+                    <Ui.Dropdown.Link onClick={this.deleteRow} icon="fa-remove" title="Delete" renderIf={isBody && rows.length > 1}/>
                 </Ui.Dropdown>
                 <table className="table table-striped">
                     <thead>
