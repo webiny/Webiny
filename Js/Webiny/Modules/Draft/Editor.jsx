@@ -15,40 +15,33 @@ class Editor extends Webiny.Ui.Component {
 
         this.state = {
             readOnly: props.readOnly,
-            editorState: this.initialize(props)
+            editorState: Draft.EditorState.createEmpty(this.plugins.getDecorators())
         };
+
+        this.state.editorState = this.initialize(props);
     }
 
     initialize(props) {
-        let editorState = null;
-        if (!props.value) {
-            editorState = Draft.EditorState.createEmpty(this.plugins.getDecorators());
+        if (_.isPlainObject(props.value) && _.has(props.value, 'blocks')) {
+            const newEditorState = Draft.EditorState.createWithContent(Draft.convertFromRaw(props.value), this.plugins.getDecorators());
+            return Draft.EditorState.forceSelection(newEditorState, this.state.editorState.getSelection());
         }
 
-        if (props.value) {
-            if (_.isPlainObject(props.value)) {
-                editorState = Draft.EditorState.createWithContent(Draft.convertFromRaw(props.value), this.plugins.getDecorators());
-            } else {
-                editorState = props.value;
-            }
-        }
-
-        return editorState;
+        return this.state.editorState;
     }
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        const editorState = this.initialize(props);
-        if (editorState) {
-            this.setState({editorState});
+        if(!_.has(this.props.value, 'blocks')){
+            const editorState = this.initialize(props);
+            if (editorState) {
+                this.setState({editorState});
+            }
         }
 
         if (props.preview !== this.props.preview) {
             this.plugins.setPreview(props.preview);
-            return this.setState({
-                readOnly: props.preview,
-                editorState: Draft.EditorState.createWithContent(this.state.editorState.getCurrentContent(), this.plugins.getDecorators())
-            }, this.forceRerender);
+            return this.setState({readOnly: props.preview}, this.forceRerender);
         }
 
         return this.setState({
@@ -76,7 +69,12 @@ class Editor extends Webiny.Ui.Component {
     }
 
     onChange(editorState) {
-        this.props.onChange(editorState);
+        clearTimeout(this.delay);
+        this.delay = null;
+        this.delay = setTimeout(() => {
+            this.props.onChange(this.props.convertToRaw ? Draft.convertToRaw(editorState.getCurrentContent()) : editorState)
+        }, this.props.delay);
+        this.setState({editorState});
     }
 
     getEditorState() {
@@ -94,13 +92,9 @@ class Editor extends Webiny.Ui.Component {
             getEditorState: this.getEditorState,
             setEditorState: this.onChange,
             setReadOnly: this.setReadOnly,
-            setPluginConfig: (name, config) => this.plugins.getPlugin(name).setConfig(config),
             getReadOnly: () => _.get(this.state, 'readOnly', this.props.readOnly),
             getDecorators: () => this.plugins.getDecorators(),
             getPreview: () => this.props.preview,
-            getProps: () => {
-                return this.props;
-            },
             updateBlockData: (block, data) => {
                 const {editorState} = this.state;
                 const selection = new Draft.SelectionState({
@@ -120,7 +114,9 @@ class Editor extends Webiny.Ui.Component {
 }
 
 Editor.defaultProps = {
+    delay: 400,
     value: null,
+    convertToRaw: true,
     plugins: [],
     preview: false,
     readOnly: false,
@@ -138,7 +134,7 @@ Editor.defaultProps = {
 
         if (this.props.toolbar === 'floating') {
             const show = !editorState.getSelection().isCollapsed() && !this.state.readOnly;
-            toolbar = <FloatingToolbar show={show} plugins={this.plugins}/>;
+            toolbar = <FloatingToolbar editor={this} show={show} plugins={this.plugins}/>;
         }
 
         this.plugins.setPreview(this.props.preview);

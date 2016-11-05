@@ -145,13 +145,21 @@ TableEditComponent.defaultProps = {
                     <thead>
                     <tr>
                         {columns.map((col, colI) => {
+                            let readOnly = !this.props.editor.getReadOnly();
+                            if (!readOnly) {
+                                const key = {type: 'head', row: 0, col: colI};
+                                readOnly = !_.isEqual(this.state.focusedEditor, key);
+                            }
                             return (
                                 <th key={colI} onMouseDown={() => this.setFocus('head', 0, colI)}>
                                     <Editor
                                         preview={this.props.editor.getPreview()}
+                                        readOnly={readOnly}
                                         toolbar="floating"
                                         plugins={this.plugins()}
                                         value={headers[colI]}
+                                        convertToRaw={false}
+                                        delay={1}
                                         onChange={editorState => this.updateHeaderData(editorState, colI)}/>
                                 </th>
                             );
@@ -163,13 +171,22 @@ TableEditComponent.defaultProps = {
                         return (
                             <tr key={rowI}>
                                 {columns.map((col, colI) => {
+                                    let readOnly = !this.props.editor.getReadOnly();
+                                    if (!readOnly) {
+                                        const key = {type: 'body', row: rowI, col: colI};
+                                        readOnly = !_.isEqual(this.state.focusedEditor, key);
+                                    }
+
                                     return (
                                         <td key={colI} onMouseDown={() => this.setFocus('body', rowI, colI)}>
                                             <Editor
                                                 preview={this.props.editor.getPreview()}
+                                                readOnly={readOnly}
                                                 toolbar="floating"
                                                 plugins={this.plugins()}
                                                 value={row[colI]}
+                                                convertToRaw={false}
+                                                delay={1}
                                                 onChange={editorState => this.updateRowData(editorState, rowI, colI)}/>
                                         </td>
                                     );

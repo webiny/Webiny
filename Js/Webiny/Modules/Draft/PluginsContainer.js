@@ -67,11 +67,6 @@ export default class PluginsContainer {
         this.config.preview.extendedBlockRenderMap = Draft.DefaultDraftBlockRenderMap.merge(Immutable.Map(this.config.preview.blockRenderMap));
     }
 
-    getPlugin(name) {
-        const pluginIndex = _.findIndex(this.plugins, p => p.name === name);
-        return this.plugins[pluginIndex];
-    }
-
     buildPlugin(plugin, target) {
         this.props.map(prop => {
             if (_.has(plugin, prop)) {

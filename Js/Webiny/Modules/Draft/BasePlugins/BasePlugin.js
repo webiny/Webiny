@@ -14,6 +14,23 @@ class BasePlugin {
         return Webiny.Ui.Dispatcher.createSignal(this, call, params);
     }
 
+    getStartBlockType(defaultValue = null) {
+        const editorState = this.editor.getEditorState();
+        const selection = editorState.getSelection();
+        const block = editorState.getCurrentContent().getBlockForKey(selection.getStartKey());
+        if (block) {
+            return block.getType();
+        }
+        return defaultValue;
+    }
+
+    getStartBlock() {
+        const editorState = this.editor.getEditorState();
+        const selection = editorState.getSelection();
+        const block = editorState.getCurrentContent().getBlockForKey(selection.getStartKey());
+        return block || null;
+    }
+
     isDisabled() {
         return this.editor.getReadOnly();
     }

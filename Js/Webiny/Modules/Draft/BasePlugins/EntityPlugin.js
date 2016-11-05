@@ -44,6 +44,7 @@ class EntityPlugin extends BasePlugin {
         if (this.editor.getReadOnly()) {
             return false;
         }
+
         const editorState = this.editor.getEditorState();
         const entityKey = Utils.getEntityKeyForSelection(editorState.getCurrentContent(), editorState.getSelection());
         return entityKey && Draft.Entity.get(entityKey).getType().toUpperCase() === this.entity.toUpperCase();

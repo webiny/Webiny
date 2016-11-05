@@ -28,6 +28,7 @@ Button.defaultProps = {
     style: null,
     label: null,
     onClick: _.noop,
+    tooltip: null,
     renderer() {
         const props = _.clone(this.props);
 
@@ -66,7 +67,15 @@ Button.defaultProps = {
         if (icon) {
             content = <span>{content}</span>;
         }
-        return <button {..._.pick(props, ['style', 'onClick', 'disabled'])} type="button" className={classes}>{icon} {content}</button>;
+
+        let button = <button {..._.pick(props, ['style', 'onClick', 'disabled'])} type="button" className={classes}>{icon} {content}</button>;
+
+        if (this.props.tooltip) {
+            const Ui = Webiny.Ui.Components;
+            button = <Ui.Tooltip target={button} placement="top">{this.props.tooltip}</Ui.Tooltip>;
+        }
+
+        return button;
     }
 };
 

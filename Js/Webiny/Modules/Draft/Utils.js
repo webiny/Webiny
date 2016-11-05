@@ -165,9 +165,9 @@ const utils = {
         }
 
         const rangeWidth = rangeBounds.right - rangeBounds.left;
-        const offsetLeft = (rangeBounds.left - editorBounds.left) + (rangeWidth / 2);
-        const offsetTop = rangeBounds.top - editorBounds.top;
-        return {offsetLeft, offsetTop};
+        const left = (rangeBounds.left - editorBounds.left) + (rangeWidth / 2);
+        const top = rangeBounds.top - editorBounds.top;
+        return {left, top};
     },
     toHtml: (editorState, plugins) => {
         const contentState = Draft.convertToRaw(editorState.getCurrentContent());

@@ -23,9 +23,7 @@ class HeadingPlugin extends BlockTypePlugin {
     getEditConfig() {
         return {
             toolbar: () => {
-                const editorState = this.editor.getEditorState();
-                const selection = editorState.getSelection();
-                const type = editorState.getCurrentContent().getBlockForKey(selection.getStartKey()).getType();
+                let type = this.getStartBlockType('unstyled');
 
                 return (
                     <Ui.Dropdown title={_.get(map, type, 'Normal')} disabled={this.editor.getReadOnly()}>
