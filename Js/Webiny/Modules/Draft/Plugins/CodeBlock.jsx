@@ -124,8 +124,8 @@ class CodeBlockPlugin extends AtomicPlugin {
     }
 
     getEditConfig() {
-        return _.merge(super.getEditConfig(), {
-            toolbar: <Ui.Draft.Toolbar.Atomic icon="fa-code" plugin={this}/>,
+        return {
+            toolbar: <Ui.Draft.Toolbar.Atomic icon="fa-code" plugin={this} tooltip="Insert code block"/>,
             blockRendererFn: (contentBlock) => {
                 const plugin = contentBlock.getData().get('plugin');
                 if (contentBlock.getType() === 'atomic' && plugin === this.name) {
@@ -135,11 +135,11 @@ class CodeBlockPlugin extends AtomicPlugin {
                     };
                 }
             }
-        });
+        };
     }
 
     getPreviewConfig() {
-        return _.merge(super.getPreviewConfig(), {
+        return {
             blockRendererFn: (contentBlock) => {
                 const plugin = contentBlock.getData().get('plugin');
                 if (contentBlock.getType() === 'atomic' && plugin === this.name) {
@@ -149,7 +149,7 @@ class CodeBlockPlugin extends AtomicPlugin {
                     };
                 }
             }
-        });
+        };
     }
 }
 

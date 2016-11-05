@@ -100,8 +100,8 @@ class ReactSandboxPlugin extends AtomicPlugin {
     }
 
     getEditConfig() {
-        return _.merge(super.getEditConfig(), {
-            toolbar: <Ui.Draft.Toolbar.Atomic icon="fa-play" plugin={this}/>,
+        return {
+            toolbar: <Ui.Draft.Toolbar.Atomic icon="fa-play" plugin={this} tooltip="React sandbox"/>,
             blockRendererFn: (contentBlock) => {
                 const plugin = contentBlock.getData().get('plugin');
                 if (contentBlock.getType() === 'atomic' && plugin === this.name) {
@@ -111,7 +111,7 @@ class ReactSandboxPlugin extends AtomicPlugin {
                     };
                 }
             }
-        });
+        };
     }
 
     getPreviewConfig() {

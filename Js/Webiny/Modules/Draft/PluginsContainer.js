@@ -7,6 +7,7 @@ export default class PluginsContainer {
         this.config = {
             edit: {
                 toolbar: [],
+                customView: [],
                 blockRenderMap: {},
                 blockRendererFn: [],
                 blockStyleFn: [],
@@ -20,6 +21,7 @@ export default class PluginsContainer {
             },
             preview: {
                 toolbar: [],
+                customView: [],
                 blockRenderMap: {},
                 blockRendererFn: [],
                 blockStyleFn: [],
@@ -45,7 +47,8 @@ export default class PluginsContainer {
             'keyBindingFn',
             'handleReturn',
             'onTab',
-            'toolbar'
+            'toolbar',
+            'customView'
         ];
 
         plugins.map(plugin => {
@@ -249,5 +252,9 @@ export default class PluginsContainer {
 
     getToolbarActions() {
         return this.config[this.mode].toolbar;
+    }
+
+    getCustomViews() {
+        return this.config[this.mode].customView;
     }
 }

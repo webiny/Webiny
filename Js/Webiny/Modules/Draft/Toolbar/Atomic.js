@@ -9,10 +9,16 @@ Atomic.defaultProps = {
     icon: null,
     renderer(){
         const disabled = this.props.plugin.isDisabled();
+        const props = {
+            disabled,
+            type: 'default',
+            onClick: () => this.props.plugin.createBlock(),
+            icon: this.props.icon,
+            tooltip: this.props.tooltip
+        };
+
         return (
-            <Ui.Button disabled={disabled} type="default" onClick={() => this.props.plugin.createBlock()} icon={this.props.icon}>
-                {this.props.children}
-            </Ui.Button>
+            <Ui.Button {...props}>{this.props.children}</Ui.Button>
         );
     }
 };

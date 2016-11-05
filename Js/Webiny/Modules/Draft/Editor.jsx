@@ -1,5 +1,8 @@
 import Webiny from 'Webiny';
+import Utils from './Utils';
 import PluginsContainer from './PluginsContainer';
+import Toolbar from './Toolbar';
+import FloatingToolbar from './FloatingToolbar';
 const Ui = Webiny.Ui.Components;
 
 class Editor extends Webiny.Ui.Component {
@@ -95,6 +98,9 @@ class Editor extends Webiny.Ui.Component {
             getReadOnly: () => _.get(this.state, 'readOnly', this.props.readOnly),
             getDecorators: () => this.plugins.getDecorators(),
             getPreview: () => this.props.preview,
+            getProps: () => {
+                return this.props;
+            },
             updateBlockData: (block, data) => {
                 const {editorState} = this.state;
                 const selection = new Draft.SelectionState({
@@ -126,8 +132,13 @@ Editor.defaultProps = {
         }
 
         let toolbar = null;
-        if (this.props.toolbar) {
-            toolbar = <Toolbar readOnly={this.state.readOnly} plugins={this.plugins} editorMethods={this.getEditorMethods()}/>;
+        if (this.props.toolbar === true) {
+            toolbar = <Toolbar readOnly={this.state.readOnly} plugins={this.plugins}/>;
+        }
+
+        if (this.props.toolbar === 'floating') {
+            const show = !editorState.getSelection().isCollapsed() && !this.state.readOnly;
+            toolbar = <FloatingToolbar show={show} plugins={this.plugins}/>;
         }
 
         this.plugins.setPreview(this.props.preview);
@@ -153,26 +164,13 @@ Editor.defaultProps = {
                         onTab={this.plugins.getOnTabFn()}
                         placeholder={this.props.placeholder}
                         spellCheck={true}/>
+                    {this.plugins.getCustomViews().map((view, i) => {
+                        return <div className="custom-view" key={i}>{view}</div>;
+                    })}
                 </div>
             </div>
         );
     }
 };
 
-const Toolbar = (props) => {
-    return (
-        <div className="editor-toolbar">
-            {props.plugins.getToolbarActions().map((action, i) => {
-                return (
-                    <span key={i} className="toolbar-action">
-                        {React.cloneElement(action, {editor: props.editorMethods})}
-                    </span>
-                );
-            })}
-        </div>
-    );
-};
-
 export default Editor;
-
-// Bold, Italic, Headings, quote (blockquote), unordered list, ordered list, link, image

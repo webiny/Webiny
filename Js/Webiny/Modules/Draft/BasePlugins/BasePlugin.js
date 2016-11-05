@@ -29,11 +29,11 @@ class BasePlugin {
     }
 
     getEditConfig() {
-        return {};
+        return _.clone({});
     }
 
     getPreviewConfig() {
-        return this.getEditConfig();
+        return _.clone(this.getEditConfig());
     }
 }
 

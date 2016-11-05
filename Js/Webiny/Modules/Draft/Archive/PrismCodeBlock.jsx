@@ -111,7 +111,7 @@ class CodeBlockPlugin extends AtomicPlugin {
     }
 
     getEditConfig() {
-        return _.merge(super.getEditConfig(), {
+        return {
             toolbar: <Ui.Draft.Toolbar.Atomic icon="fa-code" plugin={this}/>,
             blockRendererFn: (contentBlock) => {
                 const plugin = contentBlock.getData().get('plugin');
@@ -122,7 +122,7 @@ class CodeBlockPlugin extends AtomicPlugin {
                     };
                 }
             }
-        });
+        };
     }
 }
 

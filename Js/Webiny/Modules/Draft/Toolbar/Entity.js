@@ -11,10 +11,16 @@ Entity.defaultProps = {
         const isActive = this.props.plugin.isActive();
         const disabled = this.props.plugin.isDisabled();
         const click = isActive ? this.props.plugin.removeEntity : this.props.plugin.setEntity;
+        const props = {
+            disabled,
+            type: isActive ? 'primary' : 'default',
+            onClick: click.bind(this.props.plugin),
+            icon: this.props.icon,
+            tooltip: this.props.tooltip
+        };
+
         return (
-            <Ui.Button disabled={disabled} type={isActive ? 'primary' : 'default'} onClick={click.bind(this.props.plugin)} icon={this.props.icon}>
-                {this.props.children}
-            </Ui.Button>
+            <Ui.Button {...props}>{this.props.children}</Ui.Button>
         );
     }
 };

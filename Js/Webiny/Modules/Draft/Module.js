@@ -9,9 +9,12 @@ import BlockType from './Toolbar/BlockType';
 import Entity from './Toolbar/Entity';
 import Atomic from './Toolbar/Atomic';
 
+import Heading from './Plugins/Heading';
 import Bold from './Plugins/Bold';
 import Italic from './Plugins/Italic';
 import Underline from './Plugins/Underline';
+import UnorderedList from './Plugins/UnorderedList';
+import OrderedList from './Plugins/OrderedList';
 import AlignLeft from './Plugins/AlignLeft';
 import AlignCenter from './Plugins/AlignCenter';
 import AlignRight from './Plugins/AlignRight';
@@ -22,7 +25,6 @@ import CodeBlock from './Plugins/CodeBlock';
 import ReactSandbox from './Plugins/ReactSandbox';
 import Table from './Plugins/Table';
 import ToJSON from './Plugins/ToJSON';
-import SyntaxHighlight from './Plugins/SyntaxHighlight';
 
 
 class Module extends Webiny.Module {
@@ -44,9 +46,12 @@ class Module extends Webiny.Module {
             EntityPlugin,
             AtomicPlugin,
             Plugins: {
+                Heading,
                 Bold,
                 Italic,
                 Underline,
+                UnorderedList,
+                OrderedList,
                 AlignLeft,
                 AlignCenter,
                 AlignRight,
@@ -56,8 +61,7 @@ class Module extends Webiny.Module {
                 CodeBlock,
                 ReactSandbox,
                 Table,
-                ToJSON,
-                SyntaxHighlight
+                ToJSON
             }
         };
     }

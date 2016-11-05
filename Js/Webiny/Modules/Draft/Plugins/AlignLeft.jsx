@@ -10,15 +10,15 @@ class AlignLeftPlugin extends BlockTypePlugin {
     }
 
     getEditConfig() {
-        return _.merge(super.getEditConfig(), {
-            toolbar: <Ui.Draft.Toolbar.BlockType icon="fa-align-left" plugin={this}/>,
+        return {
+            toolbar: <Ui.Draft.Toolbar.BlockType icon="fa-align-left" plugin={this} tooltip="Align block to the left"/>,
             blockRenderMap: {
                 'align-left': {
                     element: null,
                     wrapper: <span className="text-left"/>
                 }
             }
-        });
+        };
     }
 }
 

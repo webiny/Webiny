@@ -10,9 +10,9 @@ class BlockquotePlugin extends BlockTypePlugin {
     }
 
     getEditConfig() {
-        return _.merge(super.getEditConfig(), {
-            toolbar: <Ui.Draft.Toolbar.BlockType icon="fa-quote-right" plugin={this}/>
-        });
+        return {
+            toolbar: <Ui.Draft.Toolbar.BlockType icon="fa-quote-right" plugin={this} tooltip="Make a quote"/>
+        };
     }
 }
 

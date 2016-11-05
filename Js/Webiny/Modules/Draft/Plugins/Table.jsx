@@ -33,8 +33,8 @@ class TablePlugin extends AtomicPlugin {
     }
 
     getEditConfig() {
-        return _.merge(super.getEditConfig(), {
-            toolbar: <Ui.Draft.Toolbar.Atomic icon="fa-table" plugin={this}/>,
+        return {
+            toolbar: <Ui.Draft.Toolbar.Atomic icon="fa-table" plugin={this} tooltip="Insert a table"/>,
             blockRendererFn: (contentBlock) => {
                 const plugin = contentBlock.getData().get('plugin');
                 if (contentBlock.getType() === 'atomic' && plugin === this.name) {
@@ -44,7 +44,7 @@ class TablePlugin extends AtomicPlugin {
                     };
                 }
             }
-        });
+        };
     }
 }
 

@@ -10,14 +10,14 @@ class BoldPlugin extends InlineStylePlugin {
     }
 
     getEditConfig() {
-        return _.merge(super.getEditConfig(), {
+        return {
             toolbar: <Ui.Draft.Toolbar.InlineStyle icon="fa-bold" plugin={this}/>,
             handleKeyCommand: (command) => {
                 if (command === 'bold' && this.editor.getEditorState().getSelection().isCollapsed()) {
                     return true;
                 }
             }
-        });
+        };
     }
 }
 

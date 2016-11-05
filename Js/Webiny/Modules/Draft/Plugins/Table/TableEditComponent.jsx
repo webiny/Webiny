@@ -23,10 +23,17 @@ class TableEditComponent extends Webiny.Ui.Component {
             'deleteColumn',
             'editColumn'
         );
-    }
 
-    getEntity() {
-
+        this.plugins = () => [
+            new Webiny.Draft.Plugins.Bold(),
+            new Webiny.Draft.Plugins.Italic(),
+            new Webiny.Draft.Plugins.Underline(),
+            new Webiny.Draft.Plugins.AlignLeft(),
+            new Webiny.Draft.Plugins.AlignCenter(),
+            new Webiny.Draft.Plugins.AlignRight(),
+            new Webiny.Draft.Plugins.Link(),
+            new Webiny.Draft.Plugins.Code()
+        ];
     }
 
     updateRowData(editorState, rowI, colI) {
@@ -84,6 +91,8 @@ class TableEditComponent extends Webiny.Ui.Component {
             entityData.headers = headers;
             entityData.numberOfColumns = numberOfColumns;
             Draft.Entity.mergeData(this.props.entity.key, entityData);
+            const editorState = this.props.editor.getEditorState();
+            this.props.editor.setEditorState(Draft.EditorState.push(editorState, editorState.getCurrentContent(), `insert-column`));
         });
     }
 
@@ -122,12 +131,12 @@ TableEditComponent.defaultProps = {
 
         return (
             <div className="table-wrapper">
-                <Ui.Dropdown title="Actions" className="balloon" align="right">
+                <Ui.Dropdown title="Actions" className="balloon" align="right" renderIf={!this.props.editor.getPreview()}>
                     <Ui.Dropdown.Header title="Column"/>
                     <Ui.Dropdown.Link onClick={this.insertColumnBefore} icon="fa-plus" title="Insert before"/>
                     <Ui.Dropdown.Link onClick={this.insertColumnAfter} icon="fa-plus" title="Insert after"/>
                     <Ui.Dropdown.Link onClick={this.deleteColumn} icon="fa-remove" title="Delete" renderIf={headers.length > 1}/>
-                    <Ui.Dropdown.Header title="Row" renderIf={isBody}/>
+                    <Ui.Dropdown.Header title="Row" renderIf={isBody && rows.length > 1}/>
                     <Ui.Dropdown.Link onClick={this.insertRowBefore} icon="fa-plus" title="Insert before" renderIf={isBody}/>
                     <Ui.Dropdown.Link onClick={this.insertRowAfter} icon="fa-plus" title="Insert after" renderIf={isBody}/>
                     <Ui.Dropdown.Link onClick={this.deleteRow} icon="fa-remove" title="Delete" renderIf={isBody}/>
@@ -139,7 +148,9 @@ TableEditComponent.defaultProps = {
                             return (
                                 <th key={colI} onMouseDown={() => this.setFocus('head', 0, colI)}>
                                     <Editor
-                                        toolbar={false}
+                                        preview={this.props.editor.getPreview()}
+                                        toolbar="floating"
+                                        plugins={this.plugins()}
                                         value={headers[colI]}
                                         onChange={editorState => this.updateHeaderData(editorState, colI)}/>
                                 </th>
@@ -155,7 +166,9 @@ TableEditComponent.defaultProps = {
                                     return (
                                         <td key={colI} onMouseDown={() => this.setFocus('body', rowI, colI)}>
                                             <Editor
-                                                toolbar={false}
+                                                preview={this.props.editor.getPreview()}
+                                                toolbar="floating"
+                                                plugins={this.plugins()}
                                                 value={row[colI]}
                                                 onChange={editorState => this.updateRowData(editorState, rowI, colI)}/>
                                         </td>
