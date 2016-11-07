@@ -35,7 +35,12 @@ class Router {
             });
 
             History.Adapter.bind(window, 'statechange', () => {
-                const url = History.getState().data.url || History.getState().url;
+                let url = History.getState().data.url || History.getState().url;
+                url = url.replace(this.appUrl, '');
+                if (url === '') {
+                    url = '/';
+                }
+
                 if (!url.startsWith(this.baseUrl)) {
                     return Utils.handleRouteNotMatched(url, this.routeNotMatched);
                 }
@@ -250,6 +255,10 @@ class Router {
         }
         Utils.setBaseUrl(this.baseUrl);
         return this;
+    }
+
+    setTitle(title) {
+        document.title = this.getTitlePattern().replace('%s', title);
     }
 
     setTitlePattern(pattern) {
