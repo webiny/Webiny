@@ -160,6 +160,12 @@ class TableEditComponent extends Webiny.Ui.Component {
         this.setState({rows}, () => {
             entityData.rows = rows;
             Draft.Entity.mergeData(this.props.entity.key, entityData);
+
+            // Focus first cell of the next available row
+            if (rows.length < index + 1) {
+                index = rows.length - 1;
+            }
+            this.setFocus('body', index, 0, true);
         });
     }
 }
