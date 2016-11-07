@@ -8,16 +8,11 @@ class ReactSandboxEditComponent extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
 
-        this.bindMethods('updateEntityData,parseCode');
-
-        const entityKey = props.block.getEntityAt(0);
-        let entityData = {};
-        if (entityKey) {
-            entityData = Draft.Entity.get(entityKey).get('data');
-        }
+        this.bindMethods('updateEntityData,parseCode,toggleCode');
 
         this.state = {
-            value: entityData.code || ''
+            value: _.get(props, 'entity.data.code', ''),
+            hideCode: _.get(props, 'entity.data.hideCode', false)
         };
     }
 
@@ -36,21 +31,33 @@ class ReactSandboxEditComponent extends Webiny.Ui.Component {
             code = eval(Babel.transform(this.state.value, {presets: ['react', 'es2015']}).code);
             this.setState({code, key: _.uniqueId('code-')});
         } catch (e) {
+            console.log(e.message);
             this.setState({code: null});
         }
     }
 
     updateEntityData(data) {
-        const block = this.props.block;
-        const entityKey = block.getEntityAt(0);
-        if (entityKey) {
-            Draft.Entity.mergeData(entityKey, data);
-        }
+        Draft.Entity.mergeData(this.props.entity.key, data);
+    }
+
+    toggleCode(flag) {
+        this.setState({hideCode: flag}, () => {
+            this.updateEntityData({hideCode: flag});
+        });
     }
 }
 
 ReactSandboxEditComponent.defaultProps = {
     renderer(){
+        if (this.props.editor.getPreview() && this.state.hideCode) {
+            return (
+                <Ui.Grid.Row>
+                    <Ui.Grid.Col all={6}>
+                        {React.isValidElement(this.state.code) && this.state.code}
+                    </Ui.Grid.Col>
+                </Ui.Grid.Row>
+            );
+        }
         const editorProps = {
             ref: 'editor',
             mode: 'text/jsx',
@@ -68,8 +75,19 @@ ReactSandboxEditComponent.defaultProps = {
                 </Ui.Grid.Col>
                 <Ui.Grid.Col all={4}>
                     <div className="component-plugin-wrapper">
-                        <Ui.Button icon="fa-play" onClick={this.parseCode}/>
-                        {React.isValidElement(this.state.code) && this.state.code}
+                        <div className="component-plugin-wrapper__toolbar">
+                            <Ui.Button icon="fa-play" onClick={this.parseCode} align="left"/>
+                            <Ui.Checkbox
+                                renderIf={!this.props.editor.getPreview()}
+                                style={{marginTop: 3}}
+                                label="Hide code"
+                                grid={8}
+                                value={this.state.hideCode}
+                                onChange={this.toggleCode}/>
+                        </div>
+                        <div className="component-plugin-wrapper__code">
+                            {React.isValidElement(this.state.code) && this.state.code}
+                        </div>
                     </div>
                 </Ui.Grid.Col>
             </Ui.Grid.Row>

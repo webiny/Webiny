@@ -11,6 +11,7 @@ CodeEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     mode: 'text/html',
     theme: 'monokai',
     readOnly: false,
+    onFocus: _.noop,
     renderer() {
         const cssConfig = {
             'form-group': true,
@@ -24,6 +25,7 @@ CodeEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             className: 'form-control',
             value: this.props.value,
             onChange: this.props.onChange,
+            onFocus: this.props.onFocus,
             placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder),
             theme: this.props.theme,
             mode: this.props.mode,

@@ -6,6 +6,7 @@ class Textarea extends Webiny.Ui.FormComponent {
 }
 
 Textarea.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
+    delay: 400,
     renderer() {
         const cssConfig = {
             'form-group': true,
@@ -26,7 +27,7 @@ Textarea.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         return (
             <div className={this.classSet(cssConfig)}>
                 {this.renderLabel()}
-                <Webiny.Ui.Components.DelayedOnChange>
+                <Webiny.Ui.Components.DelayedOnChange delay={this.props.delay}>
                     <textarea {...props}/>
                 </Webiny.Ui.Components.DelayedOnChange>
                 {this.renderDescription()}

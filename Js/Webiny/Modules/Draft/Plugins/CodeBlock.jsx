@@ -17,53 +17,34 @@ class CodeBlockEditComponent extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
 
-        this.bindMethods('switchLanguage,updateEntityData');
-
-        const entityKey = props.block.getEntityAt(0);
-        let entityData = {};
-        if (entityKey) {
-            entityData = Draft.Entity.get(entityKey).get('data');
-        }
-
-        this.state = {
-            value: entityData.code || '',
-            language: entityData.language || 'jsx'
-        };
+        this.bindMethods('switchLanguage');
     }
 
     switchLanguage(language) {
         this.refs.editor.focus();
-        this.setState({language}, () => {
-            this.updateEntityData({language});
-        });
-    }
-
-    updateEntityData(data) {
-        const block = this.props.block;
-        const entityKey = block.getEntityAt(0);
-        if (entityKey) {
-            Draft.Entity.mergeData(entityKey, data);
-        }
+        this.props.updateBlockData({language});
     }
 }
 
 CodeBlockEditComponent.defaultProps = {
-    renderer(){
+    renderer() {
         const editorProps = {
             ref: 'editor',
-            mode: languageMap[this.state.language],
-            value: this.state.value,
+            mode: languageMap[this.props.data.language],
+            value: this.props.data.code || '',
+            onFocus: () => {
+                this.props.editor.setReadOnly(true)
+            },
             onChange: value => {
-                this.setState({value}, () => {
-                    this.updateEntityData({code: value});
-                });
+                this.props.updateBlockData({code: value});
             }
         };
+
         return (
             <Ui.Grid.Row>
                 <Ui.Grid.Col all={12} className="code-block">
                     <div style={{position: 'absolute', right: 20, top: 5}}>
-                        <Ui.Dropdown title={this.state.language} className="balloon">
+                        <Ui.Dropdown title={this.props.data.language || 'jsx'} className="balloon">
                             <Ui.Dropdown.Header title="Language"/>
                             <Ui.Dropdown.Link title="HTML" onClick={() => this.switchLanguage('html')}/>
                             <Ui.Dropdown.Link title="JSON" onClick={() => this.switchLanguage('json')}/>
@@ -85,17 +66,11 @@ class CodeBlockPreviewComponent extends Webiny.Ui.Component {
 
 CodeBlockPreviewComponent.defaultProps = {
     renderer(){
-        const entityKey = this.props.block.getEntityAt(0);
-        let entityData = {};
-        if (entityKey) {
-            entityData = Draft.Entity.get(entityKey).get('data');
-        }
-
-        const language = entityData.language === 'jsx' ? 'html' : entityData.language;
+        const language = this.props.data.language === 'jsx' ? 'html' : this.props.data.language;
 
         return (
             <div className="code-block code-block--preview">
-                <Ui.CodeHighlight language={language}>{entityData.code}</Ui.CodeHighlight>
+                <Ui.CodeHighlight language={language}>{this.props.data.code}</Ui.CodeHighlight>
             </div>
         );
     }

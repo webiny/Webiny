@@ -9,7 +9,7 @@ class Editor extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
 
-        this.bindMethods('initialize', 'focus', 'onChange', 'getEditorState', 'setReadOnly');
+        this.bindMethods('initialize', 'focus', 'onChange', 'getEditorState', 'setReadOnly', 'moveFocusToEnd');
 
         this.plugins = new PluginsContainer(props.plugins, this.getEditorMethods());
 
@@ -32,7 +32,7 @@ class Editor extends Webiny.Ui.Component {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        if(!_.has(this.props.value, 'blocks')){
+        if (!_.has(this.props.value, 'blocks')) {
             const editorState = this.initialize(props);
             if (editorState) {
                 this.setState({editorState});
@@ -49,7 +49,14 @@ class Editor extends Webiny.Ui.Component {
         });
     }
 
+    moveFocusToEnd() {
+        this.setState({editorState: Draft.EditorState.moveFocusToEnd(this.state.editorState)});
+    }
+
     forceRerender() {
+        if (!this.state) {
+            return;
+        }
         const {editorState} = this.state;
         const content = editorState.getCurrentContent();
         const newEditorState = Draft.EditorState.createWithContent(content, this.plugins.getDecorators());
@@ -68,7 +75,7 @@ class Editor extends Webiny.Ui.Component {
         });
     }
 
-    onChange(editorState) {
+    onChange(editorState = null) {
         clearTimeout(this.delay);
         this.delay = null;
         this.delay = setTimeout(() => {
@@ -95,6 +102,7 @@ class Editor extends Webiny.Ui.Component {
             getReadOnly: () => _.get(this.state, 'readOnly', this.props.readOnly),
             getDecorators: () => this.plugins.getDecorators(),
             getPreview: () => this.props.preview,
+            forceRerender: this.forceRerender,
             updateBlockData: (block, data) => {
                 const {editorState} = this.state;
                 const selection = new Draft.SelectionState({
@@ -105,7 +113,7 @@ class Editor extends Webiny.Ui.Component {
                 });
 
                 const newContentState = Draft.Modifier.mergeBlockData(editorState.getCurrentContent(), selection, Immutable.Map(data || {}));
-                const newEditorState = Draft.EditorState.push(editorState, newContentState);
+                const newEditorState = Draft.EditorState.push(editorState, newContentState, 'change-block-data');
 
                 this.onChange(newEditorState);
             }

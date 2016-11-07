@@ -56,7 +56,7 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                 {this.renderInfo()}
 
                 <div className="input-group">
-                    <Webiny.Ui.Components.DelayedOnChange>
+                    <Webiny.Ui.Components.DelayedOnChange delay={this.props.delay}>
                         <input {...props}/>
                     </Webiny.Ui.Components.DelayedOnChange>
                     {this.renderValidationIcon()}

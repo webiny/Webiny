@@ -12,6 +12,8 @@ Entity.defaultProps = {
         const disabled = this.props.plugin.isDisabled();
         const click = isActive ? this.props.plugin.removeEntity : this.props.plugin.setEntity;
         const props = {
+            style: this.props.style || {},
+            className: this.props.className || '',
             disabled,
             type: isActive ? 'primary' : 'default',
             onClick: click.bind(this.props.plugin),

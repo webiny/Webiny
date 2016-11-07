@@ -448,18 +448,24 @@
   }
 
   .component-plugin-wrapper {
-    padding: 20px;
-    border-radius: 0px;
-    //-webkit-box-shadow: inset -1px 2px 20px -5px rgba(135, 135, 135, 1);
-    //-moz-box-shadow: inset -1px 2px 20px -5px rgba(135, 135, 135, 1);
-    //box-shadow: inset -1px 2px 20px -5px rgba(135, 135, 135, 1);
+    border: 1px solid grey;
     float: left;
     width: 100%;
-    border: 1px solid grey;
+    &__code {
+      padding: 20px;
 
-    .form-group {
-      .clearfix::before, .clearfix::after {
-        content: ''
+      .form-group {
+        .clearfix::before, .clearfix::after {
+          content: ''
+        }
+      }
+    }
+    &__toolbar {
+      button {
+        border-top: 0;
+        border-left: 0;
+        border-radius: 0;
+        padding: 7px;
       }
     }
   }

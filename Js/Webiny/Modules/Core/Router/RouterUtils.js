@@ -43,7 +43,7 @@ class RouterUtils {
     renderRoute(route) {
         const content = this.getRouteContent(route);
         return Webiny.ViewManager.render(content).then(() => {
-            document.title = Webiny.Router.getTitlePattern().replace('%s', route.getTitle() || route.getPattern());
+            Webiny.Router.setTitle(route.getTitle() || route.getPattern());
             return route;
         });
     }
@@ -76,7 +76,7 @@ class RouterUtils {
 
         // Execute before change callbacks in a chain
         const routerEvent = new RouterEvent(matchedRoute);
-        let routeWillChangeChain = Q(routerEvent);
+        let routeWillChangeChain = Promise.resolve(routerEvent);
         callbacks.forEach(callback => {
             routeWillChangeChain = routeWillChangeChain.then(createLink(callback), this.exceptionHandler);
         });
@@ -104,7 +104,7 @@ class RouterUtils {
 
     handleRouteNotMatched(url, callbacks) {
         const rEvent = new RouterEvent(url);
-        let routeNotMatchedChain = Q(rEvent);
+        let routeNotMatchedChain = Promise.resolve(rEvent);
         callbacks.forEach(callback => {
             routeNotMatchedChain = routeNotMatchedChain.then(() => {
                 return callback(rEvent);
@@ -114,7 +114,6 @@ class RouterUtils {
         routeNotMatchedChain = routeNotMatchedChain.then(() => {
             if (!rEvent.isStopped()) {
                 // If URL starts with loaded app prefix, go to default route
-
                 if (this.baseUrl !== '/' && url.startsWith(this.baseUrl)) {
                     url = Webiny.Router.getDefaultRoute().getHref();
                     History.replaceState({url, replace: true}, null, url);
@@ -129,7 +128,7 @@ class RouterUtils {
                 return Webiny.Router.goToRoute(rEvent.goTo, rEvent.goToParams);
             }
 
-            return Q(true);
+            return Promise.resolve(true);
         });
 
         return routeNotMatchedChain;

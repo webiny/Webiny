@@ -28,6 +28,7 @@ Checkbox.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     label: '',
     grid: 3,
     className: null,
+    style: null,
     optionIndex: null,
     labelRenderer() {
         let tooltip = null;
@@ -51,7 +52,7 @@ Checkbox.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         };
 
         return (
-            <div className={css}>
+            <div className={css} style={this.props.style}>
                 <input id={this.id} type="checkbox" {...checkboxProps}/>
                 <label htmlFor={this.id}>{this.renderLabel()}</label>
                 {this.renderValidationMessage()}
