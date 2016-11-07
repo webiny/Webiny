@@ -30,9 +30,9 @@ trait ApiTokenControlTrait
         $myHost = $this->wConfig()->getConfig()->get('Application.WebPath');
         if ($this->url($myHost)->getHost() != $requestHost) {
             // Check if referrer has an ApiToken
-            $requestToken = $req->query('token');
+            $requestToken = $req->query('apiToken');
             if (!$requestToken) {
-                $requestToken = $req->header('X-Webiny-Api-Token');
+                $requestToken = urldecode($req->header('X-Webiny-Api-Token'));
             }
 
             $isService = $instance instanceof AbstractService;

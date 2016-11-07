@@ -34,7 +34,7 @@ class Storage
         $configPath = realpath(dirname(__FILE__) . '/../../../../') . '/';
 
         // init StorageProvider
-        self::$appRootStorage = new StorageProvider(new LocalStorageDriver($configPath, ''));
+        self::$appRootStorage = new StorageProvider(new LocalStorageDriver(['Directory' => $configPath]));
     }
 
     /**

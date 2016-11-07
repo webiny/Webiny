@@ -1,5 +1,7 @@
 {
     "dependencies": {
+        "draft-js": "^0.9.1",
+        "prismjs": "^1.5.1",
         "quill": "^1.0.3"
     }
 }

@@ -65,6 +65,9 @@
         "dynamics": false,
         "Clipboard": false,
         "hljs": false,
-        "Quill": false
+        "Quill": false,
+        "Draft": true,
+        "Immutable": true,
+        "Prism": true
     }
 }

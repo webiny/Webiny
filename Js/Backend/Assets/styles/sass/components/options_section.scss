@@ -1,16 +1,20 @@
-.options-section{
+.options-section {
   margin-bottom: 20px;
-  .options-header{
+  .options-header {
     height: 75px;
     text-align: left;
     border-bottom: 3px solid red;
     margin-bottom: 10px;
-    .options-title{
+    .options-title {
       display: inline-block;
       margin-top: 35px;
       font-weight: 600;
+      > .checkbox-default {
+        padding-left: 0;
+        padding-right: 0;
+      }
     }
-    .search-container{
+    .search-container {
       display: inline-block;
       float: right;
       margin: 15px 0 0 0;
@@ -19,23 +23,23 @@
       .search {
         display: inline-block;
       }
-      
-      label{
+
+      label {
         font-size: 14px;
         vertical-align: middle;
         min-height: 10px;
         margin-right: 10px;
       }
-      .selectize{
+      .selectize {
         display: inline-block;
       }
-      .selectize-control{
+      .selectize-control {
         width: 250px;
       }
     }
   }
-  .options-content{
-    .form-group{
+  .options-content {
+    .form-group {
       display: inline-block;
       vertical-align: top;
       margin: 15px 20px 0 0;

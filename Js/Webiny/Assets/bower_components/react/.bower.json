@@ -5,16 +5,15 @@
     "react-dom.js"
   ],
   "ignore": [],
-  "homepage": "https://github.com/facebook/react-bower",
-  "version": "15.3.1",
-  "_release": "15.3.1",
+  "homepage": "https://github.com/reactjs/react-bower",
+  "version": "15.3.2",
+  "_release": "15.3.2",
   "_resolution": {
     "type": "version",
-    "tag": "v15.3.1",
-    "commit": "4a2f923c09b6a90836589827ed2857d28a180717"
+    "tag": "v15.3.2",
+    "commit": "412983d5d56fc955e9c8a9c8c6d4e6a4717ad6b2"
   },
-  "_source": "https://github.com/facebook/react-bower.git",
-  "_target": "^15.3.1",
-  "_originalSource": "react",
-  "_direct": true
+  "_source": "https://github.com/reactjs/react-bower.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/reactjs/react-bower.git"
 }

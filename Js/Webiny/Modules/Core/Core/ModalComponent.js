@@ -1,12 +1,18 @@
 import Webiny from 'Webiny';
 import Component from './Component'; // Need to import this file directly because at this point `Webiny` is not fully populated
 
-
 class ModalComponent extends Component {
 
     constructor(props) {
         super(props);
         this.bindMethods('show,hide,renderDialog');
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        const omitProps = ['renderer', 'renderDialog'];
+        const newProps = _.omit(nextProps, omitProps);
+        const oldProps = _.omit(this.props, omitProps);
+        return !_.isEqual(newProps, oldProps) || !_.isEqual(nextState, this.state);
     }
 
     hide() {

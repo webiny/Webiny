@@ -8,26 +8,6 @@ class Authentication extends Webiny.Modules.Authentication {
             new Webiny.Route('Login', '/login', Login, 'Login').setLayout('empty'),
             new Webiny.Route('Forbidden', '/forbidden', this.renderForbidden(), 'Forbidden')
         );
-
-        // Periodically check if logged in user is still an administrator and update his most recent data
-        const api = new Webiny.Api.Endpoint('/entities/core/users');
-        setInterval(() => {
-            const user = Webiny.Model.get('User');
-            if (!user) {
-                return;
-            }
-
-            api.get('/me', {_fields: this.getUserFields()}).then(apiResponse => {
-                if (!apiResponse.isError()) {
-                    const data = apiResponse.getData();
-                    if (!_.find(data.roles, {slug: 'administrator'})) {
-                        return this.onLogout();
-                    }
-                    return Webiny.Model.set('User', data);
-                }
-                return this.onLogout();
-            });
-        }, 5000);
     }
 }
 

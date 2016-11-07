@@ -7,6 +7,7 @@
 
 namespace Apps\Core\Php\RequestHandlers;
 
+use Apps\Core\Php\DevTools\Response\ApiResponse;
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Webiny\Component\EventManager\Event;
 use Webiny\Component\Http\Request;
@@ -18,6 +19,11 @@ use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
 class ApiEvent extends Event
 {
     use WebinyTrait;
+
+    /**
+     * @var ApiResponse
+     */
+    protected $response = null;
 
     /**
      * Get URL part of the string relevant to API
@@ -32,5 +38,25 @@ class ApiEvent extends Event
         $url = $this->wRequest()->getCurrentUrl(true)->val();
         $apiPath = $this->wConfig()->getConfig()->get('Application.ApiPath');
         return $this->str($url)->replace($apiPath, '')->explode('?')->first();
+    }
+
+    /**
+     * Set response object
+     * @param ApiResponse $response
+     *
+     * @return $this
+     */
+    public function setResponse(ApiResponse $response = null){
+        $this->response = $response;
+        return $this;
+    }
+
+    /**
+     * Get response object
+     * @return ApiResponse
+     */
+    public function getResponse()
+    {
+        return $this->response;
     }
 }

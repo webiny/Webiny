@@ -29,6 +29,10 @@
   }
 }
 
+.block-dismiss {
+  float: right;
+}
+
 .header-options{
   display: inline-block;
   margin: 10px 0 0 0;
@@ -51,7 +55,7 @@
     i{
       display: inline-block;
       vertical-align: middle;
-      
+
       color: $darkIconColor;
       font-size: 19px;
     }
@@ -67,15 +71,15 @@
 }
 
 .block-title {
-  margin: 0 0 0 0;
+  margin: 0 20px 0 0;
   font-weight: 600;
   font-size: 22px;
   display: inline-block;
   vertical-align: middle;
   float: left;
-  width: 75%;
+  max-width: 75%;
   @media (min-width: 486px){
-    width: 50%;
+    max-width: 50%;
   }
 }
 .block-title-light {
@@ -85,12 +89,12 @@
   opacity: 0.8;
   vertical-align: middle;
   float: right;
+  text-transform: uppercase;
   @media (max-width: 486px){
     float: left;
     width: 100%;
   }
 }
-
 
 .block-content{
   padding: 5px 20px 30px 20px;
@@ -98,10 +102,105 @@
   min-height: 295px;
   overflow: hidden;
   @media (min-width:486px){
-  padding:5px 30px 30px 30px;
+    padding:5px 30px 30px 30px;
     height: 295px;
+  }
+
+  ul {
+  }
+
+  li {
+    list-style-type: none;
+    padding: 0;
+  }
 }
+
+.block-content--empty {
+  text-align: center;
+
+  .blank-state-image {
+    margin-top: 50px;
+    min-height: 100px;
+  }
+
+  p {
+    color: #a9a9a9;
+    font-size: 13px;
+    text-transform: uppercase;
+  }
 }
+
+.block-post {
+  background-color: #fff;
+  margin-bottom: 40px;
+
+  @media (min-width: 767px) {
+    display: flex;
+    margin-bottom: 10px;
+  }
+}
+
+.block-post__thumbnail {
+  min-width: 240px;
+  min-height: 150px;
+  overflow: hidden;
+
+  background-color: #ddd;
+
+  img {
+    width: auto;
+    height: auto;
+    min-width: 100%;
+    min-height: 100%;
+  }
+}
+
+.block-post__content {
+  padding: 20px;
+}
+
+.block-post__category {
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.block-post__title {
+  margin-top: 0;
+  margin-bottom: 10px;
+
+  font-size: 24px;
+  font-weight: normal;
+}
+
+.block-post__excerpt {
+  margin-bottom: 0;
+
+  color: #666666;
+  font-size: 14px;
+}
+
+.block-list__item {
+  display: flex;
+  margin: 33px 0;
+}
+
+.block-list__item-image {
+  margin-right: 35px;
+}
+
+.block-list__item-text {
+  color: #393939;
+}
+
+.block-content--dynamic-height {
+  height: auto;
+  min-height: 0;
+}
+
+.block-content--transparent {
+  background-color: transparent;
+}
+
 .block-footer{
   padding: 5px 25px 25px 25px;
   background-color: white;
@@ -291,25 +390,25 @@
         }
         .list-item-container{
           padding-bottom: 8px;
-            .list-number{
-              margin: 15px 0 0 0;
-              display: inline-block;
-              border: none;
-              vertical-align: middle;
-              font-size: 27px;
-              color: $lighterFontcolor;
+          .list-number{
+            margin: 15px 0 0 0;
+            display: inline-block;
+            border: none;
+            vertical-align: middle;
+            font-size: 27px;
+            color: $lighterFontcolor;
+          }
+          .list-text{
+            display: inline-block;
+            margin: 15px 0 0 10px;
+            font-size: 14px;
+            vertical-align: middle;
+            width: calc(100% - 35px);
+            @media(min-width: 768px){
+              width: calc(100% - 300px);
+              font-size: 16px;
             }
-            .list-text{
-              display: inline-block;
-              margin: 15px 0 0 10px;
-              font-size: 14px;
-              vertical-align: middle;
-              width: calc(100% - 35px);
-              @media(min-width: 768px){
-                width: calc(100% - 300px);
-                font-size: 16px;
-              }
-            }
+          }
 
           .list-item-timestamp{
             display: inline-block;
@@ -338,7 +437,7 @@
 
 .notifications-block{
   .block-title{
-    width: 40%;
+    max-width: 40%;
   }
   .block-content{
     padding: 10px 10px 20px 10px;
@@ -387,6 +486,14 @@
     .unread-notification{
       .icon,p {
         color: $fadedTextColor;
+      }
+    }
+  }
+
+  @media (max-width: 484px) {
+    ul {
+      li {
+        margin: 0 20px 0 0;
       }
     }
   }
@@ -465,8 +572,8 @@
           }
         }
         .task-check-done{
-            color: $highlightColor;
-            cursor: pointer;
+          color: $highlightColor;
+          cursor: pointer;
         }
 
       }
@@ -536,6 +643,3 @@
     margin: 0 0 0 35px;
   }
 }
-
-
-

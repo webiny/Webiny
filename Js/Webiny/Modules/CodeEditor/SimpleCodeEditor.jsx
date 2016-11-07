@@ -32,6 +32,10 @@ class CodeEditor extends Webiny.Ui.Component {
             // the "+ ''" sort a strange with splitLines method within CodeMirror
             this.codeMirror.setValue(props.value + '');
         }
+
+        if (this.props.mode !== props.mode) {
+            this.codeMirror.setOption('mode', props.mode);
+        }
     }
 
     shouldComponentUpdate() {
@@ -40,6 +44,10 @@ class CodeEditor extends Webiny.Ui.Component {
 
     getTextareaElement() {
         return $(ReactDOM.findDOMNode(this)).find('textarea')[0];
+    }
+
+    focus() {
+        this.codeMirror.focus();
     }
 }
 

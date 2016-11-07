@@ -34,7 +34,7 @@ Col.defaultProps = {
     className: '',
     style: null,
     renderer() {
-        const props = _.clone(this.props);
+        let props = _.clone(this.props);
         let cssClasses = [];
 
         const cls = _.trim(props.className);
@@ -50,7 +50,13 @@ Col.defaultProps = {
             }
         });
 
-        return <div style={this.props.style} className={this.classSet(cssClasses)}>{this.props.children}</div>;
+        props = _.omit(props, ['children', 'renderer', 'className', 'all'].concat(Object.keys(propsMap)));
+
+        return (
+            <div className={this.classSet(cssClasses)} {...props}>
+                {this.props.children}
+            </div>
+        );
     }
 };
 

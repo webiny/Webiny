@@ -1,8 +1,6 @@
-const translations = {
-    en_GB: {
-        'Selecto.Backend.Billing.InvoicesList.c7699f35c47afc1dc52a7bb914be10b3': 'Are you sure you want to approve invoice {invoiceNumber}?'
-    }
-};
+import Webiny from 'Webiny';
+
+let translations = {};
 
 /**
  * This is responsible for replacing given text with given values
@@ -44,13 +42,25 @@ function replaceVariables(text, values) {
     });
 }
 
-
 const i18n = function i18n(key, text, variables) {
-    const output = _.get(translations[i18n.language], key, text);
+    const output = i18n.getTranslation(key) || text;
     return replaceVariables(output, variables);
 };
 
-i18n.language = 'en_GB';
+i18n.language = '';
+i18n.api = null;
+
+/**
+ * Used for rendering text in DOM
+ * @param key
+ * @param label
+ * @param variables
+ * @param options
+ * @returns {XML}
+ */
+i18n.render = function render(key, label, variables, options) {
+    return <Webiny.Ui.Components.I18N placeholder={label} translationKey={key} variables={variables} options={options}/>;
+};
 
 // Following methods are plain-simple for now - let's make them smarter in the near future
 i18n.price = function price(value, currency = '£') {
@@ -72,6 +82,54 @@ i18n.time = function time(value, format = 'HH:mm') {
 
 i18n.datetime = function datetime(value, format = 'DD/MMM/YY HH:mm') {
     return moment(value).format(format);
+};
+
+i18n.getTranslation = function getTranslation(key) {
+    return translations[key] || '';
+};
+
+i18n.setTranslation = function setTranslation(key, translation) {
+    translations[key] = translation;
+    return this;
+};
+
+i18n.getTranslations = function getTranslations() {
+    return _.get(translations);
+};
+
+i18n.hasTranslation = function hasTranslation(key) {
+    return _.get(translations, key);
+};
+
+i18n.setApiEndpoint = function setApiEndpoint(api) {
+    this.api = api;
+    return this;
+};
+
+i18n.getLanguage = function getLanguage() {
+    return this.language;
+};
+
+i18n.setLanguage = function setLanguage(language) {
+    this.language = language;
+    // TODO: Set moment / accounting language settings here
+
+    // First let's get contents from cache
+    if (localStorage[`Webiny.i18n.translations`]) {
+        translations = JSON.parse(localStorage[`Webiny.i18n.translations`]);
+    }
+
+    // First we fetch all translations from server - we send a cache key
+    return this.api.get('', {
+        language: this.language,
+        cacheKey: localStorage[`Webiny.i18n.cacheKey`]
+    }).then(apiResponse => {
+        localStorage[`Webiny.i18n.language`] = this.language;
+        localStorage[`Webiny.i18n.cacheKey`] = apiResponse.getData('cacheKey', null);
+        localStorage[`Webiny.i18n.translations`] = JSON.stringify(apiResponse.getData('translations'));
+        translations = _.assign(translations, apiResponse.getData('translations'));
+        return apiResponse;
+    });
 };
 
 export default i18n;

@@ -10,7 +10,6 @@ namespace Apps\Core\Php\RequestHandlers;
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
-use Apps\Core\Php\Discover\Postman;
 use Webiny\Component\StdLib\StdLibTrait;
 
 class Api
@@ -30,17 +29,23 @@ class Api
             header("Access-Control-Allow-Origin: *");
             $this->apiEvent = new ApiEvent();
 
-            $events = [
-                'Core.Api.Before',
-                'Core.Api.Request'
-            ];
+            $response = null;
 
-            foreach ($events as $event) {
-                $response = $this->wEvents()->fire($event, $this->apiEvent, $this->apiResponse, 1);
-                if ($response) {
-                    return $response;
-                }
+            $beforeResponse = $this->wEvents()->fire('Core.Api.Before', $this->apiEvent, $this->apiResponse, 1);
+            if ($beforeResponse) {
+                return $beforeResponse;
             }
+
+            $response = $this->wEvents()->fire('Core.Api.Request', $this->apiEvent, $this->apiResponse, 1);
+            $this->apiEvent->setResponse($response);
+            $afterResponse = $this->wEvents()->fire('Core.Api.After', $this->apiEvent, $this->apiResponse, 1);
+            if ($afterResponse) {
+                return $afterResponse;
+            }
+
+            return $response;
+
+
         } catch (ApiException $e) {
             // TODO: add exception loggin (ApiExceptionLog - just like ApiTokenLog)
             return new ApiErrorResponse($e->getData(), $e->getErrorMessage(), $e->getErrorCode(), $e->getResponseCode());

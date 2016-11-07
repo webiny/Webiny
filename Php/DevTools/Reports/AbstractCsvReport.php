@@ -4,6 +4,8 @@ namespace Apps\Core\Php\DevTools\Reports;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use League\Csv\Writer;
+use League\Csv\Reader;
+
 use SplTempFileObject;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Storage\File\File;
@@ -48,10 +50,7 @@ abstract class AbstractCsvReport extends AbstractReport
     {
         // the CSV file will be created into a temporary File
         $writer = Writer::createFromFileObject(new SplTempFileObject());
-        $writer->setDelimiter(";");
-        $writer->setNewline("\r\n");
-        $writer->setEncodingFrom("utf-8");
-        $writer->insertOne($this->getHeader());
+        $writer->insertOne($this->getHeader())->setOutputBOM(Reader::BOM_UTF8);
 
         foreach ($this->data as $record) {
             $writer->insertOne($this->getRow($record));

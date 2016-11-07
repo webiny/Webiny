@@ -1,0 +1,18 @@
+.owl-dots {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.owl-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 0 4px;
+  border-radius: 50%;
+
+  background-color: #e8e8e8;
+}
+
+.owl-dot.active {
+  background-color: $color-secondary;
+}
