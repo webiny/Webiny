@@ -11,6 +11,8 @@ InlineStyle.defaultProps = {
         const isActive = this.props.plugin.isActive();
         const disabled = this.props.plugin.isDisabled();
         const props = {
+            style: this.props.style || {},
+            className: this.props.className || '',
             disabled,
             type: isActive ? 'primary' : 'default',
             onClick: () => this.props.plugin.toggleStyle(),

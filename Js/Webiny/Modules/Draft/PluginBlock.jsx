@@ -4,7 +4,7 @@ const Ui = Webiny.Ui.Components;
 class PluginBlock extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
-        this.bindMethods('onMouseDown', 'updateData');
+        this.bindMethods('onMouseDown', 'updateBlockData', 'updateEntityData');
     }
 
     onMouseDown(e) {
@@ -17,8 +17,17 @@ class PluginBlock extends Webiny.Ui.Component {
         e.stopPropagation();
     }
 
-    updateData(data) {
+    updateBlockData(data) {
         this.props.blockProps.editor.updateBlockData(this.props.block, data);
+    }
+
+    updateEntityData(data, key = null) {
+        if (!key) {
+            key = this.props.block.getEntityAt(0);
+        }
+
+        Draft.Entity.mergeData(key, data);
+        this.updateBlockData(data);
     }
 }
 
@@ -40,7 +49,8 @@ PluginBlock.defaultProps = {
             entity: null,
             data,
             editor,
-            updateData: this.updateData,
+            updateBlockData: this.updateBlockData,
+            updateEntityData: this.updateEntityData,
             container: this
         };
 

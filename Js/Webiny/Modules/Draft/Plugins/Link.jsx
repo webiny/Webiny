@@ -5,6 +5,7 @@ import EntityPlugin from './../BasePlugins/EntityPlugin';
 class LinkPlugin extends EntityPlugin {
     constructor(config) {
         super(config);
+        this.validate = _.get(config, 'validate', 'required,url');
         this.name = 'link';
         this.entity = 'LINK';
         this.id = _.uniqueId('insertLink-');
@@ -36,7 +37,7 @@ class LinkPlugin extends EntityPlugin {
                                 <Ui.Modal.Body>
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={12}>
-                                            <Ui.Input name="url" placeholder="Enter a URL" validate="required,url"/>
+                                            <Ui.Input name="url" placeholder="Enter a URL" validate={this.validate}/>
                                             <Ui.Select name="target" placeholder="Select link target" validate="required">
                                                 <option value="_self">Same tab</option>
                                                 <option value="_blank">New tab</option>

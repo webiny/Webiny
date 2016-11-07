@@ -10,6 +10,8 @@ Atomic.defaultProps = {
     renderer(){
         const disabled = this.props.plugin.isDisabled();
         const props = {
+            style: this.props.style || {},
+            className: this.props.className || '',
             disabled,
             type: 'default',
             onClick: () => this.props.plugin.createBlock(),
