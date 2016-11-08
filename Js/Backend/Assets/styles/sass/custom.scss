@@ -315,7 +315,7 @@
   background-color: white;
   height: 369px;
   overflow: visible;
-  padding: 0 20px;
+  padding: 0; /* adding padding to c3js causes visual issues - use margin instead */
   position: relative;
 }
 

@@ -72,10 +72,8 @@ class ApiCache extends AbstractApiDispatcher
         // read cache
         $response = $this->hrc->read('response');
         if ($response !== false) {
-            return new ApiCacheResponse($response);
+            $event->setResponse(new ApiCacheResponse($response));
         }
-
-        return false;
     }
 
     public function cacheSave(ApiEvent $event)
