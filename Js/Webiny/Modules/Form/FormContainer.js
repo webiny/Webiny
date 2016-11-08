@@ -594,7 +594,7 @@ class FormContainer extends Webiny.Ui.Component {
     }
 
     __onKeyDown(e) {
-        if ((e.metaKey || e.ctrlKey) && (['s', 'Enter'].indexOf(e.key) > -1)) {
+        if ((e.metaKey || e.ctrlKey) && (['s', 'Enter'].indexOf(e.key) > -1) && !e.isDefaultPrevented()) {
             // Need to blur current target in case of input fields to trigger validation
             e.target.blur();
             e.preventDefault();

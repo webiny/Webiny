@@ -22,10 +22,16 @@ class TableShortcuts extends BasePlugin {
             },
 
             keyBindingFn: (e) => {
+                if (!this.editor.getEditorState().getSelection().isCollapsed()) {
+                    return false;
+                }
+
                 if (Draft.KeyBindingUtil.hasCommandModifier(e)) {
                     switch (e.keyCode) {
+                        // Cmd + D
                         case 68:
                             return 'insert-table-row';
+                        // Cmd + X
                         case 88:
                             return 'delete-table-row';
                         default:

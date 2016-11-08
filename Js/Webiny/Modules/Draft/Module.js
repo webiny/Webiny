@@ -1,6 +1,8 @@
 import Webiny from 'Webiny';
 import Editor from './Editor';
 import BasePlugin from './BasePlugins/BasePlugin';
+import BlockTypePlugin from './BasePlugins/BlockTypePlugin';
+import InlineStylePlugin from './BasePlugins/InlineStylePlugin';
 import EntityPlugin from './BasePlugins/EntityPlugin';
 import AtomicPlugin from './BasePlugins/AtomicPlugin';
 import Utils from './Utils';
@@ -43,6 +45,8 @@ class Module extends Webiny.Module {
         Webiny.Draft = {
             Utils,
             BasePlugin,
+            BlockTypePlugin,
+            InlineStylePlugin,
             EntityPlugin,
             AtomicPlugin,
             Plugins: {

@@ -417,6 +417,12 @@
     cursor: text;
     margin-top: 10px;
 
+    span[data-text="true"] {
+      font-size: 1.2em;
+      color: #393939;
+      line-height: 150%;
+    }
+
     .public-DraftEditorPlaceholder-root, .public-DraftEditor-content {
       margin: 0 -15px -15px;
       padding: 15px;
@@ -444,6 +450,75 @@
       font-style: italic;
       margin: 16px 0;
       padding: 10px 20px;
+    }
+
+    figure {
+      .row:before,
+      .row:after {
+        content: ''
+      }
+    }
+
+    .warning-block {
+      padding: 55px 55px 55px 110px;
+      background-color: #F7F8FA;
+      position: relative;
+      .warning-text {
+        font-size: 18px;
+        color: #313131;
+        line-height: 1.4em;
+      }
+      .warning-icon {
+        position: absolute;
+        top: 50%;
+        left: 21px;
+        transform: translateY(-50%);
+        font-size: 55px;
+        &:before {
+          font-family: "FontAwesome";
+          font-style: normal;
+          font-weight: normal;
+          speak: none;
+          display: inline-block;
+          text-decoration: inherit;
+          width: 1em;
+          margin-right: .2em;
+          text-align: center;
+          font-variant: normal;
+          text-transform: none;
+          line-height: 1em;
+          margin-left: .2em;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+      }
+      &.warning-block--info .warning-icon {
+        color: #67A5FF;
+        &:before {
+          content: '\f05a';
+        }
+      }
+
+      &.warning-block--error .warning-icon {
+        color: #FF2D02;
+        &:before {
+          content: '\f12a';
+        }
+      }
+
+      &.warning-block--danger .warning-icon {
+        color: #FF8000;
+        &:before {
+          content: '\f071';
+        }
+      }
+
+      &.warning-block--success .warning-icon {
+        color: #84D935;
+        &:before {
+          content: '\f00c';
+        }
+      }
     }
   }
 

@@ -72,7 +72,7 @@ class Editor extends Webiny.Ui.Component {
             if (this.refs.editor) {
                 this.refs.editor.focus();
             }
-        });
+        }, 50);
     }
 
     onChange(editorState = null) {

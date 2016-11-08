@@ -168,6 +168,10 @@ class TableEditComponent extends Webiny.Ui.Component {
             this.setFocus('body', index, 0, true);
         });
     }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return !_.isEqual(nextProps.entity.data, this.props.entity.data) || !_.isEqual(this.state, nextState);
+    }
 }
 
 TableEditComponent.defaultProps = {

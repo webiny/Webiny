@@ -10,6 +10,7 @@ const languageMap = {
     'jsx': 'text/jsx',
     'javascript': 'text/javascript',
     'php': 'text/x-php',
+    'shell': 'text/x-sh',
     'yaml': 'text/x-yaml'
 };
 
@@ -51,6 +52,7 @@ CodeBlockEditComponent.defaultProps = {
                             <Ui.Dropdown.Link title="JSX" onClick={() => this.switchLanguage('jsx')}/>
                             <Ui.Dropdown.Link title="JAVASCRIPT" onClick={() => this.switchLanguage('javascript')}/>
                             <Ui.Dropdown.Link title="PHP" onClick={() => this.switchLanguage('php')}/>
+                            <Ui.Dropdown.Link title="SHELL" onClick={() => this.switchLanguage('shell')}/>
                             <Ui.Dropdown.Link title="YAML" onClick={() => this.switchLanguage('yaml')}/>
                         </Ui.Dropdown>
                     </div>
@@ -114,17 +116,17 @@ class CodeBlockPlugin extends AtomicPlugin {
     }
 
     getPreviewConfig() {
-        return {
-            blockRendererFn: (contentBlock) => {
-                const plugin = contentBlock.getData().get('plugin');
-                if (contentBlock.getType() === 'atomic' && plugin === this.name) {
-                    return {
-                        component: CodeBlockPreviewComponent,
-                        editable: false
-                    };
-                }
+        const editConfig = this.getEditConfig();
+        editConfig.blockRendererFn = (contentBlock) => {
+            const plugin = contentBlock.getData().get('plugin');
+            if (contentBlock.getType() === 'atomic' && plugin === this.name) {
+                return {
+                    component: CodeBlockPreviewComponent,
+                    editable: false
+                };
             }
         };
+        return editConfig;
     }
 }
 
