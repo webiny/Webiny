@@ -16,7 +16,8 @@ class TableEditComponent extends Webiny.Ui.Component {
             }],
             headers: props.entity.data.headers || [{key: Draft.genKey(), data: null}],
             numberOfColumns: props.entity.data.numberOfColumns || 1,
-            focusedEditor: null
+            focusedEditor: null,
+            readOnly: true
         };
 
         this.bindMethods(
@@ -43,6 +44,15 @@ class TableEditComponent extends Webiny.Ui.Component {
             new TabHandler({selectNextEditor: this.selectNextEditor}),
             new TableShortcuts({insertRow: this.insertRowAfter, deleteRow: this.deleteRow})
         ];
+    }
+
+    componentWillReceiveProps(props) {
+        super.componentWillReceiveProps(props);
+        this.setState({readOnly: !props.editor.getReadOnly()});
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return !_.isEqual(nextProps.entity.data, this.props.entity.data) || !_.isEqual(this.state, nextState);
     }
 
     selectNextEditor() {
@@ -167,10 +177,6 @@ class TableEditComponent extends Webiny.Ui.Component {
             }
             this.setFocus('body', index, 0, true);
         });
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(nextProps.entity.data, this.props.entity.data) || !_.isEqual(this.state, nextState);
     }
 }
 
