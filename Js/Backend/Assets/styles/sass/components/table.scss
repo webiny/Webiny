@@ -21,7 +21,7 @@ table.table {
       z-index: 10;
     }
     .dropdown-menu {
-      z-index: 11;
+      z-index: 999; // Updated z-index from 11 to 999 to fix bug on Ubuntu Chrome
     }
   }
   thead th, tfoot td {
