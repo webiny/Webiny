@@ -36,8 +36,7 @@ class EntityPlugin extends BasePlugin {
         const editorState = this.editor.getEditorState();
         const selection = editorState.getSelection();
         let newContentState = Draft.Modifier.applyEntity(editorState.getCurrentContent(), selection, entityKey);
-        const newEditorState = Draft.EditorState.createWithContent(newContentState, this.editor.getDecorators());
-        this.editor.setEditorState(newEditorState);
+        this.editor.setEditorState(Draft.EditorState.push(editorState, newContentState, 'apply-entity'));
     }
 
     isActive() {

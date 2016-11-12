@@ -63,8 +63,13 @@ PluginBlock.defaultProps = {
             };
         }
 
+        const classes = this.classSet({
+            'plugin-block-wrapper': true,
+            'preview': editor.getPreview()
+        });
+
         return (
-            <div className="plugin-block-wrapper" {...eventHandlers}>
+            <div className={classes} {...eventHandlers}>
                 <Plugin {...props}/>
             </div>
         );

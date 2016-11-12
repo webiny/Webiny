@@ -14,7 +14,7 @@ class Editor extends Webiny.Ui.Component {
         this.plugins = new PluginsContainer(props.plugins, this.getEditorMethods());
 
         this.state = {
-            readOnly: props.readOnly,
+            readOnly: props.preview || props.readOnly,
             editorState: Draft.EditorState.createEmpty(this.plugins.getDecorators())
         };
 
@@ -129,6 +129,7 @@ Editor.defaultProps = {
     preview: false,
     readOnly: false,
     toolbar: true,
+    onChange: _.noop,
     renderer() {
         const {editorState} = this.state;
         if (!editorState) {

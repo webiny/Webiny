@@ -17,6 +17,7 @@ class LinkPlugin extends EntityPlugin {
     }
 
     submitModal(model) {
+        model.target = '_blank';
         const entityKey = Draft.Entity.create(this.entity, 'MUTABLE', model);
         this.ui(this.id).hide().then(() => {
             this.insertEntity(entityKey);
@@ -38,10 +39,6 @@ class LinkPlugin extends EntityPlugin {
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={12}>
                                             <Ui.Input name="url" placeholder="Enter a URL" validate={this.validate}/>
-                                            <Ui.Select name="target" placeholder="Select link target" validate="required">
-                                                <option value="_self">Same tab</option>
-                                                <option value="_blank">New tab</option>
-                                            </Ui.Select>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>
                                 </Ui.Modal.Body>
@@ -64,8 +61,14 @@ class LinkPlugin extends EntityPlugin {
                     strategy: this.entity,
                     component: (props) => {
                         const data = Draft.Entity.get(props.entityKey).getData();
+                        const onClick = (e) => {
+                            if (!this.editor.getPreview()) {
+                                e.stopPropagation();
+                                e.preventDefault();
+                            }
+                        };
                         return (
-                            <a href={data.url} target={data.target}>{props.children}</a>
+                            <a onClick={onClick} href={data.url} target={data.target}>{props.children}</a>
                         );
                     }
                 }

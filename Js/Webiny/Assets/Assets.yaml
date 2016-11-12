@@ -10,6 +10,7 @@ Assets:
             - bower_components/codemirror/theme/dracula.css
             - bower_components/codemirror/theme/monokai.css
             - bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css
+            - bower_components/highlightjs/styles/monokai.css
             - node_modules/quill/dist/quill.core.css
             - node_modules/quill/dist/quill.snow.css
             - bower_components/select2/dist/css/select2.min.css

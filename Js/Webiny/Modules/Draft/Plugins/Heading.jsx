@@ -3,7 +3,7 @@ const Ui = Webiny.Ui.Components;
 import BlockTypePlugin from './../BasePlugins/BlockTypePlugin';
 
 const map = {
-    'untyped': 'Normal',
+    'unstyled': 'Normal',
     'header-one': 'Heading 1',
     'header-two': 'Heading 2',
     'header-three': 'Heading 3',

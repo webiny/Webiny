@@ -53,7 +53,11 @@ ReactSandboxEditComponent.defaultProps = {
             return (
                 <Ui.Grid.Row>
                     <Ui.Grid.Col all={6}>
-                        {React.isValidElement(this.state.code) && this.state.code}
+                        <div className="component-plugin-wrapper">
+                            <div className="component-plugin-wrapper__code">
+                                {React.isValidElement(this.state.code) && this.state.code}
+                            </div>
+                        </div>
                     </Ui.Grid.Col>
                 </Ui.Grid.Row>
             );

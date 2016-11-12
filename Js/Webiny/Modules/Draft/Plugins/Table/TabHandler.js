@@ -9,7 +9,9 @@ class TabHandler extends BasePlugin {
     getEditConfig() {
         return {
             onTab: () => {
-                return this.config.selectNextEditor();
+                if (!this.editor.getReadOnly()) {
+                    return this.config.selectNextEditor();
+                }
             }
         };
     }
