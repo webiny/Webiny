@@ -8,9 +8,9 @@ class PluginBlock extends Webiny.Ui.Component {
     }
 
     onMouseDown(e) {
+        e.stopPropagation();
         const editor = this.props.blockProps.editor;
         editor.setReadOnly(true);
-        e.stopPropagation();
     }
 
     onClick(e) {
