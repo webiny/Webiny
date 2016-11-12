@@ -20,6 +20,7 @@ Switch.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                 {this.renderLabel()}
                 <div className="clearfix"></div>
                 <SwitchButton {...props}/>
+                {this.renderDescription()}
             </div>
         );
     }
