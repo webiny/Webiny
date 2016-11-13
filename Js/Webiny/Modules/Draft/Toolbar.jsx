@@ -2,7 +2,26 @@ import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
 class Toolbar extends Webiny.Ui.Component {
+    componentDidMount() {
+        super.componentDidMount();
 
+        $(document).on('scroll', () => {
+            const doc = $(document);
+            const elem = $(ReactDOM.findDOMNode(this));
+            if(doc.scrollTop() > 490) {
+                elem.addClass('floating');
+                elem.css({width: elem.closest('.rich-editor').width()});
+            } else {
+                elem.removeClass('floating');
+                elem.css({width: 'auto'});
+            }
+        });
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        $(document).off('scroll');
+    }
 }
 
 Toolbar.defaultProps = {

@@ -44,6 +44,10 @@ class Editor extends Webiny.Ui.Component {
             this.plugins.setPreview(props.preview);
             return this.setState({readOnly: props.preview}, this.forceRerender);
         }
+
+        if (props.readOnly !== this.props.readOnly) {
+            this.setState({readOnly: props.readOnly});
+        }
     }
 
     moveFocusToEnd() {
