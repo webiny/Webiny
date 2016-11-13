@@ -407,7 +407,15 @@
     padding: 15px;
 
     .editor-toolbar {
-      height: 28px;
+      &.floating {
+        height: 50px;
+        position: fixed;
+        top: 53px;
+        z-index: 5000;
+        background-color: white;
+        padding: 10px;
+      }
+      min-height: 28px;
       .btn {
         margin: 0;
       }

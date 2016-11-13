@@ -122,13 +122,13 @@ class TableEditComponent extends Webiny.Ui.Component {
         const rows = _.cloneDeep(this.state.rows);
         // Insert a new column into each row
         _.each(rows, row => {
-            let spliceArgs = insert ? [index, 0, {key: Draft.genKey(), data: null}] : [index, 1];
+            const spliceArgs = insert ? [index, 0, {key: Draft.genKey(), data: null}] : [index, 1];
             row.columns.splice(...spliceArgs);
         });
 
         // Insert header column
         const headers = _.cloneDeep(this.state.headers);
-        let spliceArgs = insert ? [index, 0, {key: Draft.genKey(), data: null}] : [index, 1];
+        const spliceArgs = insert ? [index, 0, {key: Draft.genKey(), data: null}] : [index, 1];
         headers.splice(...spliceArgs);
         const numberOfColumns = headers.length;
         const entityData = this.props.entity.data;

@@ -1,10 +1,8 @@
 import Webiny from 'Webiny';
-import Utils from './Utils';
 import PluginsContainer from './PluginsContainer';
 import Toolbar from './Toolbar';
 import FloatingToolbar from './FloatingToolbar';
 import CustomViews from './CustomViews';
-const Ui = Webiny.Ui.Components;
 
 class Editor extends Webiny.Ui.Component {
     constructor(props) {
@@ -44,6 +42,10 @@ class Editor extends Webiny.Ui.Component {
             this.plugins.setPreview(props.preview);
             return this.setState({readOnly: props.preview}, this.forceRerender);
         }
+
+        if (props.readOnly !== this.props.readOnly) {
+            this.setState({readOnly: props.readOnly});
+        }
     }
 
     moveFocusToEnd() {
@@ -76,7 +78,7 @@ class Editor extends Webiny.Ui.Component {
         clearTimeout(this.delay);
         this.delay = null;
         this.delay = setTimeout(() => {
-            this.props.onChange(this.props.convertToRaw ? Draft.convertToRaw(editorState.getCurrentContent()) : editorState)
+            this.props.onChange(this.props.convertToRaw ? Draft.convertToRaw(editorState.getCurrentContent()) : editorState);
         }, this.props.delay);
         this.setState({editorState});
     }

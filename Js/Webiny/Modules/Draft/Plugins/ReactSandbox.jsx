@@ -1,8 +1,9 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 import AtomicPlugin from './../BasePlugins/AtomicPlugin';
-import Editor from './../Editor';
 import Utils from './../Utils';
+
+// TODO: move this to TheHub
 
 class ReactSandboxEditComponent extends Webiny.Ui.Component {
     constructor(props) {
@@ -29,7 +30,9 @@ class ReactSandboxEditComponent extends Webiny.Ui.Component {
 
         let code = null;
         try {
+            /* eslint-disable */
             code = eval(Babel.transform(this.state.value, {presets: ['react', 'es2015']}).code);
+            /* eslint-enable */
             this.setState({code, key: _.uniqueId('code-')});
         } catch (e) {
             console.log(e.message);
@@ -68,7 +71,7 @@ class ReactSandboxEditComponent extends Webiny.Ui.Component {
 }
 
 ReactSandboxEditComponent.defaultProps = {
-    renderer(){
+    renderer() {
         if (this.props.editor.getPreview() && this.state.hideCode) {
             return (
                 <Ui.Grid.Row>

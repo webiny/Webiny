@@ -43,7 +43,7 @@ class LinkPlugin extends EntityPlugin {
                                     </Ui.Grid.Row>
                                 </Ui.Modal.Body>
                                 <Ui.Modal.Footer align="right">
-                                    <Ui.Button type="default" key="cancel" label="Cancel" onClick={this.ui(this.id+':hide')}/>
+                                    <Ui.Button type="default" key="cancel" label="Cancel" onClick={this.ui(this.id + ':hide')}/>
                                     <Ui.Button type="primary" key="submit" label="Insert" onClick={form.submit}/>
                                 </Ui.Modal.Footer>
                             </wrapper>

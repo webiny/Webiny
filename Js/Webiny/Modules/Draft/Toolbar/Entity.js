@@ -7,7 +7,7 @@ class Entity extends Webiny.Ui.Component {
 Entity.defaultProps = {
     plugin: null,
     icon: null,
-    renderer(){
+    renderer() {
         const isActive = this.props.plugin.isActive();
         const disabled = this.props.plugin.isDisabled();
         const click = isActive ? this.props.plugin.removeEntity : this.props.plugin.setEntity;

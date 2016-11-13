@@ -1,5 +1,3 @@
-import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 import BasePlugin from './../BasePlugins/BasePlugin';
 
 class SyntaxHighlightPlugin extends BasePlugin {
@@ -24,8 +22,8 @@ class SyntaxHighlightPlugin extends BasePlugin {
     }
 
     getEditConfig() {
-        let render = {};
-        let renderIndex = {};
+        const render = {};
+        const renderIndex = {};
         return {
             decorators: [
                 {
@@ -89,7 +87,9 @@ class SyntaxHighlightPlugin extends BasePlugin {
 
             onTab: (e) => {
                 const editorState = this.editor.getEditorState();
+                /* eslint-disable */
                 this.editor.setEditorState(DraftCodeBlock.handleTab(e, editorState));
+                /* eslint-enable */
                 return true;
             }
         };

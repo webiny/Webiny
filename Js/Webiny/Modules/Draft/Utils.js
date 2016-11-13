@@ -1,8 +1,6 @@
-const {List, Map} = Immutable;
-
 function filterKey(entityKey) {
     if (entityKey) {
-        var entity = Draft.Entity.get(entityKey);
+        const entity = Draft.Entity.get(entityKey);
         return entity.getMutability() === 'MUTABLE' ? entityKey : null;
     }
     return null;
@@ -81,22 +79,22 @@ const utils = {
     },
 
     getRangesForDraftEntity: (block, key) => {
-        var ranges = [];
-        block.findEntityRanges(function (c) {
+        const ranges = [];
+        block.findEntityRanges(c => {
             return c.getEntity() === key;
-        }, function (start, end) {
-            ranges.push({start: start, end: end});
+        }, (start, end) => {
+            ranges.push({start, end});
         });
 
         return ranges;
     },
 
     getEntityKeyForSelection: (contentState, targetSelection) => {
-        var entityKey;
+        let entityKey;
 
         if (targetSelection.isCollapsed()) {
-            var key = targetSelection.getAnchorKey();
-            var offset = targetSelection.getAnchorOffset();
+            const key = targetSelection.getAnchorKey();
+            const offset = targetSelection.getAnchorOffset();
             if (offset > 0) {
                 entityKey = contentState.getBlockForKey(key).getEntityAt(offset - 1);
                 return filterKey(entityKey);
@@ -104,9 +102,9 @@ const utils = {
             return null;
         }
 
-        var startKey = targetSelection.getStartKey();
-        var startOffset = targetSelection.getStartOffset();
-        var startBlock = contentState.getBlockForKey(startKey);
+        const startKey = targetSelection.getStartKey();
+        const startOffset = targetSelection.getStartOffset();
+        const startBlock = contentState.getBlockForKey(startKey);
 
         entityKey = startOffset === startBlock.getLength() ? null : startBlock.getEntityAt(startOffset);
 
@@ -141,15 +139,6 @@ const utils = {
             return JSON.stringify(Draft.convertToRaw(content), null, 2);
         }
     },
-    editorStateFromRaw: (rawContent) => {
-        // TODO: add decorators from plugins here
-        if (rawContent) {
-            const content = Draft.convertFromRaw(rawContent);
-            return Draft.EditorState.createWithContent(content, decorator);
-        } else {
-            return Draft.EditorState.createEmpty(decorator);
-        }
-    },
 
     getSelectionCoords: (editor) => {
         const editorBounds = editor.getBoundingClientRect();
@@ -164,6 +153,7 @@ const utils = {
         const top = rangeBounds.top - editorBounds.top;
         return {left, top};
     },
+
     toHtml: (editorState, plugins) => {
         const contentState = Draft.convertToRaw(editorState.getCurrentContent());
         const renderedBlocks = [];
@@ -176,13 +166,11 @@ const utils = {
                         renderedBlocks.push(_.isString(element) ? element : ReactDOMServer.renderToStaticMarkup(element));
                     }
                 }
-            })
+            });
         });
 
         return renderedBlocks.join('\n');
-
     }
 };
 
 export default utils;
-
