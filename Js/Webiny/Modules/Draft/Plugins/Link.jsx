@@ -38,10 +38,7 @@ class LinkPlugin extends EntityPlugin {
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={12}>
                                             <Ui.Input name="url" placeholder="Enter a URL" validate={this.validate}/>
-                                            <Ui.Select name="target" placeholder="Select link target" validate="required">
-                                                <option value="_blank">New tab</option>
-                                                <option value="_self">Same tab</option>
-                                            </Ui.Select>
+                                            <Ui.Checkbox name="newTab" label="Open in new tab" grid={12}/>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>
                                 </Ui.Modal.Body>
@@ -64,14 +61,25 @@ class LinkPlugin extends EntityPlugin {
                     strategy: this.entity,
                     component: (props) => {
                         const data = Draft.Entity.get(props.entityKey).getData();
-                        const onClick = (e) => {
-                            if (!this.editor.getPreview()) {
-                                e.stopPropagation();
-                                e.preventDefault();
-                            }
-                        };
+                        // To avoid opening the link in same tab while editing we always set _blank here
                         return (
-                            <a onClick={onClick} href={data.url} target={data.target}>{props.children}</a>
+                            <a href={data.url} target="_blank">{props.children}</a>
+                        );
+                    }
+                }
+            ]
+        };
+    }
+
+    getPreviewConfig() {
+        return {
+            decorators: [
+                {
+                    strategy: this.entity,
+                    component: (props) => {
+                        const data = Draft.Entity.get(props.entityKey).getData();
+                        return (
+                            <a href={data.url} target={data.newTab ? '_blank' : '_self'}>{props.children}</a>
                         );
                     }
                 }
