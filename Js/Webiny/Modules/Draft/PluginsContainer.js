@@ -246,7 +246,7 @@ export default class PluginsContainer {
     }
 
     getToolbarActions() {
-        return this.config[this.mode].toolbar;
+        return this.config.edit.toolbar;
     }
 
     getCustomViews() {
