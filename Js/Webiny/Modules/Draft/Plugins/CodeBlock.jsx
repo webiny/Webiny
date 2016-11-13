@@ -1,7 +1,6 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 import AtomicPlugin from './../BasePlugins/AtomicPlugin';
-import Editor from './../Editor';
 import Utils from './../Utils';
 
 const languageMap = {
@@ -34,7 +33,7 @@ CodeBlockEditComponent.defaultProps = {
             mode: languageMap[this.props.data.language],
             value: this.props.data.code || '',
             onFocus: () => {
-                this.props.editor.setReadOnly(true)
+                this.props.editor.setReadOnly(true);
             },
             onChange: value => {
                 this.props.updateBlockData({code: value});
@@ -67,7 +66,7 @@ class CodeBlockPreviewComponent extends Webiny.Ui.Component {
 }
 
 CodeBlockPreviewComponent.defaultProps = {
-    renderer(){
+    renderer() {
         const language = this.props.data.language === 'jsx' ? 'html' : this.props.data.language;
 
         return (

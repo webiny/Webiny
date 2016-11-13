@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
-const {Entity, RichUtils} = Draft;
 import DraftUtils from './../DraftUtils';
 
 class ImageComponent extends Webiny.Ui.Component {
@@ -33,7 +32,7 @@ class ImageAction extends Webiny.Ui.Component {
 }
 
 ImageAction.defaultProps = {
-    renderer(){
+    renderer() {
         return (
             <Ui.Button disabled={this.props.editor.getReadOnly()} onClick={this.getImage.bind(this)} icon="fa-picture-o"/>
         );
@@ -68,4 +67,4 @@ export default () => {
             }
         }
     };
-}
+};

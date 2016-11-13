@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
 class Toolbar extends Webiny.Ui.Component {
     componentDidMount() {
@@ -8,7 +7,7 @@ class Toolbar extends Webiny.Ui.Component {
         $(document).on('scroll', () => {
             const doc = $(document);
             const elem = $(ReactDOM.findDOMNode(this));
-            if(doc.scrollTop() > 490) {
+            if (doc.scrollTop() > 490) {
                 elem.addClass('floating');
                 elem.css({width: elem.closest('.rich-editor').width()});
             } else {

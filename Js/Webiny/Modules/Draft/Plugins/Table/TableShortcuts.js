@@ -1,4 +1,3 @@
-import Webiny from 'Webiny';
 import BasePlugin from './../../BasePlugins/BasePlugin';
 
 class TableShortcuts extends BasePlugin {

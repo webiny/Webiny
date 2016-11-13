@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
 class PluginBlock extends Webiny.Ui.Component {
     constructor(props) {
