@@ -17,7 +17,6 @@ class LinkPlugin extends EntityPlugin {
     }
 
     submitModal(model) {
-        model.target = '_blank';
         const entityKey = Draft.Entity.create(this.entity, 'MUTABLE', model);
         this.ui(this.id).hide().then(() => {
             this.insertEntity(entityKey);
@@ -31,7 +30,7 @@ class LinkPlugin extends EntityPlugin {
             ),
             customView: (
                 <Ui.Modal.Dialog ui={this.id}>
-                    <Ui.Form ui="linkModalForm" onSubmit={this.submitModal.bind(this)}>
+                    <Ui.Form ui="linkModalForm" onSubmit={this.submitModal.bind(this)} model={{target: '_blank'}}>
                         {(model, form) => (
                             <wrapper>
                                 <Ui.Modal.Header title="Insert link"/>
@@ -39,6 +38,10 @@ class LinkPlugin extends EntityPlugin {
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={12}>
                                             <Ui.Input name="url" placeholder="Enter a URL" validate={this.validate}/>
+                                            <Ui.Select name="target" placeholder="Select link target" validate="required">
+                                                <option value="_blank">New tab</option>
+                                                <option value="_self">Same tab</option>
+                                            </Ui.Select>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>
                                 </Ui.Modal.Body>
