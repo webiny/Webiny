@@ -3,6 +3,7 @@ import Utils from './Utils';
 import PluginsContainer from './PluginsContainer';
 import Toolbar from './Toolbar';
 import FloatingToolbar from './FloatingToolbar';
+import CustomViews from './CustomViews';
 const Ui = Webiny.Ui.Components;
 
 class Editor extends Webiny.Ui.Component {
@@ -157,17 +158,15 @@ Editor.defaultProps = {
                         keyBindingFn={this.plugins.getKeyBindingFn()}
                         handleReturn={this.plugins.getHandleReturnFn()}
                         handlePastedText={this.plugins.getHandlePastedTextFn()}
+                        onTab={this.plugins.getOnTabFn()}
                         //
                         ref="editor"
                         readOnly={this.state.readOnly}
                         editorState={editorState}
                         onChange={this.onChange}
-                        onTab={this.plugins.getOnTabFn()}
                         placeholder={this.props.placeholder}
                         spellCheck={true}/>
-                    {this.plugins.getCustomViews().map((view, i) => {
-                        return <div className="custom-view" key={i}>{view}</div>;
-                    })}
+                    <CustomViews preview={this.props.preview} plugins={this.plugins}/>
                 </div>
             </div>
         );

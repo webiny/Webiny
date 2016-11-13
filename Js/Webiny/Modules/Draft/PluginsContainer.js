@@ -35,7 +35,7 @@ export default class PluginsContainer {
             }
         };
 
-        this.mode = 'edit';
+        this.mode = editor.getPreview() ? 'preview' : 'edit';
 
         this.props = [
             'blockRenderMap',

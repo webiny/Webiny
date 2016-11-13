@@ -30,7 +30,7 @@ class LinkPlugin extends EntityPlugin {
             ),
             customView: (
                 <Ui.Modal.Dialog ui={this.id}>
-                    <Ui.Form ui="linkModalForm" onSubmit={this.submitModal.bind(this)} model={{target: '_blank'}}>
+                    <Ui.Form ui="linkModalForm" onSubmit={this.submitModal.bind(this)}>
                         {(model, form) => (
                             <wrapper>
                                 <Ui.Modal.Header title="Insert link"/>
@@ -79,7 +79,7 @@ class LinkPlugin extends EntityPlugin {
                     component: (props) => {
                         const data = Draft.Entity.get(props.entityKey).getData();
                         return (
-                            <a href={data.url} target={data.newTab ? '_blank' : '_self'}>{props.children}</a>
+                            <a href={data.url} target={_.get(data, 'newTab') ? '_blank' : '_self'}>{props.children}</a>
                         );
                     }
                 }
