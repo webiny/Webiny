@@ -1,9 +1,8 @@
 import Webiny from 'Webiny';
-import Utils from './Utils';
 import PluginsContainer from './PluginsContainer';
 import Toolbar from './Toolbar';
 import FloatingToolbar from './FloatingToolbar';
-const Ui = Webiny.Ui.Components;
+import CustomViews from './CustomViews';
 
 class Editor extends Webiny.Ui.Component {
     constructor(props) {
@@ -43,6 +42,10 @@ class Editor extends Webiny.Ui.Component {
             this.plugins.setPreview(props.preview);
             return this.setState({readOnly: props.preview}, this.forceRerender);
         }
+
+        if (props.readOnly !== this.props.readOnly) {
+            this.setState({readOnly: props.readOnly});
+        }
     }
 
     moveFocusToEnd() {
@@ -75,7 +78,7 @@ class Editor extends Webiny.Ui.Component {
         clearTimeout(this.delay);
         this.delay = null;
         this.delay = setTimeout(() => {
-            this.props.onChange(this.props.convertToRaw ? Draft.convertToRaw(editorState.getCurrentContent()) : editorState)
+            this.props.onChange(this.props.convertToRaw ? Draft.convertToRaw(editorState.getCurrentContent()) : editorState);
         }, this.props.delay);
         this.setState({editorState});
     }
@@ -125,6 +128,7 @@ Editor.defaultProps = {
     preview: false,
     readOnly: false,
     toolbar: true,
+    stripPastedStyles: false,
     onChange: _.noop,
     renderer() {
         const {editorState} = this.state;
@@ -157,17 +161,16 @@ Editor.defaultProps = {
                         keyBindingFn={this.plugins.getKeyBindingFn()}
                         handleReturn={this.plugins.getHandleReturnFn()}
                         handlePastedText={this.plugins.getHandlePastedTextFn()}
+                        onTab={this.plugins.getOnTabFn()}
                         //
                         ref="editor"
                         readOnly={this.state.readOnly}
                         editorState={editorState}
                         onChange={this.onChange}
-                        onTab={this.plugins.getOnTabFn()}
                         placeholder={this.props.placeholder}
+                        stripPastedStyles={this.props.stripPastedStyles}
                         spellCheck={true}/>
-                    {this.plugins.getCustomViews().map((view, i) => {
-                        return <div className="custom-view" key={i}>{view}</div>;
-                    })}
+                    <CustomViews preview={this.props.preview} plugins={this.plugins}/>
                 </div>
             </div>
         );

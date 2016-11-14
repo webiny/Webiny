@@ -1,4 +1,3 @@
-import Webiny from 'Webiny';
 import BasePlugin from './../../BasePlugins/BasePlugin';
 
 class TabHandler extends BasePlugin {
@@ -8,9 +7,9 @@ class TabHandler extends BasePlugin {
 
     getEditConfig() {
         return {
-            onTab: () => {
+            onTab: (e) => {
                 if (!this.editor.getReadOnly()) {
-                    return this.config.selectNextEditor();
+                    return e.shiftKey ? this.config.selectPrevEditor() : this.config.selectNextEditor();
                 }
             }
         };

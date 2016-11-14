@@ -406,9 +406,37 @@
     border: 1px solid #ddd;
     padding: 15px;
 
-    .toolbar-action button:not(.dropdown-toggle) {
-      padding: 7px;
-      border-radius: 0;
+    .editor-toolbar {
+      &.floating {
+        height: 50px;
+        position: fixed;
+        top: 53px;
+        z-index: 5000;
+        background-color: white;
+        padding: 10px;
+      }
+      min-height: 28px;
+      .btn {
+        margin: 0;
+      }
+      .dropdown > .btn {
+        height: 28px;
+        line-height: 100%;
+      }
+      .dropdown:after {
+        content: '';
+      }
+
+      .toolbar-action {
+        float: left;
+        display: block;
+        margin-right: 6px;
+
+        button:not(.dropdown-toggle) {
+          padding: 7px;
+          border-radius: 0;
+        }
+      }
     }
   }
 
@@ -552,12 +580,4 @@
     }
   }
 }
-
-.editor-toolbar {
-  .dropdown > .btn {
-    height: 28px;
-    line-height: 100%;
-  }
-}
-
 /** END OF DRAFT EDITOR **/

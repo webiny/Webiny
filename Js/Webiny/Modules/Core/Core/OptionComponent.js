@@ -152,7 +152,7 @@ class OptionComponent extends FormComponent {
             this.setState({loading: true});
             this.request = this.api.execute().then(apiResponse => {
                 if (apiResponse.isAborted()) {
-                    if(this.isMounted()){
+                    if (this.isMounted()) {
                         this.setState({loading: false});
                     }
                     return null;

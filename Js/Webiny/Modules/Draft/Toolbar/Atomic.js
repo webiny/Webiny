@@ -7,7 +7,7 @@ class Atomic extends Webiny.Ui.Component {
 Atomic.defaultProps = {
     plugin: null,
     icon: null,
-    renderer(){
+    renderer() {
         const disabled = this.props.plugin.isDisabled();
         const props = {
             style: this.props.style || {},

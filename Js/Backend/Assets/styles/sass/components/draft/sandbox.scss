@@ -1,0 +1,81 @@
+.editor-sandbox {
+  border-radius: 5px;
+  border: 1px solid black;
+  overflow: hidden;
+  background: #272822;
+
+  .CodeMirror-scroll {
+    height: auto;
+    overflow-y: hidden;
+    overflow-x: auto;
+  }
+
+  &__toolbar {
+    height: 45px;
+    background-color: black;
+    margin: 0;
+    padding-top: 7px;
+    padding-left: 10px;
+
+    &:before {
+      content: '';
+      display: inherit;
+    }
+
+    > div {
+      padding: 0px
+    }
+
+    .btn,.btn:focus, .btn:active {
+      padding: 5px 10px;
+      border-radius: 0px;
+      margin-right: 25px;
+      width: 100px;
+      text-align: center;
+      display: inline-block;
+      font-size: 14px;
+      color: #fff;
+      background-color: transparent;
+
+      &.paneActive{
+        background-color: #00C7B1;
+        color: #333;
+      }
+
+      &.run-code {
+        margin-right: 10px;
+        background-color: #00C7B1;
+        color: #333;
+      }
+    }
+
+  }
+  &__editor-area {
+    margin: 0;
+    display: flex;
+    overflow: auto;
+
+    &__code-block {
+      height: auto;
+      padding: 0px;
+      overflow: scroll;
+
+      .form-group{
+        margin-bottom: 5px;
+      }
+
+      .CodeMirror{
+        height: 100%;
+        max-height: 450px;
+      }
+    }
+
+    &__preview-block {
+      height: auto;
+      background: #fff;
+      margin: 5px;
+      padding: 5px;
+      overflow: scroll;
+    }
+  }
+}
