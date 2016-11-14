@@ -42,13 +42,13 @@ class ReactSandboxEditComponent extends Webiny.Ui.Component {
         // set the editor dimensions
         const sandbox = $(ReactDOM.findDOMNode(this))[0];
         $(sandbox).css({
-            'height':sandbox.offsetHeight+'px',
-            'width':sandbox.offsetWidth+'px'
+            'height': sandbox.offsetHeight + 'px',
+            'width': sandbox.offsetWidth + 'px'
         });
         const previewArea = $(sandbox).find('.editor-sandbox__editor-area__preview-block')[0];
-        $(previewArea).css({'height':(sandbox.offsetHeight-60)+'px'});
+        $(previewArea).css({'height': (sandbox.offsetHeight - 60) + 'px'});
         const editorArea = $(sandbox).find('.editor-sandbox__editor-area__code-block')[0];
-        $(editorArea).css({'height':(sandbox.offsetHeight-60)+'px'});
+        $(editorArea).css({'height': (sandbox.offsetHeight - 60) + 'px'});
     }
 
     updateEntityData(data) {
@@ -108,10 +108,12 @@ ReactSandboxEditComponent.defaultProps = {
                 </Ui.Grid.Row>
 
                 <Ui.Grid.Row className="editor-sandbox__editor-area">
-                    <Ui.Grid.Col md={(this.state.hidePreview ? 12 : 6)} className={"editor-sandbox__editor-area__code-block code-block "+(this.state.hideEditor && "hide")}>
+                    <Ui.Grid.Col md={(this.state.hidePreview ? 12 : 6)}
+                                 className={"editor-sandbox__editor-area__code-block code-block "+(this.state.hideEditor && "hide")}>
                         <Ui.CodeEditor {...editorProps}/>
                     </Ui.Grid.Col>
-                    <Ui.Grid.Col md={(this.state.hideEditor ? 12 : 6)} className={"editor-sandbox__editor-area__preview-block "+(this.state.hidePreview && "hide")}>
+                    <Ui.Grid.Col md={(this.state.hideEditor ? 12 : 6)}
+                                 className={"editor-sandbox__editor-area__preview-block "+(this.state.hidePreview && "hide")}>
                         <div className="component-plugin-wrapper">
                             <div className="component-plugin-wrapper__toolbar">
                                 <Ui.Checkbox

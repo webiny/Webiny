@@ -7,9 +7,9 @@ class TabHandler extends BasePlugin {
 
     getEditConfig() {
         return {
-            onTab: () => {
+            onTab: (e) => {
                 if (!this.editor.getReadOnly()) {
-                    return this.config.selectNextEditor();
+                    return e.shiftKey ? this.config.selectPrevEditor() : this.config.selectNextEditor();
                 }
             }
         };

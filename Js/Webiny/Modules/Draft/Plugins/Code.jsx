@@ -4,7 +4,7 @@ import EntityPlugin from './../BasePlugins/EntityPlugin';
 
 const style = {
     fontFamily: 'monospace',
-    wordBreak: 'break-all',
+    wordBreak: 'normal',
     backgroundColor: 'rgb(244, 244, 244)',
     padding: '1px 4px',
     borderRadius: '5px',
@@ -36,7 +36,33 @@ class CodePlugin extends EntityPlugin {
                         );
                     }
                 }
-            ]
+            ],
+            handleKeyCommand: (command) => {
+                if (command === 'toggle-code') {
+                    if (this.isActive()) {
+                        this.removeEntity();
+                    } else {
+                        this.setEntity();
+                    }
+                    return true;
+                }
+            },
+
+            keyBindingFn: (e) => {
+                if (this.editor.getEditorState().getSelection().isCollapsed()) {
+                    return false;
+                }
+
+                if (Draft.KeyBindingUtil.hasCommandModifier(e) && e.shiftKey) {
+                    switch (e.keyCode) {
+                        // Cmd + Shift + C
+                        case 67:
+                            return 'toggle-code';
+                        default:
+                            return false;
+                    }
+                }
+            }
         };
     }
 }

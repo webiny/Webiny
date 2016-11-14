@@ -29,7 +29,8 @@ class TableEditComponent extends Webiny.Ui.Component {
             'insertColumnAfter',
             'deleteColumn',
             'editColumn',
-            'selectNextEditor'
+            'selectNextEditor',
+            'selectPrevEditor'
         );
 
         this.plugins = () => [
@@ -41,7 +42,7 @@ class TableEditComponent extends Webiny.Ui.Component {
             new Webiny.Draft.Plugins.AlignRight(),
             new Webiny.Draft.Plugins.Link(),
             new Webiny.Draft.Plugins.Code(),
-            new TabHandler({selectNextEditor: this.selectNextEditor}),
+            new TabHandler({selectNextEditor: this.selectNextEditor, selectPrevEditor: this.selectPrevEditor}),
             new TableShortcuts({insertRow: this.insertRowAfter, deleteRow: this.deleteRow})
         ];
     }
@@ -67,6 +68,22 @@ class TableEditComponent extends Webiny.Ui.Component {
             return this.setFocus(type, row, col + 1, true);
         } else if (col === columns && row < rows) {
             return this.setFocus(type, row + 1, 0, true);
+        }
+
+        return false;
+    }
+
+    selectPrevEditor() {
+        const columns = this.state.numberOfColumns - 1;
+        const {type, row, col} = this.state.focusedEditor;
+        if (type === 'body' && row === 0 && col === 0) {
+            return this.setFocus('head', 0, columns, true);
+        }
+
+        if (col > 0) {
+            return this.setFocus(type, row, col - 1, true);
+        } else if (col === 0) {
+            return this.setFocus(type, row - 1, columns, true);
         }
 
         return false;
@@ -218,6 +235,7 @@ TableEditComponent.defaultProps = {
                                         value={headers[colI].data}
                                         convertToRaw={false}
                                         delay={1}
+                                        stripPastedStyles={true}
                                         onChange={editorState => this.updateHeaderData(editorState, colI)}/>
                                 </th>
                             );
@@ -238,6 +256,7 @@ TableEditComponent.defaultProps = {
                                     return (
                                         <td key={row.columns[colI].key} onMouseDown={() => this.setFocus('body', rowI, colI)}>
                                             <Editor
+                                                stripPastedStyles={true}
                                                 ref={row.columns[colI].key}
                                                 preview={this.props.editor.getPreview()}
                                                 readOnly={readOnly}

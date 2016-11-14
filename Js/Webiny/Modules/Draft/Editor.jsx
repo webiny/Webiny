@@ -128,6 +128,7 @@ Editor.defaultProps = {
     preview: false,
     readOnly: false,
     toolbar: true,
+    stripPastedStyles: false,
     onChange: _.noop,
     renderer() {
         const {editorState} = this.state;
@@ -167,6 +168,7 @@ Editor.defaultProps = {
                         editorState={editorState}
                         onChange={this.onChange}
                         placeholder={this.props.placeholder}
+                        stripPastedStyles={this.props.stripPastedStyles}
                         spellCheck={true}/>
                     <CustomViews preview={this.props.preview} plugins={this.plugins}/>
                 </div>
