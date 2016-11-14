@@ -132,7 +132,7 @@ class FormComponent extends Component {
 }
 
 FormComponent.defaultProps = {
-    disabled: null,
+    disabled: false,
     disabledBy: null,
     label: null,
     info: null,

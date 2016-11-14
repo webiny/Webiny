@@ -38,6 +38,9 @@ class LinkPlugin extends EntityPlugin {
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={12}>
                                             <Ui.Input name="url" placeholder="Enter a URL" validate={this.validate}/>
+                                            <Ui.Select name="target" validate="required" placeholder="Select target">
+                                                <option value="1">Random option</option>
+                                            </Ui.Select>
                                             <Ui.Checkbox name="newTab" label="Open in new tab" grid={12}/>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>

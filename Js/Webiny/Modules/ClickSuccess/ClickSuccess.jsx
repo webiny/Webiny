@@ -45,7 +45,7 @@ ClickSuccess.defaultProps = {
     renderer() {
         const dialogProps = {
             ref: 'dialog',
-            message: () => this.props.message,
+            message: () => _.isFunction(this.props.message) ? this.props.message(this.state.data) : this.props.message,
             onClose: () => {
                 this.hide().then(this.props.onClose);
             }
