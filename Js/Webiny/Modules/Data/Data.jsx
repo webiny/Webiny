@@ -5,6 +5,7 @@ class Data extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);
+        this.autoRefreshInterval = null; // Ony when 'autoRefresh' prop is used
 
         this.state = {
             data: null
@@ -24,10 +25,19 @@ class Data extends Webiny.Ui.Component {
 
     componentDidMount() {
         super.componentDidMount();
-        this.request = this.api.execute().then(apiResponse => {
-            this.setData(apiResponse);
-            return apiResponse.getData();
+        this.request = this.api.execute().then(response => {
+            this.setData(response);
+            return response.getData();
         });
+
+        if (_.isNumber(this.props.autoRefresh)) {
+            this.autoRefreshInterval = setInterval(() => {
+                this.request = this.api.execute().then(response => {
+                    this.setData(response);
+                    return response.getData();
+                });
+            }, this.props.autoRefresh * 1000)
+        }
     }
 
     componentWillUnmount() {
@@ -35,19 +45,23 @@ class Data extends Webiny.Ui.Component {
         if (this.request) {
             this.request.abort();
         }
+
+        if (this.autoRefreshInterval) {
+            clearInterval(this.autoRefreshInterval);
+        }
     }
 
-    setData(apiResponse) {
-        if (apiResponse.isAborted() || !this.isMounted()) {
+    setData(response) {
+        if (response.isAborted() || !this.isMounted()) {
             return;
         }
 
-        if (apiResponse.isError()) {
+        if (response.isError()) {
             this.setState({loading: false});
-            Webiny.Growl.info(apiResponse.getError(), 'Could not fetch data', true);
+            Webiny.Growl.info(response.getError(), 'Could not fetch data', true);
             return;
         }
-        this.setState({data: apiResponse.getData(), loading: false});
+        this.setState({data: response.getData(), loading: false});
     }
 
     filter(filters = {}) {
@@ -59,6 +73,7 @@ class Data extends Webiny.Ui.Component {
 
 Data.defaultProps = {
     waitForData: true,
+    autoRefresh: null,
     renderer() {
         if (this.props.waitForData && !this.state.data) {
             return null;
