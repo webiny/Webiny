@@ -45,10 +45,10 @@ class ReactSandboxEditComponent extends Webiny.Ui.Component {
             'height': sandbox.offsetHeight + 'px',
             'width': sandbox.offsetWidth + 'px'
         });
-        const previewArea = $(sandbox).find('.editor-sandbox__editor-area__preview-block')[0];
-        $(previewArea).css({'height': (sandbox.offsetHeight - 60) + 'px'});
-        const editorArea = $(sandbox).find('.editor-sandbox__editor-area__code-block')[0];
-        $(editorArea).css({'height': (sandbox.offsetHeight - 60) + 'px'});
+        //const previewArea = $(sandbox).find('.editor-sandbox__editor-area__preview-block')[0];
+        //$(previewArea).css({'height': (sandbox.offsetHeight - 60) + 'px'});
+        //const editorArea = $(sandbox).find('.editor-sandbox__editor-area__code-block')[0];
+        //$(editorArea).css({'height': (sandbox.offsetHeight - 60) + 'px'});
     }
 
     updateEntityData(data) {
@@ -115,15 +115,6 @@ ReactSandboxEditComponent.defaultProps = {
                     <Ui.Grid.Col md={(this.state.hideEditor ? 12 : 6)}
                                  className={"editor-sandbox__editor-area__preview-block "+(this.state.hidePreview && "hide")}>
                         <div className="component-plugin-wrapper">
-                            <div className="component-plugin-wrapper__toolbar">
-                                <Ui.Checkbox
-                                    renderIf={!this.props.editor.getPreview()}
-                                    style={{marginTop: 3}}
-                                    label="Hide code"
-                                    grid={8}
-                                    value={this.state.hideCode}
-                                    onChange={this.toggleCode}/>
-                            </div>
                             <div className="component-plugin-wrapper__code">
                                 {React.isValidElement(this.state.code) && this.state.code}
                             </div>
