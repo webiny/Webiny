@@ -431,6 +431,8 @@
         float: left;
         display: block;
         margin-right: 6px;
+        position: relative;
+        z-index: 0;
 
         button:not(.dropdown-toggle) {
           padding: 7px;
