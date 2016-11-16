@@ -10,6 +10,7 @@ Assets:
             - bower_components/codemirror/theme/dracula.css
             - bower_components/codemirror/theme/monokai.css
             - bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css
+            - bower_components/highlightjs/styles/monokai.css
             - node_modules/quill/dist/quill.core.css
             - node_modules/quill/dist/quill.snow.css
             - bower_components/select2/dist/css/select2.min.css
@@ -48,6 +49,7 @@ Assets:
             - bower_components/codemirror/mode/php/php.js
             - bower_components/codemirror/mode/yaml/yaml.js
             - bower_components/codemirror/mode/htmlmixed/htmlmixed.js
+            - bower_components/codemirror/mode/shell/shell.js
             - bower_components/cropper/dist/cropper.min.js
             - bower_components/d3/d3.min.js
             - bower_components/dynamics.js/lib/dynamics.min.js

@@ -20,7 +20,11 @@ class Container extends Webiny.Ui.Component {
         _.forEach(elements, (el) => {
             if (_.isObject(this.props.show)) {
                 AnimationSets.custom(this.props.show, el, () => {
-                    callback();
+                    try {
+                        callback();
+                    } catch (e) {
+                        // ignore
+                    }
                     if (_.isFunction(this.props.onFinish)) {
                         this.props.onFinish(true);
                     }

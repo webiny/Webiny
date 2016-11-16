@@ -1,6 +1,4 @@
-import Webiny from 'Webiny';
 import BasePlugin from './BasePlugin';
-import Utils from './../Utils';
 
 class AtomicPlugin extends BasePlugin {
     constructor(config) {

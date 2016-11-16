@@ -1,24 +1,32 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
 class PluginBlock extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
-        this.bindMethods('onMouseDown', 'updateData');
+        this.bindMethods('onMouseDown', 'updateBlockData', 'updateEntityData');
     }
 
     onMouseDown(e) {
+        e.stopPropagation();
         const editor = this.props.blockProps.editor;
         editor.setReadOnly(true);
-        e.stopPropagation();
     }
 
     onClick(e) {
         e.stopPropagation();
     }
 
-    updateData(data) {
+    updateBlockData(data) {
         this.props.blockProps.editor.updateBlockData(this.props.block, data);
+    }
+
+    updateEntityData(data, key = null) {
+        if (!key) {
+            key = this.props.block.getEntityAt(0);
+        }
+
+        Draft.Entity.mergeData(key, data);
+        this.updateBlockData(data);
     }
 }
 
@@ -40,7 +48,8 @@ PluginBlock.defaultProps = {
             entity: null,
             data,
             editor,
-            updateData: this.updateData,
+            updateBlockData: this.updateBlockData,
+            updateEntityData: this.updateEntityData,
             container: this
         };
 
@@ -53,8 +62,13 @@ PluginBlock.defaultProps = {
             };
         }
 
+        const classes = this.classSet({
+            'plugin-block-wrapper': true,
+            'preview': editor.getPreview()
+        });
+
         return (
-            <div className="plugin-block-wrapper" {...eventHandlers}>
+            <div className={classes} {...eventHandlers}>
                 <Plugin {...props}/>
             </div>
         );

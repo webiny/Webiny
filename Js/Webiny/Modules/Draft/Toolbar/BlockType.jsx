@@ -7,10 +7,12 @@ class BlockType extends Webiny.Ui.Component {
 BlockType.defaultProps = {
     icon: null,
     plugin: null,
-    renderer(){
+    renderer() {
         const isActive = this.props.plugin.isActive();
         const disabled = this.props.plugin.isDisabled();
         const props = {
+            style: this.props.style || {},
+            className: this.props.className || '',
             disabled,
             type: isActive ? 'primary' : 'default',
             onClick: () => this.props.plugin.toggleBlockType(),

@@ -1,4 +1,3 @@
-import Webiny from 'Webiny';
 import BasePlugin from './BasePlugin';
 import Utils from './../Utils';
 
@@ -35,9 +34,8 @@ class EntityPlugin extends BasePlugin {
     insertEntity(entityKey) {
         const editorState = this.editor.getEditorState();
         const selection = editorState.getSelection();
-        let newContentState = Draft.Modifier.applyEntity(editorState.getCurrentContent(), selection, entityKey);
-        const newEditorState = Draft.EditorState.createWithContent(newContentState, this.editor.getDecorators());
-        this.editor.setEditorState(newEditorState);
+        const newContentState = Draft.Modifier.applyEntity(editorState.getCurrentContent(), selection, entityKey);
+        this.editor.setEditorState(Draft.EditorState.push(editorState, newContentState, 'apply-entity'));
     }
 
     isActive() {

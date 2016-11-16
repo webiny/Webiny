@@ -7,6 +7,7 @@
 
 namespace Apps\Core\Php\RequestHandlers;
 
+use Apps\Core\Php\DevTools\Response\ApiResponse;
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
@@ -31,16 +32,17 @@ class Api
 
             $response = null;
 
-            $beforeResponse = $this->wEvents()->fire('Core.Api.Before', $this->apiEvent, $this->apiResponse, 1);
-            if ($beforeResponse) {
-                return $beforeResponse;
+            $this->wEvents()->fire('Core.Api.Before', $this->apiEvent, $this->apiResponse);
+            if ($this->apiEvent->getResponse() instanceof ApiResponse) {
+                return $this->apiEvent->getResponse();
             }
 
             $response = $this->wEvents()->fire('Core.Api.Request', $this->apiEvent, $this->apiResponse, 1);
             $this->apiEvent->setResponse($response);
-            $afterResponse = $this->wEvents()->fire('Core.Api.After', $this->apiEvent, $this->apiResponse, 1);
-            if ($afterResponse) {
-                return $afterResponse;
+
+            $this->wEvents()->fire('Core.Api.After', $this->apiEvent, $this->apiResponse);
+            if ($this->apiEvent->getResponse() instanceof ApiResponse) {
+                $response = $this->apiEvent->getResponse();
             }
 
             return $response;

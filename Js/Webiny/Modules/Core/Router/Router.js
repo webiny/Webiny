@@ -38,7 +38,12 @@ class Router {
 
             History.Adapter.bind(window, 'statechange', () => {
                 this.activeRoute = null;
-                const url = History.getState().data.url || History.getState().hash;
+                let url = History.getState().data.url || History.getState().hash;
+                url = url.replace(this.appUrl, '');
+                if (url === '') {
+                    url = '/';
+                }
+
                 if (!url.startsWith(this.baseUrl)) {
                     return Utils.handleRouteNotMatched(url, this.routeNotMatched);
                 }
@@ -243,6 +248,10 @@ class Router {
         }
         Utils.setBaseUrl(this.baseUrl);
         return this;
+    }
+
+    setTitle(title) {
+        document.title = this.getTitlePattern().replace('%s', title);
     }
 
     setTitlePattern(pattern) {

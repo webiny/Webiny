@@ -1,6 +1,4 @@
-import Webiny from 'Webiny';
 import BasePlugin from './BasePlugin';
-import Utils from './../Utils';
 
 class BlockTypePlugin extends BasePlugin {
     constructor() {

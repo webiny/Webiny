@@ -12,7 +12,7 @@ class CodeEditor extends Webiny.Ui.Component {
             theme: props.theme // needs to be loaded via bower.json
         };
 
-        this.bindMethods('getTextareaElement');
+        this.bindMethods('getTextareaElement', 'setValue');
     }
 
     componentDidMount() {
@@ -25,13 +25,17 @@ class CodeEditor extends Webiny.Ui.Component {
         this.codeMirror.on('change', () => {
             this.props.onChange(this.codeMirror.getValue());
         });
+
+        this.codeMirror.on('focus', () => {
+            this.props.onFocus();
+        });
+
+        this.setValue(this.props);
     }
 
     componentWillReceiveProps(props) {
-        if (this.codeMirror.getValue() !== props.value && !_.isNull(props.value)) {
-            // the "+ ''" sort a strange with splitLines method within CodeMirror
-            this.codeMirror.setValue(props.value + '');
-        }
+        super.componentWillReceiveProps(props);
+        this.setValue(props);
 
         if (this.props.mode !== props.mode) {
             this.codeMirror.setOption('mode', props.mode);
@@ -40,6 +44,13 @@ class CodeEditor extends Webiny.Ui.Component {
 
     shouldComponentUpdate() {
         return false;
+    }
+
+    setValue(props) {
+        if (this.codeMirror.getValue() !== props.value && !_.isNull(props.value)) {
+            // the "+ ''" sort a strange with splitLines method within CodeMirror
+            this.codeMirror.setValue(props.value + '');
+        }
     }
 
     getTextareaElement() {
@@ -56,6 +67,7 @@ CodeEditor.defaultProps = {
     theme: 'monokai',
     value: null,
     onChange: _.noop,
+    onFocus: _.noop,
     renderer() {
         return (
             <div>

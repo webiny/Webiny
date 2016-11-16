@@ -4,10 +4,9 @@ import EntityPlugin from './../BasePlugins/EntityPlugin';
 
 const style = {
     fontFamily: 'monospace',
-    wordBreak: 'break-all',
+    wordBreak: 'normal',
     backgroundColor: 'rgb(244, 244, 244)',
-    boxShadow: 'rgb(187, 187, 187) 0px -1px 0px inset',
-    padding: '2px 4px',
+    padding: '1px 4px',
     borderRadius: '5px',
     margin: '0 2px',
     border: '1px solid rgb(204, 204, 204)'
@@ -37,7 +36,33 @@ class CodePlugin extends EntityPlugin {
                         );
                     }
                 }
-            ]
+            ],
+            handleKeyCommand: (command) => {
+                if (command === 'toggle-code') {
+                    if (this.isActive()) {
+                        this.removeEntity();
+                    } else {
+                        this.setEntity();
+                    }
+                    return true;
+                }
+            },
+
+            keyBindingFn: (e) => {
+                if (this.editor.getEditorState().getSelection().isCollapsed()) {
+                    return false;
+                }
+
+                if (Draft.KeyBindingUtil.hasCommandModifier(e) && e.shiftKey) {
+                    switch (e.keyCode) {
+                        // Cmd + Shift + C
+                        case 67:
+                            return 'toggle-code';
+                        default:
+                            return false;
+                    }
+                }
+            }
         };
     }
 }

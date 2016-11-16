@@ -1,7 +1,6 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 import AtomicPlugin from './../BasePlugins/AtomicPlugin';
-import Editor from './../Editor';
 import Utils from './../Utils';
 import TableEditComponent from './Table/TableEditComponent';
 

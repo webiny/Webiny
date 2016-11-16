@@ -50,7 +50,7 @@ Col.defaultProps = {
             }
         });
 
-        props = _.omit(props, ['children', 'renderer', 'className', 'all'].concat(Object.keys(propsMap)));
+        props = _.omit(props, ['children', 'renderer', 'className', 'all', 'renderIf'].concat(Object.keys(propsMap)));
 
         return (
             <div className={this.classSet(cssClasses)} {...props}>

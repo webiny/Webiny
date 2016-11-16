@@ -315,7 +315,7 @@
   background-color: white;
   height: 369px;
   overflow: visible;
-  padding: 0 20px;
+  padding: 0; /* adding padding to c3js causes visual issues - use margin instead */
   position: relative;
 }
 
@@ -406,9 +406,39 @@
     border: 1px solid #ddd;
     padding: 15px;
 
-    .toolbar-action button:not(.dropdown-toggle) {
-      padding: 7px;
-      border-radius: 0;
+    .editor-toolbar {
+      &.floating {
+        height: 50px;
+        position: fixed;
+        top: 53px;
+        z-index: 2000;
+        background-color: white;
+        padding: 10px;
+      }
+      min-height: 28px;
+      .btn {
+        margin: 0;
+      }
+      .dropdown > .btn {
+        height: 28px;
+        line-height: 100%;
+      }
+      .dropdown:after {
+        content: '';
+      }
+
+      .toolbar-action {
+        float: left;
+        display: block;
+        margin-right: 6px;
+        position: relative;
+        z-index: 1;
+
+        button:not(.dropdown-toggle) {
+          padding: 7px;
+          border-radius: 0;
+        }
+      }
     }
   }
 
@@ -416,6 +446,12 @@
     // border-top: 1px solid #ddd;
     cursor: text;
     margin-top: 10px;
+
+    span[data-text="true"] {
+      font-size: 1.2em;
+      // color: #393939;
+      line-height: 150%;
+    }
 
     .public-DraftEditorPlaceholder-root, .public-DraftEditor-content {
       margin: 0 -15px -15px;
@@ -445,21 +481,34 @@
       margin: 16px 0;
       padding: 10px 20px;
     }
+
+    figure {
+      .row:before,
+      .row:after {
+        content: ''
+      }
+    }
   }
 
   .component-plugin-wrapper {
-    padding: 20px;
-    border-radius: 0px;
-    //-webkit-box-shadow: inset -1px 2px 20px -5px rgba(135, 135, 135, 1);
-    //-moz-box-shadow: inset -1px 2px 20px -5px rgba(135, 135, 135, 1);
-    //box-shadow: inset -1px 2px 20px -5px rgba(135, 135, 135, 1);
+    border: 1px solid grey;
     float: left;
     width: 100%;
-    border: 1px solid grey;
+    &__code {
+      padding: 20px;
 
-    .form-group {
-      .clearfix::before, .clearfix::after {
-        content: ''
+      .form-group {
+        .clearfix::before, .clearfix::after {
+          content: ''
+        }
+      }
+    }
+    &__toolbar {
+      button {
+        border-top: 0;
+        border-left: 0;
+        border-radius: 0;
+        padding: 7px;
       }
     }
   }
@@ -533,14 +582,4 @@
     }
   }
 }
-
-.editor-toolbar {
-  .dropdown > .btn {
-    height: 28px;
-    line-height: 100%;
-  }
-}
-
 /** END OF DRAFT EDITOR **/
-
-@import "highlightjs/monokai.css";

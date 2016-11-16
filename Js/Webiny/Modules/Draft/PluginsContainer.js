@@ -35,7 +35,7 @@ export default class PluginsContainer {
             }
         };
 
-        this.mode = 'edit';
+        this.mode = editor.getPreview() ? 'preview' : 'edit';
 
         this.props = [
             'blockRenderMap',
@@ -105,7 +105,7 @@ export default class PluginsContainer {
                     },
                     callback
                 );
-            }
+            };
         }
         return draftDecorator;
     }
@@ -246,7 +246,7 @@ export default class PluginsContainer {
     }
 
     getToolbarActions() {
-        return this.config[this.mode].toolbar;
+        return this.config.edit.toolbar;
     }
 
     getCustomViews() {

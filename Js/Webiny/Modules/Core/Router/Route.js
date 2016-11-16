@@ -38,6 +38,13 @@ class Route {
             });
         }
 
+        const splatParams = pattern.match(this.splatParam);
+        if (splatParams) {
+            splatParams.forEach(item => {
+                this.paramNames.push(item.replace('*', ''));
+            });
+        }
+
         // Build route regex
         const regex = pattern.replace(this.namedParam, '([^\/]+)').replace(this.splatParam, '(.*?)');
         this.regex = new RegExp('^' + regex + '$');

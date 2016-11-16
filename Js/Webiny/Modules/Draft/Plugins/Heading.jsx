@@ -3,10 +3,13 @@ const Ui = Webiny.Ui.Components;
 import BlockTypePlugin from './../BasePlugins/BlockTypePlugin';
 
 const map = {
-    'untyped': 'Normal',
+    'unstyled': 'Normal',
     'header-one': 'Heading 1',
     'header-two': 'Heading 2',
-    'header-three': 'Heading 3'
+    'header-three': 'Heading 3',
+    'header-four': 'Heading 4',
+    'header-five': 'Heading 5',
+    'header-six': 'Heading 6'
 };
 
 class HeadingPlugin extends BlockTypePlugin {
@@ -23,14 +26,13 @@ class HeadingPlugin extends BlockTypePlugin {
     getEditConfig() {
         return {
             toolbar: () => {
-                let type = this.getStartBlockType('unstyled');
+                const type = this.getStartBlockType('unstyled');
 
                 return (
                     <Ui.Dropdown title={_.get(map, type, 'Normal')} disabled={this.editor.getReadOnly()}>
-                        <Ui.Dropdown.Link onClick={() => this.setHeading("unstyled")} title="Normal"/>
-                        <Ui.Dropdown.Link onClick={() => this.setHeading("header-one")} title="Header 1"/>
-                        <Ui.Dropdown.Link onClick={() => this.setHeading("header-two")} title="Header 2"/>
-                        <Ui.Dropdown.Link onClick={() => this.setHeading("header-three")} title="Header 3"/>
+                        {_.keys(map).map(k => (
+                            <Ui.Dropdown.Link key={k} onClick={() => this.setHeading(k)} title={map[k]}/>
+                        ))}
                     </Ui.Dropdown>
                 );
             }

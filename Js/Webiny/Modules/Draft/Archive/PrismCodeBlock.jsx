@@ -52,7 +52,7 @@ class CodeBlockComponent extends Webiny.Ui.Component {
 }
 
 CodeBlockComponent.defaultProps = {
-    renderer(){
+    renderer() {
         const editorProps = {
             ref: 'editor',
             stripPastedStyles: true,
@@ -79,7 +79,7 @@ CodeBlockComponent.defaultProps = {
                             <Ui.Dropdown.Link title="YAML" onClick={() => this.switchLanguage('yaml')}/>
                         </Ui.Dropdown>
                     </div>
-                    <div className={'language-'+this.state.language}>
+                    <div className={'language-' + this.state.language}>
                         <Editor {...editorProps}/>
                     </div>
                 </Ui.Grid.Col>
