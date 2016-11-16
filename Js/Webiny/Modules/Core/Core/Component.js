@@ -92,11 +92,6 @@ class Component extends React.Component {
         return true;
     }
 
-    onRouteChanged(callback) {
-        const stopListening = Dispatcher.on('RouteChanged', callback);
-        this.__listeners.push(stopListening);
-    }
-
     getClassName() {
         return Object.getPrototypeOf(this).constructor.name;
     }

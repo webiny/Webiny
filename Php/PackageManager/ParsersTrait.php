@@ -36,6 +36,8 @@ trait ParsersTrait
     /**
      * Parses and registers events attached to the component.
      *
+     * Greater Priority number means handler will be executed first (or sooner).
+     *
      * @param ConfigObject $info Parsed App.yaml ConfigObject.
      */
     private function parseEvents(ConfigObject $info)

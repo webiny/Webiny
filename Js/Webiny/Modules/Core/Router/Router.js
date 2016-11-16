@@ -1,5 +1,6 @@
 import RouterEvent from './RouterEvent';
 import Utils from './RouterUtils';
+import Dispatcher from './../Core/Dispatcher';
 
 /**
  * ROUTER
@@ -18,13 +19,14 @@ class Router {
         this.activeRoute = null;
         this.beforeStart = [];
         this.routeWillChange = [];
+        this.routeChanged = [];
         this.routeNotMatched = [];
         this.started = false;
     }
 
     start() {
         if (!this.baseUrl) {
-            return Q();
+            return Promise.resolve();
         }
 
         if (!this.started) {
@@ -48,9 +50,22 @@ class Router {
                 this.activeRoute = matched;
                 Utils.routeWillChange(matched, this.routeWillChange).then(routerEvent => {
                     if (!routerEvent.isStopped()) {
-                        Utils.renderRoute(matched);
+                        Utils.renderRoute(matched).then(route => {
+                            Dispatcher.dispatch('RouteChanged', new RouterEvent(route));
+                        });
                     }
                 }).catch(Utils.exceptionHandler);
+            });
+
+            // Listen for "RouteChanged" event and process callbacks
+            Dispatcher.on('RouteChanged', (event) => {
+                let chain = Promise.resolve(event);
+                this.routeChanged.forEach(callback => {
+                    chain = chain.then(() => {
+                        return callback(event);
+                    }).catch(Utils.exceptionHandler);
+                });
+                return chain;
             });
         }
 
@@ -61,8 +76,8 @@ class Router {
         /**
          * Execute beforeStart callbacks in a chain and see if start is prevented
          */
-        const routerEvent = new RouterEvent(matchedRoute);
-        let beforeStartChain = Q(routerEvent);
+        const routerEvent = new RouterEvent(matchedRoute, true);
+        let beforeStartChain = Promise.resolve(routerEvent);
         this.beforeStart.forEach(callback => {
             beforeStartChain = beforeStartChain.then(() => {
                 return callback(routerEvent);
@@ -74,7 +89,9 @@ class Router {
                 if (!matchedRoute) {
                     return Utils.handleRouteNotMatched(url, this.routeNotMatched);
                 }
-                Utils.renderRoute(event.route);
+                Utils.renderRoute(event.route).then(route => {
+                    Dispatcher.dispatch('RouteChanged', new RouterEvent(route, true));
+                });
             } else {
                 if (event.goTo !== null) {
                     this.goToRoute(event.goTo, event.goToParams);
@@ -95,13 +112,14 @@ class Router {
         return this;
     }
 
-    onRouteNotMatched(callback) {
-        this.routeNotMatched.push(callback);
+    onRouteChanged(callback) {
+        this.routeChanged.push(callback);
         return this;
     }
 
-    reloadRoute() {
-        Utils.renderRoute(this.activeRoute);
+    onRouteNotMatched(callback) {
+        this.routeNotMatched.push(callback);
+        return this;
     }
 
     addLayout(name, component) {

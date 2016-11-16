@@ -62,8 +62,6 @@ class RootElement extends View {
 
     onDidUpdate() {
         window.scrollTo(0, 0);
-        // Since this is a top level component, it will dispatch RouteChanged event after everything has finished rendering
-        Dispatcher.dispatch('RouteChanged', Router.getActiveRoute());
         this.checkHash();
     }
 
