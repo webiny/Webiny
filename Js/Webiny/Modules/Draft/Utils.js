@@ -39,13 +39,18 @@ const utils = {
         }
 
         const fragmentArray = [];
+
         if (insertData) {
             // creating a new ContentBlock including the entity with data
             // Entity will be created with a specific type, if defined, else will fall back to the ContentBlock type
             const {text, data, entity} = insertData;
+            let characterList = Immutable.List();
             type = insertData.type;
-            const entityKey = Draft.Entity.create(entity.type || type, entity.mutability, entity.data);
-            const charData = Draft.CharacterMetadata.create({entity: entityKey});
+            if (entity) {
+                const entityKey = Draft.Entity.create(entity.type || type, entity.mutability, entity.data);
+                const charData = Draft.CharacterMetadata.create({entity: entityKey});
+                characterList = Immutable.List(Immutable.Repeat(charData, text.length || 1));
+            }
 
             fragmentArray.push(
                 new Draft.ContentBlock({
@@ -53,7 +58,7 @@ const utils = {
                     type,
                     text,
                     data,
-                    characterList: Immutable.List(Immutable.Repeat(charData, text.length || 1)) // eslint-disable-line new-cap
+                    characterList // eslint-disable-line new-cap
                 })
             );
         }
@@ -74,7 +79,7 @@ const utils = {
         // replace the content block we reserved for our insert
         const contentStateWithBlock = Draft.Modifier.replaceWithFragment(newContentStateAfterSplit, insertionTargetSelection, fragment);
         // update editor state with our new state including the block
-        const newState = Draft.EditorState.push(editorState, contentStateWithBlock, `insert-fragment`);
+        const newState = Draft.EditorState.push(editorState, contentStateWithBlock, 'insert-fragment');
         return Draft.EditorState.forceSelection(newState, contentStateWithBlock.getSelectionAfter());
     },
 

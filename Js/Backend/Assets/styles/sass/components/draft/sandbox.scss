@@ -1,4 +1,4 @@
-.editor-sandbox {
+.react-sandbox {
   border-radius: 5px;
   border: 1px solid black;
   overflow: hidden;
@@ -57,7 +57,7 @@
 
     &__code-block {
       height: auto;
-      padding: 0px;
+      padding: 0;
       overflow: scroll;
 
       .form-group{
@@ -76,6 +76,19 @@
       margin: 5px;
       padding: 5px;
       overflow: scroll;
+      &__code-wrapper {
+        border: 1px solid grey;
+        float: left;
+        width: 100%;
+      }
+      &__code {
+        padding: 20px;
+        .form-group {
+          .clearfix::before, .clearfix::after {
+            content: ''
+          }
+        }
+      }
     }
   }
 }

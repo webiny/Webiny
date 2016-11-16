@@ -63,6 +63,10 @@ Image.defaultProps = {
             );
         }
 
+        if (this.state.cropImage && this.props.cropper.inline) {
+            return this.getCropper();
+        }
+
         const props = {
             onDrop: this.onDrop,
             onDragLeave: this.onDragLeave,
@@ -103,13 +107,13 @@ Image.defaultProps = {
                             ref="reader"
                             sizeLimit={this.props.sizeLimit}
                             onChange={this.fileChanged}/>
-                        {this.getCropper()}
                     </div>
                     <div className="txt_b">
                         <span>Dragging not convenient?</span>&nbsp;
                         <a href="#" onClick={this.getFiles}>SELECT A FILE HERE</a>
                     </div>
                 </div>
+                {this.getCropper()}
             </div>
         );
     }

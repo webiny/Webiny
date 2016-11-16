@@ -11,6 +11,7 @@ class ViewManager {
     }
 
     render(content) {
+        this.placeholders = {};
         _.each(content, (components, key) => {
             this.placeholders[key] = components;
         });

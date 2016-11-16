@@ -21,6 +21,7 @@ import AlignLeft from './Plugins/AlignLeft';
 import AlignCenter from './Plugins/AlignCenter';
 import AlignRight from './Plugins/AlignRight';
 import Link from './Plugins/Link';
+import Image from './Plugins/Image';
 import Blockquote from './Plugins/Blockquote';
 import Code from './Plugins/Code';
 import CodeBlock from './Plugins/CodeBlock';
@@ -60,6 +61,7 @@ class Module extends Webiny.Module {
                 AlignCenter,
                 AlignRight,
                 Link,
+                Image,
                 Blockquote,
                 Code,
                 CodeBlock,

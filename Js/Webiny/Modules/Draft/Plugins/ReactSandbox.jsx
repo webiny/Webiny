@@ -45,9 +45,9 @@ class ReactSandboxEditComponent extends Webiny.Ui.Component {
             'height': sandbox.offsetHeight + 'px',
             'width': sandbox.offsetWidth + 'px'
         });
-        //const previewArea = $(sandbox).find('.editor-sandbox__editor-area__preview-block')[0];
+        //const previewArea = $(sandbox).find('.react-sandbox__editor-area__preview-block')[0];
         //$(previewArea).css({'height': (sandbox.offsetHeight - 60) + 'px'});
-        //const editorArea = $(sandbox).find('.editor-sandbox__editor-area__code-block')[0];
+        //const editorArea = $(sandbox).find('.react-sandbox__editor-area__code-block')[0];
         //$(editorArea).css({'height': (sandbox.offsetHeight - 60) + 'px'});
     }
 
@@ -96,8 +96,8 @@ ReactSandboxEditComponent.defaultProps = {
             }
         };
         return (
-            <div className="editor-sandbox">
-                <Ui.Grid.Row className="editor-sandbox__toolbar">
+            <div className="react-sandbox">
+                <Ui.Grid.Row className="react-sandbox__toolbar">
                     <Ui.Grid.Col md={10}>
                         <Ui.Button onClick={this.toggleHideEditor} className={(!this.state.hideEditor && "paneActive")}>Code</Ui.Button>
                         <Ui.Button onClick={this.toggleHidePreview} className={!this.state.hidePreview && "paneActive"}>Preview</Ui.Button>
@@ -107,15 +107,15 @@ ReactSandboxEditComponent.defaultProps = {
                     </Ui.Grid.Col>
                 </Ui.Grid.Row>
 
-                <Ui.Grid.Row className="editor-sandbox__editor-area">
+                <Ui.Grid.Row className="react-sandbox__editor-area">
                     <Ui.Grid.Col md={(this.state.hidePreview ? 12 : 6)}
-                                 className={"editor-sandbox__editor-area__code-block code-block "+(this.state.hideEditor && "hide")}>
+                                 className={"react-sandbox__editor-area__code-block code-block "+(this.state.hideEditor && "hide")}>
                         <Ui.CodeEditor {...editorProps}/>
                     </Ui.Grid.Col>
                     <Ui.Grid.Col md={(this.state.hideEditor ? 12 : 6)}
-                                 className={"editor-sandbox__editor-area__preview-block "+(this.state.hidePreview && "hide")}>
-                        <div className="component-plugin-wrapper">
-                            <div className="component-plugin-wrapper__code">
+                                 className={"react-sandbox__editor-area__preview-block "+(this.state.hidePreview && "hide")}>
+                        <div className="react-sandbox__editor-area__preview-block__code-wrapper">
+                            <div className="react-sandbox__editor-area__preview-block__code">
                                 {React.isValidElement(this.state.code) && this.state.code}
                             </div>
                         </div>
