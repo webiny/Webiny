@@ -3,6 +3,7 @@ import Avatar from './Avatar/Avatar';
 import Gallery from './Gallery/Gallery';
 import GalleryImage from './Gallery/Image';
 import Image from './Image/Image';
+import SimpleFile from './File/SimpleFile';
 import FileReader from './FileReader';
 import InlineFileCropper from './InlineFileCropper';
 import ModalFileCropper from './ModalFileCropper';
@@ -16,6 +17,7 @@ class Module extends Webiny.Module {
             Avatar,
             Gallery,
             Image,
+            File: SimpleFile,
             ImageUploader,
             FileReader,
             InlineFileCropper,

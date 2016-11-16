@@ -74,7 +74,7 @@ class FileReader extends Webiny.Ui.Component {
 }
 
 FileReader.defaultProps = {
-    accept: '',
+    accept: [],
     multiple: false,
     sizeLimit: 2097152, // 10485760
     readAs: 'data', // data || binary

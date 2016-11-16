@@ -154,7 +154,13 @@ FormComponent.defaultProps = {
                 const Ui = Webiny.Ui.Components;
                 tooltip = <Ui.Tooltip key="label" target={<Ui.Icon icon="icon-info-circle"/>}>{this.props.tooltip}</Ui.Tooltip>;
             }
-            label = <label key="label" className="control-label">{this.props.label} {tooltip}</label>;
+
+            let required = null;
+            if (this.props.validate && this.props.validate.indexOf('required') > -1) {
+                required = <span className="mandat">*</span>;
+            }
+
+            label = <label key="label" className="control-label">{this.props.label} {required} {tooltip}</label>;
         }
 
         return label;
