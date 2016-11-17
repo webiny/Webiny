@@ -19,6 +19,7 @@ const Webiny = {
             _.merge(props, config);
         }
     },
+    EMPTY: '__webiny_empty__',
     Ui: {}
 };
 

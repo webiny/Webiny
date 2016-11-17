@@ -22,8 +22,6 @@ import Endpoint from './Api/Endpoint';
 import RootElement from './Ui/RootElement';
 import Placeholder from './Ui/Placeholder';
 import UiMenu from './Ui/Menu';
-import Hide from './Ui/Hide';
-import Show from './Ui/Show';
 import Value from './Ui/Value';
 
 
@@ -45,8 +43,6 @@ class Module extends WebinyModule {
                 Placeholder,
                 Component,
                 Components: {
-                    Hide,
-                    Show,
                     Value,
                     Filters: {}
                 },
