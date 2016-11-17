@@ -1,6 +1,7 @@
-import Component from './../Core/Component';
+import Webiny from 'Webiny';
+const Ui = Webiny.Ui.Components;
 
-class Show extends Component {
+class Show extends Webiny.Ui.Component {
 
 }
 

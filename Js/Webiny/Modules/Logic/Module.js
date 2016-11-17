@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
-import Switch from 'Switch';
-import Show from 'Show';
-import Hide from 'Hide';
+import Switch from './Switch';
+import Show from './Show';
+import Hide from './Hide';
 
 class Module extends Webiny.Module {
 
