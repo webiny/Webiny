@@ -85,7 +85,7 @@ Login.defaultProps = {
             type: 'password',
             name: 'password',
             placeholder: 'Password',
-            label: 'Password *',
+            label: 'Password',
             validate: 'required,password'
             // info: <span className="info-txt"><a tabIndex="-1" href="#">Forgot your password?</a></span>
         };
@@ -106,7 +106,7 @@ Login.defaultProps = {
                         <Ui.Form.Error container={container}/>
 
                         <div className="clear"></div>
-                        <Ui.Input name="username" placeholder="Enter email" label="Email address *" validate="required,email" onEnter={container.submit}/>
+                        <Ui.Input name="username" placeholder="Enter email" label="Email address" validate="required,email" onEnter={container.submit}/>
                         <Ui.Input {...passwordProps} onEnter={container.submit}/>
 
                         <div className="form-footer">

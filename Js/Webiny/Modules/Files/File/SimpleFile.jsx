@@ -34,7 +34,7 @@ class SimpleFile extends Webiny.Ui.FormComponent {
     }
 }
 
-SimpleFile.defaultProps =  _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
+SimpleFile.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     accept: [],
     sizeLimit: 2485760,
     readAs: 'data', // or binary
