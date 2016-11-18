@@ -18,13 +18,6 @@ class Bootstrap extends AbstractBootstrap
             ]
         ]);
 
-        /**
-         * @see http://php.net/manual/en/mongodb.setprofilinglevel.php
-         */
-        if (!$this->wIsProduction()) {
-            $this->wDatabase()->command(['profile' => 2]);
-        }
-
         User::onActivity(function (User $user) {
             $user->lastActive = new DateTimeObject('now');
             $user->save();
