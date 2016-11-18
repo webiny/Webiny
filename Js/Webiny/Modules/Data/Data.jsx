@@ -25,9 +25,10 @@ class Data extends Webiny.Ui.Component {
 
     componentDidMount() {
         super.componentDidMount();
-        this.request = this.api.execute().then(response => {
-            this.setData(response);
-            return response.getData();
+        this.request = this.api.execute().then(apiResponse => {
+            this.setData(apiResponse);
+            this.props.onInitialLoad(apiResponse);
+            return apiResponse.getData();
         });
 
         if (_.isNumber(this.props.autoRefresh)) {
@@ -66,7 +67,10 @@ class Data extends Webiny.Ui.Component {
 
     filter(filters = {}) {
         this.setState({loading: true});
-        this.request = this.api.setQuery(filters).execute().then(this.setData);
+        this.request = this.api.setQuery(filters).execute().then(apiResponse => {
+            this.setData(apiResponse);
+            this.props.onLoad(apiResponse);
+        });
         return this.request;
     }
 }
@@ -74,6 +78,8 @@ class Data extends Webiny.Ui.Component {
 Data.defaultProps = {
     waitForData: true,
     autoRefresh: null,
+    onLoad: _.noop,
+    onInitialLoad: _.noop,
     renderer() {
         if (this.props.waitForData && !this.state.data) {
             return null;
