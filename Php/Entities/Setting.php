@@ -74,7 +74,7 @@ class Setting extends AbstractEntity
     /**
      * Load settings
      *
-     * @return Setting|null
+     * @return ArrayObject
      */
     public static function load()
     {
