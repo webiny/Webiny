@@ -121,9 +121,20 @@ class EntityParser extends AbstractParser
         foreach ($apiDocs as $name => $httpMethods) {
             foreach ($httpMethods as $httpMethod => $config) {
                 $key = $name . '.' . $httpMethod;
-                if (!$includeCrudMethods && in_array($key, $crudPatterns)) {
+
+                // There may be a case when a developer uses a trait with extra api methods and parser registers those methods
+                // but if those methods are not initialized, this following check may fail with an error.
+                // To avoid that and similar situations - we check if method is initialized before doing anything else.
+                $entityMethod = $entityInstance->api($httpMethod, $name);
+                if (!$entityMethod) {
                     continue;
                 }
+
+                $crudMethod = in_array($key, $crudPatterns);
+                if (!$includeCrudMethods && $crudMethod && !$config->key('custom', false, true)) {
+                    continue;
+                }
+
 
                 $config = $this->arr($config);
                 $definition = [
@@ -135,18 +146,13 @@ class EntityParser extends AbstractParser
                     'method'        => strtoupper($httpMethod),
                     'public'        => false,
                     'authorization' => true,
+                    'custom'        => !$crudMethod || $config->key('custom', false, true),
                     'headers'       => []
                 ];
 
-                // There may be a case when a developer uses a trait with extra api methods and parser registers those methods
-                // but if those methods are not initialized, this following check may fail with an error.
-                // To avoid it - we check if method is initialized before doing anything else.
-                $entityMethod = $entityInstance->api($httpMethod, $name);
-                if ($entityMethod) {
-                    $isPublic = $entityMethod->getPublic();
-                    $definition['public'] = $isPublic;
-                    $definition['authorization'] = $isPublic ? false : $entityMethod->getAuthorization();
-                }
+                $isPublic = $entityMethod->getPublic();
+                $definition['public'] = $isPublic;
+                $definition['authorization'] = $isPublic ? false : $entityMethod->getAuthorization();
 
                 if (!$definition['public']) {
                     $definition['headers'][] = $this->headerApiToken;

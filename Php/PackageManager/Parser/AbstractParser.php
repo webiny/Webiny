@@ -169,6 +169,11 @@ abstract class AbstractParser
                         continue;
                     }
 
+                    if ($line == 'custom') {
+                        $tmpDoc->key('custom', true);
+                        continue;
+                    }
+
                     if ($line->startsWith('description')) {
                         $descriptionStarted = true;
                         $description = $annotationLine[1] ?? '';

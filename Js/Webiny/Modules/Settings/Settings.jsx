@@ -6,19 +6,21 @@ class Settings extends Webiny.Ui.Component {
 }
 
 Settings.defaultProps = {
-    id: null,
     api: '/entities/core/settings',
     onSuccessMessage: () => 'Settings saved!',
     onSubmitSuccess: null,
     renderer() {
         const formProps = {
             api: this.props.api,
-            fields: '*',
-            url: 'key',
-            id: this.props.id,
+            createHttpMethod: 'patch',
             onSuccessMessage: this.props.onSuccessMessage,
             onSubmitSuccess: this.props.onSubmitSuccess,
-            children: this.props.children
+            children: this.props.children,
+            loadModel() {
+                return this.api.get('/').then(apiResponse => {
+                    return apiResponse.getData();
+                });
+            }
         };
 
         return <Ui.Form {...formProps}/>;

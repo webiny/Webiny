@@ -28,6 +28,7 @@ class Entities extends AbstractService
         $this->api('get', '/', function () {
             $singleEntity = $this->wRequest()->query('entity', false);
             $withDetails = StdObjectWrapper::toBool($this->wRequest()->query('withDetails', false));
+            $includeCrudMethods = StdObjectWrapper::toBool($this->wRequest()->query('crudMethods', false));
             $entities = [];
             /* @var $app App */
             foreach ($this->wApps() as $app) {
@@ -39,7 +40,7 @@ class Entities extends AbstractService
                     if ($withDetails) {
                         $entityParser = new EntityParser($entity['class']);
                         $entity['attributes'] = $entityParser->getAttributes();
-                        $entity['methods'] = $entityParser->getApiMethods(false);
+                        $entity['methods'] = $entityParser->getApiMethods($includeCrudMethods);
                         $entity['relations'] = $entityParser->getRelations();
                     }
 

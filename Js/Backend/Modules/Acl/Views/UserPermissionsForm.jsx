@@ -14,12 +14,22 @@ class UserPermissionsForm extends Webiny.Ui.View {
             serviceFilter: ''
         };
 
+        this.crud = {
+            list: '/.get',
+            get: '{id}.get',
+            create: '/.post',
+            update: '{id}.patch',
+            delete: '{id}.delete'
+        };
+
+        this.crudPatterns = _.values(this.crud);
+
         this.bindMethods('renderService');
     }
 
     componentWillMount() {
         super.componentWillMount();
-        new Webiny.Api.Endpoint('/services/core/entities', {query: {withDetails: true}}).get().then(apiResponse => {
+        new Webiny.Api.Endpoint('/services/core/entities', {query: {withDetails: true, crudMethods: true}}).get().then(apiResponse => {
             this.setState({entities: apiResponse.getData()});
             return new Webiny.Api.Endpoint('/services/core/services', {query: {withDetails: true}}).get().then(apiResponse => {
                 this.setState({services: apiResponse.getData()});
@@ -89,6 +99,11 @@ UserPermissionsForm.defaultProps = {
                             return;
                         }
 
+                        const crudCreate = _.find(entity.methods, {key: this.crud.create});
+                        const crudRead = _.find(entity.methods, {key: this.crud.get}) || _.find(entity.methods, {key: this.crud.list});
+                        const crudUpdate = _.find(entity.methods, {key: this.crud.update});
+                        const crudDelete = _.find(entity.methods, {key: this.crud.delete});
+
                         const entityPermissions = {
                             id: entity.class,
                             name: entity.class,
@@ -96,14 +111,26 @@ UserPermissionsForm.defaultProps = {
                             crudRead: _.get(model, 'permissions.entities.' + entity.class + '.crudRead', false),
                             crudUpdate: _.get(model, 'permissions.entities.' + entity.class + '.crudUpdate', false),
                             crudDelete: _.get(model, 'permissions.entities.' + entity.class + '.crudDelete', false),
+                            hasCrudCreate: crudCreate && !crudCreate.custom,
+                            hasCrudRead: crudRead && !crudRead.custom,
+                            hasCrudUpdate: crudUpdate && !crudUpdate.custom,
+                            hasCrudDelete: crudDelete && !crudDelete.custom,
                             custom: false
                         };
 
                         if (entity.methods.length) {
-                            entityPermissions.custom = entity.methods.map(m => {
+                            entityPermissions.custom = [];
+                            _.each(entity.methods, (m => {
+                                if (!m.custom) {
+                                    return;
+                                }
                                 const exposed = _.get(model, 'permissions.entities.' + entity.class + '.' + m.key, false);
-                                return _.assign({}, m, {exposed});
-                            });
+                                entityPermissions.custom.push(_.assign({}, m, {exposed}));
+                            }));
+
+                            if (entityPermissions.custom.length === 0) {
+                                entityPermissions.custom = false;
+                            }
                         }
 
                         entities.push(entityPermissions);
@@ -164,10 +191,26 @@ UserPermissionsForm.defaultProps = {
                                                     <Table.Row>
                                                         <Table.RowDetailsField hide={data => !data.custom}/>
                                                         <Table.Field name="name" label="Entity"/>
-                                                        <Table.ToggleField name="crudCreate" label="Create" align="center"/>
-                                                        <Table.ToggleField name="crudRead" label="Read" align="center"/>
-                                                        <Table.ToggleField name="crudUpdate" label="Update" align="center"/>
-                                                        <Table.ToggleField name="crudDelete" label="Delete" align="center"/>
+                                                        <Table.ToggleField
+                                                            disabled={r => !r.hasCrudCreate}
+                                                            name="crudCreate"
+                                                            label="Create"
+                                                            align="center"/>
+                                                        <Table.ToggleField
+                                                            disabled={r => !r.hasCrudRead}
+                                                            name="crudRead"
+                                                            label="Read"
+                                                            align="center"/>
+                                                        <Table.ToggleField
+                                                            disabled={r => !r.hasCrudUpdate}
+                                                            name="crudUpdate"
+                                                            label="Update"
+                                                            align="center"/>
+                                                        <Table.ToggleField
+                                                            disabled={r => !r.hasCrudDelete}
+                                                            name="crudDelete"
+                                                            label="Delete"
+                                                            align="center"/>
                                                     </Table.Row>
                                                     <Table.RowDetails>
                                                         {data => {
@@ -191,7 +234,8 @@ UserPermissionsForm.defaultProps = {
                                                                                     </td>
                                                                                     <td className="text-left">
                                                                                         {m.description || 'No description available'}<br/>
-                                                                                        <Ui.Label type="info"><strong>{m.method.toUpperCase()}</strong></Ui.Label>
+                                                                                        <Ui.Label
+                                                                                            type="info"><strong>{m.method.toUpperCase()}</strong></Ui.Label>
                                                                                         <a>{m.url}</a>
                                                                                     </td>
                                                                                 </tr>

@@ -4,6 +4,14 @@
 .switch {
   color: #f85926;
 
+  &.disabled {
+    > label {
+      background-color: #f4f4f4;
+      border: 1px solid #e7e7e7;
+      pointer-events: none;
+    }
+  }
+
   label {
     position: relative;
     display: inline-block;
@@ -62,7 +70,7 @@
   cursor: pointer;
   position: relative;
   display: inline-block;
-  
+
   > label {
     cursor: pointer;
 

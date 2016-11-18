@@ -175,7 +175,7 @@ class FormContainer extends Webiny.Ui.Component {
             return this.api.setConfig(config).patch(this.api.url + '/' + model.id, model).then(res => this.__processSubmitResponse(model, res));
         }
 
-        return this.api.setConfig(config).post(this.api.url, model).then(res => this.__processSubmitResponse(model, res));
+        return this.api.setConfig(config)[this.props.createHttpMethod](this.api.url, model).then(res => this.__processSubmitResponse(model, res));
     }
 
     onInvalid() {
@@ -607,6 +607,7 @@ class FormContainer extends Webiny.Ui.Component {
 FormContainer.defaultProps = {
     defaultModel: {},
     connectToRouter: false,
+    createHttpMethod: 'post',
     onSubmitSuccess: null,
     onFailure: _.noop,
     onProgress(pe) {

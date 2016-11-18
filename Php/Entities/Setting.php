@@ -1,8 +1,10 @@
 <?php
 namespace Apps\Core\Php\Entities;
 
+use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
+use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
 /**
  * Class Setting
@@ -20,50 +22,82 @@ class Setting extends AbstractEntity
 
     protected static $entityCollection = 'Settings';
     protected static $entityMask = '{key}';
+    protected static $key = null;
 
     public function __construct()
     {
+        if (!static::$key) {
+            throw new AppException('You must specify a settings key for your settings entity class.');
+        }
+
         parent::__construct();
 
         $this->attr('key')->char()->setValidators('required,unique')->setToArrayDefault();
         $this->attr('settings')->object()->setToArrayDefault();
 
-        $this->api('get', 'key/{key}', function ($key) {
-            $record = $this->findOne(['key' => $key]);
+        $this->getApiMethods()->removeKey(['get', 'patch', 'post', 'delete']);
+        /**
+         * @api.name Get settings
+         * @api.custom
+         * @api.description Get settings
+         */
+        $this->api('GET', '/', function () {
+            $record = $this->findOne(['key' => static::$key]);
             if (!$record) {
                 $record = new self;
-                $record->key = $key;
+                $record->key = static::$key;
             }
-            $record->id = $key;
 
-            return $record->toArray('*');
+            return $record->settings->val();
         });
 
-        $this->api('patch', 'key/{key}', function ($key) {
-            $record = $this->findOne(['key' => $key]);
-            $data = $this->wRequest()->getRequestData();
+        /**
+         * @api.name Update settings
+         * @api.description Update settings
+         */
+        $this->api('PATCH', '/', function () {
+            $record = $this->findOne(['key' => static::$key]);
             if (empty($record)) {
                 $record = new self();
-                $record->key = $key;
+                $record->key = static::$key;
             }
-            $record->settings = $data['settings'];
+            $record->settings = $this->wRequest()->getRequestData();
             $record->save();
 
-            $record->id = $key;
-
-            return $record->toArray('*');
+            return $record->settings->val();
         });
     }
 
     /**
-     * Load settings by key
-     *
-     * @param $key
+     * Load settings
      *
      * @return Setting|null
      */
-    public static function load($key)
+    public static function load()
     {
-        return static::findOne(['key' => $key]);
+        /* @var $settings Setting */
+        $settings = static::findOne(['key' => static::$key]);
+        if ($settings && $settings->settings->count()) {
+            return $settings->settings;
+        }
+
+        return null;
+    }
+
+    /**
+     * Update settings
+     *
+     * @param array|ArrayObject $settings
+     *
+     * @return Setting|null
+     */
+    public static function update($settings)
+    {
+        /* @var $entity Setting */
+        $entity = static::findOne(['key' => static::$key]);
+        if ($entity) {
+            $entity->settings = $settings;
+            $entity->save();
+        }
     }
 }
