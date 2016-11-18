@@ -30,7 +30,10 @@ Field.defaultProps = {
     route: null,
     params: null,
     renderer() {
-        let content = _.get(this.props.data, this.props.name) || this.props.default;
+        let content = _.get(this.props.data, this.props.name);
+        if (content === null || content === undefined) {
+            content = this.props.default;
+        }
         if (_.isFunction(this.props.children)) {
             content = this.props.children.call(this, this.props.data, this);
         }
