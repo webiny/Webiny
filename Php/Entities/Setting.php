@@ -26,10 +26,6 @@ class Setting extends AbstractEntity
 
     public function __construct()
     {
-        if (!static::$key) {
-            throw new AppException('You must specify a settings key for your settings entity class.');
-        }
-
         parent::__construct();
 
         $this->attr('key')->char()->setValidators('required,unique')->setToArrayDefault();
@@ -42,6 +38,10 @@ class Setting extends AbstractEntity
          * @api.description Get settings
          */
         $this->api('GET', '/', function () {
+            if (!static::$key) {
+                throw new AppException('You must specify a settings key for ' . get_called_class());
+            }
+
             $record = $this->findOne(['key' => static::$key]);
             if (!$record) {
                 $record = new self;
@@ -56,6 +56,9 @@ class Setting extends AbstractEntity
          * @api.description Update settings
          */
         $this->api('PATCH', '/', function () {
+            if (!static::$key) {
+                throw new AppException('You must specify a settings key for ' . get_called_class());
+            }
             $record = $this->findOne(['key' => static::$key]);
             if (empty($record)) {
                 $record = new self();

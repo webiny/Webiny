@@ -40,6 +40,14 @@ class Authorization
      */
     private $security;
 
+    private $patterns = [
+        '/.get'       => 'crudRead',
+        '{id}.get'    => 'crudRead',
+        '/.post'      => 'crudCreate',
+        '{id}.patch'  => 'crudUpdate',
+        '{id}.delete' => 'crudDelete'
+    ];
+
     protected function init()
     {
         $this->security = Security::getInstance();
@@ -192,6 +200,11 @@ class Authorization
         /* @var $role UserRole */
         foreach ($roles as $role) {
             if ($role->checkPermission($class, $permission)) {
+                return true;
+            }
+
+            // Check if given permission pattern is a crud pattern
+            if (isset($this->patterns[$permission]) && $role->checkPermission($class, $this->patterns[$permission])) {
                 return true;
             }
         }

@@ -18,6 +18,9 @@ Settings.defaultProps = {
             children: this.props.children,
             loadModel() {
                 return this.api.get('/').then(apiResponse => {
+                    if (apiResponse.isError()) {
+                        return this.handleApiError(apiResponse);
+                    }
                     return apiResponse.getData();
                 });
             }
