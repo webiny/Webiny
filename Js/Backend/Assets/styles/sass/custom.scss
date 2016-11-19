@@ -405,6 +405,11 @@
     min-height: 45px;
     height: auto;
   }
+
+  &.toolbar-floated{
+    padding-top:45px;
+  }
+
   &__root {
     background: #fff;
     border: 1px solid #ddd;
@@ -422,6 +427,7 @@
         z-index: 2000;
         background-color: white;
         padding: 10px;
+        box-shadow: 0px 5px 10px -8px gray;
       }
       .btn {
         margin: 0;
