@@ -25,7 +25,6 @@ import Image from './Plugins/Image';
 import Blockquote from './Plugins/Blockquote';
 import Code from './Plugins/Code';
 import CodeBlock from './Plugins/CodeBlock';
-import ReactSandbox from './Plugins/ReactSandbox';
 import Table from './Plugins/Table';
 import ToJSON from './Plugins/ToJSON';
 
@@ -65,7 +64,6 @@ class Module extends Webiny.Module {
                 Blockquote,
                 Code,
                 CodeBlock,
-                ReactSandbox,
                 Table,
                 ToJSON
             }
