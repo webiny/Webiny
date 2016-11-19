@@ -4,34 +4,131 @@ import AtomicPlugin from './../BasePlugins/AtomicPlugin';
 import Utils from './../Utils';
 
 class ImageEditComponent extends Webiny.Ui.Component {
+    constructor(props) {
+        super(props);
 
+        this.state = {
+            size: props.data.size
+        };
+
+        this.bindMethods('resize', 'resizeStart', 'resizeEnd', 'getSize');
+    }
+
+    alignImage(align) {
+        this.props.updateBlockData({align});
+    }
+
+    resizeStart(e) {
+        this.size = {
+            width: this.refs.resizer.clientWidth,
+            height: this.refs.resizer.clientHeight
+        };
+
+        this.aspectRatio = this.size.width / this.size.height;
+
+        this.position = {
+            x: e.clientX,
+            y: e.clientY
+        };
+    }
+
+    resize(e) {
+        e.preventDefault();
+        const deltaX = this.position.x - e.clientX;
+        const deltaY = this.position.y - e.clientY;
+
+        if (Math.abs(deltaX) > 200 || Math.abs(deltaY) > 200) {
+            return;
+        }
+
+        if (deltaX !== 0) {
+            this.size.width = this.size.width - deltaX;
+            this.size.height = Math.round(this.size.width / this.aspectRatio);
+        } else {
+            this.size.height = this.size.height - deltaY;
+            this.size.width = Math.round(this.size.height * this.aspectRatio);
+        }
+
+        this.position = {
+            x: e.clientX,
+            y: e.clientY
+        };
+
+        this.setState({size: this.size});
+    }
+
+    resizeEnd() {
+        this.props.updateBlockData({size: this.state.size});
+    }
+
+    getSize(offset = 0) {
+        return {
+            width: _.has(this.state, 'size.width') ? this.state.size.width - offset : 'auto',
+            height: _.has(this.state, 'size.height') ? this.state.size.height - offset : 'auto'
+        };
+    }
 }
 
 ImageEditComponent.defaultProps = {
     renderer() {
         const captionChange = caption => this.props.updateBlockData({caption});
+
+        const btnProps = (align) => {
+            return {
+                type: 'button',
+                className: this.classSet('btn btn-default', {active: this.props.data.align === align}),
+                onClick: this.alignImage.bind(this, align)
+            };
+        };
+
+        const draggable = {
+            draggable: true,
+            onDragStart: this.resizeStart,
+            onDrag: this.resize,
+            onDragEnd: this.resizeEnd
+        };
+
         return (
             <div className="image-plugin-wrapper">
-                <Ui.Grid.Col xs={12}>
-                    <img src={this.props.data.url}/>
-                    <Ui.Input value={this.props.data.caption} onChange={captionChange} placeholder="Enter a caption for this image"/>
-                </Ui.Grid.Col>
+                <Ui.Grid.Row>
+                    <Ui.Grid.Col xs={12}>
+                        <div className="btn-group pull-right">
+                            <button {...btnProps('left')}>Left</button>
+                            <button {...btnProps('center')}>Center</button>
+                            <button {...btnProps('right')}>Right</button>
+                        </div>
+                    </Ui.Grid.Col>
+                </Ui.Grid.Row>
+
+                <div className={'image-wrapper'} style={{textAlign: this.props.data.align}}>
+                    <div className="resizer" ref="resizer" style={this.getSize()}>
+                        <img src={this.props.data.url} style={this.getSize(2)}/>
+                        <span className="resize-handle br" {...draggable}></span>
+                    </div>
+                </div>
+                <Ui.Input value={this.props.data.caption} onChange={captionChange} placeholder="Enter a caption for this image"/>
             </div>
         );
     }
 };
 
 class ImageComponent extends Webiny.Ui.Component {
-
+    getSize(offset = 0) {
+        return {
+            width: _.has(this.props.data, 'size.width') ? this.props.data.size.width - offset : 'auto',
+            height: _.has(this.props.data, 'size.height') ? this.props.data.size.height - offset : 'auto'
+        };
+    }
 }
 
 ImageComponent.defaultProps = {
     renderer() {
-        const captionChange = caption => this.props.updateBlockData({caption});
         return (
             <div className="image-plugin-wrapper">
-                <img src={this.props.data.url}/>
-                <Ui.Input value={this.props.data.caption} onChange={captionChange} placeholder="Enter a caption for this image"/>
+                <div className={'image-wrapper'} style={{textAlign: this.props.data.align}}>
+                    <img src={this.props.data.url} {...this.getSize()}/>
+                    <div>{this.props.data.caption}</div>
+                </div>
             </div>
         );
     }
@@ -130,6 +227,20 @@ class ImagePlugin extends AtomicPlugin {
                 if (contentBlock.getType() === 'atomic' && plugin === this.name) {
                     return {
                         component: ImageEditComponent,
+                        editable: false
+                    };
+                }
+            }
+        };
+    }
+
+    getPreviewConfig() {
+        return {
+            blockRendererFn: (contentBlock) => {
+                const plugin = contentBlock.getData().get('plugin');
+                if (contentBlock.getType() === 'atomic' && plugin === this.name) {
+                    return {
+                        component: ImageComponent,
                         editable: false
                     };
                 }

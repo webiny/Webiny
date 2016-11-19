@@ -498,7 +498,35 @@
   }
 
   .image-plugin-wrapper {
+    display: block;
     width: auto;
+    height: auto;
+    padding: 20px;
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.175);
+
+    .image-wrapper {
+      margin: 20px;
+
+      .resizer {
+        border: 1px dashed blue;
+        width: auto;
+        position: relative;
+        display: inline-block;
+        .resize-handle {
+          position: absolute;
+          height: 10px;
+          width: 10px;
+          border: 1px solid blue;
+          border-radius: 50px;
+          &.br {
+            cursor: nwse-resize;
+            bottom: -5px;
+            right: -5px;
+            background-color: #fff;
+          }
+        }
+      }
+    }
   }
 
   .code-block .rich-editor {
