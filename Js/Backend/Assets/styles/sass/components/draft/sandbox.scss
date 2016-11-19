@@ -63,7 +63,7 @@
         height: 100%;
         overflow: visible;
         > div {
-          padding: 0px 0 5px 0;
+          padding: 0;
           margin: 0px;
           height: 100%;
           overflow: visible;
@@ -71,10 +71,14 @@
       }
 
       .CodeMirror {
-        height: 100%;
+        height: 100% !important;
         overflow: visible;
         font-size: 13px;
         font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+
+        .CodeMirror-scrollbar-filler{
+          opacity: 0;
+        }
 
 
         ::-webkit-scrollbar {
@@ -141,13 +145,13 @@
           top: 0 !important;;
         }
 
+        pre{
+          padding: 10px !important;
+          margin: 10px 0 10px 0 !important;;
+        }
+
         .form-group {
           overflow: visible;
-
-          pre{
-            padding: 9.5px;
-            margin: 0 0 10px;
-          }
 
           .clearfix::before, .clearfix::after {
             content: ''
