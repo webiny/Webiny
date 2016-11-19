@@ -3,12 +3,7 @@
   border: 1px solid black;
   overflow: hidden;
   background: #272822;
-
-  .CodeMirror-scroll {
-    height: auto;
-    overflow-y: hidden;
-    overflow-x: auto;
-  }
+  min-height: 200px;
 
   &__toolbar {
     height: 45px;
@@ -26,8 +21,9 @@
       padding: 0px
     }
 
-    .btn,.btn:focus, .btn:active {
+    .btn, .btn:focus, .btn:active, .btn:hover {
       padding: 5px 10px;
+      border:none;
       border-radius: 0px;
       margin-right: 25px;
       width: 100px;
@@ -36,8 +32,9 @@
       font-size: 14px;
       color: #fff;
       background-color: transparent;
+      box-shadow: none;
 
-      &.paneActive{
+      &.paneActive {
         background-color: #00C7B1;
         color: #333;
       }
@@ -53,37 +50,105 @@
   &__editor-area {
     margin: 0;
     display: flex;
-    overflow: auto;
+    overflow: hidden;
 
     &__code-block {
-      height: auto;
-      padding: 0;
-      overflow: scroll;
+      padding: 0px;
+      overflow: hidden;
+      height: 300px;
 
-      .form-group{
-        margin-bottom: 5px;
+      .form-group {
+        padding: 0px;
+        margin: 0px;
+        height: 100%;
+        overflow: visible;
+        > div {
+          padding: 0px 0 5px 0;
+          margin: 0px;
+          height: 100%;
+          overflow: visible;
+        }
       }
 
-      .CodeMirror{
+      .CodeMirror {
         height: 100%;
-        max-height: 450px;
+        overflow: visible;
+        font-size: 13px;
+        font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+
+
+        ::-webkit-scrollbar {
+          -webkit-appearance: none;
+          width: 7px;
+        }
+
+        ::-webkit-scrollbar-track{
+          background-color: #272822;
+        }
+
+        ::-webkit-scrollbar-thumb{
+          border-radius: 0px;
+          background-color: #444;
+          border: none;
+        }
+
+        ::-webkit-scrollbar:vertical{
+          width: 7px;
+        }
+        ::-webkit-scrollbar:horizontal {
+          height: 7px;
+        }
+
       }
     }
 
     &__preview-block {
-      height: auto;
+      height: 300px;
       background: #fff;
-      margin: 5px;
-      padding: 5px;
+      margin: 0 1px 5px 0;
+      padding: 20px;
       overflow: scroll;
+
+      ::-webkit-scrollbar {
+        -webkit-appearance: none;
+      }
+
+      ::-webkit-scrollbar-track{
+        background-color: #272822;
+      }
+
+      ::-webkit-scrollbar-thumb{
+        border-radius: 0px;
+        background-color: #444;
+        border: none;
+      }
+
+      ::-webkit-scrollbar:vertical{
+        width: 7px;
+      }
+      ::-webkit-scrollbar:horizontal {
+        height: 7px;
+      }
       &__code-wrapper {
-        border: 1px solid grey;
         float: left;
         width: 100%;
       }
       &__code {
-        padding: 20px;
+        padding: 0px;
+
+        .help-block{
+          opacity: 100 !important;
+          top: 0 !important;;
+        }
+
         .form-group {
+          overflow: auto;
+
+          pre{
+            padding: 9.5px;
+            margin: 0 0 10px;
+          }
+
           .clearfix::before, .clearfix::after {
             content: ''
           }
