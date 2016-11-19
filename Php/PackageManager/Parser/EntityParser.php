@@ -120,6 +120,7 @@ class EntityParser extends AbstractParser
         $entityInstance = new $this->class;
         foreach ($apiDocs as $name => $httpMethods) {
             foreach ($httpMethods as $httpMethod => $config) {
+                $config = $this->arr($config);
                 $key = $name . '.' . $httpMethod;
 
                 // There may be a case when a developer uses a trait with extra api methods and parser registers those methods

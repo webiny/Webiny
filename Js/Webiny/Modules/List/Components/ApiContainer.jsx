@@ -13,7 +13,10 @@ class ApiContainer extends BaseContainer {
         super.componentWillMount();
         this.prepare(_.clone(this.props));
         if (this.props.autoLoad) {
-            this.loadData();
+            this.loadData().then(data => {
+                this.props.onInitialLoad(_.get(data, 'list'), _.get(data, 'meta'));
+
+            });
         }
     }
 
@@ -41,7 +44,9 @@ class ApiContainer extends BaseContainer {
         // Need to do this explicit check because 'query' prop can contain data coming from anywhere and it is not processed in 'prepare'
         const queryPropsChanged = !_.isEqual(props.query, this.props.query);
         if (this.props.autoLoad && (queryParamsChanged || queryPropsChanged)) {
-            this.loadData(props);
+            this.loadData(props).then(data => {
+                this.props.onLoad(_.get(data, 'list'), _.get(data, 'meta'));
+            });
         }
     }
 
@@ -116,6 +121,8 @@ class ApiContainer extends BaseContainer {
 }
 
 ApiContainer.defaultProps = _.merge({}, BaseContainer.defaultProps, {
+    onInitialLoad: _.noop,
+    onLoad: _.noop,
     autoLoad: true,
     autoRefresh: null,
     prepareLoadedData: null
