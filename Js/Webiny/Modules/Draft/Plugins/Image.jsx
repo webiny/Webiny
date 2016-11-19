@@ -126,7 +126,7 @@ ImageComponent.defaultProps = {
         return (
             <div className="image-plugin-wrapper">
                 <div className={'image-wrapper'} style={{textAlign: this.props.data.align}}>
-                    <img src={this.props.data.url} {...this.getSize()}/>
+                    <img src={this.props.data.url} {...this.getSize.call(this)}/>
                     <div>{this.props.data.caption}</div>
                 </div>
             </div>
@@ -135,7 +135,7 @@ ImageComponent.defaultProps = {
 };
 
 class ImagePlugin extends AtomicPlugin {
-    constructor(config) {
+    constructor(config = {}) {
         super(config);
         this.validate = _.get(config, 'validate', 'required');
         this.name = 'image';
@@ -146,9 +146,11 @@ class ImagePlugin extends AtomicPlugin {
         }
     }
 
-    submitModal(model) {
+    submitModal(model, form) {
         if (model.image) {
+            form.showLoading();
             this.api.post('/', model.image).then(apiResponse => {
+                form.hideLoading();
                 delete model.image;
                 const file = apiResponse.getData();
                 model.url = file.src;
@@ -189,6 +191,7 @@ class ImagePlugin extends AtomicPlugin {
                             const urlValidator = model.image ? null : 'required,url';
                             return (
                                 <wrapper>
+                                    <Ui.Form.Loader container={form}/>
                                     <Ui.Modal.Header title="Insert image"/>
                                     <Ui.Modal.Body noPadding>
                                         <Ui.Tabs>
@@ -199,16 +202,17 @@ class ImagePlugin extends AtomicPlugin {
                                                 <Ui.Files.Image
                                                     name="image"
                                                     cropper={{
-                                                    inline: true,
-                                                    title: 'Crop your image',
-                                                    action: 'Upload image',
-                                                    config: {
-                                                        closeOnClick: false,
-                                                        autoCropArea: 0.7,
-                                                        guides: false,
-                                                        strict: true,
-                                                        mouseWheelZoom: true
-                                                    }}}/>
+                                                        inline: true,
+                                                        title: 'Crop your image',
+                                                        action: 'Upload image',
+                                                        config: {
+                                                            closeOnClick: false,
+                                                            autoCropArea: 0.7,
+                                                            guides: false,
+                                                            strict: true,
+                                                            mouseWheelZoom: true
+                                                        }}
+                                                    }/>
                                             </Ui.Tabs.Tab>
                                         </Ui.Tabs>
                                     </Ui.Modal.Body>
