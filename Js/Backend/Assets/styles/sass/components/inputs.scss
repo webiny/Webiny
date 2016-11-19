@@ -169,6 +169,7 @@ textarea.form-control {
       }
     }
 
+    /* Commented by Pavel: this selector was simulating a caret - but we have caret explicitly in the markup so I'm disabling this
     &:after {
       position: absolute;
       top: 50%;
@@ -180,7 +181,7 @@ textarea.form-control {
       font-weight: normal;
       speak: none;
       pointer-events: none;
-    }
+    }*/
   }
   .picker-holder {
     position: relative;
