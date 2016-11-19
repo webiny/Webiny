@@ -21,8 +21,9 @@
       padding: 0px
     }
 
-    .btn, .btn:focus, .btn:active {
+    .btn, .btn:focus, .btn:active, .btn:hover {
       padding: 5px 10px;
+      border:none;
       border-radius: 0px;
       margin-right: 25px;
       width: 100px;
@@ -31,6 +32,7 @@
       font-size: 14px;
       color: #fff;
       background-color: transparent;
+      box-shadow: none;
 
       &.paneActive {
         background-color: #00C7B1;
@@ -128,13 +130,25 @@
         height: 7px;
       }
       &__code-wrapper {
-        border: 1px solid grey;
         float: left;
         width: 100%;
       }
       &__code {
-        padding: 20px;
+        padding: 0px;
+
+        .help-block{
+          opacity: 100 !important;
+          top: 0 !important;;
+        }
+
         .form-group {
+          overflow: auto;
+
+          pre{
+            padding: 9.5px;
+            margin: 0 0 10px;
+          }
+
           .clearfix::before, .clearfix::after {
             content: ''
           }
