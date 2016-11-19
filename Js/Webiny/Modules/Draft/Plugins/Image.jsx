@@ -186,22 +186,23 @@ class ImagePlugin extends AtomicPlugin {
             toolbar: <Ui.Draft.Toolbar.Atomic icon="fa-image" plugin={this} tooltip="Insert an image"/>,
             customView: (
                 <Ui.Modal.Dialog ui={this.id}>
-                    <Ui.Form onSubmit={this.submitModal.bind(this)}>
-                        {(model, form) => {
-                            const urlValidator = model.image ? null : 'required,url';
-                            return (
-                                <wrapper>
-                                    <Ui.Form.Loader container={form}/>
-                                    <Ui.Modal.Header title="Insert image"/>
-                                    <Ui.Modal.Body noPadding>
-                                        <Ui.Tabs>
-                                            <Ui.Tabs.Tab label="URL" icon="fa-link">
-                                                <Ui.Input name="url" placeholder="Enter an image URL" label="URL" validate={urlValidator}/>
-                                            </Ui.Tabs.Tab>
-                                            <Ui.Tabs.Tab label="Upload" icon="fa-upload">
-                                                <Ui.Files.Image
-                                                    name="image"
-                                                    cropper={{
+                    {dialog => (
+                        <Ui.Form onSubmit={this.submitModal.bind(this)}>
+                            {(model, form) => {
+                                const urlValidator = model.image ? null : 'required,url';
+                                return (
+                                    <wrapper>
+                                        <Ui.Form.Loader container={form}/>
+                                        <Ui.Modal.Header title="Insert image"/>
+                                        <Ui.Modal.Body noPadding>
+                                            <Ui.Tabs>
+                                                <Ui.Tabs.Tab label="URL" icon="fa-link">
+                                                    <Ui.Input name="url" placeholder="Enter an image URL" label="URL" validate={urlValidator}/>
+                                                </Ui.Tabs.Tab>
+                                                <Ui.Tabs.Tab label="Upload" icon="fa-upload">
+                                                    <Ui.Files.Image
+                                                        name="image"
+                                                        cropper={{
                                                         inline: true,
                                                         title: 'Crop your image',
                                                         action: 'Upload image',
@@ -213,17 +214,18 @@ class ImagePlugin extends AtomicPlugin {
                                                             mouseWheelZoom: true
                                                         }}
                                                     }/>
-                                            </Ui.Tabs.Tab>
-                                        </Ui.Tabs>
-                                    </Ui.Modal.Body>
-                                    <Ui.Modal.Footer align="right">
-                                        <Ui.Button type="default" key="cancel" label="Cancel" onClick={this.ui(this.id + ':hide')}/>
-                                        <Ui.Button type="primary" key="submit" label="Insert" onClick={form.submit}/>
-                                    </Ui.Modal.Footer>
-                                </wrapper>
-                            );
-                        }}
-                    </Ui.Form>
+                                                </Ui.Tabs.Tab>
+                                            </Ui.Tabs>
+                                        </Ui.Modal.Body>
+                                        <Ui.Modal.Footer align="right">
+                                            <Ui.Button type="default" key="cancel" label="Cancel" onClick={dialog.hide}/>
+                                            <Ui.Button type="primary" key="submit" label="Insert" onClick={form.submit}/>
+                                        </Ui.Modal.Footer>
+                                    </wrapper>
+                                );
+                            }}
+                        </Ui.Form>
+                    )}
                 </Ui.Modal.Dialog>
             ),
             blockRendererFn: (contentBlock) => {

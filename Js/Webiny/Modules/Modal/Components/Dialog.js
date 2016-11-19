@@ -257,6 +257,10 @@ Dialog.defaultProps = {
     style: {},
     renderDialog() {
         const className = this.classSet({modal: true, 'modal-wizard': this.props.wide});
+        let content = this.props.children;
+        if (_.isFunction(content)) {
+            content = content.call(this, this);
+        }
         return (
             <div style={_.merge({}, {display: 'block'}, this.props.style)}>
 
@@ -275,7 +279,7 @@ Dialog.defaultProps = {
                         hide={{translateY: -100, ease: 'easeOut', opacity: 0, duration: this.modalHideDuration}}>
                         <div className={this.classSet('modal-dialog modal-show', this.props.className)} style={{top: -50}}>
                             <div className="modal-content">
-                                {this.prepareChildren(this.props.children)}
+                                {this.prepareChildren(content)}
                             </div>
                         </div>
                     </Ui.Animate>

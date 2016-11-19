@@ -47,7 +47,7 @@ class SystemApiTokenModal extends Webiny.Ui.ModalComponent {
                 </Ui.Modal.Body>
                 <Ui.Modal.Footer>
                     <Ui.Link type="default" align="left" route="ApiTokens.Logs" params={{token: 'system'}}>View logs</Ui.Link>
-                    <Ui.Button type="secondary" label="Close" onClick={this.hide}/>
+                    <Ui.Button label="Close" onClick={this.hide}/>
                 </Ui.Modal.Footer>
             </Ui.Modal.Dialog>
         );
