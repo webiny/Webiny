@@ -94,7 +94,7 @@ i18n.setTranslation = function setTranslation(key, translation) {
 };
 
 i18n.getTranslations = function getTranslations() {
-    return _.get(translations);
+    return translations;
 };
 
 i18n.hasTranslation = function hasTranslation(key) {

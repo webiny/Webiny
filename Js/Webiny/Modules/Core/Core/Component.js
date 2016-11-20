@@ -8,6 +8,24 @@ class Component extends React.Component {
     constructor(props) {
         super(props);
 
+        this.i18n = (label, variables, options = {}) => {
+            if (!label) {
+                return Webiny.i18n;
+            }
+
+            let key = this.i18n.key;
+            if (!key) {
+                const app = _.get(Webiny.Router.getActiveRoute(), 'module.app.name');
+                const module = _.get(Webiny.Router.getActiveRoute(), 'module.name');
+                key = `${app}.${module}.${this.getClassName()}`;
+            }
+
+            key = _.trimEnd(key, '.') + '.' + md5(label);
+            return Webiny.i18n.render(key, label, variables, options);
+        };
+
+        this.i18n.key = null;
+
         this.__listeners = [];
         this.__cursors = [];
         this.__mounted = false;
@@ -205,28 +223,6 @@ class Component extends React.Component {
             injected[k] = v;
         });
         return injected;
-    }
-
-    /**
-     * Method for a more convenient use of i18n module - this will automatically generate a complete namespace for the label
-     * If this method is called without parameters, it will return Webiny.i18n module, from which you can use other functions as well
-     * @param label
-     * @param variables
-     * @param options
-     * @returns {*}
-     */
-    i18n(label, variables, options = {}) {
-        if (!label) {
-            return Webiny.i18n;
-        }
-
-        const module = _.get(Webiny.Router.getActiveRoute(), 'module.name');
-        const app = _.get(Webiny.Router.getActiveRoute(), 'module.app.name');
-        const key = `${app}.${module}.${this.getClassName()}.${md5(label)}`;
-
-        return <webiny-i18n id={key}>{Webiny.i18n(key, label, variables, options)}</webiny-i18n>;
-        // TODO: when finished, we will enable the line below
-        // return Webiny.i18n.render(key, label, variables, options);
     }
 
     render() {
