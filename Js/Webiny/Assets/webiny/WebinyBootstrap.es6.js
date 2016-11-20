@@ -17,7 +17,7 @@ function runWebiny() {
     }
 
     // Include required apps
-    let boot = Q();
+    let boot = Promise.resolve();
     _.each(config.require || [], depName => {
         boot = boot.then(() => WebinyBootstrap.includeApp(depName, true));
     });
@@ -69,7 +69,7 @@ class WebinyBootstrapClass {
 
     run(config) {
         if (initialized) {
-            return Q(false);
+            return Promise.resolve(false);
         }
 
         initialized = true;
@@ -125,7 +125,7 @@ class WebinyBootstrapClass {
             this.includeCss(item);
         });
 
-        return Q.all(assets).then(() => {
+        return Promise.all(assets).then(() => {
             return this.import(meta.name).then(m => {
                 return {
                     instance: m.default,
@@ -152,13 +152,20 @@ class WebinyBootstrapClass {
             return request(config).then(res => {
                 this.meta[appName] = res.data.data;
                 return this.loadAssets(this.meta[appName]).then(app => {
-                    app.instance.meta = app.config;
-                    if (meta === true) {
-                        app.instance.addModules(app.config.modules);
-                        _.set(Webiny.Apps, app.config.name, app.instance);
-                        return app.instance.run();
-                    }
-                    return app;
+                    let appBoot = Promise.resolve();
+                    _.each(app.instance.dependencies || [], depName => {
+                        appBoot = appBoot.then(() => WebinyBootstrap.includeApp(depName, true));
+                    });
+
+                    return appBoot.then(() => {
+                        app.instance.meta = app.config;
+                        if (meta === true) {
+                            app.instance.addModules(app.config.modules);
+                            _.set(Webiny.Apps, app.config.name, app.instance);
+                            return app.instance.run();
+                        }
+                        return app;
+                    });
                 });
             });
         }

@@ -6,6 +6,7 @@ class App {
     constructor(name) {
         this.name = name;
         this.modules = [];
+        this.dependencies = [];
         this.onBeforeRender = _.noop;
         this.element = 'default';
     }
@@ -17,6 +18,11 @@ class App {
 
     setRootElement(element) {
         this.element = element;
+        return this;
+    }
+
+    setDependencies(...dependencies) {
+        this.dependencies = dependencies;
         return this;
     }
 
