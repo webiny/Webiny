@@ -3,10 +3,10 @@ import RootElement from './../Ui/RootElement';
 
 class App {
 
-    constructor(name) {
+    constructor(name, dependencies = []) {
         this.name = name;
         this.modules = [];
-        this.dependencies = [];
+        this.dependencies = _.isArray(dependencies) ? dependencies : [];
         this.onBeforeRender = _.noop;
         this.element = 'default';
     }
@@ -18,11 +18,6 @@ class App {
 
     setRootElement(element) {
         this.element = element;
-        return this;
-    }
-
-    setDependencies(...dependencies) {
-        this.dependencies = dependencies;
         return this;
     }
 
