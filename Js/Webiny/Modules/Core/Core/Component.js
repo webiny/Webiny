@@ -8,6 +8,19 @@ class Component extends React.Component {
     constructor(props) {
         super(props);
 
+        this.__listeners = [];
+        this.__cursors = [];
+        this.__mounted = false;
+        this.bindMethods('bindTo,isRendered');
+
+        /**
+         * Method for a more convenient use of i18n module - this will automatically generate a complete namespace for the label
+         * If this method is called without parameters, it will return Webiny.i18n module, from which you can use other functions as well
+         * @param label
+         * @param variables
+         * @param options
+         * @returns {*}
+         */
         this.i18n = (label, variables, options = {}) => {
             if (!label) {
                 return Webiny.i18n;
@@ -24,12 +37,11 @@ class Component extends React.Component {
             return Webiny.i18n.render(key, label, variables, options);
         };
 
+        /**
+         * If set, it will be used in the component instead of dynamically created key
+         * @type {null}
+         */
         this.i18n.key = null;
-
-        this.__listeners = [];
-        this.__cursors = [];
-        this.__mounted = false;
-        this.bindMethods('bindTo,isRendered');
     }
 
     componentWillMount() {
