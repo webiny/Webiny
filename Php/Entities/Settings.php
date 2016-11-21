@@ -7,7 +7,7 @@ use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
 /**
- * Class Setting
+ * Class Settings
  *
  * @property string $id
  * @property string $key
@@ -16,7 +16,7 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  * @package Apps\Core\Php\Entities
  *
  */
-class Setting extends AbstractEntity
+class Settings extends AbstractEntity
 {
     use WebinyTrait;
 
@@ -78,7 +78,7 @@ class Setting extends AbstractEntity
      */
     public static function load()
     {
-        /* @var $settings Setting */
+        /* @var $settings Settings */
         $settings = static::findOne(['key' => static::$key]);
         if ($settings && $settings->settings->count()) {
             return $settings->settings;
@@ -92,11 +92,11 @@ class Setting extends AbstractEntity
      *
      * @param array|ArrayObject $settings
      *
-     * @return Setting|null
+     * @return Settings|null
      */
     public static function update($settings)
     {
-        /* @var $entity Setting */
+        /* @var $entity Settings */
         $entity = static::findOne(['key' => static::$key]);
         if ($entity) {
             $entity->settings = $settings;
