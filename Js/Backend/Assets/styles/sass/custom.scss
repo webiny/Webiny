@@ -406,8 +406,8 @@
     height: auto;
   }
 
-  &.toolbar-floated{
-    padding-top:45px;
+  &.toolbar-floated {
+    padding-top: 45px;
   }
 
   &__root {
@@ -499,6 +499,12 @@
     figure {
       .row:before,
       .row:after {
+        content: ''
+      }
+    }
+
+    .clearfix {
+      &:before, &:after {
         content: ''
       }
     }

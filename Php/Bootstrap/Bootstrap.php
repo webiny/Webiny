@@ -131,8 +131,16 @@ class Bootstrap
 
             $configSet = false;
             foreach ($configSets as $name => $domain) {
-                if ($currentDomain == $this->url($domain)->getDomain()) {
+                if ($domain instanceof ConfigObject) {
+                    foreach ($domain as $d) {
+                        if ($currentDomain == $this->url($d)->getDomain()) {
+                            $configSet = $name;
+                            break 2;
+                        }
+                    }
+                } elseif ($currentDomain == $this->url($domain)->getDomain()) {
                     $configSet = $name;
+                    break;
                 }
             }
             if (!$configSet) {
