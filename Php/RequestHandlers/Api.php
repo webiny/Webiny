@@ -27,6 +27,7 @@ class Api
         }
 
         try {
+            header("Access-Control-Allow-Origin: *");
             $this->apiEvent = new ApiEvent();
 
             $response = null;
