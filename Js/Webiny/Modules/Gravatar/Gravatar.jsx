@@ -8,7 +8,7 @@ Gravatar.defaultProps = {
     size: 48,
     renderer() {
         const props = {
-            src: 'http://www.gravatar.com/avatar/' + this.props.hash + '?s=' + this.props.size,
+            src: '//www.gravatar.com/avatar/' + this.props.hash + '?s=' + this.props.size,
             width: this.props.size,
             height: this.props.size
         };
