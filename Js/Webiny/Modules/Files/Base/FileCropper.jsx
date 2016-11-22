@@ -11,8 +11,13 @@ class FileCropper extends Webiny.Ui.Component {
         this.bindMethods('initCropper,getCacheBust,applyCropping,destroyCropper,getImage');
     }
 
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        this.destroyCropper();
+    }
+
     initCropper() {
-        const data = this.props.config;
+        const data = _.cloneDeep(this.props.config);
         data.crop = e => {
             this.setState({width: Math.floor(e.width), height: Math.floor(e.height)});
         };
