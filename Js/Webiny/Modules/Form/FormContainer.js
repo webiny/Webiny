@@ -43,7 +43,6 @@ class FormContainer extends Webiny.Ui.Component {
             'cancel',
             'validate',
             'onSubmit',
-            'onCancel',
             'onInvalid',
             'isSubmitDisabled',
             'enableSubmit',
@@ -185,14 +184,6 @@ class FormContainer extends Webiny.Ui.Component {
         }
     }
 
-    onCancel() {
-        if (_.isString(this.props.onCancel)) {
-            Webiny.Router.goToRoute(this.props.onCancel);
-        } else if (_.isFunction(this.props.onCancel)) {
-            this.props.onCancel(this);
-        }
-    }
-
     /**
      * MODEL METHODS
      */
@@ -261,7 +252,6 @@ class FormContainer extends Webiny.Ui.Component {
             this.request = this.api.execute(this.api.httpMethod, this.api.url + '/' + id).then(apiResponse => {
                 this.request = null;
                 if (apiResponse.isAborted()) {
-                    this.cancel();
                     return;
                 }
 
@@ -324,7 +314,11 @@ class FormContainer extends Webiny.Ui.Component {
     }
 
     cancel() {
-        this.onCancel();
+        if (_.isString(this.props.onCancel)) {
+            Webiny.Router.goToRoute(this.props.onCancel);
+        } else if (_.isFunction(this.props.onCancel)) {
+            this.props.onCancel(this);
+        }
     }
 
     validate() {
