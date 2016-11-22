@@ -159,7 +159,7 @@ class WebinyBootstrapClass {
             if (autoRun) {
                 // Remove all Authentication modules except the one defined in the bootstrap config
                 const modules = app.config.modules;
-                if (app.config.name !== this.config.authenticationApp) {
+                if (app.config.name !== this.config.authentication && app.config.name !== 'Core.Webiny') {
                     delete modules['Authentication'];
                 }
                 app.instance.meta = app.config;
