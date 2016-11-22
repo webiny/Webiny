@@ -26,7 +26,7 @@ CodeEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             value: this.props.value,
             onChange: this.props.onChange,
             onFocus: this.props.onFocus,
-            placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder),
+            placeholder: this.getPlaceholder(),
             theme: this.props.theme,
             mode: this.props.mode,
             readOnly: this.props.readOnly

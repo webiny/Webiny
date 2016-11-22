@@ -18,7 +18,7 @@ Container.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             className: 'form-control form-group--keywords',
             value: this.props.value,
             onChange: this.props.onChange,
-            placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder),
+            placeholder: this.getPlaceholder(),
             style: this.props.style,
             mode: this.props.mode,
             readOnly: _.get(this.props, 'readOnly', false)

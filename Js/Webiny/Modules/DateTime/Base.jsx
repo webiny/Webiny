@@ -83,7 +83,7 @@ Base.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             className: this.classSet('form-control', {placeholder: !this.props.value}),
             value: this.props.value || '',
             onChange: _.noop,
-            placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder)
+            placeholder: this.getPlaceholder()
         };
 
         return (

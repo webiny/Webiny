@@ -399,7 +399,7 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         const inputProps = {
             type: 'text',
             readOnly: this.props.readOnly || false,
-            placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder),
+            placeholder: this.getPlaceholder(),
             autoComplete: 'off',
             spellCheck: 'false',
             dir: 'auto',

@@ -113,6 +113,14 @@ class FormComponent extends Component {
         return this.props.disabled;
     }
 
+    getPlaceholder() {
+        if (React.isValidElement(this.props.placeholder) && _.get(this.props.placeholder, 'type.name') === 'I18N') {
+            const props = this.props.placeholder.props;
+            return Webiny.i18n(props.translationKey, props.placeholder, props.variables, props.options);
+        }
+        return this.props.placeholder;
+    }
+
     renderLabel() {
         return this.props.labelRenderer.call(this);
     }
@@ -138,6 +146,7 @@ FormComponent.defaultProps = {
     disabled: false,
     disabledBy: null,
     label: null,
+    placeholder: null,
     info: null,
     description: null,
     form: null,
@@ -180,9 +189,9 @@ FormComponent.defaultProps = {
         }
 
         if (this.state.isValid === true) {
-            return <span className="icon icon-good"></span>;
+            return <span className="icon icon-good"/>;
         }
-        return <span className="icon icon-bad"></span>;
+        return <span className="icon icon-bad"/>;
     },
     infoRenderer() {
         let info = this.props.info;
