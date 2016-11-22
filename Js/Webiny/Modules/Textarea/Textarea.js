@@ -19,7 +19,7 @@ Textarea.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             disabled: this.isDisabled(),
             className: 'form-control',
             value: this.props.value || '',
-            placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder),
+            placeholder: this.getPlaceholder(),
             style: this.props.style,
             onChange: this.props.onChange
         };

@@ -178,7 +178,7 @@ class SimpleSelect extends Webiny.Ui.Component {
             disabled: props.disabled,
             minimumResultsForSearch: props.minimumResultsForSearch,
             minimumInputLength: props.minimumInputLength,
-            placeholder: _.get(props.placeholder, 'props.children', props.placeholder),
+            placeholder: props.placeholder,
             allowClear: props.allowClear,
             templateResult: item => this.itemRenderer(item, 'optionRenderer'),
             templateSelection: item => this.itemRenderer(item, 'selectedRenderer')

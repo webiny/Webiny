@@ -44,7 +44,7 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             type: this.props.type,
             className: 'form-control',
             value: this.getValue() || '',
-            placeholder: _.get(this.props.placeholder, 'props.children', this.props.placeholder),
+            placeholder: this.getPlaceholder(),
             onKeyUp: this.props.onKeyUp,
             onKeyDown: this.props.onKeyDown !== _.noop ? this.props.onKeyDown : this.onKeyDown.bind(this),
             onChange: this.props.onChange

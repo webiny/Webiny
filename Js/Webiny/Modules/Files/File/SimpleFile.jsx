@@ -61,7 +61,7 @@ SimpleFile.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                 <div className="choose-file">
                     <input
                         type="text"
-                        placeholder={this.props.placeholder}
+                        placeholder={this.getPlaceholder()}
                         readOnly={true}
                         onClick={this.getFiles}
                         className="form-control"
