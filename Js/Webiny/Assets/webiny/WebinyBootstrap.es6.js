@@ -144,13 +144,13 @@ class WebinyBootstrapClass {
     includeApp(appName, meta) {
         if (!meta || meta === true) {
             const config = {
-                url: webinyApiPath + '/services/core/apps/' + appName,
+                url: webinyWebPath + '/build/' + webinyEnvironment + '/' + appName.replace('.', '/') + '/meta.json',
                 dataType: 'json',
                 contentType: 'application/json;charset=UTF-8',
                 processData: false
             };
             return request(config).then(res => {
-                this.meta[appName] = res.data.data;
+                this.meta[appName] = res.data;
                 return this.loadAssets(this.meta[appName]).then(app => {
                     let appBoot = Promise.resolve();
                     _.each(app.instance.dependencies || [], depName => {
