@@ -7,7 +7,6 @@ function runWebiny() {
     const config = WebinyBootstrap.config;
     const appElement = document.querySelector('webiny-app');
     const appName = config.app;
-    const authenticationApp = config.authentication || 'Core.Backend';
 
     // Configure Router
     if (config.router) {
@@ -17,6 +16,7 @@ function runWebiny() {
     }
 
     // Include required apps
+    // TODO: remove this - dependencies are now specified through JS
     let boot = Promise.resolve();
     _.each(config.require || [], depName => {
         boot = boot.then(() => WebinyBootstrap.includeApp(depName));
@@ -86,7 +86,7 @@ class WebinyBootstrapClass {
         });
     }
 
-    loadAssets(meta) {
+    loadScripts(meta) {
         const assets = [];
         _.each(_.get(meta.assets, 'js', []), item => {
             const vendors = new RegExp('\/vendors([-0-9a-z]+)?.js');
@@ -95,22 +95,12 @@ class WebinyBootstrapClass {
                 return;
             }
 
-
             if (vendors.test(item)) {
                 this.includeScript(item);
                 return;
             }
 
             assets.push(this.import(item));
-        });
-
-        const vendors = new RegExp('\/vendors([-0-9a-z]+)?.css');
-        _.each(_.get(meta.assets, 'css', []), item => {
-            // Do NOT import Core.Webiny vendors.css
-            if (meta.name === 'Core.Webiny' && vendors.test(item)) {
-                return;
-            }
-            this.includeCss(item);
         });
 
         return Promise.all(assets).then(() => {
@@ -123,6 +113,19 @@ class WebinyBootstrapClass {
         });
     }
 
+    loadCss(app) {
+        const meta = app.instance.meta;
+        const vendors = new RegExp('\/vendors([-0-9a-z]+)?.css');
+        _.each(_.get(meta.assets, 'css', []), item => {
+            // Do NOT import Core.Webiny vendors.css
+            if (meta.name === 'Core.Webiny' && vendors.test(item)) {
+                return;
+            }
+            this.includeCss(item);
+        });
+        return app;
+    }
+
     /**
      * Include app
      * @param appName
@@ -133,7 +136,12 @@ class WebinyBootstrapClass {
     includeApp(appName, meta = null, autoRun = true) {
         if (_.has(webinyMeta, appName) || _.isPlainObject(meta)) {
             this.meta[appName] = _.get(webinyMeta, appName, meta);
-            return this.loadAssets(this.meta[appName]).then(app => this.runApp(app, autoRun));
+            return this.loadScripts(this.meta[appName]).then(app => {
+                return this.runApp(app, autoRun).then(app => {
+                    console.log(app);
+                    return this.loadCss(app);
+                });
+            });
         } else {
             const config = {
                 url: webinyWebPath + '/build/' + webinyEnvironment + '/' + appName.replace('.', '/') + '/meta.json',
@@ -143,7 +151,12 @@ class WebinyBootstrapClass {
             };
             return request(config).then(res => {
                 this.meta[appName] = res.data;
-                return this.loadAssets(this.meta[appName]).then(app => this.runApp(app, autoRun));
+                return this.loadScripts(this.meta[appName]).then(app => {
+                    return this.runApp(app, autoRun).then(app => {
+                        console.log(app);
+                        return this.loadCss(app);
+                    });
+                });
             });
         }
     }
@@ -170,7 +183,7 @@ class WebinyBootstrapClass {
                 if (this.config.app === app.config.name) {
                     return app;
                 }
-                return app.instance.run();
+                return app.instance.run().then(() => app);
             }
             return app;
         });
