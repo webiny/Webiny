@@ -19,19 +19,11 @@ function runWebiny() {
     // Include required apps
     let boot = Promise.resolve();
     _.each(config.require || [], depName => {
-        boot = boot.then(() => WebinyBootstrap.includeApp(depName, true));
+        boot = boot.then(() => WebinyBootstrap.includeApp(depName));
     });
 
     return boot.then(() => {
         return WebinyBootstrap.includeApp(appName).then(app => {
-            // Filter modules
-            const modules = app.config.modules;
-            if (app.config.name !== authenticationApp) {
-                delete modules['Authentication'];
-            }
-            app.instance.meta = app.config;
-            app.instance.addModules(modules);
-            _.set(Webiny.Apps, app.config.name, app.instance);
             return app.instance.run(appElement);
         });
     });
@@ -81,19 +73,15 @@ class WebinyBootstrapClass {
 
         console.groupCollapsed('Bootstrap');
         // First we need to import Core/Webiny
-        return this.includeApp('Core.Webiny').then(app => {
-            app.instance.meta = app.config;
-            _.set(Webiny.Apps, app.config.name, app.instance);
-            return app.instance.addModules(this.meta['Core.Webiny'].modules).run().then(() => {
-                // Include logger
-                System.import('Core/Webiny/logger').then(m => {
-                    _.set(Webiny, 'Logger', new m.default());
-                });
+        return this.includeApp('Core.Webiny').then(() => {
+            // Include logger
+            System.import('Core/Webiny/logger').then(m => {
+                _.set(Webiny, 'Logger', new m.default());
+            });
 
-                return runWebiny().then(() => {
-                    console.groupEnd('Bootstrap');
-                    return Webiny;
-                });
+            return runWebiny().then(() => {
+                console.groupEnd('Bootstrap');
+                return Webiny;
             });
         });
     }
@@ -138,11 +126,15 @@ class WebinyBootstrapClass {
     /**
      * Include app
      * @param appName
-     * @param object|boolean meta If true, will load modules and run the app
+     * @param meta
+     * @param autoRun
      * @returns {*}
      */
-    includeApp(appName, meta) {
-        if (!meta || meta === true) {
+    includeApp(appName, meta = null, autoRun = true) {
+        if (_.has(webinyMeta, appName) || _.isPlainObject(meta)) {
+            this.meta[appName] = _.get(webinyMeta, appName, meta);
+            return this.loadAssets(this.meta[appName]).then(app => this.runApp(app, autoRun));
+        } else {
             const config = {
                 url: webinyWebPath + '/build/' + webinyEnvironment + '/' + appName.replace('.', '/') + '/meta.json',
                 dataType: 'json',
@@ -151,26 +143,37 @@ class WebinyBootstrapClass {
             };
             return request(config).then(res => {
                 this.meta[appName] = res.data;
-                return this.loadAssets(this.meta[appName]).then(app => {
-                    let appBoot = Promise.resolve();
-                    _.each(app.instance.dependencies || [], depName => {
-                        appBoot = appBoot.then(() => WebinyBootstrap.includeApp(depName, true));
-                    });
-
-                    return appBoot.then(() => {
-                        app.instance.meta = app.config;
-                        if (meta === true) {
-                            app.instance.addModules(app.config.modules);
-                            _.set(Webiny.Apps, app.config.name, app.instance);
-                            return app.instance.run();
-                        }
-                        return app;
-                    });
-                });
+                return this.loadAssets(this.meta[appName]).then(app => this.runApp(app, autoRun));
             });
         }
-        this.meta[appName] = meta;
-        return this.loadAssets(meta);
+    }
+
+    runApp(app, autoRun = true) {
+        let appBoot = Promise.resolve();
+        _.each(app.instance.dependencies || [], depName => {
+            appBoot = appBoot.then(() => WebinyBootstrap.includeApp(depName));
+        });
+
+        return appBoot.then(() => {
+            app.instance.meta = app.config;
+            if (autoRun) {
+                // Remove all Authentication modules except the one defined in the bootstrap config
+                const modules = app.config.modules;
+                if (app.config.name !== this.config.authenticationApp) {
+                    delete modules['Authentication'];
+                }
+                app.instance.meta = app.config;
+                app.instance.addModules(modules);
+
+                _.set(Webiny.Apps, app.config.name, app.instance);
+                // Do not run main app (defined in TPL bootstrap)
+                if (this.config.app === app.config.name) {
+                    return app;
+                }
+                return app.instance.run();
+            }
+            return app;
+        });
     }
 
     includeCss(filename) {

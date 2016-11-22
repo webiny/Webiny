@@ -38,9 +38,11 @@ class SmartyExtension extends AbstractSmartyExtension
         $webPath = $this->wConfig()->getConfig()->get('Application.WebPath');
         $apiPath = $this->wConfig()->getConfig()->get('Application.ApiPath');
         $jsConfig = $this->wConfig()->getConfig()->get('Js', new ConfigObject())->toArray();
-        $apps = new Apps();
+
+        $appsHelper = new Apps();
+
         try {
-            $meta = $apps->getAppsMeta('Core.Webiny');
+            $meta = $appsHelper->getAppsMeta('Core.Webiny');
         } catch (StorageException $e) {
             ob_end_clean();
             echo '<h2>Meta files are not available!</h2>';
@@ -57,6 +59,13 @@ class SmartyExtension extends AbstractSmartyExtension
         $cssPath = '';
         $jsPath = '';
 
+        $metaConfig = ['Core.Webiny' => $meta];
+
+        $apps = array_filter(explode(',', $params['apps'] ?? ''));
+        foreach ($apps as $app) {
+            $metaConfig[$app] = $appsHelper->getAppsMeta($app);
+        }
+
         foreach ($meta['assets']['js'] as $file) {
             if ($this->str($file)->contains('/vendors')) {
                 $jsPath = $file;
@@ -69,7 +78,9 @@ class SmartyExtension extends AbstractSmartyExtension
             }
         }
 
-        $config = json_encode($jsConfig, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+        $flags = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE;
+        $config = json_encode($jsConfig, $flags);
+        $appsMeta = json_encode($metaConfig, $flags);
 
         return <<<EOT
     <script type="text/javascript">
@@ -77,6 +88,7 @@ class SmartyExtension extends AbstractSmartyExtension
         var webinyWebPath = '{$webPath}';
         var webinyApiPath = '{$apiPath}';
         var webinyConfig = {$config};
+        var webinyMeta = {$appsMeta};
     </script>
     <link href="{$cssPath}" rel="stylesheet" type="text/css"/>
     <script src="{$jsPath}" type="text/javascript"></script>
