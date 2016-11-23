@@ -94,13 +94,22 @@ class Authorization
                 $authCookie = $this->wRequest()->getRequestData()['X-Webiny-Authorization'] ?? null;
             }
 
+            /* @var $class AbstractEntity */
+            $class = $this->userClass;
             try {
-                /* @var $class AbstractEntity */
-                $class = $this->userClass;
                 $user = $this->login->getUser($authCookie);
                 $this->user = $class::findOne(['email' => $user->getUsername()]);
                 $this->user->trigger('onActivity');
             } catch (\Exception $le) {
+                $requestToken = urldecode($this->wRequest()->header('X-Webiny-Api-Token'));
+                $systemToken = $this->wConfig()->getConfig()->get('Application.Acl.Token');
+                if ($systemToken && $systemToken == $requestToken) {
+                    $this->user = new $class();
+                    $this->user->roles[] = UserRole::findOne(['slug' => 'administrator']);
+
+                    return $this->user;
+                }
+
                 return null;
             }
         }
