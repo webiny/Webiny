@@ -137,28 +137,27 @@ class WebinyBootstrapClass {
         if (_.has(webinyMeta, appName) || _.isPlainObject(meta)) {
             this.meta[appName] = _.get(webinyMeta, appName, meta);
             return this.loadScripts(this.meta[appName]).then(app => {
-                return this.runApp(app, autoRun).then(app => {
-                    console.log(app);
+                return this.runApp(app, autoRun).then(() => {
                     return this.loadCss(app);
                 });
             });
-        } else {
-            const config = {
-                url: webinyWebPath + '/build/' + webinyEnvironment + '/' + appName.replace('.', '/') + '/meta.json',
-                dataType: 'json',
-                contentType: 'application/json;charset=UTF-8',
-                processData: false
-            };
-            return request(config).then(res => {
-                this.meta[appName] = res.data;
-                return this.loadScripts(this.meta[appName]).then(app => {
-                    return this.runApp(app, autoRun).then(app => {
-                        console.log(app);
-                        return this.loadCss(app);
-                    });
+        }
+
+        const config = {
+            url: webinyWebPath + '/build/' + webinyEnvironment + '/' + appName.replace('.', '/') + '/meta.json',
+            dataType: 'json',
+            contentType: 'application/json;charset=UTF-8',
+            processData: false
+        };
+
+        return request(config).then(res => {
+            this.meta[appName] = res.data;
+            return this.loadScripts(this.meta[appName]).then(app => {
+                return this.runApp(app, autoRun).then(() => {
+                    return this.loadCss(app);
                 });
             });
-        }
+        });
     }
 
     runApp(app, autoRun = true) {

@@ -96,21 +96,22 @@ class Authorization
 
             /* @var $class AbstractEntity */
             $class = $this->userClass;
-            try {
-                $user = $this->login->getUser($authCookie);
-                $this->user = $class::findOne(['email' => $user->getUsername()]);
-                $this->user->trigger('onActivity');
-            } catch (\Exception $le) {
+            if ($authCookie) {
+                try {
+                    $user = $this->login->getUser($authCookie);
+                    $this->user = $class::findOne(['email' => $user->getUsername()]);
+                    $this->user->trigger('onActivity');
+                } catch (\Exception $le) {
+                    return null;
+                }
+            } else {
                 $requestToken = urldecode($this->wRequest()->header('X-Webiny-Api-Token'));
                 $systemToken = $this->wConfig()->getConfig()->get('Application.Acl.Token');
                 if ($systemToken && $systemToken == $requestToken) {
-                    $this->user = new $class();
-                    $this->user->roles[] = UserRole::findOne(['slug' => 'administrator']);
+                    $this->user = new SystemUser(new $class);
 
                     return $this->user;
                 }
-
-                return null;
             }
         }
 

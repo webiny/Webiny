@@ -42,6 +42,7 @@
         "webinyApiPath": false,
         "webinyConfig": false,
         "webinyEnvironment": false,
+        "webinyMeta": false,
         "jQuery": false,
         "$": false,
         "Cookies": false,
