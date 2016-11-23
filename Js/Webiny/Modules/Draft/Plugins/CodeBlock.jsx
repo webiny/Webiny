@@ -67,11 +67,16 @@ class CodeBlockPreviewComponent extends Webiny.Ui.Component {
 
 CodeBlockPreviewComponent.defaultProps = {
     renderer() {
-        const language = this.props.data.language === 'jsx' ? 'html' : this.props.data.language;
+        const editorProps = {
+            mode: languageMap[this.props.data.language],
+            value: this.props.data.code || '',
+            readOnly: true,
+            noCursor: true
+        };
 
         return (
             <div className="code-block code-block--preview">
-                <Ui.CodeHighlight language={language}>{this.props.data.code}</Ui.CodeHighlight>
+                <Ui.CodeEditor {...editorProps}/>
             </div>
         );
     }

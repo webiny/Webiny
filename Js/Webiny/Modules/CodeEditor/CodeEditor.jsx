@@ -10,7 +10,7 @@ class CodeEditor extends Webiny.Ui.FormComponent {
 CodeEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     mode: 'text/html',
     theme: 'monokai',
-    readOnly: false,
+    readOnly: false, // set 'nocursor' to disable cursor
     onFocus: _.noop,
     renderer() {
         const cssConfig = {
@@ -19,18 +19,13 @@ CodeEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             'success': this.state.isValid === true
         };
 
-        const props = {
+        const props = _.pick(this.props, ['value', 'onChange', 'onFocus', 'theme', 'mode', 'readOnly']);
+        _.assign(props, {
             ref: 'editor',
             onBlur: this.validate,
             className: 'form-control',
-            value: this.props.value,
-            onChange: this.props.onChange,
-            onFocus: this.props.onFocus,
-            placeholder: this.getPlaceholder(),
-            theme: this.props.theme,
-            mode: this.props.mode,
-            readOnly: this.props.readOnly
-        };
+            placeholder: this.getPlaceholder()
+        });
 
         return (
             <div className={this.classSet(cssConfig)}>

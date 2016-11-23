@@ -15,7 +15,7 @@ class Link extends Webiny.Ui.Component {
         if (!props.disabled) {
             if (props.url) {
                 // Let's ensure we have at least http:// specified - for cases where users just type www...
-                if (!/^(f|ht)tps?:\/\//i.test(props.url)) {
+                if (!/^(f|ht)tps?:\/\//i.test(props.url) && !props.url.startsWith('/')) {
                     props.url = 'http://' + props.url;
                 }
                 props.href = props.url;

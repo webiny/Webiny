@@ -9,7 +9,8 @@ class CodeEditor extends Webiny.Ui.Component {
             lineNumbers: true,
             htmlMode: true,
             mode: props.mode, // needs to be loaded via bower.json
-            theme: props.theme // needs to be loaded via bower.json
+            theme: props.theme, // needs to be loaded via bower.json
+            readOnly: props.readOnly
         };
 
         this.bindMethods('getTextareaElement', 'setValue');
@@ -17,8 +18,6 @@ class CodeEditor extends Webiny.Ui.Component {
 
     componentDidMount() {
         super.componentDidMount();
-
-        this.options = _.merge(this.options, this.props);
 
         this.codeMirror = CodeMirror.fromTextArea(this.getTextareaElement(), this.options);
 
@@ -37,9 +36,12 @@ class CodeEditor extends Webiny.Ui.Component {
         super.componentWillReceiveProps(props);
         this.setValue(props);
 
-        if (this.props.mode !== props.mode) {
-            this.codeMirror.setOption('mode', props.mode);
-        }
+        const checkProps = ['mode', 'readOnly'];
+        _.each(checkProps, (prop) => {
+            if (this.props[prop] !== props[prop]) {
+                this.codeMirror.setOption(prop, props[prop]);
+            }
+        });
     }
 
     shouldComponentUpdate() {
@@ -66,6 +68,7 @@ CodeEditor.defaultProps = {
     mode: 'text/html',
     theme: 'monokai',
     value: null,
+    readOnly: false,
     onChange: _.noop,
     onFocus: _.noop,
     renderer() {
