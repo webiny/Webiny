@@ -77,7 +77,11 @@ class ColorPickerPlugin extends InlineStylePlugin {
                 );
 
                 return (
-                    <Ui.Dropdown title={this.getDropdownTitle()} disabled={this.editor.getReadOnly()} listStyle={{padding: 0}}>
+                    <Ui.Dropdown
+                        className="color-picker"
+                        title={this.getDropdownTitle()}
+                        disabled={this.editor.getReadOnly()}
+                        listStyle={{padding: 0}}>
                         <Ui.Dropdown.Link key="noColor" onClick={() => this.setColor('noColor')} title={emptyTitle}/>
                         {_.keys(colors).map(k => {
                             const title = <span style={{backgroundColor: colors[k], display: 'block', width: '100%', height: 20}}></span>;
