@@ -1,19 +1,20 @@
 import BasePlugin from './BasePlugin';
 
 class InlineStylePlugin extends BasePlugin {
-    constructor() {
-        super();
+    constructor(config) {
+        super(config);
         this.style = '';
     }
 
-    toggleStyle() {
+    toggleStyle(style = this.style) {
         const editorState = this.editor.getEditorState();
         const contentState = editorState.getCurrentContent();
         const selection = editorState.getSelection();
         if (this.isActive() && selection.isCollapsed()) {
+            // Create a selection by finding style ranges from current cursor position
             let newEntityState = contentState;
             // Find relevant styles and remove them
-            contentState.getBlockForKey(selection.getAnchorKey()).findStyleRanges(c => c.style.has(this.style), (start, end) => {
+            contentState.getBlockForKey(selection.getAnchorKey()).findStyleRanges(c => c.style.has(style), (start, end) => {
                 if (start < selection.getAnchorOffset() && end > selection.getAnchorOffset()) {
                     const inlineStyleRange = new Draft.SelectionState({
                         anchorOffset: start,
@@ -23,12 +24,12 @@ class InlineStylePlugin extends BasePlugin {
                         isBackward: false,
                         hasFocus: selection.getHasFocus()
                     });
-                    newEntityState = Draft.Modifier.removeInlineStyle(editorState.getCurrentContent(), inlineStyleRange, this.style);
+                    newEntityState = Draft.Modifier.removeInlineStyle(editorState.getCurrentContent(), inlineStyleRange, style);
                 }
             });
             this.editor.setEditorState(Draft.EditorState.createWithContent(newEntityState, this.editor.getDecorators()));
         } else {
-            this.editor.setEditorState(Draft.RichUtils.toggleInlineStyle(editorState, this.style));
+            this.editor.setEditorState(Draft.RichUtils.toggleInlineStyle(editorState, style));
         }
     }
 

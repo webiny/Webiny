@@ -13,6 +13,7 @@ import Atomic from './Toolbar/Atomic';
 
 import Heading from './Plugins/Heading';
 import Bold from './Plugins/Bold';
+import ColorPicker from './Plugins/ColorPicker';
 import Italic from './Plugins/Italic';
 import Underline from './Plugins/Underline';
 import UnorderedList from './Plugins/UnorderedList';
@@ -52,6 +53,7 @@ class Module extends Webiny.Module {
             Plugins: {
                 Heading,
                 Bold,
+                ColorPicker,
                 Italic,
                 Underline,
                 UnorderedList,
