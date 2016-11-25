@@ -1,22 +1,27 @@
 <?php
 namespace Apps\Core\Php\Entities;
 
+use Apps\Core\Php\DevTools\Interfaces\UserInterface;
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\Crypt\CryptTrait;
+use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Mongo\Index\SingleIndex;
+use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
 
 /**
  * Class ApiToken
  *
- * @property string $id
- * @property string $token
- * @property string $owner
+ * @property string           $id
+ * @property string           $token
+ * @property string           $owner
+ * @property integer          $requests
+ * @property DateTimeObject   $lastActivity
+ * @property EntityCollection $roles
  *
  * @package Apps\Core\Php\Entities
- *
  */
-class ApiToken extends AbstractEntity
+class ApiToken extends AbstractEntity implements UserInterface
 {
     use WebinyTrait, CryptTrait;
 
@@ -39,5 +44,40 @@ class ApiToken extends AbstractEntity
         $this->attr('lastActivity')->datetime()->setToArrayDefault();
         $this->attr('requests')->integer()->setToArrayDefault()->setDefaultValue(0);
         $this->attr('enabled')->boolean()->setDefaultValue(true)->setToArrayDefault();
+        $userRole = '\Apps\Core\Php\Entities\UserRole';
+        $this->attr('roles')->many2many('ApiToken2UserRole')->setEntity($userRole)->onSet(function ($roles) {
+            // If not mongo Ids - load roles by slugs
+            if (is_array($roles)) {
+                foreach ($roles as $i => $role) {
+                    if (!$this->wDatabase()->isId($role)) {
+                        if (is_string($role)) {
+                            $roles[$i] = UserRole::findOne(['slug' => $role]);
+                        } elseif (isset($role['id'])) {
+                            $roles[$i] = $role['id'];
+                        } elseif (isset($role['slug'])) {
+                            $roles[$i] = UserRole::findOne(['slug' => $role['slug']]);
+                        }
+                    }
+                }
+            }
+
+            return $roles;
+        });
+    }
+
+    public function getUserRoles()
+    {
+        return $this->roles;
+    }
+
+    public function hasRole($name)
+    {
+        foreach ($this->getUserRoles() as $role) {
+            if ($role->slug == $name) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

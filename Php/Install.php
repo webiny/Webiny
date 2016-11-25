@@ -2,7 +2,9 @@
 namespace Apps\Core\Php;
 
 use Apps\Core\Php\DevTools\AbstractInstall;
+use Apps\Core\Php\Entities\ApiTokenLog;
 use Apps\Core\Php\PackageManager\App;
+use MongoDB\Driver\Exception\RuntimeException;
 
 class Install extends AbstractInstall
 {
@@ -15,5 +17,21 @@ class Install extends AbstractInstall
         // Insert roles
         $roles = json_decode(file_get_contents(__DIR__ . '/Install/UserRoles.json'), true);
         $this->createUserRoles($roles);
+
+        // Create a capped collection for ApiTokenLogs
+        $entityCollection = ApiTokenLog::getEntityCollection();
+        try {
+            $this->wDatabase()->createCollection($entityCollection, [
+                'capped' => true,
+                'size'   => 2097152,
+                'max'    => 2000
+            ]);
+        } catch (RuntimeException $e) {
+            $this->wDatabase()->command([
+                'convertToCapped' => $this->wDatabase()->getCollectionPrefix() . $entityCollection,
+                'size'            => 2097152,
+                'max'             => 2000
+            ]);
+        }
     }
 }

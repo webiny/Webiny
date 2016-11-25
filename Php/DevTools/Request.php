@@ -36,6 +36,21 @@ class Request extends \Webiny\Component\Http\Request
         return true;
     }
 
+    public function hasSystemToken()
+    {
+        $requestToken = urldecode($this->header('X-Webiny-Api-Token'));
+        if (!$requestToken) {
+            $requestToken = $this->query('apiToken');
+        }
+
+        $systemToken = Config::getInstance()->get('Application.Acl.Token');
+        if ($systemToken && $systemToken === $requestToken) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Get query filters
      *
