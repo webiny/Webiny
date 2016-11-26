@@ -255,4 +255,6 @@ class ImagePlugin extends AtomicPlugin {
     }
 }
 
+ImagePlugin.ImageEditComponent = ImageEditComponent;
+
 export default ImagePlugin;
