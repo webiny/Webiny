@@ -17,7 +17,7 @@ function execute(http, options) {
     let response;
     /*eslint-disable */
     for (let interceptor of requestInterceptors) {
-        response = interceptor(http);
+        response = interceptor(http, options);
         if (response instanceof HttpResponse) {
             break;
         }
