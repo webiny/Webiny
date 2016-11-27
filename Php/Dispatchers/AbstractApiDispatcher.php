@@ -14,7 +14,7 @@ use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
 
 abstract class AbstractApiDispatcher
 {
-    use WebinyTrait, StdLibTrait, ApiTokenControlTrait;
+    use WebinyTrait, StdLibTrait;
 
     protected function parseUrl(StringObject $url)
     {
