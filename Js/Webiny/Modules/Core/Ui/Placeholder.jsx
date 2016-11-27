@@ -44,7 +44,6 @@ Placeholder.defaultProps = {
                     _.assign(componentProps, item[1]);
                     item = item[0];
                 }
-                console.log({item});
                 cmps.push(React.createElement(item, componentProps));
             }
         });
