@@ -154,15 +154,17 @@ class Bootstrap
     }
 
     /**
-     * @param AbstractResponse $response
+     * @param AbstractResponse $webinyResponse
      */
-    private function processResponse(AbstractResponse $response)
+    private function processResponse(AbstractResponse $webinyResponse)
     {
-        $event = new ResponseEvent($response);
+        $event = new ResponseEvent($webinyResponse);
         $this->wEvents()->fire('Core.Bootstrap.Response', $event);
 
         // Build response body
-        $responseBody = $response->output();
-        Response::create($responseBody, $response->getStatusCode())->send();
+        $responseBody = $webinyResponse->output();
+        $response = Response::create($responseBody, $webinyResponse->getStatusCode());
+        $response->cacheControl()->setCacheControl($webinyResponse->getCacheControlHeaders());
+        $response->send();
     }
 }

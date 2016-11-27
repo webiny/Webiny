@@ -70,7 +70,23 @@ class ApiCache extends AbstractApiDispatcher
         // read cache
         $response = $this->hrc->read('response');
         if ($response !== false) {
-            $event->setResponse(new ApiCacheResponse($response));
+
+            $response = new ApiCacheResponse($response);
+
+            // get matched rule
+            $matchedRule = $this->hrc->getMatchedRule();
+            $cacheRule = $this->wConfig()->get('ApiCache.CacheRules.' . $matchedRule->getCacheRule()->getName());
+
+            // check if browser cache is turned on
+            if ($cacheRule->get('BrowserCache', false)) {
+                // get the remaining ttl
+                $remainingTtl = $this->hrc->getRemainingTtl();
+                if ($remainingTtl > 0) {
+                    $response->setCacheControl($remainingTtl);
+                }
+            }
+
+            $event->setResponse($response);
         }
     }
 
