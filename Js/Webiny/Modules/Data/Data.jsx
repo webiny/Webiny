@@ -17,9 +17,6 @@ class Data extends Webiny.Ui.Component {
 
     componentWillMount() {
         super.componentWillMount();
-        if (!_.isFunction(this.props.children)) {
-            console.warn('Warning: Data component only accepts a function as its child element!');
-        }
         this.setState({loading: true});
     }
 
@@ -37,7 +34,7 @@ class Data extends Webiny.Ui.Component {
                     this.setData(response);
                     return response.getData();
                 });
-            }, this.props.autoRefresh * 1000)
+            }, this.props.autoRefresh * 1000);
         }
     }
 
@@ -81,6 +78,10 @@ Data.defaultProps = {
     onLoad: _.noop,
     onInitialLoad: _.noop,
     renderer() {
+        if (!_.isFunction(this.props.children)) {
+            throw new Error('Warning: Data component only accepts a function as its child element!');
+        }
+
         if (this.props.waitForData && !this.state.data) {
             return null;
         }
