@@ -8,7 +8,8 @@ class Data extends Webiny.Ui.Component {
         this.autoRefreshInterval = null; // Ony when 'autoRefresh' prop is used
 
         this.state = {
-            data: null
+            data: null,
+            initiallyLoaded: false
         };
 
         this.bindMethods('setData,filter');
@@ -24,6 +25,7 @@ class Data extends Webiny.Ui.Component {
         super.componentDidMount();
         this.request = this.api.execute().then(apiResponse => {
             this.setData(apiResponse);
+            this.setState('initiallyLoaded', true);
             this.props.onInitialLoad(apiResponse);
             return apiResponse.getData();
         });

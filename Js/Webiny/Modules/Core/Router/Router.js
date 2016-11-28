@@ -64,6 +64,9 @@ class Router {
 
             // Listen for "RouteChanged" event and process callbacks
             Dispatcher.on('RouteChanged', (event) => {
+                if (_.isNumeric(History.getState().data.scrollY)) {
+                    window.scrollTo(0, History.getState().data.scrollY);
+                }
                 let chain = Promise.resolve(event);
                 this.routeChanged.forEach(callback => {
                     chain = chain.then(() => {
@@ -204,7 +207,7 @@ class Router {
         return this.getActiveRoute().getHref(params);
     }
 
-    goToRoute(route, params = {}) {
+    goToRoute(route, params = {}, options = {}) {
         if (_.isString(route)) {
             route = route !== 'current' ? _.find(this.routes, ['name', route]) : this.activeRoute;
         }
@@ -217,18 +220,19 @@ class Router {
             console.warn('Route will not change!');
             return null;
         }
-        return this.goToUrl(route.getHref(params, null));
+        return this.goToUrl(route.getHref(params, null), false, options);
     }
 
-    goToUrl(url, replace = false) {
+    goToUrl(url, replace = false, options = {}) {
         if (url.indexOf(this.baseUrl) !== 0) {
             url = this.baseUrl + url;
         }
 
+        const scrollY = options.preventScroll ? window.scrollY : false;
         if (replace) {
-            History.replaceState({url, replace: true}, null, url);
+            History.replaceState({url, replace: true, scrollY}, null, url);
         } else {
-            History.pushState({url}, null, url);
+            History.pushState({url, scrollY}, null, url);
         }
         return url;
     }
@@ -304,7 +308,10 @@ class Router {
         if (url.indexOf(webinyWebPath) === 0) {
             e.preventDefault();
             url = url.replace(webinyWebPath, '');
-            History.pushState({url}, null, url);
+            History.pushState({
+                url,
+                scrollY: a.getAttribute('data-prevent-scroll') === 'true' ? window.scrollY : false
+            }, null, url);
         }
     }
 

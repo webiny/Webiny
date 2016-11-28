@@ -77,7 +77,12 @@ class Link extends Webiny.Ui.Component {
         }
 
         props.className = this.classSet(classes);
-        return _.pick(props, ['className', 'style', 'target', 'href', 'onClick']);
+
+        if (props.preventScroll) {
+            props['data-prevent-scroll'] = true;
+        }
+
+        return _.pick(props, ['className', 'style', 'target', 'href', 'onClick', 'data-prevent-scroll']);
     }
 }
 
@@ -87,6 +92,7 @@ Link.defaultProps = {
     url: null,
     title: '',
     route: null,
+    preventScroll: false,
     data: null,
     params: {},
     separate: false,
