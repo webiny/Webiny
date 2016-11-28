@@ -112,6 +112,11 @@ class RouterUtils {
         });
 
         routeNotMatchedChain = routeNotMatchedChain.then(() => {
+
+            if (_.isNumeric(History.getState().data.scrollY)) {
+                window.scrollTo(0, History.getState().data.scrollY);
+            }
+
             if (!rEvent.isStopped()) {
                 // If URL starts with loaded app prefix, go to default route
                 if (this.baseUrl !== '/' && url.startsWith(this.baseUrl)) {
