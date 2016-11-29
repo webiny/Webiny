@@ -5,7 +5,7 @@ class ApiContainer extends BaseContainer {
 
     constructor(props) {
         super(props);
-
+        _.assign(this.state, {initiallyLoaded: false});
         Webiny.Mixins.ApiComponent.extend(this);
     }
 
@@ -14,6 +14,7 @@ class ApiContainer extends BaseContainer {
         this.prepare(_.clone(this.props));
         if (this.props.autoLoad) {
             this.loadData().then(data => {
+                this.setState('initiallyLoaded', true);
                 this.props.onInitialLoad(_.get(data, 'list'), _.get(data, 'meta'));
 
             });

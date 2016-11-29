@@ -64,7 +64,7 @@ class Router {
 
             // Listen for "RouteChanged" event and process callbacks
             Dispatcher.on('RouteChanged', (event) => {
-                if (_.isNumeric(History.getState().data.scrollY)) {
+                if (_.isNumber(History.getState().data.scrollY)) {
                     window.scrollTo(0, History.getState().data.scrollY);
                 }
                 let chain = Promise.resolve(event);
