@@ -1,10 +1,12 @@
 import Webiny from 'Webiny';
 
 class Link extends Webiny.Ui.Component {
+
     constructor(props) {
         super(props);
 
         this.bindMethods('getLinkProps');
+        this.allowedProps = ['className', 'style', 'target', 'href', 'onClick', 'title'];
     }
 
     getLinkProps() {
@@ -82,7 +84,18 @@ class Link extends Webiny.Ui.Component {
             props['data-prevent-scroll'] = true;
         }
 
-        return _.pick(props, ['className', 'style', 'target', 'href', 'onClick', 'data-prevent-scroll']);
+        if (props.documentTitle) {
+            props['data-document-title'] = props.documentTitle;
+        }
+
+        const finalProps = [];
+        _.each(props, (value, prop) => {
+            if (_.includes(this.allowedProps, prop) || _.startsWith(prop, 'data-')) {
+                finalProps[prop] = value;
+            }
+        });
+
+        return finalProps;
     }
 }
 

@@ -53,6 +53,10 @@ class Router {
                 }
 
                 this.activeRoute = matched;
+                if (History.getState().data.title) {
+                    this.activeRoute.setTitle(History.getState().data.title)
+                }
+
                 Utils.routeWillChange(matched, this.routeWillChange).then(routerEvent => {
                     if (!routerEvent.isStopped()) {
                         Utils.renderRoute(matched).then(route => {
@@ -228,11 +232,17 @@ class Router {
             url = this.baseUrl + url;
         }
 
-        const scrollY = options.preventScroll ? window.scrollY : false;
+        const state = {
+            url,
+            replace,
+            scrollY: options.preventScroll ? window.scrollY : false,
+            title: options.title
+        };
+
         if (replace) {
-            History.replaceState({url, replace: true, scrollY}, null, url);
+            History.replaceState(state, window.document.title, url);
         } else {
-            History.pushState({url, scrollY}, null, url);
+            History.pushState(state, window.document.title, url);
         }
         return url;
     }
@@ -307,11 +317,14 @@ class Router {
         // Push state and let the Router process the rest
         if (url.indexOf(webinyWebPath) === 0) {
             e.preventDefault();
-            url = url.replace(webinyWebPath, '');
-            History.pushState({
-                url,
-                scrollY: a.getAttribute('data-prevent-scroll') === 'true' ? window.scrollY : false
-            }, null, url);
+            this.goToUrl(
+                url.replace(webinyWebPath, ''),
+                false,
+                {
+                    title: a.getAttribute('data-document-title') || null,
+                    scrollY: a.getAttribute('data-prevent-scroll') === 'true' ? window.scrollY : false
+                }
+            );
         }
     }
 
