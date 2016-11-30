@@ -317,14 +317,12 @@ class Router {
         // Push state and let the Router process the rest
         if (url.indexOf(webinyWebPath) === 0) {
             e.preventDefault();
-            this.goToUrl(
-                url.replace(webinyWebPath, ''),
-                false,
-                {
-                    title: a.getAttribute('data-document-title') || null,
-                    scrollY: a.getAttribute('data-prevent-scroll') === 'true' ? window.scrollY : false
-                }
-            );
+            url = url.replace(webinyWebPath, '');
+            History.pushState({
+                url,
+                title: a.getAttribute('data-document-title') || null,
+                scrollY: a.getAttribute('data-prevent-scroll') === 'true' ? window.scrollY : false
+            }, null, url);
         }
     }
 
