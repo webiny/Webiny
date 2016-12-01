@@ -322,7 +322,7 @@ class Router {
                 url,
                 title: a.getAttribute('data-document-title') || null,
                 scrollY: a.getAttribute('data-prevent-scroll') === 'true' ? window.scrollY : false
-            }, null, url);
+            }, window.document.title, url);
         }
     }
 
