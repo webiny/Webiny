@@ -43,7 +43,9 @@ class RouterUtils {
     renderRoute(route) {
         const content = this.getRouteContent(route);
         return Webiny.ViewManager.render(content).then(() => {
-            Webiny.Router.setTitle(route.getTitle() || route.getPattern());
+            if (route.getTitle()) {
+                Webiny.Router.setTitle(route.getTitle());
+            }
             return route;
         });
     }
