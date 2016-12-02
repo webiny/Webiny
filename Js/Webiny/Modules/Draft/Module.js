@@ -1,5 +1,6 @@
 import Webiny from 'Webiny';
 import Editor from './Editor';
+import SimpleEditor from './SimpleEditor';
 import BasePlugin from './BasePlugins/BasePlugin';
 import BlockTypePlugin from './BasePlugins/BlockTypePlugin';
 import InlineStylePlugin from './BasePlugins/InlineStylePlugin';
@@ -33,6 +34,7 @@ class Module extends Webiny.Module {
     init() {
         Webiny.Ui.Components.Draft = {
             Editor,
+            SimpleEditor,
             Toolbar: {
                 InlineStyle,
                 BlockType,
