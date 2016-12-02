@@ -30,6 +30,7 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     placeholder: null,
     readOnly: false,
     type: 'text',
+    autoFocus: false,
     renderer() {
         const cssConfig = {
             'form-group': true,
@@ -47,7 +48,8 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             placeholder: this.getPlaceholder(),
             onKeyUp: this.props.onKeyUp,
             onKeyDown: this.props.onKeyDown !== _.noop ? this.props.onKeyDown : this.onKeyDown.bind(this),
-            onChange: this.props.onChange
+            onChange: this.props.onChange,
+            autoFocus: this.props.autoFocus
         };
 
         return (
