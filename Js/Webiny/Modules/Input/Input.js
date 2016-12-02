@@ -30,7 +30,7 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     placeholder: null,
     readOnly: false,
     type: 'text',
-    autoFocus: false,
+    autoFocus: _.noop(),
     renderer() {
         const cssConfig = {
             'form-group': true,
