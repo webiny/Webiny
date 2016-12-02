@@ -6,42 +6,14 @@ const responseInterceptors = [];
 const defaultHeaders = {};
 
 let pending = [];
-let interval = null;
+let timeout = null;
 
-function sendAggregatedRequest() {
-    if (!pending.length) {
-        return;
-    }
-    const inProgress = _.cloneDeep(pending);
-    // Reset pending requests
-    pending = [];
-    pending.length = 0;
 
-    console.log('Sending aggregated requests', inProgress.length);
-    const body = inProgress.map(req => {
-        return {
-            url: req.getUrl(),
-            query: req.getQuery()
-        };
-    });
-    const request = new HttpRequest();
-    request.setUrl(webinyApiPath + '/api-aggregator');
-    request.setMethod('POST');
-    request.setBody({requests: body});
-    request.send().then(response => {
-        response.getData('data').map((res, index) => {
-            const aggRes = new HttpResponse({data: res}, inProgress[index]);
-            aggRes.setStatus(200);
-            inProgress[index].resolve(aggRes);
-        });
-    });
-}
-
-function execute(http, options) {
-    if (!interval) {
-        setInterval(() => {
-            sendAggregatedRequest();
-        }, 100);
+function execute(http, options, aggregate = true) {
+    if (!timeout && aggregate) {
+        setTimeout(() => {
+            sendAggregatedRequest(); // eslint-disable-line
+        }, _.get(webinyConfig, 'Api.AggregationInterval', 100));
     }
     const headers = _.merge({}, defaultHeaders, options.headers || {});
     http.setHeaders(headers);
@@ -52,17 +24,17 @@ function execute(http, options) {
     }
 
     let response;
-    /*eslint-disable */
+    /* eslint-disable */
     for (let interceptor of requestInterceptors) {
         response = interceptor(http, options);
         if (response instanceof HttpResponse) {
             break;
         }
     }
-    /*eslint-enble */
+    /* eslint-enable */
 
     if (!response) {
-        if (!webinyConfig.Api.AggregateRequests || http.getMethod() !== 'get') {
+        if (!aggregate || !_.get(webinyConfig, 'Api.AggregateRequests', true) || http.getMethod() !== 'get') {
             response = http.send();
         } else {
             pending.push(http);
@@ -70,10 +42,10 @@ function execute(http, options) {
                 http.resolve = resolve;
             });
 
-            if (pending.length >= webinyConfig.Api.MaxRequests) {
-                clearInterval(interval);
-                interval = null;
-                sendAggregatedRequest();
+            if (pending.length >= _.get(webinyConfig, 'Api.MaxRequests', 30)) {
+                clearTimeout(timeout);
+                timeout = null;
+                sendAggregatedRequest(); // eslint-disable-line
             }
             response = http;
         }
@@ -84,6 +56,34 @@ function execute(http, options) {
     return response.then(httpResponse => {
         responseInterceptors.forEach(interceptor => interceptor(httpResponse));
         return httpResponse;
+    });
+}
+
+function sendAggregatedRequest() {
+    if (!pending.length) {
+        return;
+    }
+    const inProgress = _.cloneDeep(pending);
+    // Reset pending requests
+    pending = [];
+    pending.length = 0;
+
+    const body = inProgress.map(req => {
+        return {
+            url: req.getUrl(),
+            query: req.getQuery()
+        };
+    });
+    const request = new HttpRequest();
+    request.setUrl(webinyApiPath);
+    request.setMethod('POST');
+    request.setBody({requests: body});
+    execute(request, {headers: {'X-Webiny-Api-Aggregate': true}}, false).then(response => {
+        response.getData('data').map((res, index) => {
+            const aggRes = new HttpResponse({data: res}, inProgress[index]);
+            aggRes.setStatus(200);
+            inProgress[index].resolve(aggRes);
+        });
     });
 }
 

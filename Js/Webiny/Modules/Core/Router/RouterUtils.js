@@ -114,7 +114,6 @@ class RouterUtils {
         });
 
         routeNotMatchedChain = routeNotMatchedChain.then(() => {
-
             if (_.isNumber(History.getState().data.scrollY)) {
                 window.scrollTo(0, History.getState().data.scrollY);
             }

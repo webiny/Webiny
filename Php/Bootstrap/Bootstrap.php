@@ -84,6 +84,10 @@ class Bootstrap
 
     public function run()
     {
+        if ($this->wRequest()->isApi() && $this->wRequest()->header('X-Webiny-Api-Aggregate')) {
+            return $this->processMultipleRequests();
+        }
+
         $responseClass = '\Apps\Core\Php\DevTools\Response\AbstractResponse';
         /* @var $response AbstractResponse */
         $response = $this->wEvents()->fire('Core.Bootstrap.Request', new BootstrapEvent(), $responseClass, 1);
@@ -100,7 +104,13 @@ class Bootstrap
         $this->processResponse($response);
     }
 
-    public function multiRun()
+    /**
+     * This will read aggregated requests and execute each one of them as if they were sent individually.
+     * All responses are aggregated into a single response.
+     *
+     * @return $this
+     */
+    public function processMultipleRequests()
     {
         $requests = $this->wRequest()->getRequestData()['requests'];
         $responses = [];
@@ -123,7 +133,8 @@ class Bootstrap
 
         $apiResponse = new ApiResponse($responses);
         $response = Response::create($apiResponse->output(), 200);
-        $response->send();
+
+        return $response->send();
     }
 
     private function buildConfiguration($configSet)

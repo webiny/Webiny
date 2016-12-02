@@ -14,6 +14,9 @@ class ApiContainer extends BaseContainer {
         this.prepare(_.clone(this.props));
         if (this.props.autoLoad) {
             this.loadData().then(data => {
+                if (!this.isMounted()) {
+                    return;
+                }
                 this.setState('initiallyLoaded', true);
                 this.props.onInitialLoad(_.get(data, 'list'), _.get(data, 'meta'));
 

@@ -127,7 +127,6 @@ i18n.setLanguage = function setLanguage(language) {
         if (_.isEmpty(apiResponse.getData('translations'))) {
             return apiResponse;
         }
-        
         localStorage[`Webiny.i18n.language`] = this.language;
         localStorage[`Webiny.i18n.cacheKey`] = apiResponse.getData('cacheKey', null);
         localStorage[`Webiny.i18n.translations`] = JSON.stringify(apiResponse.getData('translations'));

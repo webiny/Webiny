@@ -54,7 +54,7 @@ class Router {
 
                 this.activeRoute = matched;
                 if (History.getState().data.title) {
-                    this.activeRoute.setTitle(History.getState().data.title)
+                    this.activeRoute.setTitle(History.getState().data.title);
                 }
 
                 Utils.routeWillChange(matched, this.routeWillChange).then(routerEvent => {
