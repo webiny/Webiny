@@ -7,6 +7,7 @@
 
 namespace Apps\Core\Php\Bootstrap;
 
+use Apps\Core\Php\DevTools\Request;
 use Apps\Core\Php\DevTools\Response\ApiResponse;
 use Apps\Core\Php\DevTools\Response\HtmlResponse;
 use Apps\Core\Php\DevTools\Response\AbstractResponse;
@@ -99,6 +100,32 @@ class Bootstrap
         $this->processResponse($response);
     }
 
+    public function multiRun()
+    {
+        $requests = $this->wRequest()->getRequestData()['requests'];
+        $responses = [];
+        $responseClass = '\Apps\Core\Php\DevTools\Response\AbstractResponse';
+        foreach ($requests as $req) {
+            Request::deleteInstance();
+            $_GET = $req['query'];
+            $_SERVER['REQUEST_URI'] = $this->url($req['url'])->getPath();
+            $_SERVER['REQUEST_METHOD'] = 'GET';
+            $_SERVER['QUERY_STRING'] = http_build_query($req['query']);
+            Request::getInstance();
+
+            $response = $this->wEvents()->fire('Core.Bootstrap.Request', new BootstrapEvent(), $responseClass, 1);
+            if ($response instanceof ApiResponse) {
+                $responses[] = $this->processResponse($response, true);
+            } else {
+                $responses[] = null;
+            }
+        }
+
+        $apiResponse = new ApiResponse($responses);
+        $response = Response::create($apiResponse->output(), 200);
+        $response->send();
+    }
+
     private function buildConfiguration($configSet)
     {
         try {
@@ -155,11 +182,17 @@ class Bootstrap
 
     /**
      * @param AbstractResponse $webinyResponse
+     *
+     * @return mixed
      */
-    private function processResponse(AbstractResponse $webinyResponse)
+    private function processResponse(AbstractResponse $webinyResponse, $return = false)
     {
         $event = new ResponseEvent($webinyResponse);
         $this->wEvents()->fire('Core.Bootstrap.Response', $event);
+
+        if ($return && $webinyResponse instanceof ApiResponse) {
+            return $webinyResponse->getData(true);
+        }
 
         // Build response body
         $responseBody = $webinyResponse->output();

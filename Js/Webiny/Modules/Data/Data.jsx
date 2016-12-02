@@ -24,6 +24,9 @@ class Data extends Webiny.Ui.Component {
     componentDidMount() {
         super.componentDidMount();
         this.request = this.api.execute().then(apiResponse => {
+            if (!this.isMounted()) {
+                return;
+            }
             this.setData(apiResponse);
             this.setState('initiallyLoaded', true);
             this.props.onInitialLoad(apiResponse);
@@ -52,6 +55,7 @@ class Data extends Webiny.Ui.Component {
     }
 
     setData(response) {
+        this.request = null;
         if (response.isAborted() || !this.isMounted()) {
             return;
         }
@@ -67,6 +71,9 @@ class Data extends Webiny.Ui.Component {
     filter(filters = {}) {
         this.setState({loading: true});
         this.request = this.api.setQuery(filters).execute().then(apiResponse => {
+            if (!this.isMounted()) {
+                return;
+            }
             this.setData(apiResponse);
             this.props.onLoad(apiResponse);
         });
