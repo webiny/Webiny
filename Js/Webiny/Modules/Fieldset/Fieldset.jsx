@@ -7,7 +7,7 @@ class Fieldset extends Webiny.Ui.Component {
 Fieldset.defaultProps = {
     renderer() {
         return (
-            <fieldset {...this.props}>
+            <fieldset {..._.pick(this.props, ['className', 'style'])}>
                 {this.props.title && (
                     <legend>{this.props.title}</legend>
                 )}

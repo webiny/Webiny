@@ -40,6 +40,7 @@ class App extends AbstractPackage
             throw new \Exception('A component must have both name and version properties defined');
         }
 
+        $this->registerAutoloaderMap();
         $this->parseNamespace($path);
         $this->parseEvents($info);
         $this->parseStorages($info);
@@ -200,5 +201,10 @@ class App extends AbstractPackage
         }
 
         return null;
+    }
+
+    private function registerAutoloaderMap()
+    {
+        $this->wClassLoader()->appendLibrary('Apps\\' . $this->name . '\\', $this->getPath());
     }
 }

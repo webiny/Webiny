@@ -51,10 +51,10 @@ class OptionComponent extends FormComponent {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        const omit = ['onChange'];
-        const oldProps = _.omit(this.props, omit);
-        const newProps = _.omit(props, omit);
-        if (!_.isEqual(newProps, oldProps)) {
+        const pick = ['options', 'children'];
+        const oldProps = _.pick(this.props, pick);
+        const newProps = _.pick(props, pick);
+        if (!_.isEqual(newProps, oldProps) && !this.api) {
             this.loadOptions(props);
         }
     }

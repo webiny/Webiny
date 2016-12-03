@@ -15,6 +15,7 @@ class FormComponent extends Component {
         this.bindMethods(
             'isRequired',
             'validate',
+            'reset',
             'getValue',
             'hasValue',
             'isDisabled',
@@ -68,6 +69,10 @@ class FormComponent extends Component {
 
     isValid() {
         return this.state.isValid !== false;
+    }
+
+    reset() {
+        this.setState({isValid: null});
     }
 
     hasValue() {

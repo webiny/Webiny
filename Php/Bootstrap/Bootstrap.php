@@ -13,6 +13,7 @@ use Apps\Core\Php\DevTools\Response\HtmlResponse;
 use Apps\Core\Php\DevTools\Response\AbstractResponse;
 use Apps\Core\Php\DevTools\Response\ResponseEvent;
 use Apps\Core\Php\PackageManager\App;
+use Apps\Core\Php\PackageManager\AppScanner;
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\Entity\Entity;
 use Webiny\Component\Http\Response;
@@ -22,7 +23,6 @@ use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\UrlObject\UrlObjectException;
 use Webiny\Component\StdLib\SingletonTrait;
 use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\PackageManager\PackageScanner;
 use Webiny\Component\Storage\Storage;
 
 /**
@@ -69,7 +69,7 @@ class Bootstrap
         Storage::setConfig($this->wConfig()->get('Storage', $emptyConfig));
 
         // scan all components to register routes and event handlers
-        PackageScanner::getInstance();
+        AppScanner::getInstance();
 
         /* @var $app App */
         foreach ($this->wApps() as $app) {

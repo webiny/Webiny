@@ -29,7 +29,7 @@ class CheckboxGroup extends Webiny.Ui.OptionComponent {
      * Create options elements
      * @returns {Array}
      */
-    renderOptions() {
+    renderOptions(callback = null) {
         return this.state.options.map((item, key) => {
             const checked = _.find(this.props.value, opt => {
                 if (_.isPlainObject(opt)) {
@@ -56,8 +56,13 @@ class CheckboxGroup extends Webiny.Ui.OptionComponent {
             if (_.isFunction(this.props.checkboxLabelRenderer)) {
                 props.labelRenderer = this.props.checkboxLabelRenderer;
             }
+            const checkbox = <Checkbox {...props}/>;
 
-            return <Checkbox {...props}/>;
+            if (callback) {
+                return callback(checkbox, key);
+            }
+
+            return checkbox;
         });
     }
 }

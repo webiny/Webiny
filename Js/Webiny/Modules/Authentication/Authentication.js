@@ -104,13 +104,30 @@ class Module extends Webiny.Module {
     }
 
     checkRouteRole(routerEvent) {
-        const user = Webiny.Model.get('User');
+        if (webinyConfig.CheckUserRoles && _.has(routerEvent.route, 'role')) {
+            return new Promise((resolve) => {
+                const user = Webiny.Model.get('User');
 
-        if (webinyConfig.CheckUserRoles && user && _.has(routerEvent.route, 'role') && !_.find(user.roles, r => routerEvent.route.role.indexOf(r.slug) > -1)) {
-            routerEvent.stop();
-            routerEvent.goToRoute('Forbidden');
+                if (user && _.isString(routerEvent.route.role) && _.find(user.roles, r => routerEvent.route.role.indexOf(r.slug) > -1)) {
+                    return resolve(routerEvent);
+                }
+
+                if (user && _.isFunction(routerEvent.route.role)) {
+                    return Promise.resolve(routerEvent.route.role()).then(allowed => {
+                        if (!allowed) {
+                            routerEvent.stop();
+                            routerEvent.goToRoute('Forbidden');
+                        }
+                        resolve(routerEvent);
+                    });
+                }
+
+                routerEvent.stop();
+                routerEvent.goToRoute('Forbidden');
+                resolve(routerEvent);
+            });
         }
-        return routerEvent;
+        return Promise.resolve(routerEvent);
     }
 
     checkUser(routerEvent) {

@@ -25,7 +25,7 @@ class Data extends Webiny.Ui.Component {
         super.componentDidMount();
         this.request = this.api.execute().then(apiResponse => {
             if (!this.isMounted()) {
-                return;
+                return null;
             }
             this.setData(apiResponse);
             this.setState('initiallyLoaded', true);

@@ -9,10 +9,11 @@ class FormContainer extends Webiny.Ui.Component {
         this.state = {
             model: {},
             initialModel: {},
-            error: null
+            error: null,
+            loading: false,
+            submitDisabled: false
         };
 
-        this.submitDisabled = false;
         this.isValid = null;
         this.watches = {};
         this.inputs = {};
@@ -30,6 +31,7 @@ class FormContainer extends Webiny.Ui.Component {
         ];
 
         this.bindMethods(
+            'resetForm',
             'getModel',
             'setModel',
             'loadModel',
@@ -85,15 +87,15 @@ class FormContainer extends Webiny.Ui.Component {
     }
 
     isSubmitDisabled() {
-        return this.submitDisabled;
+        return this.state.submitDisabled;
     }
 
     enableSubmit() {
-        this.submitDisabled = false;
+        this.setState({submitDisabled: false});
     }
 
     disableSubmit(message = '') {
-        this.submitDisabled = message;
+        this.setState({submitDisabled: message || true});
     }
 
     /**
@@ -172,10 +174,15 @@ class FormContainer extends Webiny.Ui.Component {
         };
 
         if (model.id) {
-            return this.api.setConfig(config).patch(this.api.url + '/' + model.id, model).then(res => this.__processSubmitResponse(model, res));
+            return this.api.setConfig(config)
+                .patch(this.api.url + '/' + model.id, model)
+                .then(res => this.__processSubmitResponse(model, res))
+                .then(this.enableSubmit);
         }
 
-        return this.api.setConfig(config)[this.props.createHttpMethod](this.api.url, model).then(res => this.__processSubmitResponse(model, res));
+        return this.api.setConfig(config)[this.props.createHttpMethod](this.api.url, model)
+            .then(res => this.__processSubmitResponse(model, res))
+            .then(this.enableSubmit);
     }
 
     onInvalid() {
@@ -233,6 +240,36 @@ class FormContainer extends Webiny.Ui.Component {
             _.set(this.state.model, key, value);
             this.setState({model: this.state.model}, callback);
         }
+        return this;
+    }
+
+    /**
+     * Reset initialModel and actual model of the Form and set all form inputs validation state to `null`
+     *
+     * @param model
+     * @returns {FormContainer}
+     */
+    resetForm(model = {}) {
+        this.setState({model, initialModel: model}, () => {
+            Object.keys(this.inputs).forEach(name => {
+                this.inputs[name].component.reset();
+            });
+        });
+        return this;
+    }
+
+    /**
+     * Reset initialModel and actual model of the Form and set all form inputs validation state to `null`
+     *
+     * @param model
+     * @returns {FormContainer}
+     */
+    resetForm(model = {}) {
+        this.setState({model, initialModel: model}, () => {
+            Object.keys(this.inputs).forEach(name => {
+                this.inputs[name].component.reset();
+            });
+        });
         return this;
     }
 
@@ -295,10 +332,12 @@ class FormContainer extends Webiny.Ui.Component {
             e.preventDefault();
         }
 
-        if (this.submitDisabled) {
-            Webiny.Growl.info(this.submitDisabled, 'Wait!');
+        if (this.state.submitDisabled !== false) {
+            Webiny.Growl.info(this.state.submitDisabled, 'Please wait! Your data is being processed...');
             return false;
         }
+
+        this.disableSubmit();
 
         return this.validate().then(valid => {
             if (valid) {
@@ -309,6 +348,7 @@ class FormContainer extends Webiny.Ui.Component {
                 }
                 return this.onSubmit(model);
             }
+            this.enableSubmit();
             return this.onInvalid();
         });
     }
@@ -556,7 +596,7 @@ class FormContainer extends Webiny.Ui.Component {
 
         const onSubmitSuccess = this.props.onSubmitSuccess;
         if (_.isFunction(onSubmitSuccess)) {
-            return onSubmitSuccess.call(this, apiResponse);
+            return onSubmitSuccess.call(this, apiResponse, this);
         }
 
         if (_.isString(onSubmitSuccess)) {
