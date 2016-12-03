@@ -49,6 +49,7 @@ const i18n = function i18n(key, text, variables) {
 
 i18n.language = '';
 i18n.api = null;
+i18n.cacheKey = null;
 
 /**
  * Used for rendering text in DOM
@@ -110,23 +111,23 @@ i18n.getLanguage = function getLanguage() {
     return this.language;
 };
 
-i18n.setLanguage = function setLanguage(language) {
+i18n.setCacheKey = function setCacheKey(cacheKey) {
+    this.cacheKey = cacheKey;
+    return this;
+};
+
+i18n.initialize = function setLanguage(language) {
     this.language = language;
     // TODO: Set moment / accounting language settings here
 
-    // First let's get contents from cache
-    if (localStorage[`Webiny.i18n.translations`]) {
+    // If we have the same cache key, that means we have latest translations - we can safely read from local storage.
+    if (this.cacheKey === parseInt(localStorage[`Webiny.i18n.cacheKey`])) {
         translations = JSON.parse(localStorage[`Webiny.i18n.translations`]);
+        return Promise.resolve();
     }
 
-    // First we fetch all translations from server - we send a cache key
-    return this.api.get('', {
-        language: this.language,
-        cacheKey: localStorage[`Webiny.i18n.cacheKey`]
-    }).then(apiResponse => {
-        if (_.isEmpty(apiResponse.getData('translations'))) {
-            return apiResponse;
-        }
+    // If we have a different cache key (or no cache key at all), we must fetch translations from server
+    return this.api.get(null, {language: this.language}).then(apiResponse => {
         localStorage[`Webiny.i18n.language`] = this.language;
         localStorage[`Webiny.i18n.cacheKey`] = apiResponse.getData('cacheKey', null);
         localStorage[`Webiny.i18n.translations`] = JSON.stringify(apiResponse.getData('translations'));
