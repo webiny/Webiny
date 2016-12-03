@@ -125,7 +125,9 @@ class Bootstrap
 
             $response = $this->wEvents()->fire('Core.Bootstrap.Request', new BootstrapEvent(), $responseClass, 1);
             if ($response instanceof ApiResponse) {
-                $responses[] = $this->processResponse($response, true);
+                $responseData = $this->processResponse($response, true);
+                $responseData['statusCode'] = $response->getStatusCode();
+                $responses[] = $responseData;
             } else {
                 $responses[] = null;
             }

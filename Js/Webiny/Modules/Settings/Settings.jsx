@@ -17,8 +17,11 @@ Settings.defaultProps = {
             onSubmitSuccess: this.props.onSubmitSuccess,
             children: this.props.children,
             loadModel() {
+                this.showLoading();
                 return this.api.get('/').then(apiResponse => {
+                    this.hideLoading();
                     if (apiResponse.isError()) {
+                        Webiny.Growl.danger(apiResponse.getMessage(), 'That didn\'t go as expected...', true);
                         return this.handleApiError(apiResponse);
                     }
                     return apiResponse.getData();

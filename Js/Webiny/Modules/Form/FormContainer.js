@@ -279,7 +279,11 @@ class FormContainer extends Webiny.Ui.Component {
                 }
 
                 if (apiResponse.isError()) {
-                    this.props.onFailure(apiResponse);
+                    if (_.isFunction(this.props.onFailure)) {
+                        this.props.onFailure(apiResponse, this);
+                    } else {
+                        Webiny.Growl.danger(apiResponse.getMessage(), 'That didn\'t go as expected...', true);
+                    }
                     return;
                 }
 
@@ -639,7 +643,7 @@ FormContainer.defaultProps = {
     createHttpMethod: 'post',
     validateOnFirstSubmit: false,
     onSubmitSuccess: null,
-    onFailure: _.noop,
+    onFailure: null,
     onProgress(pe) {
         const cmp = <div>Your data is being uploaded...<Ui.Progress value={pe.progress}/></div>;
         Webiny.Growl(<Ui.Growl.Info id={this.growlId} title="Please be patient" sticky={true}>{cmp}</Ui.Growl.Info>);

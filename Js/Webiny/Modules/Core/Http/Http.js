@@ -80,8 +80,7 @@ function sendAggregatedRequest() {
     request.setBody({requests: body});
     execute(request, {headers: {'X-Webiny-Api-Aggregate': true}}, false).then(response => {
         response.getData('data').map((res, index) => {
-            const aggRes = new HttpResponse({data: res}, inProgress[index]);
-            aggRes.setStatus(200);
+            const aggRes = new HttpResponse({data: res, status: res.statusCode}, inProgress[index]);
             inProgress[index].resolve(aggRes);
         });
     });
