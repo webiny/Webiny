@@ -11,7 +11,8 @@ class FormContainer extends Webiny.Ui.Component {
             initialModel: {},
             error: null,
             loading: false,
-            submitDisabled: false
+            submitDisabled: false,
+            wasSubmitted: false
         };
 
         this.isValid = null;
@@ -250,22 +251,7 @@ class FormContainer extends Webiny.Ui.Component {
      * @returns {FormContainer}
      */
     resetForm(model = {}) {
-        this.setState({model, initialModel: model}, () => {
-            Object.keys(this.inputs).forEach(name => {
-                this.inputs[name].component.reset();
-            });
-        });
-        return this;
-    }
-
-    /**
-     * Reset initialModel and actual model of the Form and set all form inputs validation state to `null`
-     *
-     * @param model
-     * @returns {FormContainer}
-     */
-    resetForm(model = {}) {
-        this.setState({model, initialModel: model}, () => {
+        this.setState({model, initialModel: model, wasSubmitted: false}, () => {
             Object.keys(this.inputs).forEach(name => {
                 this.inputs[name].component.reset();
             });
@@ -338,6 +324,7 @@ class FormContainer extends Webiny.Ui.Component {
         }
 
         this.disableSubmit();
+        this.setState({wasSubmitted: true});
 
         return this.validate().then(valid => {
             if (valid) {
@@ -517,6 +504,9 @@ class FormContainer extends Webiny.Ui.Component {
     }
 
     validateInput(component) {
+        if (this.props.validateOnFirstSubmit && !this.state.wasSubmitted) {
+            return Promise.resolve(null);
+        }
         const validators = this.inputs[component.props.name].validators;
         const hasValidators = _.keys(validators).length;
         const messages = this.inputs[component.props.name].messages;
@@ -647,6 +637,7 @@ FormContainer.defaultProps = {
     defaultModel: {},
     connectToRouter: false,
     createHttpMethod: 'post',
+    validateOnFirstSubmit: false,
     onSubmitSuccess: null,
     onFailure: _.noop,
     onProgress(pe) {
