@@ -162,7 +162,7 @@ class Bootstrap
         $this->wEvents()->fire('Core.Bootstrap.Response', $event);
 
         // Build response body
-        $responseBody = $response->output();
+        $responseBody = $response->output($this->wIsProduction() ? 0 : JSON_PRETTY_PRINT);
         Response::create($responseBody, $response->getStatusCode())->send();
     }
 }

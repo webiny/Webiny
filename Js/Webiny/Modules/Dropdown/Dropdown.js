@@ -31,6 +31,7 @@ class Dropdown extends Webiny.Ui.Component {
 Dropdown.defaultProps = {
     closeOnClick: true,
     disabled: false,
+    listStyle: null,
     renderer() {
         const props = _.clone(this.props);
 
@@ -55,7 +56,7 @@ Dropdown.defaultProps = {
                     {props.title}
                     <span className="caret"></span>
                 </button>
-                <ul className="dropdown-menu" role="menu">
+                <ul className="dropdown-menu" role="menu" style={this.props.listStyle}>
                     {_.isFunction(props.children) ? props.children.call(this, this) : props.children}
                 </ul>
             </div>
