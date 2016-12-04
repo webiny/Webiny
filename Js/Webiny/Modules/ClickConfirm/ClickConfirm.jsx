@@ -39,8 +39,16 @@ class ClickConfirm extends Webiny.Ui.Component {
         this.refs.dialog.hide().then(this.props.onCancel);
     }
 
-    onConfirm(data) {
-        return Q(this.realOnClick(data, this));
+    /**
+     * The `data` param can be used when creating a custom confirmation dialog (maybe even with a form). 
+     * When calling `confirm` callback - whatever data is passed to it will be passed down to original `onClick` handler.
+     * That way you can dynamically handle the different scenarios of the confirmation dialog.
+     * 
+     * @param data
+     * @returns {Promise.<*>}
+     */
+    onConfirm(data = {}) {
+        return Promise.resolve(this.realOnClick(data, this));
     }
 }
 

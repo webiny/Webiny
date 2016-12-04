@@ -108,7 +108,7 @@ class Module extends Webiny.Module {
             return new Promise((resolve) => {
                 const user = Webiny.Model.get('User');
 
-                if (user && _.isString(routerEvent.route.role) && _.find(user.roles, r => routerEvent.route.role.indexOf(r.slug) > -1)) {
+                if (user && _.isArray(routerEvent.route.role) && _.find(user.roles, r => routerEvent.route.role.indexOf(r.slug) > -1)) {
                     return resolve(routerEvent);
                 }
 

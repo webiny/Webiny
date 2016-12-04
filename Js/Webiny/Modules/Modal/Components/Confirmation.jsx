@@ -35,10 +35,23 @@ class Confirmation extends Webiny.Ui.ModalComponent {
         }
     }
 
-    onConfirm(data = {}) {
+    /**
+     * This function is executed when dialog is confirmed, it handles all the maintenance stuff and executes `onConfirm` callback
+     * passed through props and also passes optional `data` object to that callback.
+     *
+     * It can receive a `data` object containing arbitrary data from your custom form, for example.
+     *
+     * If no `data` is passed - Confirmation dialog will check if `data` prop is defined and use that as data payload for `onConfirm`
+     * callbacks.
+     *
+     * @param data
+     * @returns {Promise.<TResult>}
+     */
+    onConfirm(data = null) {
         if (!this.isAnimating() && _.isFunction(this.props.onConfirm)) {
             this.showLoading();
-            return Q(this.props.onConfirm(data, this)).then(result => {
+            data = _.isPlainObject(data) ? data : this.props.data;
+            return Promise.resolve(this.props.onConfirm(data, this)).then(result => {
                 if (this.isMounted()) {
                     this.hideLoading();
                 }
@@ -91,6 +104,7 @@ Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
     onCancel: null,
     autoHide: true,
     closeOnClick: false,
+    data: null,
     renderLoader() {
         return (
             <div className="loading-overlay">
@@ -102,7 +116,11 @@ Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
     },
     renderDialog(confirm, cancel) {
         return (
-            <Ui.Modal.Dialog modalContainerTag="confirmation-modal" className="alert-modal" onCancel={cancel} closeOnClick={this.props.closeOnClick}>
+            <Ui.Modal.Dialog
+                modalContainerTag="confirmation-modal"
+                className="alert-modal"
+                onCancel={cancel}
+                closeOnClick={this.props.closeOnClick}>
                 {this.renderLoader()}
                 <Ui.Modal.Body>
                     <div className="text-center">
