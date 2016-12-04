@@ -1,8 +1,10 @@
 <?php
 namespace Apps\Core\Php\DevTools\Authorization;
 
+use Apps\Core\Php\DevTools\Interfaces\UserInterface;
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
+use Apps\Core\Php\Entities\ApiToken;
 use Apps\Core\Php\Entities\User;
 use Apps\Core\Php\Entities\UserRole;
 use Apps\Core\Php\RequestHandlers\ApiException;
@@ -84,7 +86,7 @@ class Authorization
     }
 
     /**
-     * @return User
+     * @return UserInterface
      */
     public function getUser()
     {
@@ -106,11 +108,14 @@ class Authorization
                 }
             } else {
                 $requestToken = urldecode($this->wRequest()->header('X-Webiny-Api-Token'));
+                if (!$requestToken) {
+                    $requestToken = $this->wRequest()->query('apiToken');
+                }
                 $systemToken = $this->wConfig()->getConfig()->get('Application.Acl.Token');
                 if ($systemToken && $systemToken == $requestToken) {
-                    $this->user = new SystemUser(new $class);
-
-                    return $this->user;
+                    $this->user = new SystemApiToken();
+                } else {
+                    $this->user = ApiToken::findOne(['token' => $requestToken]);
                 }
             }
         }
@@ -184,7 +189,7 @@ class Authorization
 
     private function checkPermission($class, $permission)
     {
-        if (!$this->wConfig()->get('Application.Acl.CheckUserPermissions', true)) {
+        if (!$this->wConfig()->get('Application.Acl.CheckUserPermissions', true) || $this->getUser() instanceof SystemApiToken) {
             return true;
         }
 

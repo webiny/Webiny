@@ -11,4 +11,13 @@ interface UserInterface
      * @return EntityCollection|array
      */
     public function getUserRoles();
+
+    /**
+     * Check if user has a given role
+     *
+     * @param $name
+     *
+     * @return bool
+     */
+    public function hasRole($name);
 }

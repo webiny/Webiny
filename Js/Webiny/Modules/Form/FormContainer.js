@@ -9,10 +9,12 @@ class FormContainer extends Webiny.Ui.Component {
         this.state = {
             model: {},
             initialModel: {},
-            error: null
+            error: null,
+            loading: false,
+            submitDisabled: false,
+            wasSubmitted: false
         };
 
-        this.submitDisabled = false;
         this.isValid = null;
         this.watches = {};
         this.inputs = {};
@@ -30,6 +32,7 @@ class FormContainer extends Webiny.Ui.Component {
         ];
 
         this.bindMethods(
+            'resetForm',
             'getModel',
             'setModel',
             'loadModel',
@@ -85,15 +88,15 @@ class FormContainer extends Webiny.Ui.Component {
     }
 
     isSubmitDisabled() {
-        return this.submitDisabled;
+        return this.state.submitDisabled;
     }
 
     enableSubmit() {
-        this.submitDisabled = false;
+        this.setState({submitDisabled: false});
     }
 
     disableSubmit(message = '') {
-        this.submitDisabled = message;
+        this.setState({submitDisabled: message || true});
     }
 
     /**
@@ -172,10 +175,15 @@ class FormContainer extends Webiny.Ui.Component {
         };
 
         if (model.id) {
-            return this.api.setConfig(config).patch(this.api.url + '/' + model.id, model).then(res => this.__processSubmitResponse(model, res));
+            return this.api.setConfig(config)
+                .patch(this.api.url + '/' + model.id, model)
+                .then(res => this.__processSubmitResponse(model, res))
+                .then(this.enableSubmit);
         }
 
-        return this.api.setConfig(config)[this.props.createHttpMethod](this.api.url, model).then(res => this.__processSubmitResponse(model, res));
+        return this.api.setConfig(config)[this.props.createHttpMethod](this.api.url, model)
+            .then(res => this.__processSubmitResponse(model, res))
+            .then(this.enableSubmit);
     }
 
     onInvalid() {
@@ -236,6 +244,21 @@ class FormContainer extends Webiny.Ui.Component {
         return this;
     }
 
+    /**
+     * Reset initialModel and actual model of the Form and set all form inputs validation state to `null`
+     *
+     * @param model
+     * @returns {FormContainer}
+     */
+    resetForm(model = {}) {
+        this.setState({model, initialModel: model, wasSubmitted: false}, () => {
+            Object.keys(this.inputs).forEach(name => {
+                this.inputs[name].component.reset();
+            });
+        });
+        return this;
+    }
+
     loadModel(id = null, model = null) {
         if (!id) {
             if (this.props.connectToRouter) {
@@ -256,7 +279,11 @@ class FormContainer extends Webiny.Ui.Component {
                 }
 
                 if (apiResponse.isError()) {
-                    this.props.onFailure(apiResponse);
+                    if (_.isFunction(this.props.onFailure)) {
+                        this.props.onFailure(apiResponse, this);
+                    } else {
+                        Webiny.Growl.danger(apiResponse.getMessage(), 'That didn\'t go as expected...', true);
+                    }
                     return;
                 }
 
@@ -295,10 +322,13 @@ class FormContainer extends Webiny.Ui.Component {
             e.preventDefault();
         }
 
-        if (this.submitDisabled) {
-            Webiny.Growl.info(this.submitDisabled, 'Wait!');
+        if (this.state.submitDisabled !== false) {
+            Webiny.Growl.info(this.state.submitDisabled, 'Please wait! Your data is being processed...');
             return false;
         }
+
+        this.disableSubmit();
+        this.setState({wasSubmitted: true});
 
         return this.validate().then(valid => {
             if (valid) {
@@ -309,6 +339,7 @@ class FormContainer extends Webiny.Ui.Component {
                 }
                 return this.onSubmit(model);
             }
+            this.enableSubmit();
             return this.onInvalid();
         });
     }
@@ -477,6 +508,9 @@ class FormContainer extends Webiny.Ui.Component {
     }
 
     validateInput(component) {
+        if (this.props.validateOnFirstSubmit && !this.state.wasSubmitted) {
+            return Promise.resolve(null);
+        }
         const validators = this.inputs[component.props.name].validators;
         const hasValidators = _.keys(validators).length;
         const messages = this.inputs[component.props.name].messages;
@@ -556,7 +590,7 @@ class FormContainer extends Webiny.Ui.Component {
 
         const onSubmitSuccess = this.props.onSubmitSuccess;
         if (_.isFunction(onSubmitSuccess)) {
-            return onSubmitSuccess.call(this, apiResponse);
+            return onSubmitSuccess.call(this, apiResponse, this);
         }
 
         if (_.isString(onSubmitSuccess)) {
@@ -607,8 +641,9 @@ FormContainer.defaultProps = {
     defaultModel: {},
     connectToRouter: false,
     createHttpMethod: 'post',
+    validateOnFirstSubmit: false,
     onSubmitSuccess: null,
-    onFailure: _.noop,
+    onFailure: null,
     onProgress(pe) {
         const cmp = <div>Your data is being uploaded...<Ui.Progress value={pe.progress}/></div>;
         Webiny.Growl(<Ui.Growl.Info id={this.growlId} title="Please be patient" sticky={true}>{cmp}</Ui.Growl.Info>);

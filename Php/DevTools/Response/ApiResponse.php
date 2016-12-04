@@ -26,17 +26,20 @@ class ApiResponse extends AbstractResponse implements \ArrayAccess
     /**
      * Get original data
      *
+     * @param bool $format
+     *
      * @return mixed
      */
-    public function getData()
+    public function getData($format = false)
     {
-        return $this->data;
+        return $format ? $this->formatResponse() : $this->data;
     }
 
     public function output($jsonOptions = 0)
     {
         $data = $this->formatResponse();
         header("Content-type: application/json");
+
         return json_encode($data, $jsonOptions);
     }
 

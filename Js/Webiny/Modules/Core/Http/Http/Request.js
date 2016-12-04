@@ -1,21 +1,5 @@
 import HttpResponse from './Response';
 
-/**
- * TODO: add ajax request logging to get a performance overview in the backend
- * These 2 functions are an example of measuring ajax request time/size
- */
-/* xhr.onloadstart = function () {
-    window.performance.mark('mark_start_xhr');
-};
-xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4) {
-        window.performance.mark('mark_end_xhr');
-        window.performance.measure('measure_xhr_' + xhr.reponseURL, 'mark_start_xhr', 'mark_end_xhr');
-        console.log(window.performance.getEntriesByType('measure')[0].duration, xhr.response.length);
-        window.performance.clearMeasures();
-    }
-}; */
-
 function formatResponse(jqXhr) {
     const headers = {};
     _.filter(jqXhr.getAllResponseHeaders().split('\n')).map(item => {
@@ -62,7 +46,7 @@ class HttpRequest {
     }
 
     setMethod(method) {
-        this.method = method;
+        this.method = method.toLowerCase();
         return this;
     }
 
@@ -118,10 +102,16 @@ class HttpRequest {
     }
 
     getRequestObject() {
+        const headers = this.getHeaders();
+        const basicAuth = _.get(webinyConfig, 'Api.BasicAuth', null);
+        if (basicAuth) {
+            headers['Authorization'] = 'Basic ' + btoa(basicAuth.Username + ':' + basicAuth.Password);
+        }
+
         const config = {
             url: this.getUrl(),
             method: this.getMethod(),
-            headers: this.getHeaders(),
+            headers,
             data: JSON.stringify(this.getBody()),
             dataType: this.getResponseType(),
             contentType: 'application/json;charset=UTF-8',
@@ -170,7 +160,9 @@ class HttpRequest {
     }
 
     abort() {
-        this.request.abort();
+        if (this.request) {
+            this.request.abort();
+        }
     }
 }
 

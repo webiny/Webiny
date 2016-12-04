@@ -47,7 +47,7 @@ class Image extends File
         if (is_array($data['src'])) {
             foreach ($data['src'] as $dimension => $key) {
                 $src = $this->str($key);
-                if (!$src->containsAny(['http://', 'https://'])) {
+                if (!$src->containsAny(['http://', 'https://']) && !$src->startsWith('//')) {
                     $data['src'][$dimension] = $this->storage->getURL($key);
                 }
             }
@@ -99,6 +99,10 @@ class Image extends File
     {
         if ($size === 'original') {
             return $this->getUrl();
+        }
+
+        if ($this->storage->supportsAbsolutePaths() && !$this->storage->keyExists($this->src) && !$this->wIsProduction()) {
+            return '//placehold.it/' . $size;
         }
 
         /* @var $sizeFile Image */

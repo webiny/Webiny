@@ -8,9 +8,7 @@
 namespace Apps\Core\Php\PackageManager;
 
 use Webiny\Component\Config\ConfigObject;
-use Webiny\Component\ServiceManager\ServiceManager;
 use Webiny\Component\StdLib\StdLibTrait;
-use Webiny\Component\StdLib\StdObjectTrait;
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Webiny\Component\Storage\Storage;
 

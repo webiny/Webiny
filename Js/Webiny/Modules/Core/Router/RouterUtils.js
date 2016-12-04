@@ -43,7 +43,9 @@ class RouterUtils {
     renderRoute(route) {
         const content = this.getRouteContent(route);
         return Webiny.ViewManager.render(content).then(() => {
-            Webiny.Router.setTitle(route.getTitle() || route.getPattern());
+            if (route.getTitle()) {
+                Webiny.Router.setTitle(route.getTitle());
+            }
             return route;
         });
     }
@@ -112,6 +114,10 @@ class RouterUtils {
         });
 
         routeNotMatchedChain = routeNotMatchedChain.then(() => {
+            if (_.isNumber(History.getState().data.scrollY)) {
+                window.scrollTo(0, History.getState().data.scrollY);
+            }
+
             if (!rEvent.isStopped()) {
                 // If URL starts with loaded app prefix, go to default route
                 if (this.baseUrl !== '/' && url.startsWith(this.baseUrl)) {

@@ -53,6 +53,10 @@ class Router {
                 }
 
                 this.activeRoute = matched;
+                if (History.getState().data.title) {
+                    this.activeRoute.setTitle(History.getState().data.title);
+                }
+
                 Utils.routeWillChange(matched, this.routeWillChange).then(routerEvent => {
                     if (!routerEvent.isStopped()) {
                         Utils.renderRoute(matched).then(route => {
@@ -64,6 +68,9 @@ class Router {
 
             // Listen for "RouteChanged" event and process callbacks
             Dispatcher.on('RouteChanged', (event) => {
+                if (_.isNumber(History.getState().data.scrollY)) {
+                    window.scrollTo(0, History.getState().data.scrollY);
+                }
                 let chain = Promise.resolve(event);
                 this.routeChanged.forEach(callback => {
                     chain = chain.then(() => {
@@ -204,7 +211,7 @@ class Router {
         return this.getActiveRoute().getHref(params);
     }
 
-    goToRoute(route, params = {}) {
+    goToRoute(route, params = {}, options = {}) {
         if (_.isString(route)) {
             route = route !== 'current' ? _.find(this.routes, ['name', route]) : this.activeRoute;
         }
@@ -217,18 +224,25 @@ class Router {
             console.warn('Route will not change!');
             return null;
         }
-        return this.goToUrl(route.getHref(params, null));
+        return this.goToUrl(route.getHref(params, null), false, options);
     }
 
-    goToUrl(url, replace = false) {
+    goToUrl(url, replace = false, options = {}) {
         if (url.indexOf(this.baseUrl) !== 0) {
             url = this.baseUrl + url;
         }
 
+        const state = {
+            url,
+            replace,
+            scrollY: options.preventScroll ? window.scrollY : false,
+            title: options.title
+        };
+
         if (replace) {
-            History.replaceState({url, replace: true}, null, url);
+            History.replaceState(state, window.document.title, url);
         } else {
-            History.pushState({url}, null, url);
+            History.pushState(state, window.document.title, url);
         }
         return url;
     }
@@ -304,7 +318,11 @@ class Router {
         if (url.indexOf(webinyWebPath) === 0) {
             e.preventDefault();
             url = url.replace(webinyWebPath, '');
-            History.pushState({url}, null, url);
+            History.pushState({
+                url,
+                title: a.getAttribute('data-document-title') || null,
+                scrollY: a.getAttribute('data-prevent-scroll') === 'true' ? window.scrollY : false
+            }, window.document.title, url);
         }
     }
 

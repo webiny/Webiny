@@ -236,7 +236,9 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         $userClass = $this->wAuth()->getUserClass();
         $this->attr('createdOn')->datetime()->setDefaultValue('now')->setToArrayDefault();
         $this->attr('createdBy')->many2one()->setEntity($userClass)->setDefaultValue(function () {
-            return $this->wAuth()->getUser();
+            $user = $this->wAuth()->getUser();
+
+            return $user instanceof AbstractEntity ? $user : null;
         });
         $this->attr('modifiedOn')->datetime()->onToDb(function ($value) {
             if ($this->exists() && !$this->deletedOn) {
@@ -246,8 +248,14 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             return $value;
         });
         $this->attr('modifiedBy')->many2one()->setEntity($userClass)->onToDb(function ($value) {
-            if ($this->exists() && !$this->deletedOn && $this->wAuth()->getUser()) {
-                return $this->wAuth()->getUser()->id;
+            $user = $this->wAuth()->getUser();
+
+            if ($this->exists() && !$this->deletedOn && $user) {
+                if ($user instanceof AbstractEntity) {
+                    return $user->id;
+                }
+
+                return null;
             }
 
             return $value;
@@ -371,8 +379,9 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         $this->processDelete($permanent);
 
         if (!$permanent) {
+            $user = $this->wAuth()->getUser();
             $this->deletedOn = $this->datetime()->getMongoDate();
-            $this->deletedBy = $this->wAuth()->getUser();
+            $this->deletedBy = $user instanceof AbstractEntity ? $user : null;
             $this->save();
         }
 

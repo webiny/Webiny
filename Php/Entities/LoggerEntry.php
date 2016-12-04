@@ -34,7 +34,7 @@ class LoggerEntry extends AbstractEntity
 
         $this->attr('errorGroup')->many2one()->setEntity('Apps\Core\Php\Entities\LoggerErrorGroup');
 
-        $this->api('get', '{id}/resolve', function () {
+        $this->api('POST', '{id}/resolve', function () {
             // re-calculate the number of errors inside the same group
             $this->errorGroup->errorCount--;
 

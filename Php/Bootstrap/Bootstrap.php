@@ -7,11 +7,13 @@
 
 namespace Apps\Core\Php\Bootstrap;
 
+use Apps\Core\Php\DevTools\Request;
 use Apps\Core\Php\DevTools\Response\ApiResponse;
 use Apps\Core\Php\DevTools\Response\HtmlResponse;
 use Apps\Core\Php\DevTools\Response\AbstractResponse;
 use Apps\Core\Php\DevTools\Response\ResponseEvent;
 use Apps\Core\Php\PackageManager\App;
+use Apps\Core\Php\PackageManager\AppScanner;
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\Entity\Entity;
 use Webiny\Component\Http\Response;
@@ -21,7 +23,6 @@ use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\UrlObject\UrlObjectException;
 use Webiny\Component\StdLib\SingletonTrait;
 use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\PackageManager\PackageScanner;
 use Webiny\Component\Storage\Storage;
 
 /**
@@ -68,7 +69,7 @@ class Bootstrap
         Storage::setConfig($this->wConfig()->get('Storage', $emptyConfig));
 
         // scan all components to register routes and event handlers
-        PackageScanner::getInstance();
+        AppScanner::getInstance();
 
         /* @var $app App */
         foreach ($this->wApps() as $app) {
@@ -83,6 +84,10 @@ class Bootstrap
 
     public function run()
     {
+        if ($this->wRequest()->isApi() && $this->wRequest()->header('X-Webiny-Api-Aggregate')) {
+            return $this->processMultipleRequests();
+        }
+
         $responseClass = '\Apps\Core\Php\DevTools\Response\AbstractResponse';
         /* @var $response AbstractResponse */
         $response = $this->wEvents()->fire('Core.Bootstrap.Request', new BootstrapEvent(), $responseClass, 1);
@@ -97,6 +102,41 @@ class Bootstrap
         // Output 404
         $response = new HtmlResponse('Add 404 handler!', 404);
         $this->processResponse($response);
+    }
+
+    /**
+     * This will read aggregated requests and execute each one of them as if they were sent individually.
+     * All responses are aggregated into a single response.
+     *
+     * @return $this
+     */
+    public function processMultipleRequests()
+    {
+        $requests = $this->wRequest()->getRequestData()['requests'];
+        $responses = [];
+        $responseClass = '\Apps\Core\Php\DevTools\Response\AbstractResponse';
+        foreach ($requests as $req) {
+            Request::deleteInstance();
+            $_GET = $req['query'];
+            $_SERVER['REQUEST_URI'] = $this->url($req['url'])->getPath();
+            $_SERVER['REQUEST_METHOD'] = 'GET';
+            $_SERVER['QUERY_STRING'] = http_build_query($req['query']);
+            Request::getInstance();
+
+            $response = $this->wEvents()->fire('Core.Bootstrap.Request', new BootstrapEvent(), $responseClass, 1);
+            if ($response instanceof ApiResponse) {
+                $responseData = $this->processResponse($response, true);
+                $responseData['statusCode'] = $response->getStatusCode();
+                $responses[] = $responseData;
+            } else {
+                $responses[] = null;
+            }
+        }
+
+        $apiResponse = new ApiResponse($responses);
+        $response = Response::create($apiResponse->output(), 200);
+
+        return $response->send();
     }
 
     private function buildConfiguration($configSet)
@@ -154,15 +194,23 @@ class Bootstrap
     }
 
     /**
-     * @param AbstractResponse $response
+     * @param AbstractResponse $webinyResponse
+     *
+     * @return mixed
      */
-    private function processResponse(AbstractResponse $response)
+    private function processResponse(AbstractResponse $webinyResponse, $return = false)
     {
-        $event = new ResponseEvent($response);
+        $event = new ResponseEvent($webinyResponse);
         $this->wEvents()->fire('Core.Bootstrap.Response', $event);
 
+        if ($return && $webinyResponse instanceof ApiResponse) {
+            return $webinyResponse->getData(true);
+        }
+
         // Build response body
-        $responseBody = $response->output($this->wIsProduction() ? 0 : JSON_PRETTY_PRINT);
-        Response::create($responseBody, $response->getStatusCode())->send();
+        $responseBody = $webinyResponse->output();
+        $response = Response::create($responseBody, $webinyResponse->getStatusCode());
+        $response->cacheControl()->setCacheControl($webinyResponse->getCacheControlHeaders());
+        $response->send();
     }
 }

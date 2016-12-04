@@ -196,10 +196,43 @@ class User extends AbstractEntity implements UserInterface
         return $res;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getUserRoles()
     {
         return $this->roles;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function hasRole($name)
+    {
+        foreach ($this->getUserRoles() as $role) {
+            if ($role->slug == $name) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function hasPermission($class, $permission)
+    {
+        foreach ($this->getUserRoles() as $role) {
+            if ($role->checkPermission($class, $permission)) {
+                return true;
+            }
+
+            // Check if given permission pattern is a crud pattern
+            if (isset($this->patterns[$permission]) && $role->checkPermission($class, $this->patterns[$permission])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     /**
      * Triggered when User is logged-in successfully

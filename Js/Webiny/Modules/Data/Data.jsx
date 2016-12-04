@@ -8,7 +8,8 @@ class Data extends Webiny.Ui.Component {
         this.autoRefreshInterval = null; // Ony when 'autoRefresh' prop is used
 
         this.state = {
-            data: null
+            data: null,
+            initiallyLoaded: false
         };
 
         this.bindMethods('setData,filter');
@@ -17,16 +18,17 @@ class Data extends Webiny.Ui.Component {
 
     componentWillMount() {
         super.componentWillMount();
-        if (!_.isFunction(this.props.children)) {
-            console.warn('Warning: Data component only accepts a function as its child element!');
-        }
         this.setState({loading: true});
     }
 
     componentDidMount() {
         super.componentDidMount();
         this.request = this.api.execute().then(apiResponse => {
+            if (!this.isMounted()) {
+                return null;
+            }
             this.setData(apiResponse);
+            this.setState('initiallyLoaded', true);
             this.props.onInitialLoad(apiResponse);
             return apiResponse.getData();
         });
@@ -37,7 +39,7 @@ class Data extends Webiny.Ui.Component {
                     this.setData(response);
                     return response.getData();
                 });
-            }, this.props.autoRefresh * 1000)
+            }, this.props.autoRefresh * 1000);
         }
     }
 
@@ -53,6 +55,7 @@ class Data extends Webiny.Ui.Component {
     }
 
     setData(response) {
+        this.request = null;
         if (response.isAborted() || !this.isMounted()) {
             return;
         }
@@ -68,6 +71,9 @@ class Data extends Webiny.Ui.Component {
     filter(filters = {}) {
         this.setState({loading: true});
         this.request = this.api.setQuery(filters).execute().then(apiResponse => {
+            if (!this.isMounted()) {
+                return;
+            }
             this.setData(apiResponse);
             this.props.onLoad(apiResponse);
         });
@@ -81,6 +87,10 @@ Data.defaultProps = {
     onLoad: _.noop,
     onInitialLoad: _.noop,
     renderer() {
+        if (!_.isFunction(this.props.children)) {
+            throw new Error('Warning: Data component only accepts a function as its child element!');
+        }
+
         if (this.props.waitForData && !this.state.data) {
             return null;
         }

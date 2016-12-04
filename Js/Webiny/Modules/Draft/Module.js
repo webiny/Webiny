@@ -1,5 +1,6 @@
 import Webiny from 'Webiny';
 import Editor from './Editor';
+import SimpleEditor from './SimpleEditor';
 import BasePlugin from './BasePlugins/BasePlugin';
 import BlockTypePlugin from './BasePlugins/BlockTypePlugin';
 import InlineStylePlugin from './BasePlugins/InlineStylePlugin';
@@ -18,9 +19,7 @@ import Italic from './Plugins/Italic';
 import Underline from './Plugins/Underline';
 import UnorderedList from './Plugins/UnorderedList';
 import OrderedList from './Plugins/OrderedList';
-import AlignLeft from './Plugins/AlignLeft';
-import AlignCenter from './Plugins/AlignCenter';
-import AlignRight from './Plugins/AlignRight';
+import Alignment from './Plugins/Alignment';
 import Link from './Plugins/Link';
 import Image from './Plugins/Image';
 import Blockquote from './Plugins/Blockquote';
@@ -35,6 +34,7 @@ class Module extends Webiny.Module {
     init() {
         Webiny.Ui.Components.Draft = {
             Editor,
+            SimpleEditor,
             Toolbar: {
                 InlineStyle,
                 BlockType,
@@ -58,9 +58,7 @@ class Module extends Webiny.Module {
                 Underline,
                 UnorderedList,
                 OrderedList,
-                AlignLeft,
-                AlignCenter,
-                AlignRight,
+                Alignment,
                 Link,
                 Image,
                 Blockquote,

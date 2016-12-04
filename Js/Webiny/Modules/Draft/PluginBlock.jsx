@@ -70,7 +70,6 @@ PluginBlock.defaultProps = {
         return (
             <div className={classes} {...eventHandlers}>
                 <Plugin {...props}/>
-                <div className="clearfix"/>
             </div>
         );
     }

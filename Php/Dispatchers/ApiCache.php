@@ -9,13 +9,14 @@ namespace Apps\Core\Php\Dispatchers;
 
 use Apps\Core\Php\DevTools\Response\ApiCacheResponse;
 use Apps\Core\Php\RequestHandlers\ApiEvent;
+use Webiny\Component\Config\ConfigObject;
 use Webiny\Hrc\Hrc;
 
 /**
  * Class ApiCache
- * 
+ *
  * Api cache listens on Core.Api.Before and Core.Api.After events.
- * The first it to check if we have the response cached, and if we do, we delivery that reponse directly from cache.
+ * The first it to check if we have the response cached, and if we do, we deliver that response directly from cache.
  * In case the response is not cached, on the After event, we store the response, if it matches any of the defined cache rules.
  *
  * @link: https://github.com/Webiny/Hrc/
@@ -46,7 +47,7 @@ class ApiCache extends AbstractApiDispatcher
         }
 
         // extract cache rules
-        $cacheRules = $this->wConfig()->get('ApiCache.CacheRules')->toArray();
+        $cacheRules = $this->wConfig()->get('ApiCache.CacheRules', new ConfigObject())->toArray();
         if (!is_array($cacheRules) || count($cacheRules) < 1) {
             $this->cacheStatus = false;
 
@@ -66,13 +67,26 @@ class ApiCache extends AbstractApiDispatcher
             return false;
         }
 
-        // we need to first check all the security stuff before we can read
-        $this->checkApiToken();
-
         // read cache
         $response = $this->hrc->read('response');
         if ($response !== false) {
-            $event->setResponse(new ApiCacheResponse($response));
+
+            $response = new ApiCacheResponse($response);
+
+            // get matched rule
+            $matchedRule = $this->hrc->getMatchedRule();
+            $cacheRule = $this->wConfig()->get('ApiCache.CacheRules.' . $matchedRule->getCacheRule()->getName());
+
+            // check if browser cache is turned on
+            if ($cacheRule->get('BrowserCache', false)) {
+                // get the remaining ttl
+                $remainingTtl = $this->hrc->getRemainingTtl();
+                if ($remainingTtl > 0) {
+                    $response->setCacheControl($remainingTtl);
+                }
+            }
+
+            $event->setResponse($response);
         }
     }
 

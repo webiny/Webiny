@@ -5,7 +5,16 @@ const requestInterceptors = [];
 const responseInterceptors = [];
 const defaultHeaders = {};
 
-function execute(http, options) {
+let pending = [];
+let timeout = null;
+
+
+function execute(http, options, aggregate = true) {
+    if (!timeout && aggregate) {
+        setTimeout(() => {
+            sendAggregatedRequest(); // eslint-disable-line
+        }, _.get(webinyConfig, 'Api.AggregationInterval', 100));
+    }
     const headers = _.merge({}, defaultHeaders, options.headers || {});
     http.setHeaders(headers);
     http.setResponseType(options.responseType || 'json');
@@ -15,20 +24,65 @@ function execute(http, options) {
     }
 
     let response;
-    /*eslint-disable */
+    /* eslint-disable */
     for (let interceptor of requestInterceptors) {
-        response = interceptor(http);
+        response = interceptor(http, options);
         if (response instanceof HttpResponse) {
             break;
         }
     }
-    /*eslint-enble */
+    /* eslint-enable */
 
-    response = response ? Q.when(response) : http.send();
+    if (!response) {
+        if (!aggregate || !_.get(webinyConfig, 'Api.AggregateRequests', true) || http.getMethod() !== 'get') {
+            response = http.send();
+        } else {
+            pending.push(http);
+            http.promise = new Promise(resolve => {
+                http.resolve = resolve;
+            });
+
+            if (pending.length >= _.get(webinyConfig, 'Api.MaxRequests', 30)) {
+                clearTimeout(timeout);
+                timeout = null;
+                sendAggregatedRequest(); // eslint-disable-line
+            }
+            response = http;
+        }
+    } else {
+        response = Promise.resolve(response);
+    }
 
     return response.then(httpResponse => {
         responseInterceptors.forEach(interceptor => interceptor(httpResponse));
         return httpResponse;
+    });
+}
+
+function sendAggregatedRequest() {
+    if (!pending.length) {
+        return;
+    }
+    const inProgress = _.cloneDeep(pending);
+    // Reset pending requests
+    pending = [];
+    pending.length = 0;
+
+    const body = inProgress.map(req => {
+        return {
+            url: req.getUrl(),
+            query: req.getQuery()
+        };
+    });
+    const request = new HttpRequest();
+    request.setUrl(webinyApiPath);
+    request.setMethod('POST');
+    request.setBody({requests: body});
+    execute(request, {headers: {'X-Webiny-Api-Aggregate': true}}, false).then(response => {
+        response.getData('data').map((res, index) => {
+            const aggRes = new HttpResponse({data: res, status: res.statusCode}, inProgress[index]);
+            inProgress[index].resolve(aggRes);
+        });
     });
 }
 

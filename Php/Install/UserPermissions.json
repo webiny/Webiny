@@ -29,14 +29,10 @@
         "description": "Allows user to log JS/PHP/API errors",
         "permissions": {
             "entities": {
-                "Apps\\Core\\Php\\Entities\\LoggerEntry": {
-                    "crudCreate": true
-                },
                 "Apps\\Core\\Php\\Entities\\LoggerErrorGroup": {
                     "save-report": {
                         "post": true
-                    },
-                    "crudCreate": true
+                    }
                 }
             }
         }
@@ -191,7 +187,7 @@
                     "crudUpdate": true,
                     "crudDelete": true,
                     "{id}/resolve": {
-                        "get": true
+                        "post": true
                     }
                 },
                 "Apps\\Core\\Php\\Entities\\LoggerErrorGroup": {
