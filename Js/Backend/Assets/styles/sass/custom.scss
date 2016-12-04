@@ -255,7 +255,7 @@
           padding: 7px;
           border-radius: 0;
         }
-        .btn:hover{
+        .btn:hover {
           box-shadow: 0px 0px 0px 1px #cdcdcd;
         }
       }
@@ -267,10 +267,28 @@
     cursor: text;
     margin-top: 10px;
 
-    span[data-text="true"] {
+    ul, ol, span[data-text="true"] {
       font-size: 16px;
       color: #393939;
       line-height: 150%;
+    }
+
+    h1 span[data-text="true"],
+    h2 span[data-text="true"],
+    h3 span[data-text="true"],
+    h4 span[data-text="true"],
+    h5 span[data-text="true"],
+    h6 span[data-text="true"] {
+      font-size: inherit;
+    }
+
+    a span[data-text="true"] {
+      color: inherit;
+    }
+
+    blockquote span[data-text="true"] {
+      font-size: inherit;
+      color: inherit;
     }
 
     .public-DraftEditorPlaceholder-root, .public-DraftEditor-content {
