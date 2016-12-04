@@ -22,13 +22,13 @@ class ListErrors extends Webiny.Ui.View {
 
     resolveError(error, list, parentList) {
         const api = new Webiny.Api.Endpoint('/entities/core/logger-entry');
-        api.get(error.id + '/resolve').then((response) => {
-            if (response.data.data.errorCount < 1) {
+        api.post(error.id + '/resolve').then((response) => {
+            if (response.getData('errorCount') < 1) {
                 // if we have 0 errors in this group, we have to refresh the parent table
                 parentList.loadData();
             } else {
                 list.loadData();
-                this.ui('errorCount-' + response.data.data.errorGroup).updateCount(response.data.data.errorCount);
+                this.ui('errorCount-' + response.getData('errorGroup')).updateCount(response.getData('errorCount'));
             }
         });
     }
