@@ -92,7 +92,9 @@ class FormContainer extends Webiny.Ui.Component {
     }
 
     enableSubmit() {
-        this.setState({submitDisabled: false});
+        if (this.isMounted()) {
+            this.setState({submitDisabled: false});
+        }
     }
 
     disableSubmit(message = '') {
@@ -177,13 +179,11 @@ class FormContainer extends Webiny.Ui.Component {
         if (model.id) {
             return this.api.setConfig(config)
                 .patch(this.api.url + '/' + model.id, model)
-                .then(res => this.__processSubmitResponse(model, res))
-                .then(this.enableSubmit);
+                .then(res => this.__processSubmitResponse(model, res));
         }
 
         return this.api.setConfig(config)[this.props.createHttpMethod](this.api.url, model)
-            .then(res => this.__processSubmitResponse(model, res))
-            .then(this.enableSubmit);
+            .then(res => this.__processSubmitResponse(model, res));
     }
 
     onInvalid() {
@@ -333,7 +333,10 @@ class FormContainer extends Webiny.Ui.Component {
                 const model = this.__removeKeys(this.state.model);
                 // If onSubmit was passed through props, execute it. Otherwise proceed with default behaviour.
                 if (this.props.onSubmit) {
-                    return this.props.onSubmit(model, this);
+                    // Make sure whatever is returned from `onSubmit` handler is a Promise and then enable form submit
+                    return Promise.resolve(this.props.onSubmit(model, this)).then(() => {
+                        this.enableSubmit();
+                    });
                 }
                 return this.onSubmit(model);
             }
@@ -573,6 +576,7 @@ class FormContainer extends Webiny.Ui.Component {
     }
 
     __processSubmitResponse(model, apiResponse) {
+        this.enableSubmit();
         Webiny.Growl.remove(this.growlId);
         this.hideLoading();
         if (apiResponse.isError()) {
