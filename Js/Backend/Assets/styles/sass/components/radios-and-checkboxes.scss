@@ -98,6 +98,7 @@
   height: 21px;
   background-color: #FFF;
   border: 1px solid rgba(#373737, 0.35);
+  transform: none;
 }
 
 .checkbox-custom:hover label:before {
@@ -118,6 +119,8 @@
   height: 0;
   transform: rotate(-13deg);
   color: #333;
+  margin:0px;
+  line-height: 20px;
 }
 
 /* alt style - filled bg ".fill" */
