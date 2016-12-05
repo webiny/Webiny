@@ -16,8 +16,7 @@ class TableEditComponent extends Webiny.Ui.Component {
             }],
             headers: props.entity.data.headers || [{key: Draft.genKey(), data: null}],
             numberOfColumns: props.entity.data.numberOfColumns || 1,
-            focusedEditor: null,
-            readOnly: true
+            focusedEditor: null
         };
 
         this.bindMethods(
@@ -47,7 +46,7 @@ class TableEditComponent extends Webiny.Ui.Component {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        this.setState({readOnly: !props.editor.getReadOnly()});
+        this.setState({readOnly: props.editor.getPreview() || !props.editor.getReadOnly()});
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -201,6 +200,9 @@ TableEditComponent.defaultProps = {
         const columns = Array.from(new Array(numberOfColumns), (x, i) => i);
         const isBody = _.get(this.state.focusedEditor, 'type') === 'body';
 
+        // Readonly must be TRUE if parent editor is in preview mode, otherwise it is the opposite of the parent editor
+        let readOnly = this.props.editor.getPreview() || !this.props.editor.getReadOnly();
+
         return (
             <div className="table-wrapper">
                 <Ui.Dropdown title="Actions" className="balloon" align="right" renderIf={!this.props.editor.getPreview()}>
@@ -217,7 +219,6 @@ TableEditComponent.defaultProps = {
                     <thead>
                     <tr>
                         {columns.map((col, colI) => {
-                            let readOnly = !this.props.editor.getReadOnly();
                             if (!readOnly) {
                                 const key = {type: 'head', row: 0, col: colI};
                                 readOnly = !_.isEqual(this.state.focusedEditor, key);
@@ -245,7 +246,6 @@ TableEditComponent.defaultProps = {
                         return (
                             <tr key={row.key}>
                                 {columns.map((col, colI) => {
-                                    let readOnly = !this.props.editor.getReadOnly();
                                     if (!readOnly) {
                                         const key = {type: 'body', row: rowI, col: colI};
                                         readOnly = !_.isEqual(this.state.focusedEditor, key);

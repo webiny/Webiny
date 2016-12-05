@@ -281,8 +281,6 @@ class FormContainer extends Webiny.Ui.Component {
                 if (apiResponse.isError()) {
                     if (_.isFunction(this.props.onFailure)) {
                         this.props.onFailure(apiResponse, this);
-                    } else {
-                        Webiny.Growl.danger(apiResponse.getMessage(), 'That didn\'t go as expected...', true);
                     }
                     return;
                 }

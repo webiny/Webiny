@@ -13,6 +13,7 @@ class Editor extends Webiny.Ui.Component {
         this.plugins = new PluginsContainer(props.plugins, this.getEditorMethods());
 
         this.state = {
+            preview: props.preview,
             readOnly: props.preview || props.readOnly,
             editorState: Draft.EditorState.createEmpty(this.plugins.getDecorators())
         };
@@ -31,7 +32,7 @@ class Editor extends Webiny.Ui.Component {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        if (!_.has(this.props.value, 'blocks')) {
+        if (!_.has(this.props.value, 'blocks') || (props.preview && !_.isEqual(props.value, this.props.value))) {
             const editorState = this.initialize(props);
             if (editorState) {
                 this.setState({editorState});
@@ -40,7 +41,7 @@ class Editor extends Webiny.Ui.Component {
 
         if (props.preview !== this.props.preview) {
             this.plugins.setPreview(props.preview);
-            return this.setState({readOnly: props.preview}, this.forceRerender);
+            return this.setState({preview: props.preview, readOnly: props.preview}, this.forceRerender);
         }
 
         if (props.readOnly !== this.props.readOnly) {
@@ -98,7 +99,7 @@ class Editor extends Webiny.Ui.Component {
             getEditorState: this.getEditorState,
             setEditorState: this.onChange,
             setReadOnly: this.setReadOnly,
-            getReadOnly: () => _.get(this.state, 'readOnly', this.props.readOnly),
+            getReadOnly: () => this.state.readOnly || this.props.readOnly,
             getDecorators: () => this.plugins.getDecorators(),
             getPreview: () => this.props.preview,
             forceRerender: this.forceRerender,
