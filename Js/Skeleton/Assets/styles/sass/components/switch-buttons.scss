@@ -4,14 +4,6 @@
 .switch {
   color: #f85926;
 
-  &.disabled {
-    > label {
-      background-color: #f4f4f4;
-      border: 1px solid #e7e7e7;
-      pointer-events: none;
-    }
-  }
-
   label {
     position: relative;
     display: inline-block;
@@ -43,6 +35,11 @@
       text-align: center;
       border-radius: 60px;
       transition: 0.3s ease-in-out;
+      transform: none;
+    }
+
+    &:before {
+      display: none;
     }
   }
 
