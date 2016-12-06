@@ -8,11 +8,11 @@ const defaultHeaders = {};
 let pending = [];
 let timeout = null;
 
-
 function execute(http, options, aggregate = true) {
     if (!timeout && aggregate) {
-        setTimeout(() => {
+        timeout = setTimeout(() => {
             sendAggregatedRequest(); // eslint-disable-line
+            timeout = null;
         }, _.get(webinyConfig, 'Api.AggregationInterval', 100));
     }
     const headers = _.merge({}, defaultHeaders, options.headers || {});
@@ -71,7 +71,8 @@ function sendAggregatedRequest() {
     const body = inProgress.map(req => {
         return {
             url: req.getUrl(),
-            query: req.getQuery()
+            query: req.getQuery(),
+            headers: req.getHeaders()
         };
     });
     const request = new HttpRequest();

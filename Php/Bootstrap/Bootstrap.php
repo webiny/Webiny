@@ -115,12 +115,25 @@ class Bootstrap
         $requests = $this->wRequest()->getRequestData()['requests'];
         $responses = [];
         $responseClass = '\Apps\Core\Php\DevTools\Response\AbstractResponse';
+        $headers = [];
         foreach ($requests as $req) {
+            if (count($headers)) {
+                foreach (array_keys($headers) as $header) {
+                    unset($_SERVER[$header]);
+                }
+                $headers = [];
+            }
             Request::deleteInstance();
             $_GET = $req['query'];
             $_SERVER['REQUEST_URI'] = $this->url($req['url'])->getPath();
             $_SERVER['REQUEST_METHOD'] = 'GET';
             $_SERVER['QUERY_STRING'] = http_build_query($req['query']);
+            if (is_array($req['headers'])) {
+                foreach ($req['headers'] as $header => $value) {
+                    $headers['HTTP_' . $this->str($header)->replace('-', '_')->caseUpper()->val()] = $value;
+                }
+                $_SERVER = array_merge($_SERVER, $headers);
+            }
             Request::getInstance();
 
             $response = $this->wEvents()->fire('Core.Bootstrap.Request', new BootstrapEvent(), $responseClass, 1);
