@@ -6,14 +6,10 @@ class Route {
         // Normalize components
         const nComponents = {};
         if (!_.isPlainObject(components)) {
-            nComponents['Content'] = _.isArray(components) ? components : [components];
+            nComponents['Content'] = components;
         } else {
             _.forIn(components, (cmp, placeholder) => {
-                if (_.isArray(cmp)) {
-                    nComponents[placeholder] = cmp;
-                } else {
-                    nComponents[placeholder] = [cmp];
-                }
+                nComponents[placeholder] = cmp;
             });
         }
 
