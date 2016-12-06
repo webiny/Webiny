@@ -1,7 +1,7 @@
-import Footer from './Footer';
+import Navigation from './Navigation';
 import Header from './Header';
 
 export default {
-    Footer,
+    Navigation,
     Header
 };

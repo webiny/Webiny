@@ -188,7 +188,6 @@ class Navigation extends Webiny.Ui.Component {
 
 Navigation.defaultProps = {
     renderer() {
-        const Layout = Webiny.Apps.Core.Backend.Layout.Components;
         const menus = Webiny.Menu.getMenu();
         const menu = [];
         _.each(menus, m => {
@@ -211,7 +210,7 @@ Navigation.defaultProps = {
 
         return (
             <div className="master-navigation">
-                <Layout.Header/>
+                <Webiny.Ui.Placeholder name="Header"/>
 
                 <div className="navbar-collapse collapse" id="left-sidebar">
                     <div className="shield"></div>

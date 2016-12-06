@@ -78,7 +78,7 @@ class Module {
      * @returns {Module}
      */
     registerDefaultComponents(content) {
-        Webiny.Router.addDefaultComponents(content);
+        Webiny.Router.setDefaultComponents(content);
         return this;
     }
 

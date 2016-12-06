@@ -22,34 +22,24 @@ class Placeholder extends Component {
 
 Placeholder.defaultProps = {
     renderer() {
-        let components = ViewManager.getContent(this.props.name);
-        if (!_.isArray(components)) {
-            components = [components];
+        let item = ViewManager.getContent(this.props.name);
+        const componentProps = _.omit(this.props, ['renderer', 'name', 'children']);
+        if (!item) {
+            return;
         }
-        const cmps = [];
-        const placeholderProps = _.omit(this.props, ['renderer', 'name', 'children']);
-        _.each(components, (item, index) => {
-            if (!item) {
-                return;
+        let component = null;
+        if (React.isValidElement(item)) {
+            component = _.isString(item.type) ? item : React.cloneElement(item, componentProps);
+        } else {
+            if (!_.isFunction(item)) {
+                _.assign(componentProps, item[1]);
+                item = item[0];
             }
-            const componentProps = _.merge({key: index}, placeholderProps);
-            if (React.isValidElement(item)) {
-                if (_.isString(item.type)) {
-                    cmps.push(item);
-                } else {
-                    cmps.push(React.cloneElement(item, componentProps));
-                }
-            } else {
-                if (!_.isFunction(item)) {
-                    _.assign(componentProps, item[1]);
-                    item = item[0];
-                }
-                cmps.push(React.createElement(item, componentProps));
-            }
-        });
+            component = React.createElement(item, componentProps);
+        }
 
         return (
-            <webiny-placeholder>{cmps}</webiny-placeholder>
+            <webiny-placeholder>{component}</webiny-placeholder>
         );
     }
 };

@@ -97,7 +97,7 @@ Login.defaultProps = {
 
                     <div className="form-signin">
                         <a href="#" className="logo">
-                            <img src={Webiny.Assets('Core.Backend', 'images/logo_orange.png')} width="180" height="58"/>
+                            <img src={Webiny.Assets('Core.Skeleton', 'images/logo_orange.png')} width="180" height="58"/>
                         </a>
 
                         <h2 className="form-signin-heading"><span></span>Sign in to your Account</h2>

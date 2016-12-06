@@ -146,18 +146,9 @@ class Router {
         return this.layouts[name] || null;
     }
 
-    addDefaultComponents(components) {
-        _.each(components, (component, placeholder) => {
-            if (!this.defaultComponents[placeholder]) {
-                this.defaultComponents[placeholder] = [];
-            }
-
-            if (_.isArray(component)) {
-                this.defaultComponents[placeholder].concat(component);
-            } else {
-                this.defaultComponents[placeholder].push(component);
-            }
-        });
+    setDefaultComponents(components) {
+        _.assign(this.defaultComponents, components);
+        console.log(this.defaultComponents);
         return this;
     }
 
@@ -171,6 +162,14 @@ class Router {
             this.routes[index] = route;
         } else {
             this.routes.push(route);
+        }
+        return this;
+    }
+
+    deleteRoute(name) {
+        const index = _.findIndex(this.routes, {name});
+        if (index > -1) {
+            this.routes.splice(index, 1);
         }
         return this;
     }

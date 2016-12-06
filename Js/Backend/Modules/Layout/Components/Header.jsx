@@ -35,7 +35,7 @@ function renderer() {
                 <a href="#" className="search">
                 </a>
                 <a href="#" className="logo">
-                    <img src={Webiny.Assets('Core.Backend', 'images/logo.png')} width="62" height="20" alt="Webiny"/>
+                    <img src={Webiny.Assets('Core.Skeleton', 'images/logo.png')} width="62" height="20" alt="Webiny"/>
                 </a>
 
                 <div className="dropdown profile-holder">

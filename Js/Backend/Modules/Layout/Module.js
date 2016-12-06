@@ -1,17 +1,18 @@
 import Webiny from 'Webiny';
 import Components from './Components/Components';
-import Layout from './Layout';
-import EmptyLayout from './EmptyLayout';
 
 class Module extends Webiny.Module {
 
     init() {
-        this.registerDefaultLayout(Layout);
-        this.registerLayout('empty', EmptyLayout);
-
         this.registerDefaultComponents({
-            Header: Components.Navigation
+            Header: Components.Header,
+            Footer: Components.Footer
         });
+
+        // Remove route registered by Skeleton app
+        Webiny.Router.deleteRoute('Dashboard');
+        // Set a new default route
+        Webiny.Router.setDefaultRoute('Users.List');
     }
 }
 

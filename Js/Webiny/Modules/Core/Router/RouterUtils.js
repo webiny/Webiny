@@ -121,7 +121,12 @@ class RouterUtils {
             if (!rEvent.isStopped()) {
                 // If URL starts with loaded app prefix, go to default route
                 if (this.baseUrl !== '/' && url.startsWith(this.baseUrl)) {
-                    url = Webiny.Router.getDefaultRoute().getHref();
+                    const defaultRoute = Webiny.Router.getDefaultRoute();
+                    if (defaultRoute) {
+                        url = defaultRoute.getHref();
+                    } else {
+                        url = Webiny.Router.getBaseUrl();
+                    }
                     History.replaceState({url, replace: true}, null, url);
                     return true;
                 }

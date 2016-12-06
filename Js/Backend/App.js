@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
 
-const backend = new Webiny.App('Core.Backend');
+const backend = new Webiny.App('Core.Backend', ['Core.Skeleton']);
 backend.beforeRender(() => {
     Webiny.Http.addRequestInterceptor(http => {
         if (Webiny.Cookies.get('XDEBUG_SESSION')) {
