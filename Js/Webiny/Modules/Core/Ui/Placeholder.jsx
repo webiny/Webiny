@@ -25,7 +25,7 @@ Placeholder.defaultProps = {
         let item = ViewManager.getContent(this.props.name);
         const componentProps = _.omit(this.props, ['renderer', 'name', 'children']);
         if (!item) {
-            return;
+            return null;
         }
         let component = null;
         if (React.isValidElement(item)) {
