@@ -190,15 +190,11 @@ class OptionComponent extends FormComponent {
     normalizeOptions(props, data) {
         const options = [];
         _.each(data, (option, key) => {
-            if (_.isArray(data)) {
-                options.push({id: option, text: '' + option, data: null});
-                return;
-            }
-
-            if (_.isString(key) && _.isString(option) || _.isNumber(option)) {
+            if (_.isString(key) && (_.isString(option) || _.isNumber(option))) {
                 options.push({id: key, text: '' + option, data: null});
                 return;
             }
+
             const id = _.isPlainObject(option) ? option[props.valueAttr || 'id'] : '' + option;
             const text = this.renderOptionText(props, option);
             // Add data to option so we can run it through selectedRenderer when item selection changes
