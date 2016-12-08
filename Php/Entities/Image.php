@@ -3,6 +3,7 @@ namespace Apps\Core\Php\Entities;
 
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Webiny\Component\Entity\EntityCollection;
+use Webiny\Component\Image\ImageLoader;
 use Webiny\Component\Image\ImageTrait;
 use Webiny\Component\Storage\File\File as StorageFile;
 
@@ -54,6 +55,30 @@ class Image extends File
         }
 
         return $data;
+    }
+
+    /**
+     * Save image
+     *
+     * @param bool $compress Whether to attempt compression on given image or not
+     *
+     * @return bool
+     * @throws \Webiny\Component\StdLib\StdObject\StringObject\StringObjectException
+     */
+    public function save($compress = true)
+    {
+        if ($compress) {
+            $content = $this->str($this->src);
+            $newContent = $content->startsWith('data:');
+
+            if ($newContent) {
+                $parts = $content->explode(',');
+                $image = ImageLoader::load($parts->last()->base64Decode()->val());
+                $this->src = $parts->first() . ',' . base64_encode($image->getBinary());
+            }
+        }
+
+        return parent::save();
     }
 
     public function getUrl($size = null)
