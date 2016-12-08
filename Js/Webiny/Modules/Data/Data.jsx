@@ -91,7 +91,7 @@ Data.defaultProps = {
             throw new Error('Warning: Data component only accepts a function as its child element!');
         }
 
-        if (this.props.waitForData && !this.state.data) {
+        if (this.props.waitForData && this.state.data === null) {
             return null;
         }
 

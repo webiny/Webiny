@@ -20,7 +20,11 @@ class ApiComponent {
             }
 
             config.context = {props: _.omit(context.props, ['children', 'renderer'])};
-            context.api = new ApiEndpoint(context.props.api, config);
+            if (_.isString(context.props.api)) {
+                context.api = new ApiEndpoint(context.props.api, config);
+            } else {
+                context.api = context.props.api;
+            }
         }
     }
 }

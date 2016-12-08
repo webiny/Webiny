@@ -10,6 +10,8 @@ DeleteAction.defaultProps = {
     title: 'Delete confirmation',
     icon: 'icon-cancel',
     message: 'Are you sure you want to delete this record?',
+    confirmButtonLabel: 'Yes, delete!',
+    cancelButtonLabel: 'No',
     hide: _.noop,
     afterDelete: _.noop,
     onConfirm(record, actions) {
@@ -26,7 +28,8 @@ DeleteAction.defaultProps = {
                 {function render(record, actions) {
                     const props = {
                         title: this.props.title,
-                        confirm: 'Yes, delete!',
+                        confirm: $this.props.confirmButtonLabel,
+                        cancel: $this.props.cancelButtonLabel,
                         message,
                         onComplete: () => {
                             actions.reload();
