@@ -3,6 +3,7 @@ namespace Apps\Core\Php\Entities;
 
 use Apps\Core\Php\DevTools\Exceptions\AppException;
 use Webiny\Component\Entity\EntityCollection;
+use Webiny\Component\Image\Bridge\ImageException;
 use Webiny\Component\Image\ImageLoader;
 use Webiny\Component\Image\ImageTrait;
 use Webiny\Component\Storage\File\File as StorageFile;
@@ -74,6 +75,13 @@ class Image extends File
             if ($newContent) {
                 $parts = $content->explode(',');
                 $image = ImageLoader::load($parts->last()->base64Decode()->val());
+                // Format is one of these strings: jpg, jpeg, png, gif
+                // We read it from `type` attribute which is populated by HTML5 API when selecting images for upload
+                try {
+                    $image->setFormat($this->str($this->type)->explode('/')->last()->val());
+                } catch (ImageException $e) {
+                    // Ignore format error - continue as is
+                }
                 $this->src = $parts->first() . ',' . base64_encode($image->getBinary());
             }
         }
