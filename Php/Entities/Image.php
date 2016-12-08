@@ -61,25 +61,29 @@ class Image extends File
     /**
      * Save image
      *
+     * @param bool $compress Whether to attempt compression on given image or not
+     *
      * @return bool
      * @throws \Webiny\Component\StdLib\StdObject\StringObject\StringObjectException
      */
-    public function save()
+    public function save($compress = true)
     {
-        $content = $this->str($this->src);
-        $newContent = $content->startsWith('data:');
+        if ($compress) {
+            $content = $this->str($this->src);
+            $newContent = $content->startsWith('data:');
 
-        if ($newContent) {
-            $parts = $content->explode(',');
-            $image = ImageLoader::load($parts->last()->base64Decode()->val());
-            // Format is one of these strings: jpg, jpeg, png, gif
-            // We read it from `type` attribute which is populated by HTML5 API when selecting images for upload
-            try {
-                $image->setFormat($this->str($this->type)->explode('/')->last()->val());
-            } catch (ImageException $e) {
-                // Ignore format error - continue as is
+            if ($newContent) {
+                $parts = $content->explode(',');
+                $image = ImageLoader::load($parts->last()->base64Decode()->val());
+                // Format is one of these strings: jpg, jpeg, png, gif
+                // We read it from `type` attribute which is populated by HTML5 API when selecting images for upload
+                try {
+                    $image->setFormat($this->str($this->type)->explode('/')->last()->val());
+                } catch (ImageException $e) {
+                    // Ignore format error - continue as is
+                }
+                $this->src = $parts->first() . ',' . base64_encode($image->getBinary());
             }
-            $this->src = $parts->first() . ',' . base64_encode($image->getBinary());
         }
 
         return parent::save();
