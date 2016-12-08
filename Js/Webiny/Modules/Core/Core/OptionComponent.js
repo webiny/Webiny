@@ -190,6 +190,11 @@ class OptionComponent extends FormComponent {
     normalizeOptions(props, data) {
         const options = [];
         _.each(data, (option, key) => {
+            if (_.isArray(data)) {
+                options.push({id: option, text: '' + option, data: null});
+                return;
+            }
+
             if (_.isString(key) && _.isString(option) || _.isNumber(option)) {
                 options.push({id: key, text: '' + option, data: null});
                 return;
