@@ -220,7 +220,7 @@ formValidator.addValidator('phone', (value) => {
 
 
 formValidator.addValidator('url', (value) => {
-    const regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
+    const regex = new RegExp(/^((?:(?:(?:\w[\.\-\+]?)*)\w)+)((?:(?:(?:\w[\.\-\+]?){0,62})\w)+)\.(\w{2,6})$/);
     if (!value || regex.test(value)) {
         return true;
     }
