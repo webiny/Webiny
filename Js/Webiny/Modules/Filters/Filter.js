@@ -25,6 +25,10 @@ const Filter = function Filter(value, filtersToApply) {
     return value;
 };
 
+Filter.getFilters = function () {
+    return registeredFilters;
+};
+
 Filter.addFilter = function addFilter(name, callable) {
     if (!_.has(registeredFilters[name])) {
         registeredFilters[name] = callable;

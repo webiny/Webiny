@@ -7,9 +7,9 @@
 
 namespace Apps\Core\Php\PackageManager;
 
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Webiny\Component\StdLib\SingletonTrait;
 use Webiny\Component\StdLib\StdLibTrait;
-use Apps\Core\Php\DevTools\WebinyTrait;
 
 /**
  * PackageScanner scans the currently enabled apps.
@@ -64,8 +64,7 @@ class AppScanner
             $info = $this->wConfig()->parseConfig($configPath);
 
             // create package instance
-            $class = '\\Apps\\Core\\Php\\PackageManager\\App';
-            $result['Apps/' . $app] = new $class($info, 'Apps/' . $app, 'app');
+            $result['Apps/' . $app] = new App($info, 'Apps/' . $app, 'app');
         }
 
         return $result;

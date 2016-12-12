@@ -28,6 +28,7 @@
     "platform.js": "platform#^1.3.1",
     "clipboard": "^1.5.12",
     "font-awesome": ">=4.2.0",
-    "owl.carousel": "^2.1.6"
+    "owl.carousel": "^2.1.6",
+    "isMobile": "^0.4.1"
   }
 }

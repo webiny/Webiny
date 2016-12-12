@@ -28,6 +28,7 @@ Assets:
             - bower_components/baobab/build/baobab.min.js
             - bower_components/blueimp-md5/js/md5.min.js
             - bower_components/owl.carousel/dist/owl.carousel.js
+            - bower_components/isMobile/isMobile.min.js
             - D:bower_components/react/react.js
             - D:bower_components/react/react-with-addons.js
             - D:bower_components/react/react-dom.js

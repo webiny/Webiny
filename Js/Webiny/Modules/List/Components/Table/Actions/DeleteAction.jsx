@@ -16,7 +16,7 @@ DeleteAction.defaultProps = {
     afterDelete: _.noop,
     onConfirm(record, actions) {
         return actions.delete(record.id, false).then(res => {
-            return Q(this.props.afterDelete(res)).then(() => res);
+            return Promise.resolve(this.props.afterDelete(res)).then(() => res);
         });
     },
     renderer() {
@@ -34,8 +34,8 @@ DeleteAction.defaultProps = {
                         onComplete: () => {
                             actions.reload();
                         },
-                        onConfirm: (modal) => {
-                            $this.props.onConfirm.call($this, record, actions, modal);
+                        onConfirm: () => {
+                            $this.props.onConfirm.call($this, record, actions);
                         }
                     };
                     return (

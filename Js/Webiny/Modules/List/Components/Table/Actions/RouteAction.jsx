@@ -35,7 +35,12 @@ RouteAction.defaultProps = {
     route: null,
     data: {},
     label: null,
+    hide: null,
     renderer() {
+        if (_.isFunction(this.props.hide) && this.props.hide(this.props.data)) {
+            return null;
+        }
+
         return (
             <Ui.Link route={this.getRoute()} params={this.getParams()}>
                 {this.props.icon ? <Ui.Icon icon={this.props.icon}/> : null}

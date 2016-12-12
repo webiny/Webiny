@@ -10,7 +10,12 @@ Action.defaultProps = {
     onClick: _.noop,
     download: null,
     actions: null,
+    hide: null,
     renderer() {
+        if (_.isFunction(this.props.hide) && this.props.hide(this.props.data)) {
+            return null;
+        }
+
         if (_.isFunction(this.props.children)) {
             return this.props.children.call(this, this.props.data, this);
         }

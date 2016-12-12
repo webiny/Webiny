@@ -167,7 +167,6 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         if (!$includeDeleted) {
             $conditions['deletedOn'] = null;
         }
-
         return parent::find($conditions, $order, $limit, $page);
     }
 
@@ -467,7 +466,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         if ($staticFilter) {
             $staticFilterConditions = is_callable($staticFilter) ? $staticFilter($conditions) : $staticFilter;
             if (is_array($staticFilterConditions)) {
-                $conditions = array_merge($conditions, $staticFilterConditions);
+                $conditions = self::arr($conditions)->mergeSmart($staticFilterConditions)->val();
             }
         }
 
