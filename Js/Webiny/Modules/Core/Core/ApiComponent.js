@@ -14,13 +14,12 @@ class ApiComponent {
                 'searchOperator'
             ];
 
-            const config = _.pick(context.props, ['httpMethod', 'url', 'body', 'query']);
-            if (!config.query || _.isPlainObject(config.query)) {
-                config.query = _.merge({}, config.query, _.pick(context.props, apiProps));
-            }
-
-            config.context = {props: _.omit(context.props, ['children', 'renderer'])};
             if (_.isString(context.props.api)) {
+                const config = _.pick(context.props, ['httpMethod', 'url', 'body', 'query']);
+                if (!config.query || _.isPlainObject(config.query)) {
+                    config.query = _.merge({}, config.query, _.pick(context.props, apiProps));
+                }
+                config.context = {props: _.omit(context.props, ['children', 'renderer'])};
                 context.api = new ApiEndpoint(context.props.api, config);
             } else {
                 context.api = context.props.api;
