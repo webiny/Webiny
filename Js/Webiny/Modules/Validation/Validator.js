@@ -54,16 +54,24 @@ class Validator {
         return customMessages;
     }
 
-    validate(value, validators, formInputs) {
+    validate(value, validators, formInputs = null) {
+        if (_.isString(validators)) {
+            validators = this.parseValidateProperty(validators);
+        }
+
         if (!validators) {
             validators = {};
         }
+
         const _this = this;
-        let chain = Q({valid: true});
+        let chain = Promise.resolve();
+
         const results = {};
         Object.keys(validators).forEach(validatorName => {
             const args = _.clone(validators[validatorName]);
-            this.parseArgs(args, formInputs);
+            if (formInputs) {
+                this.parseArgs(args, formInputs);
+            }
             args.unshift(value);
             chain = chain.then(function validationLink() {
                 let validator = null;
@@ -78,7 +86,7 @@ class Validator {
                 if (validator instanceof Webiny.Http.Request) {
                     validator = validator.catch(e => e);
                 }
-                return Q.when(validator).then(result => {
+                return Promise.resolve(validator).then(result => {
                     if (result instanceof Error) {
                         throw result;
                     }
@@ -89,6 +97,7 @@ class Validator {
                 });
             });
         });
+
         return chain;
     }
 
