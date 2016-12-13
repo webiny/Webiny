@@ -18,6 +18,7 @@ Assets:
         Js:
             - bower_components/system.js/dist/system.src.js
             - bower_components/history.js/scripts/bundled-uncompressed/html5/native.history.js
+            - bower_components/bluebird/js/browser/bluebird.min.js
             - bower_components/jquery/dist/jquery.min.js
             - bower_components/bootstrap/dist/js/bootstrap.min.js
             - bower_components/lodash/dist/lodash.min.js
