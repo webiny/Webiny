@@ -5,6 +5,9 @@ function insertKey(data) {
     if (!data) {
         data = [];
     }
+
+    console.log('entering', JSON.stringify(data, null, 4));
+
     const model = {};
     _.each(data, (object, i) => {
         if (_.isArray(object)) {
@@ -19,6 +22,8 @@ function insertKey(data) {
         }
         model[object['$key']]['$index'] = i;
     });
+
+    console.log('exiting', JSON.stringify(model, null, 4));
     return model;
 }
 
@@ -48,6 +53,11 @@ class Fieldset extends Webiny.Ui.FormComponent {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
+        if (props.form.isSubmitDisabled()) {
+            // prevent modifying model and updating keys if props are received during form submit
+            return;
+        }
+
         this.setState({model: insertKey(_.cloneDeep(props.value))});
         this.parseLayout(props.children);
     }
