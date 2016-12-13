@@ -64,7 +64,7 @@ class FormComponent extends Component {
                 return validationResult;
             });
         }
-        return Q(true);
+        return Promise.resolve(true);
     }
 
     isValid() {
