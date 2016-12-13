@@ -5,7 +5,7 @@ class Tags extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
 
-        this.bindMethods('focusTagInput,removeTag,addTag');
+        this.bindMethods('focusTagInput,removeTag,addTag,validateTag');
     }
 
     componentDidMount() {
@@ -48,22 +48,37 @@ class Tags extends Webiny.Ui.Component {
         e.preventDefault();
         e.stopPropagation();
 
-        if (emptyField || this.tagExists(input.value)) {
+        if (emptyField) {
+            return this.validateTag();
+        }
+
+        if (this.tagExists(input.value)) {
             return;
         }
 
         if (!_.isArray(tags)) {
             tags = [];
         }
-        tags.push(input.value);
-        input.value = '';
-        this.props.onChange(tags);
-        this.setState({tag: ''});
+
+        this.validateTag(input.value).then(() => {
+            tags.push(input.value);
+            input.value = '';
+            this.props.onChange(tags);
+            this.setState({tag: ''});
+        }).catch(e => {
+            // Don't do anything
+        });
+    }
+
+    validateTag(value = null) {
+        return Webiny.Validator.validate(value, this.props.validateTags);
     }
 }
 
 Tags.defaultProps = {
+    validateTags: null,
     placeholder: 'Type and hit ENTER',
+    onInvalidTag: _.noop,
     renderer() {
         const input = {
             type: 'text',
@@ -83,7 +98,7 @@ Tags.defaultProps = {
                     {_.isArray(this.props.value) && this.props.value.map((tag, index) => (
                         <div key={tag} className="keyword-block">
                             <p>{tag}</p>
-                            <i className="icon icon-cancel" onClick={this.removeTag.bind(this, index)}></i>
+                            <i className="icon icon-cancel" onClick={this.removeTag.bind(this, index)}/>
                         </div>
                     ))}
                     <input {...input}/>

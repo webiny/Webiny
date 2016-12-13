@@ -1,11 +1,12 @@
 import Webiny from 'Webiny';
 import SimpleTags from './SimpleTags';
 
-class Container extends Webiny.Ui.FormComponent {
+class Tags extends Webiny.Ui.FormComponent {
 
 }
 
-Container.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
+Tags.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
+    validateTags: null,
     renderer() {
         const cssConfig = {
             'form-group': true,
@@ -21,6 +22,7 @@ Container.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             placeholder: this.getPlaceholder(),
             style: this.props.style,
             mode: this.props.mode,
+            validateTags: this.props.validateTags,
             readOnly: _.get(this.props, 'readOnly', false)
         };
 
@@ -35,4 +37,4 @@ Container.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     }
 });
 
-export default Container;
+export default Tags;
