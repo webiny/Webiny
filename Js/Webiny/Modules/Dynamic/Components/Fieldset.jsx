@@ -6,8 +6,6 @@ function insertKey(data) {
         data = [];
     }
 
-    console.log('entering', JSON.stringify(data, null, 4));
-
     const model = {};
     _.each(data, (object, i) => {
         if (_.isArray(object)) {
@@ -23,7 +21,6 @@ function insertKey(data) {
         model[object['$key']]['$index'] = i;
     });
 
-    console.log('exiting', JSON.stringify(model, null, 4));
     return model;
 }
 
