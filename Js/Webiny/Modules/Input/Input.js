@@ -12,7 +12,7 @@ class Input extends Webiny.Ui.FormComponent {
             case 'Enter':
                 if (this.props.onEnter && this.props.onEnter !== _.noop) {
                     e.preventDefault();
-                    this.props.onEnter(e);
+                    this.props.onEnter(e, this);
                 }
                 break;
             default:
