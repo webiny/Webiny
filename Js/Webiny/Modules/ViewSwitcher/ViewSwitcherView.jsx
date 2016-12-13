@@ -66,7 +66,7 @@ class ViewSwitcherView extends Webiny.Ui.Component {
             this.setState({show: false, params: []});
         }
 
-        return Q(true);
+        return Promise.resolve(true);
     }
 }
 

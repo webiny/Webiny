@@ -36,7 +36,7 @@ class ViewSwitcherContainer extends Webiny.Ui.Component {
             const nextView = this.views[name];
             if (!nextView) {
                 console.warn("Warning: view '" + name + "' was not found in ViewContainer!");
-                return Q();
+                return Promise.resolve();
             }
 
             if (!nextView.props.modal) {
@@ -47,7 +47,7 @@ class ViewSwitcherContainer extends Webiny.Ui.Component {
                     }
                 });
             }
-            return Q(nextView.show(params));
+            return Promise.resolve(nextView.show(params));
         };
     }
 

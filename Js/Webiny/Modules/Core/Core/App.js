@@ -44,7 +44,7 @@ class App {
                 this.modules.push(module);
             });
 
-            return Q(this.onBeforeRender()).then(() => {
+            return Promise.resolve(this.onBeforeRender()).then(() => {
                 if (mountPoint && this.element !== null) {
                     ReactDOM.render(this.element === 'default' ? React.createElement(RootElement) : this.element, mountPoint);
                 }

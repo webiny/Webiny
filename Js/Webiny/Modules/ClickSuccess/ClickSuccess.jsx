@@ -14,7 +14,7 @@ class ClickSuccess extends Webiny.Ui.Component {
     }
 
     onClick() {
-        return Q(this.realOnClick(this)).then(() => {
+        return Promise.resolve(this.realOnClick(this)).then(() => {
             return this.refs.dialog.show();
         });
     }

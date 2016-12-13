@@ -17,7 +17,7 @@ ModalAction.defaultProps = {
                 if (this.refs.dialog) {
                     return this.refs.dialog.hide();
                 }
-                return Q(true);
+                return Promise.resolve(true);
             }
         };
 

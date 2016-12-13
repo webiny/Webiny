@@ -102,7 +102,7 @@ class Dialog extends Webiny.Ui.Component {
         $(this.props.modalContainerTag).on('keyup' + namespace, '.modal', e => {
             // Listen for ESC button
             if (e.keyCode === 27 && !this.animating && this.props.closeOnClick) {
-                Q(this.props.onCancel()).then(this.hide);
+                Promise.resolve(this.props.onCancel()).then(this.hide);
             }
         }).on('mousedown' + namespace, '.modal', e => {
             // Catch backdrop click
@@ -111,7 +111,7 @@ class Dialog extends Webiny.Ui.Component {
             }
         }).on('click' + namespace, '.modal', () => {
             if (this.clickStartedOnBackdrop && this.props.closeOnClick) {
-                Q(this.props.onCancel()).then(this.hide);
+                Promise.resolve(this.props.onCancel()).then(this.hide);
             }
             this.clickStartedOnBackdrop = false;
         });
@@ -123,11 +123,11 @@ class Dialog extends Webiny.Ui.Component {
 
     hide() {
         if (!this.state.isDialogShown || this.animating) {
-            return Q(true);
+            return Promise.resolve(true);
         }
 
         this.animating = true;
-        return Q(this.props.onHide()).then(() => {
+        return Promise.resolve(this.props.onHide()).then(() => {
             return new Promise(resolve => {
                 this.hideResolve = resolve;
                 this.setState({

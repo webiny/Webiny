@@ -358,7 +358,7 @@ class FormContainer extends Webiny.Ui.Component {
 
         const inputs = this.inputs;
         // Inputs must be validated in a queue because we may have async validators
-        let chain = Q(allIsValid).then(valid => valid);
+        let chain = Promise.resolve(allIsValid).then(valid => valid);
         Object.keys(inputs).forEach(name => {
             const cmp = inputs[name].component;
             const hasValidators = inputs[name] && inputs[name].validators;
@@ -516,7 +516,7 @@ class FormContainer extends Webiny.Ui.Component {
         const hasValidators = _.keys(validators).length;
         const messages = this.inputs[component.props.name].messages;
         // Validate input
-        return Q(Webiny.Validator.validate(component.getValue(), validators, this.inputs)).then(validationResults => {
+        return Promise.resolve(Webiny.Validator.validate(component.getValue(), validators, this.inputs)).then(validationResults => {
             if (hasValidators) {
                 const isValid = component.getValue() === null ? null : true;
                 component.setState({isValid, validationResults});

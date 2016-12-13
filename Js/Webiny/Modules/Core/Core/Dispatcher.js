@@ -7,11 +7,11 @@ class Dispatcher {
     dispatch(event, data) {
         // console.info('%c[Dispatch]: ' + event, 'color: #1918DE; font-weight: bold', data);
         if (!this.listeners.hasOwnProperty(event)) {
-            return Q(null);
+            return Promise.resolve(null);
         }
 
         // Execute before change callbacks in a chain
-        let callbacksChain = Q(data).then(res => res);
+        let callbacksChain = Promise.resolve(data).then(res => res);
 
         this.listeners[event].forEach(listener => {
             callbacksChain = callbacksChain.then(listener.listener).catch(e => console.error(e));

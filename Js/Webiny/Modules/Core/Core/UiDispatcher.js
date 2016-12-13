@@ -86,7 +86,7 @@ class UiDispatcher {
                 args = signalParams;
             }
 
-            return Q(callable(...args)).then(result => result);
+            return Promise.resolve(callable(...args)).then(result => result);
         };
     }
 }

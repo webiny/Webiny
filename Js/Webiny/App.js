@@ -14,7 +14,7 @@ class WebinyApp {
         this.modules.splice(this.modules.indexOf('Core'), 1);
         this.modules.unshift('Core');
         const imported = [];
-        let queue = Q();
+        let queue = Promise.resolve();
         this.modules.map(name => {
             queue = queue.then(() => {
                 return WebinyBootstrap.import('Core/Webiny/Modules/' + name).then(m => {

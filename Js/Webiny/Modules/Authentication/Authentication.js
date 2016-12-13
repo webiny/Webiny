@@ -14,9 +14,7 @@ class Module extends Webiny.Module {
      * @param apiResponse
      */
     onForbidden() {
-        Q.all([
-            Webiny.Dispatcher.dispatch('Logout')
-        ]).then(() => {
+        Webiny.Dispatcher.dispatch('Logout').then(() => {
             Webiny.Router.goToRoute('Login');
         });
     }
