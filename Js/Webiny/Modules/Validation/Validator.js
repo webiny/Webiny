@@ -23,11 +23,23 @@ class Validator {
         if (!validators) {
             return false;
         }
-        const validate = validators.split(',');
+
+        let validate = validators;
+        if (_.isString(validators)) {
+            validate = validators.split(',');
+        }
+
         validators = {};
         validate.forEach(v => {
-            const validator = _.trim(v).split(':');
-            const vName = validator.shift();
+            let validator = null;
+            let vName = null;
+            if (_.isString(v)) {
+                validator = _.trim(v).split(':');
+                vName = validator.shift();
+            } else {
+                validator = v;
+                vName = _.uniqueId('validator');
+            }
             validators[vName] = validator;
         });
         return validators;
@@ -55,7 +67,7 @@ class Validator {
     }
 
     validate(value, validators, formInputs = null) {
-        if (_.isString(validators)) {
+        if (!_.isPlainObject(validators)) {
             validators = this.parseValidateProperty(validators);
         }
 
@@ -68,7 +80,8 @@ class Validator {
 
         const results = {};
         Object.keys(validators).forEach(validatorName => {
-            const args = _.clone(validators[validatorName]);
+            const funcValidator = _.isFunction(validators[validatorName]) ? validators[validatorName] : false;
+            const args = funcValidator ? [] : _.clone(validators[validatorName]);
             if (formInputs) {
                 this.parseArgs(args, formInputs);
             }
@@ -76,7 +89,7 @@ class Validator {
             chain = chain.then(function validationLink() {
                 let validator = null;
                 try {
-                    validator = _this.getValidator(validatorName)(...args);
+                    validator = funcValidator ? funcValidator(...args) : _this.getValidator(validatorName)(...args);
                 } catch (e) {
                     throw new ValidationError(e.message, validatorName, value);
                 }
