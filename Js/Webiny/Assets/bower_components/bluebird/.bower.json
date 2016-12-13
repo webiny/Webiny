@@ -1,0 +1,44 @@
+{
+  "name": "bluebird",
+  "version": "3.4.6",
+  "homepage": "https://github.com/petkaantonov/bluebird",
+  "authors": [
+    "Petka Antonov <petka_antonov@hotmail.com>"
+  ],
+  "description": "Bluebird is a full featured promise library with unmatched performance.",
+  "main": "js/browser/bluebird.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "benchmark",
+    "bower_components",
+    "./browser",
+    "node_modules",
+    "test"
+  ],
+  "keywords": [
+    "promise",
+    "performance",
+    "promises",
+    "promises-a",
+    "promises-aplus",
+    "async",
+    "await",
+    "deferred",
+    "deferreds",
+    "future",
+    "flow control",
+    "dsl",
+    "fluent interface"
+  ],
+  "_release": "3.4.6",
+  "_resolution": {
+    "type": "version",
+    "tag": "v3.4.6",
+    "commit": "c9e38ac47912f2e2414e42c713fe4221f6a958ff"
+  },
+  "_source": "https://github.com/petkaantonov/bluebird.git",
+  "_target": "^3.4.6",
+  "_originalSource": "bluebird",
+  "_direct": true
+}
