@@ -31,7 +31,7 @@ Field.defaultProps = {
     params: null,
     renderer() {
         let content = _.get(this.props.data, this.props.name);
-        if (content === null || content === undefined) {
+        if (_.isNil(content)) {
             content = this.props.default;
         }
         if (_.isFunction(this.props.children)) {

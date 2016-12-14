@@ -180,7 +180,11 @@ class BaseContainer extends Webiny.Ui.Component {
     }
 
     getSearchQuery() {
-        return this.searchQuery;
+        return this.state.searchQuery;
+    }
+
+    getFilters() {
+        return this.state.filters;
     }
 
     /* eslint-disable */
@@ -447,6 +451,8 @@ BaseContainer.defaultProps = {
         }
 
         const layoutProps = {
+            list: this.state.list,
+            meta: this.state.meta,
             filters: this.filtersElement,
             table: this.tableElement,
             pagination: this.paginationElement,
