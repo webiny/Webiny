@@ -93,7 +93,7 @@ Login.defaultProps = {
         return (
             <div className="container">
                 <div className="sign-in-holder">
-                    <Ui.Form.Loader container={container}/>
+                    <Ui.Form.Loader/>
 
                     <div className="form-signin">
                         <a href="#" className="logo">
@@ -103,7 +103,7 @@ Login.defaultProps = {
                         <h2 className="form-signin-heading"><span></span>Sign in to your Account</h2>
 
                         <div className="clear"></div>
-                        <Ui.Form.Error container={container}/>
+                        <Ui.Form.Error/>
 
                         <div className="clear"></div>
                         <Ui.Input name="username" placeholder="Enter email" label="Email address" validate="required,email" onEnter={container.submit}/>

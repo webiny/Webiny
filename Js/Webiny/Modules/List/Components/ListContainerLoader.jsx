@@ -7,7 +7,7 @@ class ListContainerLoader extends Webiny.Ui.Component {
 
 ListContainerLoader.defaultProps = {
     renderer() {
-        if (!this.props.container.isLoading()) {
+        if (!this.props.show) {
             return null;
         }
 

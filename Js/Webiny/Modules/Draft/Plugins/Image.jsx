@@ -192,7 +192,7 @@ class ImagePlugin extends AtomicPlugin {
                                 const urlValidator = model.image ? null : 'required,url';
                                 return (
                                     <wrapper>
-                                        <Ui.Form.Loader container={form}/>
+                                        <Ui.Form.Loader/>
                                         <Ui.Modal.Header title="Insert image"/>
                                         <Ui.Modal.Body noPadding>
                                             <Ui.Tabs>

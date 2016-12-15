@@ -6,11 +6,12 @@ class ContainerError extends Webiny.Ui.Component {
 }
 
 ContainerError.defaultProps = {
+    error: null,
     title: 'Oops',
     type: 'error',
     message: null,
     renderer() {
-        const error = this.props.container.getError();
+        const error = this.props.error;
         if (!error) {
             return null;
         }

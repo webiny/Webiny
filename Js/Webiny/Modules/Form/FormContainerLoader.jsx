@@ -6,8 +6,9 @@ class FormContainerLoader extends Webiny.Ui.Component {
 }
 
 FormContainerLoader.defaultProps = {
+    show: false,
     renderer() {
-        if (!this.props.container.isLoading()) {
+        if (!this.props.show) {
             return null;
         }
 

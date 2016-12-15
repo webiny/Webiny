@@ -410,8 +410,12 @@ class FormContainer extends Webiny.Ui.Component {
             return input;
         }
 
-        if (input.type && _.includes(this.props.injectInto(), input.type)) {
-            input = React.cloneElement(input, {container: this});
+        if (input.type && input.type === Ui.Form.Loader) {
+            input = React.cloneElement(input, {show: this.isLoading()});
+        }
+
+        if (input.type && input.type === Ui.Form.Error) {
+            input = React.cloneElement(input, {error: this.getError()});
         }
 
         if (input.props && input.props.name) {
@@ -650,10 +654,6 @@ FormContainer.defaultProps = {
         const cmp = <div>Your data is being uploaded...<Ui.Progress value={pe.progress}/></div>;
         Webiny.Growl(<Ui.Growl.Info id={this.growlId} title="Please be patient" sticky={true}>{cmp}</Ui.Growl.Info>);
     },
-    injectInto: () => [
-        Ui.Form.Loader,
-        Ui.Form.Error
-    ],
     onSuccessMessage: () => {
         return 'Your record was saved successfully!';
     },

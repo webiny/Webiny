@@ -280,7 +280,7 @@ class BaseContainer extends Webiny.Ui.Component {
             }
 
             if (child.type === Ui.List.Loader) {
-                this.loaderElement = React.cloneElement(child, {container: this}, child.props.children);
+                this.loaderElement = React.cloneElement(child, {show: this.isLoading()}, child.props.children);
             }
 
             if (child.type === Ui.List.MultiActions) {
