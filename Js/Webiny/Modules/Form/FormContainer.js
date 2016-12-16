@@ -334,7 +334,9 @@ class FormContainer extends Webiny.Ui.Component {
                 // If onSubmit was passed through props, execute it. Otherwise proceed with default behaviour.
                 if (this.props.onSubmit) {
                     // Make sure whatever is returned from `onSubmit` handler is a Promise and then enable form submit
-                    return Promise.resolve(this.props.onSubmit(model, this)).finally(() => {
+                    return Promise.resolve(this.props.onSubmit(model, this)).catch(e => {
+                        Webiny.Growl.danger('' + e);
+                    }).finally(() => {
                         this.enableSubmit();
                     });
                 }
@@ -390,7 +392,7 @@ class FormContainer extends Webiny.Ui.Component {
      * HELPER METHODS FOR REGISTERING INPUTS
      */
 
-    // TODO: construct onChange callback to process watches, etc.
+    // TODO: construct onChange callback to process watches, etc. (like here: Apps/Core/Js/Webiny/Modules/Form/FormContainer.js:437)
     bindTo(name, changeCallback = _.noop, defaultValue = null) {
         return super.bindTo('model.' + name, changeCallback, defaultValue);
     }

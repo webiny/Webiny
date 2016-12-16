@@ -18,7 +18,6 @@ Assets:
         Js:
             - bower_components/system.js/dist/system.src.js
             - bower_components/history.js/scripts/bundled-uncompressed/html5/native.history.js
-            - bower_components/bluebird/js/browser/bluebird.min.js
             - bower_components/jquery/dist/jquery.min.js
             - bower_components/bootstrap/dist/js/bootstrap.min.js
             - bower_components/lodash/dist/lodash.min.js
@@ -68,6 +67,7 @@ Assets:
             - webiny/logger.es6.js
             - node_modules/immutable/dist/immutable.min.js
             - node_modules/draft-js/dist/Draft.min.js
+            - bower_components/bluebird/js/browser/bluebird.min.js
             - scripts/draft-js-converters.js
             - scripts/draft-js-code-block.js
             - scripts/highlight.pack.min.js
