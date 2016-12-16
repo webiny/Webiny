@@ -136,33 +136,26 @@ class HttpRequest {
      * @returns {Promise}
      */
     send() {
-        this.promise = new Promise(resolve => {
+        this.promise = new Promise((resolve, reject) => {
             this.request = $.ajax(this.getRequestObject())
                 .done((data, textStatus, jqXhr) => {
                     resolve(new HttpResponse(formatResponse(jqXhr), this));
                 })
                 .fail(jqXhr => {
-                    resolve(new HttpResponse(formatResponse(jqXhr), this));
+                    reject(new HttpResponse(formatResponse(jqXhr), this));
                 });
         });
 
-        return this;
-    }
+        // A hacky solution: 
+        // we need to return a promise but at the same time expose `abort` function to be able to abort current request.
+        // Example: when uploading a large file
+        this.promise.abort = () => {
+            if (this.request) {
+                this.request.abort();
+            }
+        };
 
-    then(fn) {
-        this.promise = this.promise.then(fn);
-        return this;
-    }
-
-    catch(fn) {
-        this.promise = this.promise.catch(fn);
-        return this;
-    }
-
-    abort() {
-        if (this.request) {
-            this.request.abort();
-        }
+        return this.promise;
     }
 }
 
