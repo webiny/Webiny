@@ -23,7 +23,7 @@ class FileUploader {
 
     abort(id) {
         if (this.inProgress && this.inProgress.id === id) {
-            this.request.abort();
+            this.request.cancel();
         }
         this.pending.splice(_.findIndex(this.pending, {id}), 1);
     }

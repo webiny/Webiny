@@ -66,7 +66,7 @@ class OptionComponent extends FormComponent {
         }
 
         if (this.request) {
-            this.request.abort();
+            this.request.cancel();
         }
     }
 

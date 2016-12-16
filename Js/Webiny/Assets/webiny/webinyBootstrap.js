@@ -1,4 +1,5 @@
 (function (w) {
+    Promise.config({cancellation: true});
     System.import('Core/Webiny/WebinyBootstrap').then(function (m) {
         // Check if `Webiny` function exists in the window
         if (!w.Webiny) {

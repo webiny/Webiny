@@ -61,13 +61,13 @@ Assets:
             - bower_components/select2/dist/js/select2.min.js
             - bower_components/simplemde/dist/simplemde.min.js
             - webiny/polyfills/browser-polyfill.js
+            - bower_components/bluebird/js/browser/bluebird.min.js
+            - node_modules/immutable/dist/immutable.min.js
+            - node_modules/draft-js/dist/Draft.min.js
             - webiny/Webiny.es6.js
             - webiny/WebinyBootstrap.es6.js
             - webiny/webinyBootstrap.js
             - webiny/logger.es6.js
-            - node_modules/immutable/dist/immutable.min.js
-            - node_modules/draft-js/dist/Draft.min.js
-            - bower_components/bluebird/js/browser/bluebird.min.js
             - scripts/draft-js-converters.js
             - scripts/draft-js-code-block.js
             - scripts/highlight.pack.min.js

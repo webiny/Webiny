@@ -46,7 +46,7 @@ class Data extends Webiny.Ui.Component {
     componentWillUnmount() {
         super.componentWillUnmount();
         if (this.request) {
-            this.request.abort();
+            this.request.cancel();
         }
 
         if (this.autoRefreshInterval) {

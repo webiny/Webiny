@@ -4,6 +4,7 @@ class ApiResponse {
      * @param {HttpResponse} httpResponse
      */
     constructor(httpResponse) {
+        console.log(httpResponse)
         this.response = httpResponse;
         this.data = httpResponse.getData();
     }

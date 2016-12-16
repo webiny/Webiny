@@ -96,12 +96,13 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
      *
      * @param string $id
      *
-     * @param bool   $includeDeleted
+     *
+     * @param array  $options
      *
      * @return AbstractEntity|null
-     * @throws \Webiny\Component\Entity\EntityException
+     * @throws EntityException
      */
-    public static function findById($id, $includeDeleted = false)
+    public static function findById($id, $options = [])
     {
         if (!$id || strlen($id) != 24) {
             return null;
@@ -112,13 +113,9 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         }
         $mongo = static::entity()->getDatabase();
 
-        $criteria = self::setEntityFilters(['_id' => $mongo->id($id)]);
+        $conditions = static::buildQuery(['_id' => $mongo->id($id)], $options);
 
-        if (!$includeDeleted) {
-            $criteria['deletedOn'] = null;
-        }
-
-        $data = $mongo->findOne(static::$entityCollection, $criteria);
+        $data = $mongo->findOne(static::$entityCollection, $conditions);
         if (!$data) {
             return null;
         }
@@ -133,17 +130,13 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
      * Find one recotd by given conditions
      *
      * @param array $conditions
-     * @param bool  $includeDeleted
+     * @param array $options
      *
      * @return AbstractEntity|null
      */
-    public static function findOne(array $conditions = [], $includeDeleted = false)
+    public static function findOne(array $conditions = [], $options = [])
     {
-        $conditions = self::setEntityFilters(self::prepareFilters($conditions));
-
-        if (!$includeDeleted) {
-            $conditions['deletedOn'] = null;
-        }
+        $conditions = static::buildQuery($conditions, $options);
 
         return parent::findOne($conditions);
     }
@@ -157,16 +150,14 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
      * @param int   $limit
      * @param int   $page
      *
-     * @param bool  $includeDeleted
+     * @param array $options
      *
      * @return EntityCollection
      */
-    public static function find(array $conditions = [], array $order = [], $limit = 0, $page = 0, $includeDeleted = false)
+    public static function find(array $conditions = [], array $order = [], $limit = 0, $page = 0, $options = [])
     {
-        $conditions = static::setEntityFilters(static::prepareFilters($conditions));
-        if (!$includeDeleted) {
-            $conditions['deletedOn'] = null;
-        }
+        $conditions = static::buildQuery($conditions, $options);
+
         return parent::find($conditions, $order, $limit, $page);
     }
 
@@ -655,5 +646,35 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         }
 
         return true;
+    }
+
+    /**
+     * Format conditions and apply options
+     *
+     * @param array $conditions
+     * @param array $options
+     *
+     * @return array
+     */
+    protected static function buildQuery($conditions, $options)
+    {
+        if (!isset($options['includeDeleted'])) {
+            $options['includeDeleted'] = false;
+        }
+
+        if (!isset($options['entityFilters'])) {
+            $options['entityFilters'] = true;
+        }
+
+        $conditions = static::prepareFilters($conditions);
+        if ($options['entityFilters']) {
+            $conditions = static::setEntityFilters($conditions);
+        }
+
+        if (!$options['includeDeleted']) {
+            $conditions['deletedOn'] = null;
+        }
+
+        return $conditions;
     }
 }

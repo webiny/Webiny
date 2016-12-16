@@ -35,7 +35,7 @@ class ApiContainer extends BaseContainer {
         super.componentWillUnmount();
         clearInterval(this.autoRefresh);
         if (this.request) {
-            this.request.abort();
+            this.request.cancel();
         }
     }
 
