@@ -334,7 +334,7 @@ class FormContainer extends Webiny.Ui.Component {
                 // If onSubmit was passed through props, execute it. Otherwise proceed with default behaviour.
                 if (this.props.onSubmit) {
                     // Make sure whatever is returned from `onSubmit` handler is a Promise and then enable form submit
-                    return Promise.resolve(this.props.onSubmit(model, this)).then(() => {
+                    return Promise.resolve(this.props.onSubmit(model, this)).finally(() => {
                         this.enableSubmit();
                     });
                 }
