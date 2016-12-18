@@ -197,7 +197,7 @@ class FormContainer extends Webiny.Ui.Component {
      */
 
     /**
-     * Get form container model
+     * Get form model
      * @param key
      * @returns {*}
      */
@@ -410,6 +410,10 @@ class FormContainer extends Webiny.Ui.Component {
         // Do not descend into nested Form
         if (input.type && input.type === Ui.Form) {
             return input;
+        }
+
+        if (input.type && _.includes(this.props.injectInto(), input.type)) {
+            input = React.cloneElement(input, {form: this});
         }
 
         if (input.type && input.type === Ui.Form.Loader) {
@@ -652,6 +656,7 @@ FormContainer.defaultProps = {
     validateOnFirstSubmit: false,
     onSubmitSuccess: null,
     onFailure: null,
+    injectInto: () => [],
     onProgress(pe) {
         const cmp = <div>Your data is being uploaded...<Ui.Progress value={pe.progress}/></div>;
         Webiny.Growl(<Ui.Growl.Info id={this.growlId} title="Please be patient" sticky={true}>{cmp}</Ui.Growl.Info>);

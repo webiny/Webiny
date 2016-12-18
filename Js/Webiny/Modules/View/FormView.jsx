@@ -39,10 +39,14 @@ class FormView extends Webiny.Ui.Component {
                     // We have our body element
                     this.bodyComponent = child;
                 } else {
-                    // We need to create form loader ourselves
-                    const bodyChildren = React.Children.toArray(child.props.children);
-                    bodyChildren.push(<Ui.Form.Loader key="loader" show={this.props.container.isLoading()}/>);
-                    this.bodyComponent = React.cloneElement(child, child.props, bodyChildren);
+                    try {
+                        // We need to create form loader ourselves
+                        const bodyChildren = React.Children.toArray(child.props.children);
+                        bodyChildren.push(<Ui.Form.Loader key="loader" show={this.props.form.isLoading()}/>);
+                        this.bodyComponent = React.cloneElement(child, child.props, bodyChildren);
+                    } catch (e) {
+                        console.log(e)
+                    }
                 }
                 return;
             }
@@ -53,13 +57,17 @@ class FormView extends Webiny.Ui.Component {
             }
 
             if (child.type === Ui.Form.Error) {
-                this.errorComponent = React.cloneElement(child, _.merge(child.props, {container: this.props.container}));
+                this.errorComponent = React.cloneElement(child, _.merge(child.props, {error: this.props.form.getError()}));
                 return;
             }
         });
 
         if (!this.errorComponent) {
-            this.errorComponent = <Ui.Form.Error error={this.props.container.getError()}/>;
+            try {
+                this.errorComponent = <Ui.Form.Error error={this.props.form.getError()}/>;
+            } catch (e) {
+                console.log(e);
+            }
         }
     }
 
