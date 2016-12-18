@@ -140,6 +140,7 @@ class Component extends React.Component {
     on(event, callback, meta) {
         const stopListening = Dispatcher.on(event, callback, meta);
         this.__listeners.push(stopListening);
+        return stopListening;
     }
 
     classSet(...sets) {

@@ -69,8 +69,8 @@ i18n.price = function price(value, currency = '£') {
     return accounting.formatMoney(value, _.get(currencySymbols, currency, currency));
 };
 
-i18n.number = function price(value) {
-    return accounting.formatNumber(value);
+i18n.number = function price(value, decimals = 0) {
+    return accounting.formatNumber(value, decimals);
 };
 
 i18n.date = function date(value, format = 'DD/MMM/YY') {

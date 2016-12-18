@@ -75,6 +75,10 @@ export class Tabs extends Webiny.Ui.Component {
         this.setState({selected: index});
     }
 
+    getSelectedTab() {
+        return this.state.selected;
+    }
+
     componentWillMount() {
         super.componentWillMount();
         this.setState({selected: Webiny.Router.getParams('tab') || this.props.selected || 0});
