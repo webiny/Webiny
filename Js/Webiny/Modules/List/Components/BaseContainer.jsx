@@ -318,7 +318,7 @@ class BaseContainer extends Webiny.Ui.Component {
         }
 
         if (element.type === 'loader') {
-            return this.loaderElement ? this.loaderElement : React.createElement(Ui.List.Loader, {container: this});
+            return this.loaderElement ? this.loaderElement : React.createElement(Ui.List.Loader, {show: this.isLoading()});
         }
 
         if (element.type === 'multi-actions') {
@@ -388,7 +388,7 @@ class BaseContainer extends Webiny.Ui.Component {
         }
 
         if (element.type === Ui.List.Loader) {
-            return React.cloneElement(element, {container: this});
+            return React.cloneElement(element, {show: this.isLoading()});
         }
 
         if (element.type === Ui.List.MultiActions) {
@@ -457,7 +457,7 @@ BaseContainer.defaultProps = {
             table: this.tableElement,
             pagination: this.paginationElement,
             multiActions: this.multiActionsElement,
-            loader: this.loaderElement ? this.loaderElement : React.createElement(Ui.List.Loader, {container: this}),
+            loader: this.loaderElement ? this.loaderElement : React.createElement(Ui.List.Loader, {show: this.isLoading()}),
             container: this
         };
 
