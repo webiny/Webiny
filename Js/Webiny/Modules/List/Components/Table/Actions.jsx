@@ -26,7 +26,11 @@ class Actions extends Webiny.Ui.Component {
 
 Actions.defaultProps = {
     label: 'Actions',
+    hide: false,
     renderer() {
+        if (this.props.hide) {
+            return null;
+        }
         return (
             <Ui.Dropdown title={this.props.label} className="balloon">
                 <Ui.Dropdown.Header title="Actions"/>

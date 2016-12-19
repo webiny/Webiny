@@ -23,7 +23,7 @@ class Module extends Webiny.Module {
         View.ChartBlock = ChartBlock;
         View.InfoBlock = InfoBlock;
 
-        // Add FormView into list of components that will receive a `container` prop when used inside of Form
+        // Add FormView into list of components that will receive a `form` prop when used inside of Form
         const injectInto = Webiny.Ui.Components.Form.defaultProps.injectInto;
         Webiny.Ui.Components.Form.defaultProps.injectInto = () => {
             const injects = injectInto();

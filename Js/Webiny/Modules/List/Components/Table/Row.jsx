@@ -37,7 +37,7 @@ class Row extends Webiny.Ui.Component {
         // Table handles Row and Footer
         if (child.type === Ui.List.Table.Field || child.type.prototype instanceof Ui.List.Table.Field) {
             this.fields.push(child);
-        } else if (child.type === Ui.List.Table.Actions) {
+        } else if (child.type === Ui.List.Table.Actions && !child.props.hide) {
             this.actions = React.cloneElement(child, {
                 data: this.data,
                 actions: this.props.actions

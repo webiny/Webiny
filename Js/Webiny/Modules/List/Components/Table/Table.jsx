@@ -111,7 +111,7 @@ class Table extends Webiny.Ui.Component {
                     this.headers.push(headerProps);
                 }
 
-                if (rowChild.type === Ui.List.Table.Actions) {
+                if (rowChild.type === Ui.List.Table.Actions && !rowChild.props.hide) {
                     this.headers.push({});
                 }
             });

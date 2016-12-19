@@ -37,9 +37,12 @@ function execute(http, options, aggregate = true) {
         if (!aggregate || !_.get(webinyConfig, 'Api.AggregateRequests', true) || http.getMethod() !== 'get') {
             response = http.send();
         } else {
+            // If requests are being aggregated, push current http request into `pending` array for later resolving
             pending.push(http);
-            http.promise = new Promise(resolve => {
-                http.resolve = resolve;
+            // Return a new promise that will be resolved once the aggregated requests receive their responses
+            response = new Promise(resolve => {
+                // This is a little hack but gets the job done: set a resolver into the pending http request object
+                http.__resolve = resolve;
             });
 
             if (pending.length >= _.get(webinyConfig, 'Api.MaxRequests', 30)) {
@@ -47,7 +50,6 @@ function execute(http, options, aggregate = true) {
                 timeout = null;
                 sendAggregatedRequest(); // eslint-disable-line
             }
-            response = http;
         }
     } else {
         response = Promise.resolve(response);
@@ -82,7 +84,7 @@ function sendAggregatedRequest() {
     execute(request, {headers: {'X-Webiny-Api-Aggregate': true}}, false).then(response => {
         response.getData('data').map((res, index) => {
             const aggRes = new HttpResponse({data: res, status: res.statusCode}, inProgress[index]);
-            inProgress[index].resolve(aggRes);
+            inProgress[index].__resolve(aggRes);
         });
     });
 }
