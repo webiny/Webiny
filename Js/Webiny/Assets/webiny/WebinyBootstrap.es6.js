@@ -192,7 +192,7 @@ class WebinyBootstrapClass {
         const file = document.createElement('link');
         file.rel = 'stylesheet';
         file.type = 'text/css';
-        file.href = filename;
+        file.href = webinyCssPath + filename;
 
         if (typeof file !== 'undefined') {
             document.getElementsByTagName('head')[0].appendChild(file);
@@ -204,7 +204,7 @@ class WebinyBootstrapClass {
         _.each(attributes, (v, k) => {
             file.setAttribute(k, v);
         });
-        file.setAttribute('src', filename);
+        file.setAttribute('src', webinyJsPath + filename);
         document.head.appendChild(file);
     }
 }
