@@ -38,9 +38,9 @@ class Request extends \Webiny\Component\Http\Request
 
     public function hasSystemToken()
     {
-        $requestToken = urldecode($this->header('X-Webiny-Api-Token'));
+        $requestToken = urldecode($this->header('X-Webiny-Authorization'));
         if (!$requestToken) {
-            $requestToken = $this->query('apiToken');
+            $requestToken = $this->getRequestData()['X-Webiny-Authorization'];
         }
 
         $systemToken = Config::getInstance()->get('Application.Acl.Token');

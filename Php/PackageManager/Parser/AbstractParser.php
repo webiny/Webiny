@@ -19,7 +19,6 @@ abstract class AbstractParser
     protected $baseClass;
     protected $queryParams = [];
     protected $headerAuthorizationToken;
-    protected $headerApiToken;
 
     abstract public function getApiMethods();
 
@@ -32,13 +31,6 @@ abstract class AbstractParser
         $this->headerAuthorizationToken = [
             'name'        => 'X-Webiny-Authorization',
             'description' => 'Authorization token',
-            'type'        => 'string',
-            'required'    => true
-        ];
-
-        $this->headerApiToken = [
-            'name'        => 'X-Webiny-Api-Token',
-            'description' => 'API token to identify 3rd party clients',
             'type'        => 'string',
             'required'    => true
         ];

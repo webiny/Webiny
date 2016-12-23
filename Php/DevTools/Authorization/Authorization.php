@@ -91,26 +91,22 @@ class Authorization
     public function getUser()
     {
         if (!$this->user) {
-            $authCookie = $this->wRequest()->header('X-Webiny-Authorization');
-            if (!$authCookie) {
-                $authCookie = $this->wRequest()->getRequestData()['X-Webiny-Authorization'] ?? null;
+            $requestToken = $this->wRequest()->header('X-Webiny-Authorization');
+            if (!$requestToken) {
+                $requestToken = $this->wRequest()->getRequestData()['X-Webiny-Authorization'] ?? null;
             }
 
             /* @var $class AbstractEntity */
             $class = $this->userClass;
-            if ($authCookie) {
+            if ($requestToken) {
                 try {
-                    $user = $this->login->getUser($authCookie);
+                    $user = $this->login->getUser($requestToken);
                     $this->user = $class::findOne(['email' => $user->getUsername()]);
                     $this->user->trigger('onActivity');
                 } catch (\Exception $le) {
                     return null;
                 }
             } else {
-                $requestToken = urldecode($this->wRequest()->header('X-Webiny-Api-Token'));
-                if (!$requestToken) {
-                    $requestToken = $this->wRequest()->query('apiToken');
-                }
                 $systemToken = $this->wConfig()->getConfig()->get('Application.Acl.Token');
                 if ($systemToken && $systemToken == $requestToken) {
                     $this->user = new SystemApiToken();
