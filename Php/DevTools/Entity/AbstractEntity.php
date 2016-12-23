@@ -21,6 +21,7 @@ use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Entity\EntityException;
 use Webiny\Component\Mongo\Index\AbstractIndex;
 use Webiny\Component\Mongo\Index\SingleIndex;
+use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObjectException;
 use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
 
 /**
@@ -147,7 +148,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                 return $instance;
             }
         }
-        
+
         $conditions = static::buildQuery($conditions, $options);
 
         return parent::findOne($conditions);
@@ -461,15 +462,22 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             if (isset($originalConditions[$key])) {
                 $filterValue = $originalConditions[$key];
                 unset($conditions[$key]);
-                $conditions = array_merge($conditions, $filter($filterValue));
+                $conditions = array_merge($conditions, $filter($filterValue, $conditions, $originalConditions));
             }
         }
 
         // If we have a static filter, let's apply those too
         if ($staticFilter) {
-            $staticFilterConditions = is_callable($staticFilter) ? $staticFilter($conditions) : $staticFilter;
+            $staticFilterConditions = is_callable($staticFilter) ? $staticFilter($conditions, $originalConditions) : $staticFilter;
             if (is_array($staticFilterConditions)) {
-                $conditions = self::arr($conditions)->mergeSmart($staticFilterConditions)->val();
+                try {
+                    $conditions = self::arr($conditions)->mergeSmart($staticFilterConditions)->val();
+                } catch (ArrayObjectException $e) {
+                    throw new AppException('Merging of filters failed.', '', [
+                        'conditions'             => $conditions,
+                        'staticFilterConditions' => $staticFilterConditions
+                    ]);
+                }
             }
         }
 
