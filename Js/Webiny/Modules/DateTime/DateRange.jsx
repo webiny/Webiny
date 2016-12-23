@@ -73,7 +73,7 @@ class DateRange extends Webiny.Ui.FormComponent {
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
         if (!props.value) {
-            this.refs.daterange.value = this.props.placeholder || '';
+            this.refs.daterange.value = this.getPlaceholder() || '';
         } else {
             const dates = props.value.split(this.props.rangeDelimiter);
             this.element.data('daterangepicker').setStartDate(dates[0]);
@@ -111,7 +111,7 @@ class DateRange extends Webiny.Ui.FormComponent {
         });
 
         if (!value) {
-            this.refs.daterange.value = this.props.placeholder || '';
+            this.refs.daterange.value = this.getPlaceholder() || '';
         }
 
         return this;

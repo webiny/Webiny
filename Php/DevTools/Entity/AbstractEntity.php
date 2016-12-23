@@ -127,7 +127,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     }
 
     /**
-     * Find one recotd by given conditions
+     * Find one record by given conditions
      *
      * @param array $conditions
      * @param array $options
@@ -145,7 +145,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                 return $instance;
             }
         }
-        
+
         $conditions = static::buildQuery($conditions, $options);
 
         return parent::findOne($conditions);
@@ -159,7 +159,6 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
      * @param array $order Example: ['-name', '+title']
      * @param int   $limit
      * @param int   $page
-     *
      * @param array $options
      *
      * @return EntityCollection
@@ -175,16 +174,14 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
      * Count records using given criteria
      *
      * @param array $conditions
-     *
-     * @param bool  $includeDeleted
+     * @param array $options
      *
      * @return int
+     *
      */
-    public static function count(array $conditions = [], $includeDeleted = false)
+    public static function count(array $conditions = [], $options = [])
     {
-        if (!$includeDeleted) {
-            $conditions['deletedOn'] = null;
-        }
+        $conditions = static::buildQuery($conditions, $options);
 
         return parent::count($conditions);
     }
