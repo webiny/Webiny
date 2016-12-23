@@ -51,12 +51,12 @@ class StaticContainer extends BaseContainer {
     }
 }
 
-StaticContainer.defaultProps = {
+StaticContainer.defaultProps = _.merge({}, BaseContainer.defaultProps, {
     connectToRouter: false,
     defaultParams: {},
     page: 1,
     perPage: 10,
-    layout: function layout() {
+    layout() {
         return (
             <webiny-list-layout>
                 <filters/>
@@ -64,28 +64,7 @@ StaticContainer.defaultProps = {
                 <pagination/>
             </webiny-list-layout>
         );
-    },
-    renderer() {
-        this.prepareList(this.props.children);
-
-        const layout = this.props.layout.bind(this)();
-
-        if (React.Children.toArray(layout.props.children).length) {
-            const render = [];
-            React.Children.map(layout, (item, index) => {
-                render.push(React.cloneElement(this.replacePlaceholders(item), {key: index}));
-            });
-            return <webiny-list>{render}</webiny-list>;
-        }
-
-        const layoutProps = {
-            filters: this.filtersElement,
-            table: this.tableElement,
-            pagination: this.paginationElement,
-            container: this
-        };
-        return React.cloneElement(layout, layoutProps);
     }
-};
+});
 
 export default StaticContainer;

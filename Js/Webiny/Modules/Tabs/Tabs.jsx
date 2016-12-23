@@ -41,7 +41,7 @@ class Tabs extends Webiny.Ui.Component {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        this.setState({selected: props.selected || this.state.selected});
+        this.setState({selected: _.isNil(props.selected) ? this.state.selected : props.selected});
     }
 
     parseChildren(props, state) {
@@ -56,7 +56,7 @@ class Tabs extends Webiny.Ui.Component {
                 active
             };
 
-            _.assign(headerProps, _.omit(child.props, ['renderer', 'children', 'tabContentRenderer']));
+            _.assign(headerProps, _.omit(child.props, ['renderer', 'children', 'contentRenderer', 'headerRenderer']));
 
             let tabClicked = (e) => {
                 // Pass instance of Tabs, index clicked and event.
@@ -66,6 +66,10 @@ class Tabs extends Webiny.Ui.Component {
                 }
             };
 
+            if (_.has(child.props, 'headerRenderer')) {
+                headerProps.renderer = child.props.headerRenderer;
+            }
+
             this.tabsHeader.push(
                 <Tab.Header {...headerProps} onClick={tabClicked}/>
             );
@@ -74,9 +78,9 @@ class Tabs extends Webiny.Ui.Component {
                 key: index,
                 active
             };
-            _.assign(contentProps, _.omit(child.props, ['renderer', 'tabContentRenderer']));
-            if (_.has(child.props, 'tabContentRenderer')) {
-                contentProps.renderer = child.props.tabContentRenderer;
+            _.assign(contentProps, _.omit(child.props, ['renderer', 'contentRenderer', 'headerRenderer']));
+            if (_.has(child.props, 'contentRenderer')) {
+                contentProps.renderer = child.props.contentRenderer;
             }
             this.tabsContent.push(
                 <Tab.Content {...contentProps}/>

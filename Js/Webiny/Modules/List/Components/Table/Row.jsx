@@ -35,7 +35,7 @@ class Row extends Webiny.Ui.Component {
         }
 
         // Table handles Row and Footer
-        if (child.type === Ui.List.Table.Field || child.type.prototype instanceof Ui.List.Table.Field) {
+        if ((child.type === Ui.List.Table.Field || child.type.prototype instanceof Ui.List.Table.Field) && !child.props.hide) {
             this.fields.push(child);
         } else if (child.type === Ui.List.Table.Actions && !child.props.hide) {
             this.actions = React.cloneElement(child, {
@@ -100,8 +100,13 @@ Row.defaultProps = {
             );
         }
 
+        let classes = this.props.className;
+        if (_.isFunction(classes)) {
+            classes = classes(this.props.data);
+        }
+
         return (
-            <tr className={this.classSet(this.props.className)} onClick={this.onClick}>
+            <tr className={this.classSet(classes)} onClick={this.onClick}>
                 {select}
                 {this.fields.map(this.renderField)}
                 {this.actions ? <td className="text-center">{this.actions}</td> : null}

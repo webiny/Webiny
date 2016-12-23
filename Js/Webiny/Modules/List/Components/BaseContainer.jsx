@@ -354,7 +354,8 @@ class BaseContainer extends Webiny.Ui.Component {
             // And since BaseContainer only parses first level of children, if you return some kind of a wrapper while using a layout
             // we need to get the list elements from the wrapper element (its children).
             // When layout is not defined (or set to null/false) - this will not be executed!
-            if (this.props.layout && React.Children.count(content) === 1) {
+            // TODO: add support for returning of Table (currently not working without a wrapper)
+            if (this.props.layout && React.Children.count(content) === 1 && _.isString(content.type)) {
                 return content.props.children;
             }
 
