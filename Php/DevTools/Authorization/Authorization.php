@@ -102,7 +102,9 @@ class Authorization
                 try {
                     $user = $this->login->getUser($authCookie);
                     $this->user = $class::findOne(['email' => $user->getUsername()]);
-                    $this->user->trigger('onActivity');
+                    if ($this->user) {
+                        $this->user->trigger('onActivity');
+                    }
                 } catch (\Exception $le) {
                     return null;
                 }

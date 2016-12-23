@@ -4,6 +4,9 @@ const backend = new Webiny.App('Core.Backend', ['Core.Skeleton']);
 backend.beforeRender(() => {
     Webiny.Http.addRequestInterceptor(http => {
         if (Webiny.Cookies.get('XDEBUG_SESSION')) {
+            if (!http.query) {
+                http.query = {};
+            }
             http.query.XDEBUG_SESSION_START = Webiny.Cookies.get('XDEBUG_SESSION');
         }
     });
