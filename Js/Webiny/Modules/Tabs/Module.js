@@ -9,9 +9,9 @@ class Module extends Webiny.Module {
     constructor(app) {
         super(app);
         Webiny.Ui.Components.Tabs = Tabs;
+        Tabs.Tab = Tab;
         Tab.Header = TabHeader;
         Tab.Content = TabContent;
-        Tabs.Tab = Tab;
     }
 }
 

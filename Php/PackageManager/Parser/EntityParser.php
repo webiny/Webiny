@@ -155,10 +155,6 @@ class EntityParser extends AbstractParser
                 $definition['public'] = $isPublic;
                 $definition['authorization'] = $isPublic ? false : $entityMethod->getAuthorization();
 
-                if (!$definition['public']) {
-                    $definition['headers'][] = $this->headerApiToken;
-                }
-
                 if ($definition['authorization']) {
                     $definition['headers'][] = $this->headerAuthorizationToken;
                 }

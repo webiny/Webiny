@@ -86,39 +86,43 @@ class Authorization
     }
 
     /**
+     * Get an instance of the user identified by X-Webiny-Authorization token.
+     * A user can be a regular user, System token or API token - but they all implement `UserInterface`.
+     *
      * @return UserInterface
      */
     public function getUser()
     {
         if (!$this->user) {
-            $authCookie = $this->wRequest()->header('X-Webiny-Authorization');
-            if (!$authCookie) {
-                $authCookie = $this->wRequest()->getRequestData()['X-Webiny-Authorization'] ?? null;
+            $requestToken = $this->wRequest()->header('X-Webiny-Authorization');
+            if (!$requestToken) {
+                $requestToken = $this->wRequest()->getRequestData()['X-Webiny-Authorization'] ?? null;
             }
 
             /* @var $class AbstractEntity */
             $class = $this->userClass;
-            if ($authCookie) {
+            if ($requestToken) {
                 try {
-                    $user = $this->login->getUser($authCookie);
+                    $user = $this->login->getUser($requestToken);
                     $this->user = $class::findOne(['email' => $user->getUsername()]);
+
                     if ($this->user) {
                         $this->user->trigger('onActivity');
                     }
+                    
+                    return $this->user;
                 } catch (\Exception $le) {
-                    return null;
+                    // Not a regular user
                 }
+            }
+
+            // API tokens may contain special characters and will be urlencoded when sent through curl
+            $requestToken = urldecode($requestToken);
+            $systemToken = $this->wConfig()->getConfig()->get('Application.Acl.Token');
+            if ($systemToken && $systemToken == $requestToken) {
+                $this->user = new SystemApiToken();
             } else {
-                $requestToken = urldecode($this->wRequest()->header('X-Webiny-Api-Token'));
-                if (!$requestToken) {
-                    $requestToken = $this->wRequest()->query('apiToken');
-                }
-                $systemToken = $this->wConfig()->getConfig()->get('Application.Acl.Token');
-                if ($systemToken && $systemToken == $requestToken) {
-                    $this->user = new SystemApiToken();
-                } else {
-                    $this->user = ApiToken::findOne(['token' => $requestToken]);
-                }
+                $this->user = ApiToken::findOne(['token' => $requestToken]);
             }
         }
 

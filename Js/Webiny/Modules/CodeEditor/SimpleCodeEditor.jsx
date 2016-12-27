@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
 
-class CodeEditor extends Webiny.Ui.Component {
+class SimpleCodeEditor extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
 
@@ -64,7 +64,7 @@ class CodeEditor extends Webiny.Ui.Component {
     }
 }
 
-CodeEditor.defaultProps = {
+SimpleCodeEditor.defaultProps = {
     mode: 'text/html',
     theme: 'monokai',
     value: null,
@@ -80,4 +80,4 @@ CodeEditor.defaultProps = {
     }
 };
 
-export default CodeEditor;
+export default SimpleCodeEditor;

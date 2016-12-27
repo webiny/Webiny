@@ -36,8 +36,8 @@ class SystemApiTokenModal extends Webiny.Ui.ModalComponent {
                         System API token allows its bearer to access resources exposed by your API.
                         <br/>This system token is not meant to be shared, it is for your system only!
                         <br/><br/>
-                        Use it when you need to make internal API calls, by sending a
-                        <Ui.Label inline>X-Webiny-Api-Token</Ui.Label> header or a <Ui.Label inline>apiToken</Ui.Label> query parameter.
+                        Use it when you need to make internal API calls, by sending a <Ui.Label inline>X-Webiny-Authorization</Ui.Label>
+                        header.
                     </p>
                     <Ui.Grid.Row>
                         <Ui.Grid.Col all={12} className="text-center">

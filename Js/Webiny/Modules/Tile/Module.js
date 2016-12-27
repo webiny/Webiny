@@ -6,7 +6,9 @@ import Tile from './Tile';
 class Module extends Webiny.Module {
 
     init() {
-        Webiny.Ui.Components.Tile = {Tile, Header, Body};
+        Tile.Header = Header;
+        Tile.Body = Body;
+        Webiny.Ui.Components.Tile = Tile;
     }
 }
 
