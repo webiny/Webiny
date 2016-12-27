@@ -86,6 +86,9 @@ class Authorization
     }
 
     /**
+     * Get an instance of the user identified by X-Webiny-Authorization token.
+     * A user can be a regular user, System token or API token - but they all implement `UserInterface`.
+     *
      * @return UserInterface
      */
     public function getUser()
@@ -103,16 +106,20 @@ class Authorization
                     $user = $this->login->getUser($requestToken);
                     $this->user = $class::findOne(['email' => $user->getUsername()]);
                     $this->user->trigger('onActivity');
+
+                    return $this->user;
                 } catch (\Exception $le) {
-                    return null;
+                    // Not a regular user
                 }
+            }
+
+            // API tokens may contain special characters and will be urlencoded when sent through curl
+            $requestToken = urldecode($requestToken);
+            $systemToken = $this->wConfig()->getConfig()->get('Application.Acl.Token');
+            if ($systemToken && $systemToken == $requestToken) {
+                $this->user = new SystemApiToken();
             } else {
-                $systemToken = $this->wConfig()->getConfig()->get('Application.Acl.Token');
-                if ($systemToken && $systemToken == $requestToken) {
-                    $this->user = new SystemApiToken();
-                } else {
-                    $this->user = ApiToken::findOne(['token' => $requestToken]);
-                }
+                $this->user = ApiToken::findOne(['token' => $requestToken]);
             }
         }
 

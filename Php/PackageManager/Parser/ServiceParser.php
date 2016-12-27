@@ -59,10 +59,6 @@ class ServiceParser extends AbstractParser
                     $definition['authorization'] = $definition['public'] ? false : $serviceMethod->getAuthorization();
                 }
 
-                if (!$definition['public']) {
-                    $definition['headers'][] = $this->headerApiToken;
-                }
-
                 if ($definition['authorization']) {
                     $definition['headers'][] = $this->headerAuthorizationToken;
                 }

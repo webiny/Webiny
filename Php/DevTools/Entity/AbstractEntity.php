@@ -127,7 +127,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     }
 
     /**
-     * Find one recotd by given conditions
+     * Find one record by given conditions
      *
      * @param array $conditions
      * @param array $options
@@ -139,7 +139,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         // If ID was passed, then we check the cache. If we got something from it, then
         // we can use that entity because there cannot be two entities with the same ID.
         $id = $conditions['id'] ?? null;
-        if ($id) {
+        if ($id && is_string($id)) {
             $instance = static::entity()->get(get_called_class(), $id);
             if ($instance) {
                 return $instance;
