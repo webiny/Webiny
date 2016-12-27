@@ -37,6 +37,8 @@ class SmartyExtension extends AbstractSmartyExtension
         $env = $this->wConfig()->get('Application.Environment', 'production');
         $webPath = $this->wConfig()->getConfig()->get('Application.WebPath');
         $apiPath = $this->wConfig()->getConfig()->get('Application.ApiPath');
+        $assetsCssPath = $this->wConfig()->getConfig()->get('Application.CssPath');
+        $assetsJsPath = $this->wConfig()->getConfig()->get('Application.JsPath');
         $jsConfig = $this->wConfig()->getConfig()->get('Js', new ConfigObject())->toArray();
 
         $appsHelper = new Apps();
@@ -68,13 +70,13 @@ class SmartyExtension extends AbstractSmartyExtension
 
         foreach ($meta['assets']['js'] as $file) {
             if ($this->str($file)->contains('/vendors')) {
-                $jsPath = $file;
+                $jsPath = $assetsJsPath . $file;
             }
         }
 
         foreach ($meta['assets']['css'] as $file) {
             if ($this->str($file)->contains('/vendors')) {
-                $cssPath = $file;
+                $cssPath = $assetsCssPath . $file;
             }
         }
 
@@ -87,6 +89,8 @@ class SmartyExtension extends AbstractSmartyExtension
         var webinyEnvironment = '{$env}';
         var webinyWebPath = '{$webPath}';
         var webinyApiPath = '{$apiPath}';
+        var webinyCssPath = '{$assetsCssPath}';
+        var webinyJsPath = '{$assetsJsPath}';
         var webinyConfig = {$config};
         var webinyMeta = {$appsMeta};
     </script>

@@ -105,8 +105,11 @@ class Authorization
                 try {
                     $user = $this->login->getUser($requestToken);
                     $this->user = $class::findOne(['email' => $user->getUsername()]);
-                    $this->user->trigger('onActivity');
 
+                    if ($this->user) {
+                        $this->user->trigger('onActivity');
+                    }
+                    
                     return $this->user;
                 } catch (\Exception $le) {
                     // Not a regular user

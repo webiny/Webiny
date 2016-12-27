@@ -9,7 +9,7 @@ class TabHeader extends Webiny.Ui.Component {
     }
 
     renderLabel() {
-        return this.props.renderLabel.call(this);
+        return this.props.labelRenderer.call(this);
     }
 }
 
@@ -18,10 +18,10 @@ TabHeader.defaultProps = {
     disabled: false,
     onClick: _.noop,
     icon: null,
-    active: false,
     activeTabClassName: 'active',
     disabledTabClassName: 'disabled',
-    renderLabel() {
+    active: false,
+    labelRenderer() {
         let label = this.props.label;
         const i18n = React.isValidElement(label) && _.get(label, 'type.name') === 'I18N';
         if (_.isString(this.props.label) || i18n) {

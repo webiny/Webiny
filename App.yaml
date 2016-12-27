@@ -91,14 +91,14 @@ Services:
     AnalyticsDb:
         Class: \Webiny\AnalyticsDb\AnalyticsDb
         Arguments:
-            Mongo: @Mongo.Webiny
+            Mongo: "@Mongo.Webiny"
     Hrc:
         Class: \Webiny\Hrc\Hrc
         Arguments:
             CacheRules: []
             CacheStorage:
                 Object: \Webiny\Hrc\CacheStorage\Mongo
-                ObjectArguments: [@Mongo.Webiny]
+                ObjectArguments: ["@Mongo.Webiny"]
             IndexStorage:
                 Object: \Webiny\Hrc\IndexStorage\Mongo
-                ObjectArguments: [@Mongo.Webiny]
+                ObjectArguments: ["@Mongo.Webiny"]

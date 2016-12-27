@@ -13,7 +13,7 @@ class Tabs extends Webiny.Ui.Component {
         this.tabsHeader = [];
         this.tabsContent = [];
 
-        this.bindMethods('parseChildren,selectTab,renderTabs,renderTabsHeader,renderTabsContent');
+        this.bindMethods('parseChildren,selectTab,renderTabs,renderHeader,renderContent');
     }
 
     selectTab(index) {
@@ -51,12 +51,12 @@ class Tabs extends Webiny.Ui.Component {
         React.Children.map(props.children, (child, index) => {
             const active = parseInt(state.selected) === index;
 
-            const props = _.merge({}, _.omit(child.props, ['children', 'renderer']), {
+            const headerProps = {
                 key: index,
-                index,
-                active,
-                renderIf: _.get(child.props, 'renderIf', true)
-            });
+                active
+            };
+
+            _.assign(headerProps, _.omit(child.props, ['renderer', 'children', 'tabContentRenderer']));
 
             let tabClicked = (e) => {
                 // Pass instance of Tabs, index clicked and event.
@@ -67,31 +67,40 @@ class Tabs extends Webiny.Ui.Component {
             };
 
             this.tabsHeader.push(
-                <Tab.Header {..._.omit(props, ['alwaysRender'])} onClick={tabClicked}/>
+                <Tab.Header {...headerProps} onClick={tabClicked}/>
             );
+
+            const contentProps = {
+                key: index,
+                active
+            };
+            _.assign(contentProps, _.omit(child.props, ['renderer', 'tabContentRenderer']));
+            if (_.has(child.props, 'tabContentRenderer')) {
+                contentProps.renderer = child.props.tabContentRenderer;
+            }
             this.tabsContent.push(
-                <Tab.Content {..._.omit(props, ['onClick', 'icon', 'label', 'renderer'])}>{child.props.children}</Tab.Content>
+                <Tab.Content {...contentProps}/>
             );
         });
     }
 
     renderTabs() {
-        return this.props.renderTabs.call(this);
+        return this.props.tabsRenderer.call(this);
     }
 
-    renderTabsHeader() {
-        return this.props.renderTabsHeader.call(this);
+    renderHeader() {
+        return this.props.headerRenderer.call(this);
     }
 
-    renderTabsContent() {
-        return this.props.renderTabsContent.call(this);
+    renderContent() {
+        return this.props.contentRenderer.call(this);
     }
 }
 
 Tabs.defaultProps = {
     position: 'top', // top, left
     size: 'default',
-    renderTabs() {
+    tabsRenderer() {
         const tabsContainerCss = this.classSet({
             'tabs': true,
             'tabs--navigation-top': this.props.position === 'top',
@@ -106,16 +115,16 @@ Tabs.defaultProps = {
         return (
             <div className={tabsContainerCss}>
                 <div className="tabs__body">
-                    <ul className={this.classSet(tabsNavClasses)}>{this.renderTabsHeader()}</ul>
-                    <div className="tabs__panes">{this.renderTabsContent()}</div>
+                    <ul className={this.classSet(tabsNavClasses)}>{this.renderHeader()}</ul>
+                    <div className="tabs__panes">{this.renderContent()}</div>
                 </div>
             </div>
         );
     },
-    renderTabsHeader() {
+    headerRenderer() {
         return this.tabsHeader;
     },
-    renderTabsContent() {
+    contentRenderer() {
         return this.tabsContent;
     },
     renderer() {
