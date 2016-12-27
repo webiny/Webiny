@@ -1,11 +1,12 @@
 import Webiny from 'Webiny';
-import Container from './ViewSwitcherContainer';
+import ViewSwitcher from './ViewSwitcher';
 import View from './ViewSwitcherView';
 
 class Module extends Webiny.Module {
 
     init() {
-        Webiny.Ui.Components.ViewSwitcher = {Container, View};
+        Webiny.Ui.Components.ViewSwitcher = ViewSwitcher;
+        ViewSwitcher.View = View;
     }
 }
 

@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-class ViewSwitcherContainer extends Webiny.Ui.Component {
+class ViewSwitcher extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
 
@@ -62,7 +62,7 @@ class ViewSwitcherContainer extends Webiny.Ui.Component {
     }
 }
 
-ViewSwitcherContainer.defaultProps = {
+ViewSwitcher.defaultProps = {
     renderer() {
         return (
             <webiny-view-switcher>{React.Children.map(this.props.children, this.renderView)}</webiny-view-switcher>
@@ -70,4 +70,4 @@ ViewSwitcherContainer.defaultProps = {
     }
 };
 
-export default ViewSwitcherContainer;
+export default ViewSwitcher;

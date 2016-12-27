@@ -45,7 +45,7 @@ ApiTokensList.defaultProps = {
         }
 
         return (
-            <Ui.ViewSwitcher.Container>
+            <Ui.ViewSwitcher>
                 <Ui.ViewSwitcher.View view="tokensListView" defaultView>
                     {showView => (
                         <Ui.View.List>
@@ -128,7 +128,7 @@ ApiTokensList.defaultProps = {
                 <Ui.ViewSwitcher.View view="tokenModalView" modal>
                     {(showView, data) => <ApiTokenModalForm {...{showView, data}} />}
                 </Ui.ViewSwitcher.View>
-            </Ui.ViewSwitcher.Container>
+            </Ui.ViewSwitcher>
         );
     }
 };
