@@ -29,6 +29,7 @@ Field.defaultProps = {
     alignCenterClass: 'text-center',
     route: null,
     params: null,
+    hide: false,
     renderer() {
         let content = _.get(this.props.data, this.props.name);
         if (_.isNil(content)) {

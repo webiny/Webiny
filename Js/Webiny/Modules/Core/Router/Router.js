@@ -227,6 +227,8 @@ class Router {
     }
 
     goToUrl(url, replace = false, options = {}) {
+        // Strip app URL if present
+        url = url.replace(this.appUrl, '');
         if (url.indexOf(this.baseUrl) !== 0) {
             url = this.baseUrl + url;
         }

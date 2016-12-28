@@ -6,7 +6,7 @@ class RowDetailsField extends Field {
 }
 
 RowDetailsField.defaultProps = _.merge({}, Field.defaultProps, {
-    hide: () => false,
+    hide: false,
     renderer() {
         let onClick = this.props.actions.hideRowDetails;
         let className = 'expand close';

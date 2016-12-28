@@ -75,9 +75,8 @@ class ApiContainer extends BaseContainer {
         }
 
         this.request = this.api.setQuery(query).execute().then(apiResponse => {
-            const data = {loading: false};
+            const data = apiResponse.getData();
             if (!apiResponse.isError() && !apiResponse.isAborted()) {
-                _.merge(data, apiResponse.getData());
                 if (this.props.prepareLoadedData) {
                     data.list = this.props.prepareLoadedData(data.list);
                 }
@@ -88,7 +87,7 @@ class ApiContainer extends BaseContainer {
             }
 
             if (this.isMounted()) {
-                this.setState(data);
+                this.setState(_.merge({loading: false}, data));
             }
 
             return data;
