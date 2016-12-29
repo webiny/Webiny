@@ -18,7 +18,7 @@ MultiAction.defaultProps = {
     onAction: _.noop,
     download: null,
     renderer() {
-        if (!this.props.data.size && !this.props.allowEmpty) {
+        if (!this.props.data.length && !this.props.allowEmpty) {
             return <Ui.Link onClick={_.noop}>{this.props.label}</Ui.Link>;
         }
 

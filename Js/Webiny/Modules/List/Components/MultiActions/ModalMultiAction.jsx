@@ -21,7 +21,7 @@ ModalMultiAction.defaultProps = {
         const modal = this.props.children.call(this, this.props.data, this.props.actions, modalActions);
 
         const onAction = () => {
-            if (this.props.data.size) {
+            if (this.props.data.length) {
                 this.refs.dialog.show();
             }
         };

@@ -12,6 +12,7 @@ class Table extends Webiny.Ui.Component {
         this.footerElement = null;
         this.emptyElement = null;
         this.headers = [];
+        this.rows = {};
 
         this.state = {
             selectAll: false,
@@ -20,6 +21,7 @@ class Table extends Webiny.Ui.Component {
         };
 
         this.bindMethods(
+            'attachToTable',
             'prepareChildren',
             'prepareChild',
             'renderRow',
@@ -46,12 +48,22 @@ class Table extends Webiny.Ui.Component {
         this.prepareChildren(props.children);
     }
 
+    attachToTable(row, index) {
+        this.rows[index] = {
+            component: row,
+            data: row.props.data,
+            disabled: row.isDisabled()
+        };
+    }
+
     selectAll(selected) {
-        let data = this.state.selectedRows;
+        let data = [];
         if (selected) {
-            data = new Set(this.props.data);
-        } else {
-            data.clear();
+            Object.values(this.rows).map(row => {
+                if (!row.disabled) {
+                    data.push(row.data);
+                }
+            });
         }
 
         this.setState({
@@ -67,9 +79,9 @@ class Table extends Webiny.Ui.Component {
     onSelect(data, selected) {
         const selectedRows = this.state.selectedRows;
         if (selected) {
-            selectedRows.add(data);
+            selectedRows.push(data);
         } else {
-            selectedRows.delete(data);
+            selectedRows.splice(_.findIndex(selectedRows, data), 1);
         }
         this.setState({selectedRows});
         this.props.onSelect(selectedRows);
@@ -163,12 +175,13 @@ class Table extends Webiny.Ui.Component {
         const props = _.omit(element.props, ['children']);
         _.assign(props, {
             table: this,
+            attachToTable: this.attachToTable,
             index,
             key,
             data,
             fieldsCount: this.headers.length + (this.props.onSelect ? 1 : 0),
             expanded: this.state.expandedRows.indexOf(index) > -1,
-            selected: this.state.selectedRows.has(data),
+            selected: _.find(this.state.selectedRows, {id: data.id}) ? true : false,
             sorters: _.clone(this.props.sorters),
             actions: _.assign({}, this.props.actions, {
                 showRowDetails: this.showRowDetails,
@@ -197,7 +210,7 @@ Table.defaultProps = {
     data: [],
     type: 'simple',
     onSelect: null,
-    selectedRows: new Set(),
+    selectedRows: [],
     sorters: {},
     showHeader: true,
     className: null,

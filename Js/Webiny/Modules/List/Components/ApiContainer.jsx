@@ -58,9 +58,7 @@ class ApiContainer extends BaseContainer {
         if (!props) {
             props = this.props;
         }
-        const selectedRows = this.state.selectedRows;
-        selectedRows.clear();
-        this.setState({selectedRows});
+        this.setState({selectedRows: []});
         const query = _.assign({}, props.query, {
             _sort: Webiny.Router.sortersToString(this.state.sorters),
             _perPage: this.state.perPage,

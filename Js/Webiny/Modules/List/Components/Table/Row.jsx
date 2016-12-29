@@ -7,20 +7,20 @@ class Row extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            selected: false
-        };
-
         this.fields = [];
-        this.actions = null;
+        this.actionsElement = null;
+        this.selectRowElement = null;
         this.data = props.data;
 
-        this.bindMethods('prepareChildren,prepareChild,renderField,onClick');
+        this.bindMethods('prepareChildren,prepareChild,renderField,onClick,isDisabled');
     }
 
     componentWillMount() {
         super.componentWillMount();
         this.prepareChildren(this.props.children);
+        if (this.props.attachToTable) {
+            this.props.attachToTable(this, this.props.index);
+        }
     }
 
     componentWillReceiveProps(props) {
@@ -29,25 +29,40 @@ class Row extends Webiny.Ui.Component {
         this.prepareChildren(props.children);
     }
 
+    isDisabled() {
+        const {disabled} = this.props;
+        return _.isFunction(disabled) ? disabled(this.props.data) : disabled;
+    }
+
     prepareChild(child) {
         if (typeof child !== 'object' || child === null) {
             return child;
         }
 
-        // Table handles Row and Footer
-        if ((child.type === Ui.List.Table.Field || child.type.prototype instanceof Ui.List.Table.Field) && !child.props.hide) {
+        const tableField = child.type === Ui.List.Table.Field || child.type.prototype instanceof Ui.List.Table.Field;
+        if (tableField && !child.props.hide) {
             this.fields.push(child);
-        } else if (child.type === Ui.List.Table.Actions && !child.props.hide) {
-            this.actions = React.cloneElement(child, {
+            return;
+        }
+
+        const tableActions = child.type === Ui.List.Table.Actions || child.type.prototype instanceof Ui.List.Table.Actions;
+        if (tableActions && !child.props.hide) {
+            this.actionsElement = React.cloneElement(child, {
                 data: this.data,
                 actions: this.props.actions
             });
+            return;
+        }
+
+        const selectRow = child.type === Ui.List.Table.SelectRow || child.type.prototype instanceof Ui.List.Table.SelectRow;
+        if (selectRow) {
+            this.selectRowElement = child;
         }
     }
 
     prepareChildren(children) {
         this.fields = [];
-        this.actions = null;
+        this.actionsElement = null;
 
         if (typeof children !== 'object' || children === null) {
             return children;
@@ -92,12 +107,22 @@ class Row extends Webiny.Ui.Component {
 Row.defaultProps = {
     className: null,
     onClick: _.noop,
+    disabled: false,
     renderer() {
         let select = null;
         if (this.props.onSelect) {
-            select = (
-                <SelectRow value={this.props.selected} onChange={value => this.props.onSelect(this.data, value)}/>
-            );
+            const selectRowProps = {
+                value: this.props.selected,
+                onChange: value => this.props.onSelect(this.props.data, value),
+                data: this.props.data,
+                disabled: this.isDisabled()
+            };
+
+            if (!this.selectRowElement) {
+                this.selectRowElement = <SelectRow {...selectRowProps}/>;
+            }
+
+            select = React.cloneElement(this.selectRowElement, selectRowProps);
         }
 
         let classes = this.props.className;
@@ -109,7 +134,7 @@ Row.defaultProps = {
             <tr className={this.classSet(classes)} onClick={this.onClick}>
                 {select}
                 {this.fields.map(this.renderField)}
-                {this.actions ? <td className="text-center">{this.actions}</td> : null}
+                {this.actionsElement ? <td className="text-center">{this.actionsElement}</td> : null}
             </tr>
         );
     }

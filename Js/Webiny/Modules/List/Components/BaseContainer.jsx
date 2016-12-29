@@ -17,7 +17,7 @@ class BaseContainer extends Webiny.Ui.Component {
             searchQuery: null,
             searchOperator: props.searchOperator || 'or',
             searchFields: props.searchFields || null,
-            selectedRows: new Set()
+            selectedRows: []
         };
 
         this.filtersElement = null;

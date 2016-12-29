@@ -9,13 +9,13 @@ class DeleteMultiAction extends Webiny.Ui.Component {
     }
 
     formatMessage() {
-        return this.props.message.replace('{count}', this.props.data.size);
+        return this.props.message.replace('{count}', this.props.data.length);
     }
 
     delete(modalActions) {
-        return this.props.actions.api.post('delete', {ids: _.map(Array.from(this.props.data), 'id')}).then(res => {
+        return this.props.actions.api.post('delete', {ids: _.map(this.props.data, 'id')}).then(res => {
             if (!res.isError()) {
-                Webiny.Growl.success(this.props.data.size + ' records deleted successfully!');
+                Webiny.Growl.success(this.props.data.length + ' records deleted successfully!');
                 this.props.actions.reload();
             } else {
                 Webiny.Growl.danger(res.getError(), 'Delete failed', true);
