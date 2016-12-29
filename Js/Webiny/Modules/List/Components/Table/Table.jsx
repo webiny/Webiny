@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
-import SelectAll from './SelectAll';
 const Ui = Webiny.Ui.Components;
+import SelectRowField from './Fields/SelectRowField';
 
 class Table extends Webiny.Ui.Component {
 
@@ -8,6 +8,7 @@ class Table extends Webiny.Ui.Component {
         super(props);
 
         this.rowElement = null;
+        this.selectAllRowsElement = null;
         this.rowDetailsElement = null;
         this.footerElement = null;
         this.emptyElement = null;
@@ -49,19 +50,15 @@ class Table extends Webiny.Ui.Component {
     }
 
     attachToTable(row, index) {
-        this.rows[index] = {
-            component: row,
-            data: row.props.data,
-            disabled: row.isDisabled()
-        };
+        this.rows[index] = row;
     }
 
     selectAll(selected) {
         let data = [];
         if (selected) {
             Object.values(this.rows).map(row => {
-                if (!row.disabled) {
-                    data.push(row.data);
+                if (!row.isDisabled()) {
+                    data.push(row.props.data);
                 }
             });
         }
@@ -125,12 +122,20 @@ class Table extends Webiny.Ui.Component {
                         headerProps.renderer = rowChild.props.headerRenderer;
                     }
                     this.headers.push(headerProps);
+
+                    if (rowChild.type === Ui.List.Table.SelectRowField || rowChild.type.prototype instanceof Ui.List.Table.SelectRowField) {
+                        this.selectAllRowsElement = true;
+                    }
                 }
 
                 if (rowChild.type === Ui.List.Table.Actions && !rowChild.props.hide) {
                     this.headers.push({});
                 }
             });
+
+            if (this.props.onSelect && !this.selectAllRowsElement) {
+                this.headers.splice(0, 0, {renderer: SelectRowField.defaultProps.headerRenderer});
+            }
         } else if (child.type === Ui.List.Table.Footer) {
             this.footerElement = child;
         } else if (child.type === Ui.List.Table.Empty) {
@@ -187,7 +192,9 @@ class Table extends Webiny.Ui.Component {
                 showRowDetails: this.showRowDetails,
                 hideRowDetails: this.hideRowDetails,
                 toggleRowDetails: this.toggleRowDetails
-            })
+            }),
+            onSelect: this.props.onSelect ? this.onSelect : null,
+            onSelectAll: this.selectAll
         });
 
         if (this.props.onSelect) {
@@ -200,6 +207,8 @@ class Table extends Webiny.Ui.Component {
     renderHeader(header, i) {
         header.key = i;
         header.onSort = this.onSort;
+        header.allRowsSelected = this.state.selectAll;
+        header.onSelectAll = this.selectAll;
         return (
             <Ui.List.Table.Header {...header}/>
         );
@@ -225,13 +234,6 @@ Table.defaultProps = {
             return this.emptyElement || <Ui.List.Table.Empty/>;
         }
 
-        let selectAll = null;
-        if (this.props.onSelect) {
-            selectAll = (
-                <SelectAll value={this.state.selectAll} onChange={this.selectAll}/>
-            );
-        }
-
         const rows = [];
         this.props.data.map((data, index) => {
             rows.push(this.renderRow(data, data.id || index, this.rowElement, data.id || index));
@@ -245,7 +247,6 @@ Table.defaultProps = {
             header = (
                 <thead>
                 <tr>
-                    {selectAll}
                     {this.headers.map(this.renderHeader)}
                 </tr>
                 </thead>

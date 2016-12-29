@@ -46,7 +46,8 @@ class StaticContainer extends BaseContainer {
             perPage: this.state.perPage,
             searchQuery: this.state.searchQuery,
             searchOperator: this.state.searchOperator,
-            searchFields: this.state.searchFields
+            searchFields: this.state.searchFields,
+            selectedRows: []
         });
     }
 }

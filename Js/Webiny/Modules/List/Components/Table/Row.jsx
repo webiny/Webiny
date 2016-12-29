@@ -1,5 +1,5 @@
 import Webiny from 'Webiny';
-import SelectRow from './SelectRow';
+import SelectRowField from './Fields/SelectRowField';
 const Ui = Webiny.Ui.Components;
 
 class Row extends Webiny.Ui.Component {
@@ -27,6 +27,9 @@ class Row extends Webiny.Ui.Component {
         super.componentWillReceiveProps(props);
         this.data = props.data;
         this.prepareChildren(props.children);
+        if (this.props.attachToTable) {
+            this.props.attachToTable(this, props.index);
+        }
     }
 
     isDisabled() {
@@ -41,6 +44,11 @@ class Row extends Webiny.Ui.Component {
 
         const tableField = child.type === Ui.List.Table.Field || child.type.prototype instanceof Ui.List.Table.Field;
         if (tableField && !child.props.hide) {
+            const selectRow = child.type === SelectRowField || child.type.prototype instanceof SelectRowField;
+            if (selectRow) {
+                this.selectRowElement = true;
+            }
+
             this.fields.push(child);
             return;
         }
@@ -51,12 +59,6 @@ class Row extends Webiny.Ui.Component {
                 data: this.data,
                 actions: this.props.actions
             });
-            return;
-        }
-
-        const selectRow = child.type === Ui.List.Table.SelectRow || child.type.prototype instanceof Ui.List.Table.SelectRow;
-        if (selectRow) {
-            this.selectRowElement = child;
         }
     }
 
@@ -78,7 +80,11 @@ class Row extends Webiny.Ui.Component {
             sorted: this.props.sorters[props.name] || null,
             actions: this.props.actions,
             rowIndex: this.props.index,
-            rowDetailsExpanded: this.props.expanded
+            rowDetailsExpanded: this.props.expanded,
+            rowSelected: this.props.selected,
+            rowDisabled: this.isDisabled(),
+            onSelect: value => this.props.onSelect(this.props.data, value),
+            onSelectAll: value => this.props.onSelectAll(value)
         });
 
         // Filter Field children
@@ -109,20 +115,8 @@ Row.defaultProps = {
     onClick: _.noop,
     disabled: false,
     renderer() {
-        let select = null;
-        if (this.props.onSelect) {
-            const selectRowProps = {
-                value: this.props.selected,
-                onChange: value => this.props.onSelect(this.props.data, value),
-                data: this.props.data,
-                disabled: this.isDisabled()
-            };
-
-            if (!this.selectRowElement) {
-                this.selectRowElement = <SelectRow {...selectRowProps}/>;
-            }
-
-            select = React.cloneElement(this.selectRowElement, selectRowProps);
+        if (this.props.onSelect && !this.selectRowElement) {
+            this.fields.splice(0, 0, <SelectRowField/>);
         }
 
         let classes = this.props.className;
@@ -132,7 +126,6 @@ Row.defaultProps = {
 
         return (
             <tr className={this.classSet(classes)} onClick={this.onClick}>
-                {select}
                 {this.fields.map(this.renderField)}
                 {this.actionsElement ? <td className="text-center">{this.actionsElement}</td> : null}
             </tr>
