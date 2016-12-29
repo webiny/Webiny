@@ -108,7 +108,15 @@ class Table extends Webiny.Ui.Component {
             // Parse Row fields to extract headers
             this.headers = [];
             React.Children.map(child.props.children, rowChild => {
-                if ((rowChild.type === Ui.List.Table.Field || rowChild.type.prototype instanceof Ui.List.Table.Field) && !rowChild.props.hide) {
+                if ((rowChild.type === Ui.List.Table.Field || rowChild.type.prototype instanceof Ui.List.Table.Field)) {
+                    if (rowChild.type === SelectRowField || rowChild.type.prototype instanceof SelectRowField) {
+                        this.selectAllRowsElement = true;
+                    }
+
+                    if (rowChild.props.hide) {
+                        return;
+                    }
+
                     const headerProps = _.omit(rowChild.props, ['renderer', 'headerRenderer']);
                     headerProps.sortable = headerProps.sort || false;
                     headerProps.sorted = this.tempProps.sorters[headerProps.sort] || 0;
@@ -122,10 +130,6 @@ class Table extends Webiny.Ui.Component {
                         headerProps.renderer = rowChild.props.headerRenderer;
                     }
                     this.headers.push(headerProps);
-
-                    if (rowChild.type === Ui.List.Table.SelectRowField || rowChild.type.prototype instanceof Ui.List.Table.SelectRowField) {
-                        this.selectAllRowsElement = true;
-                    }
                 }
 
                 if (rowChild.type === Ui.List.Table.Actions && !rowChild.props.hide) {

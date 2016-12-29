@@ -43,10 +43,13 @@ class Row extends Webiny.Ui.Component {
         }
 
         const tableField = child.type === Ui.List.Table.Field || child.type.prototype instanceof Ui.List.Table.Field;
-        if (tableField && !child.props.hide) {
-            const selectRow = child.type === SelectRowField || child.type.prototype instanceof SelectRowField;
-            if (selectRow) {
+        if (tableField) {
+            if (child.type === SelectRowField || child.type.prototype instanceof SelectRowField) {
                 this.selectRowElement = true;
+            }
+            
+            if (child.props.hide) {
+                return;    
             }
 
             this.fields.push(child);
