@@ -16,6 +16,7 @@ use Apps\Core\Php\PackageManager\App;
 use Apps\Core\Php\PackageManager\AppScanner;
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\Entity\Entity;
+use Webiny\Component\Http\Http;
 use Webiny\Component\Http\Response;
 use Webiny\Component\Mongo\Mongo;
 use Webiny\Component\Security\Security;
@@ -60,13 +61,13 @@ class Bootstrap
         // set error handler
         $this->errorHandler = new ErrorHandler();
 
-
         // Set component configs
         $emptyConfig = new ConfigObject();
         Mongo::setConfig($this->wConfig()->get('Mongo', $emptyConfig));
         Entity::setConfig($this->wConfig()->get('Entity', $emptyConfig));
         Security::setConfig($this->wConfig()->get('Security', $emptyConfig));
         Storage::setConfig($this->wConfig()->get('Storage', $emptyConfig));
+        Http::setConfig($this->wConfig()->get('Http', $emptyConfig));
 
         // scan all components to register routes and event handlers
         AppScanner::getInstance();
