@@ -20,9 +20,14 @@ RowDetailsField.defaultProps = _.merge({}, Field.defaultProps, {
             className
         };
 
+        let content = <Webiny.Ui.Components.Link {...props}/>;
+        if ((_.isFunction(this.props.hide) && this.props.hide(this.props.data)) || this.props.hide) {
+            content = null;
+        }
+
         return (
             <td className={this.getTdClasses('row-details')}>
-                {this.props.hide(this.props.data) ? null : <Webiny.Ui.Components.Link {...props}/>}
+                {content}
             </td>
         );
     }
