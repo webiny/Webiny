@@ -15,7 +15,9 @@ class Link extends Webiny.Ui.Component {
         props.href = 'javascript:void(0)';
 
         if (!props.disabled) {
-            if (props.url) {
+            if (props.mailTo) {
+                props.href = 'mailto:' + props.mailTo
+            } else if (props.url) {
                 // Let's ensure we have at least http:// specified - for cases where users just type www...
                 if (!/^(f|ht)tps?:\/\//i.test(props.url) && !props.url.startsWith('/')) {
                     props.url = 'http://' + props.url;
@@ -103,6 +105,7 @@ Link.defaultProps = {
     type: null,
     size: null,
     url: null,
+    mailTo: null,
     title: '',
     route: null,
     preventScroll: false,

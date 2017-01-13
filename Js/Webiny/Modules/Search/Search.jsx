@@ -159,7 +159,9 @@ class Search extends Webiny.Ui.FormComponent {
             this.setState({loading: true});
             this.api.setQuery(_.merge({_searchQuery: this.state.query}, this.filters)).execute().then(apiResponse => {
                 const data = apiResponse.getData();
-                this.setState({options: _.get(data, 'list', data), loading: false});
+                this.setState({options: _.get(data, 'list', data), loading: false}, () => {
+                    this.props.onLoadOptions(this.state.options);
+                });
             });
         }, this.props.allowFreeInput ? 300 : 500);
     }
@@ -362,6 +364,7 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     onEnter: _.noop,
     onChange: _.noop,
     onReset: _.noop,
+    onLoadOptions: _.noop,
     onSearch: _.noop,
     inputIcon: 'icon-search',
     loadingIcon: 'icon-search',
