@@ -614,10 +614,8 @@ class FormContainer extends Webiny.Ui.Component {
 
     __focusTab(input) {
         const inputTabs = input.props.__tabs;
-        if (inputTabs) {
-            if (inputTabs.tab >= 0) {
-                this.tabs[inputTabs.id].selectTab(inputTabs.tab);
-            }
+        if (inputTabs && inputTabs.tab >= 0) {
+            this.tabs[inputTabs.id].selectTab(inputTabs.tab);
         }
     }
 
