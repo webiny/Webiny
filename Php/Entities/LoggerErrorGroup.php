@@ -33,7 +33,7 @@ class LoggerErrorGroup extends AbstractEntity
         $this->attr('error')->char()->setToArrayDefault();
         $this->attr('errorHash')->char();
 
-        $this->attr('type')->char()->setToArrayDefault()->setValidators('in:api:js');
+        $this->attr('type')->char()->setToArrayDefault()->setValidators('in:api:js:php');
 
         $this->attr('errorEntries')->one2many('errorGroup')->setEntity('\Apps\Core\Php\Entities\LoggerEntry');
 
