@@ -30,7 +30,10 @@ class Alignment extends BasePlugin {
                     <actions>
                         {buttons.map(b => {
                             const block = this.getStartBlock();
-                            const align = block.getData().get('align');
+                            let align = null;
+                            if (block) {
+                                align = block.getData().get('align');
+                            }
 
                             const props = {
                                 icon: 'fa-align-' + b.align,
