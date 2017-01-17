@@ -306,7 +306,8 @@
     }
   }
   .tile-header {
-    .ico, .title {
+    //.ico, .title {
+    .ico{
       float: left;
       padding: 5px;
     }
