@@ -11,7 +11,12 @@ use Webiny\Component\Storage\File\File as StorageFile;
 /**
  * Class Image
  *
- * @property string $imageSize
+ * @property string  $imageSize
+ * @property integer $width
+ * @property integer $height
+ * @property float   $aspectRatio
+ * @property bool    $isPortrait
+ * @property bool    $isLandscape
  *
  * @package Apps\Core\Php\Entities
  */
@@ -25,6 +30,7 @@ class Image extends File
     {
         parent::__construct();
         $this->attr('imageSize')->char()->setDefaultValue('original');
+
         $this->getAttribute('src')->onGet(function ($value, ...$dimensions) {
             if (!$dimensions) {
                 return $value;
@@ -40,6 +46,25 @@ class Image extends File
             }
 
             return $urls;
+        });
+
+        $this->attr('width')->integer()->setSkipOnPopulate();
+        $this->attr('height')->integer()->setSkipOnPopulate();
+
+        $this->attr('aspectRatio')->dynamic(function () {
+            if ($this->height) {
+                return $this->width / $this->height;
+            }
+
+            return 0;
+        });
+
+        $this->attr('isPortrait')->dynamic(function () {
+            return $this->aspectRatio <= 1;
+        });
+
+        $this->attr('isLandscape')->dynamic(function () {
+            return $this->aspectRatio > 1;
         });
     }
 
@@ -68,13 +93,17 @@ class Image extends File
      */
     public function save($compress = true)
     {
-        if ($compress) {
-            $content = $this->str($this->src);
-            $newContent = $content->startsWith('data:');
+        $content = $this->str($this->src);
+        $newContent = $content->startsWith('data:');
 
-            if ($newContent) {
-                $parts = $content->explode(',');
-                $image = ImageLoader::load($parts->last()->base64Decode()->val());
+        if ($newContent) {
+            $parts = $content->explode(',');
+            $image = ImageLoader::load($parts->last()->base64Decode()->val());
+            $dimensions = $image->getSize();
+            $this->width = $dimensions['width'];
+            $this->height = $dimensions['height'];
+
+            if ($compress) {
                 // Format is one of these strings: jpg, jpeg, png, gif
                 // We read it from `type` attribute which is populated by HTML5 API when selecting images for upload
                 try {
@@ -187,6 +216,8 @@ class Image extends File
         $newSize->type = $this->type;
         $newSize->ext = $this->ext;
         $newSize->imageSize = $size;
+        $newSize->width = (int)$width;
+        $newSize->height = (int)$height;
         $newSize->save();
 
         return $extFile->getUrl();
