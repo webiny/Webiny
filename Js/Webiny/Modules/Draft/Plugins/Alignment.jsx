@@ -1,34 +1,11 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
-import EntityPlugin from './../BasePlugins/EntityPlugin';
-import Utils from './../Utils';
+import BasePlugin from './../BasePlugins/BasePlugin';
 
-class Alignment extends EntityPlugin {
+class Alignment extends BasePlugin {
     constructor(config) {
         super(config);
         this.name = 'alignment';
-        this.entity = 'alignment';
-    }
-
-    createEntity(align) {
-        const entityKey = Draft.Entity.create(this.entity, 'MUTABLE', {align});
-        this.insertEntity(entityKey);
-    }
-
-    isActive(align) {
-        if (this.editor.getReadOnly()) {
-            return false;
-        }
-
-        const editorState = this.editor.getEditorState();
-        const entityKey = Utils.getEntityKeyForSelection(editorState.getCurrentContent(), editorState.getSelection());
-        if (!entityKey) {
-            return false;
-        }
-
-        const entity = Draft.Entity.get(entityKey);
-        const entityData = entity.get('data');
-        return entityKey && entity.getType().toUpperCase() === this.entity.toUpperCase() && entityData.align === align;
     }
 
     getEditConfig() {
@@ -52,12 +29,24 @@ class Alignment extends EntityPlugin {
                 return (
                     <actions>
                         {buttons.map(b => {
+                            const block = this.getStartBlock();
+                            let align = null;
+                            if (block) {
+                                align = block.getData().get('align');
+                            }
+
                             const props = {
                                 icon: 'fa-align-' + b.align,
                                 tooltip: b.tooltip,
                                 disabled: this.isDisabled(),
-                                onClick: this.isActive(b.align) ? this.removeEntity.bind(this) : () => this.createEntity(b.align),
-                                type: this.isActive(b.align) ? 'primary' : 'default',
+                                onClick: () => {
+                                    if (align && align === b.align) {
+                                        this.editor.updateBlockData(block, {align: null});
+                                    } else {
+                                        this.editor.updateBlockData(block, {align: b.align});
+                                    }
+                                },
+                                type: align && align === b.align ? 'primary' : 'default',
                                 key: b.align,
                                 plugin: this
                             };
@@ -66,28 +55,12 @@ class Alignment extends EntityPlugin {
                     </actions>
                 );
             },
-            decorators: [
-                {
-                    strategy: (contentBlock, callback) => {
-                        contentBlock.findEntityRanges(
-                            (character) => {
-                                const entityKey = character.getEntity();
-                                if (entityKey) {
-
-                                    const entity = Draft.Entity.get(entityKey);
-                                    return entity && entity.getType() === this.entity;
-                                }
-                                return false;
-                            },
-                            callback
-                        );
-                    },
-                    component: (props) => {
-                        const data = Draft.Entity.get(props.entityKey).getData();
-                        return <div style={{textAlign: data.align}}>{props.children}</div>;
-                    }
+            blockStyleFn: (contentBlock) => {
+                const data = contentBlock.getData().toJS();
+                if (data.align) {
+                    return 'alignment--' + data.align;
                 }
-            ]
+            }
         };
     }
 }
