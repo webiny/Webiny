@@ -77,9 +77,9 @@
   display: inline-block;
   vertical-align: middle;
   float: left;
-  max-width: 75%;
+  //max-width: 75%; // @sven: commented this out to have full with on the title on system monitor dashboard
   @media (min-width: 486px){
-    max-width: 50%;
+    //max-width: 50%; // same as above
   }
 }
 .block-title-light {
