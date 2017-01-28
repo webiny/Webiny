@@ -141,7 +141,6 @@ i18n.initialize = function setLanguage(language) {
         return Promise.resolve();
     }
 
-    console.log('diff key, lets get');
     // If we have a different cache key (or no cache key at all), we must fetch translations from server
     return this.api.setQuery({language: this.language}).execute().then(apiResponse => {
         localStorage[`Webiny.i18n.language`] = this.language;
