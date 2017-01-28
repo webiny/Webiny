@@ -43,13 +43,18 @@ function replaceVariables(text, values) {
 }
 
 const i18n = function i18n(key, text, variables) {
-    const output = i18n.getTranslation(key) || text;
-    return replaceVariables(output, variables);
+    let output = i18n.getTranslation(key) || text;
+    output = replaceVariables(output, variables);
+    i18n.parsers.forEach(parser => {
+        output = parser(output, key, text, variables);
+    });
+    return output;
 };
 
 i18n.language = '';
 i18n.api = null;
 i18n.cacheKey = null;
+i18n.parsers = [];
 
 /**
  * Used for rendering text in DOM
@@ -111,6 +116,16 @@ i18n.getLanguage = function getLanguage() {
     return this.language;
 };
 
+i18n.addParser = function addParser(callback) {
+    this.parsers.push(callback);
+    return this;
+};
+
+i18n.removeParsers = function removeParsers() {
+    this.parsers = [];
+    return this;
+};
+
 i18n.setCacheKey = function setCacheKey(cacheKey) {
     this.cacheKey = cacheKey;
     return this;
@@ -126,8 +141,9 @@ i18n.initialize = function setLanguage(language) {
         return Promise.resolve();
     }
 
+    console.log('diff key, lets get');
     // If we have a different cache key (or no cache key at all), we must fetch translations from server
-    return this.api.get(null, {language: this.language}).then(apiResponse => {
+    return this.api.setQuery({language: this.language}).execute().then(apiResponse => {
         localStorage[`Webiny.i18n.language`] = this.language;
         localStorage[`Webiny.i18n.cacheKey`] = apiResponse.getData('cacheKey', null);
         localStorage[`Webiny.i18n.translations`] = JSON.stringify(apiResponse.getData('translations'));
