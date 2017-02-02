@@ -90,7 +90,8 @@ class App extends AbstractPackage
             $storage = $this->wStorage('DevBuild');
         }
 
-        $files = new Directory($this->getName(), $storage, 1, '*meta.json');
+        $filter = $jsApp ? $this->name . '_' . $jsApp . '\/meta\.json' : $this->name . '_\S+\/meta\.json';
+        $files = new Directory('', $storage, 1, '/' . $filter . '/');
         $jsAppsMeta = [];
         /* @var $file File */
         foreach ($files as $file) {
