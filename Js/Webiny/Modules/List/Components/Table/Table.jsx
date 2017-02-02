@@ -103,17 +103,18 @@ class Table extends Webiny.Ui.Component {
         }
 
         // Table handles Row and Footer
-        if (child.type === Ui.List.Table.Row) {
+        if (Webiny.isElementOfType(child, Ui.List.Table.Row)) {
             this.rowElement = child;
             // Parse Row fields to extract headers
             this.headers = [];
             React.Children.map(child.props.children, rowChild => {
-                if ((rowChild.type === Ui.List.Table.Field || rowChild.type.prototype instanceof Ui.List.Table.Field)) {
-                    if (rowChild.type === SelectRowField || rowChild.type.prototype instanceof SelectRowField) {
+                if (Webiny.isElementOfType(rowChild, Ui.List.Table.Field)) {
+                    if (Webiny.isElementOfType(rowChild, SelectRowField)) {
                         this.selectAllRowsElement = true;
                     }
 
-                    if (rowChild.props.hide) {
+                    // Only evaluate `hide` condition if it is a plain value (not a function)
+                    if (!_.isFunction(rowChild.props.hide) && rowChild.props.hide) {
                         return;
                     }
 
@@ -121,7 +122,7 @@ class Table extends Webiny.Ui.Component {
                     headerProps.sortable = headerProps.sort || false;
                     headerProps.sorted = this.tempProps.sorters[headerProps.sort] || 0;
                     headerProps.children = React.Children.map(rowChild.props.children, ch => {
-                        if (ch.type === Ui.List.Table.FieldInfo) {
+                        if (Webiny.isElementOfType(ch, Ui.List.Table.FieldInfo)) {
                             return ch;
                         }
                     });
@@ -132,7 +133,7 @@ class Table extends Webiny.Ui.Component {
                     this.headers.push(headerProps);
                 }
 
-                if (rowChild.type === Ui.List.Table.Actions && !rowChild.props.hide) {
+                if (Webiny.isElementOfType(rowChild, Ui.List.Table.Actions) && !rowChild.props.hide) {
                     this.headers.push({});
                 }
             });
@@ -140,11 +141,11 @@ class Table extends Webiny.Ui.Component {
             if (this.props.onSelect && !this.selectAllRowsElement) {
                 this.headers.splice(0, 0, {renderer: SelectRowField.defaultProps.headerRenderer});
             }
-        } else if (child.type === Ui.List.Table.Footer) {
+        } else if (Webiny.isElementOfType(child, Ui.List.Table.Footer)) {
             this.footerElement = child;
-        } else if (child.type === Ui.List.Table.Empty) {
+        } else if (Webiny.isElementOfType(child, Ui.List.Table.Empty)) {
             this.emptyElement = child;
-        } else if (child.type === Ui.List.Table.RowDetails) {
+        } else if (Webiny.isElementOfType(child, Ui.List.Table.RowDetails)) {
             this.rowDetailsElement = child;
         }
     }

@@ -1,5 +1,6 @@
 import BasePlugin from './BasePlugin';
 import Utils from './../Utils';
+import Draft from 'draft-js';
 
 class EntityPlugin extends BasePlugin {
     constructor() {

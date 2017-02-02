@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import logo from 'Assets/images/logo.png';
 const Ui = Webiny.Ui.Components;
 
 class Header extends Webiny.Ui.Component {
@@ -23,50 +24,48 @@ class Header extends Webiny.Ui.Component {
     }
 }
 
-function renderer() {
-    return (
-        <div className="navbar navbar-inverse" role="navigation">
-            <div className="navbar-header">
-                <button type="button" className="nav" data-toggle="xcollapse" data-target=".navbar-collapse">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-                <a href="#" className="search">
-                </a>
-                <a href="#" className="logo">
-                    <img src={Webiny.Assets('Core.Skeleton', 'images/logo.png')} width="62" height="20" alt="Webiny"/>
-                </a>
-
-                <div className="dropdown profile-holder">
-                    <a href="#" className="profile" id="dropdownMenu4" data-toggle="dropdown">
-                        <span className="icon-user icon"></span>
-                        <span className="user">{_.get(this.state.user, 'firstName', '')} {_.get(this.state.user, 'lastName', '')}</span>
+Header.defaultProps = {
+    renderer() {
+        return (
+            <div className="navbar navbar-inverse" role="navigation">
+                <div className="navbar-header">
+                    <button type="button" className="nav" data-toggle="xcollapse" data-target=".navbar-collapse">
+                        <span/>
+                        <span/>
+                        <span/>
+                    </button>
+                    <a href="#" className="search">
+                    </a>
+                    <a href="#" className="logo">
+                        <img src={logo} width="62" height="20" alt="Webiny"/>
                     </a>
 
-                    <div className="drop dropdown-menu" role="menu" aria-labelledby="dropdownMenu4">
-                        <span className="top-arr"></span>
-                        <ul>
-                            <li>
-                                <Ui.Link route="Users.Account">Account preferences</Ui.Link>
-                                <span>Set your account and user preferences </span>
-                            </li>
-                        </ul>
-                        <div className="drop-footer">
-                            <a href="javascript:void(0);" className="logout" onClick={this.logout}>
-                                <span className="icon-sign-out icon-bell icon"></span>
-                                <span>Log out</span>
-                            </a>
+                    <div className="dropdown profile-holder">
+                        <a href="#" className="profile" id="dropdownMenu4" data-toggle="dropdown">
+                            <span className="icon-user icon"/>
+                            <span className="user">{_.get(this.state.user, 'firstName', '')} {_.get(this.state.user, 'lastName', '')}</span>
+                        </a>
+
+                        <div className="drop dropdown-menu" role="menu" aria-labelledby="dropdownMenu4">
+                            <span className="top-arr"/>
+                            <ul>
+                                <li>
+                                    <Ui.Link route="Users.Account">Account preferences</Ui.Link>
+                                    <span>Set your account and user preferences </span>
+                                </li>
+                            </ul>
+                            <div className="drop-footer">
+                                <a href="javascript:void(0);" className="logout" onClick={this.logout}>
+                                    <span className="icon-sign-out icon-bell icon"/>
+                                    <span>Log out</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    );
-}
-
-Header.defaultProps = {
-    renderer
+        );
+    }
 };
 
 export default Header;

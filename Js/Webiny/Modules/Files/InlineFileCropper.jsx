@@ -23,7 +23,11 @@ InlineFileCropper.defaultProps = _.merge({}, FileCropper.defaultProps, {
             <webiny-image-cropper>
                 {props.children}
                 <div className="col-xs-12 no-padding">
-                    <img className="img-cropper" width="100%" src={props.image && props.image.src + this.getCacheBust()}/>
+                    <img
+                        className="img-cropper"
+                        width="100%"
+                        style={{maxWidth: '100%'}}
+                        src={props.image && props.image.src + this.getCacheBust()}/>
                     Cropped image size: <strong>{this.state.width}x{this.state.height}</strong>
                 </div>
                 <div className="col-xs-12">

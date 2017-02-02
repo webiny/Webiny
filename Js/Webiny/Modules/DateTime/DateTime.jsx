@@ -1,4 +1,5 @@
 import DateComponent from './Date';
+import moment from 'moment';
 
 class DateTime extends DateComponent {
 

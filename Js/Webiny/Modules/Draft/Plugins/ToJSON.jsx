@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 import BasePlugin from './../BasePlugins/BasePlugin';
 import Utils from './../Utils';
+const Ui = Webiny.Ui.Components;
 
 const Action = (props) => {
     const click = () => console.log(Utils.editorStateToJSON(props.plugin.editor.getEditorState()));

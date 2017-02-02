@@ -219,7 +219,7 @@ UserPermissionsForm.defaultProps = {
                                                                     <table className="table table-simple no-hover">
                                                                         <thead>
                                                                         <tr>
-                                                                            <th className="text-left" style={{width: 140}}></th>
+                                                                            <th className="text-left" style={{width: 140}}/>
                                                                             <th className="text-left">Method</th>
                                                                         </tr>
                                                                         </thead>

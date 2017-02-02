@@ -3,6 +3,7 @@ import Router from './../Router/Router';
 import Dispatcher from './../Core/Dispatcher';
 import UiDispatcher from './../Core/UiDispatcher';
 import Placeholder from './Placeholder';
+import dynamics from 'dynamics.js';
 
 class RootElement extends View {
 
@@ -13,7 +14,7 @@ class RootElement extends View {
             loading: true
         };
 
-        this.bindMethods('onDidUpdate,checkHash');
+        this.bindMethods('onDidUpdate,checkHash,forceUpdate');
     }
 
     componentDidMount() {
@@ -67,7 +68,11 @@ class RootElement extends View {
 
     render() {
         if (!this.state.loading) {
-            return <Placeholder onDidUpdate={this.onDidUpdate} name="Layout"/>;
+            return (
+                <div>
+                    <Placeholder onDidUpdate={this.onDidUpdate} name="Layout"/>
+                </div>
+            );
         }
         return null;
     }

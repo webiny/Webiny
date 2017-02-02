@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
 import AnimationSets from './AnimationSets';
-const ReactTransitionGroup = React.addons.TransitionGroup;
+import ReactTransitionGroup from 'react-addons-transition-group';
 
 class Container extends Webiny.Ui.Component {
     componentDidMount() {

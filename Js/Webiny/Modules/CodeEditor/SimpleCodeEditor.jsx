@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import CodeMirror from 'codemirror';
 
 class SimpleCodeEditor extends Webiny.Ui.Component {
     constructor(props) {

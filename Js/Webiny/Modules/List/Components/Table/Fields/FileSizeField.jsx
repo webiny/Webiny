@@ -1,3 +1,4 @@
+import filesize from 'filesize';
 import Field from './../Field';
 
 class FileSizeField extends Field {

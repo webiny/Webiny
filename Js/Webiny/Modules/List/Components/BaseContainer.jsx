@@ -262,7 +262,7 @@ class BaseContainer extends Webiny.Ui.Component {
         }
 
         React.Children.map(children, child => {
-            if (child.type === Ui.List.Filters || child.type.prototype instanceof Ui.List.Filters) {
+            if (Webiny.isElementOfType(child, Ui.List.Filters)) {
                 // Need to omit fields that are not actual filters
                 this.filtersElement = React.cloneElement(child, {
                     filters: this.state.filters,
@@ -271,19 +271,19 @@ class BaseContainer extends Webiny.Ui.Component {
             }
 
             const props = _.omit(child.props, ['children', 'key', 'ref']);
-            if (child.type === Ui.List.Table) {
+            if (Webiny.isElementOfType(child, Ui.List.Table)) {
                 this.tableElement = React.cloneElement(child, this.tableProps(props), child.props.children);
             }
 
-            if (child.type === Ui.List.Pagination) {
+            if (Webiny.isElementOfType(child, Ui.List.Pagination)) {
                 this.paginationElement = React.cloneElement(child, this.paginationProps(props), child.props.children);
             }
 
-            if (child.type === Ui.List.Loader) {
+            if (Webiny.isElementOfType(child, Ui.List.Loader)) {
                 this.loaderElement = React.cloneElement(child, {show: this.isLoading()}, child.props.children);
             }
 
-            if (child.type === Ui.List.MultiActions) {
+            if (Webiny.isElementOfType(child, Ui.List.MultiActions)) {
                 this.multiActionsElement = React.cloneElement(child, this.multiActionsProps(props), child.props.children);
             }
         }, this);
@@ -375,7 +375,7 @@ class BaseContainer extends Webiny.Ui.Component {
             return element;
         }
 
-        if (element.type === Ui.List.Filters || element.type.prototype instanceof Ui.List.Filters) {
+        if (Webiny.isElementOfType(element, Ui.List.Filters)) {
             return React.cloneElement(element, {
                 filters: this.state.filters,
                 onFilter: this.setFilters
@@ -384,15 +384,15 @@ class BaseContainer extends Webiny.Ui.Component {
 
         const props = _.omit(element.props, ['key', 'ref']);
 
-        if (element.type === Ui.List.Pagination) {
+        if (Webiny.isElementOfType(element, Ui.List.Pagination)) {
             return React.cloneElement(element, this.paginationProps(props));
         }
 
-        if (element.type === Ui.List.Loader) {
+        if (Webiny.isElementOfType(element, Ui.List.Loader)) {
             return React.cloneElement(element, {show: this.isLoading()});
         }
 
-        if (element.type === Ui.List.MultiActions) {
+        if (Webiny.isElementOfType(element, Ui.List.MultiActions)) {
             return React.cloneElement(element, this.multiActionsProps(props));
         }
 

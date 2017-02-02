@@ -1,27 +1,40 @@
 import Webiny from 'Webiny';
+import Acl from './Modules/Acl';
+import Authentication from './Modules/Authentication';
+import Layout from './Modules/Layout';
+import Logger from './Modules/Logger';
 
-const backend = new Webiny.App('Core.Backend', ['Core.Skeleton']);
-backend.beforeRender(() => {
-    Webiny.Http.addRequestInterceptor(http => {
-        if (Webiny.Cookies.get('XDEBUG_SESSION')) {
-            if (!http.query) {
-                http.query = {};
+class Backend extends Webiny.App {
+    constructor() {
+        super('Core.Backend');
+        this.modules = [
+            new Acl(this),
+            new Authentication(this),
+            new Layout(this),
+            new Logger(this)
+        ];
+
+        Webiny.Http.addRequestInterceptor(http => {
+            if (Webiny.Cookies.get('XDEBUG_SESSION')) {
+                if (!http.query) {
+                    http.query = {};
+                }
+                http.query.XDEBUG_SESSION_START = Webiny.Cookies.get('XDEBUG_SESSION');
             }
-            http.query.XDEBUG_SESSION_START = Webiny.Cookies.get('XDEBUG_SESSION');
-        }
-    });
+        });
 
-    // Load other backend apps
-    const api = new Webiny.Api.Endpoint('/services/core/apps');
-    return api.get('/backend').then(res => {
-        let apps = Promise.resolve();
-        _.forIn(res.getData(), config => {
-            apps = apps.then(() => {
-                return WebinyBootstrap.includeApp(config.name, config);
+        this.beforeRender(() => {
+            // Load other backend apps
+            const api = new Webiny.Api.Endpoint('/services/core/apps');
+            return api.get('/backend').then(res => {
+                let apps = Promise.resolve();
+                _.forIn(res.getData(), config => {
+                    apps = apps.then(() => Webiny.includeApp(config.name, config).then(app => app.run()));
+                });
+                return apps;
             });
         });
-        return apps;
-    });
-});
+    }
+}
 
-export default backend;
+Webiny.registerApp(new Backend());

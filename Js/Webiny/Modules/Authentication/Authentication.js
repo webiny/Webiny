@@ -79,7 +79,7 @@ class Module extends Webiny.Module {
         return routerEvent;
     }
 
-    run() {
+    init() {
         Webiny.Dispatcher.on('Logout', this.onLogout.bind(this));
 
         Webiny.Router.onBeforeStart(routerEvent => {

@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import Quill from 'quill';
 const Ui = Webiny.Ui.Components;
 
 class HtmlEditor extends Webiny.Ui.FormComponent {
@@ -183,11 +184,7 @@ HtmlEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         action: 'Insert image',
         config: {
             closeOnClick: false,
-            autoCropArea: 0.7,
-            guides: false,
-            strict: true,
-            mouseWheelZoom: true,
-            touchDragZoom: false
+            autoCropArea: 0.7
         }
     },
     renderer() {

@@ -42,21 +42,22 @@ class Row extends Webiny.Ui.Component {
             return child;
         }
 
-        const tableField = child.type === Ui.List.Table.Field || child.type.prototype instanceof Ui.List.Table.Field;
+        const tableField = Webiny.isElementOfType(child, Ui.List.Table.Field);
         if (tableField) {
-            if (child.type === SelectRowField || child.type.prototype instanceof SelectRowField) {
+            if (Webiny.isElementOfType(child, SelectRowField)) {
                 this.selectRowElement = true;
             }
-            
-            if (child.props.hide) {
-                return;    
+
+            // Only evaluate `hide` condition if it is a plain value (not a function)
+            if (!_.isFunction(child.props.hide) && child.props.hide) {
+                return;
             }
 
             this.fields.push(child);
             return;
         }
 
-        const tableActions = child.type === Ui.List.Table.Actions || child.type.prototype instanceof Ui.List.Table.Actions;
+        const tableActions = Webiny.isElementOfType(child, Ui.List.Table.Actions);
         if (tableActions && !child.props.hide) {
             this.actionsElement = React.cloneElement(child, {
                 data: this.data,

@@ -2,6 +2,7 @@ import Webiny from 'Webiny';
 import LinkState from './LinkState';
 import Dispatcher from './Dispatcher';
 import UiDispatcher from './UiDispatcher';
+import md5 from 'blueimp-md5';
 
 class Component extends React.Component {
 

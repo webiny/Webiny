@@ -1,4 +1,5 @@
 import BasePlugin from './BasePlugin';
+import Draft from 'draft-js';
 
 class BlockTypePlugin extends BasePlugin {
     constructor() {

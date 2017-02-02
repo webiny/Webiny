@@ -83,7 +83,11 @@ ModalFileCropper.defaultProps = _.merge({}, FileCropper.defaultProps, {
                 <Ui.Modal.Body>
                     {props.children}
                     <div className="col-xs-12 no-padding">
-                        <img className="img-cropper" width="100%" src={props.image && props.image.src + this.getCacheBust()}/>
+                        <img
+                            className="img-cropper"
+                            width="100%"
+                            src={props.image && props.image.src + this.getCacheBust()}
+                            style={{maxWidth: '100%'}}/>
                     </div>
                     <div className="clearfix"></div>
                     Cropped image size: <strong>{this.state.width}x{this.state.height}</strong>

@@ -1,6 +1,7 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 import InlineStylePlugin from './../BasePlugins/InlineStylePlugin';
+import Draft from 'draft-js';
+const Ui = Webiny.Ui.Components;
 
 class ColorPickerPlugin extends InlineStylePlugin {
     constructor(config) {

@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import 'owl.carousel';
 
 class Carousel extends Webiny.Ui.Component {
     constructor(props) {

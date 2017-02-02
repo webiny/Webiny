@@ -11,12 +11,28 @@ class DownloadLink extends Link {
         this.state = {
             showDialog: false
         };
+
+        this.bindMethods('getDialog');
     }
 
     componentDidUpdate() {
         super.componentDidUpdate();
-        if (this.state.showDialog) {
+        if (this.state.showDialog && !this.refs.dialog.isShown()) {
             this.refs.dialog.show();
+        }
+    }
+
+    componentWillReceiveProps(props) {
+        super.componentWillReceiveProps(props);
+        if (this.dialog) {
+            this.getDialog();
+        }
+    }
+
+    getDialog() {
+        const result = this.props.download(this.refs.downloader.download, this.props.data || null);
+        if (Webiny.isElementOfType(result, Ui.Modal.Dialog)) {
+            this.dialog = result;
         }
     }
 }
@@ -31,11 +47,8 @@ DownloadLink.defaultProps = {
             if (_.isString(this.props.download)) {
                 this.refs.downloader.download(this.props.method, this.props.download);
             } else {
-                const result = this.props.download(this.refs.downloader.download, this.props.data || null);
-                if (result && result.type && result.type === Ui.Modal.Dialog) {
-                    this.dialog = result;
-                    this.setState({showDialog: true});
-                }
+                this.getDialog();
+                this.setState({showDialog: true});
             }
         };
         delete props['download'];

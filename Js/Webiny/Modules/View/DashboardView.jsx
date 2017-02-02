@@ -19,12 +19,12 @@ class DashboardView extends Webiny.Ui.Component {
         }
 
         React.Children.map(children, child => {
-            if (child.type === Ui.View.Header) {
+            if (Webiny.isElementOfType(child, Ui.View.Header)) {
                 this.headerComponent = child;
                 return;
             }
 
-            if (child.type === Ui.View.Body) {
+            if (Webiny.isElementOfType(child, Ui.View.Body)) {
                 this.bodyComponent = React.createElement('div', {className: ''}, child.props.children);
                 return;
             }

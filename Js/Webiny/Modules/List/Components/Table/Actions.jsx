@@ -39,7 +39,7 @@ Actions.defaultProps = {
                         return null;
                     }
 
-                    if (child.type === Ui.Dropdown.Divider || child.type === Ui.Dropdown.Header) {
+                    if (Webiny.isElementOfType(child, Ui.Dropdown.Divider) || Webiny.isElementOfType(child, Ui.Dropdown.Header)) {
                         return child;
                     }
 

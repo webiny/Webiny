@@ -34,21 +34,21 @@ ExpandableList.defaultProps = {
     type: 'simple',
     renderer() {
         if (!this.props.data || !this.props.data.length && this.props.showEmpty) {
-            return this.emptyement || <Ui.List.Table.Empty/>;
+            return <Ui.List.Table.Empty/>;
         }
 
         // get row and extract the header info
         let headers = [];
         let actionSet = false;
         _.forEach(this.props.children, row => {
-            if (row.type === Ui.ExpandableList.Row) {
-                if (_.isObject(row)) {
+            if (Webiny.isElementOfType(row, Ui.ExpandableList.Row)) {
+                if (React.isValidElement(row)) {
                     _.forEach(row.props.children, val => {
-                        if (val.type === Ui.ExpandableList.ActionSet) {
+                        if (Webiny.isElementOfType(val, Ui.ExpandableList.ActionSet)) {
                             actionSet = true;
                         }
 
-                        if (val.type === Ui.ExpandableList.Field && _.get(val.props, 'name', false)) {
+                        if (Webiny.isElementOfType(val, Ui.ExpandableList.Field) && _.get(val.props, 'name', false)) {
                             headers.push(_.omit(val.props, ['children', 'renderer']));
                         }
                     });
@@ -67,15 +67,17 @@ ExpandableList.defaultProps = {
         // get rows
         const rows = [];
         _.forEach(this.props.children, row => {
-            if (row.type === Ui.ExpandableList.Row) {
+            if (Webiny.isElementOfType(row, Ui.ExpandableList.Row)) {
                 rows.push(row);
             } else if (_.isArray(row)) {
                 _.forEach(row, rowDetails => {
-                    if (rowDetails.type === Ui.ExpandableList.Row) {
+                    if (Webiny.isElementOfType(rowDetails, Ui.ExpandableList.Row)) {
                         rows.push(rowDetails);
                     }
                 });
                 return false;
+            } else {
+                window['row'] = row.type;
             }
         });
 

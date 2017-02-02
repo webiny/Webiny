@@ -1,4 +1,6 @@
 import Webiny from 'Webiny';
+import Cropper from 'cropperjs';
+import moment from 'moment';
 
 class FileCropper extends Webiny.Ui.Component {
 
@@ -8,6 +10,103 @@ class FileCropper extends Webiny.Ui.Component {
             width: 0,
             height: 0
         };
+
+        this.options = {
+            // Define the view mode of the cropper
+            viewMode: 1, // 0, 1, 2, 3
+
+            // Define the dragging mode of the cropper
+            dragMode: 'crop', // 'crop', 'move' or 'none'
+
+            // Define the aspect ratio of the crop box
+            aspectRatio: NaN,
+
+            // An object with the previous cropping result data
+            data: null,
+
+            // A selector for adding extra containers to preview
+            preview: '',
+
+            // Re-render the cropper when resize the window
+            responsive: true,
+
+            // Restore the cropped area after resize the window
+            restore: true,
+
+            // Check if the current image is a cross-origin image
+            checkCrossOrigin: true,
+
+            // Check the current image's Exif Orientation information
+            checkOrientation: true,
+
+            // Show the black modal
+            modal: true,
+
+            // Show the dashed lines for guiding
+            guides: false,
+
+            // Show the center indicator for guiding
+            center: true,
+
+            // Show the white modal to highlight the crop box
+            highlight: true,
+
+            // Show the grid background
+            background: true,
+
+            // Enable to crop the image automatically when initialize
+            autoCrop: true,
+
+            // Define the percentage of automatic cropping area when initializes
+            autoCropArea: 0.8,
+
+            // Enable to move the image
+            movable: true,
+
+            // Enable to rotate the image
+            rotatable: true,
+
+            // Enable to scale the image
+            scalable: true,
+
+            // Enable to zoom the image
+            zoomable: true,
+
+            // Enable to zoom the image by dragging touch
+            zoomOnTouch: true,
+
+            // Enable to zoom the image by wheeling mouse
+            zoomOnWheel: true,
+
+            // Define zoom ratio when zoom the image by wheeling mouse
+            wheelZoomRatio: 0.1,
+
+            // Enable to move the crop box
+            cropBoxMovable: true,
+
+            // Enable to resize the crop box
+            cropBoxResizable: true,
+
+            // Toggle drag mode between "crop" and "move" when click twice on the cropper
+            toggleDragModeOnDblclick: true,
+
+            // Size limitation
+            minCanvasWidth: 0,
+            minCanvasHeight: 0,
+            minCropBoxWidth: 0,
+            minCropBoxHeight: 0,
+            minContainerWidth: 200,
+            minContainerHeight: 100,
+
+            // Shortcuts of events
+            ready: null,
+            cropstart: null,
+            cropmove: null,
+            cropend: null,
+            crop: null,
+            zoom: null
+        };
+
         this.bindMethods('initCropper,getCacheBust,applyCropping,destroyCropper,getImage');
     }
 
@@ -17,23 +116,24 @@ class FileCropper extends Webiny.Ui.Component {
     }
 
     initCropper() {
-        const data = _.cloneDeep(this.props.config);
+        const data = _.merge({}, this.options, this.props.config);
         data.crop = e => {
-            this.setState({width: Math.floor(e.width), height: Math.floor(e.height)});
+            this.setState({width: Math.floor(e.detail.width), height: Math.floor(e.detail.height)});
         };
-        this.cropper = $('.img-cropper');
-        this.cropper.cropper(data);
-        if (data.width && data.height) {
-            this.cropper.cropper('setCropBoxData', {
-                width: data.width,
-                height: data.height
-            });
-        }
+        data.ready = () => {
+            if (data.width && data.height) {
+                this.cropper.setCropBoxData({
+                    width: data.width,
+                    height: data.height
+                });
+            }
+        };
+        this.cropper = new Cropper(document.querySelector('.img-cropper'), data);
     }
 
     destroyCropper() {
         if (this.cropper) {
-            this.cropper.cropper('destroy');
+            this.cropper.destroy();
             this.cropper = null;
         }
     }
@@ -61,7 +161,7 @@ class FileCropper extends Webiny.Ui.Component {
             };
         }
 
-        model.src = this.cropper.cropper('getCroppedCanvas', options).toDataURL();
+        model.src = this.cropper.getCroppedCanvas(options).toDataURL();
         return model;
     }
 }
@@ -70,48 +170,5 @@ FileCropper.defaultProps = {
     config: {},
     onCrop: _.noop
 };
-
-/* eslint-disable */
-/**
- * Config options
- * @see https://github.com/fengyuanchen/cropper
- */
-const options = {
-    aspectRatio: React.PropTypes.number,
-    crop: React.PropTypes.func,
-    preview: React.PropTypes.string,
-    strict: React.PropTypes.bool,
-    responsive: React.PropTypes.bool,
-    checkImageOrigin: React.PropTypes.bool,
-    background: React.PropTypes.bool,
-    modal: React.PropTypes.bool,
-    guides: React.PropTypes.bool,
-    highlight: React.PropTypes.bool,
-    autoCrop: React.PropTypes.bool,
-    autoCropArea: React.PropTypes.number,
-    dragCrop: React.PropTypes.bool,
-    movable: React.PropTypes.bool,
-    cropBoxMovable: React.PropTypes.bool,
-    cropBoxResizable: React.PropTypes.bool,
-    doubleClickToggle: React.PropTypes.bool,
-    zoomable: React.PropTypes.bool,
-    mouseWheelZoom: React.PropTypes.bool,
-    touchDragZoom: React.PropTypes.bool,
-    rotatable: React.PropTypes.bool,
-    minContainerWidth: React.PropTypes.number,
-    minContainerHeight: React.PropTypes.number,
-    minCanvasWidth: React.PropTypes.number,
-    minCanvasHeight: React.PropTypes.number,
-    minCropBoxWidth: React.PropTypes.number,
-    minCropBoxHeight: React.PropTypes.number,
-    build: React.PropTypes.func,
-    built: React.PropTypes.func,
-    dragstart: React.PropTypes.func,
-    dragmove: React.PropTypes.func,
-    dragend: React.PropTypes.func,
-    zoomin: React.PropTypes.func,
-    zoomout: React.PropTypes.func
-};
-/* eslint-enable */
 
 export default FileCropper;

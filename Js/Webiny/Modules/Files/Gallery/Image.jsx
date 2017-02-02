@@ -1,4 +1,6 @@
 import Webiny from 'Webiny';
+import moment from 'moment';
+import filesize from 'filesize';
 const Ui = Webiny.Ui.Components;
 
 class Image extends Webiny.Ui.Component {

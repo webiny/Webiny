@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import SimpleMDE from 'simplemde';  
 
 class MarkdownEditor extends Webiny.Ui.FormComponent {
     constructor(props) {

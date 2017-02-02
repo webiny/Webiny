@@ -1,4 +1,4 @@
-import Webiny from 'Webiny';
+import logo from 'Assets/images/logo.png';
 
 export default function Header(props) {
     return (
@@ -12,7 +12,7 @@ export default function Header(props) {
                 <a href="#" className="search">
                 </a>
                 <a href="#" className="logo">
-                    <img src={Webiny.Assets('Core.Skeleton', 'images/logo.png')} width="62" height="20" alt="Webiny"/>
+                    <img src={logo} width="62" height="20" alt="Webiny"/>
                 </a>
             </div>
         </div>

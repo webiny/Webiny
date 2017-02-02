@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import logoOrange from 'Assets/images/logo_orange.png';
 const Ui = Webiny.Ui.Components;
 
 class Login extends Webiny.Ui.View {
@@ -97,7 +98,7 @@ Login.defaultProps = {
 
                     <div className="form-signin">
                         <a href="#" className="logo">
-                            <img src={Webiny.Assets('Core.Skeleton', 'images/logo_orange.png')} width="180" height="58"/>
+                            <img src={logoOrange} width="180" height="58"/>
                         </a>
 
                         <h2 className="form-signin-heading"><span></span>Sign in to your Account</h2>

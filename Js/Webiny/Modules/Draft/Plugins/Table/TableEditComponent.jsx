@@ -1,8 +1,9 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
+import Draft from 'draft-js';
 import Editor from './../../Editor';
 import TabHandler from './TabHandler';
 import TableShortcuts from './TableShortcuts';
+const Ui = Webiny.Ui.Components;
 
 class TableEditComponent extends Webiny.Ui.Component {
     constructor(props) {

@@ -96,14 +96,6 @@ class Module {
         Webiny.Router.addLayout(name, component);
         return this;
     }
-
-    /**
-     * Override if needed
-     * @returns {Module}
-     */
-    run() {
-        return this;
-    }
 }
 
 export default Module;

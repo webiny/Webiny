@@ -1,8 +1,9 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
+import Draft from 'draft-js';
 import AtomicPlugin from './../BasePlugins/AtomicPlugin';
 import Utils from './../Utils';
 import TableEditComponent from './Table/TableEditComponent';
+const Ui = Webiny.Ui.Components;
 
 class TablePlugin extends AtomicPlugin {
     constructor(config) {
@@ -55,5 +56,7 @@ class TablePlugin extends AtomicPlugin {
         };
     }
 }
+
+TablePlugin.TableEditComponent = TableEditComponent;
 
 export default TablePlugin;

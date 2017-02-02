@@ -403,24 +403,24 @@ class FormContainer extends Webiny.Ui.Component {
      * @returns {*}
      */
     registerComponent(input) {
-        if (typeof input !== 'object' || input === null || this.noParsing.indexOf(input.type) > -1) {
+        if (typeof input !== 'object' || input === null || _.find(this.noParsing, np => Webiny.isElementOfType(input, np))) {
             return input;
         }
 
         // Do not descend into nested Form
-        if (input.type && input.type === Ui.Form) {
+        if (Webiny.isElementOfType(input, Ui.Form)) {
             return input;
         }
 
-        if (input.type && _.includes(this.props.injectInto(), input.type)) {
+        if (_.find(this.props.injectInto(), injectInto => Webiny.isElementOfType(input, injectInto))) {
             input = React.cloneElement(input, {form: this});
         }
 
-        if (input.type && input.type === Ui.Form.Loader) {
+        if (Webiny.isElementOfType(input, Ui.Form.Loader)) {
             input = React.cloneElement(input, {show: this.isLoading()});
         }
 
-        if (input.type && input.type === Ui.Form.Error) {
+        if (Webiny.isElementOfType(input, Ui.Form.Error)) {
             input = React.cloneElement(input, {error: this.getError()});
         }
 
@@ -463,7 +463,7 @@ class FormContainer extends Webiny.Ui.Component {
         }
 
         // Track Tabs to be able to focus the relevant tab when validation fails
-        if (input.type && input.type === Ui.Tabs) {
+        if (Webiny.isElementOfType(input, Ui.Tabs)) {
             this.parsingTabsIndex++;
             this.parsingTabIndex = -1;
 
@@ -480,7 +480,7 @@ class FormContainer extends Webiny.Ui.Component {
             return tabsContent;
         }
 
-        if (input.type && input.type === Ui.Tabs.Tab && this.parsingTabsIndex > 0) {
+        if (Webiny.isElementOfType(input, Ui.Tabs.Tab) && this.parsingTabsIndex > 0) {
             this.parsingTabIndex++;
         }
 

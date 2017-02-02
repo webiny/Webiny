@@ -1,4 +1,5 @@
 import BaseDateTime from './Base';
+import moment from 'moment';
 
 class Date extends BaseDateTime {
 

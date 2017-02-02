@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import hljs from 'highlight.js';
 
 class CodeHighlight extends Webiny.Ui.Component {
     constructor(props) {

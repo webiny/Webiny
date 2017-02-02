@@ -1,4 +1,5 @@
 import BasePlugin from './../../BasePlugins/BasePlugin';
+import Draft from 'draft-js';
 
 class TableShortcuts extends BasePlugin {
     constructor(config) {

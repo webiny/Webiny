@@ -1,5 +1,6 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
+import Clipboard from 'clipboard';
 
 class CopyButton extends Webiny.Ui.Component {
     componentDidMount() {

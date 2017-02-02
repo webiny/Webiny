@@ -7,7 +7,6 @@ import ColorPicker from '../ui/color-picker';
 import IconPicker from '../ui/icon-picker';
 import Picker from '../ui/picker';
 import Tooltip from '../ui/tooltip';
-import icons from '../ui/icons';
 
 
 const ALIGNS = [ false, 'center', 'right', 'justify' ];
@@ -57,7 +56,7 @@ class BaseTheme extends Theme {
     return module;
   }
 
-  buildButtons(buttons) {
+  buildButtons(buttons, icons) {
     buttons.forEach((button) => {
       let className = button.getAttribute('class') || '';
       className.split(/\s+/).forEach((name) => {
@@ -78,7 +77,7 @@ class BaseTheme extends Theme {
     });
   }
 
-  buildPickers(selects) {
+  buildPickers(selects, icons) {
     this.pickers = selects.map((select) => {
       if (select.classList.contains('ql-align')) {
         if (select.querySelector('option') == null) {
@@ -125,7 +124,7 @@ BaseTheme.DEFAULTS = extend(true, {}, Theme.DEFAULTS, {
           if (fileInput == null) {
             fileInput = document.createElement('input');
             fileInput.setAttribute('type', 'file');
-            fileInput.setAttribute('accept', 'image/*');
+            fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon, image/svg+xml');
             fileInput.classList.add('ql-image');
             fileInput.addEventListener('change', () => {
               if (fileInput.files != null && fileInput.files[0] != null) {

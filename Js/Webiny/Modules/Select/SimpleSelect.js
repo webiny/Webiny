@@ -1,4 +1,7 @@
 import Webiny from 'Webiny';
+import ReactDOMServer from 'react-dom/server';
+import 'select2';
+
 
 class SimpleSelect extends Webiny.Ui.Component {
 

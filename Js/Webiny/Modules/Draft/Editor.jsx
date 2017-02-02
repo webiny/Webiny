@@ -1,4 +1,6 @@
 import Webiny from 'Webiny';
+import Draft from 'draft-js';
+import Immutable from 'immutable';
 import PluginsContainer from './PluginsContainer';
 import Toolbar from './Toolbar';
 import FloatingToolbar from './FloatingToolbar';

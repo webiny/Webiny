@@ -1,7 +1,6 @@
 /* eslint-disable */
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
-const Table = Ui.List.Table;
 
 class Form extends Webiny.Ui.View {
     constructor(props){
