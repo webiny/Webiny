@@ -152,7 +152,7 @@ class Search extends Webiny.Ui.FormComponent {
         clearTimeout(this.delay);
 
         this.delay = setTimeout(() => {
-            if (_.isEmpty(this.state.query)) {
+            if (_.isEmpty(this.state.query) || this.state.query.length < 2) {
                 return;
             }
 
