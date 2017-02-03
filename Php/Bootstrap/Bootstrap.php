@@ -124,7 +124,10 @@ class Bootstrap
                 }
                 $headers = [];
             }
-            Request::deleteInstance();
+
+            Authorization::getInstance()->unsetUser();
+            Request::deleteInstance();		              Request::deleteInstance();
+
             $_GET = $req['query'];
             $_SERVER['REQUEST_URI'] = $this->url($req['url'])->getPath();
             $_SERVER['REQUEST_METHOD'] = 'GET';

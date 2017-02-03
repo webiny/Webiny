@@ -109,7 +109,7 @@ class Authorization
                     if ($this->user) {
                         $this->user->trigger('onActivity');
                     }
-                    
+
                     return $this->user;
                 } catch (\Exception $le) {
                     // Not a regular user
@@ -127,6 +127,17 @@ class Authorization
         }
 
         return $this->user;
+    }
+
+    /**
+     * Removes instance of current user.
+     * @return $this
+     */
+    public function unsetUser()
+    {
+        $this->user = null;
+
+        return $this;
     }
 
     public function processLogin($username)
