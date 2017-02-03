@@ -92,13 +92,16 @@ class User extends AbstractEntity implements UserInterface
             $data = $this->wRequest()->getRequestData();
             $login = $this->wAuth()->processLogin($data['username']);
 
-            if (!$this->wAuth()->getUser()->enabled) {
+            /* @var User $user */
+            $user = $this->wAuth()->getUser($login['authToken']);
+
+            if (!$user->enabled) {
                 throw new AppException('User account is disabled!');
             }
 
             return [
                 'authToken' => $login['authToken'],
-                'user'      => $this->wAuth()->getUser()->toArray($this->wRequest()->getFields('*,!password'))
+                'user'      => $user->toArray($this->wRequest()->getFields('*,!password'))
             ];
         })->setBodyValidators(['username' => 'required,email', 'password' => 'required']);
 

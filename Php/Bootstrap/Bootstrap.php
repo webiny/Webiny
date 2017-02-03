@@ -126,7 +126,6 @@ class Bootstrap
                 $headers = [];
             }
 
-            Authorization::getInstance()->unsetUser();
             Request::deleteInstance();
 
             $_GET = $req['query'];
