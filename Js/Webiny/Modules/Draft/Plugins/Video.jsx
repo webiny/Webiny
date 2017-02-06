@@ -8,7 +8,8 @@ class VideoEditComponent extends Webiny.Ui.Component {
         super(props);
 
         this.state = {
-            size: props.data.size
+            size: props.data.size,
+            resizing: false
         };
 
         this.bindMethods('resize', 'resizeStart', 'resizeEnd', 'getSize', 'renderVideo');
@@ -19,6 +20,7 @@ class VideoEditComponent extends Webiny.Ui.Component {
     }
 
     resizeStart(e) {
+        this.setState({resizing: true});
         this.size = {
             width: this.refs.resizer.clientWidth,
             height: this.refs.resizer.clientHeight
@@ -58,6 +60,7 @@ class VideoEditComponent extends Webiny.Ui.Component {
     }
 
     resizeEnd() {
+        this.setState({resizing: false});
         this.props.updateBlockData({size: this.state.size});
     }
 
@@ -80,8 +83,8 @@ class VideoEditComponent extends Webiny.Ui.Component {
 
         props = {
             src: embedUrl,
-            width: '100%',
-            height: '100%',
+            width: this.getSize(2).width,
+            height: this.getSize(2).height,
             frameBorder: 0,
             wmode: 'Opaque',
             allowFullScreen: true
@@ -110,8 +113,14 @@ VideoEditComponent.defaultProps = {
             onDragEnd: this.resizeEnd
         };
 
+        const resizeOverlay = {
+            position: 'absolute',
+            width: '100%',
+            height: '100%'
+        };
+
         return (
-            <div className="image-plugin-wrapper">
+            <div className="video-plugin-wrapper">
                 <Ui.Grid.Row>
                     <Ui.Grid.Col xs={12}>
                         <div className="btn-group pull-right">
@@ -122,13 +131,14 @@ VideoEditComponent.defaultProps = {
                     </Ui.Grid.Col>
                 </Ui.Grid.Row>
 
-                <div className={'image-wrapper'} style={{textAlign: this.props.data.align}}>
+                <div className={'video-wrapper'} style={{textAlign: this.props.data.align}}>
                     <div className="resizer" ref="resizer" style={this.getSize()}>
+                        {this.state.resizing ? <div style={resizeOverlay}/> : null}
                         {this.renderVideo()}
                         <span className="resize-handle br" {...draggable}></span>
                     </div>
                 </div>
-                <Ui.Input value={this.props.data.caption} onChange={captionChange} placeholder="Enter a caption for this image"/>
+                <Ui.Input value={this.props.data.caption} onChange={captionChange} placeholder="Enter a caption for this video"/>
             </div>
         );
     }
@@ -160,8 +170,8 @@ class VideoComponent extends Webiny.Ui.Component {
 
         props = {
             src: embedUrl,
-            width: '100%',
-            height: '100%',
+            width: this.getSize().width,
+            height: this.getSize().height,
             frameBorder: 0,
             wmode: 'Opaque',
             allowFullScreen: true
@@ -174,8 +184,8 @@ class VideoComponent extends Webiny.Ui.Component {
 VideoComponent.defaultProps = {
     renderer() {
         return (
-            <div className="image-plugin-wrapper">
-                <div className={'image-wrapper'} style={{textAlign: this.props.data.align}}>
+            <div className="video-plugin-wrapper">
+                <div className={'video-wrapper'} style={{textAlign: this.props.data.align}}>
                     {this.renderVideo()}
                     <div>{this.props.data.caption}</div>
                 </div>
@@ -195,6 +205,7 @@ class VideoPlugin extends AtomicPlugin {
     submitModal(model) {
         // Parse URL and detect type
         const data = _.clone(model);
+
         let url = model.url;
         let videoId;
         if ((videoId = this.parseYoutubeLink(url))) {
