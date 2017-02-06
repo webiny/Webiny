@@ -28,9 +28,10 @@ class Authorization
     private $login;
 
     /**
-     * @var User
+     * Contains all currently logged in users.
+     * @var array
      */
-    private $user;
+    private $users = [];
 
     /**
      * @var string
@@ -89,55 +90,60 @@ class Authorization
      * Get an instance of the user identified by X-Webiny-Authorization token.
      * A user can be a regular user, System token or API token - but they all implement `UserInterface`.
      *
+     * @param null $requestToken
+     *
      * @return UserInterface
      */
-    public function getUser()
+    public function getUser($requestToken = null)
     {
-        if (!$this->user) {
+        if (!$requestToken) {
             $requestToken = $this->wRequest()->header('X-Webiny-Authorization');
             if (!$requestToken) {
                 $requestToken = $this->wRequest()->getRequestData()['X-Webiny-Authorization'] ?? null;
             }
-
-            /* @var $class AbstractEntity */
-            $class = $this->userClass;
-            if ($requestToken) {
-                try {
-                    $user = $this->login->getUser($requestToken);
-                    $this->user = $class::findOne(['email' => $user->getUsername()]);
-
-                    if ($this->user) {
-                        $this->user->trigger('onActivity');
-                    }
-
-                    return $this->user;
-                } catch (\Exception $le) {
-                    // Not a regular user
-                }
-            }
-
-            // API tokens may contain special characters and will be urlencoded when sent through curl
-            $requestToken = urldecode($requestToken);
-            $systemToken = $this->wConfig()->getConfig()->get('Application.Acl.Token');
-            if ($systemToken && $systemToken == $requestToken) {
-                $this->user = new SystemApiToken();
-            } else {
-                $this->user = ApiToken::findOne(['token' => $requestToken]);
-            }
         }
 
-        return $this->user;
-    }
+        if (!$requestToken) {
+            return null;
+        }
 
-    /**
-     * Removes instance of current user.
-     * @return $this
-     */
-    public function unsetUser()
-    {
-        $this->user = null;
+        if (isset($this->users[$requestToken])) {
+            return $this->users[$requestToken];
+        }
 
-        return $this;
+        /* @var $class AbstractEntity */
+        $class = $this->userClass;
+        try {
+            $user = $this->login->getUser($requestToken);
+            $user = $class::findOne(['email' => $user->getUsername()]);
+
+            if ($user) {
+                $this->users[$requestToken] = $user;
+                $this->users[$requestToken]->trigger('onActivity');
+            }
+
+            return $this->users[$requestToken];
+        } catch (\Exception $le) {
+            // Not a regular user
+        }
+
+        // API tokens may contain special characters and will be urlencoded when sent through curl.
+        $urlDecodedRequestToken = urldecode($requestToken);
+        $systemToken = $this->wConfig()->getConfig()->get('Application.Acl.Token');
+        if ($systemToken && $systemToken == $urlDecodedRequestToken) {
+            $this->users[$requestToken] = new SystemApiToken();
+
+            return $this->users[$requestToken];
+        }
+
+        $apiToken = ApiToken::findOne(['token' => $urlDecodedRequestToken]);
+        if ($apiToken) {
+            $this->users[$requestToken] = $apiToken;
+
+            return $this->users[$requestToken];
+        }
+
+        return null;
     }
 
     public function processLogin($username)
@@ -149,10 +155,10 @@ class Authorization
 
             /* @var $class AbstractEntity */
             $class = $this->userClass;
-            $this->user = $class::findOne(['email' => $username]);
-
-            if ($this->user && $this->user->enabled) {
-                $this->user->trigger('onLoginSuccess');
+            $user = $class::findOne(['email' => $username]);
+            if ($user && $user->enabled) {
+                $this->users[$authToken] = $user;
+                $this->users[$authToken]->trigger('onLoginSuccess');
 
                 return [
                     'authToken' => $authToken

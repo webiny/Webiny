@@ -7,6 +7,7 @@
 
 namespace Apps\Core\Php\Bootstrap;
 
+use Apps\Core\Php\DevTools\Authorization\Authorization;
 use Apps\Core\Php\DevTools\Request;
 use Apps\Core\Php\DevTools\Response\ApiResponse;
 use Apps\Core\Php\DevTools\Response\HtmlResponse;
@@ -125,8 +126,7 @@ class Bootstrap
                 $headers = [];
             }
 
-            Authorization::getInstance()->unsetUser();
-            Request::deleteInstance();		              Request::deleteInstance();
+            Request::deleteInstance();
 
             $_GET = $req['query'];
             $_SERVER['REQUEST_URI'] = $this->url($req['url'])->getPath();
