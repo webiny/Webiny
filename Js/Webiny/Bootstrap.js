@@ -20,9 +20,9 @@ require('bootstrap-sass');
 window['$Webiny'] = Webiny;
 
 const w = window;
-// Check if `Webiny` function exists in the window
-if (!w.runWebiny) {
-    console.error('You must define a "runWebiny" function to bootstrap your app!');
+// Check if `Webiny` config exists in the window
+if (!w.Webiny) {
+    console.error('You must define a "Webiny" config to bootstrap your app!');
 } else {
-    w.runWebiny(Webiny.run());
+    Webiny.run(w.Webiny);
 }

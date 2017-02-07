@@ -99,6 +99,7 @@ class SmartyExtension extends AbstractSmartyExtension
         };
     </script>
     {$browserSync}
+    <webiny-app/>
 EOT;
     }
 }

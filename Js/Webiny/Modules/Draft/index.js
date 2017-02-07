@@ -22,6 +22,7 @@ import OrderedList from './Plugins/OrderedList';
 import Alignment from './Plugins/Alignment';
 import Link from './Plugins/Link';
 import Image from './Plugins/Image';
+import Video from './Plugins/Video';
 import Blockquote from './Plugins/Blockquote';
 import Code from './Plugins/Code';
 import CodeBlock from './Plugins/CodeBlock';
@@ -61,6 +62,7 @@ class Module extends Webiny.Module {
                 Alignment,
                 Link,
                 Image,
+                Video,
                 Blockquote,
                 Code,
                 CodeBlock,

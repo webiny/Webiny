@@ -38,30 +38,28 @@ class Webiny {
         }
     }
 
-    run() {
-        return (config) => {
-            this.loadStylesheet(webinyMeta['Core.Webiny'].css);
-            return this.loadScript(webinyMeta['Core.Webiny'].app).then(() => {
-                // Configure Core
-                if (config.router) {
-                    this.Router.setBaseUrl(config.router.baseUrl || '/');
-                    this.Router.setTitlePattern(config.router.title || '');
-                    this.Router.setDefaultRoute(config.router.defaultRoute || null);
-                }
+    run(config) {
+        this.loadStylesheet(webinyMeta['Core.Webiny'].css);
+        return this.loadScript(webinyMeta['Core.Webiny'].app).then(() => {
+            // Configure Core
+            if (config.router) {
+                this.Router.setBaseUrl(config.router.baseUrl || '/');
+                this.Router.setTitlePattern(config.router.title || '');
+                this.Router.setDefaultRoute(config.router.defaultRoute || null);
+            }
 
-                let loader = Promise.resolve();
-                config.apps.map(name => {
-                    loader = loader.then(() => {
-                        return this.includeApp(name, webinyMeta[name] || null).then(app => app.run());
-                    });
+            let loader = Promise.resolve();
+            config.apps.map(name => {
+                loader = loader.then(() => {
+                    return this.includeApp(name, webinyMeta[name] || null).then(app => app.run());
                 });
-                return loader;
-            }).then(() => {
-                // Mount RootElement
-                const RootElement = this.RootElement;
-                this.app = ReactDOM.render(<RootElement/>, document.querySelector('webiny-app'));
             });
-        };
+            return loader;
+        }).then(() => {
+            // Mount RootElement
+            const RootElement = this.RootElement;
+            this.app = ReactDOM.render(<RootElement/>, document.querySelector('webiny-app'));
+        });
     }
 
     registerApp(app) {
