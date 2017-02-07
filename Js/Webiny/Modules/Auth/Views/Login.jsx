@@ -48,12 +48,11 @@ class Login extends Webiny.Ui.View {
 Login.defaultProps = {
     renderer() {
         const passwordProps = {
-            type: 'password',
             name: 'password',
             placeholder: 'Password',
             label: 'Password',
             validate: 'required,password'/*,
-            info: <span className="info-txt"><a tabIndex="-1" href="#">Forgot your password?</a></span>*/
+             info: <span className="info-txt"><a tabIndex="-1" href="#">Forgot your password?</a></span>*/
         };
 
         return (
@@ -74,9 +73,13 @@ Login.defaultProps = {
                                 <Ui.Form.Error/>
 
                                 <div className="clear"></div>
-                                <Ui.Input name="username" placeholder="Enter email" label="Email address" validate="required,email"
-                                          onEnter={form.submit}/>
-                                <Ui.Input {...passwordProps} onEnter={form.submit}/>
+                                <Ui.Input
+                                    name="username"
+                                    placeholder="Enter email"
+                                    label="Email address"
+                                    validate="required,email"
+                                    onEnter={form.submit}/>
+                                <Ui.Password {...passwordProps} onEnter={form.submit}/>
 
                                 <div className="form-footer">
                                     <div className="submit-wrapper">

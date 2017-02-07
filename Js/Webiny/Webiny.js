@@ -59,9 +59,12 @@ class Webiny {
             config.apps.map(name => {
                 if (name === config.auth) {
                     this.Auth = _.get(this.Apps, name).getAuth();
-                    this.Auth.init();
                 }
             });
+
+            if (this.Auth) {
+                this.Auth.init();
+            }
             // Mount RootElement
             const RootElement = this.RootElement;
             this.app = ReactDOM.render(<RootElement/>, document.querySelector('webiny-app'));
@@ -74,13 +77,8 @@ class Webiny {
     }
 
     configure(path, config) {
-        let target = this.Apps;
-        if (path.indexOf('Webiny.Ui') === 0) {
-            target = this.Ui;
-            path = path.replace('Webiny.Ui', '');
-        }
-
-        const props = _.get(target, path + '.defaultProps');
+        path = path.replace('Webiny.', '');
+        const props = _.get(this, path + '.defaultProps');
         if (props) {
             _.merge(props, config);
         }

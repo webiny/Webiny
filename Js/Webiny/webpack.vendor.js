@@ -12,6 +12,7 @@ module.exports = (config) => {
         'baobab',
         'bootstrap-daterangepicker',
         'clipboard',
+        'accounting',
         'codemirror',
         'cropperjs',
         'dynamics.js',

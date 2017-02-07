@@ -1,4 +1,5 @@
 import Field from './../Field';
+import {accounting} from 'accounting';
 
 class PriceField extends Field {
 
