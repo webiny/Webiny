@@ -6,9 +6,6 @@ class UsersAccount extends Webiny.Ui.View {
 }
 
 UsersAccount.defaultProps = {
-    configureContainer(form) {
-        return form;
-    },
     renderer() {
         const formContainer = {
             api: Webiny.Auth.getApiEndpoint(),
@@ -33,7 +30,7 @@ UsersAccount.defaultProps = {
         };
 
         return (
-            <Ui.Form ui="myForm" {...this.props.configureContainer(formContainer)}>
+            <Ui.Form {...formContainer}>
                 {(model, form) => (
                     <Ui.View.Form>
                         <Ui.View.Header title="Account Settings"/>

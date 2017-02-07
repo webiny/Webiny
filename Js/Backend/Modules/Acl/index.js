@@ -36,10 +36,7 @@ class Module extends Webiny.Module {
         );
 
         Webiny.Dispatcher.on('Acl.Account.Refresh', () => {
-            Webiny.Auth.getApiEndpoint().get('/me').then(res => {
-                Webiny.Model.set('User', res.getData());
-                return res;
-            });
+            Webiny.Auth.getUser();
         });
     }
 }
