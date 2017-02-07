@@ -1,6 +1,6 @@
-import Webiny from 'Webiny';
-import Forbidden from './Views/Forbidden';
-import Login from './Views/Login';
+import Webiny from "Webiny";
+import Forbidden from "./Views/Forbidden";
+import Login from "./Views/Login";
 
 class Auth {
     constructor() {
@@ -80,6 +80,10 @@ class Auth {
         return '*,roles.slug,gravatar';
     }
 
+    getRequiredUserRole() {
+        return 'administrator';
+    }
+
     getUser(routerEvent) {
         return this.getApiEndpoint().get('/me', {_fields: this.getUserFields()}).then(apiResponse => {
             return this.onVerifyUser(routerEvent, apiResponse);
@@ -120,7 +124,7 @@ class Auth {
 
     onVerifyUser(routerEvent, apiResponse) {
         const data = apiResponse.getData();
-        if (!_.find(data.roles, {slug: 'administrator'})) {
+        if (!_.find(data.roles, {slug: this.getRequiredUserRole()})) {
             Webiny.Cookies.remove(this.getCookieName());
             return this.goToLogin(routerEvent);
         }
