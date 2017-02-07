@@ -20,6 +20,10 @@ class App {
         this.onBeforeRender = callback;
         return this;
     }
+
+    getAuth() {
+        return null;
+    }
 }
 
 export default App;

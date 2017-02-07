@@ -1,10 +1,10 @@
 import Webiny from 'Webiny';
-import Settings from './Settings';
+import Auth from './Auth';
 
 class Module extends Webiny.Module {
 
     init() {
-        Webiny.Ui.Components.Settings = Settings;
+        Webiny.Base.Auth = Auth;
     }
 }
 

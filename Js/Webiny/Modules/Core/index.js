@@ -26,9 +26,9 @@ import UiMenu from './Ui/Menu';
 
 _.merge(Webiny, {
     App,
+    Base: {},
     Menu,
     Module: WebinyModule,
-    Modules: {},
     Mixins: {
         ApiComponent
     },

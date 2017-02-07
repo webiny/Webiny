@@ -1,5 +1,5 @@
 import Webiny from 'Webiny';
-import Components from './Components/Components';
+import Components from './Components';
 
 class Module extends Webiny.Module {
 

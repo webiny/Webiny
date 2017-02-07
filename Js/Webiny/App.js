@@ -4,7 +4,7 @@ import 'Assets/styles.scss';
 import './Modules/Core';
 import Alert from './Modules/Alert';
 import Animate from './Modules/Animate';
-import Authentication from './Modules/Authentication';
+import Auth from './Modules/Auth';
 import Button from './Modules/Button';
 import Carousel from './Modules/Carousel';
 import ChangeConfirm from './Modules/ChangeConfirm';
@@ -67,7 +67,7 @@ class Core extends Webiny.App {
         this.modules = [
             new Alert(this),
             new Animate(this),
-            new Authentication(this),
+            new Auth(this),
             new Button(this),
             new Carousel(this),
             new ChangeConfirm(this),

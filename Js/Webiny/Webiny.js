@@ -56,6 +56,12 @@ class Webiny {
             });
             return loader;
         }).then(() => {
+            config.apps.map(name => {
+                if (name === config.auth) {
+                    this.Auth = _.get(this.Apps, name).getAuth();
+                    this.Auth.init();
+                }
+            });
             // Mount RootElement
             const RootElement = this.RootElement;
             this.app = ReactDOM.render(<RootElement/>, document.querySelector('webiny-app'));
@@ -63,7 +69,7 @@ class Webiny {
     }
 
     registerApp(app) {
-        this.Apps[app.name] = app;
+        _.set(this.Apps, app.name, app);
         return this;
     }
 
@@ -133,7 +139,7 @@ class Webiny {
         }
 
         return loadConfig.then(runApp).then(() => {
-            return this.Apps[name];
+            return _.get(this.Apps, name);
         });
     }
 

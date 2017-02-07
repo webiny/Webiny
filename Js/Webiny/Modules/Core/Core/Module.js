@@ -26,7 +26,7 @@ class Module {
      * @returns {string}
      */
     getName() {
-        return this.name;
+        return this.name || this.constructor.name;
     }
 
     /**
@@ -36,28 +36,6 @@ class Module {
     registerComponents(components) {
         _.forEach(components, (value, key) => {
             _.set(this.app, `${this.name}.Components.` + key, value);
-        });
-        return this;
-    }
-
-    /**
-     * @param views
-     * @returns {Module}
-     */
-    registerViews(views) {
-        _.forEach(views, (value, key) => {
-            _.set(this.app, `${this.name}.Views.` + key, value);
-        });
-        return this;
-    }
-
-    /**
-     * @param actions
-     * @returns {Module}
-     */
-    registerActions(actions) {
-        _.forEach(actions, (value, key) => {
-            _.set(this.app, `${this.name}.Actions.` + key, value);
         });
         return this;
     }

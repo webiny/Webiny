@@ -5,7 +5,7 @@ class Route {
     constructor(name, pattern, components, title = '') {
         // Normalize components
         const nComponents = {};
-        if (!_.isPlainObject(components)) {
+        if (!_.isPlainObject(components) || React.isValidElement(components)) {
             nComponents['Content'] = components;
         } else {
             _.forIn(components, (cmp, placeholder) => {

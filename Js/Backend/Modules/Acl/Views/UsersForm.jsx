@@ -45,7 +45,7 @@ class Form extends Webiny.Ui.View {
 Form.defaultProps = {
     renderer() {
         const containerProps = {
-            api: '/entities/core/users',
+            api: Webiny.Auth.getApiEndpoint(),
             fields: 'id,firstName,lastName,email,roles,enabled',
             connectToRouter: true,
             onSubmitSuccess: 'Users.List',
