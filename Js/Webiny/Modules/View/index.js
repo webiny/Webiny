@@ -12,6 +12,7 @@ import Footer from './Footer';
 class Module extends Webiny.Module {
 
     init() {
+        this.name = 'View';
         Webiny.Ui.Components.View = View;
         View.Form = FormView;
         View.List = ListView;

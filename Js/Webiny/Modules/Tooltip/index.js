@@ -4,6 +4,7 @@ import Tooltip from './Tooltip';
 class Module extends Webiny.Module {
 
     init() {
+        this.name = 'Tooltip';
         Webiny.Ui.Components.Tooltip = Tooltip;
     }
 }

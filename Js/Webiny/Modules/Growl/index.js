@@ -10,6 +10,7 @@ import Danger from './Components/DangerGrowl';
 class Module extends Webiny.Module {
 
     init() {
+        this.name = 'Growl';
         Webiny.Ui.Components.Growl = {
             Container,
             Info,

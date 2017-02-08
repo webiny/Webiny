@@ -3,6 +3,7 @@ import Fieldset from './Fieldset';
 
 class Module extends Webiny.Module {
     init() {
+        this.name = 'Fieldset';
         Webiny.Ui.Components.Fieldset = Fieldset;
     }
 }

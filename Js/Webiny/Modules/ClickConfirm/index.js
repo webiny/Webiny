@@ -3,8 +3,8 @@ import ClickConfirm from './ClickConfirm';
 
 class Module extends Webiny.Module {
 
-    constructor(app) {
-        super(app);
+    init() {
+        this.name = 'ClickConfirm';
         Webiny.Ui.Components.ClickConfirm = ClickConfirm;
     }
 }

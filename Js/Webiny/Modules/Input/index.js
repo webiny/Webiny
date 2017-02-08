@@ -5,6 +5,7 @@ import SimpleInput from './SimpleInput';
 class Module extends Webiny.Module {
 
     init() {
+        this.name = 'Input';
         Webiny.Ui.Components.Input = Input;
         Webiny.Ui.Components.SimpleInput = SimpleInput;
     }

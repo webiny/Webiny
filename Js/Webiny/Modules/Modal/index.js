@@ -9,6 +9,7 @@ import Success from './Components/Success';
 class Module extends Webiny.Module {
 
     init() {
+        this.name = 'Modal';
         Webiny.Ui.Components.Modal = {
             Dialog,
             Body,

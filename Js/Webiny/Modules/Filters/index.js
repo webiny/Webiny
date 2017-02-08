@@ -5,8 +5,8 @@ import FileSize from './FileSize';
 
 class Module extends Webiny.Module {
 
-    constructor(app) {
-        super(app);
+    init() {
+        this.name = 'Filters';
         Webiny.Filter = Filter;
         Webiny.Ui.Components.Filters.DateTime = DateTime;
         Webiny.Ui.Components.Filters.FileSize = FileSize;

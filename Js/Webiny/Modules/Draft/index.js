@@ -33,6 +33,7 @@ import ToJSON from './Plugins/ToJSON';
 class Module extends Webiny.Module {
 
     init() {
+        this.name = 'Draft';
         Webiny.Ui.Components.Draft = {
             Editor,
             SimpleEditor,

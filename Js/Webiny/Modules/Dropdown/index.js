@@ -7,6 +7,7 @@ import Link from './Link';
 class Module extends Webiny.Module {
 
     init() {
+        this.name = 'Dropdown';
         Webiny.Ui.Components.Dropdown = Dropdown;
         _.assign(Dropdown, {
             Header,

@@ -1,13 +1,13 @@
 import Webiny from 'Webiny';
 import Components from './Components/Components';
-import Layout from './Layout';
+import DefaultLayout from './Layout';
 import EmptyLayout from './EmptyLayout';
 import Dashboard from './Views/Dashboard';
 
-class Module extends Webiny.Module {
+class Layout extends Webiny.Module {
 
     init() {
-        this.registerDefaultLayout(Layout);
+        this.registerDefaultLayout(DefaultLayout);
         this.registerLayout('empty', EmptyLayout);
         this.registerComponents(Components);
 
@@ -23,4 +23,4 @@ class Module extends Webiny.Module {
     }
 }
 
-export default Module;
+export default Layout;

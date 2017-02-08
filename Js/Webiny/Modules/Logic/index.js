@@ -6,6 +6,7 @@ import Hide from './Hide';
 class Module extends Webiny.Module {
 
     init() {
+        this.name = 'Logic';
         Webiny.Ui.Components.Logic = {
             Show,
             Hide,

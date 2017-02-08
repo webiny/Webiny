@@ -3,8 +3,8 @@ import ClickSuccess from './ClickSuccess';
 
 class Module extends Webiny.Module {
 
-    constructor(app) {
-        super(app);
+    init() {
+        this.name = 'ClickSuccess';
         Webiny.Ui.Components.ClickSuccess = ClickSuccess;
     }
 }

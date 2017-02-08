@@ -7,6 +7,7 @@ import TabContent from './TabContent';
 class Module extends Webiny.Module {
 
     init() {
+        this.name = 'Tabs';
         Webiny.Ui.Components.Tabs = Tabs;
         Tabs.Tab = Tab;
         Tab.Header = TabHeader;

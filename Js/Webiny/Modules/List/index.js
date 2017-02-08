@@ -52,6 +52,7 @@ ExpandableList.RowDetailsList = ElRowDetailsList;
 class Module extends Webiny.Module {
 
     init() {
+        this.name = 'List';
         Webiny.Ui.Components.ExpandableList = ExpandableList;
         Webiny.Ui.Components.List = List;
         _.assign(List, {

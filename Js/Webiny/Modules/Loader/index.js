@@ -4,6 +4,7 @@ import Loader from './Loader';
 class Module extends Webiny.Module {
 
     init() {
+        this.name = 'Loader';
         Webiny.Ui.Components.Loader = Loader;
     }
 }

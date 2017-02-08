@@ -10,6 +10,7 @@ import DateRange from './DateRange';
 class Module extends Webiny.Module {
 
     init() {
+        this.name = 'DateTime';
         Webiny.Ui.Components.Date = Date;
         Webiny.Ui.Components.DateTime = DateTime;
         Webiny.Ui.Components.Time = Time;

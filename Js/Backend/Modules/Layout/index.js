@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
 import Components from './Components';
 
-class Module extends Webiny.Module {
+class Layout extends Webiny.Module {
 
     init() {
         this.registerComponents(Components);
@@ -17,4 +17,4 @@ class Module extends Webiny.Module {
     }
 }
 
-export default Module;
+export default Layout;

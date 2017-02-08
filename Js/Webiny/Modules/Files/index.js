@@ -13,6 +13,7 @@ import ImageUploader from './Image/ImageUploader';
 class Module extends Webiny.Module {
 
     init() {
+        this.name = 'Files';
         Webiny.Ui.Components.Files = {
             Avatar,
             Gallery,

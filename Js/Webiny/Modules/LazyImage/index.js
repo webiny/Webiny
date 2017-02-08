@@ -5,6 +5,7 @@ import ImageSet from './ImageSet';
 class Module extends Webiny.Module {
 
     init() {
+        this.name = 'LazyImage';
         Webiny.Ui.Components.LazyImage = {Image, ImageSet};
     }
 }
