@@ -35,7 +35,7 @@ class Module {
      */
     registerComponents(components) {
         _.forEach(components, (value, key) => {
-            _.set(this.app, `${this.name}.Components.` + key, value);
+            _.set(this.app, `${this.getName()}.Components.` + key, value);
         });
         return this;
     }
