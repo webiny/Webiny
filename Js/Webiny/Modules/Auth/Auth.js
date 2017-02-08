@@ -49,6 +49,10 @@ class Auth {
         return this.getUser(routerEvent).then(this.checkRouteRole.bind(this));
     }
 
+    isAuthorized(user) {
+        return _.find(user.roles, {slug: 'administrator'}) !== undefined;
+    }
+
     checkRouteRole(routerEvent) {
         if (webinyConfig.CheckUserRoles && _.has(routerEvent.route, 'role')) {
             return new Promise((resolve) => {
@@ -78,10 +82,6 @@ class Auth {
 
     getUserFields() {
         return '*,roles.slug,gravatar';
-    }
-
-    getRequiredUserRole() {
-        return 'administrator';
     }
 
     getUser(routerEvent) {
@@ -124,7 +124,7 @@ class Auth {
 
     onVerifyUser(routerEvent, apiResponse) {
         const data = apiResponse.getData();
-        if (!_.find(data.roles, {slug: this.getRequiredUserRole()})) {
+        if (!this.isAuthorized(data)) {
             Webiny.Cookies.remove(this.getCookieName());
             return this.goToLogin(routerEvent);
         }

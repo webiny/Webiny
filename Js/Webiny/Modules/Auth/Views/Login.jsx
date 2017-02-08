@@ -32,8 +32,7 @@ class Login extends Webiny.Ui.View {
             }
 
             const data = apiResponse.getData();
-            // Verify user - must have an administrator role
-            if (!_.find(data.user.roles, {slug: 'administrator'})) {
+            if (!Webiny.Auth.isAuthorized(data.user)) {
                 return form.setState({error: 'Some of your input isn\'t quite right.'});
             }
 
@@ -51,8 +50,7 @@ Login.defaultProps = {
             name: 'password',
             placeholder: 'Password',
             label: 'Password',
-            validate: 'required,password'/*,
-             info: <span className="info-txt"><a tabIndex="-1" href="#">Forgot your password?</a></span>*/
+            validate: 'required,password'
         };
 
         return (
