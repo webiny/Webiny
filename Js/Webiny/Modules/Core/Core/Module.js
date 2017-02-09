@@ -26,7 +26,7 @@ class Module {
      * @returns {string}
      */
     getName() {
-        return this.name || this.constructor.name;
+        return this.name;
     }
 
     /**

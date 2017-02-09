@@ -1,9 +1,10 @@
 import Webiny from 'Webiny';
 import Views from './Views/Views';
 
-class Acl extends Webiny.Module {
+class Module extends Webiny.Module {
 
     init() {
+        this.name = 'Acl';
         const Menu = Webiny.Ui.Menu;
 
         const aclManageUsers = 'core-acl-user-manager';
@@ -41,4 +42,4 @@ class Acl extends Webiny.Module {
     }
 }
 
-export default Acl;
+export default Module;

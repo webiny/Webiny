@@ -7,6 +7,7 @@ import Dashboard from './Views/Dashboard';
 class Layout extends Webiny.Module {
 
     init() {
+        this.name = 'Layout';
         this.registerDefaultLayout(DefaultLayout);
         this.registerLayout('empty', EmptyLayout);
         this.registerComponents(Components);

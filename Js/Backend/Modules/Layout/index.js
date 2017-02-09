@@ -4,6 +4,7 @@ import Components from './Components';
 class Layout extends Webiny.Module {
 
     init() {
+        this.name = 'Layout';
         this.registerComponents(Components);
         this.registerDefaultComponents({
             Header: Components.Header,

@@ -4,6 +4,7 @@ import Views from './Views/Views';
 class Logger extends Webiny.Module {
 
     init() {
+        this.name = 'Logger';
         const Menu = Webiny.Ui.Menu;
 
         this.registerMenus(
