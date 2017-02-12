@@ -3,6 +3,12 @@ const Ui = Webiny.Ui.Components;
 
 class Input extends Webiny.Ui.FormComponent {
 
+    constructor(props) {
+        super(props);
+
+        this.bindMethods('focus');
+    }
+
     onKeyDown(e) {
         if (e.metaKey || e.ctrlKey) {
             return;
@@ -19,6 +25,10 @@ class Input extends Webiny.Ui.FormComponent {
                 break;
         }
     }
+
+    focus() {
+        ReactDOM.findDOMNode(this).querySelector('input').focus();
+    }
 }
 
 Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
@@ -30,7 +40,7 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     placeholder: null,
     readOnly: false,
     type: 'text',
-    autoFocus: _.noop(),
+    autoFocus: null,
     renderer() {
         const cssConfig = {
             'form-group': true,
