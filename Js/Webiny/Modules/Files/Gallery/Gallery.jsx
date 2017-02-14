@@ -183,13 +183,18 @@ class Gallery extends ImageComponent {
 
     onImageDragStart(e) {
         this.dragged = $(e.currentTarget).closest('[data-role="image"]')[0];
-        e.dataTransfer.setDragImage(this.dragged, 10, 50);
-        // Firefox requires calling dataTransfer.setData for the drag to properly work
-        e.dataTransfer.setData('text/html', this.dragged);
+        if (this.dragged) {
+            e.dataTransfer.setDragImage(this.dragged, 10, 50);
+            // Firefox requires calling dataTransfer.setData for the drag to properly work
+            e.dataTransfer.setData('text/html', this.dragged);
+        }
     }
 
     onImageDragEnd(e) {
         e.preventDefault();
+        if (!this.dragged) {
+            return;
+        }
         // Update state
         let data = this.state.images;
         const from = Number(this.dragged.dataset.id);
