@@ -3,6 +3,7 @@ import LinkState from './LinkState';
 import Dispatcher from './Dispatcher';
 import UiDispatcher from './UiDispatcher';
 import md5 from 'blueimp-md5';
+import isMobile from 'ismobilejs';
 
 class Component extends React.Component {
 

@@ -19,6 +19,7 @@ module.exports = (config) => {
         'eonasdan-bootstrap-datetimepicker',
         'highlight.js',
         'js-cookie',
+        'ismobilejs',
         'lodash',
         'moment',
         'owl.carousel',
