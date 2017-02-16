@@ -53,6 +53,9 @@ class Footer extends Webiny.Ui.Component {
 
 Footer.defaultProps = {
     renderer() {
+        return false;
+
+        /*
         return (
             <footer>
                 <ul className="links">
@@ -69,6 +72,7 @@ Footer.defaultProps = {
                 </div>
             </footer>
         );
+        */
     }
 };
 
