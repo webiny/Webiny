@@ -139,7 +139,7 @@ class Bootstrap
                 $_SERVER = array_merge($_SERVER, $headers);
             }
             Request::getInstance();
-
+            Authorization::getInstance()->reset();
             $response = $this->wEvents()->fire('Core.Bootstrap.Request', new BootstrapEvent(), $responseClass, 1);
             if ($response instanceof ApiResponse) {
                 $responseData = $this->processResponse($response, true);
