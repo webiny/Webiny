@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import moment from 'moment';
 const Ui = Webiny.Ui.Components;
 
 class ApiTokensLogs extends Webiny.Ui.View {

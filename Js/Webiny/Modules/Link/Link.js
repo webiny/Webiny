@@ -6,7 +6,7 @@ class Link extends Webiny.Ui.Component {
         super(props);
 
         this.bindMethods('getLinkProps');
-        this.allowedProps = ['className', 'style', 'target', 'href', 'onClick', 'title'];
+        this.allowedProps = ['className', 'style', 'target', 'href', 'onClick', 'title', 'tabIndex'];
     }
 
     getLinkProps() {
@@ -113,6 +113,7 @@ Link.defaultProps = {
     params: {},
     separate: false,
     className: '',
+    tabIndex: false,
     renderer() {
         return (
             <a {...this.getLinkProps()}>{this.props.children}</a>

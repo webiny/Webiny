@@ -53,6 +53,7 @@ class TemplateEngine
         self::$templateEngine = $this->templateEngine('Smarty');
 
         self::$templateEngine->assign('Webiny', new View());
+        self::$templateEngine->assign('WebinyEnvironment', $this->wIsProduction() ? 'production' : 'development');
     }
 
     /**
