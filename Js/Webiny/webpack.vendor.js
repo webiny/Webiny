@@ -7,6 +7,7 @@ module.exports = (config) => {
         'react-dom',
         'react-dom/server',
         'react-addons-transition-group',
+        'classnames',
         'draft-js',
         'immutable',
         'baobab',

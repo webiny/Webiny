@@ -4,6 +4,7 @@ import Dispatcher from './Dispatcher';
 import UiDispatcher from './UiDispatcher';
 import md5 from 'blueimp-md5';
 import isMobile from 'ismobilejs';
+import classNames from 'classnames';
 
 class Component extends React.Component {
 
@@ -146,32 +147,7 @@ class Component extends React.Component {
     }
 
     classSet(...sets) {
-        let classes = [];
-
-        _.forIn(sets, classObject => {
-            if (!classObject) {
-                return;
-            }
-
-            if (typeof classObject === 'string') {
-                classes = classes.concat(classObject.split(' '));
-                return;
-            }
-
-            if (classObject instanceof Array) {
-                classes = classes.concat(classObject);
-                return;
-            }
-
-            _.forIn(classObject, (value, className) => {
-                if (!value) {
-                    return;
-                }
-                classes.push(className);
-            });
-        });
-
-        return classes.join(' ');
+        return classNames(...sets);
     }
 
     /**
