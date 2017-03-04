@@ -1,19 +1,34 @@
 import ApiEndpoint from './../Api/Endpoint';
 
+const apiProps = [
+    'fields',
+    'page',
+    'perPage',
+    'sort',
+    'searchFields',
+    'searchQuery',
+    'searchOperator'
+];
+
+function normalizeParams(params) {
+    const verifiedParams = {};
+    _.each(params, (v, k) => {
+        if (k === 'fields' || k === '_fields') {
+            v = v.replace(' ', '');
+        }
+        if (apiProps.indexOf(k) > -1) {
+            verifiedParams['_' + k] = v;
+        } else {
+            verifiedParams[k] = v;
+        }
+    });
+    return verifiedParams;
+}
+
 class ApiComponent {
 
     static extend(context) {
         if (context.props.api) {
-            const apiProps = [
-                'fields',
-                'page',
-                'perPage',
-                'sort',
-                'searchFields',
-                'searchQuery',
-                'searchOperator'
-            ];
-
             if (_.isString(context.props.api)) {
                 const config = _.pick(context.props, ['httpMethod', 'url', 'body', 'query']);
                 if (!config.query || _.isPlainObject(config.query)) {
@@ -23,6 +38,9 @@ class ApiComponent {
                 context.api = new ApiEndpoint(context.props.api, config);
             } else {
                 context.api = context.props.api;
+                const apiQuery = context.api.getQuery();
+                _.merge(apiQuery, normalizeParams(_.pick(context.props, apiProps)));
+                context.api.setQuery(apiQuery);
             }
         }
     }

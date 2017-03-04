@@ -83,7 +83,7 @@ Form.defaultProps = {
                                     <table className="table table-simple">
                                         <thead>
                                         <tr>
-                                            <th className="text-left" style={{width: 140}}></th>
+                                            <th className="text-left" style={{width: 140}}/>
                                             <th className="text-left">Role</th>
                                             <th className="text-left">Description</th>
                                         </tr>
