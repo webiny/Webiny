@@ -24,6 +24,7 @@ class RouteAction extends Webiny.Ui.Component {
         }
 
         if (_.isFunction(params)) {
+            //noinspection JSUnresolvedFunction
             params = params(this.props.data);
         }
         return params;

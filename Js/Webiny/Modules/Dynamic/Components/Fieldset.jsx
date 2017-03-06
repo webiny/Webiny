@@ -65,15 +65,15 @@ class Fieldset extends Webiny.Ui.FormComponent {
         }
 
         React.Children.map(children, child => {
-            if (child.type === Ui.Dynamic.Row) {
+            if (Webiny.isElementOfType(child, Ui.Dynamic.Row)) {
                 this.rowTemplate = child.props.children;
             }
 
-            if (child.type === Ui.Dynamic.Header) {
+            if (Webiny.isElementOfType(child, Ui.Dynamic.Header)) {
                 this.headerTemplate = child.props.children;
             }
 
-            if (child.type === Ui.Dynamic.Empty) {
+            if (Webiny.isElementOfType(child, Ui.Dynamic.Empty)) {
                 this.emptyTemplate = child.props.children;
             }
         });

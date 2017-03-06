@@ -1,6 +1,8 @@
 import RouterEvent from './RouterEvent';
 import Utils from './RouterUtils';
 import Dispatcher from './../Core/Dispatcher';
+import 'historyjs/scripts/bundled-uncompressed/html5/native.history';
+import 'jquery-deparam';
 
 /**
  * ROUTER
@@ -148,7 +150,6 @@ class Router {
 
     setDefaultComponents(components) {
         _.assign(this.defaultComponents, components);
-        console.log(this.defaultComponents);
         return this;
     }
 

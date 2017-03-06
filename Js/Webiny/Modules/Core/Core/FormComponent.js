@@ -119,7 +119,7 @@ class FormComponent extends Component {
     }
 
     getPlaceholder() {
-        if (React.isValidElement(this.props.placeholder) && _.get(this.props.placeholder, 'type.name') === 'I18N') {
+        if (React.isValidElement(this.props.placeholder) && Webiny.isElementOfType(this.props.placeholder, Webiny.Ui.Components.I18N)) {
             const props = this.props.placeholder.props;
             return Webiny.i18n(props.translationKey, props.placeholder, props.variables, props.options);
         }

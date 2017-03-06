@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import dynamics from 'dynamics.js';
 
 const Ui = Webiny.Ui.Components;
 const mountedDialogs = [];
@@ -215,9 +216,9 @@ class Dialog extends Webiny.Ui.Component {
             return child;
         }
 
-        if ([Ui.Modal.Header, Ui.Modal.Body, Ui.Modal.Footer].indexOf(child.type) > -1) {
+        if (_.find([Ui.Modal.Header, Ui.Modal.Body, Ui.Modal.Footer], c => Webiny.isElementOfType(child, c))) {
             const props = {dialog: this};
-            if (child.type === Ui.Modal.Header) {
+            if (Webiny.isElementOfType(child, Ui.Modal.Header)) {
                 props['onClose'] = this.hide;
             }
             return React.cloneElement(child, props);

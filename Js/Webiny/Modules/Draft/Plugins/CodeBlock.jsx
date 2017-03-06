@@ -1,7 +1,8 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 import AtomicPlugin from './../BasePlugins/AtomicPlugin';
 import Utils from './../Utils';
+
+const Ui = Webiny.Ui.Components;
 
 const languageMap = {
     'html': 'text/html',

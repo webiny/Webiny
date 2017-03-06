@@ -21,16 +21,16 @@ class FormView extends Webiny.Ui.Component {
 
         // Loop through View elements and detect header/body/footer components
         React.Children.map(children, child => {
-            if (child.type === Ui.View.Header) {
+            if (Webiny.isElementOfType(child, Ui.View.Header)) {
                 this.headerComponent = child;
                 return;
             }
 
-            if (child.type === Ui.View.Body) {
+            if (Webiny.isElementOfType(child, Ui.View.Body)) {
                 // Check if form loader exists in body
                 let loader = null;
                 React.Children.map(child.props.children, bodyChild => {
-                    if (bodyChild.type === Ui.Form.Loader) {
+                    if (Webiny.isElementOfType(bodyChild, Ui.Form.Loader)) {
                         loader = true;
                     }
                 });
@@ -51,14 +51,13 @@ class FormView extends Webiny.Ui.Component {
                 return;
             }
 
-            if (child.type === Ui.View.Footer) {
+            if (Webiny.isElementOfType(child, Ui.View.Footer)) {
                 this.footerComponent = child;
                 return;
             }
 
-            if (child.type === Ui.Form.Error) {
+            if (Webiny.isElementOfType(child, Ui.Form.Error)) {
                 this.errorComponent = React.cloneElement(child, _.merge(child.props, {error: this.props.form.getError()}));
-                return;
             }
         });
 

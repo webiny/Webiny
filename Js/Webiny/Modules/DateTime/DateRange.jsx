@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import moment from 'moment';
 
 class DateRange extends Webiny.Ui.FormComponent {
 

@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import Draft from 'draft-js';
 
 class PluginBlock extends Webiny.Ui.Component {
     constructor(props) {

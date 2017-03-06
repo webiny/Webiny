@@ -9,6 +9,9 @@ class ModalComponent extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        if (DEVELOPMENT && Webiny.isHotReloading()) {
+            return true;
+        }
         const omitProps = ['renderer', 'renderDialog'];
         const newProps = _.omit(nextProps, omitProps);
         const oldProps = _.omit(this.props, omitProps);
@@ -40,7 +43,7 @@ ModalComponent.defaultProps = {
     renderDialog: null,
     renderer() {
         const dialog = this.renderDialog();
-        if (dialog.type === Webiny.Ui.Components.Modal.Dialog) {
+        if (Webiny.isElementOfType(dialog, Webiny.Ui.Components.Modal.Dialog)) {
             const props = {ref: 'dialog', onHidden: this.props.onHidden};
             return React.cloneElement(dialog, props);
         }

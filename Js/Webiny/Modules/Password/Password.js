@@ -34,7 +34,7 @@ class Password extends Webiny.Ui.Component {
 Password.defaultProps = {
     renderer() {
         const props = _.omit(this.props, ['renderer']);
-        props.info = <Ui.Link onClick={this.togglePassword}><Ui.Icon icon={this.state.icon}/> {this.state.msg}</Ui.Link>;
+        props.info = <Ui.Link tabIndex="-1" onClick={this.togglePassword}><Ui.Icon icon={this.state.icon}/> {this.state.msg}</Ui.Link>;
         props.type = this.state.showPassword ? 'text' : 'password';
 
         return (

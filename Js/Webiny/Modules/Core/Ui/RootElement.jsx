@@ -3,6 +3,7 @@ import Router from './../Router/Router';
 import Dispatcher from './../Core/Dispatcher';
 import UiDispatcher from './../Core/UiDispatcher';
 import Placeholder from './Placeholder';
+import dynamics from 'dynamics.js';
 
 class RootElement extends View {
 
@@ -13,7 +14,9 @@ class RootElement extends View {
             loading: true
         };
 
-        this.bindMethods('onDidUpdate,checkHash');
+        this.loader = document.querySelector('.preloader-wrap');
+
+        this.bindMethods('onDidUpdate,checkHash,forceUpdate');
     }
 
     componentDidMount() {
@@ -23,7 +26,6 @@ class RootElement extends View {
             });
         });
 
-        this.hideLoader();
         Router.start().then(() => {
             this.setState({loading: false});
             this.checkHash();
@@ -44,33 +46,38 @@ class RootElement extends View {
     }
 
     hideLoader() {
-        const loader = document.querySelector('.preloader-wrap');
-        if (loader) {
-            setTimeout(() => {
-                dynamics.animate(loader, {
-                    opacity: 0
-                }, {
-                    type: dynamics.easeOut,
-                    duration: 500,
-                    complete: () => {
-                        loader.style.display = 'none';
-                    }
-                });
-            }, 200);
+        if (this.loader) {
+            dynamics.animate(this.loader, {
+                opacity: 0
+            }, {
+                type: dynamics.easeOut,
+                duration: 500,
+                complete: () => {
+                    this.loader.style.display = 'none';
+                    this.loader = null;
+                }
+            });
         }
     }
 
     onDidUpdate() {
+        this.hideLoader();
         window.scrollTo(0, 0);
         this.checkHash();
     }
+}
 
-    render() {
+RootElement.defaultProps = _.merge({}, View.defaultProps, {
+    renderer() {
         if (!this.state.loading) {
-            return <Placeholder onDidUpdate={this.onDidUpdate} name="Layout"/>;
+            return (
+                <div>
+                    <Placeholder onDidUpdate={this.onDidUpdate} name="Layout"/>
+                </div>
+            );
         }
         return null;
     }
-}
+});
 
 export default RootElement;

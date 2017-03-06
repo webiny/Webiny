@@ -1,3 +1,5 @@
+import dynamics from 'dynamics.js';
+
 class AnimationSets {
     static fadeIn(el, callback) {
         dynamics.animate(el, {

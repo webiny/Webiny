@@ -17,7 +17,8 @@ SimpleEditor.defaultProps = _.merge({}, Editor.defaultProps, {
             new Webiny.Draft.Plugins.Alignment(),
             new Webiny.Draft.Plugins.Link({validate: 'required'}),
             new Webiny.Draft.Plugins.Blockquote(),
-            new Webiny.Draft.Plugins.Table()
+            new Webiny.Draft.Plugins.Table(),
+            new Webiny.Draft.Plugins.Image()
         ];
 
         plugins = _.merge(plugins, this.props.plugins);

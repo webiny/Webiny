@@ -58,8 +58,6 @@ class SmartyExtension extends AbstractSmartyExtension
                 </p>';
             die();
         }
-        $cssPath = '';
-        $jsPath = '';
 
         $metaConfig = ['Core.Webiny' => $meta];
 
@@ -68,21 +66,14 @@ class SmartyExtension extends AbstractSmartyExtension
             $metaConfig[$app] = $appsHelper->getAppsMeta($app);
         }
 
-        foreach ($meta['assets']['js'] as $file) {
-            if ($this->str($file)->contains('/vendors')) {
-                $jsPath = $assetsJsPath . $file;
-            }
-        }
-
-        foreach ($meta['assets']['css'] as $file) {
-            if ($this->str($file)->contains('/vendors')) {
-                $cssPath = $assetsCssPath . $file;
-            }
-        }
-
         $flags = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE;
         $config = json_encode($jsConfig, $flags);
         $appsMeta = json_encode($metaConfig, $flags);
+
+        $browserSync = '<script src="http://localhost:3000/browser-sync/browser-sync-client.js?v=2.18.6"></script>';
+        if ($this->wIsProduction()) {
+            $browserSync = '';
+        }
 
         return <<<EOT
     <script type="text/javascript">
@@ -93,9 +84,22 @@ class SmartyExtension extends AbstractSmartyExtension
         var webinyJsPath = '{$assetsJsPath}';
         var webinyConfig = {$config};
         var webinyMeta = {$appsMeta};
+
+        var loadScript = function(url) {
+            var s = document.createElement('script');
+            s.type = 'text/javascript';
+            s.src = url;
+            s.async = true;
+            document.body.appendChild(s);
+            return s;
+        };
+
+        loadScript('{$meta['vendor']}').onload = function() {
+            loadScript('{$meta['bootstrap']}');
+        };
     </script>
-    <link href="{$cssPath}" rel="stylesheet" type="text/css"/>
-    <script src="{$jsPath}" type="text/javascript"></script>
+    {$browserSync}
+    <webiny-app/>
 EOT;
     }
 }

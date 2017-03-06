@@ -11,10 +11,10 @@ class Dispatcher {
         }
 
         // Execute before change callbacks in a chain
-        let callbacksChain = Promise.resolve(data).then(res => res);
+        let callbacksChain = Promise.resolve(data);
 
         this.listeners[event].forEach(listener => {
-            callbacksChain = callbacksChain.then(listener.listener).catch(e => console.error(e));
+            callbacksChain = callbacksChain.then(res => listener.listener(res)).catch(e => console.error(e));
         });
 
         return callbacksChain;

@@ -1,4 +1,5 @@
 import BasePlugin from './BasePlugin';
+import Draft from 'draft-js';
 
 class InlineStylePlugin extends BasePlugin {
     constructor(config) {

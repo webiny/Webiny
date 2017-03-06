@@ -23,7 +23,7 @@ TabHeader.defaultProps = {
     active: false,
     labelRenderer() {
         let label = this.props.label;
-        const i18n = React.isValidElement(label) && _.get(label, 'type.name') === 'I18N';
+        const i18n = React.isValidElement(label) && Webiny.isElementOfType(label, Webiny.Ui.Components.I18N);
         if (_.isString(this.props.label) || i18n) {
             label = (
                 <a href="javascript:void(0);">

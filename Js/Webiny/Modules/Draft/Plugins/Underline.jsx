@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 import InlineStylePlugin from './../BasePlugins/InlineStylePlugin';
+const Ui = Webiny.Ui.Components;
 
 class UnderlinePlugin extends InlineStylePlugin {
     constructor(config) {

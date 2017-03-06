@@ -1,3 +1,6 @@
+import Draft from 'draft-js';
+import Immutable from 'immutable';
+
 function filterKey(entityKey) {
     if (entityKey) {
         const entity = Draft.Entity.get(entityKey);
@@ -157,24 +160,6 @@ const utils = {
         const left = (rangeBounds.left - editorBounds.left) + (rangeWidth / 2);
         const top = rangeBounds.top - editorBounds.top;
         return {left, top};
-    },
-
-    toHtml: (editorState, plugins) => {
-        const contentState = Draft.convertToRaw(editorState.getCurrentContent());
-        const renderedBlocks = [];
-        contentState.blocks.map(block => {
-            const children = null;
-            plugins.map(plugin => {
-                if (_.isFunction(plugin.toHtml)) {
-                    const element = plugin.toHtml(block, children);
-                    if (element) {
-                        renderedBlocks.push(_.isString(element) ? element : ReactDOMServer.renderToStaticMarkup(element));
-                    }
-                }
-            });
-        });
-
-        return renderedBlocks.join('\n');
     }
 };
 

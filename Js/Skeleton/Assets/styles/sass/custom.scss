@@ -293,6 +293,15 @@
       line-height: 150%;
     }
 
+    ul, ol{
+      li{
+        list-style-position: outside;
+        >div{
+          display: inline-block;
+        }
+      }
+    }
+
     h1 span[data-text="true"],
     h2 span[data-text="true"],
     h3 span[data-text="true"],

@@ -1,4 +1,7 @@
 import Webiny from 'Webiny';
+
+// TODO: https://www.npmjs.com/package/react-google-maps
+
 class GoogleMap extends Webiny.Ui.Component {
 
     constructor(props) {
@@ -10,7 +13,7 @@ class GoogleMap extends Webiny.Ui.Component {
         this.loading = null;
 
         if (!window.google) {
-            WebinyBootstrap.includeScript('https://maps.googleapis.com/maps/api/js?key=' + this.props.key);
+            Webiny.loadScript('https://maps.googleapis.com/maps/api/js?key=' + this.props.key);
         }
 
         this.bindMethods('positionMarker,setupMap,search');

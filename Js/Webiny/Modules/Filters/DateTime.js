@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import moment from 'moment';
 
 class DateTime extends Webiny.Ui.Component {
 

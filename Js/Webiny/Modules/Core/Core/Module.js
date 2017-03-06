@@ -35,29 +35,7 @@ class Module {
      */
     registerComponents(components) {
         _.forEach(components, (value, key) => {
-            _.set(this.app, `${this.name}.Components.` + key, value);
-        });
-        return this;
-    }
-
-    /**
-     * @param views
-     * @returns {Module}
-     */
-    registerViews(views) {
-        _.forEach(views, (value, key) => {
-            _.set(this.app, `${this.name}.Views.` + key, value);
-        });
-        return this;
-    }
-
-    /**
-     * @param actions
-     * @returns {Module}
-     */
-    registerActions(actions) {
-        _.forEach(actions, (value, key) => {
-            _.set(this.app, `${this.name}.Actions.` + key, value);
+            _.set(this.app, `${this.getName()}.Components.` + key, value);
         });
         return this;
     }
@@ -94,14 +72,6 @@ class Module {
 
     registerLayout(name, component) {
         Webiny.Router.addLayout(name, component);
-        return this;
-    }
-
-    /**
-     * Override if needed
-     * @returns {Module}
-     */
-    run() {
         return this;
     }
 }

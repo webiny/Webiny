@@ -1,6 +1,7 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 import ListErrors from './ListErrors';
+const Ui = Webiny.Ui.Components;
+
 
 class Main extends Webiny.Ui.View {
 

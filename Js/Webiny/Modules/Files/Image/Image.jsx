@@ -63,7 +63,7 @@ Image.defaultProps = {
             );
         }
 
-        if (this.state.cropImage && this.props.cropper.inline) {
+        if (this.state.cropImage && _.get(this.props, 'cropper.inline', false)) {
             return this.getCropper();
         }
 

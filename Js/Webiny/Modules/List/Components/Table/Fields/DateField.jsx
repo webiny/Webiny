@@ -1,4 +1,5 @@
 import Field from './../Field';
+import moment from 'moment';
 
 class DateField extends Field {
 

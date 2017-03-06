@@ -52,7 +52,7 @@ class ViewSwitcher extends Webiny.Ui.Component {
     }
 
     renderView(view) {
-        if (view.type === Ui.ViewSwitcher.View) {
+        if (Webiny.isElementOfType(view, Ui.ViewSwitcher.View)) {
             if (view.props.defaultView) {
                 this.defaultView = view.props.view;
             }

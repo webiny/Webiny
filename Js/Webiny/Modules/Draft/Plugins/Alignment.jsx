@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 import BasePlugin from './../BasePlugins/BasePlugin';
+const Ui = Webiny.Ui.Components;
 
 class Alignment extends BasePlugin {
     constructor(config) {

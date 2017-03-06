@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
 
 class Email extends Webiny.Ui.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.bindMethods('focus');
@@ -16,9 +16,8 @@ Email.defaultProps = {
     renderer() {
         const props = _.omit(this.props, ['renderer']);
         if (props.onChange) {
-            const realOnChange = props.onChange;
-            props.onChange = (value) => {
-                realOnChange(value ? value.toLowerCase() : value);
+            props.onChange = (value, cb = _.noop) => {
+                this.props.onChange(value ? value.toLowerCase() : value, cb);
             };
         }
 

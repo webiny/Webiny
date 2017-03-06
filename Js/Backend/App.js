@@ -1,27 +1,39 @@
 import Webiny from 'Webiny';
+import Acl from './Modules/Acl';
+import Layout from './Modules/Layout';
+import Logger from './Modules/Logger';
+import Auth from './Auth';
 
-const backend = new Webiny.App('Core.Backend', ['Core.Skeleton']);
-backend.beforeRender(() => {
-    Webiny.Http.addRequestInterceptor(http => {
-        if (Webiny.Cookies.get('XDEBUG_SESSION')) {
-            if (!http.query) {
-                http.query = {};
-            }
-            http.query.XDEBUG_SESSION_START = Webiny.Cookies.get('XDEBUG_SESSION');
-        }
-    });
+class Backend extends Webiny.App {
+    constructor() {
+        super('Core.Backend');
+        this.modules = [
+            new Acl(this),
+            new Layout(this),
+            new Logger(this)
+        ];
 
-    // Load other backend apps
-    const api = new Webiny.Api.Endpoint('/services/core/apps');
-    return api.get('/backend').then(res => {
-        let apps = Promise.resolve();
-        _.forIn(res.getData(), config => {
-            apps = apps.then(() => {
-                return WebinyBootstrap.includeApp(config.name, config);
+        this.beforeRender(() => {
+            // Load other backend apps
+            const api = new Webiny.Api.Endpoint('/services/core/apps');
+            return api.get('/backend').then(res => {
+                let apps = Promise.resolve();
+                _.forIn(res.getData(), config => {
+                    apps = apps.then(() => Webiny.includeApp(config.name, config).then(app => {
+                        if (config.name === window.Webiny.auth) {
+                            Webiny.Auth = app.getAuth();
+                        }
+                        app.run();
+                    }));
+                });
+                return apps;
             });
         });
-        return apps;
-    });
-});
+    }
 
-export default backend;
+    getAuth() {
+        return new Auth();
+    }
+}
+
+Webiny.registerApp(new Backend());

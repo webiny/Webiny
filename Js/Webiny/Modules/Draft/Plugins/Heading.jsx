@@ -1,6 +1,7 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 import BlockTypePlugin from './../BasePlugins/BlockTypePlugin';
+import Draft from 'draft-js';
+const Ui = Webiny.Ui.Components;
 
 const map = {
     'unstyled': 'Normal',

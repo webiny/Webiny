@@ -1,5 +1,6 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
+import moment from 'moment';
 
 class ImagePreview extends Webiny.Ui.Component {
 

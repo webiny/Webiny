@@ -11,7 +11,7 @@ MultiActions.defaultProps = {
             <Ui.Dropdown title={this.props.label}>
                 <Ui.Dropdown.Header title="Actions"/>
                 {React.Children.map(this.props.children, child => {
-                    if (child.type === Ui.Dropdown.Divider || child.type === Ui.Dropdown.Header) {
+                    if (Webiny.isElementOfType(child, Ui.Dropdown.Divider) || Webiny.isElementOfType(child, Ui.Dropdown.Header)) {
                         return child;
                     }
 

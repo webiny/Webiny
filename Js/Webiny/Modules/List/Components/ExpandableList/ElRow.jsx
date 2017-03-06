@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-class Row extends Webiny.Ui.Component {
+class ElRow extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);
@@ -133,18 +133,18 @@ class Row extends Webiny.Ui.Component {
     }
 }
 
-Row.defaultProps = {
+ElRow.defaultProps = {
     onClick: _.noop,
     renderer() {
         let fields = [];
         let actionSet = false;
         let details = '';
         this.props.children.map(child => {
-            if (child.type === Ui.ExpandableList.Field) {
+            if (Webiny.isElementOfType(child, Ui.ExpandableList.Field)) {
                 fields.push(child);
-            } else if (child.type === Ui.ExpandableList.RowDetailsContent || child.type === Ui.ExpandableList.RowDetailsList) {
+            } else if (Webiny.isElementOfType(child, Ui.ExpandableList.RowDetailsContent) || Webiny.isElementOfType(child, Ui.ExpandableList.RowDetailsList)) {
                 details = child;
-            } else if (child.type === Ui.ExpandableList.ActionSet) {
+            } else if (Webiny.isElementOfType(child, Ui.ExpandableList.ActionSet)) {
                 actionSet = child;
             }
         });
@@ -176,4 +176,4 @@ Row.defaultProps = {
     }
 };
 
-export default Row;
+export default ElRow;

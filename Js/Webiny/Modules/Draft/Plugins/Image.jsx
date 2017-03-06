@@ -208,10 +208,7 @@ class ImagePlugin extends AtomicPlugin {
                                                         action: 'Upload image',
                                                         config: {
                                                             closeOnClick: false,
-                                                            autoCropArea: 0.7,
-                                                            guides: false,
-                                                            strict: true,
-                                                            mouseWheelZoom: true
+                                                            autoCropArea: 0.7
                                                         }}
                                                     }/>
                                                 </Ui.Tabs.Tab>

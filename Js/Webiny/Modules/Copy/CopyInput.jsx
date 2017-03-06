@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import Clipboard from 'clipboard';
 
 class CopyInput extends Webiny.Ui.FormComponent {
     componentDidMount() {

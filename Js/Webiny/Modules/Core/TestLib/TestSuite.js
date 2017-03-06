@@ -1,11 +1,11 @@
 /* eslint-disable */
-var assert = require('assert');
-var webdriver = require('selenium-webdriver');
-var _ = require('lodash');
-var path = require('path');
-var fs = require('fs');
-var moment = require('moment');
-var mkdirp = require('mkdirp');
+const assert = require('assert');
+const webdriver = require('selenium-webdriver');
+const _ = require('lodash');
+const path = require('path');
+const fs = require('fs');
+const moment = require('moment');
+const mkdirp = require('mkdirp');
 
 class TestSuite {
 
@@ -62,9 +62,7 @@ class TestSuite {
     initDriver() {
         if (_.isUndefined(this.driver)) {
             const browserName = _.get(this.getConfig('webDriver'), 'browser', 'chrome');
-            this.driver = new webdriver.Builder()
-                .forBrowser(browserName)
-                .build();
+            this.driver = new webdriver.Builder().forBrowser(browserName).build();
         }
     }
 
@@ -74,7 +72,6 @@ class TestSuite {
 
     setupCallbacks() {
         after(function (done) {
-            console.log('AFTER CLALLBACK');
             ts.getDriver().quit().then(done);
         });
 
@@ -139,17 +136,16 @@ class TestSuite {
                 ts.getDriver().get('http://demo.app/admin/login').then(function () {
                     ts.getDriver().wait(webdriver.until.elementLocated({xpath: '/html/body/webiny-app/rad-placeholder/webiny-form-container/div/div/form/layout/div[3]/div/input'})).then(function () {
                         // populate email input
-                        var emailInput = ts.getDriver().findElement({xpath: '/html/body/webiny-app/rad-placeholder/webiny-form-container/div/div/form/layout/div[3]/div/input'});
+                        const emailInput = ts.getDriver().findElement({xpath: '/html/body/webiny-app/rad-placeholder/webiny-form-container/div/div/form/layout/div[3]/div/input'});
                         emailInput.sendKeys(_.get(ts.getConfig('login'), 'username', 'missing@username'));
 
                         // populate password input
-                        var passwordInput = ts.getDriver().findElement({xpath: '/html/body/webiny-app/rad-placeholder/webiny-form-container/div/div/form/layout/div[4]/div/input'});
+                        const passwordInput = ts.getDriver().findElement({xpath: '/html/body/webiny-app/rad-placeholder/webiny-form-container/div/div/form/layout/div[4]/div/input'});
                         passwordInput.sendKeys(_.get(ts.getConfig('login'), 'password', 'missing@password'));
 
                         // submit form
                         ts.getDriver().findElement({className: 'btn btn-lg btn-primary'}).click().then(function () {
                             ts.getDriver().wait(webdriver.until.elementLocated({id: 'left-sidebar'})).then(function () {
-                                console.log('LOGIN DONE');
                                 done();
                             });
                         });

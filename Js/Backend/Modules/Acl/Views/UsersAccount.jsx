@@ -6,26 +6,23 @@ class UsersAccount extends Webiny.Ui.View {
 }
 
 UsersAccount.defaultProps = {
-    configureContainer(container) {
-        return container;
-    },
     renderer() {
         const formContainer = {
-            api: '/entities/core/users',
-            loadModel: (container) => {
-                return container.api.get('/me', {_fields: 'id,firstName,lastName,email,gravatar'}).then(res => {
+            api: Webiny.Auth.getApiEndpoint(),
+            loadModel: (form) => {
+                return form.api.get('/me', {_fields: 'id,firstName,lastName,email,gravatar'}).then(res => {
                     return res.getData();
                 });
             },
-            onSubmit: (model, container) => {
-                container.showLoading();
-                return container.api.patch('/me', model).then(apiResponse => {
-                    container.hideLoading();
+            onSubmit: (model, form) => {
+                form.showLoading();
+                return form.api.patch('/me', model).then(apiResponse => {
+                    form.hideLoading();
                     if (apiResponse.isError()) {
-                        return container.handleApiError(apiResponse);
+                        return form.handleApiError(apiResponse);
                     }
 
-                    container.setModel({password: null, confirmPassword: null});
+                    form.setModel({password: null, confirmPassword: null});
                     this.dispatch('Acl.Account.Refresh');
                     Webiny.Growl.success('Account settings were saved!');
                 });
@@ -33,8 +30,8 @@ UsersAccount.defaultProps = {
         };
 
         return (
-            <Ui.Form ui="myForm" {...this.props.configureContainer(formContainer)}>
-                {(model, container) => (
+            <Ui.Form {...formContainer}>
+                {(model, form) => (
                     <Ui.View.Form>
                         <Ui.View.Header title="Account Settings"/>
                         <Ui.View.Body>
@@ -73,7 +70,7 @@ UsersAccount.defaultProps = {
                             </Ui.Grid.Row>
                         </Ui.View.Body>
                         <Ui.View.Footer align="right">
-                            <Ui.Button type="primary" onClick={container.submit} label="Save account"/>
+                            <Ui.Button type="primary" onClick={form.submit} label="Save account"/>
                         </Ui.View.Footer>
                     </Ui.View.Form>
                 )}

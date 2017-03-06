@@ -1,7 +1,6 @@
 /* eslint-disable */
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
-const Table = Ui.List.Table;
 
 class Form extends Webiny.Ui.View {
     constructor(props){
@@ -46,7 +45,7 @@ class Form extends Webiny.Ui.View {
 Form.defaultProps = {
     renderer() {
         const containerProps = {
-            api: '/entities/core/users',
+            api: Webiny.Auth.getApiEndpoint(),
             fields: 'id,firstName,lastName,email,roles,enabled',
             connectToRouter: true,
             onSubmitSuccess: 'Users.List',
@@ -84,7 +83,7 @@ Form.defaultProps = {
                                     <table className="table table-simple">
                                         <thead>
                                         <tr>
-                                            <th className="text-left" style={{width: 140}}></th>
+                                            <th className="text-left" style={{width: 140}}/>
                                             <th className="text-left">Role</th>
                                             <th className="text-left">Description</th>
                                         </tr>

@@ -10,7 +10,7 @@ class Bootstrap extends AbstractBootstrap
 {
     public function run(PackageManager\App $app)
     {
-        $this->addAppRoute('/^\/' . $this->wConfig()->get('Application.Backend') . '/', 'Core:Templates/Webiny.tpl', 380);
+        $this->addAppRoute('/^\/' . $this->wConfig()->get('Application.Backend') . '/', 'Core:Templates/Backend.tpl', 380);
 
         Entity::appendConfig([
             'Attributes' => [

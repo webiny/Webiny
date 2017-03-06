@@ -1,3 +1,5 @@
+import Draft from 'draft-js';
+import Immutable from 'immutable';
 import PluginBlock from './PluginBlock';
 
 export default class PluginsContainer {

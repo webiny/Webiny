@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 import BlockTypePlugin from './../BasePlugins/BlockTypePlugin';
+const Ui = Webiny.Ui.Components;
 
 class UnorderedListPlugin extends BlockTypePlugin {
     constructor(config) {

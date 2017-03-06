@@ -142,7 +142,7 @@ class HttpRequest {
                     resolve(new HttpResponse(formatResponse(jqXhr), this));
                 })
                 .fail(jqXhr => {
-                    reject(new HttpResponse(formatResponse(jqXhr), this));
+                    resolve(new HttpResponse(formatResponse(jqXhr), this));
                 });
 
             onCancel(() => {
