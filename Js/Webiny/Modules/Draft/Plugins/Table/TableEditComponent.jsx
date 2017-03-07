@@ -92,7 +92,7 @@ class TableEditComponent extends Webiny.Ui.Component {
         this.setState({rows: this.state.rows}, () => {
             const entityData = this.props.entity.data;
             entityData.rows[rowI].columns[colI].data = Draft.convertToRaw(editorState.getCurrentContent());
-            Draft.Entity.mergeData(this.props.entity.key, entityData);
+            this.props.updateEntityData(entityData, this.props.entity.key);
         });
     }
 
@@ -100,7 +100,7 @@ class TableEditComponent extends Webiny.Ui.Component {
         this.setState('headers.' + colI + '.data', editorState, () => {
             const entityData = this.props.entity.data;
             entityData.headers[colI].data = Draft.convertToRaw(editorState.getCurrentContent());
-            Draft.Entity.mergeData(this.props.entity.key, entityData);
+            this.props.updateEntityData(entityData, this.props.entity.key);
         });
     }
 
@@ -151,7 +151,7 @@ class TableEditComponent extends Webiny.Ui.Component {
             entityData.rows = rows;
             entityData.headers = headers;
             entityData.numberOfColumns = numberOfColumns;
-            Draft.Entity.mergeData(this.props.entity.key, entityData);
+            this.props.updateEntityData(entityData, this.props.entity.key);
             const editorState = this.props.editor.getEditorState();
             this.props.editor.setEditorState(Draft.EditorState.push(editorState, editorState.getCurrentContent(), `insert-column`));
         });
@@ -184,7 +184,7 @@ class TableEditComponent extends Webiny.Ui.Component {
         rows.splice(...spliceArgs);
         this.setState({rows}, () => {
             entityData.rows = rows;
-            Draft.Entity.mergeData(this.props.entity.key, entityData);
+            this.props.updateEntityData(entityData, this.props.entity.key);
 
             // Focus first cell of the next available row
             if (rows.length < index + 1) {
@@ -202,8 +202,8 @@ TableEditComponent.defaultProps = {
         const isBody = _.get(this.state.focusedEditor, 'type') === 'body';
 
         // Readonly must be TRUE if parent editor is in preview mode, otherwise it is the opposite of the parent editor
-        let readOnly = this.props.editor.getPreview() || !this.props.editor.getReadOnly();
-
+        const tableIsReadOnly = this.props.editor.getPreview() || !this.props.editor.getReadOnly();
+        
         return (
             <div className="table-wrapper">
                 <Ui.Dropdown title="Actions" className="balloon" align="right" renderIf={!this.props.editor.getPreview()}>
@@ -220,6 +220,7 @@ TableEditComponent.defaultProps = {
                     <thead>
                     <tr>
                         {columns.map((col, colI) => {
+                            let readOnly = tableIsReadOnly;
                             if (!readOnly) {
                                 const key = {type: 'head', row: 0, col: colI};
                                 readOnly = !_.isEqual(this.state.focusedEditor, key);
@@ -247,6 +248,7 @@ TableEditComponent.defaultProps = {
                         return (
                             <tr key={row.key}>
                                 {columns.map((col, colI) => {
+                                    let readOnly = tableIsReadOnly;
                                     if (!readOnly) {
                                         const key = {type: 'body', row: rowI, col: colI};
                                         readOnly = !_.isEqual(this.state.focusedEditor, key);

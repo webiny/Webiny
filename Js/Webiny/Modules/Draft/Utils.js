@@ -1,9 +1,9 @@
 import Draft from 'draft-js';
 import Immutable from 'immutable';
 
-function filterKey(entityKey) {
+function filterKey(contentState, entityKey) {
     if (entityKey) {
-        const entity = Draft.Entity.get(entityKey);
+        const entity = contentState.getEntity(entityKey);
         return entity.getMutability() === 'MUTABLE' ? entityKey : null;
     }
     return null;
@@ -13,7 +13,7 @@ const utils = {
     // function borrowed from: https://github.com/draft-js-plugins/draft-js-plugins/blob/master/draft-js-dnd-plugin/src/modifiers/addBlock.js
     insertDataBlock: (editorState, insertData = null) => {
         let type = 'unstyled';
-        const currentContentState = editorState.getCurrentContent();
+        let currentContentState = editorState.getCurrentContent();
         const currentSelectionState = editorState.getSelection();
 
         // in case text is selected it is removed and then the block is appended
@@ -50,7 +50,8 @@ const utils = {
             let characterList = Immutable.List();
             type = insertData.type;
             if (entity) {
-                const entityKey = Draft.Entity.create(entity.type || type, entity.mutability, entity.data);
+                currentContentState = currentContentState.createEntity(entity.type || type, entity.mutability, entity.data);
+                const entityKey = currentContentState.getLastCreatedEntityKey();
                 const charData = Draft.CharacterMetadata.create({entity: entityKey});
                 characterList = Immutable.List(Immutable.Repeat(charData, text.length || 1));
             }
@@ -105,7 +106,7 @@ const utils = {
             const offset = targetSelection.getAnchorOffset();
             if (offset > 0) {
                 entityKey = contentState.getBlockForKey(key).getEntityAt(offset - 1);
-                return filterKey(entityKey);
+                return filterKey(contentState, entityKey);
             }
             return null;
         }
@@ -116,7 +117,7 @@ const utils = {
 
         entityKey = startOffset === startBlock.getLength() ? null : startBlock.getEntityAt(startOffset);
 
-        return filterKey(entityKey);
+        return filterKey(contentState, entityKey);
     },
 
     getEntitySelectionState: (contentState, selectionState, entityKey) => {

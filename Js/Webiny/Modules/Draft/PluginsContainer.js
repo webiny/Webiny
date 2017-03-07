@@ -99,11 +99,11 @@ export default class PluginsContainer {
     createDecorator(decorator) {
         const draftDecorator = _.clone(decorator);
         if (_.isString(draftDecorator.strategy)) {
-            draftDecorator.strategy = (contentBlock, callback) => {
+            draftDecorator.strategy = (contentBlock, callback, contentState) => {
                 contentBlock.findEntityRanges(
                     (character) => {
                         const entityKey = character.getEntity();
-                        return entityKey !== null && Draft.Entity.get(entityKey).getType().toUpperCase() === decorator.strategy.toUpperCase();
+                        return entityKey && contentState.getEntity(entityKey).getType().toUpperCase() === decorator.strategy.toUpperCase();
                     },
                     callback
                 );

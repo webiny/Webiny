@@ -87,7 +87,7 @@ class Editor extends Webiny.Ui.Component {
     }
 
     getEditorState() {
-        return this.state.editorState || null;
+        return _.get(this.state, 'editorState', null);
     }
 
     setReadOnly(readOnly) {

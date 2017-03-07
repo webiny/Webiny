@@ -32,10 +32,10 @@ class EntityPlugin extends BasePlugin {
         this.editor.setEditorState(Draft.RichUtils.toggleLink(editorState, entitySelectionState, null));
     }
 
-    insertEntity(entityKey) {
+    insertEntity(newContentState, entityKey) {
         const editorState = this.editor.getEditorState();
         const selection = editorState.getSelection();
-        const newContentState = Draft.Modifier.applyEntity(editorState.getCurrentContent(), selection, entityKey);
+        newContentState = Draft.Modifier.applyEntity(newContentState, selection, entityKey);
         this.editor.setEditorState(Draft.EditorState.push(editorState, newContentState, 'apply-entity'));
     }
 
@@ -45,8 +45,9 @@ class EntityPlugin extends BasePlugin {
         }
 
         const editorState = this.editor.getEditorState();
-        const entityKey = Utils.getEntityKeyForSelection(editorState.getCurrentContent(), editorState.getSelection());
-        return entityKey && Draft.Entity.get(entityKey).getType().toUpperCase() === this.entity.toUpperCase();
+        const contentState = editorState.getCurrentContent();
+        const entityKey = Utils.getEntityKeyForSelection(contentState, editorState.getSelection());
+        return entityKey && contentState.getEntity(entityKey).getType().toUpperCase() === this.entity.toUpperCase();
     }
 }
 

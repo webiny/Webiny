@@ -21,8 +21,9 @@ class CodePlugin extends EntityPlugin {
     }
 
     createEntity() {
-        const entityKey = Draft.Entity.create(this.entity, 'MUTABLE');
-        this.insertEntity(entityKey);
+        const editorState = this.editor.getEditorState();
+        const newContentState = editorState.getCurrentContent().createEntity(this.entity, 'MUTABLE');
+        this.insertEntity(newContentState, newContentState.getLastCreatedEntityKey());
     }
 
     getEditConfig() {

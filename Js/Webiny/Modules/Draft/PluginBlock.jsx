@@ -26,7 +26,11 @@ class PluginBlock extends Webiny.Ui.Component {
             key = this.props.block.getEntityAt(0);
         }
 
-        Draft.Entity.mergeData(key, data);
+        const editor = this.props.blockProps.editor;
+        const editorState = editor.getEditorState();
+        const newContentState = editorState.getCurrentContent().mergeEntityData(key, data);
+        const newEditorState = Draft.EditorState.push(editorState, newContentState, 'insert-fragment');
+        editor.setEditorState(newEditorState);
         this.updateBlockData(data);
     }
 }
@@ -56,7 +60,7 @@ PluginBlock.defaultProps = {
 
         const entityKey = block.getEntityAt(0);
         if (entityKey) {
-            const entityData = Draft.Entity.get(entityKey).get('data');
+            const entityData = editor.getEditorState().getCurrentContent().getEntity(entityKey).get('data');
             props.entity = {
                 key: entityKey,
                 data: entityData

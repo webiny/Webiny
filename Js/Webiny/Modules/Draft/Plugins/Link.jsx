@@ -18,9 +18,10 @@ class LinkPlugin extends EntityPlugin {
     }
 
     submitModal(model) {
-        const entityKey = Draft.Entity.create(this.entity, 'MUTABLE', model);
+        const editorState = this.editor.getEditorState();
         this.ui(this.id).hide().then(() => {
-            this.insertEntity(entityKey);
+            const newContentState = editorState.getCurrentContent().createEntity(this.entity, 'MUTABLE', model);
+            this.insertEntity(newContentState, newContentState.getLastCreatedEntityKey());
         });
     }
 
@@ -61,7 +62,8 @@ class LinkPlugin extends EntityPlugin {
                 {
                     strategy: this.entity,
                     component: (props) => {
-                        const data = Draft.Entity.get(props.entityKey).getData();
+                        const editorState = this.editor.getEditorState();
+                        const data = editorState.getCurrentContent().getEntity(props.entityKey).getData();
                         // To avoid opening the link in same tab while editing we always set _blank here
                         return (
                             <a href={data.url} target="_blank">{props.children}</a>
@@ -78,7 +80,8 @@ class LinkPlugin extends EntityPlugin {
                 {
                     strategy: this.entity,
                     component: (props) => {
-                        const data = Draft.Entity.get(props.entityKey).getData();
+                        const editorState = this.editor.getEditorState();
+                        const data = editorState.getCurrentContent().getEntity(props.entityKey).getData();
                         return (
                             <a href={data.url} target={_.get(data, 'newTab') ? '_blank' : '_self'}>{props.children}</a>
                         );

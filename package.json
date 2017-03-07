@@ -13,7 +13,7 @@
     "clipboard": "^1.5.16",
     "codemirror": "^5.23.0",
     "cropperjs": "^1.0.0-beta.1",
-    "draft-js": "^0.9.1",
+    "draft-js": "^0.10.0",
     "dynamics.js": "1.1.0",
     "eonasdan-bootstrap-datetimepicker": "^4.17.45",
     "filesize": "^3.4.3",
