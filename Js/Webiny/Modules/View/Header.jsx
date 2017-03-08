@@ -9,7 +9,7 @@ Header.defaultProps = {
     renderer() {
 
         // extract the app name
-        const appName = Webiny.Router.getActiveRoute().module.app.constructor.name;
+        const appName = _.split(Webiny.Router.getActiveRoute().module.app.name, '.')[0];
 
         return (
             <div className="master-content__header master-content__header--with-bg">
