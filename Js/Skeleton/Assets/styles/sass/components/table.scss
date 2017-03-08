@@ -100,6 +100,9 @@ table.table {
       &.row-details {
         max-width: 40px;
       }
+      h1{
+        border:none;
+      }
     }
   }
   > thead > tr > th {
