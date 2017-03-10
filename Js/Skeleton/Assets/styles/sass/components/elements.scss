@@ -346,8 +346,24 @@
   li {
     margin-right: 2px;
     display: inline-block;
+    /* removed by sven -  this class name is incorrect, the correct name is "previous"
     &.prev a {
       color: #333;
+    }
+    */
+    &.previous a{
+      padding-left: 15px;
+      span.icon{
+        left:0px;
+        top:6px;
+      }
+    }
+    &.next a{
+      padding-right: 15px;
+    }
+    a{
+      position: relative;
+      display: inline-block;
     }
     a:hover {
       background: #ECECEC;
@@ -373,19 +389,16 @@
     }
     span.icon {
       width: 12px;
-      float: left;
       transform: rotate(90deg);
-      -webkit-transform: rotate(90deg);
-      margin-top: -1px;
       clear: none;
+      position: absolute;
     }
     &.next span.icon {
       transform: rotate(-90deg);
-      -webkit-transform: rotate(-90deg);
-      margin-top: 7px;
+      top:14px;
+      right:0px;
     }
     span {
-      float: left;
       clear: none;
     }
     > {
@@ -393,12 +406,13 @@
         border: none;
       }
     }
+    /* removed by sven -  this class name is incorrect, the correct name is "previous"
     &.prev span {
       float: left;
       margin-right: 5px;
       border: none;
       clear: none;
-    }
+    }*/
     a {
       display: block;
       font-size: 14px;
