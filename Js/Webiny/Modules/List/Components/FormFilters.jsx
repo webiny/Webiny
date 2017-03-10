@@ -7,7 +7,7 @@ class FormFilters extends Filters {
     constructor(props) {
         super(props);
 
-        this.bindMethods('getFilters');
+        this.bindMethods('getFilters,submit');
     }
 
     shouldComponentUpdate(nextProps) {
@@ -17,16 +17,27 @@ class FormFilters extends Filters {
     getFilters() {
         return this.refs.form.getModel();
     }
+
+    submit(model, form) {
+        if(_.isFunction(this.props.onSubmit)) {
+            this.props.onSubmit(model, form, this.applyFilters);
+        } else {
+            this.applyFilters(model);
+        }
+    }
 }
 
 FormFilters.defaultProps = {
     defaultModel: null,
+    onSubmit: (model, form, applyFilters) => {
+        applyFilters(model);
+    },
     renderer() {
         const applyFilters = () => (e) => this.refs.form.submit(e);
         const resetFilters = () => () => this.applyFilters({});
 
         return (
-            <Ui.Form ref="form" defaultModel={this.props.defaultModel} model={this.props.filters} onSubmit={this.applyFilters}>
+            <Ui.Form ref="form" defaultModel={this.props.defaultModel} model={this.props.filters} onSubmit={this.submit}>
                 {() => this.props.children(applyFilters, resetFilters)}
             </Ui.Form>
         );
