@@ -34,7 +34,11 @@ class Base extends Webiny.Ui.FormComponent {
             keepOpen: false,
             debug: this.props.debug || false,
             minDate: this.props.minDate ? new Date(this.props.minDate) : false,
-            viewMode: this.props.viewMode
+            viewMode: this.props.viewMode,
+            widgetPositioning: {
+                horizontal: this.props.positionHorizontal || 'auto',
+                vertical: this.props.positionVertical || 'bottom'
+            }
         }).on('dp.hide', e => {
             if (this.valueChanged) {
                 this.onChange(e.target.value);
