@@ -13,7 +13,7 @@
     right: 0;
     z-index: 10;
     transform: translateY(-50%);
-    
+
     display: block;
     width: auto;
     height: 100%;
@@ -33,6 +33,7 @@
 .bootstrap-datetimepicker-widget.dropdown-menu {
   background: #FFF;
   border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.09);
   color: #333;
   padding: 0;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.176);
@@ -51,7 +52,20 @@
 }
 
 .bootstrap-datetimepicker-widget {
+  li.picker-switch{
+    span{
+      margin: 0px;
+      border-radius: 0;
+      text-align: center;
+      .glyphicon{
+        top:0px;
+      }
+    }
+  }
   table {
+    margin: 0px;
+    padding: 0px;
+    border: none;
     thead {
       tr:first-child {
         th {
@@ -69,35 +83,50 @@
       }
     }
 
-    td.day {
-      margin: 2px;
-      border-radius: 0;
-      border: 2px solid #fff;
-      background-color: #f6f6f6;
-    }
+    td{
+      a{
+        margin-right: 0px;
+        &.btn{
+          margin: 0px;
+          padding: 0px;
+        }
+      }
 
-    td.old {
-      background-color: transparent;
-    }
+      &.day {
+        margin: 2px;
+        border-radius: 0;
+        border: 2px solid #fff;
+        background-color: #f6f6f6;
+        font-size: 14px;
+        text-align: center !important;
+        width: 35px;
+        height: 35px;
+      }
 
-    td.today {
-      color: #fff;
-      background-color: #00ccae;
-    }
+      &.old {
+        background-color: transparent;
+      }
 
-    td.today:before {
-      display: none;
+      &.today {
+        color: #fff;
+        background-color: #00ccae;
+      }
+
+      &.today:before {
+        display: none;
+      }
+
+      &.active {
+        background-color: #337ab7;
+        display: table-cell;
+      }
     }
-    td.active {
-      background-color: #337ab7;
-      display: table-cell;
-    }
-  } 
+  }
 
   th {
     border-radius: 0;
   }
-  
+
   .dow {
     font-weight: normal;
     font-size: 16px;
@@ -126,8 +155,11 @@
     background: #00CCAE;
   }
 
-  .datepicker td a {
-    background: #fff;
+  .datepicker {
+    display: block;
+    td a {
+      background: #fff;
+    }
   }
 
   .prev,

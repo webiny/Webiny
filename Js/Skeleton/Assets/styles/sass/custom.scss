@@ -442,6 +442,7 @@
   .editor-toolbar {
     position: absolute;
     top: -80px;
+    min-width: 310px;
     z-index: 200;
     background-color: #fff;
     padding: 6px 0 6px 8px;
