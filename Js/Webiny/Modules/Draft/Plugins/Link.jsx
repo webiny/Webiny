@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
 import EntityPlugin from './../BasePlugins/EntityPlugin';
-import Draft from 'draft-js';
 const Ui = Webiny.Ui.Components;
 
 class LinkPlugin extends EntityPlugin {
