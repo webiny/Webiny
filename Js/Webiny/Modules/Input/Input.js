@@ -43,6 +43,9 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     autoFocus: null,
     addonLeft:_.noop(),
     addonRight:_.noop(),
+    iconLeft: _.noop(),
+    iconRight: _.noop(),
+    wrapperClassName: '',
     renderer() {
         const cssConfig = {
             'form-group': true,
@@ -74,17 +77,32 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             addonRight = (<span className="input-group-addon">{this.props.addonRight}</span>);
         }
 
+        let wrapperClassName = this.props.wrapperClassName+' input-group';
+        let iconLeft = '';
+        if (!_.isNil(this.props.iconLeft)){
+            wrapperClassName+=' icon-left';
+            iconLeft = (<span className={this.props.iconLeft}></span>);
+        }
+
+        let iconRight = '';
+        if (!_.isNil(this.props.iconRight)){
+            wrapperClassName+=' icon-right';
+            iconRight = (<span className={this.props.iconRight}></span>);
+        }
+
         return (
             <div className={this.classSet(cssConfig, this.props.className)}>
                 {this.renderLabel()}
                 {this.renderInfo()}
 
-                <div className="input-group">
+                <div className={wrapperClassName}>
+                    {iconLeft}
                     {addonLeft}
                     <Webiny.Ui.Components.DelayedOnChange delay={this.props.delay}>
                         <input {...props}/>
                     </Webiny.Ui.Components.DelayedOnChange>
                     {addonRight}
+                    {iconRight}
                     {this.renderValidationIcon()}
                 </div>
                 {this.renderDescription()}

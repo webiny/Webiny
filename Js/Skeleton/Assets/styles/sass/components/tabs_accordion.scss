@@ -118,7 +118,7 @@
 
   clear: both;
   border: 1px solid $borderColor;
-  padding: 10px;
+  padding: 5px;
   padding-right: 85px;
 
   background-color: $formBgColor;
@@ -145,6 +145,7 @@
       right: 10px;
       transform: translateY(-50%);
       color: rgba(255,255,255, 0.5);
+      cursor: pointer;
     }
   }
   .keyword-input{
