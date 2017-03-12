@@ -34,7 +34,7 @@ class Input extends Webiny.Ui.FormComponent {
 Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     delay: 400,
     name: null,
-    onEnter: _.noop,
+    onEnter: _.noop, // NOTE: only works if inside a Form
     onKeyDown: _.noop,
     onKeyUp: _.noop,
     placeholder: null,
@@ -51,6 +51,7 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         };
 
         const props = {
+            'data-on-enter': this.props.onEnter !== _.noop,
             onBlur: this.props.validateInput ? this.validate : this.props.onBlur,
             disabled: this.isDisabled(),
             readOnly: this.props.readOnly,
