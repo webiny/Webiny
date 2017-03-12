@@ -145,7 +145,7 @@ VideoEditComponent.defaultProps = {
 };
 
 class VideoComponent extends Webiny.Ui.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.bindMethods('renderVideo');
@@ -176,7 +176,7 @@ class VideoComponent extends Webiny.Ui.Component {
             wmode: 'Opaque',
             allowFullScreen: true
         };
-        
+
         return <iframe {...props}/>;
     }
 }
@@ -200,23 +200,10 @@ class VideoPlugin extends AtomicPlugin {
         this.validate = _.get(config, 'validate', 'required');
         this.name = 'video';
         this.id = _.uniqueId('insertVideo-');
-    }
+        this.formId = this.id + '-form';
 
-    submitModal(model) {
-        // Parse URL and detect type
-        const data = _.clone(model);
-
-        let url = model.url;
-        let videoId;
-        if ((videoId = this.parseYoutubeLink(url))) {
-            data.type = 'youtube';
-            data.videoId = videoId;
-        } else if ((videoId = this.parseVimeoLink(url))) {
-            data.type = 'vimeo';
-            data.videoId = videoId;
-        }
-
-        this.createVideoBlock(data);
+        this.showDropdown = this.showDropdown.bind(this);
+        this.submitForm = this.submitForm.bind(this);
     }
 
     parseYoutubeLink(link) {
@@ -240,10 +227,8 @@ class VideoPlugin extends AtomicPlugin {
         return id;
     }
 
-
-    createBlock() {
+    showDropdown() {
         this.editor.setReadOnly(true);
-        this.ui(this.id).show();
     }
 
     createVideoBlock(model) {
@@ -253,39 +238,70 @@ class VideoPlugin extends AtomicPlugin {
             text: ' ',
             data: model
         };
-        this.ui(this.id).hide().then(() => {
-            const editorState = Utils.insertDataBlock(this.editor.getEditorState(), insert);
-            this.editor.setEditorState(editorState);
-        });
+        const editorState = Utils.insertDataBlock(this.editor.getEditorState(), insert);
+        this.editor.setEditorState(editorState);
     }
+
+    submitForm(model) {
+        // Parse URL and detect type
+        const data = _.clone(model);
+
+        let url = model.url;
+        let videoId;
+        if ((videoId = this.parseYoutubeLink(url))) {
+            data.type = 'youtube';
+            data.videoId = videoId;
+        } else if ((videoId = this.parseVimeoLink(url))) {
+            data.type = 'vimeo';
+            data.videoId = videoId;
+        }
+
+        this.createVideoBlock(data);
+        this.ui(this.formId).resetForm();
+        this.ui(this.id).close();
+    }
+
 
     getEditConfig() {
         return {
-            toolbar: <Ui.Draft.Toolbar.Atomic icon="fa-video-camera" plugin={this} tooltip="Insert a video"/>,
-            customView: (
-                <Ui.Modal.Dialog ui={this.id}>
-                    {dialog => (
-                        <Ui.Form onSubmit={this.submitModal.bind(this)}>
-                            {(model, form) => {
-                                const urlValidator = model.image ? null : 'required,url';
-                                return (
-                                    <wrapper>
-                                        <Ui.Form.Loader/>
-                                        <Ui.Modal.Header title="Insert video"/>
-                                        <Ui.Modal.Body>
-                                            <Ui.Input name="url" placeholder="Enter a video URL" label="URL" validate={urlValidator}/>
-                                        </Ui.Modal.Body>
-                                        <Ui.Modal.Footer align="right">
-                                            <Ui.Button type="default" key="cancel" label="Cancel" onClick={dialog.hide}/>
-                                            <Ui.Button type="primary" key="submit" label="Insert" onClick={form.submit}/>
-                                        </Ui.Modal.Footer>
-                                    </wrapper>
-                                );
-                            }}
-                        </Ui.Form>
-                    )}
-                </Ui.Modal.Dialog>
-            ),
+            toolbar: () => {
+                const props = {
+                    ui: this.id,
+                    title: <Ui.Icon icon="fa-video-camera"/>,
+                    closeOnClick: false,
+                    onShow: this.showDropdown
+                };
+                return (
+                    <Ui.Dropdown {...props}>
+                        {() => (
+                            <Ui.Form ui={this.formId} onSubmit={this.submitForm}>
+                                {(model, form) => {
+                                    return (
+                                        <div style={{width: 400}}>
+                                            <Ui.Grid.Row>
+                                                <Ui.Grid.Col xs={12}>
+                                                    <Ui.Input
+                                                        name="url"
+                                                        placeholder="Enter a video URL"
+                                                        validate={this.validate}
+                                                        showValidationIcon={false}/>
+                                                </Ui.Grid.Col>
+                                                <Ui.Grid.Col xs={12}>
+                                                    <Ui.Button
+                                                        type="primary"
+                                                        align="right"
+                                                        label="Insert video"
+                                                        onClick={form.submit}/>
+                                                </Ui.Grid.Col>
+                                            </Ui.Grid.Row>
+                                        </div>
+                                    );
+                                }}
+                            </Ui.Form>
+                        )}
+                    </Ui.Dropdown>
+                );
+            },
             blockRendererFn: (contentBlock) => {
                 const plugin = contentBlock.getData().get('plugin');
                 if (contentBlock.getType() === 'atomic' && plugin === this.name) {
