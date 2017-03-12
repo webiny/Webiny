@@ -42,10 +42,10 @@ class RouterUtils {
      */
     renderRoute(route) {
         const content = this.getRouteContent(route);
+        if (route.getTitle()) {
+            Webiny.Router.setTitle(route.getTitle());
+        }
         return Webiny.ViewManager.render(content).then(() => {
-            if (route.getTitle()) {
-                Webiny.Router.setTitle(route.getTitle());
-            }
             return route;
         });
     }
