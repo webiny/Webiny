@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 import AtomicPlugin from './../BasePlugins/AtomicPlugin';
 import Utils from './../Utils';
+const Ui = Webiny.Ui.Components;
 
 class VideoEditComponent extends Webiny.Ui.Component {
     constructor(props) {

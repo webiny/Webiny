@@ -65,7 +65,12 @@ class Editor extends Webiny.Ui.Component {
         this.setState({editorState: newEditorState});
     }
 
-    focus() {
+    focus(e) {
+        // Prevent editor focus if event originates from a dropdown
+        if ($(e.target).closest('.dropdown').length > 0) {
+            return;
+        }
+
         if (!this.state.preview) {
             this.setReadOnly(false);
         }

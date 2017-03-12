@@ -1,5 +1,8 @@
 import Webiny from 'Webiny';
 import EntityPlugin from './../BasePlugins/EntityPlugin';
+import Utils from './../Utils';
+import Draft from 'draft-js';
+
 const Ui = Webiny.Ui.Components;
 
 class LinkPlugin extends EntityPlugin {
@@ -9,49 +12,103 @@ class LinkPlugin extends EntityPlugin {
         this.name = 'link';
         this.entity = 'LINK';
         this.id = _.uniqueId('insertLink-');
+        this.formId = this.id + '-form';
+        this.newLink = true;
+
+        this.showDropdown = this.showDropdown.bind(this);
+        this.submitForm = this.submitForm.bind(this);
+        this.removeEntity = this.removeEntity.bind(this);
     }
 
-    createEntity() {
-        this.editor.setReadOnly(true);
-        this.ui(this.id).show();
+    removeEntity() {
+        super.removeEntity();
+        this.ui(this.id).close();
     }
 
-    submitModal(model) {
+    showDropdown() {
         const editorState = this.editor.getEditorState();
-        this.ui(this.id).hide().then(() => {
+        if (editorState) {
+            const contentState = editorState.getCurrentContent();
+            const selection = editorState.getSelection();
+            const entityKey = Utils.getEntityKeyForSelection(contentState, selection);
+            if (entityKey) {
+                this.newLink = false;
+                const data = contentState.getEntity(entityKey).get('data');
+                this.ui(this.formId).setModel(data);
+            } else {
+                this.newLink = true;
+                this.ui(this.formId).resetForm();
+            }
+        }
+        this.editor.setReadOnly(true);
+    }
+
+    submitForm(model) {
+        const editorState = this.editor.getEditorState();
+        if (this.newLink) {
             const newContentState = editorState.getCurrentContent().createEntity(this.entity, 'MUTABLE', model);
             this.insertEntity(newContentState, newContentState.getLastCreatedEntityKey());
-        });
+        } else {
+            const contentState = editorState.getCurrentContent();
+            const entityKey = Utils.getEntityKeyForSelection(contentState, editorState.getSelection());
+            const newContentState = contentState.replaceEntityData(entityKey, model);
+            this.editor.setEditorState(Draft.EditorState.push(editorState, newContentState, 'apply-entity'));
+        }
+
+        this.ui(this.formId).resetForm();
+        this.ui(this.id).close();
     }
 
     getEditConfig() {
         return {
-            toolbar: (
-                <Ui.Draft.Toolbar.Entity icon="fa-link" plugin={this} tooltip="Insert a link"/>
-            ),
-            customView: (
-                <Ui.Modal.Dialog ui={this.id}>
-                    <Ui.Form ui="linkModalForm" onSubmit={this.submitModal.bind(this)}>
-                        {(model, form) => (
-                            <wrapper>
-                                <Ui.Modal.Header title="Insert link"/>
-                                <Ui.Modal.Body>
-                                    <Ui.Grid.Row>
-                                        <Ui.Grid.Col all={12}>
-                                            <Ui.Input name="url" placeholder="Enter a URL" validate={this.validate}/>
-                                            <Ui.Checkbox name="newTab" label="Open in new tab" grid={12}/>
-                                        </Ui.Grid.Col>
-                                    </Ui.Grid.Row>
-                                </Ui.Modal.Body>
-                                <Ui.Modal.Footer align="right">
-                                    <Ui.Button type="default" key="cancel" label="Cancel" onClick={this.ui(this.id + ':hide')}/>
-                                    <Ui.Button type="primary" key="submit" label="Insert" onClick={form.submit}/>
-                                </Ui.Modal.Footer>
-                            </wrapper>
+            toolbar: () => {
+                const disabled = !this.isActive() && this.editor.getEditorState().getSelection().isCollapsed();
+                const props = {
+                    disabled,
+                    ui: this.id,
+                    title: <Ui.Icon icon="fa-link"/>,
+                    closeOnClick: false,
+                    onShow: this.showDropdown
+                };
+                return (
+                    <Ui.Dropdown {...props}>
+                        {() => (
+                            <Ui.Form ui={this.formId} onSubmit={this.submitForm}>
+                                {(model, form) => {
+                                    return (
+                                        <div style={{width: 400}}>
+                                            <Ui.Grid.Row>
+                                                <Ui.Grid.Col xs={12}>
+                                                    <Ui.Input
+                                                        name="url"
+                                                        placeholder="Enter a URL"
+                                                        validate={this.validate}
+                                                        showValidationIcon={false}/>
+                                                </Ui.Grid.Col>
+                                                <Ui.Grid.Col xs={6}>
+                                                    <Ui.Checkbox name="newTab" label="Open in new tab" grid={null}/>
+                                                </Ui.Grid.Col>
+                                                <Ui.Grid.Col xs={3} className="no-padding">
+                                                    <Ui.Logic.Hide if={() => this.newLink}>
+                                                        <Ui.Button type="secondary" align="right" label="Remove link"
+                                                                   onClick={this.removeEntity}/>
+                                                    </Ui.Logic.Hide>
+                                                </Ui.Grid.Col>
+                                                <Ui.Grid.Col xs={3} className="pull-right">
+                                                    <Ui.Button
+                                                        type="primary"
+                                                        label={this.newLink ? 'Insert link' : 'Update link'}
+                                                        onClick={form.submit}/>
+                                                </Ui.Grid.Col>
+                                            </Ui.Grid.Row>
+                                        </div>
+                                    );
+                                }}
+                            </Ui.Form>
                         )}
-                    </Ui.Form>
-                </Ui.Modal.Dialog>
-            ),
+                    </Ui.Dropdown>
+                );
+            },
             handleKeyCommand: (command) => {
                 if (command === this.entity && this.editor.getEditorState().getSelection().isCollapsed()) {
                     return true;
