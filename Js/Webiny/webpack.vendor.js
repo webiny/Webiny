@@ -32,6 +32,7 @@ module.exports = (config) => {
         'filesize',
         'c3',
         'jquery-deparam',
+        'localforage',
         'platform',
         './Webiny'
     ];

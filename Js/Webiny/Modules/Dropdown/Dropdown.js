@@ -5,6 +5,7 @@ class Dropdown extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
         this.id = _.uniqueId('dropdown-');
+        this.opened = false;
         this.bindMethods('close');
     }
 
@@ -16,6 +17,21 @@ class Dropdown extends Webiny.Ui.Component {
                 e.stopPropagation();
             });
         }
+
+        $(ReactDOM.findDOMNode(this)).on({
+            'show.bs.dropdown': () => {
+                this.props.onShow();
+            },
+            'shown.bs.dropdown': () => {
+                this.props.onShown();
+            },
+            'hide.bs.dropdown': () => {
+                this.props.onHide();
+            },
+            'hidden.bs.dropdown': () => {
+                this.props.onHidden();
+            }
+        });
     }
 
     componentWillUnmount() {
@@ -32,6 +48,10 @@ Dropdown.defaultProps = {
     closeOnClick: true,
     disabled: false,
     listStyle: null,
+    onShow: _.noop,
+    onShown: _.noop,
+    onHide: _.noop,
+    onHidden: _.noop,
     renderer() {
         const props = _.clone(this.props);
 

@@ -42,7 +42,7 @@ Checkbox.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             'checkbox-custom checkbox-default',
             {'checkbox-disabled': this.isDisabled()},
             this.props.className,
-            'col-sm-' + this.props.grid
+            this.props.grid ? 'col-sm-' + this.props.grid : null
         );
 
         const checkboxProps = {

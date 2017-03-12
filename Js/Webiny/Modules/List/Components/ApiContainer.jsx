@@ -55,6 +55,10 @@ class ApiContainer extends BaseContainer {
     }
 
     loadData(props = null, showLoading = true) {
+        if (this.request) {
+            this.request.cancel();
+        }
+
         if (!props) {
             props = this.props;
         }

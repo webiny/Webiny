@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import localForage from 'localforage';
 const Ui = Webiny.Ui.Components;
 
 class BaseContainer extends Webiny.Ui.Component {
@@ -48,6 +49,11 @@ class BaseContainer extends Webiny.Ui.Component {
 
     componentWillMount() {
         super.componentWillMount();
+        if (this.props.connectToRouter) {
+            localForage.getItem('webiny.list.' + window.location.pathname).then(value => {
+                Webiny.Router.goToRoute('current', value);
+            });
+        }
     }
 
     componentWillReceiveProps(props) {
@@ -176,7 +182,11 @@ class BaseContainer extends Webiny.Ui.Component {
     }
 
     goToRoute(params) {
-        Webiny.Router.goToRoute('current', _.merge({}, Webiny.Router.getParams(), params));
+        const routeParams = _.merge({}, Webiny.Router.getParams(), params);
+        if (this.props.connectToRouter) {
+            localForage.setItem('webiny.list.' + window.location.pathname, routeParams);
+        }
+        Webiny.Router.goToRoute('current', routeParams);
     }
 
     getSearchQuery() {
