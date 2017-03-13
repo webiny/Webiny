@@ -41,10 +41,10 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     readOnly: false,
     type: 'text',
     autoFocus: null,
-    addonLeft:_.noop(),
-    addonRight:_.noop(),
-    iconLeft: _.noop(),
-    iconRight: _.noop(),
+    addonLeft: null,
+    addonRight: null,
+    iconLeft: null,
+    iconRight: null,
     wrapperClassName: '',
     renderer() {
         const cssConfig = {
@@ -69,25 +69,25 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         };
 
         let addonLeft = '';
-        if (!_.isNil(this.props.addonLeft)){
+        if (this.props.addonLeft) {
             addonLeft = (<span className="input-group-addon">{this.props.addonLeft}</span>);
         }
 
         let addonRight = '';
-        if (!_.isNil(this.props.addonRight)){
+        if (this.props.addonRight) {
             addonRight = (<span className="input-group-addon">{this.props.addonRight}</span>);
         }
 
-        let wrapperClassName = this.props.wrapperClassName+' input-group';
+        let wrapperClassName = this.props.wrapperClassName + ' input-group';
         let iconLeft = '';
-        if (!_.isNil(this.props.iconLeft)){
-            wrapperClassName+=' icon-left';
+        if (this.props.iconLeft) {
+            wrapperClassName += ' icon-left';
             iconLeft = (<span className={this.props.iconLeft}></span>);
         }
 
         let iconRight = '';
-        if (!_.isNil(this.props.iconRight)){
-            wrapperClassName+=' icon-right';
+        if (this.props.iconRight) {
+            wrapperClassName += ' icon-right';
             iconRight = (<span className={this.props.iconRight}></span>);
         }
 
