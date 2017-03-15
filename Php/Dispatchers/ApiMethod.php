@@ -34,7 +34,6 @@ class ApiMethod
     private $context;
     private $callbacks = [];
     private $bodyValidators;
-    private $authorization = true;
     private $public = false;
 
     function __construct($httpMethod, $methodName, $context, $callable = null)
@@ -97,7 +96,7 @@ class ApiMethod
         }
         $params = $this->injectParams($callback, $params);
         if ($callbackCount > 1) {
-            $params[] = $this->createParent(1);
+            $params[] = $this->createParent(1, $bindTo);
         }
 
         return $callback(...$params);
@@ -122,31 +121,6 @@ class ApiMethod
         $this->bodyValidators = $validators;
 
         return $this;
-    }
-
-    /**
-     * Enable or disable the authorization for this API method.
-     * Authorization is enabled by default.
-     *
-     * @param bool $flag
-     *
-     * @return $this
-     */
-    public function setAuthorization($flag = true)
-    {
-        $this->authorization = boolval($flag);
-
-        return $this;
-    }
-
-    /**
-     * Is authorization enabled?
-     *
-     * @return bool
-     */
-    public function getAuthorization()
-    {
-        return $this->authorization;
     }
 
     /**
@@ -184,16 +158,6 @@ class ApiMethod
         $this->bodyValidators = array_merge($this->bodyValidators, $validators);
 
         return $this;
-    }
-
-    /**
-     * Does this method requires authorization?
-     *
-     * @return bool
-     */
-    public function requiresAuthorization()
-    {
-        return !($this->public || $this->noAuthorization);
     }
 
     protected function injectParams($function, array $params)
@@ -250,15 +214,22 @@ class ApiMethod
         return $injectedParams;
     }
 
-    private function createParent($index)
+    /**
+     * @param int $index Callback index
+     * @param AbstractEntity|AbstractService $bindTo Instance to bind this callback to
+     *
+     * @return \Closure
+     */
+    private function createParent($index, $bindTo)
     {
-        return function () use ($index) {
+        return function () use ($index, $bindTo) {
             $params = func_get_args();
             $callback = $this->callbacks[$index];
             if (count($this->callbacks) > $index + 1) {
-                $params[] = $this->createParent($index + 1);
+                $params[] = $this->createParent($index + 1, $bindTo);
             }
 
+            $callback = $callback->bindTo($bindTo);
             return $callback(...$params);
         };
     }

@@ -320,7 +320,8 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
          */
         $this->api('PATCH', '{id}', function () {
             try {
-                $this->populate($this->wRequest()->getRequestData())->save();
+                $data = $this->wRequest()->getRequestData();
+                $this->populate($data)->save();
 
                 return $this->toArray($this->wRequest()->getFields());
             } catch (EntityException $e) {
