@@ -1,4 +1,5 @@
 // import Core vendors
+import 'babel-polyfill';
 import Webiny from 'Webiny';
 import Promise from 'bluebird';
 
