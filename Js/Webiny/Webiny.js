@@ -88,7 +88,7 @@ class Webiny {
         return new Promise(resolve => {
             const s = document.createElement('script');
             s.type = 'text/javascript';
-            s.src = url;
+            s.src = webinyJsPath + url.replace('http://localhost:3000', '');
             s.async = true;
             s.onload = () => resolve();
             document.body.appendChild(s);
@@ -100,6 +100,7 @@ class Webiny {
             const s = document.createElement('link');
             s.rel = 'stylesheet';
             s.href = url;
+            s.href = webinyCssPath + url.replace('http://localhost:3000', '');
             s.onload = resolve;
             document.head.appendChild(s);
         });
