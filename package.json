@@ -2,6 +2,7 @@
   "dependencies": {
     "accounting": "^0.4.1",
     "animate.css": "^3.5.2",
+    "babel-polyfill": "^6.23.0",
     "baobab": "^2.4.0",
     "bluebird": "^3.4.7",
     "blueimp-md5": "^2.6.0",
