@@ -37,7 +37,7 @@ UsersAccount.defaultProps = {
                         <Ui.View.Body>
                             <Ui.Grid.Row>
                                 <Ui.Grid.Col md={6} sm={12}>
-                                    <Ui.Form.Fieldset title="Your account"/>
+                                    <Ui.Form.Section title="Your account"/>
                                     <Ui.Input label="First name" name="firstName" validate="required"/>
                                     <Ui.Input label="Last name" name="lastName" validate="required"/>
                                     <Ui.Input label="Email" name="email" validate="required,email"/>
@@ -51,7 +51,7 @@ UsersAccount.defaultProps = {
                                     </div>
                                 </Ui.Grid.Col>
                                 <Ui.Grid.Col md={6} sm={12}>
-                                    <Ui.Form.Fieldset title="Reset password"/>
+                                    <Ui.Form.Section title="Reset password"/>
                                     <Ui.Input
                                         label="New password"
                                         name="password"

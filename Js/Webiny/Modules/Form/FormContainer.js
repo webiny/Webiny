@@ -285,13 +285,20 @@ class FormContainer extends Webiny.Ui.Component {
                     return;
                 }
 
+                let newModel;
                 if (this.props.prepareLoadedData) {
-                    const newModel = _.merge({}, this.props.defaultModel || {}, this.props.prepareLoadedData(apiResponse.getData()));
-                    this.setState({model: newModel, initialModel: _.cloneDeep(newModel), loading: false}, this.__processWatches);
-                    return;
+                    newModel = _.merge({}, this.props.defaultModel || {}, this.props.prepareLoadedData(apiResponse.getData()));
+                } else {
+                    newModel = _.merge({}, this.props.defaultModel || {}, apiResponse.getData())
                 }
-                const newModel = _.merge({}, this.props.defaultModel || {}, apiResponse.getData());
-                this.setState({model: newModel, initialModel: _.cloneDeep(newModel), loading: false}, this.__processWatches);
+
+                this.setState({model: newModel, initialModel: _.cloneDeep(newModel), loading: false}, () => {
+                    // Execute optional `onLoad` callback
+                    if (_.isFunction(this.props.onLoad)) {
+                        this.props.onLoad(this.getModel(), this);
+                    }
+                    this.__processWatches();
+                });
             });
             return this.request;
         }
@@ -431,8 +438,13 @@ class FormContainer extends Webiny.Ui.Component {
                 attachValidators: this.attachValidators,
                 detachFromForm: this.detachFromForm,
                 validateInput: this.validateInput,
-                form: this
+                form: this,
+                disabled: _.get(input.props, 'disabled', null)
             };
+
+            if (this.props.disabled) {
+                newProps['disabled'] = _.isFunction(this.props.disabled) ? this.props.disabled(this.getModel()) : this.props.disabled;
+            }
 
             // Create an onChange callback
             const callback = _.get(input.props, 'onChange', _.noop);
@@ -650,12 +662,14 @@ class FormContainer extends Webiny.Ui.Component {
 }
 
 FormContainer.defaultProps = {
+    disabled: false,
     defaultModel: {},
     connectToRouter: false,
     createHttpMethod: 'post',
     validateOnFirstSubmit: false,
     onSubmitSuccess: null,
     onFailure: null,
+    onLoad: _.noop,
     injectInto: () => [],
     onProgress(pe) {
         const cmp = <div>Your data is being uploaded...<Ui.Progress value={pe.progress}/></div>;

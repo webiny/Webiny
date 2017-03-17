@@ -62,7 +62,7 @@ class LinkPlugin extends EntityPlugin {
     getEditConfig() {
         return {
             toolbar: () => {
-                const disabled = !this.isActive() && this.editor.getEditorState().getSelection().isCollapsed();
+                const disabled = this.editor.getReadOnly() || (!this.isActive() && this.editor.getEditorState().getSelection().isCollapsed());
                 const props = {
                     disabled,
                     ui: this.id,

@@ -168,7 +168,7 @@ UserPermissionsForm.defaultProps = {
                         <Ui.View.Form>
                             <Ui.View.Header title={model.id ? 'ACL - Edit permission' : 'ACL - Create permission'}/>
                             <Ui.View.Body>
-                                <Ui.Form.Fieldset title="General"/>
+                                <Ui.Form.Section title="General"/>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>
                                         <Ui.Input label="Name" name="name" validate="required"/>

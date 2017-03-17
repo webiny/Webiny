@@ -1,10 +1,10 @@
 import Webiny from 'Webiny';
 
-class Fieldset extends Webiny.Ui.Component {
+class Section extends Webiny.Ui.Component {
 
 }
 
-Fieldset.defaultProps = {
+Section.defaultProps = {
     title: null,
     icon: null,
     renderer() {
@@ -25,4 +25,4 @@ Fieldset.defaultProps = {
     }
 };
 
-export default Fieldset;
+export default Section;

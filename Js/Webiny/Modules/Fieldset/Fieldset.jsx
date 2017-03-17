@@ -1,10 +1,13 @@
 import Webiny from 'Webiny';
 
 class Fieldset extends Webiny.Ui.Component {
-    // This component doesn't do anything beyond rendering itself
+
 }
 
 Fieldset.defaultProps = {
+    title: null,
+    className: null,
+    style: null,
     renderer() {
         return (
             <fieldset {..._.pick(this.props, ['className', 'style'])}>
