@@ -17,7 +17,8 @@ class Toolbar extends Webiny.Ui.Component {
             const doc = $(document);
             const elem = $(ReactDOM.findDOMNode(this));
             const editor = elem.closest('.rich-editor');
-            if (editor && doc.scrollTop() > (editor.offset().top - 52)) {
+
+            if (editor && (doc.scrollTop() > (editor.offset().top - 52)) && (doc.scrollTop() < (editor.offset().top + editor.height() - 20))) {
                 elem.addClass('floating');
                 elem.css({width: editor.outerWidth()});
                 elem.css({left: editor.offset().left});
@@ -28,7 +29,7 @@ class Toolbar extends Webiny.Ui.Component {
                 elem.css({width: 'auto'});
                 elem.css({left: '0'});
             }
-        }, 150);
+        }, 250);
 
         this.setState({'floatingToolbarInterval': floatingToolbarInterval});
     }
