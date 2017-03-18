@@ -279,7 +279,7 @@ class FormContainer extends Webiny.Ui.Component {
                 }
 
                 if (apiResponse.isError()) {
-                    if (_.isFunction(this.props.onFailure)) {
+                    if (this.props.onFailure) {
                         this.props.onFailure(apiResponse, this);
                     }
                     return;
@@ -667,8 +667,9 @@ FormContainer.defaultProps = {
     connectToRouter: false,
     createHttpMethod: 'post',
     validateOnFirstSubmit: false,
+    onSubmit: null,
     onSubmitSuccess: null,
-    onFailure: null,
+    onFailure: _.noop,
     onLoad: _.noop,
     injectInto: () => [],
     onProgress(pe) {

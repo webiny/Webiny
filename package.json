@@ -31,6 +31,7 @@
     "moment": "^2.17.1",
     "owl.carousel": "^2.2.0",
     "platform": "^1.3.3",
+    "pluralize": "^4.0.0",
     "quill": "^1.2.0",
     "react": "^15.4.2",
     "react-addons-transition-group": "^15.4.2",

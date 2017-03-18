@@ -1,16 +1,15 @@
 import Webiny from 'Webiny';
+import filesize from 'filesize';
 
 class FileSize extends Webiny.Ui.Component {
 
 }
 
 FileSize.defaultProps = {
+    options: {},
     renderer() {
-        const i = Math.floor(Math.log(this.props.value) / Math.log(1024));
-        const result = (this.props.value / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
-
         return (
-            <span>{result}</span>
+            <span>{filesize(this.props.value, this.props.options)}</span>
         );
     }
 };

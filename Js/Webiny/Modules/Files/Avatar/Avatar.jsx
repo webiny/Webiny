@@ -49,12 +49,8 @@ class Avatar extends ImageComponent {
     }
 }
 
-Avatar.defaultProps = {
-    accept: ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'],
-    cropper: false,
-    defaultImage: '',
-    width: 250,
-    height: 250,
+Avatar.defaultProps = _.merge({}, ImageComponent.defaultProps, {
+    defaultImage: null,
     empty: 'x',
     renderer() {
         const model = this.props.value;
@@ -98,12 +94,12 @@ Avatar.defaultProps = {
                     </span>
                     {imageAction}
                     <span className="small-txt">JPG, PNG, GIF</span>
-                    <Ui.Files.FileReader accept={this.props.accept} ref="reader" onChange={this.fileChanged}/>
+                    {this.getFileReader({accept: this.props.accept, onChange: this.fileChanged})}
                     {cropper}
                 </div>
             </div>
         );
     }
-};
+});
 
 export default Avatar;

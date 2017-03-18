@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-class Image extends Webiny.Ui.FormComponent {
+class ImageComponent extends Webiny.Ui.FormComponent {
 
     constructor(props) {
         super(props);
@@ -15,8 +15,7 @@ class Image extends Webiny.Ui.FormComponent {
             'editFile',
             'removeFile',
             'getFiles',
-            'getCropper',
-            'readActualImageSize'
+            'getCropper'
         );
 
         _.merge(this.state, {
@@ -72,6 +71,10 @@ class Image extends Webiny.Ui.FormComponent {
         }
         this.refs.reader.getFiles();
     }
+    
+    getFileReader(props) {
+        return <Ui.Files.FileReader ref="reader" {...props}/>
+    }
 
     getCropper(children = null) {
         const cropper = this.props.cropper;
@@ -106,26 +109,11 @@ class Image extends Webiny.Ui.FormComponent {
             </Ui.Files.ModalFileCropper>
         );
     }
-
-    readActualImageSize(e) {
-        const target = e.target;
-        // Delay execution to allow DOM to be updated with image so we can get parent's width
-        setTimeout(() => {
-            this.setState({
-                actualWidth: target.naturalWidth,
-                actualHeight: target.naturalHeight,
-                containerWidth: $(target).parent().outerWidth()
-            });
-        }, 30);
-    }
 }
 
-Image.defaultProps = {
+ImageComponent.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     accept: ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'],
-    cropper: false,
-    defaultImage: '',
-    width: 250,
-    height: 250
-};
+    cropper: false
+});
 
-export default Image;
+export default ImageComponent;

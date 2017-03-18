@@ -9,11 +9,13 @@ import InlineFileCropper from './InlineFileCropper';
 import ModalFileCropper from './ModalFileCropper';
 import FileUploader from './FileUploader';
 import ImageUploader from './Image/ImageUploader';
+import ImageComponent from './Base/ImageComponent';
 
 class Module extends Webiny.Module {
 
     init() {
         this.name = 'Files';
+        Webiny.Ui.ImageComponent = ImageComponent;
         Webiny.Ui.Components.Files = {
             Avatar,
             Gallery,

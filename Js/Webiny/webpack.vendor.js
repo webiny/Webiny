@@ -23,6 +23,7 @@ module.exports = (config) => {
         'ismobilejs',
         'lodash',
         'moment',
+        'pluralize',
         'owl.carousel',
         'quill',
         'select2',

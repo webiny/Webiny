@@ -1,27 +1,27 @@
 import Webiny from 'Webiny';
+import pluralize from 'pluralize';
 
 class Pluralize extends Webiny.Ui.Component {
 
 }
 
 Pluralize.defaultProps = {
-    suffix: 's',
     plural: null,
     count: null,
     noun: null,
-    pattern: '$count$ $noun$',
+    pattern: '{count} {noun}',
     renderer() {
         let noun = this.props.noun;
-        if (this.props.count !== 1) {
-            if (this.props.plural) {
-                noun = this.props.plural;
-            } else {
-                noun = this.props.noun + this.props.suffix;
-            }
+        // If 'plural' is set, it will be used as plural form of given noun.
+        if (this.props.plural && this.props.count !== 1) {
+            noun = this.props.plural;
         }
 
-        let result = this.props.pattern.replace('$count$', this.props.count);
-        result = result.replace('$noun$', noun);
+        if (!this.props.plural && this.props.count !== 1) {
+            noun = pluralize(this.props.noun, this.props.count);
+        }
+
+        const result = this.props.pattern.replace('{count}', this.props.count).replace('{noun}', noun);
 
         return <span>{result}</span>
     }

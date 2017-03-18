@@ -51,7 +51,7 @@ class Image extends ImageComponent {
     }
 }
 
-Image.defaultProps = {
+Image.defaultProps = _.merge({}, ImageComponent.defaultProps, {
     sizeLimit: 2485760,
     renderer() {
         let message = null;
@@ -102,11 +102,7 @@ Image.defaultProps = {
                     <div className="tray-bin__container">
                         {message}
                         {image}
-                        <Ui.Files.FileReader
-                            accept={this.props.accept}
-                            ref="reader"
-                            sizeLimit={this.props.sizeLimit}
-                            onChange={this.fileChanged}/>
+                        {this.getFileReader({accept: this.props.accept, sizeLimit: this.props.sizeLimit, onChange: this.fileChanged})}
                     </div>
                     <div className="txt_b">
                         <span>Dragging not convenient?</span>&nbsp;
@@ -117,6 +113,6 @@ Image.defaultProps = {
             </div>
         );
     }
-};
+});
 
 export default Image;

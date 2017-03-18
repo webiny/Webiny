@@ -6,8 +6,8 @@ import Webiny from 'Webiny';
  * This means, whenever you type a letter an entire form re-renders.
  * On complex forms you will feel and see a significant delay if this component is not used.
  *
- * The logic behind this component is to serve as a middleman between Form and Input/Textarea, and only notify form of a change when
- * a user stops typing for given period of time (200ms by default).
+ * The logic behind this component is to serve as a middleware between Form and Input/Textarea, and only notify form of a change when
+ * a user stops typing for given period of time (400ms by default).
  */
 class DelayedOnChange extends Webiny.Ui.Component {
 

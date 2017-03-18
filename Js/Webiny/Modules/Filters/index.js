@@ -5,7 +5,6 @@ import FileSize from './FileSize';
 import TimeAgo from './TimeAgo';
 import Pluralize from './Pluralize';
 
-
 class Module extends Webiny.Module {
 
     init() {
