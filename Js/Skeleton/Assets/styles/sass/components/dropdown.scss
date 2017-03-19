@@ -60,6 +60,9 @@
   > a {
     padding: 5px 10px;
     cursor: pointer;
+    &:hover{
+      color: inherit;
+    }
   }
 }
 
