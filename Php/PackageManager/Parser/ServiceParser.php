@@ -56,7 +56,7 @@ class ServiceParser extends AbstractParser
                 }
 
                 if ($serviceMethod && !$this->publicApiInterface && !$this->noAuthorizationInterface) {
-                    $definition['authorization'] = $definition['public'] ? false : $serviceMethod->getAuthorization();
+                    $definition['authorization'] = !$definition['public'];
                 }
 
                 if ($definition['authorization']) {
