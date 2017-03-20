@@ -229,7 +229,9 @@ class ApiMethod
                 $params[] = $this->createParent($index + 1, $bindTo);
             }
 
-            $callback = $callback->bindTo($bindTo);
+            if($bindTo) {
+                $callback = $callback->bindTo($bindTo);
+            }
             return $callback(...$params);
         };
     }
