@@ -6,11 +6,13 @@ class TimeAgo extends Webiny.Ui.Component {
 }
 
 TimeAgo.defaultProps = {
+    value: null,
+    invalidMessage: 'invalid date format',
     renderer() {
         const timeAgo = moment(this.props.value, moment.ISO_8601);
 
         return (
-            <span>{timeAgo.isValid() ? timeAgo.fromNow() : 'invalid date format'}</span>
+            <span>{timeAgo.isValid() ? timeAgo.fromNow() : this.props.invalidMessage}</span>
         );
     }
 };

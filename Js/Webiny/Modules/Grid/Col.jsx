@@ -31,7 +31,7 @@ class Col extends Webiny.Ui.Component {
 }
 
 Col.defaultProps = {
-    className: '',
+    className: null,
     style: null,
     renderer() {
         let props = _.clone(this.props);

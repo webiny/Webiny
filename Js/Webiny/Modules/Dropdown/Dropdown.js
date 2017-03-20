@@ -45,6 +45,7 @@ class Dropdown extends Webiny.Ui.Component {
 }
 
 Dropdown.defaultProps = {
+    align: 'normal',
     closeOnClick: true,
     disabled: false,
     listStyle: null,

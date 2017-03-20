@@ -286,7 +286,7 @@ class FormContainer extends Webiny.Ui.Component {
                 }
 
                 let newModel;
-                if (this.props.prepareLoadedData) {
+                if (_.isFunction(this.props.prepareLoadedData) && this.props.prepareLoadedData !== _.noop) {
                     newModel = _.merge({}, this.props.defaultModel || {}, this.props.prepareLoadedData(apiResponse.getData()));
                 } else {
                     newModel = _.merge({}, this.props.defaultModel || {}, apiResponse.getData())
@@ -671,6 +671,7 @@ FormContainer.defaultProps = {
     onSubmitSuccess: null,
     onFailure: _.noop,
     onLoad: _.noop,
+    prepareLoadedData: null,
     injectInto: () => [],
     onProgress(pe) {
         const cmp = <div>Your data is being uploaded...<Ui.Progress value={pe.progress}/></div>;
