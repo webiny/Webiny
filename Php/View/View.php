@@ -25,11 +25,18 @@ class View
         return \Apps\Core\Php\DevTools\Config::getInstance();
     }
 
+    /**
+     * Returns a path to the given file in given app. Only used for publicly exposed files (via 'public' folders).
+     * @param $app
+     * @param $path
+     *
+     * @return string
+     */
     public function Assets($app, $path)
     {
         $parts = $this->str($app)->explode('.');
         $app = $this->wApps($parts[0]);
 
-        return $this->wConfig()->get('Application.WebPath') . $app->getBuildPath() . '/' . $parts[1] . '/' . ltrim($path, '/');
+        return $this->wConfig()->get('Application.WebPath') . $app->getBuildPath() . '_' . $parts[1] . '/' . ltrim($path, '/');
     }
 }
