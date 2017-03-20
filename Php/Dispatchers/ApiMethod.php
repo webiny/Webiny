@@ -215,7 +215,7 @@ class ApiMethod
     }
 
     /**
-     * @param int $index Callback index
+     * @param int                            $index Callback index
      * @param AbstractEntity|AbstractService $bindTo Instance to bind this callback to
      *
      * @return \Closure
@@ -229,7 +229,10 @@ class ApiMethod
                 $params[] = $this->createParent($index + 1, $bindTo);
             }
 
-            $callback = $callback->bindTo($bindTo);
+            if ($bindTo) {
+                $callback = $callback->bindTo($bindTo);
+            }
+
             return $callback(...$params);
         };
     }

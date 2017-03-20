@@ -5,6 +5,7 @@ class Gravatar extends Webiny.Ui.Component {
 }
 
 Gravatar.defaultProps = {
+    hash: null,
     size: 48,
     renderer() {
         const props = {

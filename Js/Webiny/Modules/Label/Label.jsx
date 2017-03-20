@@ -7,7 +7,7 @@ class Label extends Webiny.Ui.Component {
 Label.defaultProps = {
     inline: false,
     type: 'default',
-    style: {},
+    style: null,
     className: null,
     renderer() {
         const props = _.clone(this.props);

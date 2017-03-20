@@ -163,10 +163,6 @@ HtmlEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     imageApi: '/entities/core/images',
     accept: ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'],
     sizeLimit: 2485760,
-    label: null,
-    description: null,
-    info: null,
-    tooltip: null,
     toolbar: [
         ['bold', 'italic', 'underline', 'strike'],
         ['blockquote', 'code-block', 'link', 'image'],

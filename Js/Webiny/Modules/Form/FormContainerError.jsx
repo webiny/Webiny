@@ -26,7 +26,7 @@ ContainerError.defaultProps = {
 
         const data = [];
         _.each(error.getData(), (value, key) => {
-            data.push(<li key={key}><strong>{key}</strong>: {value}</li>);
+            data.push(<li key={key}><strong>{key}</strong> {value}</li>);
         });
 
         return (

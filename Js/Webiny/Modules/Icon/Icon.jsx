@@ -5,6 +5,7 @@ class Icon extends Webiny.Ui.Component {
 }
 
 Icon.defaultProps = {
+    className: null,
     type: 'span', // span || i
     renderer() {
         let iconSet = 'icon';
@@ -12,7 +13,7 @@ Icon.defaultProps = {
             iconSet = 'fa icon';
         }
 
-        return React.createElement(this.props.type, {className: this.classSet(iconSet + ' ' + this.props.icon, this.props.className)});
+        return React.createElement(this.props.type, {className: this.classSet(iconSet, this.props.icon, this.props.className)});
     }
 };
 

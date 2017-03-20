@@ -28,7 +28,6 @@ import GoogleMap from './Modules/GoogleMap';
 import Gravatar from './Modules/Gravatar';
 import Grid from './Modules/Grid';
 import Growl from './Modules/Growl';
-import Hidden from './Modules/Hidden';
 import HtmlEditor from './Modules/HtmlEditor';
 import I18N from './Modules/I18N';
 import Icon from './Modules/Icon';
@@ -93,7 +92,6 @@ class Core extends Webiny.App {
             new Gravatar(this),
             new Grid(this),
             new Growl(this),
-            new Hidden(this),
             new HtmlEditor(this),
             new I18N(this),
             new Icon(this),
