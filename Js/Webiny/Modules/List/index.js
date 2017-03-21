@@ -34,26 +34,11 @@ import ModalAction from './Components/Table/Actions/ModalAction';
 import DeleteAction from './Components/Table/Actions/DeleteAction';
 import EditModalAction from './Components/Table/Actions/EditModalAction';
 import Empty from './Components/Table/Empty';
-import ExpandableList from './Components/ExpandableList/ExpandableList';
-import ElRow from './Components/ExpandableList/ElRow';
-import ElField from './Components/ExpandableList/ElField';
-import ElAction from './Components/ExpandableList/ElAction';
-import ElActionSet from './Components/ExpandableList/ElActionSet';
-import ElRowDetailsList from './Components/ExpandableList/ElRowDetailsList';
-import ElRowDetailsContent from './Components/ExpandableList/ElRowDetailsContent';
-
-ExpandableList.Row = ElRow;
-ExpandableList.Field = ElField;
-ExpandableList.Action = ElAction;
-ExpandableList.ActionSet = ElActionSet;
-ExpandableList.RowDetailsContent = ElRowDetailsContent;
-ExpandableList.RowDetailsList = ElRowDetailsList;
 
 class Module extends Webiny.Module {
 
     init() {
         this.name = 'List';
-        Webiny.Ui.Components.ExpandableList = ExpandableList;
         Webiny.Ui.Components.List = List;
         _.assign(List, {
             Table,
