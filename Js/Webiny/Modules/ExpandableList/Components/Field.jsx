@@ -1,10 +1,10 @@
 import Webiny from 'Webiny';
 
-class ElField extends Webiny.Ui.Component {
+class Field extends Webiny.Ui.Component {
 
 }
 
-ElField.defaultProps = {
+Field.defaultProps = {
     renderer() {
         let content = this.props.children;
         if (_.isFunction(this.props.children)) {
@@ -20,4 +20,4 @@ ElField.defaultProps = {
     }
 };
 
-export default ElField;
+export default Field;

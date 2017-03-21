@@ -1,7 +1,6 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-
 class ExpandableList extends Webiny.Ui.Component {
     constructor(props) {
         super(props);

@@ -1,11 +1,11 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-class ElAction extends Webiny.Ui.Component {
+class Action extends Webiny.Ui.Component {
 
 }
 
-ElAction.defaultProps = {
+Action.defaultProps = {
     icon: null,
     onClick: _.noop,
     download: null,
@@ -32,4 +32,4 @@ ElAction.defaultProps = {
     }
 };
 
-export default ElAction;
+export default Action;

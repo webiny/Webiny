@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-class ElRow extends Webiny.Ui.Component {
+class Row extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);
@@ -133,7 +133,7 @@ class ElRow extends Webiny.Ui.Component {
     }
 }
 
-ElRow.defaultProps = {
+Row.defaultProps = {
     onClick: _.noop,
     renderer() {
         let fields = [];
@@ -176,4 +176,4 @@ ElRow.defaultProps = {
     }
 };
 
-export default ElRow;
+export default Row;

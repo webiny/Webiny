@@ -1,11 +1,11 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 
-class ElActionSet extends Webiny.Ui.Component {
+class ActionSet extends Webiny.Ui.Component {
 
 }
 
-ElActionSet.defaultProps = {
+ActionSet.defaultProps = {
     label: 'Actions',
     renderer() {
         return (
@@ -30,4 +30,4 @@ ElActionSet.defaultProps = {
     }
 };
 
-export default ElActionSet;
+export default ActionSet;

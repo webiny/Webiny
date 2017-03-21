@@ -1,10 +1,10 @@
 import Webiny from 'Webiny';
 
-class ElRowDetailsContent extends Webiny.Ui.Component {
+class RowDetailsContent extends Webiny.Ui.Component {
 
 }
 
-ElRowDetailsContent.defaultProps = {
+RowDetailsContent.defaultProps = {
     renderer() {
         let content = this.props.children;
         if (_.isFunction(this.props.children)) {
@@ -15,4 +15,4 @@ ElRowDetailsContent.defaultProps = {
     }
 };
 
-export default ElRowDetailsContent;
+export default RowDetailsContent;
