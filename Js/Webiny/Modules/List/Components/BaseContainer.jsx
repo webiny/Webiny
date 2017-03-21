@@ -49,11 +49,11 @@ class BaseContainer extends Webiny.Ui.Component {
 
     componentWillMount() {
         super.componentWillMount();
-        if (this.props.connectToRouter) {
+        /*if (this.props.connectToRouter) {
             localForage.getItem('webiny.list.' + window.location.pathname).then(value => {
                 Webiny.Router.goToRoute('current', value);
             });
-        }
+        }*/
     }
 
     componentWillReceiveProps(props) {
