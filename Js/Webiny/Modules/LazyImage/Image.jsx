@@ -5,11 +5,11 @@ class Image extends Webiny.Ui.Component {
 }
 
 Image.defaultProps = {
-    alt: '',
-    className: '',
-    src: '',
-    width: '',
-    height: '',
+    alt: null,
+    className: null,
+    src: null,
+    width: null,
+    height: null,
     renderer() {
         return (
             <img

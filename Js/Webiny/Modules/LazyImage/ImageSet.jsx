@@ -4,36 +4,29 @@ class ImageSet extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            images: [],
-            interval: null
-        };
+        this.interval = null;
+        this.images = [];
 
         this.bindMethods('getImages, checkOffset');
     }
 
     componentDidMount() {
         super.componentDidMount();
-
-        setTimeout(() => {
-            this.getImages();
-        }, 100); // give the change for the dom to finish rendering
+        this.getImages();
     }
 
     getImages() {
-        const dom = $(ReactDOM.findDOMNode(this));
-        const images = [];
-        dom.find('img').map((i, img) => {
+        const dom = ReactDOM.findDOMNode(this);
+        _.each(dom.querySelectorAll('img'), img => {
             if (img.hasAttribute('data-src')) {
-                img.setAttribute('offset', img.offsetTop);
-                images.push(img);
+                const rect = img.getBoundingClientRect();
+                img.setAttribute('offset', rect.top);
+                this.images.push(img);
             }
         });
 
-        if (images.length > 0) {
-            this.setState({images});
-            const interval = setInterval(this.checkOffset, 500);
-            this.setState({interval});
+        if (this.images.length > 0) {
+            this.interval = setInterval(this.checkOffset, 500);
         }
     }
 
@@ -41,7 +34,7 @@ class ImageSet extends Webiny.Ui.Component {
         const offset = window.scrollY + window.innerHeight + this.props.offset;
 
         const images = [];
-        this.state.images.map(img => {
+        this.images.map(img => {
             if (offset >= img.getAttribute('offset')) {
                 img.setAttribute('src', img.getAttribute('data-src'));
             } else {
@@ -49,11 +42,10 @@ class ImageSet extends Webiny.Ui.Component {
             }
         });
 
-        this.setState({images});
-
+        this.images = images;
         if (images.length <= 0) {
-            clearInterval(this.state.interval);
-            this.setState({interval: null});
+            clearInterval(this.interval);
+            this.interval = null;
         }
     }
 
@@ -62,7 +54,7 @@ class ImageSet extends Webiny.Ui.Component {
 ImageSet.defaultProps = {
     offset: 0,
     renderer() {
-        return this.props.children;
+        return React.isValidElement(this.props.children) ? this.props.children : <webiny-image-set>{this.props.children}</webiny-image-set>;
     }
 };
 
