@@ -87,14 +87,19 @@
   }
 
   ul, ol {
-    margin-top: 20px;
-
+    margin: 20px 10px;
     color: #fff;
     font-size: 15px;
   }
 
   li {
     padding-left: 0;
+    color: #fff;
+    font-size: 16px;
+    margin: 0 0 5px 0;
+    &:last-child{
+      margin-bottom: 0;
+    }
   }
 }
 
