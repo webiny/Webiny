@@ -418,10 +418,8 @@ class BaseContainer extends Webiny.Ui.Component {
 
 BaseContainer.defaultProps = {
     connectToRouter: false,
-    defaultParams: {},
     page: 1,
     perPage: 10,
-    customView: false,
     layout() {
         return (
             <webiny-list-layout>

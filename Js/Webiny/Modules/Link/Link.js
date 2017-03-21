@@ -39,7 +39,7 @@ class Link extends Webiny.Ui.Component {
             }
         }
 
-        if (props.separate) {
+        if (props.separate || props.newTab) {
             props.target = '_blank';
         }
 
@@ -61,9 +61,10 @@ class Link extends Webiny.Ui.Component {
             small: 'btn-sm'
         };
 
-        const classes = {};
+        const classes = {
+            btn: this.props.type || this.props.size
+        };
 
-        classes.btn = this.props.type || this.props.size;
         if (this.props.type) {
             classes[typeClasses[this.props.type]] = true;
         }
@@ -102,18 +103,20 @@ class Link extends Webiny.Ui.Component {
 }
 
 Link.defaultProps = {
+    align: null,
     type: null,
     size: null,
     url: null,
     mailTo: null,
-    title: '',
+    title: null,
     route: null,
     preventScroll: false,
-    data: null,
     params: {},
     separate: false,
-    className: '',
-    tabIndex: false,
+    newTab: false,
+    className: null,
+    tabIndex: null,
+    onClick: null,
     renderer() {
         return (
             <a {...this.getLinkProps()}>{this.props.children}</a>

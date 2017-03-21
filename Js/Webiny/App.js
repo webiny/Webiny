@@ -33,6 +33,7 @@ import I18N from './Modules/I18N';
 import Icon from './Modules/Icon';
 import Input from './Modules/Input';
 import Email from './Modules/Email';
+import ExpandableList from './Modules/ExpandableList';
 import Label from './Modules/Label';
 import LazyImage from './Modules/LazyImage';
 import Link from './Modules/Link';
@@ -84,6 +85,7 @@ class Core extends Webiny.App {
             new Dropdown(this),
             new Dynamic(this),
             new Email(this),
+            new ExpandableList(this),
             new Fieldset(this),
             new Files(this),
             new Filters(this),

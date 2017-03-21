@@ -54,7 +54,6 @@ class StaticContainer extends BaseContainer {
 
 StaticContainer.defaultProps = _.merge({}, BaseContainer.defaultProps, {
     connectToRouter: false,
-    defaultParams: {},
     page: 1,
     perPage: 10,
     layout() {
