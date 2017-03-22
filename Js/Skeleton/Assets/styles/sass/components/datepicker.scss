@@ -44,21 +44,30 @@
   animation: fadeIn 225ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 
   ul {
+    margin: 0;
+    padding: 0;
     li {
       list-style-type: none;
-      padding-left: 0;
+      padding: 0;
+      margin: 0;
     }
   }
 }
 
 .bootstrap-datetimepicker-widget {
-  li.picker-switch{
-    span{
-      margin: 0px;
-      border-radius: 0;
-      text-align: center;
-      .glyphicon{
-        top:0px;
+  li.picker-switch {
+    a{
+      width: 100%;
+      display: inline-block;
+      span{
+        display: inline-block;
+        width: 100%;
+        margin: 0px;
+        border-radius: 0;
+        text-align: center;
+        .glyphicon {
+          top: 0px;
+        }
       }
     }
   }
@@ -67,26 +76,37 @@
     padding: 0px;
     border: none;
     thead {
-      tr:first-child {
+      tr {
         th {
-          position: relative;
-          border-radius: 0;
-          color: #fff;
-          border: none;
           padding: 15px 0;
-          background: #FA5A28;
+          margin: 0;
+        }
 
-          &:hover {
+        &:first-child {
+          th {
+            position: relative;
+            border-radius: 0;
+            color: #fff;
+            border: none;
+            padding: 15px 0;
             background: #FA5A28;
+
+            &:hover {
+              background: #FA5A28;
+            }
           }
         }
       }
     }
 
-    td{
-      a{
+    td {
+      padding: 0;
+      margin: 0;
+      text-align: center;
+
+      a {
         margin-right: 0px;
-        &.btn{
+        &.btn {
           margin: 0px;
           padding: 0px;
         }
@@ -117,8 +137,18 @@
       }
 
       &.active {
-        background-color: #337ab7;
+        background-color: #FA5A28;
         display: table-cell;
+      }
+
+      span{
+        text-align: center;
+        width: 25%;
+        margin: 0;
+        border-radius: 0;
+        &.active{
+          background-color: #00ccae;
+        }
       }
     }
   }
@@ -165,6 +195,28 @@
   .prev,
   .next {
     font-size: 30px;
+  }
+
+  .timepicker{
+    width: 100%;
+
+    .timepicker-picker{
+      a{
+        display: inline-block;
+        width: 100%;
+        border-radius: 0;
+      }
+      td.separator{
+        width: 10px;
+      }
+
+      span{
+        &.timepicker-hour, &.timepicker-minute, &.timepicker-second{
+          font-size: 16px;
+          width: 100%;
+        }
+      }
+    }
   }
 }
 
