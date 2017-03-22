@@ -49,11 +49,13 @@ class BaseContainer extends Webiny.Ui.Component {
 
     componentWillMount() {
         super.componentWillMount();
-        /*if (this.props.connectToRouter) {
-            localForage.getItem('webiny.list.' + window.location.pathname).then(value => {
-                Webiny.Router.goToRoute('current', value);
-            });
-        }*/
+        if (this.props.connectToRouter && this.props.trackLastUsedParameters) {
+            if (Object.keys(Webiny.Router.getQueryParams()).length === 0) {
+                localForage.getItem('webiny.list.' + window.location.pathname).then(value => {
+                    Webiny.Router.goToRoute('current', value);
+                });
+            }
+        }
     }
 
     componentWillReceiveProps(props) {
@@ -418,6 +420,7 @@ class BaseContainer extends Webiny.Ui.Component {
 
 BaseContainer.defaultProps = {
     connectToRouter: false,
+    trackLastUsedParameters: true,
     page: 1,
     perPage: 10,
     layout() {
