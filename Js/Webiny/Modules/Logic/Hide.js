@@ -7,7 +7,6 @@ class Hide extends Webiny.Ui.Component {
 
 Hide.defaultProps = {
     if: false,
-    return: null,
     renderer() {
         let hide = false;
         if (_.isFunction(this.props.if)) {

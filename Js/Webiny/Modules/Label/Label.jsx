@@ -27,7 +27,7 @@ Label.defaultProps = {
             props.className
         );
 
-        const styles = _.clone(this.props.style);
+        const styles = _.clone(this.props.style || {});
         if (this.props.inline) {
             styles['float'] = 'none';
         }

@@ -30,24 +30,6 @@ class UiDispatcher {
         return container[name];
     }
 
-    eq(key, value) {
-        const _this = this;
-        return function eq() {
-            const parts = _.split(key, '.');
-            const name = parts.shift();
-            return _.get(_this.get(name), parts.join('.')) === value;
-        };
-    }
-
-    value(key) {
-        const _this = this;
-        return function value() {
-            const parts = _.split(key, '.');
-            const name = parts.shift();
-            return _.get(_this.get(name), parts.join('.'));
-        };
-    }
-
     createSignal(_this, call, params) {
         return function executeSignal() {
             let callable = null;
