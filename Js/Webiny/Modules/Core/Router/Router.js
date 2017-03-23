@@ -1,3 +1,4 @@
+import Webiny from 'Webiny';
 import RouterEvent from './RouterEvent';
 import Utils from './RouterUtils';
 import Dispatcher from './../Core/Dispatcher';
@@ -267,7 +268,7 @@ class Router {
     }
 
     setTitle(title) {
-        document.title = this.getTitlePattern().replace('%s', title);
+        Webiny.Page.setTitle(this.getTitlePattern().replace('%s', title));
     }
 
     setTitlePattern(pattern) {

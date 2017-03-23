@@ -1,3 +1,5 @@
+const Page = require('./Page');
+
 function formatAjaxResponse(jqXhr) {
     return {
         data: jqXhr.responseJSON,
@@ -22,6 +24,7 @@ class Webiny {
     constructor() {
         this.Apps = {};
         this.EMPTY = '__webiny_empty__';
+        this.Page = new Page();
         this.Ui = {
             Components: {}
         };
@@ -39,8 +42,8 @@ class Webiny {
     }
 
     run(config) {
-        this.loadStylesheet(webinyMeta['Core.Webiny'].css);
-        return this.loadScript(webinyMeta['Core.Webiny'].app).then(() => {
+        this.Page.loadStylesheet(webinyMeta['Core.Webiny'].css);
+        return this.Page.loadScript(webinyMeta['Core.Webiny'].app).then(() => {
             // Configure Core
             if (config.router) {
                 this.Router.setBaseUrl(config.router.baseUrl || '/');
@@ -84,41 +87,19 @@ class Webiny {
         }
     }
 
-    loadScript(url) {
-        return new Promise(resolve => {
-            const s = document.createElement('script');
-            s.type = 'text/javascript';
-            s.src = webinyJsPath + url.replace('http://localhost:3000', '');
-            s.async = true;
-            s.onload = () => resolve();
-            document.body.appendChild(s);
-        });
-    }
-
-    loadStylesheet(url) {
-        return new Promise(resolve => {
-            const s = document.createElement('link');
-            s.rel = 'stylesheet';
-            s.href = url;
-            s.href = webinyCssPath + url.replace('http://localhost:3000', '');
-            s.onload = resolve;
-            document.head.appendChild(s);
-        });
-    }
-
     includeApp(name, config) {
         const runApp = (appConfig) => {
             let loader = Promise.resolve();
             if (_.has(appConfig, 'vendor')) {
-                loader = loader.then(() => this.loadScript(appConfig['vendor']));
+                loader = loader.then(() => this.Page.loadScript(appConfig['vendor']));
             }
 
             if (_.has(appConfig, 'app')) {
-                loader = loader.then(() => this.loadScript(appConfig['app']));
+                loader = loader.then(() => this.Page.loadScript(appConfig['app']));
             }
 
             if (_.has(appConfig, 'css')) {
-                this.loadStylesheet(appConfig['css']);
+                this.Page.loadStylesheet(appConfig['css']);
             }
 
             return loader;
