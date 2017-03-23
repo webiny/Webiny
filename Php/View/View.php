@@ -7,9 +7,11 @@
 
 namespace Apps\Core\Php\View;
 
+use Apps\Core\Php\DevTools\Request;
 use Apps\Core\Php\DevTools\WebinyTrait;
 use Webiny\Component\Config\Config;
 use Webiny\Component\StdLib\StdLibTrait;
+
 
 class View
 {
@@ -23,6 +25,14 @@ class View
     public static function wConfig()
     {
         return \Apps\Core\Php\DevTools\Config::getInstance();
+    }
+
+    /**
+     * @return Request
+     */
+    public static function wRequest()
+    {
+        return Request::getInstance();
     }
 
     /**
