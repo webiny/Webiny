@@ -7,12 +7,14 @@
 
 namespace Apps\Core\Php\DevTools;
 
+use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
 use Apps\Core\Php\Entities\UserPermission;
 use Apps\Core\Php\Entities\UserRole;
 use Apps\Core\Php\PackageManager\App;
 use Closure;
 use MongoDB\Driver\Exception\RuntimeException;
 use Webiny\Component\Entity\EntityException;
+use Webiny\Component\StdLib\Exception\Exception;
 
 /**
  * Class AbstractInstall
@@ -57,6 +59,25 @@ abstract class AbstractInstall
             } catch (EntityException $e) {
                 if (is_callable($exceptionHandler)) {
                     $exceptionHandler($e, $p);
+                } else {
+                    $invalidAttributes = $e->getInvalidAttributes();
+                    if (array_key_exists('slug', $invalidAttributes)) {
+                        $p = UserPermission::findOne(['slug' => $perm['slug']]);
+                        if ($p) {
+                            try {
+                                $p->populate($perm)->save();
+                            } catch (EntityException $e) {
+                                echo("\n\nError occurred while updating UserPermission with the following data:\n\n");
+                                print_r($p);
+                                $this->printException($e);
+                            }
+
+                            continue;
+                        }
+                    }
+                    echo("\n\nError occurred while installing UserPermission with the following data:\n\n");
+                    print_r($perm);
+                    $this->printException($e);
                 }
             }
         }
@@ -77,6 +98,25 @@ abstract class AbstractInstall
             } catch (EntityException $e) {
                 if (is_callable($exceptionHandler)) {
                     $exceptionHandler($e, $r);
+                } else {
+                    $invalidAttributes = $e->getInvalidAttributes();
+                    if (array_key_exists('slug', $invalidAttributes)) {
+                        $r = UserRole::findOne(['slug' => $role['slug']]);
+                        if ($r) {
+                            try {
+                                $r->populate($role)->save();
+                            } catch (EntityException $e) {
+                                echo("\n\nError occurred while updating UserRole with the following data:\n\n");
+                                print_r($role);
+                                $this->printException($e);
+                            }
+
+                            continue;
+                        }
+                    }
+                    echo("\n\nError occurred while installing UserRole with the following data:\n\n");
+                    print_r($role);
+                    $this->printException($e);
                 }
             }
         }
@@ -101,5 +141,11 @@ abstract class AbstractInstall
                 }
             }
         }
+    }
+
+    private function printException(EntityException $e)
+    {
+        $response = new ApiErrorResponse($e->getInvalidAttributes(), $e->getMessage(), $e->getCode());
+        print_r($response->getData(true));
     }
 }
