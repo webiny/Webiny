@@ -9,9 +9,9 @@ Header.defaultProps = {
     renderer() {
 
         let headerContent = '';
-        if(_.get(this.props, 'title')){
+        if(_.get(this.props, 'title') && this.props.title!=''){
             headerContent = <h4>{this.props.title}</h4>;
-        }else if(this.props.children.length>0){
+        }else if(_.size(this.props.children)>0){
             headerContent = this.props.children;
         }
 
