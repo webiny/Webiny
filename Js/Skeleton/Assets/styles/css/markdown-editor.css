@@ -49,6 +49,7 @@
 	display: block;
 	content: ' ';
 	height: 1px;
+	margin: 0;
 }
 
 .smde .editor-toolbar:before {
@@ -135,7 +136,9 @@
 }
 
 .smde .editor-toolbar a:before {
-	line-height: 30px
+	line-height: 30px !important;
+	font-size: 14px;
+	height: 30px;
 }
 
 .smde .editor-toolbar i.separator {

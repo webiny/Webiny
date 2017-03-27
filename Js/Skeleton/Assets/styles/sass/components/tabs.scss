@@ -18,9 +18,14 @@
 
 .tabs__navigation {
 	padding: 0;
+	margin: 0;
 	border: none;
 	
 	background-color: #F3F3F3;
+
+	&:after, &:before{
+		display: none;
+	}
 
 	&.nav-stacked {
 		margin-right: -1px;
