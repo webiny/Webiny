@@ -40,14 +40,13 @@ class RouterUtils {
      * RENDER ROUTE
      * @param route
      */
-    renderRoute(route) {
-        const content = this.getRouteContent(route);
+    async renderRoute(route) {
+        const content = await this.getRouteContent(route);
         if (route.getTitle()) {
             Webiny.Router.setTitle(route.getTitle());
         }
-        return Webiny.ViewManager.render(content).then(() => {
-            return route;
-        });
+        await Webiny.ViewManager.render(content);
+        return route;
     }
 
     sanitizeUrl(url) {
@@ -93,8 +92,8 @@ class RouterUtils {
         });
     }
 
-    getRouteContent(route) {
-        const components = route.getComponents();
+    async getRouteContent(route) {
+        const components = await route.getComponents();
 
         let defComponents = [];
         if (!route.skipDefaultComponents()) {

@@ -1,3 +1,4 @@
+import Webiny from 'Webiny';
 import Router from './Router';
 
 class Route {
@@ -138,7 +139,20 @@ class Route {
         return queryParams;
     }
 
-    getComponents() {
+    async getComponents() {
+        // Check if there are any components that are actually functions (they may possibly have dynamic imports)
+        const dynamic = [];
+        _.each(this.components, (component, placeholder) => {
+            if (_.isFunction(component) && !(component.prototype instanceof Webiny.Ui.Component)) {
+                dynamic.push(
+                    Promise.resolve(component()).then(module => {
+                        this.components[placeholder] = module;
+                    })
+                );
+            }
+        });
+
+        await Promise.all(dynamic);
         return this.components;
     }
 

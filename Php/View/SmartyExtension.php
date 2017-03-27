@@ -71,8 +71,12 @@ class SmartyExtension extends AbstractSmartyExtension
         $appsMeta = json_encode($metaConfig, $flags);
 
         $browserSync = '<script src="http://localhost:3000/browser-sync/browser-sync-client.js?v=2.18.6"></script>';
+        $jsDomain = '';
+        $cssDomain = '';
         if ($this->wIsProduction()) {
             $browserSync = '';
+            $jsDomain = $assetsJsPath;
+            $cssDomain = $assetsCssPath;
         }
 
         return <<<EOT
@@ -80,8 +84,8 @@ class SmartyExtension extends AbstractSmartyExtension
         var webinyEnvironment = '{$env}';
         var webinyWebPath = '{$webPath}';
         var webinyApiPath = '{$apiPath}';
-        var webinyCssPath = '{$assetsCssPath}';
-        var webinyJsPath = '{$assetsJsPath}';
+        var webinyCssPath = '{$cssDomain}';
+        var webinyJsPath = '{$jsDomain}';
         var webinyConfig = {$config};
         var webinyMeta = {$appsMeta};
 
@@ -94,8 +98,8 @@ class SmartyExtension extends AbstractSmartyExtension
             return s;
         };
 
-        loadScript('{$meta['vendor']}').onload = function() {
-            loadScript('{$meta['bootstrap']}');
+        loadScript('{$jsDomain}{$meta['vendor']}').onload = function() {
+            loadScript('{$jsDomain}{$meta['bootstrap']}');
         };
     </script>
     {$browserSync}
