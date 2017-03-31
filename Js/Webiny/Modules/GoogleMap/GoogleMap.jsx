@@ -13,7 +13,7 @@ class GoogleMap extends Webiny.Ui.Component {
         this.loading = null;
 
         if (!window.google) {
-            Webiny.loadScript('https://maps.googleapis.com/maps/api/js?key=' + this.props.key);
+            Webiny.Page.loadScript('https://maps.googleapis.com/maps/api/js?key=' + this.props.key);
         }
 
         this.bindMethods('positionMarker,setupMap,search');
