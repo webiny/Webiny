@@ -56,7 +56,7 @@ UsersAccount.defaultProps = {
                                         label="New password"
                                         name="password"
                                         type="password"
-                                        validate="password"
+                                        validate="required,minLength:8"
                                         placeholder="Type your new password"/>
                                     <Ui.Input
                                         label="Confirm password"
