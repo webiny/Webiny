@@ -129,18 +129,20 @@ class Webiny {
         }
 
         // If a class to compare against has an "__originalComponent" property it means it's a ComponentWrapper
+        // Need to compare against originalComponent class
+        let targetType = type;
         if (type.hasOwnProperty('__originalComponent')) {
-            type = type.__originalComponent;
+            targetType = type.__originalComponent;
         }
 
-        if (PRODUCTION) {
-            return element.type === type || element.type.prototype instanceof type;
+        // If the element type has an "__originalComponent" property it means it's a ComponentWrapper
+        // Need to compare against originalComponent class
+        let elementType = element.type;
+        if (elementType.hasOwnProperty('__originalComponent')) {
+            elementType = elementType.__originalComponent;
         }
 
-        if (DEVELOPMENT) {
-            // In development `react-hot-loader` is wrapping components into a Proxy component so we need to check type like this
-            return element.type.prototype instanceof type;
-        }
+        return elementType === targetType || elementType.prototype instanceof targetType;
     }
 }
 
