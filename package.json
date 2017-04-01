@@ -21,6 +21,7 @@
     "font-awesome": "^4.7.0",
     "highlight.js": "^9.9.0",
     "historyjs": "^1.8.0-b2",
+    "hoist-non-react-statics": "^1.2.0",
     "isarray": "^2.0.1",
     "ismobilejs": "^0.4.0",
     "jquery": "^3.1.1",
