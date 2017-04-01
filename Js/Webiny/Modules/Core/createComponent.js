@@ -3,15 +3,18 @@ import {Map} from 'immutable';
 import LazyLoad from './Ui/LazyLoad';
 import WebinyComponent from './Core/Component';
 
+/**
+ * This function creates a wrapper class around given component to allow component styling and lazy loading of dependencies
+ *
+ * @param Component
+ * @param options
+ * @returns {component}
+ */
 export default (Component, options = {}) => {
     // Create an immutable copy of styles to use as default styles
     const defaultStyles = Map(options.styles || {});
 
-    const ComponentWrapper = class extends WebinyComponent {
-        getComponent() {
-            return Component;
-        }
-
+    class ComponentWrapper extends WebinyComponent {
         render() {
             const props = _.omit(this.props, ['styles']);
             props.styles = defaultStyles.toJS();
@@ -34,7 +37,7 @@ export default (Component, options = {}) => {
 
             return <Component {...props}/>
         }
-    };
+    }
 
     ComponentWrapper.__originalComponent = Component;
 

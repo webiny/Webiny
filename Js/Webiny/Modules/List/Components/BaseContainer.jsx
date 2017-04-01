@@ -52,7 +52,9 @@ class BaseContainer extends Webiny.Ui.Component {
         if (this.props.connectToRouter && this.props.trackLastUsedParameters) {
             if (Object.keys(Webiny.Router.getQueryParams()).length === 0) {
                 localForage.getItem('webiny.list.' + window.location.pathname).then(value => {
-                    Webiny.Router.goToRoute('current', value);
+                    if (value) {
+                        Webiny.Router.goToRoute('current', value);
+                    }
                 });
             }
         }
