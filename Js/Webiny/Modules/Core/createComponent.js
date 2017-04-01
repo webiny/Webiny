@@ -8,6 +8,10 @@ export default (Component, options = {}) => {
     const defaultStyles = Map(options.styles || {});
 
     const ComponentWrapper = class extends WebinyComponent {
+        getComponent() {
+            return Component;
+        }
+
         render() {
             const props = _.omit(this.props, ['styles']);
             props.styles = defaultStyles.toJS();

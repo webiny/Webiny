@@ -130,7 +130,7 @@ class Webiny {
 
         // If a class to compare against has an "__originalComponent" property it means it's a ComponentWrapper
         if (type.hasOwnProperty('__originalComponent')) {
-            type = type.__originalComponent;
+            type = type.getComponent();
         }
 
         if (PRODUCTION) {
