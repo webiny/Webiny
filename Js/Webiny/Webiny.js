@@ -128,6 +128,11 @@ class Webiny {
             return false;
         }
 
+        // If a class to compare against has an "__originalComponent" property it means it's a ComponentWrapper
+        if (type.hasOwnProperty('__originalComponent')) {
+            type = type.__originalComponent;
+        }
+
         if (PRODUCTION) {
             return element.type === type || element.type.prototype instanceof type;
         }

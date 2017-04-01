@@ -23,6 +23,8 @@ import Endpoint from './Api/Endpoint';
 import Placeholder from './Ui/Placeholder';
 import RootElement from './Ui/RootElement';
 import UiMenu from './Ui/Menu';
+import createComponent from './createComponent';
+import LazyLoad from './Ui/LazyLoad';
 
 _.merge(Webiny, {
     App,
@@ -32,7 +34,9 @@ _.merge(Webiny, {
     Mixins: {
         ApiComponent
     },
+    createComponent,
     Ui: {
+        LazyLoad,
         Placeholder,
         Component,
         Components: {
