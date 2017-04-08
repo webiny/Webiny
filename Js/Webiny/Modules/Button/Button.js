@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles/Button.css';
 
 class Button extends Webiny.Ui.Component {
 
@@ -49,13 +50,12 @@ Button.defaultProps = {
         };
 
         const typeClasses = {
-            default: 'btn-default',
-            primary: 'btn-primary',
-            secondary: 'btn-success'
+            default: styles.btnDefault,
+            primary: styles.btnPrimary,
+            secondary: styles.btnSuccess
         };
 
         const classes = this.classSet(
-            'btn',
             sizeClasses[props.size],
             alignClasses[props.align],
             typeClasses[props.type],
@@ -79,4 +79,4 @@ Button.defaultProps = {
     }
 };
 
-export default Button;
+export default Webiny.createComponent(Button, {styles});

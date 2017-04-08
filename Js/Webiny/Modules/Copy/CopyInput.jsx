@@ -1,11 +1,14 @@
 import Webiny from 'Webiny';
 import Clipboard from 'clipboard';
+import styles from './styles/CopyInput.css';
 
 class CopyInput extends Webiny.Ui.FormComponent {
     componentDidMount() {
         super.componentDidMount();
 
-        this.clipboard = new Clipboard(this.refs.button, {
+        const dom = $(ReactDOM.findDOMNode(this));// @todo: fix this without JQ
+
+        this.clipboard = new Clipboard(dom.find('button')[0], {
             text: () => {
                 return this.props.value;
             }
@@ -29,39 +32,25 @@ class CopyInput extends Webiny.Ui.FormComponent {
 
 CopyInput.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     actionLabel: 'Copy',
-    actionStyle: {
-        position: 'absolute',
-        right: -5,
-        zIndex: 100,
-        height: 35,
-        top: 4,
-        lineHeight: 0.5
-    },
     onSuccessMessage: 'Copied to clipboard!',
     onCopy: _.noop,
     renderer() {
         const props = {
-            className: 'form-control',
+            className: styles['form-control'],
             readOnly: true,
             type: 'text',
-            value: this.props.value || '',
-            style: {
-                paddingRight: 95
-            }
+            value: this.props.value || ''
         };
 
         return (
-            <div className={this.classSet('form-group', this.props.className)}>
+            <div className={this.classSet(styles['form-group'], this.props.className)}>
                 {this.renderLabel()}
                 {this.renderInfo()}
-                <div className="input-group">
+                <div className={styles['input-group']}>
                     <input {...props}/>
-                    <button
-                        style={this.props.actionStyle}
-                        className="btn btn-primary btn--copy"
-                        ref="button">
+                    <Webiny.Ui.Components.Button type="primary" className={styles.btnCopy}>
                         {this.props.actionLabel}
-                    </button>
+                    </Webiny.Ui.Components.Button>
                 </div>
                 {this.renderDescription()}
             </div>
@@ -69,4 +58,4 @@ CopyInput.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     }
 });
 
-export default CopyInput;
+export default Webiny.createComponent(CopyInput, {styles});
