@@ -10,6 +10,7 @@ ContainerError.defaultProps = {
     title: 'Oops',
     type: 'error',
     message: null,
+    className: null,
     renderer() {
         const error = this.props.error;
         if (!error) {
@@ -30,7 +31,10 @@ ContainerError.defaultProps = {
         });
 
         return (
-            <Ui.Alert title={this.props.title} type={this.props.type}>
+            <Ui.Alert
+                title={this.props.title}
+                type={this.props.type}
+                className={this.props.className}>
                 {this.props.message || error.getMessage()}
                 {data.length > 0 && <ul>{data}</ul>}
             </Ui.Alert>

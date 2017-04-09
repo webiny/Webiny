@@ -1,6 +1,8 @@
 import Webiny from 'Webiny';
 import Component from './Component';
 
+const Ui = Webiny.Ui.Components;
+
 class FormComponent extends Component {
 
     constructor(props) {
@@ -159,7 +161,7 @@ FormComponent.defaultProps = {
     value: null,
     onChange: _.noop,
     hideValidationAnimation: {translateY: 0, opacity: 0, duration: 225},
-    showValidationAnimation: {translateY: 50, opacity: 1, duration: 225},
+    showValidationAnimation: {translateY: 100, opacity: 1, duration: 225},
     showValidationMessage: true,
     showValidationIcon: true,
     tooltip: null,
@@ -168,16 +170,15 @@ FormComponent.defaultProps = {
         if (this.props.label) {
             let tooltip = null;
             if (this.props.tooltip) {
-                const Ui = Webiny.Ui.Components;
                 tooltip = <Ui.Tooltip key="label" target={<Ui.Icon icon="icon-info-circle"/>}>{this.props.tooltip}</Ui.Tooltip>;
             }
 
             let required = null;
             if (this.props.validate && this.props.validate.indexOf('required') > -1) {
-                required = <span className="mandat">*</span>;
+                required = <Ui.Input.Mandat/>;
             }
 
-            label = <label key="label" className="control-label">{this.props.label} {required} {tooltip}</label>;
+            label = <Ui.Input.Label>{this.props.label} {required} {tooltip}</Ui.Input.Label>;
         }
 
         return label;
@@ -186,7 +187,7 @@ FormComponent.defaultProps = {
         if (!this.props.showValidationMessage || this.state.isValid !== false) {
             return null;
         }
-        return <span className="help-block w-anim">{this.state.validationMessage}</span>;
+        return <Ui.Input.ValidationMessage>{this.state.validationMessage}</Ui.Input.ValidationMessage>;
     },
     validationIconRenderer() {
         if (!this.props.showValidationIcon || this.state.isValid === null) {
@@ -194,9 +195,11 @@ FormComponent.defaultProps = {
         }
 
         if (this.state.isValid === true) {
-            return <span className="icon icon-good"/>;
+            //return <span className="icon icon-good"/>;
+            return <Ui.Input.ValidationIcon/>;
         }
-        return <span className="icon icon-bad"/>;
+        //return <span className="icon icon-bad"/>;
+        return <Ui.Input.ValidationIcon success={false}/>;
     },
     infoRenderer() {
         let info = this.props.info;
@@ -204,7 +207,7 @@ FormComponent.defaultProps = {
             info = info(this);
         }
 
-        return info ? <span className="info-txt">{info}</span> : null;
+        return info ? <Ui.Input.InfoMessage>{info}</Ui.Input.InfoMessage> : null;
     },
     descriptionRenderer() {
         let description = this.props.description;
@@ -212,7 +215,7 @@ FormComponent.defaultProps = {
             description = description(this);
         }
 
-        return description ? <span className="help-block">{description}</span> : null;
+        return description ? <Ui.Input.InfoMessage>{description}</Ui.Input.InfoMessage> : null;
     }
 };
 

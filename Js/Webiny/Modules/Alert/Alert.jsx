@@ -20,6 +20,7 @@ Alert.defaultProps = {
     icon: 'info',
     title: null,
     close: false,
+    className: null,
     renderer() {
         const props = _.clone(this.props);
 
@@ -31,9 +32,6 @@ Alert.defaultProps = {
             danger: styles.alertDanger
         };
 
-        console.log(typeClasses);
-
-
         const iconClasses = {
             info: 'icon-info',
             success: 'icon-check-circle-o',
@@ -42,14 +40,11 @@ Alert.defaultProps = {
             danger: 'icon-cancel'
         };
 
-        /*const classes = this.classSet(
-            'alert',
+        const classes = this.classSet(
             typeClasses[props.type],
             props.className
-        );*/
-        const classes = typeClasses[props.type];
-        //console.log(styles);
-
+        );
+        
         const icon = this.props.icon ? <Webiny.Ui.Components.Icon icon={iconClasses[props.type]}/> : null;
         let close = null;
         if (props.close) {

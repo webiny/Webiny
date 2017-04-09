@@ -1,0 +1,140 @@
+.wrapper {
+	margin-bottom: 15px;
+	position: relative;
+	text-align: left;
+	overflow: visible;
+}
+
+.wrapper.error {
+
+}
+
+.wrapper.success {
+
+}
+
+.container {
+	width: 100%;
+	position: relative;
+	display: table;
+	border-collapse: separate;
+}
+
+.input {
+	padding: 21px 15px;
+	border: 1px solid #cdcdcd;
+	width: 100%;
+	height: 34px;
+	font-size: 14px;
+	background-image: none;
+	line-height: 135%;
+	background-color: #fbfbfb;
+	color: #333;
+	box-shadow: none;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	transition: all 225ms;
+	display: table-cell;
+	position: relative;
+	z-index: 2;
+	float: left;
+	margin-bottom: 0;
+}
+
+.input:focus {
+	background: #fff;
+	border-color: #333;
+	z-index: 3;
+	outline: 0;
+}
+
+.label {
+	font-size: 17px;
+	color: #393939;
+	clear: left;
+	cursor: pointer;
+	font-family: 'Source Sans Pro', sans-serif;
+	font-weight: 500;
+	line-height: 135%;
+	display: inline-block;
+	max-width: 100%;
+	margin-bottom: 5px;
+}
+
+.mandat {
+	color: #cc3300;
+	margin-left: 2px;
+}
+
+.message {
+	display: inline;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	color: #737373;
+	font-size: 13px;
+	opacity: 100;
+	top: 0;
+}
+
+.wrapper.error .validationMessage {
+	position: relative;
+	top: 0px;
+}
+
+.wrapper.error .message {
+	color: #cc3300;
+}
+
+.wrapper.success .message {
+	color: #3fbfb0;
+}
+
+.wrapper.error .input {
+	border: 1px solid #cc3300;
+}
+
+.wrapper.success .input {
+	border: 1px solid #3fbfb0;
+}
+
+.validationIconError, .validationIconSuccess {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-47%);
+	right: 4px;
+	z-index: 10;
+	transition: all 225ms;
+	font-size: 41px;
+	line-height: 98%;
+	font-family: 'fontello';
+	font-style: normal;
+	font-weight: normal;
+}
+
+.validationIconError::before {
+	content: '\e81f';
+	color: #cc3300;
+}
+
+.validationIconSuccess {
+	right: 4px;
+	transform: translateY(-50%);
+}
+
+.validationIconSuccess::before {
+	content: '\e80e';
+	color: #3fbfb0;
+}
+
+.addon {
+
+}
+
+.iconLeft {
+
+}
+
+.iconRight {
+
+}

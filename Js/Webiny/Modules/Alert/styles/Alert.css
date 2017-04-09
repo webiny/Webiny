@@ -12,6 +12,7 @@
 	font-weight: 300;
 	text-align: left;
 	display: block;
+	margin-bottom: 10px;
 
 	/*this should be set via variables*/
 	font-family: "Source Sans Pro";

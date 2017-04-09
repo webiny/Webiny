@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles/Dropdown.css';
 
 class Header extends Webiny.Ui.Component {
 
@@ -7,8 +8,8 @@ class Header extends Webiny.Ui.Component {
 Header.defaultProps = {
     renderer() {
         const props = _.clone(this.props);
-        return <li role="presentation" className="dropdown-header">{props.title}</li>;
+        return <li role="presentation" className={styles.header}>{props.title}</li>;
     }
 };
 
-export default Header;
+export default Webiny.createComponent(Header, {styles});

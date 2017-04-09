@@ -1,5 +1,6 @@
 import Webiny from 'Webiny';
 import ImageComponent from './../Base/ImageComponent';
+import styles from './styles/Avatar.css';
 const Ui = Webiny.Ui.Components;
 
 class Avatar extends ImageComponent {
@@ -60,9 +61,11 @@ Avatar.defaultProps = _.merge({}, ImageComponent.defaultProps, {
             imageSrc = model.src;
         }
 
-        const imageAction = (
-            <button type="button" className="btn btn-primary btn-block upload" onClick={this.getFiles}>Upload</button>
-        );
+        const imageAction = <Ui.Button
+            type="primary"
+            icon="fa-upload"
+            onClick={this.getFiles}
+            className={styles.uploadBtn}>Upload</Ui.Button>;
 
         let cropper = null;
         if (this.props.cropper) {
@@ -82,18 +85,18 @@ Avatar.defaultProps = _.merge({}, ImageComponent.defaultProps, {
             onDragLeave: this.onDragLeave,
             onDragOver: this.onDragOver,
             onClick: this.getFiles,
-            className: 'avatar'
+            className: styles.avatar
         };
 
         return (
             <div>
                 <div {...props}>
                     {this.renderError()}
-                    <span className="avatar-placeholder">
-                        {imageSrc ? <img src={imageSrc} className="avatar img-responsive" height="157" width="157"/> : this.props.empty}
+                    <span className={styles.placeholder}>
+                        {imageSrc ? <img src={imageSrc} className={styles.image} height="157" width="157"/> : this.props.empty}
                     </span>
                     {imageAction}
-                    <span className="small-txt">JPG, PNG, GIF</span>
+                    <span className={styles.smallText}>JPG, PNG, GIF</span>
                     {this.getFileReader({accept: this.props.accept, onChange: this.fileChanged})}
                     {cropper}
                 </div>

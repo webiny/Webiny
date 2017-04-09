@@ -104,12 +104,12 @@
   span.remember {
     display: inline-block;
     vertical-align: top;
-    
+
     color: #FA5A28;
     font-size: 22px;
     font-weight: 300;
     line-height: 115%;
-    
+
     cursor: pointer;
   }
   a.info {
@@ -274,7 +274,7 @@
 
   .sign-in {
     padding: 0;
-  
+
     h2 {
       font-size: 28px;
       margin-bottom: 41px;
@@ -318,7 +318,7 @@
       background: url("../../../images/icons.png") no-repeat scroll 1px 2px rgba(0, 0, 0, 0);
     }
     padding: 0;
-  
+
     h2 {
       font-size: 28px;
       margin-bottom: 41px;
@@ -340,14 +340,14 @@
         top: 43px;
       }
     }
-    
+
     .desc {
       font-size: 18px;
       color: #FA5A28;
       line-height: 120%;
       font-weight: 300;
     }
-    
+
     .input-holder {
       &.success span.not, &.error span.not {
         top: 42px;

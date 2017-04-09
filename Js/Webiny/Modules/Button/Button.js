@@ -39,8 +39,8 @@ Button.defaultProps = {
 
         const sizeClasses = {
             normal: '',
-            large: 'btn-lg',
-            small: 'btn-sm'
+            large: styles.btnLarge,
+            //small: 'btn-sm' // sven: this option doesn't exist in css
         };
 
         const alignClasses = {
@@ -62,7 +62,7 @@ Button.defaultProps = {
             props.className
         );
 
-        const icon = this.props.icon ? <Webiny.Ui.Components.Icon icon={this.props.icon} className="right"/> : null;
+        const icon = this.props.icon ? <Webiny.Ui.Components.Icon icon={this.props.icon} className={styles.icon + ' ' + styles.iconRight}/> : null;
         let content = props.children || props.label;
         if (icon) {
             content = <span>{content}</span>;

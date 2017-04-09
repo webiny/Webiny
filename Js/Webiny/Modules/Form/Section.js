@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles/Section.css';
 
 class Section extends Webiny.Ui.Component {
 
@@ -14,11 +15,11 @@ Section.defaultProps = {
         }
 
         return (
-            <div className="options-section">
-                <div className="options-header">
-                    <h5 className="options-title">{icon} {this.props.title}</h5>
+            <div className={styles.wrapper}>
+                <div className={styles.header}>
+                    <h5 className={styles.title}>{icon} {this.props.title}</h5>
 
-                    <div className="form-group form-group--inline-label search-container">{this.props.children}</div>
+                    <div className={styles.container}>{this.props.children}</div>
                 </div>
             </div>
         );

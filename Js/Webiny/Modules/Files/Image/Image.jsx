@@ -1,6 +1,7 @@
 import Webiny from 'Webiny';
 import ImageComponent from './../Base/ImageComponent';
 import ImagePreview from './ImagePreview';
+import galleryStyles from '../Gallery/styles/Gallery.css';
 const Ui = Webiny.Ui.Components;
 
 class Image extends ImageComponent {
@@ -57,8 +58,8 @@ Image.defaultProps = _.merge({}, ImageComponent.defaultProps, {
         let message = null;
         if (!this.props.value) {
             message = (
-                <div className="dz-default dz-message">
-                    <span className="tray-bin__main-text">DRAG A FILE HERE</span>
+                <div>
+                    <span className={galleryStyles.mainText}>DRAG FILES HERE</span>
                 </div>
             );
         }
@@ -74,10 +75,13 @@ Image.defaultProps = _.merge({}, ImageComponent.defaultProps, {
             onClick: this.getFiles
         };
 
-        const css = {
-            'tray-bin': true,
-            'tray-bin--empty': !this.props.value
-        };
+        let css = this.classSet(
+            galleryStyles.trayBin,
+            galleryStyles.trayBinEmpty
+        );
+        if (this.props.value) {
+            let css = this.classSet(galleryStyles.trayBin);
+        }
 
         let image = null;
         if (this.props.value) {
@@ -99,14 +103,14 @@ Image.defaultProps = _.merge({}, ImageComponent.defaultProps, {
             <div className="form-group">
                 <div className={this.classSet(css)} {...props}>
                     {this.renderError()}
-                    <div className="tray-bin__container">
+                    <div className={galleryStyles.container}>
                         {message}
                         {image}
                         {this.getFileReader({accept: this.props.accept, sizeLimit: this.props.sizeLimit, onChange: this.fileChanged})}
                     </div>
-                    <div className="txt_b">
+                    <div className={galleryStyles.uploadAction}>
                         <span>Dragging not convenient?</span>&nbsp;
-                        <a href="#" onClick={this.getFiles}>SELECT A FILE HERE</a>
+                        <a href="#" onClick={this.getFiles}>SELECT FILES HERE</a>
                     </div>
                 </div>
                 {this.getCropper()}

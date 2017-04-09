@@ -52,20 +52,18 @@ UsersAccount.defaultProps = {
                                 </Ui.Grid.Col>
                                 <Ui.Grid.Col md={6} sm={12}>
                                     <Ui.Form.Section title="Reset password"/>
-                                    <Ui.Input
+                                    <Ui.Password
                                         label="New password"
                                         name="password"
-                                        type="password"
-                                        validate="password"
+                                        validate="password,minLength:8"
                                         placeholder="Type your new password"/>
-                                    <Ui.Input
+                                    <Ui.Password
                                         label="Confirm password"
                                         name="confirmPassword"
-                                        type="password"
                                         validate="eq:@password"
                                         placeholder="Re-type your new password">
                                         <validator name="eq">Passwords do not match</validator>
-                                    </Ui.Input>
+                                    </Ui.Password>
                                 </Ui.Grid.Col>
                             </Ui.Grid.Row>
                         </Ui.View.Body>
