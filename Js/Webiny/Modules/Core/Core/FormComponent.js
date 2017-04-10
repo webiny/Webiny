@@ -161,7 +161,7 @@ FormComponent.defaultProps = {
     value: null,
     onChange: _.noop,
     hideValidationAnimation: {translateY: 0, opacity: 0, duration: 225},
-    showValidationAnimation: {translateY: 100, opacity: 1, duration: 225},
+    showValidationAnimation: {translateY: 50, opacity: 1, duration: 225},
     showValidationMessage: true,
     showValidationIcon: true,
     tooltip: null,

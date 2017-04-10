@@ -77,9 +77,13 @@
 	top: 0;
 }
 
-.wrapper.error .validationMessage {
+.wrapper span>div{
 	position: relative;
-	top: 0px;
+}
+
+.wrapper.error .validationMessage {
+	position: absolute;
+	top: -50px;
 }
 
 .wrapper.error .message {

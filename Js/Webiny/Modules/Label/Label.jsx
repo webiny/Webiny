@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles/Label.css';
 
 class Label extends Webiny.Ui.Component {
 
@@ -13,31 +14,31 @@ Label.defaultProps = {
         const props = _.clone(this.props);
 
         const typeClasses = {
-            default: 'label-default',
-            info: 'label-info',
-            primary: 'label-primary',
-            success: 'label-success',
-            warning: 'label-warning',
-            error: 'label-danger'
+            default: styles.default,
+            info: styles.info,
+            primary: styles.primary,
+            success: styles.success,
+            warning: styles.warning,
+            error: styles.danger
         };
 
         const classes = this.classSet(
-            'label',
+            styles.label,
             typeClasses[props.type],
             props.className
         );
 
-        const styles = _.clone(this.props.style || {});
+        const style = _.clone(this.props.style || {});
         if (this.props.inline) {
-            styles['float'] = 'none';
+            style['float'] = 'none';
         }
 
         return (
-            <span className={classes} style={styles}>
+            <span className={classes} style={style}>
                 {props.children}
             </span>
         );
     }
 };
 
-export default Label;
+export default Webiny.createComponent(Label, {styles});
