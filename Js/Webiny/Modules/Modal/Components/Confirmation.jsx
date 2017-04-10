@@ -1,5 +1,6 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
+import styles from '../styles/Modal.css';
 
 class Confirmation extends Webiny.Ui.ModalComponent {
 
@@ -106,19 +107,13 @@ Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
     closeOnClick: false,
     data: null,
     renderLoader() {
-        return (
-            <div className="loading-overlay">
-                <div className="loading-overlay__icon-wrapper">
-                    <div className="loading-overlay__icon"></div>
-                </div>
-            </div>
-        );
+        return (<Ui.Loader/>);
     },
     renderDialog(confirm, cancel) {
         return (
             <Ui.Modal.Dialog
                 modalContainerTag="confirmation-modal"
-                className="alert-modal"
+                className={styles.alertModal}
                 onCancel={cancel}
                 closeOnClick={this.props.closeOnClick}>
                 {this.renderLoader()}

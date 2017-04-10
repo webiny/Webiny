@@ -1,5 +1,6 @@
 import Webiny from 'Webiny';
 import dynamics from 'dynamics.js';
+import styles from '../styles/Modal.css';
 
 const Ui = Webiny.Ui.Components;
 const mountedDialogs = [];
@@ -43,8 +44,8 @@ class Dialog extends Webiny.Ui.Component {
         // Hide currently visible dialog but do not unmount it
         if (currentDialog && currentDialog.id !== this.id && nextState.isShown) {
             const container = $(currentDialog.modalContainer);
-            const modal = container.find('.modal-dialog');
-            const backdrop = container.find('.modal-backdrop');
+            const modal = container.find('.'+styles.container);
+            const backdrop = container.find('.'+styles.backdrop);
 
             dynamics.animate(modal[0], {
                 opacity: 0,
@@ -54,7 +55,7 @@ class Dialog extends Webiny.Ui.Component {
                 duration: this.modalHideDuration,
                 complete: () => {
                     // Need to hide .modal to let mouse events through
-                    modal.closest('.modal').hide();
+                    modal.closest('.'+styles.modal).hide();
                     // Remove transform so next time we animate, we start from scratch, with no transformations applied
                     modal.css('transform', '');
                 }
@@ -73,7 +74,7 @@ class Dialog extends Webiny.Ui.Component {
         super.componentDidUpdate(prevProps, prevState);
         if (this.isShown()) {
             ReactDOM.render(this.props.renderDialog.call(this), this.modalContainer);
-            $(this.modalContainer).find('.modal').focus();
+            $(this.modalContainer).find('.'+styles.modal).focus();
             this.bindHandlers();
         } else if (prevState.isShown && !this.isShown()) {
             this.unbindHandlers();
@@ -100,17 +101,17 @@ class Dialog extends Webiny.Ui.Component {
     bindHandlers() {
         this.unbindHandlers();
         const namespace = '.' + this.id;
-        $(this.props.modalContainerTag).on('keyup' + namespace, '.modal', e => {
+        $(this.props.modalContainerTag).on('keyup' + namespace, '.'+styles.modal, e => {
             // Listen for ESC button
             if (e.keyCode === 27 && !this.animating && this.props.closeOnClick) {
                 Promise.resolve(this.props.onCancel()).then(this.hide);
             }
-        }).on('mousedown' + namespace, '.modal', e => {
+        }).on('mousedown' + namespace, '.'+styles.modal, e => {
             // Catch backdrop click
-            if ($(e.target).hasClass('modal')) {
+            if ($(e.target).hasClass(styles.modal)) {
                 this.clickStartedOnBackdrop = true;
             }
-        }).on('click' + namespace, '.modal', () => {
+        }).on('click' + namespace, '.'+styles.modal, () => {
             if (this.clickStartedOnBackdrop && this.props.closeOnClick) {
                 Promise.resolve(this.props.onCancel()).then(this.hide);
             }
@@ -147,9 +148,9 @@ class Dialog extends Webiny.Ui.Component {
             return new Promise(resolve => {
                 this.animating = true;
                 const prevContainer = $(this.modalContainer);
-                const prevModal = prevContainer.find('.modal-dialog');
-                const prevBackdrop = prevContainer.find('.modal-backdrop');
-                prevModal.closest('.modal').show();
+                const prevModal = prevContainer.find('.'+styles.dialog);
+                const prevBackdrop = prevContainer.find('.'+styles.backdrop);
+                prevModal.closest('.'+styles.modal).show();
                 dynamics.animate(prevModal[0], {
                     opacity: 1,
                     translateY: 50
@@ -157,7 +158,7 @@ class Dialog extends Webiny.Ui.Component {
                     type: dynamics.spring,
                     duration: this.modalShowDuration,
                     complete: () => {
-                        prevModal.closest('.modal').focus();
+                        prevModal.closest('.'+styles.modal).focus();
                         this.animating = false;
                         resolve();
                     }
@@ -257,7 +258,7 @@ Dialog.defaultProps = {
     modalContainerTag: 'webiny-modal',
     style: {},
     renderDialog() {
-        const className = this.classSet({modal: true, 'modal-wizard': this.props.wide});
+        const className = this.classSet(styles.modal, (this.props.wide && styles.noPadding));
         let content = this.props.children;
         if (_.isFunction(content)) {
             content = content.call(this, this);
@@ -269,7 +270,7 @@ Dialog.defaultProps = {
                     trigger={this.state.isDialogShown}
                     show={{opacity: 0.8, duration: this.backdropShowDuration, ease: 'easeIn'}}
                     hide={{opacity: 0, duration: this.backdropHideDuration, ease: 'easeOut'}}>
-                    <div className="modal-backdrop" style={{opacity: 0}}></div>
+                    <div className={styles.backdrop} style={{opacity: 0}}></div>
                 </Ui.Animate>
 
                 <div className={className} tabIndex="-1" style={{display: 'block'}}>
@@ -278,8 +279,8 @@ Dialog.defaultProps = {
                         onFinish={this.animationFinish}
                         show={{translateY: 50, ease: 'spring', duration: this.modalShowDuration}}
                         hide={{translateY: -100, ease: 'easeOut', opacity: 0, duration: this.modalHideDuration}}>
-                        <div className={this.classSet('modal-dialog modal-show', this.props.className)} style={{top: -50}}>
-                            <div className="modal-content">
+                        <div className={this.classSet(styles.dialog, styles.show, this.props.className)} style={{top: -50}}>
+                            <div className={styles.content}>
                                 {this.prepareChildren(content)}
                             </div>
                         </div>

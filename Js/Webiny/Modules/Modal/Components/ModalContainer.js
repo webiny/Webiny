@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from '../styles/Modal.css';
 
 class Container extends Webiny.Ui.Component {
     constructor(props) {
@@ -19,7 +20,7 @@ class Container extends Webiny.Ui.Component {
         super.componentDidUpdate();
         if (this.state.content) {
             // Need to focus on .modal to reduce scope of events (keyup and click in Modal.Dialog)
-            $('.modal').focus();
+            $('.' + styles.modal).focus();
             $('webiny-modal-container').show();
         }
     }
