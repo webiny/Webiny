@@ -1,6 +1,6 @@
 .checkbox {
 	all: initial;
-	display: inline-block;
+	display: block;
 	background-color: transparent;
 	color: inherit;
 	margin-bottom: 7px;
