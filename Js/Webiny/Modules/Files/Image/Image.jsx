@@ -80,7 +80,7 @@ Image.defaultProps = _.merge({}, ImageComponent.defaultProps, {
             galleryStyles.trayBinEmpty
         );
         if (this.props.value) {
-            let css = this.classSet(galleryStyles.trayBin);
+            css = this.classSet(galleryStyles.trayBin);
         }
 
         let image = null;

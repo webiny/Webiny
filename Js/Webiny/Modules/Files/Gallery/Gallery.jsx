@@ -314,7 +314,7 @@ Gallery.defaultProps = {
             styles.trayBinEmpty
         );
         if (this.state.images.length > 0) {
-            let css = this.classSet(styles.trayBin);
+            css = this.classSet(styles.trayBin);
         }
 
         let errors = null;

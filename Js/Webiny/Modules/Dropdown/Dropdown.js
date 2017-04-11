@@ -75,16 +75,11 @@ Dropdown.defaultProps = {
             (this.props.type == 'balloon' && styles.balloon)
         );
 
-        console.log(this.props);
-
-        const openClass = styles.dropdownToggleOpen;
         const buttonClasses = this.classSet(
             'dropdown-toggle',
             styles.dropdownToggle,
             {disabled: this.props.disabled}
         );
-
-        //const buttonClasses = this.classSet('btn btn-default dropdown-toggle', {disabled: this.props.disabled});
 
         return (
             <div className={classes}>
