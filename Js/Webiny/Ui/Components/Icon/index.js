@@ -17,4 +17,4 @@ Icon.defaultProps = {
     }
 };
 
-export default Icon;
+export default Webiny.createComponent(Icon);

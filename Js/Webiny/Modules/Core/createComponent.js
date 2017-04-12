@@ -15,9 +15,21 @@ export default (Component, options = {}) => {
     const defaultStyles = Map(options.styles || {});
 
     class ComponentWrapper extends WebinyComponent {
+        constructor(props) {
+            super(props);
+            if (options.api) {
+                options.api.forEach((method) => {
+                    Object.defineProperty(this, method, {
+                        get: () => this.component[method]
+                    });
+                })
+            }
+        }
+
         render() {
             const props = _.omit(this.props, ['styles']);
             props.styles = defaultStyles.toJS();
+            props.ref = c => this.component = c;
             // If new styles are given, merge them with default styles
             if (_.isPlainObject(this.props.styles)) {
                 _.merge(props.styles, this.props.styles);
@@ -28,9 +40,9 @@ export default (Component, options = {}) => {
             if (Object.keys(modules).length > 0) {
                 return (
                     <LazyLoad modules={modules || []}>
-                        {(modules) => (
-                            <Component {...props} {...modules}/>
-                        )}
+                        {(modules) => {
+                            return <Component {...props} {...modules}/>;
+                        }}
                     </LazyLoad>
                 );
             }

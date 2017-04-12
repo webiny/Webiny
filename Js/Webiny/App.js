@@ -2,6 +2,7 @@ import Webiny from 'Webiny';
 import 'Assets/styles.scss';
 
 import './Modules/Core';
+import './Ui/Components';
 import Alert from './Modules/Alert';
 import Animate from './Modules/Animate';
 import Auth from './Modules/Auth';
@@ -11,7 +12,7 @@ import ChangeConfirm from './Modules/ChangeConfirm';
 import Checkbox from './Modules/Checkbox';
 import ClickConfirm from './Modules/ClickConfirm';
 import ClickSuccess from './Modules/ClickSuccess';
-import CodeEditor from './Modules/CodeEditor';
+// import CodeEditor from './Modules/CodeEditor';
 import CodeHighlight from './Modules/CodeHighlight';
 import Copy from './Modules/Copy';
 import Data from './Modules/Data';
@@ -40,7 +41,7 @@ import Link from './Modules/Link';
 import List from './Modules/List';
 import Loader from './Modules/Loader';
 import Logic from './Modules/Logic';
-import MarkdownEditor from './Modules/MarkdownEditor';
+//import MarkdownEditor from './Modules/MarkdownEditor';
 import Modal from './Modules/Modal';
 import Panel from './Modules/Panel';
 import Password from './Modules/Password';
@@ -75,7 +76,7 @@ class Core extends Webiny.App {
             new Checkbox(this),
             new ClickConfirm(this),
             new ClickSuccess(this),
-            new CodeEditor(this),
+            // new CodeEditor(this),
             new CodeHighlight(this),
             new Copy(this),
             new Data(this),
@@ -104,7 +105,7 @@ class Core extends Webiny.App {
             new List(this),
             new Loader(this),
             new Logic(this),
-            new MarkdownEditor(this),
+            //new MarkdownEditor(this),
             new Modal(this),
             new Panel(this),
             new Password(this),

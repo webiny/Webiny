@@ -18,19 +18,22 @@ class LazyLoad extends Component {
         if (_.isArray(toLoad)) {
             toLoad.map(name => modules[name] = name);
         } else {
-            modules = toLoad;
+            modules = _.clone(toLoad);
         }
 
         const keys = Object.keys(modules);
-        Promise.all(keys.map(key => {
+
+        const imports = keys.map(key => {
             const module = modules[key];
             if (_.isString(module)) {
                 // If string is given, we expect it to be a Core component name
-                return import(`Webiny/Ui/${module}/index`).then(m => m.default);
+                return import(`Webiny/Ui/Components/${module}/index`).then(m => m.default);
             }
             // If a function is given - execute it and return whatever that function is returning
             return module();
-        })).then(values => {
+        });
+
+        Promise.all(imports).then(values => {
             // Map loaded modules to requested modules object
             const modules = {};
             keys.map((key, i) => {
