@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles/Checkbox.css';
 
 class Checkbox extends Webiny.Ui.FormComponent {
 
@@ -32,15 +33,15 @@ Checkbox.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     labelRenderer() {
         let tooltip = null;
         if (this.props.tooltip) {
-            const {Tooltip} = this.props;
-            tooltip = <Tooltip key="label" target={<Ui.Icon icon="icon-info-circle"/>}>{this.props.tooltip}</Tooltip>;
+            const {Tooltip, Icon} = this.props;
+            tooltip = <Tooltip key="label" target={<Icon icon="icon-info-circle"/>}>{this.props.tooltip}</Tooltip>;
         }
         return <span>{this.props.label} {tooltip}</span>;
     },
     renderer() {
         const css = this.classSet(
-            'checkbox-custom checkbox-default',
-            {'checkbox-disabled': this.isDisabled()},
+            styles.checkbox,
+            this.isDisabled() && styles.checkboxDisabled,
             this.props.className,
             this.props.grid ? 'col-sm-' + this.props.grid : null
         );
@@ -61,4 +62,4 @@ Checkbox.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     }
 });
 
-export default Webiny.createComponent(Checkbox, {modules: ['Tooltip']});
+export default Webiny.createComponent(Checkbox, {styles, modules: ['Tooltip', 'Icon']});

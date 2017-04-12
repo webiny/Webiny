@@ -89,7 +89,7 @@ ChangeConfirm.defaultProps = {
             dialogProps['renderDialog'] = this.props.renderDialog;
         }
 
-        const Modal = this.props.Modal;
+        const {Modal} = this.props;
 
         return (
             <webiny-change-confirm>

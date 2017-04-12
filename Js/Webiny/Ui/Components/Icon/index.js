@@ -1,20 +1,16 @@
 import Webiny from 'Webiny';
+import Icon from './Icon';
+import Picker from './Picker';
 
-class Icon extends Webiny.Ui.Component {
+class Module extends Webiny.Module {
 
+    init() {
+        this.name = 'Icon';
+        Webiny.Ui.Components.Icon = Icon;
+        Webiny.Ui.Components.Icon.Picker = Picker;
+        // Force webpack to build this component to be ready for dynamic import
+        () => import('Webiny/Ui/Icon');
+    }
 }
 
-Icon.defaultProps = {
-    className: null,
-    type: 'span', // span || i
-    renderer() {
-        let iconSet = 'icon';
-        if (_.includes(this.props.icon, 'fa-')) {
-            iconSet = 'fa icon';
-        }
-
-        return React.createElement(this.props.type, {className: this.classSet(iconSet, this.props.icon, this.props.className)});
-    }
-};
-
-export default Webiny.createComponent(Icon);
+export default Module;

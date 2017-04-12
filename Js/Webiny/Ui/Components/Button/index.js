@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles.css';
 
 class Button extends Webiny.Ui.Component {
 
@@ -31,7 +32,7 @@ Button.defaultProps = {
     tooltip: null,
     renderer() {
         const props = _.clone(this.props);
-        const {Icon, Tooltip} = props;
+        const {Tooltip, Icon} = props;
 
         if (props.disabled || !this.state.enabled) {
             props['disabled'] = true;
@@ -39,8 +40,8 @@ Button.defaultProps = {
 
         const sizeClasses = {
             normal: '',
-            large: 'btn-lg',
-            small: 'btn-sm'
+            large: styles.btnLarge,
+            //small: 'btn-sm' // sven: this option doesn't exist in css
         };
 
         const alignClasses = {
@@ -50,28 +51,32 @@ Button.defaultProps = {
         };
 
         const typeClasses = {
-            default: 'btn-default',
-            primary: 'btn-primary',
-            secondary: 'btn-success'
+            default: styles.btnDefault,
+            primary: styles.btnPrimary,
+            secondary: styles.btnSuccess
         };
 
         const classes = this.classSet(
-            'btn',
             sizeClasses[props.size],
             alignClasses[props.align],
             typeClasses[props.type],
             props.className
         );
 
-        const icon = this.props.icon && Icon ? <Icon icon={this.props.icon} className="right"/> : null;
+        const icon = this.props.icon ? <Icon icon={this.props.icon} className={styles.icon + ' ' + styles.iconRight}/> : null;
         let content = props.children || props.label;
         if (icon) {
             content = <span>{content}</span>;
         }
 
-        let button = <button {..._.pick(props, ['style', 'onClick', 'disabled'])} type="button" className={classes}>{icon} {content}</button>;
+        const buttonProps = _.pick(props, ['style', 'onClick', 'disabled']);
+        _.assign(buttonProps, {
+            type: 'button',
+            className: classes,
+        });
+        let button = <button {...buttonProps}>{icon} {content}</button>;
 
-        if (this.props.tooltip && Tooltip) {
+        if (this.props.tooltip) {
             button = <Tooltip target={button} placement="top">{this.props.tooltip}</Tooltip>;
         }
 
@@ -79,4 +84,4 @@ Button.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Button, {modules: ['Icon', 'Tooltip']});
+export default Webiny.createComponent(Button, {styles, modules: ['Tooltip', 'Icon']});

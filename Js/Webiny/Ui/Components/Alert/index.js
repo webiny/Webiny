@@ -1,9 +1,16 @@
 import Webiny from 'Webiny';
+import styles from './styles/Alert.css';
 
 class Alert extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);
+
+        this.bindMethods('close');
+    }
+
+    close(){
+        ReactDOM.findDOMNode(this).remove();
     }
 }
 
@@ -12,15 +19,17 @@ Alert.defaultProps = {
     icon: 'info',
     title: null,
     close: false,
+    className: null,
     renderer() {
         const props = _.clone(this.props);
+        const {styles, type, Icon} = this.props;
 
         const typeClasses = {
-            info: 'alert-info',
-            success: 'alert-success',
-            warning: 'alert-warning',
-            error: 'alert-error',
-            danger: 'alert-error'
+            info: styles.alertInfo,
+            success: styles.alertSuccess,
+            warning: styles.alertWarning,
+            error: styles.alertDanger,
+            danger: styles.alertDanger
         };
 
         const iconClasses = {
@@ -32,24 +41,21 @@ Alert.defaultProps = {
         };
 
         const classes = this.classSet(
-            'alert',
-            typeClasses[props.type],
+            typeClasses[type],
             props.className
         );
 
-        const Icon = this.props.Icon;
-        const icon = this.props.icon ? <Icon icon={iconClasses[props.type]}/> : null;
+        const icon = this.props.icon ? <Icon icon={iconClasses[type]}/> : null;
         let close = null;
         if (props.close) {
             close = (
-                <button type="button" className="close" data-dismiss="alert">
+                <button type="button" className={styles.close} onClick={this.close}>
                     <span aria-hidden="true">×</span>
-                    <span className="sr-only">Close</span>
                 </button>
             );
         }
 
-        const title = this.props.title ? <strong>{_.trimEnd(this.props.title, ':')}:</strong> : null;
+        const title = props.title ? <strong>{_.trimEnd(props.title, ':')}:</strong> : null;
 
         return (
             <div className={classes}>
@@ -61,4 +67,4 @@ Alert.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Alert, {modules: ['Icon']});
+export default Webiny.createComponent(Alert, {styles, modules: ['Icon']});
