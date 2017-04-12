@@ -215,7 +215,7 @@ FormComponent.defaultProps = {
             description = description(this);
         }
 
-        return description ? <Ui.Input.InfoMessage>{description}</Ui.Input.InfoMessage> : null;
+        return description ? <Ui.Input.DescriptionMessage>{description}</Ui.Input.DescriptionMessage> : null;
     }
 };
 

@@ -70,17 +70,20 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             autoFocus: this.props.autoFocus
         };
 
+        let showValidationIcon = true;
         let addonLeft = '';
         if (this.props.addonLeft) {
-            addonLeft = (<span className="input-group-addon">{this.props.addonLeft}</span>);
+            addonLeft = (<span className={styles.addon}>{this.props.addonLeft}</span>);
+            showValidationIcon = false;
         }
 
         let addonRight = '';
         if (this.props.addonRight) {
-            addonRight = (<span className="input-group-addon">{this.props.addonRight}</span>);
+            addonRight = (<span className={styles.addon}>{this.props.addonRight}</span>);
+            showValidationIcon = false;
         }
 
-        let wrapperClassName = this.props.wrapperClassName + ' input-group';
+        let wrapperClassName = this.props.wrapperClassName + ' ' + styles.inputGroup;
         let iconLeft = '';
         if (this.props.iconLeft) {
             wrapperClassName += ' ' + styles.iconLeft;
@@ -106,7 +109,7 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                     </Webiny.Ui.Components.DelayedOnChange>
                     {addonRight}
                     {iconRight}
-                    {this.renderValidationIcon()}
+                    {showValidationIcon && this.renderValidationIcon()}
                 </div>
                 {this.renderDescription()}
                 <Webiny.Ui.Components.Animate

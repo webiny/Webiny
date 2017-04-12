@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles/DateTime.scss';
 
 class Base extends Webiny.Ui.FormComponent {
 
@@ -73,35 +74,10 @@ Base.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     debug: false,
     withTimezone: true,
     renderer() {
-        const cssConfig = {
-            'form-group': true,
-            'error': this.state.isValid === false,
-            'success': this.state.isValid === true
-        };
+        let props = _.omit(this.props, ['renderer']);
+        props.addonRight = (<Webiny.Ui.Components.Icon icon="icon-calendar"/>);
 
-        const props = {
-            onBlur: this.validate,
-            disabled: this.isDisabled(),
-            readOnly: this.props.readOnly,
-            type: 'text',
-            className: this.classSet('form-control', {placeholder: !this.props.value}),
-            value: this.props.value || '',
-            onChange: _.noop,
-            placeholder: this.getPlaceholder()
-        };
-
-        return (
-            <div className={this.classSet(cssConfig)}>
-                {this.renderLabel()}
-                <div className="input-group date">
-                    <input {...props}/>
-                    <span className="input-group-addon cursor">
-                        <i className="icon-calendar icon_c"></i>
-                    </span>
-                </div>
-                {this.renderValidationMessage()}
-            </div>
-        );
+        return (<Webiny.Ui.Components.Input {...props}/>);
     }
 });
 

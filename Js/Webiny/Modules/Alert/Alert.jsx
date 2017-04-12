@@ -33,7 +33,7 @@ Alert.defaultProps = {
         };
 
         const iconClasses = {
-            info: 'icon-info',
+            info: 'icon-info-circle',
             success: 'icon-check-circle-o',
             warning: 'icon-exclamation-circle',
             error: 'icon-cancel',
