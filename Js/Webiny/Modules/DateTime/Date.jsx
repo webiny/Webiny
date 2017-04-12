@@ -1,6 +1,5 @@
 import BaseDateTime from './Base';
 import moment from 'moment';
-import styles from './styles/DateTime.scss';
 
 class Date extends BaseDateTime {
 

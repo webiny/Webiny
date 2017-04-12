@@ -57,22 +57,27 @@
 
   .bootstrap-datetimepicker-widget {
     li.picker-switch {
-      a {
-        width: 100%;
-        display: inline-block;
-        span {
-          display: inline-block;
+      table.table-condensed {
+        a {
           width: 100%;
-          margin: 0px;
-          border-radius: 0;
+          display: inline-block;
           text-align: center;
-          .glyphicon {
-            top: 0px;
+          padding: 0px;
+          span {
+            display: inline-block;
+            width: 100%;
+            margin: 0px;
+            border-radius: 0;
+            text-align: center;
+            .glyphicon {
+              top: 0px;
+            }
           }
         }
       }
     }
-    table {
+
+    table.table-condensed {
       margin: 0px;
       padding: 0px;
       border: none;
@@ -122,6 +127,7 @@
           text-align: center !important;
           width: 35px;
           height: 35px;
+          padding: 0;
         }
 
         &.old {
@@ -144,7 +150,7 @@
 
         span {
           text-align: center;
-          width: 25%;
+          width: 100%;
           margin: 0;
           border-radius: 0;
           &.active {
@@ -161,6 +167,10 @@
     .dow {
       font-weight: normal;
       font-size: 16px;
+      padding: 0;
+      margin: 2px;
+      height: 35px;
+      width: 35px;
     }
 
     .ui-state-default,
