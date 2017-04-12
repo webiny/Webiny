@@ -1,5 +1,6 @@
 import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
+import styles from '../styles/Modal.css';
 
 class Success extends Webiny.Ui.ModalComponent {
 
@@ -34,7 +35,7 @@ Success.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
     onClose: _.noop,
     renderDialog() {
         return (
-            <Ui.Modal.Dialog modalContainerTag="success-modal" className="alert-modal">
+            <Ui.Modal.Dialog modalContainerTag="success-modal" className={styles.alertModal}>
                 <Ui.Modal.Body>
                     <div className="text-center">
                         <div className="icon icon-check-circle icon-success icon-4x"></div>

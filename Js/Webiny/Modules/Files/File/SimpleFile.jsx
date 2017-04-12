@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles/SimpleFile.css';
 const Ui = Webiny.Ui.Components;
 
 class SimpleFile extends Webiny.Ui.FormComponent {
@@ -58,17 +59,17 @@ SimpleFile.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             <div className={this.classSet(cssConfig, this.props.className)}>
                 {this.renderLabel()}
 
-                <div className="choose-file">
+                <div className={styles.wrapper}>
                     <input
                         type="text"
                         placeholder={this.getPlaceholder()}
                         readOnly={true}
                         onClick={this.getFiles}
-                        className="form-control"
+                        className={styles.input}
                         value={_.get(this.props.value, 'name', '')}
                         onChange={_.noop}/>
 
-                    <div className="fileUpload btn" onClick={this.getFiles}>
+                    <div className={styles.uploadBtn} onClick={this.getFiles}>
                         <span>Upload</span>
                         {fileReader}
                     </div>

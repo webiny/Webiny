@@ -2,6 +2,7 @@ import Webiny from 'Webiny';
 const Ui = Webiny.Ui.Components;
 import ImageComponent from './../Base/ImageComponent';
 import Image from './Image';
+import styles from './styles/Gallery.css';
 
 const placeholder = document.createElement('div');
 placeholder.className = 'tray-bin__file placeholder';
@@ -295,8 +296,8 @@ Gallery.defaultProps = {
         let message = null;
         if (this.state.images.length === 0) {
             message = (
-                <div className="dz-default dz-message">
-                    <span className="tray-bin__main-text">DRAG FILES HERE</span>
+                <div>
+                    <span className={styles.mainText}>DRAG FILES HERE</span>
                 </div>
             );
         }
@@ -308,10 +309,13 @@ Gallery.defaultProps = {
             onClick: this.getFiles
         };
 
-        const css = {
-            'tray-bin': true,
-            'tray-bin--empty': !this.state.images.length
-        };
+        let css = this.classSet(
+            styles.trayBin,
+            styles.trayBinEmpty
+        );
+        if (this.state.images.length > 0) {
+            css = this.classSet(styles.trayBin);
+        }
 
         let errors = null;
         if (this.state.errors) {
@@ -329,9 +333,9 @@ Gallery.defaultProps = {
 
         return (
             <div className="form-group">
-                <div className={this.classSet(css)}>
+                <div className={css}>
                     {errors}
-                    <div className="tray-bin__container" {...props}>
+                    <div className={styles.container} {...props}>
                         {message}
                         {this.state.images.map((item, index) => {
                             const imageProps = {
@@ -356,10 +360,11 @@ Gallery.defaultProps = {
                             sizeLimit={this.props.sizeLimit}
                             onChange={this.filesChanged}/>
                         {this.getCropper(
-                            <Ui.Input label="Title" placeholder="Type in an image title" {...this.bindTo('cropImage.title')}/>
+                            <Ui.Input label="Title"
+                                      placeholder="Type in an image title" {...this.bindTo('cropImage.title')}/>
                         )}
                     </div>
-                    <div className="txt_b">
+                    <div className={styles.uploadAction}>
                         <span>Dragging not convenient?</span>&nbsp;
                         <a href="#" onClick={this.getFiles}>SELECT FILES HERE</a>
                     </div>

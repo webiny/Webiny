@@ -1,6 +1,8 @@
 import Webiny from 'Webiny';
 import logoOrange from 'Assets/images/logo_orange.png';
+import styles from './styles/Login.css';
 const Ui = Webiny.Ui.Components;
+
 
 class Login extends Webiny.Ui.View {
 
@@ -11,17 +13,6 @@ class Login extends Webiny.Ui.View {
         if (!_.isEmpty(Webiny.Model.get('User'))) {
             Webiny.Router.goToRoute(Webiny.Router.getDefaultRoute());
         }
-    }
-
-    componentDidMount() {
-        super.componentDidMount();
-        $('body').addClass('sign-in');
-        $('input:first').focus();
-    }
-
-    componentWillUnmount() {
-        super.componentWillUnmount();
-        $('body').removeClass('sign-in');
     }
 
     onSubmit(model, form) {
@@ -50,51 +41,58 @@ Login.defaultProps = {
             name: 'password',
             placeholder: 'Password',
             label: 'Password',
-            validate: 'required,password'
+            validate: 'required,minLength:8'
         };
 
         return (
-            <Ui.Form onSubmit={this.onSubmit}>
-                {(model, form) => (
-                    <div className="container">
-                        <div className="sign-in-holder">
-                            <Ui.Form.Loader/>
+            <sign-in-form class="sign-in">
+                <Ui.Form onSubmit={this.onSubmit}>
+                    {(model, form) => (
+                        <div className="container">
+                            <div className="sign-in-holder">
+                                <Ui.Form.Loader/>
 
-                            <div className="form-signin">
-                                <a href="#" className="logo">
-                                    <img src={logoOrange} width="180" height="58"/>
-                                </a>
+                                <div className="form-signin">
+                                    <a href="#" className="logo">
+                                        <img src={logoOrange} width="180" height="58"/>
+                                    </a>
 
-                                <h2 className="form-signin-heading"><span/>Sign in to your Account</h2>
+                                    <h2 className="form-signin-heading"><span/>Sign in to your Account</h2>
 
-                                <div className="clear"></div>
-                                <Ui.Form.Error/>
+                                    <div className="clear"></div>
+                                    <Ui.Form.Error className="testing"/>
 
-                                <div className="clear"></div>
-                                <Ui.Input
-                                    name="username"
-                                    placeholder="Enter email"
-                                    label="Email address"
-                                    validate="required,email"
-                                    onEnter={form.submit}/>
-                                <Ui.Password {...passwordProps} onEnter={form.submit}/>
+                                    <div className="clear"></div>
+                                    <Ui.Input
+                                        name="username"
+                                        placeholder="Enter email"
+                                        label="Email address"
+                                        validate="required,email"
+                                        onEnter={form.submit}
+                                        autoFocus={true}/>
+                                    <Ui.Password {...passwordProps} onEnter={form.submit}/>
 
-                                <div className="form-footer">
-                                    <div className="submit-wrapper">
-                                        <Ui.Button type="primary" size="large" onClick={form.submit}>
-                                            <span>Submit</span>
-                                            <Ui.Icon icon="icon-next"/>
-                                        </Ui.Button>
+                                    <div className="form-footer">
+                                        <div className="submit-wrapper">
+                                            <Ui.Button
+                                                type="primary"
+                                                size="large"
+                                                onClick={form.submit}
+                                                icon="icon-next"
+                                                styles={styles}>
+                                                <span>Submit</span>
+                                            </Ui.Button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <p className="copyright">Version 2.0</p>
-                            <a href="#" className="site">www.webiny.com</a>
+                                <p className="copyright">Version 2.0</p>
+                                <a href="#" className="site">www.webiny.com</a>
+                            </div>
                         </div>
-                    </div>
-                )}
-            </Ui.Form>
+                    )}
+                </Ui.Form>
+            </sign-in-form>
         );
     }
 };

@@ -1,5 +1,6 @@
 import Webiny from 'Webiny';
 import Checkbox from './Checkbox';
+import styles from './styles/Checkbox.css';
 
 class CheckboxGroup extends Webiny.Ui.OptionComponent {
     constructor(props) {
@@ -91,7 +92,7 @@ CheckboxGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps,
             <div className={this.classSet(this.props.className)}>
                 <div className={this.classSet(cssConfig)}>
                     {this.renderLabel()}
-                    <div className="clearfix"></div>
+                    <div className={styles.clearfix}></div>
                     {this.renderOptions()}
                 </div>
                 {this.renderValidationMessage()}
@@ -100,4 +101,4 @@ CheckboxGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps,
     }
 });
 
-export default CheckboxGroup;
+export default Webiny.createComponent(CheckboxGroup, {styles});

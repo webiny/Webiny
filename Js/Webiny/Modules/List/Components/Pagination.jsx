@@ -84,7 +84,7 @@ Pagination.defaultProps = {
     size: 'large', // large or small
     perPageRenderer() {
         return (
-            <Ui.Dropdown title={<span><strong>{this.props.perPage}</strong> per page</span>} className="balloon">
+            <Ui.Dropdown title={<span><strong>{this.props.perPage}</strong> per page</span>} type="balloon">
                 <Ui.Dropdown.Header title="Results per page"/>
                 <Ui.Dropdown.Link title="10" onClick={() => this.props.onPerPageChange(10)}/>
                 <Ui.Dropdown.Link title="25" onClick={() => this.props.onPerPageChange(25)}/>

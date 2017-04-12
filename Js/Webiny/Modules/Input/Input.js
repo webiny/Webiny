@@ -1,4 +1,6 @@
 import Webiny from 'Webiny';
+import styles from './styles/Input.css';
+
 const Ui = Webiny.Ui.Components;
 
 class Input extends Webiny.Ui.FormComponent {
@@ -47,11 +49,11 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     iconRight: null,
     wrapperClassName: '',
     renderer() {
-        const cssConfig = {
-            'form-group': true,
-            'error': this.state.isValid === false,
-            'success': this.state.isValid === true
-        };
+        const cssConfig = this.classSet(
+            styles.wrapper,
+            (this.state.isValid === false && styles.error),
+            (this.state.isValid === true && styles.success)
+        );
 
         const props = {
             'data-on-enter': this.props.onEnter !== _.noop,
@@ -59,7 +61,7 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             disabled: this.isDisabled(),
             readOnly: this.props.readOnly,
             type: this.props.type,
-            className: 'form-control',
+            className: styles.input,
             value: this.getValue() || '',
             placeholder: this.getPlaceholder(),
             onKeyUp: this.props.onKeyUp,
@@ -81,13 +83,13 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         let wrapperClassName = this.props.wrapperClassName + ' input-group';
         let iconLeft = '';
         if (this.props.iconLeft) {
-            wrapperClassName += ' icon-left';
+            wrapperClassName += ' ' + styles.iconLeft;
             iconLeft = (<span className={this.props.iconLeft}></span>);
         }
 
         let iconRight = '';
         if (this.props.iconRight) {
-            wrapperClassName += ' icon-right';
+            wrapperClassName += ' ' + styles.iconRight;
             iconRight = (<span className={this.props.iconRight}></span>);
         }
 

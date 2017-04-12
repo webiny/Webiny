@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles/Button.css';
 
 class Button extends Webiny.Ui.Component {
 
@@ -38,8 +39,8 @@ Button.defaultProps = {
 
         const sizeClasses = {
             normal: '',
-            large: 'btn-lg',
-            small: 'btn-sm'
+            large: styles.btnLarge,
+            //small: 'btn-sm' // sven: this option doesn't exist in css
         };
 
         const alignClasses = {
@@ -49,20 +50,19 @@ Button.defaultProps = {
         };
 
         const typeClasses = {
-            default: 'btn-default',
-            primary: 'btn-primary',
-            secondary: 'btn-success'
+            default: styles.btnDefault,
+            primary: styles.btnPrimary,
+            secondary: styles.btnSuccess
         };
 
         const classes = this.classSet(
-            'btn',
             sizeClasses[props.size],
             alignClasses[props.align],
             typeClasses[props.type],
             props.className
         );
 
-        const icon = this.props.icon ? <Webiny.Ui.Components.Icon icon={this.props.icon} className="right"/> : null;
+        const icon = this.props.icon ? <Webiny.Ui.Components.Icon icon={this.props.icon} className={styles.icon + ' ' + styles.iconRight}/> : null;
         let content = props.children || props.label;
         if (icon) {
             content = <span>{content}</span>;
@@ -79,4 +79,4 @@ Button.defaultProps = {
     }
 };
 
-export default Button;
+export default Webiny.createComponent(Button, {styles});

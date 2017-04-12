@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from '../styles/Modal.css';
 
 class Header extends Webiny.Ui.Component {
 
@@ -16,9 +17,9 @@ Header.defaultProps = {
         }
 
         return (
-            <div className={this.classSet('modal-header', this.props.className)}>
+            <div className={this.classSet(styles.header, this.props.className)}>
                 {headerContent}
-                <button onClick={this.props.onClose} type="button" className="close md-close" data-dismiss="modal">×</button>
+                <button onClick={this.props.onClose} type="button" className={styles.close} data-dismiss="modal">×</button>
             </div>
         );
     }

@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles/Growl.css';
 
 class GrowlContainer extends Webiny.Ui.Component {
 
@@ -49,8 +50,8 @@ class GrowlContainer extends Webiny.Ui.Component {
 GrowlContainer.defaultProps = {
     renderer: function renderer() {
         return (
-            <div className="top-right growl">
-                <div className="growl-notification"></div>
+            <div className={this.classSet(styles.growl, styles.topRight)}>
+                <div className={styles.notification}></div>
                 {this.state.growls.map(growl => {
                     return React.cloneElement(growl, {ref: growl.props.id, key: growl.props.id, onRemove: this.removeGrowl});
                 })}

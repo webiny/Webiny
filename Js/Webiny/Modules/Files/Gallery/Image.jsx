@@ -1,6 +1,7 @@
 import Webiny from 'Webiny';
 import moment from 'moment';
 import filesize from 'filesize';
+import styles from './styles/Gallery.css';
 const Ui = Webiny.Ui.Components;
 
 class Image extends Webiny.Ui.Component {
@@ -41,16 +42,16 @@ Image.defaultProps = {
 
         let editBtn = null;
         if (!_.has(image, 'progress')) {
-            editBtn = <Ui.Link onClick={this.editImage} className="tray-bin__file-edit"/>;
+            editBtn = <Ui.Link onClick={this.editImage} className={styles.fileEdit}/>;
         }
 
         return (
-            <div className="tray-bin__file" {...draggable} data-role="image">
-                <img className="tray-bin__file-preview" src={image.src + cacheBust} alt={title} title={title} width="133" height="133"/>
+            <div className={styles.file} {...draggable} data-role="image">
+                <img className={styles.filePreview} src={image.src + cacheBust} alt={title} title={title} width="133" height="133"/>
                 {editBtn}
-                <Ui.Link onClick={this.deleteImage} className="tray-bin__file-remove"/>
-                <span className="tray-bin__file-name">{image.name}</span>
-                <span className="tray-bin__file-size">{image.id ? filesize(image.size) : '-'}</span>
+                <Ui.Link onClick={this.deleteImage} className={styles.fileRemove}/>
+                <span className={styles.fileName}>{image.name}</span>
+                <span className={styles.fileSize}>{image.id ? filesize(image.size) : '-'}</span>
             </div>
         );
     }

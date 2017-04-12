@@ -1,5 +1,8 @@
 import Webiny from 'Webiny';
+import styles from './styles/Checkbox.css';
+
 const Ui = Webiny.Ui.Components;
+
 
 class Checkbox extends Webiny.Ui.FormComponent {
 
@@ -39,8 +42,8 @@ Checkbox.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     },
     renderer() {
         const css = this.classSet(
-            'checkbox-custom checkbox-default',
-            {'checkbox-disabled': this.isDisabled()},
+            styles.checkbox,
+            this.isDisabled() && styles.checkboxDisabled,
             this.props.className,
             this.props.grid ? 'col-sm-' + this.props.grid : null
         );
@@ -61,4 +64,4 @@ Checkbox.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     }
 });
 
-export default Checkbox;
+export default Webiny.createComponent(Checkbox, {styles});

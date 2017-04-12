@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles/Dropdown.css';
 
 class Dropdown extends Webiny.Ui.Component {
 
@@ -21,12 +22,14 @@ class Dropdown extends Webiny.Ui.Component {
         $(ReactDOM.findDOMNode(this)).on({
             'show.bs.dropdown': () => {
                 this.props.onShow();
+                $('.' + this.id).addClass(styles.opened);
             },
             'shown.bs.dropdown': () => {
                 this.props.onShown();
             },
             'hide.bs.dropdown': () => {
                 this.props.onHide();
+                $('.' + this.id).removeClass(styles.opened);
             },
             'hidden.bs.dropdown': () => {
                 this.props.onHidden();
@@ -41,6 +44,7 @@ class Dropdown extends Webiny.Ui.Component {
 
     close() {
         $('.' + this.id).removeClass('open');
+        $('.' + this.id).removeClass(styles.opened);
     }
 }
 
@@ -53,6 +57,7 @@ Dropdown.defaultProps = {
     onShown: _.noop,
     onHide: _.noop,
     onHidden: _.noop,
+    type: 'default',
     renderer() {
         const props = _.clone(this.props);
 
@@ -63,21 +68,26 @@ Dropdown.defaultProps = {
         };
 
         const classes = this.classSet(
-            'dropdown',
+            styles.dropdown,
             alignClasses[props.align],
             props.className,
-            this.id
+            this.id,
+            (this.props.type == 'balloon' && styles.balloon)
         );
 
-        const buttonClasses = this.classSet('btn btn-default dropdown-toggle', {disabled: this.props.disabled});
+        const buttonClasses = this.classSet(
+            'dropdown-toggle',
+            styles.dropdownToggle,
+            {disabled: this.props.disabled}
+        );
 
         return (
             <div className={classes}>
                 <button className={buttonClasses} type="button" data-toggle="dropdown">
                     {props.title}
-                    <span className="caret"></span>
+                    <span className={'caret ' + styles.caret}></span>
                 </button>
-                <ul className="dropdown-menu" role="menu" style={this.props.listStyle}>
+                <ul className={'dropdown-menu ' + styles.dropdownMenu} role="menu" style={this.props.listStyle}>
                     {_.isFunction(props.children) ? props.children.call(this, this) : props.children}
                 </ul>
             </div>
@@ -85,4 +95,4 @@ Dropdown.defaultProps = {
     }
 };
 
-export default Dropdown;
+export default Webiny.createComponent(Dropdown, {styles});

@@ -32,7 +32,7 @@ Actions.defaultProps = {
             return null;
         }
         return (
-            <Ui.Dropdown title={this.props.label} className="balloon">
+            <Ui.Dropdown title={this.props.label} type="balloon">
                 <Ui.Dropdown.Header title="Actions"/>
                 {React.Children.map(this.props.children, child => {
                     if (this.shouldHideItem(child)) {
