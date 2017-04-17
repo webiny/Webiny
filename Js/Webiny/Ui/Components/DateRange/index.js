@@ -102,7 +102,8 @@ class DateRange extends Webiny.Ui.FormComponent {
     }
 
     getInput() {
-        return ReactDOM.findDOMNode(this.refs.daterange).querySelector('input');
+        const dateRangeDom = ReactDOM.findDOMNode(this.refs.daterange);
+        return dateRangeDom && dateRangeDom.querySelector('input');
     }
 
     prepare() {
