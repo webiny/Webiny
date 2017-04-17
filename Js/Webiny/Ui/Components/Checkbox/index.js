@@ -1,5 +1,5 @@
 import Webiny from 'Webiny';
-import styles from './styles/Checkbox.css';
+import styles from './styles.css';
 
 class Checkbox extends Webiny.Ui.FormComponent {
 
@@ -39,6 +39,7 @@ Checkbox.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         return <span>{this.props.label} {tooltip}</span>;
     },
     renderer() {
+        const {styles} = this.props;
         const css = this.classSet(
             styles.checkbox,
             this.isDisabled() && styles.checkboxDisabled,

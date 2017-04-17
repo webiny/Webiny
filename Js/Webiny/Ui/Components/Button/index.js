@@ -32,7 +32,7 @@ Button.defaultProps = {
     tooltip: null,
     renderer() {
         const props = _.clone(this.props);
-        const {Tooltip, Icon} = props;
+        const {Tooltip, Icon, styles} = props;
 
         if (props.disabled || !this.state.enabled) {
             props['disabled'] = true;

@@ -34,14 +34,14 @@ CopyInput.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     onSuccessMessage: 'Copied to clipboard!',
     onCopy: _.noop,
     renderer() {
+        const {Button, styles} = this.props;
+
         const props = {
             className: styles['form-control'],
             readOnly: true,
             type: 'text',
             value: this.props.value || ''
         };
-
-        const {Button} = this.props;
 
         return (
             <div className={this.classSet(styles['form-group'], this.props.className)}>

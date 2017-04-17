@@ -41,7 +41,7 @@ class Dialog extends Webiny.Ui.Component {
     componentWillUpdate(nextProps, nextState) {
         super.componentWillUpdate(nextProps, nextState);
         const currentDialog = getShownDialog();
-        const {dynamics} = this.props;
+        const {dynamics, styles} = this.props;
 
         // Hide currently visible dialog but do not unmount it
         if (currentDialog && currentDialog.id !== this.id && nextState.isShown) {
@@ -73,6 +73,7 @@ class Dialog extends Webiny.Ui.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+        const {styles} = this.props;
         super.componentDidUpdate(prevProps, prevState);
         if (this.isShown()) {
             ReactDOM.render(this.props.renderDialog.call(this), this.modalContainer);
@@ -102,6 +103,7 @@ class Dialog extends Webiny.Ui.Component {
 
     bindHandlers() {
         this.unbindHandlers();
+        const {styles} = this.props;
         const namespace = '.' + this.id;
         $(this.props.modalContainerTag).on('keyup' + namespace, '.' + styles.modal, e => {
             // Listen for ESC button
@@ -144,6 +146,7 @@ class Dialog extends Webiny.Ui.Component {
     show() {
         // This shows the modal container element in case it was previously hidden by another dialog
         this.props.onShow();
+        const {styles} = this.props;
 
         if (this.isShown()) {
             // Animate previously hidden dialog
@@ -261,12 +264,12 @@ Dialog.defaultProps = {
     modalContainerTag: 'webiny-modal',
     style: {},
     renderDialog() {
+        const {Animate, styles} = this.props;
         const className = this.classSet(styles.modal, (this.props.wide && styles.noPadding));
         let content = this.props.children;
         if (_.isFunction(content)) {
             content = content.call(this, this);
         }
-        const {Animate} = this.props;
         return (
             <div style={_.merge({}, {display: 'block'}, this.props.style)}>
 
@@ -300,6 +303,7 @@ Dialog.defaultProps = {
 };
 
 export default Webiny.createComponent(Dialog, {
+    styles,
     modules: {
         Animate: 'Animate',
         dynamics: () => import('dynamics.js')

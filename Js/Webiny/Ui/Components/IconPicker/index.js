@@ -1,21 +1,22 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
-class Picker extends Webiny.Ui.Component {
+class IconPicker extends Webiny.Ui.Component {
 
 }
 
-Picker.defaultProps = {
+IconPicker.defaultProps = {
     minimumInputLength: 2,
     tooltip: 'Visit http://fontawesome.io for full list',
     optionRenderer: option => {
+        const {Icon} = this.props;
         return (
-            <div><Ui.Icon icon={'fa ' + option.id}/> {option.text}</div>
+            <div><Icon icon={'fa ' + option.id}/> {option.text}</div>
         );
     },
     selectedRenderer: option => {
+        const {Icon} = this.props;
         return (
-            <div><Ui.Icon icon={'fa ' + option.id}/> {option.text}</div>
+            <div><Icon icon={'fa ' + option.id}/> {option.text}</div>
         );
     },
     renderer() {
@@ -608,9 +609,10 @@ Picker.defaultProps = {
         };
 
         const props = _.omit(this.props, ['renderer']);
+        const {Select} = this.props;
 
-        return <Ui.Select {...props} options={icons}/>;
+        return <Select {...props} options={icons}/>;
     }
 };
 
-export default Picker;
+export default Webiny.createComponent(IconPicker, {modules: ['Select', 'Icon']});

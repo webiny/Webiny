@@ -9,9 +9,10 @@ Section.defaultProps = {
     title: null,
     icon: null,
     renderer() {
+        const {Icon, styles} = this.props;
         let icon = null;
         if (this.props.icon) {
-            icon = <Webiny.Ui.Components.Icon icon={this.props.icon}/>;
+            icon = <Icon icon={this.props.icon}/>;
         }
 
         return (
@@ -26,4 +27,4 @@ Section.defaultProps = {
     }
 };
 
-export default Section;
+export default Webiny.createComponent(Section, {modules: ['Icon'], styles});

@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-import CropperJs from 'cropperjs';
 import moment from 'moment';
 
 class BaseCropper extends Webiny.Ui.Component {
@@ -116,6 +115,7 @@ class BaseCropper extends Webiny.Ui.Component {
     }
 
     initCropper() {
+        const {Cropper} = this.props;
         const data = _.merge({}, this.options, this.props.config);
         data.crop = e => {
             this.setState({width: Math.floor(e.detail.width), height: Math.floor(e.detail.height)});
@@ -128,7 +128,7 @@ class BaseCropper extends Webiny.Ui.Component {
                 });
             }
         };
-        this.cropper = new CropperJs(document.querySelector('.img-cropper'), data);
+        this.cropper = new Cropper(document.querySelector('.img-cropper'), data);
     }
 
     destroyCropper() {

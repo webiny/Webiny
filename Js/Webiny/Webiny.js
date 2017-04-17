@@ -87,10 +87,10 @@ class Webiny {
         }
 
         /*Webiny.configure('Form', (Form) => {
-            _.merge(Form.Error.defaultProps, {
+         _.merge(Form.Error.defaultProps, {
 
-            });
-        });*/
+         });
+         });*/
     }
 
     includeApp(name, config) {

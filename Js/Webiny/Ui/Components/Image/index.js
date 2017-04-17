@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
 import ImagePreview from './Preview';
-import galleryStyles from './Gallery.css';
+import styles from './Gallery.css';
 
 class Image extends Webiny.Ui.FormComponent {
     constructor(props) {
@@ -154,11 +154,13 @@ Image.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             return this.getCropper();
         }
 
+        const {FileReader, styles} = this.props;
+
         let message = null;
         if (!this.props.value) {
             message = (
                 <div>
-                    <span className={galleryStyles.mainText}>DRAG FILES HERE</span>
+                    <span className={styles.mainText}>DRAG FILES HERE</span>
                 </div>
             );
         }
@@ -171,12 +173,12 @@ Image.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         };
 
         let css = this.classSet(
-            galleryStyles.trayBin,
-            galleryStyles.trayBinEmpty
+            styles.trayBin,
+            styles.trayBinEmpty
         );
 
         if (this.props.value) {
-            css = this.classSet(galleryStyles.trayBin);
+            css = this.classSet(styles.trayBin);
         }
 
         let image = null;
@@ -195,13 +197,11 @@ Image.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             );
         }
 
-        const {FileReader} = this.props;
-
         return (
             <div className="form-group">
                 <div className={this.classSet(css)} {...props}>
                     {this.renderError()}
-                    <div className={galleryStyles.container}>
+                    <div className={styles.container}>
                         {message}
                         {image}
                         <FileReader
@@ -210,7 +210,7 @@ Image.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                             sizeLimit={this.props.sizeLimit}
                             onChange={this.fileChanged}/>
                     </div>
-                    <div className={galleryStyles.uploadAction}>
+                    <div className={styles.uploadAction}>
                         <span>Dragging not convenient?</span>&nbsp;
                         <a href="#" onClick={this.getFiles}>SELECT FILES HERE</a>
                     </div>
@@ -221,4 +221,4 @@ Image.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     }
 });
 
-export default Webiny.createComponent(Image, {modules: ['FileReader', 'Alert', 'Cropper']});
+export default Webiny.createComponent(Image, {modules: ['FileReader', 'Alert', 'Cropper'], styles});

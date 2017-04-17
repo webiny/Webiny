@@ -19,6 +19,8 @@ class Dropdown extends Webiny.Ui.Component {
             });
         }
 
+        const {styles} = this.props;
+
         $(ReactDOM.findDOMNode(this)).on({
             'show.bs.dropdown': () => {
                 this.props.onShow();
@@ -43,6 +45,7 @@ class Dropdown extends Webiny.Ui.Component {
     }
 
     close() {
+        const {styles} = this.props;
         $('.' + this.id).removeClass('open');
         $('.' + this.id).removeClass(styles.opened);
     }
@@ -59,7 +62,7 @@ Dropdown.defaultProps = {
     onHidden: _.noop,
     type: 'default',
     renderer() {
-        const props = _.clone(this.props);
+        const {styles, ...props} = this.props;
 
         const alignClasses = {
             normal: '',

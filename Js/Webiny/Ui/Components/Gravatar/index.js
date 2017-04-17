@@ -1,12 +1,23 @@
 import Webiny from 'Webiny';
-import Gravatar from './Gravatar';
 
-class Module extends Webiny.Module {
+class Gravatar extends Webiny.Ui.Component {
 
-    init() {
-        this.name = 'Gravatar';
-        Webiny.Ui.Components.Gravatar = Gravatar;
-    }
 }
 
-export default Module;
+Gravatar.defaultProps = {
+    hash: null,
+    size: 48,
+    renderer() {
+        const props = {
+            src: '//www.gravatar.com/avatar/' + this.props.hash + '?s=' + this.props.size,
+            width: this.props.size,
+            height: this.props.size
+        };
+
+        return (
+            <img {...props}/>
+        );
+    }
+};
+
+export default Gravatar;

@@ -1,12 +1,22 @@
 import Webiny from 'Webiny';
-import I18N from './I18N';
 
-class Module extends Webiny.Module {
-
-    init() {
-        this.name = 'I18n';
-        Webiny.Ui.Components.I18N = I18N;
-    }
+class I18N extends Webiny.Ui.Component {
 }
 
-export default Module;
+I18N.defaultProps = {
+    translationKey: '',
+    placeholder: '',
+    variables: {},
+    options: {},
+    renderer() {
+        return (
+            <webiny-i18n
+                placeholder={this.props.placeholder}
+                translation-key={this.props.translationKey}>
+                {Webiny.i18n(this.props.translationKey, this.props.placeholder, this.props.variables, this.props.options)}
+            </webiny-i18n>
+        );
+    }
+};
+
+export default I18N;

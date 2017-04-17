@@ -7,8 +7,8 @@ class Header extends Webiny.Ui.Component {
 
 Header.defaultProps = {
     renderer() {
-        const props = _.clone(this.props);
-        return <li role="presentation" className={styles.header}>{props.title}</li>;
+        const {title, styles} = this.props;
+        return <li role="presentation" className={styles.header}>{title}</li>;
     }
 };
 

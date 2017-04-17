@@ -104,8 +104,6 @@ class Avatar extends Webiny.Ui.FormComponent {
         );
     }
 
-    /////////////
-
     onDragOver(e) {
         e.preventDefault();
         this.setState({
@@ -154,7 +152,7 @@ Avatar.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         }
 
         const model = this.props.value;
-        const {FileReader, Button} = this.props;
+        const {FileReader, Button, styles} = this.props;
 
         let imageSrc = this.props.defaultImage;
         if (model) {
@@ -196,4 +194,4 @@ Avatar.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     }
 });
 
-export default Webiny.createComponent(Avatar, {modules: ['Alert', 'FileReader', 'Cropper', 'Button']});
+export default Webiny.createComponent(Avatar, {modules: ['Alert', 'FileReader', 'Cropper', 'Button'], styles});

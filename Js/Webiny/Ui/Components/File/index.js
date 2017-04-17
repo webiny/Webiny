@@ -39,6 +39,8 @@ SimpleFile.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     sizeLimit: 2485760,
     readAs: 'data', // or binary
     renderer() {
+        const {Animate, FileReader, styles} = this.props;
+
         const fileReaderProps = {
             accept: this.props.accept,
             ref: 'reader',
@@ -46,7 +48,6 @@ SimpleFile.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             readAs: this.props.readAs,
             sizeLimit: this.props.sizeLimit
         };
-        const {Animate, FileReader} = this.props;
         const fileReader = <FileReader {...fileReaderProps}/>;
 
         const cssConfig = {
@@ -86,4 +87,4 @@ SimpleFile.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     }
 });
 
-export default Webiny.createComponent(SimpleFile, {modules: ['Animate', 'FileReader']});
+export default Webiny.createComponent(SimpleFile, {modules: ['Animate', 'FileReader'], styles});

@@ -1,12 +1,23 @@
 import Webiny from 'Webiny';
-import Loader from './Loader';
+import styles from './styles.css';
 
-class Module extends Webiny.Module {
+class Loader extends Webiny.Ui.Component {
 
-    init() {
-        this.name = 'Loader';
-        Webiny.Ui.Components.Loader = Loader;
-    }
 }
 
-export default Module;
+Loader.defaultProps = {
+    className: null,
+    style: null,
+    renderer() {
+        const {styles} = this.props;
+        return (
+            <div className={this.classSet(styles.overlay, this.props.className)} style={this.props.style}>
+                <div className={styles.iconWrapper}>
+                    <div className={styles.icon}/>
+                </div>
+            </div>
+        );
+    }
+};
+
+export default Webiny.createComponent(Loader, {styles});

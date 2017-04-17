@@ -691,4 +691,6 @@ Form.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Form, {modules: []});
+
+//TODO: add Tabs and List to modules
+export default Webiny.createComponent(Form, {modules: ['Growl', 'Progress']});

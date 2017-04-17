@@ -296,6 +296,8 @@ Gallery.defaultProps = {
     newCropper: {},
     editCropper: {},
     renderer() {
+        const {FileReader, Alert, Input, styles} = this.props;
+
         let message = null;
         if (this.state.images.length === 0) {
             message = (
@@ -316,11 +318,10 @@ Gallery.defaultProps = {
             styles.trayBin,
             styles.trayBinEmpty
         );
+
         if (this.state.images.length > 0) {
             css = this.classSet(styles.trayBin);
         }
-
-        const {FileReader, Alert, Input} = this.props;
 
         let errors = null;
         if (this.state.errors) {
@@ -378,4 +379,4 @@ Gallery.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Gallery, {modules: ['Alert', 'Cropper', 'FileReader', 'Input']});
+export default Webiny.createComponent(Gallery, {modules: ['Alert', 'Cropper', 'FileReader', 'Input'], styles});

@@ -36,13 +36,20 @@ export default () => {
     import('./GoogleMap');
     import('./Gravatar');
     import('./Grid');
-
+    import('./Growl');
+    import('./HtmlEditor');
+    import('./I18N');
     import('./Icon');
+    import('./IconPicker');
     import('./Image');
     import('./ImageUploader');
     import('./Input');
+    import('./Label');
+    import('./LazyImage');
     import('./Link');
+    import('./Loader');
     import('./Modal');
+    import('./Progress');
     import('./SimpleCodeEditor');
     import('./Time');
     import('./Tooltip');

@@ -24,7 +24,7 @@ class Image extends Webiny.Ui.Component {
 
 Image.defaultProps = {
     renderer() {
-        const {Link, image} = this.props;
+        const {Link, image, styles} = this.props;
         const title = image.title || image.name || '';
         let cacheBust = '';
         if (image.modifiedOn && image.src.indexOf('data:') === -1) {

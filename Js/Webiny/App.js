@@ -60,16 +60,12 @@ import './Vendors';
 import Validation from './Modules/Validation';
 /*import View from './Modules/View';*/
 import Logger from './Logger';
-import Grid from './Modules/Grid';
-import Input from './Modules/Input';
 
 class Core extends Webiny.App {
     constructor() {
         super('Core.Webiny');
         Webiny.Logger = new Logger();
         this.modules = [
-            new Input(this),
-            new Grid(this),
             new Validation(this)
         ];
 

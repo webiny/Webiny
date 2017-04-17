@@ -78,6 +78,7 @@ CheckboxGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps,
     checkboxLabelRenderer: null,
     formatValue: value => value.id,
     renderer() {
+        const {styles} = this.props;
         const cssConfig = {
             'error': this.state.isValid === false,
             'success': this.state.isValid === true

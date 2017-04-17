@@ -114,7 +114,7 @@ Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
         return <Loader/>;
     },
     renderDialog(confirm, cancel) {
-        const {Button} = this.props;
+        const {Button, styles} = this.props;
         return (
             <Dialog
                 modalContainerTag="confirmation-modal"

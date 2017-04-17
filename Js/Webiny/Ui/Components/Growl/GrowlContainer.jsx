@@ -13,6 +13,11 @@ class GrowlContainer extends Webiny.Ui.Component {
         this.bindMethods('addGrowl,removeGrowl,removeById');
     }
 
+    componentDidMount() {
+        super.componentDidMount();
+        this.props.onComponentDidMount();
+    }
+
     addGrowl(growl) {
         let growlIndex = -1;
         if (growl.props.id) {
@@ -48,10 +53,11 @@ class GrowlContainer extends Webiny.Ui.Component {
 }
 
 GrowlContainer.defaultProps = {
+    onComponentDidMount: _.noop,
     renderer: function renderer() {
         return (
             <div className={this.classSet(styles.growl, styles.topRight)}>
-                <div className={styles.notification}></div>
+                <div className={styles.notification}/>
                 {this.state.growls.map(growl => {
                     return React.cloneElement(growl, {ref: growl.props.id, key: growl.props.id, onRemove: this.removeGrowl});
                 })}

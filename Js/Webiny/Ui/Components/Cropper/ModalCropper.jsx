@@ -93,6 +93,6 @@ ModalCropper.defaultProps = _.merge({}, BaseCropper.defaultProps, {
 });
 
 export default Webiny.createComponent(ModalCropper, {
-    modules: ['Modal', 'Button'],
+    modules: {Modal: 'Modal', Button: 'Button', Cropper: () => import('Webiny/Vendors/Cropper')},
     api: ['show', 'hide']
 });

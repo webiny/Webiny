@@ -64,6 +64,7 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         return <ValidationIcon success={false}/>;
     },
     renderer() {
+        const {styles} = this.props;
         const cssConfig = this.classSet(
             styles.wrapper,
             (this.state.isValid === false && styles.error),
@@ -88,13 +89,13 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         let showValidationIcon = true;
         let addonLeft = '';
         if (this.props.addonLeft) {
-            addonLeft = (<span className={styles.addon}>{this.props.addonLeft}</span>);
+            addonLeft = <span className={styles.addon}>{this.props.addonLeft}</span>;
             showValidationIcon = false;
         }
 
         let addonRight = '';
         if (this.props.addonRight) {
-            addonRight = (<span className={styles.addon}>{this.props.addonRight}</span>);
+            addonRight = <span className={styles.addon}>{this.props.addonRight}</span>;
             showValidationIcon = false;
         }
 
@@ -102,13 +103,13 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         let iconLeft = '';
         if (this.props.iconLeft) {
             wrapperClassName += ' ' + styles.iconLeft;
-            iconLeft = (<span className={this.props.iconLeft}></span>);
+            iconLeft = <span className={this.props.iconLeft}/>;
         }
 
         let iconRight = '';
         if (this.props.iconRight) {
             wrapperClassName += ' ' + styles.iconRight;
-            iconRight = (<span className={this.props.iconRight}></span>);
+            iconRight = <span className={this.props.iconRight}/>;
         }
 
         const {DelayedOnChange, Animate} = this.props;
@@ -140,4 +141,4 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     }
 });
 
-export default Webiny.createComponent(Input, {modules: ['Animate', 'DelayedOnChange']});
+export default Webiny.createComponent(Input, {modules: ['Animate', 'DelayedOnChange'], styles});

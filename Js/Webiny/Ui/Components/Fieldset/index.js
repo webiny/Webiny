@@ -10,15 +10,16 @@ Fieldset.defaultProps = {
     className: null,
     style: null,
     renderer() {
+        const {styles, ...props} = this.props;
         return (
-            <fieldset className={this.classSet(styles.fieldset, this.props.className)}>
-                {this.props.title && (
-                    <legend className={styles.legend}>{this.props.title}</legend>
+            <fieldset className={this.classSet(styles.fieldset, props.className)}>
+                {props.title && (
+                    <legend className={styles.legend}>{props.title}</legend>
                 )}
-                {this.props.children}
+                {props.children}
             </fieldset>
         );
     }
 };
 
-export default Fieldset;
+export default Webiny.createComponent(Fieldset, {styles});

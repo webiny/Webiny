@@ -16,6 +16,7 @@ import UiDispatcher from './Core/UiDispatcher';
 import Injector from './Core/Injector';
 import ViewManager from './Core/ViewManager';
 import Filter from './Core/Filter';
+import Growl from './Core/Growl';
 import Router from './Router/Router';
 import Route from './Router/Route';
 import Http from './Http/Http';
@@ -60,6 +61,7 @@ _.merge(Webiny, {
     Dispatcher,
     Injector,
     Filter,
+    Growl,
     i18n,
     Cookies, // from js-cookies
     Http,

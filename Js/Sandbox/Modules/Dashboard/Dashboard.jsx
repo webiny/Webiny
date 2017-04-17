@@ -13,6 +13,7 @@ Dashboard.defaultProps = {
             'Gallery',
             'Link',
             'DownloadLink',
+            'HtmlEditor',
             'Form',
             'Grid',
             'DateTime',
@@ -100,6 +101,7 @@ Dashboard.defaultProps = {
                                                     height: 300
                                                 }
                                             }}/>
+                                        <Ui.HtmlEditor name="html"/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                             </div>
