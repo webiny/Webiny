@@ -79,7 +79,6 @@ CheckboxGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps,
     formatValue: value => value.id,
     renderer() {
         const cssConfig = {
-            'form-group': true,
             'error': this.state.isValid === false,
             'success': this.state.isValid === true
         };
@@ -89,12 +88,10 @@ CheckboxGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps,
         }
 
         return (
-            <div className={this.classSet(this.props.className)}>
-                <div className={this.classSet(cssConfig)}>
-                    {this.renderLabel()}
-                    <div className={styles.clearfix}></div>
-                    {this.renderOptions()}
-                </div>
+            <div className={this.classSet('formGroup', this.props.className)}>
+                {this.renderLabel()}
+                <div className={styles.clearfix}/>
+                {this.renderOptions()}
                 {this.renderValidationMessage()}
             </div>
         );

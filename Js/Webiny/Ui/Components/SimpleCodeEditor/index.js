@@ -18,9 +18,8 @@ class SimpleCodeEditor extends Webiny.Ui.Component {
 
     componentDidMount() {
         super.componentDidMount();
-        const {CodeMirror} = this.props;
 
-        this.codeMirror = CodeMirror.fromTextArea(this.getTextareaElement(), this.options);
+        this.codeMirror = this.props.CodeMirror.fromTextArea(this.getTextareaElement(), this.options);
 
         this.codeMirror.on('change', () => {
             this.props.onChange(this.codeMirror.getValue());
@@ -83,8 +82,6 @@ SimpleCodeEditor.defaultProps = {
 
 export default Webiny.createComponent(SimpleCodeEditor, {
     modules: {
-        CodeMirror: () => {
-            return import('./codemirror');
-        }
+        CodeMirror: () => import('Webiny/Vendors/CodeMirror')
     }
 });

@@ -1,25 +1,18 @@
-import Webiny from 'Webiny';
-import ExpandableList from './Components/ExpandableList';
-import Row from './Components/Row';
-import Field from './Components/Field';
-import Action from './Components/Action';
-import ActionSet from './Components/ActionSet';
-import RowDetailsList from './Components/RowDetailsList';
-import RowDetailsContent from './Components/RowDetailsContent';
+import ExpandableList from './ExpandableList';
+import Row from './Row';
+import Empty from './Empty';
+import Field from './Field';
+import Action from './Action';
+import ActionSet from './ActionSet';
+import RowDetailsList from './RowDetailsList';
+import RowDetailsContent from './RowDetailsContent';
 
 ExpandableList.Row = Row;
+ExpandableList.Empty = Empty;
 ExpandableList.Field = Field;
 ExpandableList.Action = Action;
 ExpandableList.ActionSet = ActionSet;
 ExpandableList.RowDetailsContent = RowDetailsContent;
 ExpandableList.RowDetailsList = RowDetailsList;
 
-class Module extends Webiny.Module {
-
-    init() {
-        this.name = 'ExpandableList';
-        Webiny.Ui.Components.ExpandableList = ExpandableList;
-    }
-}
-
-export default Module;
+export default ExpandableList;

@@ -39,7 +39,7 @@ export default (Component, options = {}) => {
             const modules = options.modules || {};
             if (Object.keys(modules).length > 0) {
                 return (
-                    <LazyLoad modules={modules || []}>
+                    <LazyLoad modules={modules}>
                         {(modules) => {
                             return <Component {...props} {...modules}/>;
                         }}

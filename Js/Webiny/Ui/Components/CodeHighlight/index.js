@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import 'highlight.js/styles/monokai.css';
 
 class CodeHighlight extends Webiny.Ui.Component {
     constructor(props) {

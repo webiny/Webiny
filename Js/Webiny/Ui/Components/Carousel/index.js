@@ -6,7 +6,7 @@ class Carousel extends Webiny.Ui.Component {
 
         this.carousel = null;
 
-        this.bindMethods('getCarouselWrapper', 'setValue', 'getEditor');
+        this.bindMethods('getCarouselWrapper');
     }
 
     componentDidMount() {
@@ -56,4 +56,9 @@ Carousel.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Carousel, {modules: {owlCarousel: 'owl.carousel'}});
+export default Webiny.createComponent(Carousel, {
+    modules: [
+        // owl.carousel attaches itself to jQuery object and does not export anything
+        () => import('Webiny/Vendors/OwlCarousel')
+    ]
+});

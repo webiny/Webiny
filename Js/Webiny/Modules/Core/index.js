@@ -6,6 +6,7 @@ import Component from './Core/Component';
 import FormComponent from './Core/FormComponent';
 import OptionComponent from './Core/OptionComponent';
 import ModalComponent from './Core/ModalComponent';
+import Uploader from './Api/Uploader';
 import ApiComponent from './Core/ApiComponent';
 import Model from './Core/Model';
 import View from './Core/View';
@@ -14,10 +15,10 @@ import Dispatcher from './Core/Dispatcher';
 import UiDispatcher from './Core/UiDispatcher';
 import Injector from './Core/Injector';
 import ViewManager from './Core/ViewManager';
+import Filter from './Core/Filter';
 import Router from './Router/Router';
 import Route from './Router/Route';
 import Http from './Http/Http';
-import Tools from './Tools';
 import i18n from './i18n/i18n';
 import Endpoint from './Api/Endpoint';
 import Placeholder from './Ui/Placeholder';
@@ -34,6 +35,7 @@ _.merge(Webiny, {
     Mixins: {
         ApiComponent
     },
+    Filter,
     createComponent,
     Ui: {
         LazyLoad,
@@ -57,11 +59,12 @@ _.merge(Webiny, {
     ViewManager,
     Dispatcher,
     Injector,
-    Tools,
+    Filter,
     i18n,
     Cookies, // from js-cookies
     Http,
     Api: {
+        Uploader,
         Endpoint
     }
 });

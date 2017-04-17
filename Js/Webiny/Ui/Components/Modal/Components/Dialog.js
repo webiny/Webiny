@@ -1,8 +1,9 @@
 import Webiny from 'Webiny';
-import dynamics from 'dynamics.js';
+import Header from './Header';
+import Footer from './Footer';
+import Body from './Body';
 import styles from '../styles/Modal.css';
 
-const Ui = Webiny.Ui.Components;
 const mountedDialogs = [];
 
 function getShownDialog(id = null) {
@@ -40,12 +41,13 @@ class Dialog extends Webiny.Ui.Component {
     componentWillUpdate(nextProps, nextState) {
         super.componentWillUpdate(nextProps, nextState);
         const currentDialog = getShownDialog();
+        const {dynamics} = this.props;
 
         // Hide currently visible dialog but do not unmount it
         if (currentDialog && currentDialog.id !== this.id && nextState.isShown) {
             const container = $(currentDialog.modalContainer);
-            const modal = container.find('.'+styles.container);
-            const backdrop = container.find('.'+styles.backdrop);
+            const modal = container.find('.' + styles.container);
+            const backdrop = container.find('.' + styles.backdrop);
 
             dynamics.animate(modal[0], {
                 opacity: 0,
@@ -55,7 +57,7 @@ class Dialog extends Webiny.Ui.Component {
                 duration: this.modalHideDuration,
                 complete: () => {
                     // Need to hide .modal to let mouse events through
-                    modal.closest('.'+styles.modal).hide();
+                    modal.closest('.' + styles.modal).hide();
                     // Remove transform so next time we animate, we start from scratch, with no transformations applied
                     modal.css('transform', '');
                 }
@@ -74,7 +76,7 @@ class Dialog extends Webiny.Ui.Component {
         super.componentDidUpdate(prevProps, prevState);
         if (this.isShown()) {
             ReactDOM.render(this.props.renderDialog.call(this), this.modalContainer);
-            $(this.modalContainer).find('.'+styles.modal).focus();
+            $(this.modalContainer).find('.' + styles.modal).focus();
             this.bindHandlers();
         } else if (prevState.isShown && !this.isShown()) {
             this.unbindHandlers();
@@ -101,17 +103,17 @@ class Dialog extends Webiny.Ui.Component {
     bindHandlers() {
         this.unbindHandlers();
         const namespace = '.' + this.id;
-        $(this.props.modalContainerTag).on('keyup' + namespace, '.'+styles.modal, e => {
+        $(this.props.modalContainerTag).on('keyup' + namespace, '.' + styles.modal, e => {
             // Listen for ESC button
             if (e.keyCode === 27 && !this.animating && this.props.closeOnClick) {
                 Promise.resolve(this.props.onCancel()).then(this.hide);
             }
-        }).on('mousedown' + namespace, '.'+styles.modal, e => {
+        }).on('mousedown' + namespace, '.' + styles.modal, e => {
             // Catch backdrop click
             if ($(e.target).hasClass(styles.modal)) {
                 this.clickStartedOnBackdrop = true;
             }
-        }).on('click' + namespace, '.'+styles.modal, () => {
+        }).on('click' + namespace, '.' + styles.modal, () => {
             if (this.clickStartedOnBackdrop && this.props.closeOnClick) {
                 Promise.resolve(this.props.onCancel()).then(this.hide);
             }
@@ -146,11 +148,12 @@ class Dialog extends Webiny.Ui.Component {
         if (this.isShown()) {
             // Animate previously hidden dialog
             return new Promise(resolve => {
+                const {dynamics} = this.props;
                 this.animating = true;
                 const prevContainer = $(this.modalContainer);
-                const prevModal = prevContainer.find('.'+styles.dialog);
-                const prevBackdrop = prevContainer.find('.'+styles.backdrop);
-                prevModal.closest('.'+styles.modal).show();
+                const prevModal = prevContainer.find('.' + styles.dialog);
+                const prevBackdrop = prevContainer.find('.' + styles.backdrop);
+                prevModal.closest('.' + styles.modal).show();
                 dynamics.animate(prevModal[0], {
                     opacity: 1,
                     translateY: 50
@@ -158,7 +161,7 @@ class Dialog extends Webiny.Ui.Component {
                     type: dynamics.spring,
                     duration: this.modalShowDuration,
                     complete: () => {
-                        prevModal.closest('.'+styles.modal).focus();
+                        prevModal.closest('.' + styles.modal).focus();
                         this.animating = false;
                         resolve();
                     }
@@ -217,9 +220,9 @@ class Dialog extends Webiny.Ui.Component {
             return child;
         }
 
-        if (_.find([Ui.Modal.Header, Ui.Modal.Body, Ui.Modal.Footer], c => Webiny.isElementOfType(child, c))) {
+        if (_.find([Header, Body, Footer], c => Webiny.isElementOfType(child, c))) {
             const props = {dialog: this};
-            if (Webiny.isElementOfType(child, Ui.Modal.Header)) {
+            if (Webiny.isElementOfType(child, Header)) {
                 props['onClose'] = this.hide;
             }
             return React.cloneElement(child, props);
@@ -263,18 +266,19 @@ Dialog.defaultProps = {
         if (_.isFunction(content)) {
             content = content.call(this, this);
         }
+        const {Animate} = this.props;
         return (
             <div style={_.merge({}, {display: 'block'}, this.props.style)}>
 
-                <Ui.Animate
+                <Animate
                     trigger={this.state.isDialogShown}
                     show={{opacity: 0.8, duration: this.backdropShowDuration, ease: 'easeIn'}}
                     hide={{opacity: 0, duration: this.backdropHideDuration, ease: 'easeOut'}}>
-                    <div className={styles.backdrop} style={{opacity: 0}}></div>
-                </Ui.Animate>
+                    <div className={styles.backdrop} style={{opacity: 0}}/>
+                </Animate>
 
                 <div className={className} tabIndex="-1" style={{display: 'block'}}>
-                    <Ui.Animate
+                    <Animate
                         trigger={this.state.isDialogShown}
                         onFinish={this.animationFinish}
                         show={{translateY: 50, ease: 'spring', duration: this.modalShowDuration}}
@@ -284,7 +288,7 @@ Dialog.defaultProps = {
                                 {this.prepareChildren(content)}
                             </div>
                         </div>
-                    </Ui.Animate>
+                    </Animate>
                 </div>
             </div>
 
@@ -295,4 +299,10 @@ Dialog.defaultProps = {
     }
 };
 
-export default Dialog;
+export default Webiny.createComponent(Dialog, {
+    modules: {
+        Animate: 'Animate',
+        dynamics: () => import('dynamics.js')
+    },
+    api: ['show', 'hide', 'isShown', 'isAnimating']
+});

@@ -1,0 +1,49 @@
+// Force webpack to build these components to be ready for dynamic import
+export default () => {
+    import('./Alert');
+    import('./Avatar');
+    import('./Animate');
+    import('./Button');
+    import('./ButtonGroup');
+    import('./Carousel');
+    import('./ChangeConfirm');
+    import('./Checkbox');
+    import('./CheckboxGroup');
+    import('./ClickConfirm');
+    import('./ClickSuccess');
+    import('./CodeEditor');
+    import('./CodeHighlight');
+    import('./Copy');
+    import('./Cropper');
+    import('./Data');
+    import('./Date');
+    import('./DateRange');
+    import('./DateTime');
+    import('./DelayedOnChange');
+    import('./Downloader');
+    import('./DownloadLink');
+    //import('./Draft');
+    import('./Dropdown');
+    import('./Dynamic');
+    import('./Email');
+    import('./ExpandableList');
+    import('./Fieldset');
+    import('./File');
+    import('./Filters');
+    import('./FileReader');
+    import('./Form');
+    import('./Gallery');
+    import('./GoogleMap');
+    import('./Gravatar');
+    import('./Grid');
+
+    import('./Icon');
+    import('./Image');
+    import('./ImageUploader');
+    import('./Input');
+    import('./Link');
+    import('./Modal');
+    import('./SimpleCodeEditor');
+    import('./Time');
+    import('./Tooltip');
+}

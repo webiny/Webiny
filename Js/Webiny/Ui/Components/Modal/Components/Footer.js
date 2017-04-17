@@ -17,4 +17,4 @@ Footer.defaultProps = {
     }
 };
 
-export default Footer;
+export default Webiny.createComponent(Footer, {styles});

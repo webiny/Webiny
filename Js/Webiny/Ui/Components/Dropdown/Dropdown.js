@@ -1,5 +1,5 @@
 import Webiny from 'Webiny';
-import styles from './styles/Dropdown.css';
+import styles from './styles.css';
 
 class Dropdown extends Webiny.Ui.Component {
 
@@ -72,7 +72,7 @@ Dropdown.defaultProps = {
             alignClasses[props.align],
             props.className,
             this.id,
-            (this.props.type == 'balloon' && styles.balloon)
+            this.props.type === 'balloon' && styles.balloon
         );
 
         const buttonClasses = this.classSet(
@@ -85,7 +85,7 @@ Dropdown.defaultProps = {
             <div className={classes}>
                 <button className={buttonClasses} type="button" data-toggle="dropdown">
                     {props.title}
-                    <span className={'caret ' + styles.caret}></span>
+                    <span className={'caret ' + styles.caret}/>
                 </button>
                 <ul className={'dropdown-menu ' + styles.dropdownMenu} role="menu" style={this.props.listStyle}>
                     {_.isFunction(props.children) ? props.children.call(this, this) : props.children}

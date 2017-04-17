@@ -54,7 +54,7 @@ LazyLoad.defaultProps = {
         if (this.state.loaded) {
             return this.props.children(this.state.modules);
         }
-        return <h2>Loading components...</h2>;
+        return null;
     }
 };
 

@@ -1,11 +1,24 @@
 import Webiny from 'Webiny';
-import Fieldset from './Fieldset';
+import styles from './styles.css';
 
-class Module extends Webiny.Module {
-    init() {
-        this.name = 'Fieldset';
-        Webiny.Ui.Components.Fieldset = Fieldset;
-    }
+class Fieldset extends Webiny.Ui.Component {
+
 }
 
-export default Module;
+Fieldset.defaultProps = {
+    title: null,
+    className: null,
+    style: null,
+    renderer() {
+        return (
+            <fieldset className={this.classSet(styles.fieldset, this.props.className)}>
+                {this.props.title && (
+                    <legend className={styles.legend}>{this.props.title}</legend>
+                )}
+                {this.props.children}
+            </fieldset>
+        );
+    }
+};
+
+export default Fieldset;

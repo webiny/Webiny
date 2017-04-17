@@ -1,5 +1,5 @@
 import Webiny from 'Webiny';
-import styles from './styles/Dropdown.css';
+import styles from './styles.css';
 
 class Divider extends Webiny.Ui.Component {
 
@@ -7,7 +7,7 @@ class Divider extends Webiny.Ui.Component {
 
 Divider.defaultProps = {
     renderer() {
-        return <li role="presentation" className={styles.divider}></li>;
+        return <li role="presentation" className={styles.divider}/>;
     }
 };
 

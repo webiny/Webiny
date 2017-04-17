@@ -10,7 +10,7 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
         this.editor = null;
         this.delay = null;
         this.api = new Webiny.Api.Endpoint(props.imageApi);
-        this.uploader = new Ui.Files.FileUploader(this.api);
+        this.uploader = new Webiny.Api.Uploader(this.api);
 
         _.merge(this.state, {
             cropImage: null,

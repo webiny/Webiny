@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
 class Link extends Webiny.Ui.Component {
 
@@ -8,8 +7,9 @@ class Link extends Webiny.Ui.Component {
 Link.defaultProps = {
     renderer() {
         const props = _.clone(this.props);
-        const icon = props.icon ? <Ui.Icon icon={props.icon}/> : null;
-        let link = <Ui.Link onClick={this.props.onClick}>{icon} {props.title}</Ui.Link>;
+        const {Link, Icon} = props;
+        const icon = props.icon ? <Icon icon={props.icon}/> : null;
+        let link = <Link onClick={this.props.onClick}>{icon} {props.title}</Link>;
 
         if (props.children && !_.isString(props.children)) {
             link = this.props.children;
@@ -21,4 +21,4 @@ Link.defaultProps = {
     }
 };
 
-export default Link;
+export default Webiny.createComponent(Link, {modules: ['Link', 'Icon']});

@@ -38,7 +38,6 @@
 	display: table-cell;
 	position: relative;
 	z-index: 2;
-	float: left;
 	margin-bottom: 0;
 }
 
@@ -47,6 +46,13 @@
 	border-color: #333;
 	z-index: 3;
 	outline: 0;
+}
+
+.inputGroup {
+	position: relative;
+	display: table;
+	border-collapse: separate;
+	width: 100%;
 }
 
 .label {
@@ -67,7 +73,7 @@
 	margin-left: 2px;
 }
 
-.message {
+.infoMessage, .descriptionMessage, .validationMessage {
 	display: inline;
 	margin-top: 5px;
 	margin-bottom: 10px;
@@ -75,10 +81,44 @@
 	font-size: 13px;
 	opacity: 100;
 	top: 0;
+	float: right;
 }
 
-.wrapper span>div{
+.descriptionMessage, .validationMessage {
+	float: none;
+}
+
+.addon {
+	padding: 6px 12px;
+	font-size: 14px;
+	font-weight: normal;
+	line-height: 1;
+	color: #555555;
+	text-align: center;
+	background-color: #eeeeee;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	width: 1%;
+	white-space: nowrap;
+	vertical-align: middle;
+	display: table-cell;
+}
+
+.addon:first-child {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+	border-right: none;
+}
+
+.addon:last-child {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+	border-left: none;
+}
+
+.wrapper span > div {
 	position: relative;
+	height: 25px;
 }
 
 .wrapper.error .validationMessage {
@@ -86,11 +126,11 @@
 	top: -50px;
 }
 
-.wrapper.error .message {
+.wrapper.error .validationMessage {
 	color: #cc3300;
 }
 
-.wrapper.success .message {
+.wrapper.success .validationMessage {
 	color: #3fbfb0;
 }
 

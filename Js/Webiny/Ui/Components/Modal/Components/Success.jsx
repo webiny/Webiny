@@ -1,5 +1,7 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
+import Dialog from './Dialog';
+import Body from './Body';
+import Footer from './Footer';
 import styles from '../styles/Modal.css';
 
 class Success extends Webiny.Ui.ModalComponent {
@@ -34,22 +36,26 @@ Success.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
     close: 'Close',
     onClose: _.noop,
     renderDialog() {
+        const {Button} = this.props;
         return (
-            <Ui.Modal.Dialog modalContainerTag="success-modal" className={styles.alertModal}>
-                <Ui.Modal.Body>
+            <Dialog modalContainerTag="success-modal" className={styles.alertModal}>
+                <Body>
                     <div className="text-center">
-                        <div className="icon icon-check-circle icon-success icon-4x"></div>
+                        <div className="icon icon-check-circle icon-success icon-4x"/>
                         <h4>{this.props.title}</h4>
 
                         <p>{this.renderContent()}</p>
                     </div>
-                </Ui.Modal.Body>
-                <Ui.Modal.Footer>
-                    <Ui.Button type="primary" label="Close" onClick={() => this.hide().then(this.props.onClose)}/>
-                </Ui.Modal.Footer>
-            </Ui.Modal.Dialog>
+                </Body>
+                <Footer>
+                    <Button type="primary" label="Close" onClick={() => this.hide().then(this.props.onClose)}/>
+                </Footer>
+            </Dialog>
         );
     }
 });
 
-export default Success;
+export default Webiny.createComponent(Success, {
+    modules: ['Button'],
+    api: ['show', 'hide', 'isAnimating']
+});

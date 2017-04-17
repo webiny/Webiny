@@ -85,6 +85,12 @@ class Webiny {
         if (props) {
             _.merge(props, config);
         }
+
+        /*Webiny.configure('Form', (Form) => {
+            _.merge(Form.Error.defaultProps, {
+
+            });
+        });*/
     }
 
     includeApp(name, config) {

@@ -1,5 +1,5 @@
 import Webiny from 'Webiny';
-import styles from './styles/Alert.css';
+import styles from './styles.css';
 
 class Alert extends Webiny.Ui.Component {
 
@@ -33,7 +33,7 @@ Alert.defaultProps = {
         };
 
         const iconClasses = {
-            info: 'icon-info',
+            info: 'icon-info-circle',
             success: 'icon-check-circle-o',
             warning: 'icon-exclamation-circle',
             error: 'icon-cancel',

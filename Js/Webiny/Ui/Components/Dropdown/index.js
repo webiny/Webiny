@@ -1,20 +1,12 @@
-import Webiny from 'Webiny';
 import Dropdown from './Dropdown';
 import Divider from './Divider';
 import Header from './Header';
 import Link from './Link';
 
-class Module extends Webiny.Module {
+_.assign(Dropdown, {
+    Header,
+    Divider,
+    Link
+});
 
-    init() {
-        this.name = 'Dropdown';
-        Webiny.Ui.Components.Dropdown = Dropdown;
-        _.assign(Dropdown, {
-            Header,
-            Divider,
-            Link
-        });
-    }
-}
-
-export default Module;
+export default Dropdown;

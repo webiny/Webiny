@@ -1,8 +1,6 @@
 import Webiny from 'Webiny';
 import Component from './Component';
 
-const Ui = Webiny.Ui.Components;
-
 class FormComponent extends Component {
 
     constructor(props) {
@@ -24,7 +22,6 @@ class FormComponent extends Component {
             'renderLabel',
             'renderInfo',
             'renderDescription',
-            'renderValidationIcon',
             'renderValidationMessage'
         );
     }
@@ -143,10 +140,6 @@ class FormComponent extends Component {
     renderValidationMessage() {
         return this.props.validationMessageRenderer.call(this);
     }
-
-    renderValidationIcon() {
-        return this.props.validationIconRenderer.call(this);
-    }
 }
 
 FormComponent.defaultProps = {
@@ -168,17 +161,23 @@ FormComponent.defaultProps = {
     labelRenderer() {
         let label = null;
         if (this.props.label) {
-            let tooltip = null;
-            if (this.props.tooltip) {
-                tooltip = <Ui.Tooltip key="label" target={<Ui.Icon icon="icon-info-circle"/>}>{this.props.tooltip}</Ui.Tooltip>;
-            }
+            label = (
+                <Webiny.Ui.LazyLoad modules={['Tooltip', 'Input', 'Icon']}>
+                    {({Tooltip, Input, Icon}) => {
+                        let tooltip = null;
+                        if (this.props.tooltip) {
+                            tooltip = <Tooltip key="label" target={<Icon icon="icon-info-circle"/>}>{this.props.tooltip}</Tooltip>;
+                        }
 
-            let required = null;
-            if (this.props.validate && this.props.validate.indexOf('required') > -1) {
-                required = <Ui.Input.Mandat/>;
-            }
+                        let required = null;
+                        if (this.props.validate && this.props.validate.indexOf('required') > -1) {
+                            required = <Input.Mandat/>;
+                        }
 
-            label = <Ui.Input.Label>{this.props.label} {required} {tooltip}</Ui.Input.Label>;
+                        return <Input.Label>{this.props.label} {required} {tooltip}</Input.Label>;
+                    }}
+                </Webiny.Ui.LazyLoad>
+            );
         }
 
         return label;
@@ -187,27 +186,32 @@ FormComponent.defaultProps = {
         if (!this.props.showValidationMessage || this.state.isValid !== false) {
             return null;
         }
-        return <Ui.Input.ValidationMessage>{this.state.validationMessage}</Ui.Input.ValidationMessage>;
+        return (
+            <Webiny.Ui.LazyLoad modules={['Input']}>
+                {({Input}) => (
+                    <Input.ValidationMessage>{this.state.validationMessage}</Input.ValidationMessage>
+                )}
+            </Webiny.Ui.LazyLoad>
+        );
     },
-    validationIconRenderer() {
-        if (!this.props.showValidationIcon || this.state.isValid === null) {
-            return null;
-        }
 
-        if (this.state.isValid === true) {
-            //return <span className="icon icon-good"/>;
-            return <Ui.Input.ValidationIcon/>;
-        }
-        //return <span className="icon icon-bad"/>;
-        return <Ui.Input.ValidationIcon success={false}/>;
-    },
     infoRenderer() {
         let info = this.props.info;
         if (_.isFunction(info)) {
             info = info(this);
         }
 
-        return info ? <Ui.Input.InfoMessage>{info}</Ui.Input.InfoMessage> : null;
+        if (!info) {
+            return null;
+        }
+
+        return (
+            <Webiny.Ui.LazyLoad modules={['Input']}>
+                {({Input}) => (
+                    <Input.InfoMessage>{info}</Input.InfoMessage>
+                )}
+            </Webiny.Ui.LazyLoad>
+        );
     },
     descriptionRenderer() {
         let description = this.props.description;
@@ -215,7 +219,17 @@ FormComponent.defaultProps = {
             description = description(this);
         }
 
-        return description ? <Ui.Input.DescriptionMessage>{description}</Ui.Input.DescriptionMessage> : null;
+        if (!description) {
+            return null;
+        }
+
+        return (
+            <Webiny.Ui.LazyLoad modules={['Input']}>
+                {({Input}) => (
+                    <Input.DescriptionMessage>{description}</Input.DescriptionMessage>
+                )}
+            </Webiny.Ui.LazyLoad>
+        );
     }
 };
 

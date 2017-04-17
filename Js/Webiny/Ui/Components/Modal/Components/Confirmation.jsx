@@ -1,5 +1,8 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
+import Dialog from './Dialog';
+import Body from './Body';
+import Footer from './Footer';
+
 import styles from '../styles/Modal.css';
 
 class Confirmation extends Webiny.Ui.ModalComponent {
@@ -107,30 +110,35 @@ Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
     closeOnClick: false,
     data: null,
     renderLoader() {
-        return (<Ui.Loader/>);
+        const {Loader} = this.props;
+        return <Loader/>;
     },
     renderDialog(confirm, cancel) {
+        const {Button} = this.props;
         return (
-            <Ui.Modal.Dialog
+            <Dialog
                 modalContainerTag="confirmation-modal"
                 className={styles.alertModal}
                 onCancel={cancel}
                 closeOnClick={this.props.closeOnClick}>
                 {this.renderLoader()}
-                <Ui.Modal.Body>
+                <Body>
                     <div className="text-center">
                         <h4>{this.props.title}</h4>
 
                         <p>{this.renderContent()}</p>
                     </div>
-                </Ui.Modal.Body>
-                <Ui.Modal.Footer>
-                    <Ui.Button type="default" label={this.props.cancel} onClick={cancel}/>
-                    <Ui.Button type="primary" label={this.props.confirm} onClick={confirm}/>
-                </Ui.Modal.Footer>
-            </Ui.Modal.Dialog>
+                </Body>
+                <Footer>
+                    <Button type="default" label={this.props.cancel} onClick={cancel}/>
+                    <Button type="primary" label={this.props.confirm} onClick={confirm}/>
+                </Footer>
+            </Dialog>
         );
     }
 });
 
-export default Confirmation;
+export default Webiny.createComponent(Confirmation, {
+    modules: ['Button'],
+    api: ['show', 'hide', 'isAnimating']
+});

@@ -1,14 +1,13 @@
 import Webiny from 'Webiny';
+import ValidationIcon from './Components/ValidationIcon';
 import styles from './styles/Input.css';
-
-const Ui = Webiny.Ui.Components;
 
 class Input extends Webiny.Ui.FormComponent {
 
     constructor(props) {
         super(props);
 
-        this.bindMethods('focus');
+        this.bindMethods('focus,renderValidationIcon');
     }
 
     onKeyDown(e) {
@@ -31,6 +30,10 @@ class Input extends Webiny.Ui.FormComponent {
     focus() {
         ReactDOM.findDOMNode(this).querySelector('input').focus();
     }
+
+    renderValidationIcon() {
+        return this.props.validationIconRenderer.call(this);
+    }
 }
 
 Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
@@ -48,6 +51,18 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     iconLeft: null,
     iconRight: null,
     wrapperClassName: '',
+    validationIconRenderer() {
+        if (!this.props.showValidationIcon || this.state.isValid === null) {
+            return null;
+        }
+
+        if (this.state.isValid === true) {
+            //return <span className="icon icon-good"/>;
+            return <ValidationIcon/>;
+        }
+        //return <span className="icon icon-bad"/>;
+        return <ValidationIcon success={false}/>;
+    },
     renderer() {
         const cssConfig = this.classSet(
             styles.wrapper,
@@ -70,17 +85,20 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             autoFocus: this.props.autoFocus
         };
 
+        let showValidationIcon = true;
         let addonLeft = '';
         if (this.props.addonLeft) {
-            addonLeft = (<span className="input-group-addon">{this.props.addonLeft}</span>);
+            addonLeft = (<span className={styles.addon}>{this.props.addonLeft}</span>);
+            showValidationIcon = false;
         }
 
         let addonRight = '';
         if (this.props.addonRight) {
-            addonRight = (<span className="input-group-addon">{this.props.addonRight}</span>);
+            addonRight = (<span className={styles.addon}>{this.props.addonRight}</span>);
+            showValidationIcon = false;
         }
 
-        let wrapperClassName = this.props.wrapperClassName + ' input-group';
+        let wrapperClassName = this.props.wrapperClassName + ' ' + styles.inputGroup;
         let iconLeft = '';
         if (this.props.iconLeft) {
             wrapperClassName += ' ' + styles.iconLeft;
@@ -93,6 +111,8 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             iconRight = (<span className={this.props.iconRight}></span>);
         }
 
+        const {DelayedOnChange, Animate} = this.props;
+
         return (
             <div className={this.classSet(cssConfig, this.props.className)}>
                 {this.renderLabel()}
@@ -101,23 +121,23 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                 <div className={wrapperClassName}>
                     {iconLeft}
                     {addonLeft}
-                    <Webiny.Ui.Components.DelayedOnChange delay={this.props.delay}>
+                    <DelayedOnChange delay={this.props.delay}>
                         <input {...props}/>
-                    </Webiny.Ui.Components.DelayedOnChange>
+                    </DelayedOnChange>
                     {addonRight}
                     {iconRight}
-                    {this.renderValidationIcon()}
+                    {showValidationIcon && this.renderValidationIcon()}
                 </div>
                 {this.renderDescription()}
-                <Webiny.Ui.Components.Animate
+                <Animate
                     trigger={this.renderValidationMessage()}
                     show={this.props.showValidationAnimation}
                     hide={this.props.hideValidationAnimation}>
                     {this.renderValidationMessage()}
-                </Webiny.Ui.Components.Animate>
+                </Animate>
             </div>
         );
     }
 });
 
-export default Input;
+export default Webiny.createComponent(Input, {modules: ['Animate', 'DelayedOnChange']});

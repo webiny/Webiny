@@ -10,9 +10,9 @@ Header.defaultProps = {
     renderer() {
 
         let headerContent = '';
-        if(_.get(this.props, 'title') && this.props.title!=''){
+        if (_.get(this.props, 'title') && this.props.title !== '') {
             headerContent = <h4>{this.props.title}</h4>;
-        }else if(_.size(this.props.children)>0){
+        } else if (_.size(this.props.children) > 0) {
             headerContent = this.props.children;
         }
 
@@ -25,4 +25,4 @@ Header.defaultProps = {
     }
 };
 
-export default Header;
+export default Webiny.createComponent(Header, {styles});
