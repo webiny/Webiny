@@ -5,6 +5,22 @@ class CopyInput extends Webiny.Ui.FormComponent {
     componentDidMount() {
         super.componentDidMount();
 
+        this.interval = setInterval(() => {
+            const dom = ReactDOM.findDOMNode(this).querySelector('button');
+            if (dom) {
+                clearInterval(this.interval);
+                this.interval = null;
+                this.setup();
+            }
+        }, 100);
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        this.clipboard.destroy();
+    }
+
+    setup() {
         const button = ReactDOM.findDOMNode(this).querySelector('button');
 
         this.clipboard = new this.props.Clipboard(button, {
@@ -21,11 +37,6 @@ class CopyInput extends Webiny.Ui.FormComponent {
                 Webiny.Growl.info(onSuccessMessage);
             }
         });
-    }
-
-    componentWillUnmount() {
-        super.componentWillUnmount();
-        this.clipboard.destroy();
     }
 }
 
