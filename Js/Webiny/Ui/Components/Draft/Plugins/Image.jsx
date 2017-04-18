@@ -1,7 +1,6 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
-import AtomicPlugin from './../BasePlugins/AtomicPlugin';
-import Utils from './../Utils';
+import Atomic from './../Toolbar/Atomic';
+const Utils = Webiny.Draft.Utils;
 
 class ImageEditComponent extends Webiny.Ui.Component {
     constructor(props) {
@@ -89,25 +88,29 @@ ImageEditComponent.defaultProps = {
         };
 
         return (
-            <div className="image-plugin-wrapper">
-                <Ui.Grid.Row>
-                    <Ui.Grid.Col xs={12}>
-                        <div className="btn-group pull-right">
-                            <button {...btnProps('left')}>Left</button>
-                            <button {...btnProps('center')}>Center</button>
-                            <button {...btnProps('right')}>Right</button>
-                        </div>
-                    </Ui.Grid.Col>
-                </Ui.Grid.Row>
+            <Webiny.Ui.LazyLoad modules={['Grid', 'Input']}>
+                {(Ui) => (
+                    <div className="image-plugin-wrapper">
+                        <Ui.Grid.Row>
+                            <Ui.Grid.Col xs={12}>
+                                <div className="btn-group pull-right">
+                                    <button {...btnProps('left')}>Left</button>
+                                    <button {...btnProps('center')}>Center</button>
+                                    <button {...btnProps('right')}>Right</button>
+                                </div>
+                            </Ui.Grid.Col>
+                        </Ui.Grid.Row>
 
-                <div className={'image-wrapper'} style={{textAlign: this.props.data.align}}>
-                    <div className="resizer" ref="resizer" style={this.getSize()}>
-                        <img src={this.props.data.url} style={this.getSize(2)}/>
-                        <span className="resize-handle br" {...draggable}></span>
+                        <div className="image-wrapper" style={{textAlign: this.props.data.align}}>
+                            <div className="resizer" ref="resizer" style={this.getSize()}>
+                                <img src={this.props.data.url} style={this.getSize(2)}/>
+                                <span className="resize-handle br" {...draggable}/>
+                            </div>
+                        </div>
+                        <Ui.Input value={this.props.data.caption} onChange={captionChange} placeholder="Enter a caption for this image"/>
                     </div>
-                </div>
-                <Ui.Input value={this.props.data.caption} onChange={captionChange} placeholder="Enter a caption for this image"/>
-            </div>
+                )}
+            </Webiny.Ui.LazyLoad>
         );
     }
 };
@@ -134,7 +137,7 @@ ImageComponent.defaultProps = {
     }
 };
 
-class ImagePlugin extends AtomicPlugin {
+class ImagePlugin extends Webiny.Draft.AtomicPlugin {
     constructor(config = {}) {
         super(config);
         this.validate = _.get(config, 'validate', 'required');
@@ -183,47 +186,53 @@ class ImagePlugin extends AtomicPlugin {
 
     getEditConfig() {
         return {
-            toolbar: <Ui.Draft.Toolbar.Atomic icon="fa-image" plugin={this} tooltip="Insert an image"/>,
+            toolbar: <Atomic icon="fa-image" plugin={this} tooltip="Insert an image"/>,
             customView: (
-                <Ui.Modal.Dialog ui={this.id}>
-                    {dialog => (
-                        <Ui.Form onSubmit={this.submitModal.bind(this)}>
-                            {(model, form) => {
-                                const urlValidator = model.image ? null : 'required,url';
-                                return (
-                                    <wrapper>
-                                        <Ui.Form.Loader/>
-                                        <Ui.Modal.Header title="Insert image"/>
-                                        <Ui.Modal.Body noPadding>
-                                            <Ui.Tabs>
-                                                <Ui.Tabs.Tab label="URL" icon="fa-link">
-                                                    <Ui.Input name="url" placeholder="Enter an image URL" label="URL" validate={urlValidator}/>
-                                                </Ui.Tabs.Tab>
-                                                <Ui.Tabs.Tab label="Upload" icon="fa-upload">
-                                                    <Ui.Files.Image
-                                                        name="image"
-                                                        cropper={{
-                                                        inline: true,
-                                                        title: 'Crop your image',
-                                                        action: 'Upload image',
-                                                        config: {
-                                                            closeOnClick: false,
-                                                            autoCropArea: 0.7
-                                                        }}
-                                                    }/>
-                                                </Ui.Tabs.Tab>
-                                            </Ui.Tabs>
-                                        </Ui.Modal.Body>
-                                        <Ui.Modal.Footer align="right">
-                                            <Ui.Button type="default" key="cancel" label="Cancel" onClick={dialog.hide}/>
-                                            <Ui.Button type="primary" key="submit" label="Insert" onClick={form.submit}/>
-                                        </Ui.Modal.Footer>
-                                    </wrapper>
-                                );
-                            }}
-                        </Ui.Form>
+                <Webiny.Ui.LazyLoad modules={['Form', 'Input', 'Modal', 'Tabs', 'Image', 'Button']}>
+                    {(Ui) => (
+                        <Ui.Modal.Dialog ui={this.id}>
+                            {dialog => (
+                                <Ui.Form onSubmit={this.submitModal.bind(this)}>
+                                    {(model, form) => {
+                                        const urlValidator = model.image ? null : 'required,url';
+                                        return (
+                                            <wrapper>
+                                                <Ui.Form.Loader/>
+                                                <Ui.Modal.Header title="Insert image"/>
+                                                <Ui.Modal.Body noPadding>
+                                                    <Ui.Tabs>
+                                                        <Ui.Tabs.Tab label="URL" icon="fa-link">
+                                                            <Ui.Input name="url" placeholder="Enter an image URL" label="URL"
+                                                                      validate={urlValidator}/>
+                                                        </Ui.Tabs.Tab>
+                                                        <Ui.Tabs.Tab label="Upload" icon="fa-upload">
+                                                            <Ui.Image
+                                                                name="image"
+                                                                cropper={{
+                                                                    inline: true,
+                                                                    title: 'Crop your image',
+                                                                    action: 'Upload image',
+                                                                    config: {
+                                                                        closeOnClick: false,
+                                                                        autoCropArea: 0.7
+                                                                    }
+                                                                }
+                                                                }/>
+                                                        </Ui.Tabs.Tab>
+                                                    </Ui.Tabs>
+                                                </Ui.Modal.Body>
+                                                <Ui.Modal.Footer align="right">
+                                                    <Ui.Button type="default" key="cancel" label="Cancel" onClick={dialog.hide}/>
+                                                    <Ui.Button type="primary" key="submit" label="Insert" onClick={form.submit}/>
+                                                </Ui.Modal.Footer>
+                                            </wrapper>
+                                        );
+                                    }}
+                                </Ui.Form>
+                            )}
+                        </Ui.Modal.Dialog>
                     )}
-                </Ui.Modal.Dialog>
+                </Webiny.Ui.LazyLoad>
             ),
             blockRendererFn: (contentBlock) => {
                 const plugin = contentBlock.getData().get('plugin');

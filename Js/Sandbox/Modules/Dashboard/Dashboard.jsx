@@ -1,23 +1,39 @@
 import Webiny from 'Webiny';
 
 class Dashboard extends Webiny.Ui.View {
+    constructor(props) {
+        super(props);
 
+        const {Draft} = props;
+
+        this.plugins = [
+            new Draft.Plugins.Heading(),
+            new Draft.Plugins.Bold(),
+            new Draft.Plugins.Italic(),
+            new Draft.Plugins.Underline(),
+            new Draft.Plugins.UnorderedList(),
+            new Draft.Plugins.OrderedList(),
+            new Draft.Plugins.Alignment(),
+            new Draft.Plugins.Link(),
+            new Draft.Plugins.Blockquote(),
+            new Draft.Plugins.Table(),
+            new Draft.Plugins.Code(),
+            new Draft.Plugins.Video(),
+            new Draft.Plugins.CodeBlock(),
+            new Draft.Plugins.ToJSON()
+        ];
+    }
 }
 
 Dashboard.defaultProps = {
     renderer() {
+        const DraftEditor = this.props.Draft.Editor;
+
         const modules = [
-            'Alert',
             'Avatar',
-            'Button',
-            'ButtonGroup',
-            'Carousel',
-            'ChangeConfirm',
-            'Checkbox',
-            'CheckboxGroup',
             'ClickConfirm',
-            'ClickSuccess',
             'CodeEditor',
+            'Button',
             'File',
             'Image',
             'Gallery',
@@ -243,6 +259,10 @@ Dashboard.defaultProps = {
                                                 }
                                             }}/>
                                         <Ui.HtmlEditor name="html"/>
+                                        <DraftEditor
+                                            name="draft"
+                                            placeholder="Tell a story..."
+                                            plugins={this.plugins}/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                             </div>
@@ -254,4 +274,4 @@ Dashboard.defaultProps = {
     }
 };
 
-export default Dashboard;
+export default Webiny.createComponent(Dashboard, {modules: ['Draft']});

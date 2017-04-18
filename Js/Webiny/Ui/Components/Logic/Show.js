@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
 class Show extends Webiny.Ui.Component {
 
@@ -16,7 +15,7 @@ Show.defaultProps = {
         }
 
         if (!show) {
-            return <webiny-show></webiny-show>;
+            return <webiny-show/>;
         }
 
         const children = React.Children.toArray(this.props.children);

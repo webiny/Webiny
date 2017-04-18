@@ -1,8 +1,7 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
-import BlockTypePlugin from './../BasePlugins/BlockTypePlugin';
+import BlockType from './../Toolbar/BlockType';
 
-class OrderedListPlugin extends BlockTypePlugin {
+class OrderedListPlugin extends Webiny.Draft.BlockTypePlugin {
     constructor(config) {
         super(config);
         this.name = 'ordered-list';
@@ -11,7 +10,7 @@ class OrderedListPlugin extends BlockTypePlugin {
 
     getEditConfig() {
         return {
-            toolbar: <Ui.Draft.Toolbar.BlockType icon="fa-list-ol" plugin={this} tooltip="Toggle ordered list"/>
+            toolbar: <BlockType icon="fa-list-ol" plugin={this} tooltip="Toggle ordered list"/>
         };
     }
 }

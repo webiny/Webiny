@@ -1,6 +1,6 @@
-import BasePlugin from './../../BasePlugins/BasePlugin';
+import Webiny from 'Webiny';
 
-class TabHandler extends BasePlugin {
+class TabHandler extends Webiny.Draft.BasePlugin {
     constructor(config) {
         super(config);
     }

@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
 class Atomic extends Webiny.Ui.Component {
 }
@@ -19,10 +18,12 @@ Atomic.defaultProps = {
             tooltip: this.props.tooltip
         };
 
+        const {Button} = this.props;
+
         return (
-            <Ui.Button {...props}>{this.props.children}</Ui.Button>
+            <Button {...props}>{this.props.children}</Button>
         );
     }
 };
 
-export default Atomic;
+export default Webiny.createComponent(Atomic, {modules: ['Button']});

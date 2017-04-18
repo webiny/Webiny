@@ -1,11 +1,10 @@
 import Webiny from 'Webiny';
 import Draft from 'draft-js';
-import AtomicPlugin from './../BasePlugins/AtomicPlugin';
-import Utils from './../Utils';
+import Atomic from './../Toolbar/Atomic';
 import TableEditComponent from './Table/TableEditComponent';
-const Ui = Webiny.Ui.Components;
+const Utils = Webiny.Draft.Utils;
 
-class TablePlugin extends AtomicPlugin {
+class TablePlugin extends Webiny.Draft.AtomicPlugin {
     constructor(config) {
         super(config);
         this.name = 'table';
@@ -43,7 +42,7 @@ class TablePlugin extends AtomicPlugin {
 
     getEditConfig() {
         return {
-            toolbar: <Ui.Draft.Toolbar.Atomic icon="fa-table" plugin={this} tooltip="Insert a table"/>,
+            toolbar: <Atomic icon="fa-table" plugin={this} tooltip="Insert a table"/>,
             blockRendererFn: (contentBlock) => {
                 const plugin = contentBlock.getData().get('plugin');
                 if (contentBlock.getType() === 'atomic' && plugin === this.name) {

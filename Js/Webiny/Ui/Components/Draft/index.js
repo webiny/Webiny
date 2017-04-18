@@ -1,12 +1,5 @@
-import Webiny from 'Webiny';
 import Editor from './Editor';
 import SimpleEditor from './SimpleEditor';
-import BasePlugin from './BasePlugins/BasePlugin';
-import BlockTypePlugin from './BasePlugins/BlockTypePlugin';
-import InlineStylePlugin from './BasePlugins/InlineStylePlugin';
-import EntityPlugin from './BasePlugins/EntityPlugin';
-import AtomicPlugin from './BasePlugins/AtomicPlugin';
-import Utils from './Utils';
 import InlineStyle from './Toolbar/InlineStyle';
 import BlockType from './Toolbar/BlockType';
 import Entity from './Toolbar/Entity';
@@ -30,48 +23,31 @@ import Table from './Plugins/Table';
 import ToJSON from './Plugins/ToJSON';
 
 
-class Module extends Webiny.Module {
-
-    init() {
-        this.name = 'Draft';
-        Webiny.Ui.Components.Draft = {
-            Editor,
-            SimpleEditor,
-            Toolbar: {
-                InlineStyle,
-                BlockType,
-                Entity,
-                Atomic
-            }
-        };
-
-        Webiny.Draft = {
-            Utils,
-            BasePlugin,
-            BlockTypePlugin,
-            InlineStylePlugin,
-            EntityPlugin,
-            AtomicPlugin,
-            Plugins: {
-                Heading,
-                Bold,
-                ColorPicker,
-                Italic,
-                Underline,
-                UnorderedList,
-                OrderedList,
-                Alignment,
-                Link,
-                Image,
-                Video,
-                Blockquote,
-                Code,
-                CodeBlock,
-                Table,
-                ToJSON
-            }
-        };
+export default {
+    Editor,
+    SimpleEditor,
+    Toolbar: {
+        InlineStyle,
+        BlockType,
+        Entity,
+        Atomic
+    },
+    Plugins: {
+        Heading,
+        Bold,
+        ColorPicker,
+        Italic,
+        Underline,
+        UnorderedList,
+        OrderedList,
+        Alignment,
+        Link,
+        Image,
+        Video,
+        Blockquote,
+        Code,
+        CodeBlock,
+        Table,
+        ToJSON
     }
-}
-
-export default Module;
+};

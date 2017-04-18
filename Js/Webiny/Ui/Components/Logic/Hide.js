@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
 class Hide extends Webiny.Ui.Component {
 
@@ -16,7 +15,7 @@ Hide.defaultProps = {
         }
 
         if (hide) {
-            return <webiny-hide></webiny-hide>;
+            return <webiny-hide/>;
         }
 
         const children = React.Children.toArray(this.props.children);

@@ -7,6 +7,10 @@ class BasePlugin {
         this.editor = null;
     }
 
+    getDraft() {
+        return import('Webiny/Vendors/Draft');
+    }
+
     ui(call, ...params) {
         if (call.indexOf(':') < 0) {
             return Webiny.Ui.Dispatcher.get(call);

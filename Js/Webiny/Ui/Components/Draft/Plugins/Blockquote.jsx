@@ -1,8 +1,7 @@
 import Webiny from 'Webiny';
-import BlockTypePlugin from './../BasePlugins/BlockTypePlugin';
-const Ui = Webiny.Ui.Components;
+import BlockType from './../Toolbar/BlockType';
 
-class BlockquotePlugin extends BlockTypePlugin {
+class BlockquotePlugin extends Webiny.Draft.BlockTypePlugin {
     constructor(config) {
         super(config);
         this.name = 'blockquote';
@@ -11,7 +10,9 @@ class BlockquotePlugin extends BlockTypePlugin {
 
     getEditConfig() {
         return {
-            toolbar: <Ui.Draft.Toolbar.BlockType icon="fa-quote-right" plugin={this} tooltip="Make a quote"/>
+            toolbar: (
+                <BlockType icon="fa-quote-right" plugin={this} tooltip="Make a quote"/>
+            )
         };
     }
 }

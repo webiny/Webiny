@@ -1,9 +1,7 @@
 import Webiny from 'Webiny';
-import InlineStylePlugin from './../BasePlugins/InlineStylePlugin';
 import Draft from 'draft-js';
-const Ui = Webiny.Ui.Components;
 
-class ColorPickerPlugin extends InlineStylePlugin {
+class ColorPickerPlugin extends Webiny.Draft.InlineStylePlugin {
     constructor(config) {
         super(config);
         this.name = 'color-picker';
@@ -59,7 +57,7 @@ class ColorPickerPlugin extends InlineStylePlugin {
         const activeStyle = this.getSelectedColor();
         if (activeStyle) {
             const color = this.config.colors[activeStyle];
-            return <span style={{backgroundColor: color, display: 'block', width: 40, height: 10}}></span>;
+            return <span style={{backgroundColor: color, display: 'block', width: 40, height: 10}}/>;
         }
         return 'No color';
     }
@@ -78,17 +76,21 @@ class ColorPickerPlugin extends InlineStylePlugin {
                 );
 
                 return (
-                    <Ui.Dropdown
-                        className="color-picker"
-                        title={this.getDropdownTitle()}
-                        disabled={this.editor.getReadOnly()}
-                        listStyle={{padding: 0}}>
-                        <Ui.Dropdown.Link key="noColor" onClick={() => this.setColor('noColor')} title={emptyTitle}/>
-                        {_.keys(colors).map(k => {
-                            const title = <span style={{backgroundColor: colors[k], display: 'block', width: '100%', height: 20}}></span>;
-                            return <Ui.Dropdown.Link key={k} onClick={() => this.setColor(k)} title={title}/>
-                        })}
-                    </Ui.Dropdown>
+                    <Webiny.Ui.LazyLoad modules={['Dropdown']}>
+                        {({Dropdown}) => (
+                            <Dropdown
+                                className="color-picker"
+                                title={this.getDropdownTitle()}
+                                disabled={this.editor.getReadOnly()}
+                                listStyle={{padding: 0}}>
+                                <Dropdown.Link key="noColor" onClick={() => this.setColor('noColor')} title={emptyTitle}/>
+                                {_.keys(colors).map(k => {
+                                    const title = <span style={{backgroundColor: colors[k], display: 'block', width: '100%', height: 20}}/>;
+                                    return <Dropdown.Link key={k} onClick={() => this.setColor(k)} title={title}/>
+                                })}
+                            </Dropdown>
+                        )}
+                    </Webiny.Ui.LazyLoad>
                 );
             },
             customStyleMap

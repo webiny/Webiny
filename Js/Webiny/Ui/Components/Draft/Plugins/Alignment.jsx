@@ -1,8 +1,7 @@
 import Webiny from 'Webiny';
-import BasePlugin from './../BasePlugins/BasePlugin';
 const Ui = Webiny.Ui.Components;
 
-class Alignment extends BasePlugin {
+class Alignment extends Webiny.Draft.BasePlugin {
     constructor(config) {
         super(config);
         this.name = 'alignment';
@@ -47,10 +46,15 @@ class Alignment extends BasePlugin {
                                     }
                                 },
                                 type: align && align === b.align ? 'primary' : 'default',
-                                key: b.align,
                                 plugin: this
                             };
-                            return <Ui.Button {...props}/>
+                            return (
+                                <Webiny.Ui.LazyLoad modules={['Button']} key={b.align}>
+                                    {({Button}) => (
+                                        <Button {...props}/>
+                                    )}
+                                </Webiny.Ui.LazyLoad>
+                            );
                         })}
                     </actions>
                 );

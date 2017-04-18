@@ -22,7 +22,7 @@ export default () => {
     import('./DelayedOnChange');
     import('./Downloader');
     import('./DownloadLink');
-    //import('./Draft');
+    import('./Draft');
     import('./Dropdown');
     import('./Dynamic');
     import('./Email');

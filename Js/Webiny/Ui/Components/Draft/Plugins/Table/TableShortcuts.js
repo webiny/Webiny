@@ -1,7 +1,7 @@
-import BasePlugin from './../../BasePlugins/BasePlugin';
+import Webiny from 'Webiny';
 import Draft from 'draft-js';
 
-class TableShortcuts extends BasePlugin {
+class TableShortcuts extends Webiny.Draft.BasePlugin {
     constructor(config) {
         super(config);
         this.name = 'insert-table-row';

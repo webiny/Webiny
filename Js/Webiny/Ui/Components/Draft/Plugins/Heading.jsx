@@ -1,7 +1,5 @@
 import Webiny from 'Webiny';
-import BlockTypePlugin from './../BasePlugins/BlockTypePlugin';
 import Draft from 'draft-js';
-const Ui = Webiny.Ui.Components;
 
 const map = {
     'unstyled': 'Normal',
@@ -13,7 +11,7 @@ const map = {
     'header-six': 'Heading 6'
 };
 
-class HeadingPlugin extends BlockTypePlugin {
+class HeadingPlugin extends Webiny.Draft.BlockTypePlugin {
     constructor(config) {
         super(config);
         this.name = 'heading';
@@ -30,11 +28,15 @@ class HeadingPlugin extends BlockTypePlugin {
                 const type = this.getStartBlockType('unstyled');
 
                 return (
-                    <Ui.Dropdown title={_.get(map, type, 'Normal')} disabled={this.editor.getReadOnly()}>
-                        {_.keys(map).map(k => (
-                            <Ui.Dropdown.Link key={k} onClick={() => this.setHeading(k)} title={map[k]}/>
-                        ))}
-                    </Ui.Dropdown>
+                    <Webiny.Ui.LazyLoad modules={['Dropdown']}>
+                        {({Dropdown}) => (
+                            <Dropdown title={_.get(map, type, 'Normal')} disabled={this.editor.getReadOnly()}>
+                                {_.keys(map).map(k => (
+                                    <Dropdown.Link key={k} onClick={() => this.setHeading(k)} title={map[k]}/>
+                                ))}
+                            </Dropdown>
+                        )}
+                    </Webiny.Ui.LazyLoad>
                 );
             }
         };

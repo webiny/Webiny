@@ -77,7 +77,7 @@ class Confirmation extends Webiny.Ui.ModalComponent {
 
     renderLoader() {
         if (this.state.loading) {
-            return this.props.renderLoader();
+            return this.props.renderLoader.call(this);
         }
         return null;
     }
@@ -139,6 +139,6 @@ Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
 });
 
 export default Webiny.createComponent(Confirmation, {
-    modules: ['Button'],
+    modules: ['Button', 'Loader'],
     api: ['show', 'hide', 'isAnimating']
 });

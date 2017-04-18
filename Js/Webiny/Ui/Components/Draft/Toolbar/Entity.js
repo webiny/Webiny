@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
 class Entity extends Webiny.Ui.Component {
 }
@@ -21,10 +20,12 @@ Entity.defaultProps = {
             tooltip: this.props.tooltip
         };
 
+        const {Button} = this.props;
+
         return (
-            <Ui.Button {...props}>{this.props.children}</Ui.Button>
+            <Button {...props}>{this.props.children}</Button>
         );
     }
 };
 
-export default Entity;
+export default Webiny.createComponent(Entity, {modules: ['Button']});

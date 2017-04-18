@@ -1,8 +1,7 @@
 import Webiny from 'Webiny';
-import InlineStylePlugin from './../BasePlugins/InlineStylePlugin';
-const Ui = Webiny.Ui.Components;
+import InlineStyle from './../Toolbar/InlineStyle';
 
-class UnderlinePlugin extends InlineStylePlugin {
+class UnderlinePlugin extends Webiny.Draft.InlineStylePlugin {
     constructor(config) {
         super(config);
         this.name = 'bold';
@@ -11,7 +10,7 @@ class UnderlinePlugin extends InlineStylePlugin {
 
     getEditConfig() {
         return {
-            toolbar: <Ui.Draft.Toolbar.InlineStyle icon="fa-underline" plugin={this}/>,
+            toolbar: <InlineStyle icon="fa-underline" plugin={this}/>,
             handleKeyCommand: (command, editor) => {
                 if (command === 'underline' && editor.getEditorState().getSelection().isCollapsed()) {
                     return true;

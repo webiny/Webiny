@@ -25,7 +25,7 @@ SimpleEditor.defaultProps = _.merge({}, Editor.defaultProps, {
 
         const props = _.omit(this.props, ['plugins', 'renderer']);
 
-        return (<Webiny.Ui.Components.Draft.Editor plugins={plugins} {...props}/>);
+        return <Editor plugins={plugins} {...props}/>;
     }
 });
 

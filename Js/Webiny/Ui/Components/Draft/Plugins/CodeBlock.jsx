@@ -1,8 +1,6 @@
 import Webiny from 'Webiny';
-import AtomicPlugin from './../BasePlugins/AtomicPlugin';
-import Utils from './../Utils';
-
-const Ui = Webiny.Ui.Components;
+import Atomic from './../Toolbar/Atomic';
+const Utils = Webiny.Draft.Utils;
 
 const languageMap = {
     'html': 'text/html',
@@ -42,23 +40,27 @@ CodeBlockEditComponent.defaultProps = {
         };
 
         return (
-            <Ui.Grid.Row>
-                <Ui.Grid.Col all={12} className="code-block">
-                    <div style={{position: 'absolute', right: 20, top: 5}}>
-                        <Ui.Dropdown title={this.props.data.language || 'jsx'} className="balloon">
-                            <Ui.Dropdown.Header title="Language"/>
-                            <Ui.Dropdown.Link title="HTML" onClick={() => this.switchLanguage('html')}/>
-                            <Ui.Dropdown.Link title="JSON" onClick={() => this.switchLanguage('json')}/>
-                            <Ui.Dropdown.Link title="JSX" onClick={() => this.switchLanguage('jsx')}/>
-                            <Ui.Dropdown.Link title="JAVASCRIPT" onClick={() => this.switchLanguage('javascript')}/>
-                            <Ui.Dropdown.Link title="PHP" onClick={() => this.switchLanguage('php')}/>
-                            <Ui.Dropdown.Link title="SHELL" onClick={() => this.switchLanguage('shell')}/>
-                            <Ui.Dropdown.Link title="YAML" onClick={() => this.switchLanguage('yaml')}/>
-                        </Ui.Dropdown>
-                    </div>
-                    <Ui.CodeEditor {...editorProps}/>
-                </Ui.Grid.Col>
-            </Ui.Grid.Row>
+            <Webiny.Ui.LazyLoad modules={['Grid', 'Dropdown', 'CodeEditor']}>
+                {(Ui) => (
+                    <Ui.Grid.Row>
+                        <Ui.Grid.Col all={12} className="code-block">
+                            <div style={{position: 'absolute', right: 20, top: 5}}>
+                                <Ui.Dropdown title={this.props.data.language || 'jsx'} className="balloon">
+                                    <Ui.Dropdown.Header title="Language"/>
+                                    <Ui.Dropdown.Link title="HTML" onClick={() => this.switchLanguage('html')}/>
+                                    <Ui.Dropdown.Link title="JSON" onClick={() => this.switchLanguage('json')}/>
+                                    <Ui.Dropdown.Link title="JSX" onClick={() => this.switchLanguage('jsx')}/>
+                                    <Ui.Dropdown.Link title="JAVASCRIPT" onClick={() => this.switchLanguage('javascript')}/>
+                                    <Ui.Dropdown.Link title="PHP" onClick={() => this.switchLanguage('php')}/>
+                                    <Ui.Dropdown.Link title="SHELL" onClick={() => this.switchLanguage('shell')}/>
+                                    <Ui.Dropdown.Link title="YAML" onClick={() => this.switchLanguage('yaml')}/>
+                                </Ui.Dropdown>
+                            </div>
+                            <Ui.CodeEditor {...editorProps}/>
+                        </Ui.Grid.Col>
+                    </Ui.Grid.Row>
+                )}
+            </Webiny.Ui.LazyLoad>
         );
     }
 };
@@ -76,14 +78,18 @@ CodeBlockPreviewComponent.defaultProps = {
         };
 
         return (
-            <div className="code-block code-block--preview">
-                <Ui.CodeEditor {...editorProps}/>
-            </div>
+            <Webiny.Ui.LazyLoad modules={['CodeEditor']}>
+                {(Ui) => (
+                    <div className="code-block code-block--preview">
+                        <Ui.CodeEditor {...editorProps}/>
+                    </div>
+                )}
+            </Webiny.Ui.LazyLoad>
         );
     }
 };
 
-class CodeBlockPlugin extends AtomicPlugin {
+class CodeBlockPlugin extends Webiny.Draft.AtomicPlugin {
     constructor(config) {
         super(config);
         this.name = 'code-block';
@@ -107,7 +113,7 @@ class CodeBlockPlugin extends AtomicPlugin {
 
     getEditConfig() {
         return {
-            toolbar: <Ui.Draft.Toolbar.Atomic icon="fa-code" plugin={this} tooltip="Insert code block"/>,
+            toolbar: <Atomic icon="fa-code" plugin={this} tooltip="Insert code block"/>,
             blockRendererFn: (contentBlock) => {
                 const plugin = contentBlock.getData().get('plugin');
                 if (contentBlock.getType() === 'atomic' && plugin === this.name) {

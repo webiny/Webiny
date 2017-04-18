@@ -1,5 +1,6 @@
-import Draft from 'draft-js';
 import Immutable from 'immutable';
+
+// TODO: draft izdvojiti u Vendors
 
 function filterKey(contentState, entityKey) {
     if (entityKey) {
