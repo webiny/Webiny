@@ -4,15 +4,7 @@
 }
 
 .uploadBtn{
-	display: inline-block;
-	padding: 14px 30px;
-	margin-right: 0;
-	margin-bottom: 10px;
-	position: relative;
-	color: #fff;
-	font-size: 12px;
-	font-weight: 600;
-	line-height: 1;
+	margin-right: 0 !important;
 }
 
 .image {

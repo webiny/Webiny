@@ -69,7 +69,8 @@ class LinkPlugin extends Webiny.Draft.EntityPlugin {
                                 ui: this.id,
                                 title: <Ui.Icon icon="fa-link"/>,
                                 closeOnClick: false,
-                                onShow: this.showDropdown
+                                onShow: this.showDropdown,
+                                className: 'toolbar-dropdown'
                             };
 
                             return (

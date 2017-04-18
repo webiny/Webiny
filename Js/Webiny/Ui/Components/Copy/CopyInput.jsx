@@ -1,5 +1,5 @@
 import Webiny from 'Webiny';
-import styles from './CopyInput.css';
+import styles from './styles.css';
 
 class CopyInput extends Webiny.Ui.FormComponent {
     componentDidMount() {

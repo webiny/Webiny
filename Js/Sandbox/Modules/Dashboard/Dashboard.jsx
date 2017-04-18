@@ -23,6 +23,7 @@ class Dashboard extends Webiny.Ui.View {
             new Draft.Plugins.ToJSON()
         ];
     }
+
 }
 
 Dashboard.defaultProps = {
@@ -30,10 +31,23 @@ Dashboard.defaultProps = {
         const DraftEditor = this.props.Draft.Editor;
 
         const modules = [
+            'Alert',
             'Avatar',
-            'ClickConfirm',
-            'CodeEditor',
             'Button',
+            'ButtonGroup',
+            'Carousel',
+            'ChangeConfirm',
+            'Checkbox',
+            'CheckboxGroup',
+            'ClickConfirm',
+            'ClickSuccess',
+            'CodeEditor',
+            'CodeHighlight',
+            'Copy',
+            'DateTime',
+            'Date',
+            'Time',
+            'Draft',
             'File',
             'Image',
             'Gallery',
@@ -42,12 +56,9 @@ Dashboard.defaultProps = {
             'HtmlEditor',
             'Form',
             'Grid',
-            'DateTime',
-            'Date',
-            'Time',
+
             'DateRange',
-            'Icon',
-            'Carousel'
+            'Icon'
         ];
         const src = "https://scontent-amt2-1.xx.fbcdn.net/v/t31.0-8/17855125_536372119866416_7405702212874834803_o.jpg?oh=386fe327a0899af7461322ff3b00177b&oe=5987F465";
         return (
@@ -186,7 +197,8 @@ Dashboard.defaultProps = {
                                     <Ui.Grid.Col all={6}>
                                         <h2>ClickSuccess</h2>
                                         <Ui.ClickSuccess message="That was easy!">
-                                            <Ui.Button type="primary" label="Click me!" onClick={() => {}}/>
+                                            <Ui.Button type="primary" label="Click me!" onClick={() => {
+                                            }}/>
                                         </Ui.ClickSuccess>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
@@ -195,25 +207,71 @@ Dashboard.defaultProps = {
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>
                                         <h2>CodeEditor</h2>
-                                        <Ui.CodeEditor label="Email template" name="content" description="Enter plain text or HTML content"/>
+                                        <Ui.CodeEditor name="content" description="Enter plain text or HTML content"/>
+                                    </Ui.Grid.Col>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>CodeHighlight</h2>
+                                        <Ui.CodeHighlight>
+                                            {`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Webiny</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+</head>
+<body>
+...
+</body>
+</html>`}
+                                        </Ui.CodeHighlight>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
-
+                                <hr/>
 
                                 <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={3}>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Copy.Button</h2>
+                                        <Ui.Copy.Button type="secondary" icon="icon-pencil" value="Clipboard content" label="Click to copy!"/>
+                                    </Ui.Grid.Col>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Copy.Input</h2>
+                                        <Ui.Copy.Input label="Your download link" value="http://download.me/35Tzy7"/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                                <hr/>
+
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>DateTime</h2>
                                         <Ui.DateTime label="Date & Time" name="datetime" placeholder="Select date and time"/>
                                     </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={3}>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Date</h2>
                                         <Ui.Date label="Date" name="date" placeholder="Select a date" validate="required"/>
                                     </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={3}>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Time</h2>
                                         <Ui.Time label="Time" name="time" placeholder="Select time"/>
                                     </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={3}>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>DateRange</h2>
                                         <Ui.DateRange label="Date range" name="daterange" placeholder="Select a date range"/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
+                                <hr/>
+
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Draft</h2>
+                                        <DraftEditor
+                                            name="draft"
+                                            placeholder="Tell a story..."
+                                            plugins={this.plugins}/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+
+
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
 
@@ -259,10 +317,6 @@ Dashboard.defaultProps = {
                                                 }
                                             }}/>
                                         <Ui.HtmlEditor name="html"/>
-                                        <DraftEditor
-                                            name="draft"
-                                            placeholder="Tell a story..."
-                                            plugins={this.plugins}/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                             </div>

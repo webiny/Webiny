@@ -30,7 +30,7 @@ class HeadingPlugin extends Webiny.Draft.BlockTypePlugin {
                 return (
                     <Webiny.Ui.LazyLoad modules={['Dropdown']}>
                         {({Dropdown}) => (
-                            <Dropdown title={_.get(map, type, 'Normal')} disabled={this.editor.getReadOnly()}>
+                            <Dropdown title={_.get(map, type, 'Normal')} disabled={this.editor.getReadOnly()} className="toolbar-dropdown">
                                 {_.keys(map).map(k => (
                                     <Dropdown.Link key={k} onClick={() => this.setHeading(k)} title={map[k]}/>
                                 ))}

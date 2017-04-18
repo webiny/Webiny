@@ -5,6 +5,7 @@ import PluginsContainer from './PluginsContainer';
 import Toolbar from './Toolbar';
 import FloatingToolbar from './FloatingToolbar';
 import CustomViews from './CustomViews';
+import './styles.scss';
 
 class Editor extends Webiny.Ui.Component {
     constructor(props) {

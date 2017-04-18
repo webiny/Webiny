@@ -274,7 +274,8 @@ class VideoPlugin extends Webiny.Draft.AtomicPlugin {
                                 ui: this.id,
                                 title: <Ui.Icon icon="fa-video-camera"/>,
                                 closeOnClick: false,
-                                onShow: this.showDropdown
+                                onShow: this.showDropdown,
+                                className: 'toolbar-dropdown'
                             };
                             return (
                                 <Ui.Dropdown {...props}>
@@ -283,18 +284,18 @@ class VideoPlugin extends Webiny.Draft.AtomicPlugin {
                                             {(model, form) => (
                                                 <div style={{width: 400}}>
                                                     <Ui.Grid.Row>
-                                                        <Ui.Grid.Col xs={12}>
+                                                        <Ui.Grid.Col xs={10}>
                                                             <Ui.Input
                                                                 name="url"
                                                                 placeholder="Enter a video URL"
                                                                 validate={this.validate}
                                                                 showValidationIcon={false}/>
                                                         </Ui.Grid.Col>
-                                                        <Ui.Grid.Col xs={12}>
+                                                        <Ui.Grid.Col xs={2}>
                                                             <Ui.Button
                                                                 type="primary"
                                                                 align="right"
-                                                                label="Insert video"
+                                                                label="Insert"
                                                                 onClick={form.submit}/>
                                                         </Ui.Grid.Col>
                                                     </Ui.Grid.Row>
