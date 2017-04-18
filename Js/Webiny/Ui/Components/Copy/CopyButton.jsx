@@ -3,7 +3,23 @@ import Webiny from 'Webiny';
 class CopyButton extends Webiny.Ui.Component {
     componentDidMount() {
         super.componentDidMount();
+        this.interval = setInterval(() => {
+            const dom = ReactDOM.findDOMNode(this);
+            if (dom) {
+                clearInterval(this.interval);
+                this.interval = null;
+                this.setup();
+            }
+        }, 100);
+    }
 
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        this.clipboard.destroy();
+    }
+
+    setup() {
+        console.log('Button DOM', ReactDOM.findDOMNode(this));
         this.clipboard = new this.props.Clipboard(ReactDOM.findDOMNode(this), {
             text: () => {
                 return this.props.value;
@@ -18,11 +34,6 @@ class CopyButton extends Webiny.Ui.Component {
                 Webiny.Growl.info(onSuccessMessage);
             }
         });
-    }
-
-    componentWillUnmount() {
-        super.componentWillUnmount();
-        this.clipboard.destroy();
     }
 }
 
