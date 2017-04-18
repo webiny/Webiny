@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
 import ImagePreview from './Preview';
-import styles from './Gallery.css';
+import styles from './styles.css';
 
 class Image extends Webiny.Ui.FormComponent {
     constructor(props) {

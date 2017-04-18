@@ -1,18 +1,28 @@
-.btnGroup .btn:first-child:not(:last-child){
+.btnGroup button:first-child:not(:last-child) {
 	border-bottom-right-radius: 0;
 	border-top-right-radius: 0;
 	margin-right: 0;
 }
 
-.btnGroup .btn:first-child:not(:last-child):hover{
+.btnGroup button:first-child:not(:last-child):hover {
 	box-shadow: none;
 }
 
-.btnGroup .btn:last-child:not(:first-child){
+.btnGroup button:last-child:not(:first-child) {
 	border-bottom-left-radius: 0;
 	border-top-left-radius: 0;
 }
 
-.btnGroup .btn:last-child:not(:first-child):hover{
+.btnGroup button:last-child:not(:first-child):hover {
+	box-shadow: none;
+}
+
+.btnGroup button:not(:last-child):not(:first-child) {
+	border-radius: 0;
+	margin: 0;
+
+}
+
+.btnGroup button:not(:last-child):not(:first-child):hover {
 	box-shadow: none;
 }

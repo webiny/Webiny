@@ -7,7 +7,17 @@ class Dashboard extends Webiny.Ui.View {
 Dashboard.defaultProps = {
     renderer() {
         const modules = [
+            'Alert',
             'Avatar',
+            'Button',
+            'ButtonGroup',
+            'Carousel',
+            'ChangeConfirm',
+            'Checkbox',
+            'CheckboxGroup',
+            'ClickConfirm',
+            'ClickSuccess',
+            'CodeEditor',
             'File',
             'Image',
             'Gallery',
@@ -32,6 +42,149 @@ Dashboard.defaultProps = {
                             <div>
                                 <pre>{JSON.stringify(model, null, 4)}</pre>
                                 <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Alert</h2>
+                                        <Ui.Alert type="info" title="Well done!" close={true}>You successfully read this important alert
+                                            message.</Ui.Alert>
+                                        <Ui.Alert type="success" title="Well done!">You successfully read this important alert
+                                            message.</Ui.Alert>
+                                        <Ui.Alert type="warning" title="Well done!">You successfully read this important alert
+                                            message.</Ui.Alert>
+                                        <Ui.Alert type="error" title="Well done!">You successfully read this important alert
+                                            message.</Ui.Alert>
+                                    </Ui.Grid.Col>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Avatar</h2>
+                                        <Ui.Avatar
+                                            name="avatar"
+                                            cropper={{
+                                                title: 'Crop your image',
+                                                action: 'Upload image',
+                                                config: {
+                                                    closeOnClick: false,
+                                                    autoCropArea: 0.7,
+                                                    aspectRatio: 1,
+                                                    width: 300,
+                                                    height: 300
+                                                }
+                                            }}/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                                <hr/>
+
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Button</h2>
+                                        <Ui.Button type="primary" icon="icon-plus-circled" label="Create" onClick={() => alert('Hi!')}/>
+                                        <Ui.Button type="secondary" icon="icon-plus-circled" label="Create" onClick={() => alert('Hi!')}/>
+                                        <Ui.Button type="default" icon="icon-plus-circled" label="Create" onClick={() => alert('Hi!')}/>
+                                    </Ui.Grid.Col>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>ButtonGroup</h2>
+                                        <Ui.ButtonGroup>
+                                            <Ui.Button type="primary" icon="icon-plus-circled" label="Create" onClick={() => alert('Hi!')}/>
+                                            <Ui.Button type="secondary" icon="icon-plus-circled" label="Create"
+                                                       onClick={() => alert('Hi!')}/>
+                                            <Ui.Button type="default" icon="icon-plus-circled" label="Create" onClick={() => alert('Hi!')}/>
+                                        </Ui.ButtonGroup>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                                <hr/>
+
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Carousel</h2>
+                                        <Ui.Carousel items="3">
+                                            <div style={{backgroundColor: "#ff3f4d"}}>
+                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>Swipe</h2>
+                                            </div>
+                                            <div style={{backgroundColor: "#ff3f4d"}}>
+                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>Drag</h2>
+                                            </div>
+                                            <div style={{backgroundColor: "#ff3f4d"}}>
+                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>Responsive</h2>
+                                            </div>
+                                            <div style={{backgroundColor: "#ff3f4d"}}>
+                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>CSS3</h2>
+                                            </div>
+                                            <div style={{backgroundColor: "#ff3f4d"}}>
+                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>Fast</h2>
+                                            </div>
+                                            <div style={{backgroundColor: "#ff3f4d"}}>
+                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>Easy</h2>
+                                            </div>
+                                            <div style={{backgroundColor: "#ff3f4d"}}>
+                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>Free</h2>
+                                            </div>
+                                            <div style={{backgroundColor: "#ff3f4d"}}>
+                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>Upgradable</h2>
+                                            </div>
+                                            <div style={{backgroundColor: "#ff3f4d"}}>
+                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>Tons of options</h2>
+                                            </div>
+                                            <div style={{backgroundColor: "#ff3f4d"}}>
+                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>Infinity</h2>
+                                            </div>
+                                            <div style={{backgroundColor: "#ff3f4d"}}>
+                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>Auto Width</h2>
+                                            </div>
+                                        </Ui.Carousel>
+                                    </Ui.Grid.Col>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>ChangeConfirm</h2>
+                                        // pending dependency upon Switch component
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                                <hr/>
+
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Checkbox</h2>
+                                        <Ui.Checkbox label="Single checkbox" name="enabled" grid={12}/>
+                                    </Ui.Grid.Col>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>CheckboxGroup</h2>
+                                        <Ui.CheckboxGroup label="Choose your favorite fruit:" name="fruits" validate="minLength:2">
+                                            <option value="strawberry">Strawberry</option>
+                                            <option value="blackberry">Blackberry</option>
+                                            <option value="mango">Mango</option>
+                                            <option value="banana">Banana</option>
+                                            <validator name="minLength">Please select at least 2 options</validator>
+                                        </Ui.CheckboxGroup>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                                <hr/>
+
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>ClickConfirm</h2>
+                                        <Ui.ClickConfirm message="Do you really want to delete your credit card?">
+                                            <Ui.Button type="primary" label="Delete credit card" onClick={() => {
+                                                // You can return a promise or any other value
+                                                return new Promise(r => {
+                                                    setTimeout(r, 1500);
+                                                });
+                                            }}/>
+                                        </Ui.ClickConfirm>
+                                    </Ui.Grid.Col>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>ClickSuccess</h2>
+                                        <Ui.ClickSuccess message="That was easy!">
+                                            <Ui.Button type="primary" label="Click me!" onClick={() => {}}/>
+                                        </Ui.ClickSuccess>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                                <hr/>
+
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>CodeEditor</h2>
+                                        <Ui.CodeEditor label="Email template" name="content" description="Enter plain text or HTML content"/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+
+
+                                <Ui.Grid.Row>
                                     <Ui.Grid.Col all={3}>
                                         <Ui.DateTime label="Date & Time" name="datetime" placeholder="Select date and time"/>
                                     </Ui.Grid.Col>
@@ -47,19 +200,7 @@ Dashboard.defaultProps = {
                                 </Ui.Grid.Row>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
-                                        <Ui.Avatar
-                                            name="avatar"
-                                            cropper={{
-                                                title: 'Crop your image',
-                                                action: 'Upload image',
-                                                config: {
-                                                    closeOnClick: false,
-                                                    autoCropArea: 0.7,
-                                                    aspectRatio: 1,
-                                                    width: 300,
-                                                    height: 300
-                                                }
-                                            }}/>
+
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                                 <Ui.Grid.Row>
