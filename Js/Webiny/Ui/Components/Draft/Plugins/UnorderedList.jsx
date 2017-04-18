@@ -1,8 +1,8 @@
 import Webiny from 'Webiny';
-import BlockTypePlugin from './../BasePlugins/BlockTypePlugin';
+import BlockType from './../Toolbar/BlockType';
 const Ui = Webiny.Ui.Components;
 
-class UnorderedListPlugin extends BlockTypePlugin {
+class UnorderedListPlugin extends Webiny.Draft.BlockTypePlugin {
     constructor(config) {
         super(config);
         this.name = 'unordered-list';
@@ -11,7 +11,7 @@ class UnorderedListPlugin extends BlockTypePlugin {
 
     getEditConfig() {
         return {
-            toolbar: <Ui.Draft.Toolbar.BlockType icon="fa-list-ul" plugin={this} tooltip="Toggle unordered list"/>
+            toolbar: <BlockType icon="fa-list-ul" plugin={this} tooltip="Toggle unordered list"/>
         };
     }
 }

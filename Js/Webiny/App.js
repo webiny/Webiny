@@ -1,9 +1,9 @@
 import Webiny from 'Webiny';
 import 'Assets/styles.scss';
 
-import './Modules/Core';
-import './Ui/Components';
 import './Vendors';
+import './Lib';
+import './Ui/Components';
 /*import Alert from './Modules/Alert';
  import Animate from './Modules/Animate';
  import Auth from './Modules/Auth';
@@ -65,11 +65,6 @@ class Core extends Webiny.App {
     constructor() {
         super('Core.Webiny');
         Webiny.Logger = new Logger();
-        this.modules = [
-            new Validation(this)
-        ];
-
-        this.modules.map(m => m.init());
     }
 }
 

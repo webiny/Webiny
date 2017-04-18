@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
 class InlineStyle extends Webiny.Ui.Component {
 }
@@ -19,10 +18,13 @@ InlineStyle.defaultProps = {
             icon: this.props.icon,
             tooltip: this.props.tooltip
         };
+
+        const {Button} = this.props;
+
         return (
-            <Ui.Button {...props}/>
+            <Button {...props}/>
         );
     }
 };
 
-export default InlineStyle;
+export default Webiny.createComponent(InlineStyle, {modules: ['Button']});

@@ -1,5 +1,4 @@
 import BasePlugin from './BasePlugin';
-import Draft from 'draft-js';
 
 class BlockTypePlugin extends BasePlugin {
     constructor() {
@@ -9,7 +8,9 @@ class BlockTypePlugin extends BasePlugin {
 
     toggleBlockType() {
         const editorState = this.editor.getEditorState();
-        this.editor.setEditorState(Draft.RichUtils.toggleBlockType(editorState, this.block));
+        this.getDraft().then(Draft => {
+            this.editor.setEditorState(Draft.RichUtils.toggleBlockType(editorState, this.block));
+        });
     }
 
     isActive() {

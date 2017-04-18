@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-import pluralize from 'pluralize';
 
 class Pluralize extends Webiny.Ui.Component {
 
@@ -18,7 +17,7 @@ Pluralize.defaultProps = {
         }
 
         if (!this.props.plural && this.props.count !== 1) {
-            noun = pluralize(this.props.noun, this.props.count);
+            noun = this.props.pluralize(this.props.noun, this.props.count);
         }
 
         const result = this.props.pattern.replace('{count}', this.props.count).replace('{noun}', noun);
@@ -28,4 +27,8 @@ Pluralize.defaultProps = {
 };
 
 
-export default Pluralize;
+export default Webiny.createComponent(Pluralize, {
+    modules: {
+        pluralize: () => import('pluralize')
+    }
+});

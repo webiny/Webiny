@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
-import Utils from './Utils';
-const Ui = Webiny.Ui.Components;
+const Utils = Webiny.Draft.Utils;
 
 class FloatingToolbar extends Webiny.Ui.Component {
     componentDidUpdate() {
@@ -32,8 +31,10 @@ FloatingToolbar.defaultProps = {
             onClick: e => e.stopPropagation()
         };
 
+        const {Animate} = this.props;
+
         return (
-            <Webiny.Ui.Components.Animate
+            <Animate
                 trigger={this.props.show}
                 show={{translateY: 25, opacity: 1, duration: 100}}
                 hide={{translateY: -25, opacity: 0, duration: 100}}>
@@ -46,9 +47,9 @@ FloatingToolbar.defaultProps = {
                         );
                     })}
                 </div>
-            </Webiny.Ui.Components.Animate>
+            </Animate>
         );
     }
 };
 
-export default FloatingToolbar;
+export default Webiny.createComponent(FloatingToolbar, {modules: ['Animate']});

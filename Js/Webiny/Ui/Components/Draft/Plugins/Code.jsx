@@ -1,7 +1,6 @@
 import Webiny from 'Webiny';
-import EntityPlugin from './../BasePlugins/EntityPlugin';
+import Entity from './../Toolbar/Entity';
 import Draft from 'draft-js';
-const Ui = Webiny.Ui.Components;
 
 const style = {
     fontFamily: 'monospace',
@@ -13,7 +12,7 @@ const style = {
     border: '1px solid rgb(204, 204, 204)'
 };
 
-class CodePlugin extends EntityPlugin {
+class CodePlugin extends Webiny.Draft.EntityPlugin {
     constructor(config) {
         super(config);
         this.name = 'code';
@@ -28,7 +27,7 @@ class CodePlugin extends EntityPlugin {
 
     getEditConfig() {
         return {
-            toolbar: <Ui.Draft.Toolbar.Entity icon="fa-terminal" plugin={this} tooltip="Code quote"/>,
+            toolbar: <Entity icon="fa-terminal" plugin={this} tooltip="Code quote"/>,
             decorators: [
                 {
                     strategy: this.entity,

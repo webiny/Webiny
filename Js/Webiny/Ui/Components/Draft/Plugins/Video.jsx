@@ -1,7 +1,5 @@
 import Webiny from 'Webiny';
-import AtomicPlugin from './../BasePlugins/AtomicPlugin';
-import Utils from './../Utils';
-const Ui = Webiny.Ui.Components;
+const Utils = Webiny.Draft.Utils;
 
 class VideoEditComponent extends Webiny.Ui.Component {
     constructor(props) {
@@ -75,7 +73,7 @@ class VideoEditComponent extends Webiny.Ui.Component {
         const data = this.props.data;
         let props, embedUrl;
 
-        if (data.type == 'youtube') {
+        if (data.type === 'youtube') {
             embedUrl = 'http://www.youtube.com/embed/' + data.videoId + '?wmode=transparent&autoplay=0&html5=1';
         } else {
             embedUrl = 'http://player.vimeo.com/video/' + data.videoId + '?wmode=transparent&autoplay=0&type=html5';
@@ -120,26 +118,30 @@ VideoEditComponent.defaultProps = {
         };
 
         return (
-            <div className="video-plugin-wrapper">
-                <Ui.Grid.Row>
-                    <Ui.Grid.Col xs={12}>
-                        <div className="btn-group pull-right">
-                            <button {...btnProps('left')}>Left</button>
-                            <button {...btnProps('center')}>Center</button>
-                            <button {...btnProps('right')}>Right</button>
-                        </div>
-                    </Ui.Grid.Col>
-                </Ui.Grid.Row>
+            <Webiny.Ui.LazyLoad modules={['Grid', 'Input']}>
+                {(Ui) => (
+                    <div className="video-plugin-wrapper">
+                        <Ui.Grid.Row>
+                            <Ui.Grid.Col xs={12}>
+                                <div className="btn-group pull-right">
+                                    <button {...btnProps('left')}>Left</button>
+                                    <button {...btnProps('center')}>Center</button>
+                                    <button {...btnProps('right')}>Right</button>
+                                </div>
+                            </Ui.Grid.Col>
+                        </Ui.Grid.Row>
 
-                <div className={'video-wrapper'} style={{textAlign: this.props.data.align}}>
-                    <div className="resizer" ref="resizer" style={this.getSize()}>
-                        {this.state.resizing ? <div style={resizeOverlay}/> : null}
-                        {this.renderVideo()}
-                        <span className="resize-handle br" {...draggable}></span>
+                        <div className={'video-wrapper'} style={{textAlign: this.props.data.align}}>
+                            <div className="resizer" ref="resizer" style={this.getSize()}>
+                                {this.state.resizing ? <div style={resizeOverlay}/> : null}
+                                {this.renderVideo()}
+                                <span className="resize-handle br" {...draggable}/>
+                            </div>
+                        </div>
+                        <Ui.Input value={this.props.data.caption} onChange={captionChange} placeholder="Enter a caption for this video"/>
                     </div>
-                </div>
-                <Ui.Input value={this.props.data.caption} onChange={captionChange} placeholder="Enter a caption for this video"/>
-            </div>
+                )}
+            </Webiny.Ui.LazyLoad>
         );
     }
 };
@@ -162,7 +164,7 @@ class VideoComponent extends Webiny.Ui.Component {
         const data = this.props.data;
         let props, embedUrl;
 
-        if (data.type == 'youtube') {
+        if (data.type === 'youtube') {
             embedUrl = 'http://www.youtube.com/embed/' + data.videoId + '?wmode=transparent&autoplay=0&html5=1';
         } else {
             embedUrl = 'http://player.vimeo.com/video/' + data.videoId + '?wmode=transparent&autoplay=0&type=html5';
@@ -194,7 +196,7 @@ VideoComponent.defaultProps = {
     }
 };
 
-class VideoPlugin extends AtomicPlugin {
+class VideoPlugin extends Webiny.Draft.AtomicPlugin {
     constructor(config = {}) {
         super(config);
         this.validate = _.get(config, 'validate', 'required');
@@ -265,41 +267,45 @@ class VideoPlugin extends AtomicPlugin {
     getEditConfig() {
         return {
             toolbar: () => {
-                const props = {
-                    ui: this.id,
-                    title: <Ui.Icon icon="fa-video-camera"/>,
-                    closeOnClick: false,
-                    onShow: this.showDropdown
-                };
                 return (
-                    <Ui.Dropdown {...props}>
-                        {() => (
-                            <Ui.Form ui={this.formId} onSubmit={this.submitForm}>
-                                {(model, form) => {
-                                    return (
-                                        <div style={{width: 400}}>
-                                            <Ui.Grid.Row>
-                                                <Ui.Grid.Col xs={12}>
-                                                    <Ui.Input
-                                                        name="url"
-                                                        placeholder="Enter a video URL"
-                                                        validate={this.validate}
-                                                        showValidationIcon={false}/>
-                                                </Ui.Grid.Col>
-                                                <Ui.Grid.Col xs={12}>
-                                                    <Ui.Button
-                                                        type="primary"
-                                                        align="right"
-                                                        label="Insert video"
-                                                        onClick={form.submit}/>
-                                                </Ui.Grid.Col>
-                                            </Ui.Grid.Row>
-                                        </div>
-                                    );
-                                }}
-                            </Ui.Form>
-                        )}
-                    </Ui.Dropdown>
+                    <Webiny.Ui.LazyLoad modules={['Form', 'Input', 'Dropdown', 'Grid', 'Icon', 'Button']}>
+                        {(Ui) => {
+                            const props = {
+                                ui: this.id,
+                                title: <Ui.Icon icon="fa-video-camera"/>,
+                                closeOnClick: false,
+                                onShow: this.showDropdown
+                            };
+                            return (
+                                <Ui.Dropdown {...props}>
+                                    {() => (
+                                        <Ui.Form ui={this.formId} onSubmit={this.submitForm}>
+                                            {(model, form) => (
+                                                <div style={{width: 400}}>
+                                                    <Ui.Grid.Row>
+                                                        <Ui.Grid.Col xs={12}>
+                                                            <Ui.Input
+                                                                name="url"
+                                                                placeholder="Enter a video URL"
+                                                                validate={this.validate}
+                                                                showValidationIcon={false}/>
+                                                        </Ui.Grid.Col>
+                                                        <Ui.Grid.Col xs={12}>
+                                                            <Ui.Button
+                                                                type="primary"
+                                                                align="right"
+                                                                label="Insert video"
+                                                                onClick={form.submit}/>
+                                                        </Ui.Grid.Col>
+                                                    </Ui.Grid.Row>
+                                                </div>
+                                            )}
+                                        </Ui.Form>
+                                    )}
+                                </Ui.Dropdown>
+                            );
+                        }}
+                    </Webiny.Ui.LazyLoad>
                 );
             },
             blockRendererFn: (contentBlock) => {

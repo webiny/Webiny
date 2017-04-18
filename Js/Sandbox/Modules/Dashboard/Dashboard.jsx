@@ -1,13 +1,39 @@
 import Webiny from 'Webiny';
 
 class Dashboard extends Webiny.Ui.View {
+    constructor(props) {
+        super(props);
 
+        const {Draft} = props;
+
+        this.plugins = [
+            new Draft.Plugins.Heading(),
+            new Draft.Plugins.Bold(),
+            new Draft.Plugins.Italic(),
+            new Draft.Plugins.Underline(),
+            new Draft.Plugins.UnorderedList(),
+            new Draft.Plugins.OrderedList(),
+            new Draft.Plugins.Alignment(),
+            new Draft.Plugins.Link(),
+            new Draft.Plugins.Blockquote(),
+            new Draft.Plugins.Table(),
+            new Draft.Plugins.Code(),
+            new Draft.Plugins.Video(),
+            new Draft.Plugins.CodeBlock(),
+            new Draft.Plugins.ToJSON()
+        ];
+    }
 }
 
 Dashboard.defaultProps = {
     renderer() {
+        const DraftEditor = this.props.Draft.Editor;
+
         const modules = [
             'Avatar',
+            'ClickConfirm',
+            'CodeEditor',
+            'Button',
             'File',
             'Image',
             'Gallery',
@@ -30,7 +56,15 @@ Dashboard.defaultProps = {
                     <Ui.Form>
                         {(model) => (
                             <div>
+                                <Ui.CodeEditor label="Email template" name="content" description="Enter plain text or HTML content"/>
                                 <pre>{JSON.stringify(model, null, 4)}</pre>
+                                <Ui.ClickConfirm message="Do you really want to delete this user?">
+                                    <Ui.Button type="primary" label="ClickConfirm" align="right" onClick={() => {
+                                        return new Promise(r => {
+                                            setTimeout(r, 1500);
+                                        });
+                                    }}/>
+                                </Ui.ClickConfirm>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={3}>
                                         <Ui.DateTime label="Date & Time" name="datetime" placeholder="Select date and time"/>
@@ -102,6 +136,10 @@ Dashboard.defaultProps = {
                                                 }
                                             }}/>
                                         <Ui.HtmlEditor name="html"/>
+                                        <DraftEditor
+                                            name="draft"
+                                            placeholder="Tell a story..."
+                                            plugins={this.plugins}/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                             </div>
@@ -113,4 +151,4 @@ Dashboard.defaultProps = {
     }
 };
 
-export default Dashboard;
+export default Webiny.createComponent(Dashboard, {modules: ['Draft']});

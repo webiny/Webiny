@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
 class BlockType extends Webiny.Ui.Component {
 }
@@ -19,10 +18,13 @@ BlockType.defaultProps = {
             icon: this.props.icon,
             tooltip: this.props.tooltip
         };
+
+        const {Button} = this.props;
+
         return (
-            <Ui.Button {...props}/>
+            <Button {...props}/>
         );
     }
 };
 
-export default BlockType;
+export default Webiny.createComponent(BlockType, {modules: ['Button']});

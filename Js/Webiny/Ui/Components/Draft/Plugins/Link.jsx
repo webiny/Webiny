@@ -1,11 +1,8 @@
 import Webiny from 'Webiny';
-import EntityPlugin from './../BasePlugins/EntityPlugin';
-import Utils from './../Utils';
 import Draft from 'draft-js';
+const Utils = Webiny.Draft.Utils;
 
-const Ui = Webiny.Ui.Components;
-
-class LinkPlugin extends EntityPlugin {
+class LinkPlugin extends Webiny.Draft.EntityPlugin {
     constructor(config) {
         super(config);
         this.validate = _.get(config, 'validate', 'required,url');
@@ -63,50 +60,61 @@ class LinkPlugin extends EntityPlugin {
         return {
             toolbar: () => {
                 const disabled = this.editor.getReadOnly() || (!this.isActive() && this.editor.getEditorState().getSelection().isCollapsed());
-                const props = {
-                    disabled,
-                    ui: this.id,
-                    title: <Ui.Icon icon="fa-link"/>,
-                    closeOnClick: false,
-                    onShow: this.showDropdown
-                };
+
                 return (
-                    <Ui.Dropdown {...props}>
-                        {() => (
-                            <Ui.Form ui={this.formId} onSubmit={this.submitForm}>
-                                {(model, form) => {
-                                    return (
-                                        <div style={{width: 400}}>
-                                            <Ui.Grid.Row>
-                                                <Ui.Grid.Col xs={12}>
-                                                    <Ui.Input
-                                                        name="url"
-                                                        placeholder="Enter a URL"
-                                                        validate={this.validate}
-                                                        showValidationIcon={false}/>
-                                                </Ui.Grid.Col>
-                                                <Ui.Grid.Col xs={6}>
-                                                    <Ui.Checkbox name="newTab" label="Open in new tab" grid={null}/>
-                                                </Ui.Grid.Col>
-                                                <Ui.Grid.Col xs={3} className="no-padding">
-                                                    <Ui.Logic.Hide if={() => this.newLink}>
-                                                        <Ui.Button type="secondary" align="right" label="Remove link"
-                                                                   onClick={this.removeEntity}/>
-                                                    </Ui.Logic.Hide>
-                                                </Ui.Grid.Col>
-                                                <Ui.Grid.Col xs={3} className="pull-right">
-                                                    <Ui.Button
-                                                        type="primary"
-                                                        label={this.newLink ? 'Insert link' : 'Update link'}
-                                                        onClick={form.submit}/>
-                                                </Ui.Grid.Col>
-                                            </Ui.Grid.Row>
-                                        </div>
-                                    );
-                                }}
-                            </Ui.Form>
-                        )}
-                    </Ui.Dropdown>
+                    <Webiny.Ui.LazyLoad modules={['Form', 'Dropdown', 'Grid', 'Checkbox', 'Input', 'Logic', 'Button', 'Icon']}>
+                        {(Ui) => {
+                            const props = {
+                                disabled,
+                                ui: this.id,
+                                title: <Ui.Icon icon="fa-link"/>,
+                                closeOnClick: false,
+                                onShow: this.showDropdown
+                            };
+
+                            return (
+                                <Ui.Dropdown {...props}>
+                                    {() => (
+                                        <Ui.Form ui={this.formId} onSubmit={this.submitForm}>
+                                            {(model, form) => {
+                                                return (
+                                                    <div style={{width: 400}}>
+                                                        <Ui.Grid.Row>
+                                                            <Ui.Grid.Col xs={12}>
+                                                                <Ui.Input
+                                                                    name="url"
+                                                                    placeholder="Enter a URL"
+                                                                    validate={this.validate}
+                                                                    showValidationIcon={false}/>
+                                                            </Ui.Grid.Col>
+                                                            <Ui.Grid.Col xs={6}>
+                                                                <Ui.Checkbox name="newTab" label="Open in new tab" grid={null}/>
+                                                            </Ui.Grid.Col>
+                                                            <Ui.Grid.Col xs={3} className="no-padding">
+                                                                <Ui.Logic.Hide if={() => this.newLink}>
+                                                                    <Ui.Button
+                                                                        type="secondary"
+                                                                        align="right"
+                                                                        label="Remove link"
+                                                                        onClick={this.removeEntity}/>
+                                                                </Ui.Logic.Hide>
+                                                            </Ui.Grid.Col>
+                                                            <Ui.Grid.Col xs={3} className="pull-right">
+                                                                <Ui.Button
+                                                                    type="primary"
+                                                                    label={this.newLink ? 'Insert link' : 'Update link'}
+                                                                    onClick={form.submit}/>
+                                                            </Ui.Grid.Col>
+                                                        </Ui.Grid.Row>
+                                                    </div>
+                                                );
+                                            }}
+                                        </Ui.Form>
+                                    )}
+                                </Ui.Dropdown>
+                            );
+                        }}
+                    </Webiny.Ui.LazyLoad>
                 );
             },
             handleKeyCommand: (command) => {

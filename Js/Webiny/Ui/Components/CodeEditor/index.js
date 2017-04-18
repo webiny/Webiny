@@ -26,14 +26,14 @@ CodeEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             placeholder: this.getPlaceholder()
         });
 
-        const {SimpleCodeEditor} = this.props;
+        const {SimpleCodeEditor, DelayedOnChange} = this.props;
 
         return (
             <div className={this.classSet(cssConfig)}>
                 {this.renderLabel()}
-                <Webiny.Ui.Components.DelayedOnChange>
+                <DelayedOnChange>
                     <SimpleCodeEditor {...props}/>
-                </Webiny.Ui.Components.DelayedOnChange>
+                </DelayedOnChange>
                 {this.renderDescription()}
                 {this.renderValidationMessage()}
             </div>
@@ -41,4 +41,4 @@ CodeEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     }
 });
 
-export default Webiny.createComponent(CodeEditor, {modules: ['SimpleCodeEditor']});
+export default Webiny.createComponent(CodeEditor, {modules: ['SimpleCodeEditor', 'DelayedOnChange']});

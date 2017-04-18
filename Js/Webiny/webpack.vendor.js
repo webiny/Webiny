@@ -7,8 +7,8 @@ module.exports = (config) => {
         'react-dom',
         'react-dom/server',
         'react-addons-transition-group',
-        'react-css-modules',
         'classnames',
+        //'draft-js',
         'immutable',
         'baobab',
         'js-cookie',
@@ -20,7 +20,7 @@ module.exports = (config) => {
         'platform',
         './Webiny',
 
-        /*'draft-js',
+        /*
         'bootstrap-daterangepicker',
         'clipboard',
         'accounting',

@@ -1,6 +1,5 @@
 import BasePlugin from './BasePlugin';
 import Utils from './../Utils';
-import Draft from 'draft-js';
 
 class EntityPlugin extends BasePlugin {
     constructor() {
@@ -23,18 +22,20 @@ class EntityPlugin extends BasePlugin {
         this.createEntity();
     }
 
-    removeEntity() {
+    async removeEntity() {
         const editorState = this.editor.getEditorState();
         const contentState = editorState.getCurrentContent();
         const selection = editorState.getSelection();
         const entityKey = Utils.getEntityKeyForSelection(contentState, selection);
         const entitySelectionState = Utils.getEntitySelectionState(contentState, selection, entityKey);
+        const Draft = await this.getDraft();
         this.editor.setEditorState(Draft.RichUtils.toggleLink(editorState, entitySelectionState, null));
     }
 
-    insertEntity(newContentState, entityKey) {
+    async insertEntity(newContentState, entityKey) {
         const editorState = this.editor.getEditorState();
         const selection = editorState.getSelection();
+        const Draft = await this.getDraft();
         newContentState = Draft.Modifier.applyEntity(newContentState, selection, entityKey);
         this.editor.setEditorState(Draft.EditorState.push(editorState, newContentState, 'apply-entity'));
     }

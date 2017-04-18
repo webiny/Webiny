@@ -1,8 +1,7 @@
 import Webiny from 'Webiny';
-import InlineStylePlugin from './../BasePlugins/InlineStylePlugin';
-const Ui = Webiny.Ui.Components;
+import InlineStyle from './../Toolbar/InlineStyle';
 
-class BoldPlugin extends InlineStylePlugin {
+class BoldPlugin extends Webiny.Draft.InlineStylePlugin {
     constructor(config) {
         super(config);
         this.name = 'bold';
@@ -11,7 +10,7 @@ class BoldPlugin extends InlineStylePlugin {
 
     getEditConfig() {
         return {
-            toolbar: <Ui.Draft.Toolbar.InlineStyle icon="fa-bold" plugin={this}/>,
+            toolbar: <InlineStyle icon="fa-bold" plugin={this}/>,
             handleKeyCommand: (command) => {
                 if (command === 'bold' && this.editor.getEditorState().getSelection().isCollapsed()) {
                     return true;

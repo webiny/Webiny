@@ -4,4 +4,5 @@ export default () => {
     import('./OwlCarousel');
     import('./Quill');
     import('./Cropper');
+    import('./Draft');
 };

@@ -3,7 +3,13 @@ import Draft from 'draft-js';
 import Editor from './../../Editor';
 import TabHandler from './TabHandler';
 import TableShortcuts from './TableShortcuts';
-const Ui = Webiny.Ui.Components;
+
+import Bold from './../Bold';
+import Italic from './../Italic';
+import Underline from './../Underline';
+import Alignment from './../Alignment';
+import Link from './../Link';
+import Code from './../Code';
 
 class TableEditComponent extends Webiny.Ui.Component {
     constructor(props) {
@@ -34,12 +40,12 @@ class TableEditComponent extends Webiny.Ui.Component {
         );
 
         this.plugins = () => [
-            new Webiny.Draft.Plugins.Bold(),
-            new Webiny.Draft.Plugins.Italic(),
-            new Webiny.Draft.Plugins.Underline(),
-            new Webiny.Draft.Plugins.Alignment(),
-            new Webiny.Draft.Plugins.Link(),
-            new Webiny.Draft.Plugins.Code(),
+            new Bold(),
+            new Italic(),
+            new Underline(),
+            new Alignment(),
+            new Link(),
+            new Code(),
             new TabHandler({selectNextEditor: this.selectNextEditor, selectPrevEditor: this.selectPrevEditor}),
             new TableShortcuts({insertRow: this.insertRowAfter, deleteRow: this.deleteRow})
         ];
@@ -203,79 +209,84 @@ TableEditComponent.defaultProps = {
 
         // Readonly must be TRUE if parent editor is in preview mode, otherwise it is the opposite of the parent editor
         const tableIsReadOnly = this.props.editor.getPreview() || !this.props.editor.getReadOnly();
-        
+
         return (
-            <div className="table-wrapper">
-                <Ui.Dropdown title="Actions" className="balloon" align="right" renderIf={!this.props.editor.getPreview()}>
-                    <Ui.Dropdown.Header title="Column"/>
-                    <Ui.Dropdown.Link onClick={this.insertColumnBefore} icon="fa-plus" title="Insert before"/>
-                    <Ui.Dropdown.Link onClick={this.insertColumnAfter} icon="fa-plus" title="Insert after"/>
-                    <Ui.Dropdown.Link onClick={this.deleteColumn} icon="fa-remove" title="Delete" renderIf={headers.length > 1}/>
-                    <Ui.Dropdown.Header title="Row" renderIf={isBody}/>
-                    <Ui.Dropdown.Link onClick={this.insertRowBefore} icon="fa-plus" title="Insert before" renderIf={isBody}/>
-                    <Ui.Dropdown.Link onClick={this.insertRowAfter} icon="fa-plus" title="Insert after" renderIf={isBody}/>
-                    <Ui.Dropdown.Link onClick={this.deleteRow} icon="fa-remove" title="Delete" renderIf={isBody && rows.length > 1}/>
-                </Ui.Dropdown>
-                <table className="table table-striped">
-                    <thead>
-                    <tr>
-                        {columns.map((col, colI) => {
-                            let readOnly = tableIsReadOnly;
-                            if (!readOnly) {
-                                const key = {type: 'head', row: 0, col: colI};
-                                readOnly = !_.isEqual(this.state.focusedEditor, key);
-                            }
-                            return (
-                                <th key={headers[colI].key} onMouseDown={() => this.setFocus('head', 0, colI)}>
-                                    <Editor
-                                        ref={headers[colI].key}
-                                        preview={this.props.editor.getPreview()}
-                                        readOnly={readOnly}
-                                        toolbar="floating"
-                                        plugins={this.plugins()}
-                                        value={headers[colI].data}
-                                        convertToRaw={false}
-                                        delay={1}
-                                        stripPastedStyles={true}
-                                        onChange={editorState => this.updateHeaderData(editorState, colI)}/>
-                                </th>
-                            );
-                        })}
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {rows.map((row, rowI) => {
-                        return (
-                            <tr key={row.key}>
+            <Webiny.Ui.LazyLoad modules={['Dropdown']}>
+                {(Ui) => (
+                    <div className="table-wrapper">
+                        <Ui.Dropdown title="Actions" className="balloon" align="right" renderIf={!this.props.editor.getPreview()}>
+                            <Ui.Dropdown.Header title="Column"/>
+                            <Ui.Dropdown.Link onClick={this.insertColumnBefore} icon="fa-plus" title="Insert before"/>
+                            <Ui.Dropdown.Link onClick={this.insertColumnAfter} icon="fa-plus" title="Insert after"/>
+                            <Ui.Dropdown.Link onClick={this.deleteColumn} icon="fa-remove" title="Delete" renderIf={headers.length > 1}/>
+                            <Ui.Dropdown.Header title="Row" renderIf={isBody}/>
+                            <Ui.Dropdown.Link onClick={this.insertRowBefore} icon="fa-plus" title="Insert before" renderIf={isBody}/>
+                            <Ui.Dropdown.Link onClick={this.insertRowAfter} icon="fa-plus" title="Insert after" renderIf={isBody}/>
+                            <Ui.Dropdown.Link onClick={this.deleteRow} icon="fa-remove" title="Delete"
+                                              renderIf={isBody && rows.length > 1}/>
+                        </Ui.Dropdown>
+                        <table className="table table-striped">
+                            <thead>
+                            <tr>
                                 {columns.map((col, colI) => {
                                     let readOnly = tableIsReadOnly;
                                     if (!readOnly) {
-                                        const key = {type: 'body', row: rowI, col: colI};
+                                        const key = {type: 'head', row: 0, col: colI};
                                         readOnly = !_.isEqual(this.state.focusedEditor, key);
                                     }
-
                                     return (
-                                        <td key={row.columns[colI].key} onMouseDown={() => this.setFocus('body', rowI, colI)}>
+                                        <th key={headers[colI].key} onMouseDown={() => this.setFocus('head', 0, colI)}>
                                             <Editor
-                                                stripPastedStyles={true}
-                                                ref={row.columns[colI].key}
+                                                ref={headers[colI].key}
                                                 preview={this.props.editor.getPreview()}
                                                 readOnly={readOnly}
                                                 toolbar="floating"
                                                 plugins={this.plugins()}
-                                                value={row.columns[colI].data}
+                                                value={headers[colI].data}
                                                 convertToRaw={false}
                                                 delay={1}
-                                                onChange={editorState => this.updateRowData(editorState, rowI, colI)}/>
-                                        </td>
+                                                stripPastedStyles={true}
+                                                onChange={editorState => this.updateHeaderData(editorState, colI)}/>
+                                        </th>
                                     );
                                 })}
                             </tr>
-                        );
-                    })}
-                    </tbody>
-                </table>
-            </div>
+                            </thead>
+                            <tbody>
+                            {rows.map((row, rowI) => {
+                                return (
+                                    <tr key={row.key}>
+                                        {columns.map((col, colI) => {
+                                            let readOnly = tableIsReadOnly;
+                                            if (!readOnly) {
+                                                const key = {type: 'body', row: rowI, col: colI};
+                                                readOnly = !_.isEqual(this.state.focusedEditor, key);
+                                            }
+
+                                            return (
+                                                <td key={row.columns[colI].key} onMouseDown={() => this.setFocus('body', rowI, colI)}>
+                                                    <Editor
+                                                        stripPastedStyles={true}
+                                                        ref={row.columns[colI].key}
+                                                        preview={this.props.editor.getPreview()}
+                                                        readOnly={readOnly}
+                                                        toolbar="floating"
+                                                        plugins={this.plugins()}
+                                                        value={row.columns[colI].data}
+                                                        convertToRaw={false}
+                                                        delay={1}
+                                                        onChange={editorState => this.updateRowData(editorState, rowI, colI)}/>
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                );
+                            })}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </Webiny.Ui.LazyLoad>
         );
     }
 };
