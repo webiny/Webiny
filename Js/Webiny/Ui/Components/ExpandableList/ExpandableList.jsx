@@ -3,6 +3,7 @@ import Empty from './Empty';
 import Row from './Row';
 import Field from './Field';
 import ActionSet from './ActionSet';
+import './styles.scss';
 
 class ExpandableList extends Webiny.Ui.Component {
     constructor(props) {

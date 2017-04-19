@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
 import ValidationIcon from './Components/ValidationIcon';
-import styles from './styles/Input.css';
+import styles from './styles.css';
 
 class Input extends Webiny.Ui.FormComponent {
 
@@ -57,10 +57,8 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         }
 
         if (this.state.isValid === true) {
-            //return <span className="icon icon-good"/>;
             return <ValidationIcon/>;
         }
-        //return <span className="icon icon-bad"/>;
         return <ValidationIcon success={false}/>;
     },
     renderer() {

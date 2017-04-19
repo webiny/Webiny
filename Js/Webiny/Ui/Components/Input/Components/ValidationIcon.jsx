@@ -1,5 +1,5 @@
 import Webiny from 'Webiny';
-import styles from '../styles/Input.css';
+import styles from '../styles.css';
 
 class ValidationIcon extends Webiny.Ui.Component {
 

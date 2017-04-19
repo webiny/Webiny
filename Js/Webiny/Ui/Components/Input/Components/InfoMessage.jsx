@@ -1,5 +1,5 @@
 import Webiny from 'Webiny';
-import styles from '../styles/Input.css';
+import styles from '../styles.css';
 
 class InfoMessage extends Webiny.Ui.Component {
 

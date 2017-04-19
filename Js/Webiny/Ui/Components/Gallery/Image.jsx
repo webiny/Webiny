@@ -56,4 +56,4 @@ Image.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Image, {modules: ['Link']});
+export default Webiny.createComponent(Image, {modules: ['Link'], styles});

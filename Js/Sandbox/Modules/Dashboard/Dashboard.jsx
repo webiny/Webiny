@@ -46,17 +46,23 @@ Dashboard.defaultProps = {
             'Copy',
             'DateTime',
             'Date',
-            'Time',
+            'Dropdown',
+            'Email',
+            'Fieldset',
             'Draft',
             'File',
-            'Image',
+            'Form',
             'Gallery',
+
+            'Input',
+            'Image',
+
             'Link',
             'DownloadLink',
             'HtmlEditor',
             'Form',
             'Grid',
-
+            'Time',
             'DateRange',
             'Icon'
         ];
@@ -269,14 +275,86 @@ Dashboard.defaultProps = {
                                             placeholder="Tell a story..."
                                             plugins={this.plugins}/>
                                     </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-
-
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={12}>
-
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Dropdown</h2>
+                                        <Ui.Dropdown title="Actions">
+                                            <Ui.Dropdown.Header title="Column"/>
+                                            <Ui.Dropdown.Link onClick={() => {}} icon="fa-plus" title="Insert"/>
+                                            <Ui.Dropdown.Link onClick={() => {}} icon="fa-plus" title="Update"/>
+                                            <Ui.Dropdown.Divider/>
+                                            <Ui.Dropdown.Link onClick={() => {}} icon="fa-plus" title="Insert"/>
+                                            <Ui.Dropdown.Link onClick={() => {}} icon="fa-remove" title="Delete"/>
+                                        </Ui.Dropdown>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
+                                <hr/>
+
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Email</h2>
+                                        <Ui.Email
+                                            placeholder="Enter a valid email address"
+                                            label="Email"
+                                            name="email"
+                                            validate="required" // 'email' validator is added automatically
+                                            description="Your email will be used for logging in"/>
+                                    </Ui.Grid.Col>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Fieldset</h2>
+                                        <Ui.Fieldset title="Owner details">
+                                            <h4>Inside the fieldset</h4>
+                                        </Ui.Fieldset>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                                <hr/>
+
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>File</h2>
+                                        <Ui.File name="file"/>
+                                    </Ui.Grid.Col>
+
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Form</h2>
+                                        <Ui.Form>
+                                            {(model, form) => {
+                                                return (
+                                                    <Ui.Grid.Row>
+                                                        <Ui.Grid.Col xs={12}>
+                                                            <Ui.Form.Error/>
+                                                            <Ui.Input name="title" label="Title" validate="required"/>
+                                                            <Ui.Input name="slug" label="Slug" validate="required"/>
+                                                            <Ui.Button type="primary" label="Submit" onClick={form.submit}/>
+                                                        </Ui.Grid.Col>
+                                                    </Ui.Grid.Row>
+                                                );
+                                            }}
+                                        </Ui.Form>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                                <hr/>
+
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Gallery</h2>
+                                        <Ui.Gallery
+                                            name="gallery"
+                                            maxImages={7}
+                                            newCropper={{
+                                                title: 'Crop your image',
+                                                action: 'Upload image',
+                                                config: {
+                                                    closeOnClick: false,
+                                                    autoCropArea: 0.7,
+                                                    aspectRatio: 1,
+                                                    width: 300,
+                                                    height: 300
+                                                }
+                                            }}/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                                <hr/>
+
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>
                                         <Ui.File name="file"/>
