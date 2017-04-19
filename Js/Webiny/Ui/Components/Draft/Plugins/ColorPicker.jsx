@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-import Draft from 'draft-js';
 
 class ColorPickerPlugin extends Webiny.Draft.InlineStylePlugin {
     constructor(config) {
@@ -9,6 +8,7 @@ class ColorPickerPlugin extends Webiny.Draft.InlineStylePlugin {
     }
 
     setColor(toggledColor) {
+        const Draft = this.Draft;
         const editorState = this.editor.getEditorState();
         const selection = editorState.getSelection();
 

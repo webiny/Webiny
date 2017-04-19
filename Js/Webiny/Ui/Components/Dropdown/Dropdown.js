@@ -98,4 +98,4 @@ Dropdown.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Dropdown, {styles});
+export default Webiny.createComponent(Dropdown, {styles, api: ['close']});

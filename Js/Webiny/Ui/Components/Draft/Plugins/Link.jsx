@@ -1,6 +1,4 @@
 import Webiny from 'Webiny';
-import Draft from 'draft-js';
-const Utils = Webiny.Draft.Utils;
 
 class LinkPlugin extends Webiny.Draft.EntityPlugin {
     constructor(config) {
@@ -28,7 +26,7 @@ class LinkPlugin extends Webiny.Draft.EntityPlugin {
         if (editorState) {
             const contentState = editorState.getCurrentContent();
             const selection = editorState.getSelection();
-            const entityKey = Utils.getEntityKeyForSelection(contentState, selection);
+            const entityKey = this.getEntityKeyForSelection(contentState, selection);
             if (entityKey) {
                 this.newLink = false;
                 const data = contentState.getEntity(entityKey).get('data');
@@ -48,9 +46,9 @@ class LinkPlugin extends Webiny.Draft.EntityPlugin {
             this.insertEntity(newContentState, newContentState.getLastCreatedEntityKey());
         } else {
             const contentState = editorState.getCurrentContent();
-            const entityKey = Utils.getEntityKeyForSelection(contentState, editorState.getSelection());
+            const entityKey = this.getEntityKeyForSelection(contentState, editorState.getSelection());
             const newContentState = contentState.replaceEntityData(entityKey, model);
-            this.editor.setEditorState(Draft.EditorState.push(editorState, newContentState, 'apply-entity'));
+            this.editor.setEditorState(this.Draft.EditorState.push(editorState, newContentState, 'apply-entity'));
         }
 
         const formUi = this.ui(this.formId);

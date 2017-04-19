@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-import Draft from 'draft-js';
 
 class TableShortcuts extends Webiny.Draft.BasePlugin {
     constructor(config) {
@@ -26,7 +25,7 @@ class TableShortcuts extends Webiny.Draft.BasePlugin {
                     return false;
                 }
 
-                if (Draft.KeyBindingUtil.hasCommandModifier(e)) {
+                if (this.Draft.KeyBindingUtil.hasCommandModifier(e)) {
                     switch (e.keyCode) {
                         // Cmd + D
                         case 68:

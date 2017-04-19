@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-import Draft from 'draft-js';
 import Editor from './../../Editor';
 import TabHandler from './TabHandler';
 import TableShortcuts from './TableShortcuts';
@@ -14,14 +13,15 @@ import Code from './../Code';
 class TableEditComponent extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
+        this.Draft = props.Draft;
 
         this.state = {
             rows: props.entity.data.rows || [{
-                key: Draft.genKey(), columns: [
-                    {key: Draft.genKey(), data: null}
+                key: this.Draft.genKey(), columns: [
+                    {key: this.Draft.genKey(), data: null}
                 ]
             }],
-            headers: props.entity.data.headers || [{key: Draft.genKey(), data: null}],
+            headers: props.entity.data.headers || [{key: this.Draft.genKey(), data: null}],
             numberOfColumns: props.entity.data.numberOfColumns || 1,
             focusedEditor: null
         };
@@ -97,7 +97,7 @@ class TableEditComponent extends Webiny.Ui.Component {
         this.state.rows[rowI].columns[colI].data = editorState;
         this.setState({rows: this.state.rows}, () => {
             const entityData = this.props.entity.data;
-            entityData.rows[rowI].columns[colI].data = Draft.convertToRaw(editorState.getCurrentContent());
+            entityData.rows[rowI].columns[colI].data = this.Draft.convertToRaw(editorState.getCurrentContent());
             this.props.updateEntityData(entityData, this.props.entity.key);
         });
     }
@@ -105,7 +105,7 @@ class TableEditComponent extends Webiny.Ui.Component {
     updateHeaderData(editorState, colI) {
         this.setState('headers.' + colI + '.data', editorState, () => {
             const entityData = this.props.entity.data;
-            entityData.headers[colI].data = Draft.convertToRaw(editorState.getCurrentContent());
+            entityData.headers[colI].data = this.Draft.convertToRaw(editorState.getCurrentContent());
             this.props.updateEntityData(entityData, this.props.entity.key);
         });
     }
@@ -143,13 +143,13 @@ class TableEditComponent extends Webiny.Ui.Component {
         const rows = _.cloneDeep(this.state.rows);
         // Insert a new column into each row
         _.each(rows, row => {
-            const spliceArgs = insert ? [index, 0, {key: Draft.genKey(), data: null}] : [index, 1];
+            const spliceArgs = insert ? [index, 0, {key: this.Draft.genKey(), data: null}] : [index, 1];
             row.columns.splice(...spliceArgs);
         });
 
         // Insert header column
         const headers = _.cloneDeep(this.state.headers);
-        const spliceArgs = insert ? [index, 0, {key: Draft.genKey(), data: null}] : [index, 1];
+        const spliceArgs = insert ? [index, 0, {key: this.Draft.genKey(), data: null}] : [index, 1];
         headers.splice(...spliceArgs);
         const numberOfColumns = headers.length;
         const entityData = this.props.entity.data;
@@ -159,7 +159,7 @@ class TableEditComponent extends Webiny.Ui.Component {
             entityData.numberOfColumns = numberOfColumns;
             this.props.updateEntityData(entityData, this.props.entity.key);
             const editorState = this.props.editor.getEditorState();
-            this.props.editor.setEditorState(Draft.EditorState.push(editorState, editorState.getCurrentContent(), `insert-column`));
+            this.props.editor.setEditorState(this.Draft.EditorState.push(editorState, editorState.getCurrentContent(), `insert-column`));
         });
     }
 
@@ -180,8 +180,8 @@ class TableEditComponent extends Webiny.Ui.Component {
         if (insert) {
             const columns = Array.from(new Array(this.state.numberOfColumns), (x, i) => i);
             spliceArgs = [index, 0, {
-                key: Draft.genKey(), columns: columns.map(() => {
-                    return {key: Draft.genKey(), data: null};
+                key: this.Draft.genKey(), columns: columns.map(() => {
+                    return {key: this.Draft.genKey(), data: null};
                 })
             }];
         }
@@ -291,4 +291,8 @@ TableEditComponent.defaultProps = {
     }
 };
 
-export default TableEditComponent;
+export default Webiny.createComponent(TableEditComponent, {
+    modules: {
+        Draft: () => import('Webiny/Vendors/Draft')
+    }
+});

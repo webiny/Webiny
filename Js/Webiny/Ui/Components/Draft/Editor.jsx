@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-import Draft from 'draft-js';
 import Immutable from 'immutable';
 import PluginsContainer from './PluginsContainer';
 import Toolbar from './Toolbar';
@@ -10,15 +9,16 @@ import './styles.scss';
 class Editor extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
+        this.Draft = props.Draft;
 
         this.bindMethods('initialize', 'focus', 'onChange', 'getEditorState', 'setReadOnly', 'moveFocusToEnd');
 
-        this.plugins = new PluginsContainer(props.plugins, this.getEditorMethods());
+        this.plugins = new PluginsContainer(props.plugins, this.getEditorMethods(), this.Draft);
 
         this.state = {
             preview: props.preview,
             readOnly: props.preview || props.readOnly,
-            editorState: Draft.EditorState.createEmpty(this.plugins.getDecorators())
+            editorState: this.Draft.EditorState.createEmpty(this.plugins.getDecorators())
         };
 
         this.state.editorState = this.initialize(props);
@@ -26,8 +26,8 @@ class Editor extends Webiny.Ui.Component {
 
     initialize(props) {
         if (_.isPlainObject(props.value) && _.has(props.value, 'blocks')) {
-            const newEditorState = Draft.EditorState.createWithContent(Draft.convertFromRaw(props.value), this.plugins.getDecorators());
-            return Draft.EditorState.forceSelection(newEditorState, this.state.editorState.getSelection());
+            const newEditorState = this.Draft.EditorState.createWithContent(this.Draft.convertFromRaw(props.value), this.plugins.getDecorators());
+            return this.Draft.EditorState.forceSelection(newEditorState, this.state.editorState.getSelection());
         }
 
         return this.state.editorState;
@@ -53,7 +53,7 @@ class Editor extends Webiny.Ui.Component {
     }
 
     moveFocusToEnd() {
-        this.setState({editorState: Draft.EditorState.moveFocusToEnd(this.state.editorState)});
+        this.setState({editorState: this.Draft.EditorState.moveFocusToEnd(this.state.editorState)});
     }
 
     forceRerender() {
@@ -62,13 +62,13 @@ class Editor extends Webiny.Ui.Component {
         }
         const {editorState} = this.state;
         const content = editorState.getCurrentContent();
-        const newEditorState = Draft.EditorState.createWithContent(content, this.plugins.getDecorators());
+        const newEditorState = this.Draft.EditorState.createWithContent(content, this.plugins.getDecorators());
         this.setState({editorState: newEditorState});
     }
 
     focus(e) {
-        // Prevent editor focus if event originates from a dropdown
-        if ($(e.target).closest('.dropdown').length > 0) {
+        // Prevent editor focus if event originates from a dropdown (.dropdown-menu)
+        if ($(e.target).closest('.dropdown-menu').length > 0) {
             return;
         }
 
@@ -87,7 +87,7 @@ class Editor extends Webiny.Ui.Component {
         clearTimeout(this.delay);
         this.delay = null;
         this.delay = setTimeout(() => {
-            this.props.onChange(this.props.convertToRaw ? Draft.convertToRaw(editorState.getCurrentContent()) : editorState);
+            this.props.onChange(this.props.convertToRaw ? this.Draft.convertToRaw(editorState.getCurrentContent()) : editorState);
         }, this.props.delay);
         this.setState({editorState});
     }
@@ -113,15 +113,15 @@ class Editor extends Webiny.Ui.Component {
             forceRerender: this.forceRerender,
             updateBlockData: (block, data) => {
                 const {editorState} = this.state;
-                const selection = new Draft.SelectionState({
+                const selection = new this.Draft.SelectionState({
                     anchorKey: block.getKey(),
                     anchorOffset: 0,
                     focusKey: block.getKey(),
                     focusOffset: block.getLength()
                 });
 
-                const newContentState = Draft.Modifier.mergeBlockData(editorState.getCurrentContent(), selection, Immutable.Map(data || {}));
-                const newEditorState = Draft.EditorState.push(editorState, newContentState, 'change-block-data');
+                const newContentState = this.Draft.Modifier.mergeBlockData(editorState.getCurrentContent(), selection, Immutable.Map(data || {}));
+                const newEditorState = this.Draft.EditorState.push(editorState, newContentState, 'change-block-data');
 
                 this.onChange(newEditorState);
             }
@@ -157,11 +157,13 @@ Editor.defaultProps = {
 
         this.plugins.setPreview(this.props.preview);
 
+        const DraftEditor = this.Draft.Editor;
+
         return (
             <div className="rich-editor rich-editor__root" onMouseDown={this.focus}>
                 {toolbar}
                 <div className={this.classSet(this.props.className, 'rich-editor__editor')}>
-                    <Draft.Editor
+                    <DraftEditor
                         blockRenderMap={this.plugins.getBlockRenderMap()}
                         blockRendererFn={this.plugins.getBlockRendererFn()}
                         blockStyleFn={this.plugins.getBlockStyleFn()}
@@ -186,4 +188,9 @@ Editor.defaultProps = {
     }
 };
 
-export default Editor;
+export default Webiny.createComponent(Editor, {
+    api: ['focus'],
+    modules: {
+        Draft: () => import('Webiny/Vendors/Draft')
+    }
+});

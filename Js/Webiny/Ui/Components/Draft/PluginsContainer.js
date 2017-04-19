@@ -1,9 +1,9 @@
-import Draft from 'draft-js';
 import Immutable from 'immutable';
 import PluginBlock from './PluginBlock';
 
 export default class PluginsContainer {
-    constructor(plugins, editor) {
+    constructor(plugins, editor, Draft) {
+        this.Draft = Draft;
         this.editor = editor;
         this.plugins = plugins;
         this.config = {
@@ -58,15 +58,16 @@ export default class PluginsContainer {
                 return;
             }
             plugin.setEditor(this.editor);
+            plugin.setDraft(Draft);
             this.buildPlugin(plugin.getEditConfig(), this.config.edit);
             this.buildPlugin(plugin.getPreviewConfig(), this.config.preview);
         });
 
-        this.config.edit.compositeDecorator = new Draft.CompositeDecorator(this.config.edit.decorators);
-        this.config.preview.compositeDecorator = new Draft.CompositeDecorator(this.config.preview.decorators);
+        this.config.edit.compositeDecorator = new this.Draft.CompositeDecorator(this.config.edit.decorators);
+        this.config.preview.compositeDecorator = new this.Draft.CompositeDecorator(this.config.preview.decorators);
 
-        this.config.edit.extendedBlockRenderMap = Draft.DefaultDraftBlockRenderMap.merge(Immutable.Map(this.config.edit.blockRenderMap));
-        this.config.preview.extendedBlockRenderMap = Draft.DefaultDraftBlockRenderMap.merge(Immutable.Map(this.config.preview.blockRenderMap));
+        this.config.edit.extendedBlockRenderMap = this.Draft.DefaultDraftBlockRenderMap.merge(Immutable.Map(this.config.edit.blockRenderMap));
+        this.config.preview.extendedBlockRenderMap = this.Draft.DefaultDraftBlockRenderMap.merge(Immutable.Map(this.config.preview.blockRenderMap));
     }
 
     buildPlugin(plugin, target) {
@@ -124,7 +125,7 @@ export default class PluginsContainer {
 
             if (!result) {
                 const editorState = this.editor.getEditorState();
-                const newState = Draft.RichUtils.handleKeyCommand(editorState, command);
+                const newState = this.Draft.RichUtils.handleKeyCommand(editorState, command);
                 if (newState) {
                     this.editor.setEditorState(newState);
                     return true;
@@ -182,7 +183,7 @@ export default class PluginsContainer {
             }
 
             e.stopPropagation();
-            this.editor.setEditorState(Draft.RichUtils.onTab(e, this.editor.getEditorState(), 4));
+            this.editor.setEditorState(this.Draft.RichUtils.onTab(e, this.editor.getEditorState(), 4));
         };
     }
 
@@ -243,7 +244,7 @@ export default class PluginsContainer {
                 }
             });
 
-            return command || Draft.getDefaultKeyBinding(e);
+            return command || this.Draft.getDefaultKeyBinding(e);
         };
     }
 

@@ -13,7 +13,7 @@ class SimpleCodeEditor extends Webiny.Ui.Component {
             readOnly: props.readOnly
         };
 
-        this.bindMethods('getTextareaElement', 'setValue');
+        this.bindMethods('getTextareaElement,setValue,focus');
     }
 
     componentDidMount() {
@@ -56,7 +56,7 @@ class SimpleCodeEditor extends Webiny.Ui.Component {
     }
 
     getTextareaElement() {
-        return $(ReactDOM.findDOMNode(this)).find('textarea')[0];
+        return ReactDOM.findDOMNode(this).querySelector('textarea');
     }
 
     focus() {
@@ -83,5 +83,6 @@ SimpleCodeEditor.defaultProps = {
 export default Webiny.createComponent(SimpleCodeEditor, {
     modules: {
         CodeMirror: () => import('Webiny/Vendors/CodeMirror')
-    }
+    },
+    api: ['focus']
 });

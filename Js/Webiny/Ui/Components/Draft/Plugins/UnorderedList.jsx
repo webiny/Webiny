@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
 import BlockType from './../Toolbar/BlockType';
-const Ui = Webiny.Ui.Components;
 
 class UnorderedListPlugin extends Webiny.Draft.BlockTypePlugin {
     constructor(config) {

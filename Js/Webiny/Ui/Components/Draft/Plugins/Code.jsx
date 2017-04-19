@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
 import Entity from './../Toolbar/Entity';
-import Draft from 'draft-js';
 
 const style = {
     fontFamily: 'monospace',
@@ -54,7 +53,7 @@ class CodePlugin extends Webiny.Draft.EntityPlugin {
                     return false;
                 }
 
-                if (Draft.KeyBindingUtil.hasCommandModifier(e) && e.shiftKey) {
+                if (this.Draft.KeyBindingUtil.hasCommandModifier(e) && e.shiftKey) {
                     switch (e.keyCode) {
                         // Cmd + Shift + C
                         case 67:

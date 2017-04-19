@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
 import Atomic from './../Toolbar/Atomic';
-const Utils = Webiny.Draft.Utils;
 
 class ImageEditComponent extends Webiny.Ui.Component {
     constructor(props) {
@@ -179,8 +178,9 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
             data: model
         };
         this.ui(this.id).hide().then(() => {
-            const editorState = Utils.insertDataBlock(this.editor.getEditorState(), insert);
-            this.editor.setEditorState(editorState);
+            this.insertDataBlock(this.editor.getEditorState(), insert).then(es => {
+                this.editor.setEditorState(es);
+            });
         });
     }
 

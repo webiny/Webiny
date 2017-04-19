@@ -1,6 +1,5 @@
+import Webiny from 'Webiny';
 import Immutable from 'immutable';
-
-// TODO: draft izdvojiti u Vendors
 
 function filterKey(contentState, entityKey) {
     if (entityKey) {
@@ -10,13 +9,21 @@ function filterKey(contentState, entityKey) {
     return null;
 }
 
-const utils = {
+class BasePlugin {
+    constructor(config = {}) {
+        this.name = '';
+        this.config = config;
+        this.editor = null;
+        this.Draft = null;
+    }
+
     // function borrowed from: https://github.com/draft-js-plugins/draft-js-plugins/blob/master/draft-js-dnd-plugin/src/modifiers/addBlock.js
-    insertDataBlock: (editorState, insertData = null) => {
+    insertDataBlock(editorState, insertData = null) {
         let type = 'unstyled';
         let currentContentState = editorState.getCurrentContent();
         const currentSelectionState = editorState.getSelection();
 
+        const Draft = this.Draft;
         // in case text is selected it is removed and then the block is appended
         const afterRemovalContentState = Draft.Modifier.removeRange(currentContentState, currentSelectionState, 'backward');
 
@@ -86,9 +93,9 @@ const utils = {
         // update editor state with our new state including the block
         const newState = Draft.EditorState.push(editorState, contentStateWithBlock, 'insert-fragment');
         return Draft.EditorState.forceSelection(newState, contentStateWithBlock.getSelectionAfter());
-    },
+    }
 
-    getRangesForDraftEntity: (block, key) => {
+    getRangesForDraftEntity(block, key) {
         const ranges = [];
         block.findEntityRanges(c => {
             return c.getEntity() === key;
@@ -97,9 +104,9 @@ const utils = {
         });
 
         return ranges;
-    },
+    }
 
-    getEntityKeyForSelection: (contentState, targetSelection) => {
+    getEntityKeyForSelection(contentState, targetSelection) {
         let entityKey;
 
         if (targetSelection.isCollapsed()) {
@@ -119,16 +126,17 @@ const utils = {
         entityKey = startOffset === startBlock.getLength() ? null : startBlock.getEntityAt(startOffset);
 
         return filterKey(contentState, entityKey);
-    },
+    }
 
-    getEntitySelectionState: (contentState, selectionState, entityKey) => {
+    getEntitySelectionState(contentState, selectionState, entityKey) {
+        const Draft = this.Draft;
         const selectionKey = selectionState.getAnchorKey();
         const selectionOffset = selectionState.getAnchorOffset();
         const block = contentState.getBlockForKey(selectionKey);
         const blockKey = block.getKey();
 
         let entitySelection;
-        utils.getRangesForDraftEntity(block, entityKey).forEach((range) => {
+        this.getRangesForDraftEntity(block, entityKey).forEach((range) => {
             if (range.start <= selectionOffset && selectionOffset <= range.end) {
                 entitySelection = new Draft.SelectionState({
                     anchorOffset: range.start,
@@ -141,28 +149,58 @@ const utils = {
             }
         });
         return entitySelection;
-    },
-
-    editorStateToJSON: (editorState) => {
-        if (editorState) {
-            const content = editorState.getCurrentContent();
-            return JSON.stringify(Draft.convertToRaw(content), null, 2);
-        }
-    },
-
-    getSelectionCoords: (editor) => {
-        const editorBounds = editor.getBoundingClientRect();
-        const rangeBounds = Draft.getVisibleSelectionRect(window);
-
-        if (!rangeBounds) {
-            return null;
-        }
-
-        const rangeWidth = rangeBounds.right - rangeBounds.left;
-        const left = (rangeBounds.left - editorBounds.left) + (rangeWidth / 2);
-        const top = rangeBounds.top - editorBounds.top;
-        return {left, top};
     }
-};
 
-export default utils;
+    ui(call, ...params) {
+        if (call.indexOf(':') < 0) {
+            return Webiny.Ui.Dispatcher.get(call);
+        }
+        return Webiny.Ui.Dispatcher.createSignal(this, call, params);
+    }
+
+    getStartBlockType(defaultValue = null) {
+        const editorState = this.editor.getEditorState();
+        const selection = editorState.getSelection();
+        const block = editorState.getCurrentContent().getBlockForKey(selection.getStartKey());
+        if (block) {
+            return block.getType();
+        }
+        return defaultValue;
+    }
+
+    getStartBlock() {
+        const editorState = this.editor.getEditorState();
+        const selection = editorState.getSelection();
+        const block = editorState.getCurrentContent().getBlockForKey(selection.getStartKey());
+        return block || null;
+    }
+
+    isDisabled() {
+        return this.editor.getReadOnly();
+    }
+
+    setConfig(config) {
+        _.merge(this.config, config);
+        return this;
+    }
+
+    setEditor(editor) {
+        this.editor = editor;
+        return this;
+    }
+
+    setDraft(Draft) {
+        this.Draft = Draft;
+        return this;
+    }
+
+    getEditConfig() {
+        return _.clone({});
+    }
+
+    getPreviewConfig() {
+        return _.clone(this.getEditConfig());
+    }
+}
+
+export default BasePlugin;

@@ -1,8 +1,13 @@
 import Webiny from 'Webiny';
 
 class CodeEditor extends Webiny.Ui.FormComponent {
+    constructor(props){
+        super(props);
+        this.bindMethods('focus');
+    }
+
     focus() {
-        this.refs.editor.focus();
+        this.editor.focus();
     }
 }
 
@@ -20,7 +25,7 @@ CodeEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
 
         const props = _.pick(this.props, ['value', 'onChange', 'onFocus', 'theme', 'mode', 'readOnly']);
         _.assign(props, {
-            ref: 'editor',
+            ref: (editor) => this.editor = editor,
             onBlur: this.validate,
             className: 'form-control',
             placeholder: this.getPlaceholder()
@@ -41,4 +46,4 @@ CodeEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     }
 });
 
-export default Webiny.createComponent(CodeEditor, {modules: ['SimpleCodeEditor', 'DelayedOnChange']});
+export default Webiny.createComponent(CodeEditor, {modules: ['SimpleCodeEditor', 'DelayedOnChange'], api: ['focus']});

@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
 class Alignment extends Webiny.Draft.BasePlugin {
     constructor(config) {

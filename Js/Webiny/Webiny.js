@@ -1,4 +1,4 @@
-const Page = require('./Page');
+const Page = require('./Lib/Core/Page');
 
 function formatAjaxResponse(jqXhr) {
     return {

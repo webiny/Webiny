@@ -1,16 +1,4 @@
 import Webiny from 'Webiny';
-const Utils = Webiny.Draft.Utils;
-
-const Action = (props) => {
-    const click = () => console.log(Utils.editorStateToJSON(props.plugin.editor.getEditorState()));
-    return (
-        <Webiny.Ui.LazyLoad modules={['Button']}>
-            {({Button}) => (
-                <Button onClick={click} label="JSON" tooltip="Log editor content"/>
-            )}
-        </Webiny.Ui.LazyLoad>
-    );
-};
 
 class ToJSONPlugin extends Webiny.Draft.BasePlugin {
     constructor(config) {
@@ -18,9 +6,20 @@ class ToJSONPlugin extends Webiny.Draft.BasePlugin {
         this.name = 'toJson';
     }
 
+    toJSON() {
+        const content = this.editor.getEditorState().getCurrentContent();
+        console.log(JSON.stringify(this.Draft.convertToRaw(content), null, 2));
+    }
+
     getEditConfig() {
         return {
-            toolbar: <Action plugin={this}/>
+            toolbar: (
+                <Webiny.Ui.LazyLoad modules={['Button']}>
+                    {({Button}) => (
+                        <Button onClick={() => this.toJSON()} label="JSON" tooltip="Log editor content"/>
+                    )}
+                </Webiny.Ui.LazyLoad>
+            )
         };
     }
 }

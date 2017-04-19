@@ -1,5 +1,4 @@
 import BasePlugin from './BasePlugin';
-import Utils from './../Utils';
 
 class EntityPlugin extends BasePlugin {
     constructor() {
@@ -22,22 +21,20 @@ class EntityPlugin extends BasePlugin {
         this.createEntity();
     }
 
-    async removeEntity() {
+    removeEntity() {
         const editorState = this.editor.getEditorState();
         const contentState = editorState.getCurrentContent();
         const selection = editorState.getSelection();
-        const entityKey = Utils.getEntityKeyForSelection(contentState, selection);
-        const entitySelectionState = Utils.getEntitySelectionState(contentState, selection, entityKey);
-        const Draft = await this.getDraft();
-        this.editor.setEditorState(Draft.RichUtils.toggleLink(editorState, entitySelectionState, null));
+        const entityKey = this.getEntityKeyForSelection(contentState, selection);
+        const entitySelectionState = this.getEntitySelectionState(contentState, selection, entityKey);
+        this.editor.setEditorState(this.Draft.RichUtils.toggleLink(editorState, entitySelectionState, null));
     }
 
-    async insertEntity(newContentState, entityKey) {
+    insertEntity(newContentState, entityKey) {
         const editorState = this.editor.getEditorState();
         const selection = editorState.getSelection();
-        const Draft = await this.getDraft();
-        newContentState = Draft.Modifier.applyEntity(newContentState, selection, entityKey);
-        this.editor.setEditorState(Draft.EditorState.push(editorState, newContentState, 'apply-entity'));
+        newContentState = this.Draft.Modifier.applyEntity(newContentState, selection, entityKey);
+        this.editor.setEditorState(this.Draft.EditorState.push(editorState, newContentState, 'apply-entity'));
     }
 
     isActive() {
@@ -47,7 +44,7 @@ class EntityPlugin extends BasePlugin {
 
         const editorState = this.editor.getEditorState();
         const contentState = editorState.getCurrentContent();
-        const entityKey = Utils.getEntityKeyForSelection(contentState, editorState.getSelection());
+        const entityKey = this.getEntityKeyForSelection(contentState, editorState.getSelection());
         return entityKey && contentState.getEntity(entityKey).getType().toUpperCase() === this.entity.toUpperCase();
     }
 }

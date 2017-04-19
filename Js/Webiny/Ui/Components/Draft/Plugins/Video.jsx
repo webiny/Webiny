@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Utils = Webiny.Draft.Utils;
 
 class VideoEditComponent extends Webiny.Ui.Component {
     constructor(props) {
@@ -233,14 +232,14 @@ class VideoPlugin extends Webiny.Draft.AtomicPlugin {
         this.editor.setReadOnly(true);
     }
 
-    createVideoBlock(model) {
+    async createVideoBlock(model) {
         model.plugin = this.name;
         const insert = {
             type: 'atomic',
             text: ' ',
             data: model
         };
-        const editorState = Utils.insertDataBlock(this.editor.getEditorState(), insert);
+        const editorState = await this.insertDataBlock(this.editor.getEditorState(), insert);
         this.editor.setEditorState(editorState);
     }
 

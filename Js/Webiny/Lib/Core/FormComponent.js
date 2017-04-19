@@ -187,11 +187,13 @@ FormComponent.defaultProps = {
             return null;
         }
         return (
-            <Webiny.Ui.LazyLoad modules={['Input']}>
-                {({Input}) => (
-                    <Input.ValidationMessage>{this.state.validationMessage}</Input.ValidationMessage>
-                )}
-            </Webiny.Ui.LazyLoad>
+            <div>
+                <Webiny.Ui.LazyLoad modules={['Input']}>
+                    {({Input}) => (
+                        <Input.ValidationMessage>{this.state.validationMessage}</Input.ValidationMessage>
+                    )}
+                </Webiny.Ui.LazyLoad>
+            </div>
         );
     },
 

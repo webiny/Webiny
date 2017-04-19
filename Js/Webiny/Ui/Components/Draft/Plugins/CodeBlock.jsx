@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
 import Atomic from './../Toolbar/Atomic';
-const Utils = Webiny.Draft.Utils;
 
 const languageMap = {
     'html': 'text/html',
@@ -20,7 +19,7 @@ class CodeBlockEditComponent extends Webiny.Ui.Component {
     }
 
     switchLanguage(language) {
-        this.refs.editor.focus();
+        this.editor.focus();
         this.props.updateBlockData({language});
     }
 }
@@ -28,7 +27,7 @@ class CodeBlockEditComponent extends Webiny.Ui.Component {
 CodeBlockEditComponent.defaultProps = {
     renderer() {
         const editorProps = {
-            ref: 'editor',
+            ref: (editor) => this.editor = editor,
             mode: languageMap[this.props.data.language],
             value: this.props.data.code || '',
             onFocus: () => {
@@ -95,7 +94,7 @@ class CodeBlockPlugin extends Webiny.Draft.AtomicPlugin {
         this.name = 'code-block';
     }
 
-    createBlock() {
+    async createBlock() {
         const insert = {
             type: 'atomic',
             text: ' ',
@@ -107,7 +106,7 @@ class CodeBlockPlugin extends Webiny.Draft.AtomicPlugin {
                 mutability: 'IMMUTABLE'
             }
         };
-        const editorState = Utils.insertDataBlock(this.editor.getEditorState(), insert);
+        const editorState = await this.insertDataBlock(this.editor.getEditorState(), insert);
         this.editor.setEditorState(editorState);
     }
 

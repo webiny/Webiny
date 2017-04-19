@@ -2,31 +2,35 @@ import Webiny from 'Webiny';
 import Editor from './Editor';
 
 class SimpleEditor extends Webiny.Ui.Component {
+    constructor(props){
+        super(props);
 
+        const {Draft} = props;
+
+        let plugins = [
+            new Draft.Plugins.Heading(),
+            new Draft.Plugins.Bold(),
+            new Draft.Plugins.Italic(),
+            new Draft.Plugins.Underline(),
+            new Draft.Plugins.UnorderedList(),
+            new Draft.Plugins.OrderedList(),
+            new Draft.Plugins.Alignment(),
+            new Draft.Plugins.Link({validate: 'required'}),
+            new Draft.Plugins.Blockquote(),
+            new Draft.Plugins.Table(),
+            new Draft.Plugins.Image()
+        ];
+
+        this.plugins = plugins.concat(props.plugins);
+    }
 }
 
 SimpleEditor.defaultProps = _.merge({}, Editor.defaultProps, {
     renderer() {
-        let plugins = [
-            new Webiny.Draft.Plugins.Heading(),
-            new Webiny.Draft.Plugins.Bold(),
-            new Webiny.Draft.Plugins.Italic(),
-            new Webiny.Draft.Plugins.Underline(),
-            new Webiny.Draft.Plugins.UnorderedList(),
-            new Webiny.Draft.Plugins.OrderedList(),
-            new Webiny.Draft.Plugins.Alignment(),
-            new Webiny.Draft.Plugins.Link({validate: 'required'}),
-            new Webiny.Draft.Plugins.Blockquote(),
-            new Webiny.Draft.Plugins.Table(),
-            new Webiny.Draft.Plugins.Image()
-        ];
-
-        plugins = _.merge(plugins, this.props.plugins);
-
         const props = _.omit(this.props, ['plugins', 'renderer']);
 
-        return <Editor plugins={plugins} {...props}/>;
+        return <Editor plugins={this.plugins} {...props}/>;
     }
 });
 
-export default SimpleEditor;
+export default Webiny.createComponent(SimpleEditor, {modules: ['Draft']});

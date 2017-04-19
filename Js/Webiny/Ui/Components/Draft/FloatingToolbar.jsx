@@ -1,11 +1,10 @@
 import Webiny from 'Webiny';
-const Utils = Webiny.Draft.Utils;
 
 class FloatingToolbar extends Webiny.Ui.Component {
     componentDidUpdate() {
         super.componentDidMount();
         if (this.props.show) {
-            const sel = Utils.getSelectionCoords(ReactDOM.findDOMNode(this.props.editor));
+            const sel = this.getSelectionCoords(ReactDOM.findDOMNode(this.props.editor));
             if (sel) {
                 const toolbar = $(ReactDOM.findDOMNode(this.refs.toolbar));
                 let left = sel.left - (toolbar.width() / 2);
@@ -21,6 +20,21 @@ class FloatingToolbar extends Webiny.Ui.Component {
                 }
             }
         }
+    }
+
+    getSelectionCoords(editor) {
+        const {Draft} = this.props;
+        const editorBounds = editor.getBoundingClientRect();
+        const rangeBounds = Draft.getVisibleSelectionRect(window);
+
+        if (!rangeBounds) {
+            return null;
+        }
+
+        const rangeWidth = rangeBounds.right - rangeBounds.left;
+        const left = (rangeBounds.left - editorBounds.left) + (rangeWidth / 2);
+        const top = rangeBounds.top - editorBounds.top;
+        return {left, top};
     }
 }
 
@@ -52,4 +66,9 @@ FloatingToolbar.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(FloatingToolbar, {modules: ['Animate']});
+export default Webiny.createComponent(FloatingToolbar, {
+    modules: {
+        Animate: 'Animate',
+        Draft: () => import('Webiny/Vendors/Draft')
+    },
+});

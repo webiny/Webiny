@@ -47,8 +47,8 @@ Toolbar.defaultProps = {
                 {this.props.plugins.getToolbarActions().map((action, i) => {
                     return (
                         <span key={i} className="toolbar-action">
-                        {React.isValidElement(action) ? React.cloneElement(action) : action()}
-                    </span>
+                            {React.isValidElement(action) ? React.cloneElement(action) : action()}
+                        </span>
                     );
                 })}
             </div>

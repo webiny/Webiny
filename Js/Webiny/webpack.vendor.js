@@ -7,7 +7,6 @@ module.exports = (config) => {
         'react-dom',
         'react-dom/server',
         'react-addons-transition-group',
-        //'react-css-modules',
         'classnames',
         'immutable',
         'baobab',
@@ -18,26 +17,7 @@ module.exports = (config) => {
         'historyjs/scripts/bundled-uncompressed/html5/native.history',
         'jquery-deparam',
         'platform',
-        './Webiny',
-
-        /*'draft-js',
-        'bootstrap-daterangepicker',
-        'clipboard',
-        'accounting',
-        'cropperjs',
-        'dynamics.js',
-        'eonasdan-bootstrap-datetimepicker',
-        'highlight.js',
-        'pluralize',
-        'owl.carousel',
-        'quill',
-        'select2',
-        'simplemde',
-        'codemirror',
-        'blueimp-md5',
-        'filesize',
-        'c3',
-        'localforage',*/
+        './Webiny'
     ];
 
     return config;

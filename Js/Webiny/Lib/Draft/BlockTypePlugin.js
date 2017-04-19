@@ -8,9 +8,7 @@ class BlockTypePlugin extends BasePlugin {
 
     toggleBlockType() {
         const editorState = this.editor.getEditorState();
-        this.getDraft().then(Draft => {
-            this.editor.setEditorState(Draft.RichUtils.toggleBlockType(editorState, this.block));
-        });
+        this.editor.setEditorState(this.Draft.RichUtils.toggleBlockType(editorState, this.block));
     }
 
     isActive() {

@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-import Draft from 'draft-js';
 
 class PluginBlock extends Webiny.Ui.Component {
     constructor(props) {
@@ -29,7 +28,7 @@ class PluginBlock extends Webiny.Ui.Component {
         const editor = this.props.blockProps.editor;
         const editorState = editor.getEditorState();
         const newContentState = editorState.getCurrentContent().mergeEntityData(key, data);
-        const newEditorState = Draft.EditorState.push(editorState, newContentState, 'insert-fragment');
+        const newEditorState = this.props.blockProps.Draft.EditorState.push(editorState, newContentState, 'insert-fragment');
         editor.setEditorState(newEditorState);
         this.updateBlockData(data);
     }
@@ -80,4 +79,8 @@ PluginBlock.defaultProps = {
     }
 };
 
-export default PluginBlock;
+export default Webiny.createComponent(PluginBlock, {
+    modules: {
+        Draft: () => import('Webiny/Vendors/Draft')
+    }
+});

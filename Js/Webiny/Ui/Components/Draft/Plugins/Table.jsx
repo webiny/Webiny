@@ -1,8 +1,6 @@
 import Webiny from 'Webiny';
-import Draft from 'draft-js';
 import Atomic from './../Toolbar/Atomic';
 import TableEditComponent from './Table/TableEditComponent';
-const Utils = Webiny.Draft.Utils;
 
 class TablePlugin extends Webiny.Draft.AtomicPlugin {
     constructor(config) {
@@ -22,13 +20,13 @@ class TablePlugin extends Webiny.Draft.AtomicPlugin {
                 mutability: 'IMMUTABLE',
                 data: {
                     headers: [
-                        {key: Draft.genKey(), data: null}
+                        {key: this.Draft.genKey(), data: null}
                     ],
                     rows: [
                         {
-                            key: Draft.genKey(),
+                            key: this.Draft.genKey(),
                             columns: [
-                                {key: Draft.genKey(), data: null}
+                                {key: this.Draft.genKey(), data: null}
                             ]
                         }
                     ],
@@ -36,7 +34,7 @@ class TablePlugin extends Webiny.Draft.AtomicPlugin {
                 }
             }
         };
-        const editorState = Utils.insertDataBlock(this.editor.getEditorState(), insert);
+        const editorState = this.insertDataBlock(this.editor.getEditorState(), insert);
         this.editor.setEditorState(editorState);
     }
 

@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-import Draft from 'draft-js';
 
 const map = {
     'unstyled': 'Normal',
@@ -19,7 +18,7 @@ class HeadingPlugin extends Webiny.Draft.BlockTypePlugin {
 
     setHeading(heading) {
         const editorState = this.editor.getEditorState();
-        this.editor.setEditorState(Draft.RichUtils.toggleBlockType(editorState, heading));
+        this.editor.setEditorState(this.Draft.RichUtils.toggleBlockType(editorState, heading));
     }
 
     getEditConfig() {
