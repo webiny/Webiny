@@ -1,10 +1,10 @@
 import Webiny from 'Webiny';
 import logoOrange from 'Assets/images/logo_orange.png';
 import styles from './styles/Login.css';
-const Ui = Webiny.Ui.Components;
+import View from './../../Core/View';
+import createComponent from './../../createComponent';
 
-
-class Login extends Webiny.Ui.View {
+class Login extends View {
 
     componentWillMount() {
         super.componentWillMount();
@@ -44,13 +44,15 @@ Login.defaultProps = {
             validate: 'required,minLength:8'
         };
 
+        const {Form, Input, Password, Button} = this.props;
+
         return (
             <sign-in-form class="sign-in">
-                <Ui.Form onSubmit={this.onSubmit}>
+                <Form onSubmit={this.onSubmit}>
                     {(model, form) => (
                         <div className="container">
                             <div className="sign-in-holder">
-                                <Ui.Form.Loader/>
+                                <Form.Loader/>
 
                                 <div className="form-signin">
                                     <a href="#" className="logo">
@@ -59,29 +61,29 @@ Login.defaultProps = {
 
                                     <h2 className="form-signin-heading"><span/>Sign in to your Account</h2>
 
-                                    <div className="clear"></div>
-                                    <Ui.Form.Error className="testing"/>
+                                    <div className="clear"/>
+                                    <Form.Error className="testing"/>
 
-                                    <div className="clear"></div>
-                                    <Ui.Input
+                                    <div className="clear"/>
+                                    <Input
                                         name="username"
                                         placeholder="Enter email"
                                         label="Email address"
                                         validate="required,email"
                                         onEnter={form.submit}
                                         autoFocus={true}/>
-                                    <Ui.Password {...passwordProps} onEnter={form.submit}/>
+                                    <Password {...passwordProps} onEnter={form.submit}/>
 
                                     <div className="form-footer">
                                         <div className="submit-wrapper">
-                                            <Ui.Button
+                                            <Button
                                                 type="primary"
                                                 size="large"
                                                 onClick={form.submit}
                                                 icon="icon-next"
                                                 styles={styles}>
                                                 <span>Submit</span>
-                                            </Ui.Button>
+                                            </Button>
                                         </div>
                                     </div>
                                 </div>
@@ -91,10 +93,10 @@ Login.defaultProps = {
                             </div>
                         </div>
                     )}
-                </Ui.Form>
+                </Form>
             </sign-in-form>
         );
     }
 };
 
-export default Login;
+export default createComponent(Login, {modules: ['Form', 'Input', 'Password', 'Button']});

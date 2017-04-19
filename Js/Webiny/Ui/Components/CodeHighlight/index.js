@@ -31,6 +31,6 @@ CodeHighlight.defaultProps = {
 
 export default Webiny.createComponent(CodeHighlight, {
     modules: {
-        hljs: () => import('highlight.js')
+        hljs: () => import('Webiny/Vendors/Highlight')
     }
 });

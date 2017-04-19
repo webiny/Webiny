@@ -1,6 +1,6 @@
-import Webiny from "Webiny";
-import Forbidden from "./Views/Forbidden";
-import Login from "./Views/Login";
+import Webiny from 'Webiny';
+import Forbidden from './Views/Forbidden';
+import Login from './Views/Login';
 
 class Auth {
     constructor() {

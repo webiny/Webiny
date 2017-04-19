@@ -2,6 +2,7 @@ import Webiny from 'Webiny';
 import Cookies from 'js-cookie';
 import WebinyModule from './Core/Module';
 import App from './Core/App';
+import Auth from './Auth';
 import Draft from './Draft';
 import Component from './Core/Component';
 import FormComponent from './Core/FormComponent';
@@ -36,7 +37,9 @@ _.merge(Webiny, {
         Endpoint
     },
     App,
-    Base: {},
+    Base: {
+        Auth
+    },
     createComponent,
     Cookies, // from js-cookies
     Draft,
