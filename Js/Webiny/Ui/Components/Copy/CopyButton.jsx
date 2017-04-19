@@ -19,7 +19,6 @@ class CopyButton extends Webiny.Ui.Component {
     }
 
     setup() {
-        console.log('Button DOM', ReactDOM.findDOMNode(this));
         this.clipboard = new this.props.Clipboard(ReactDOM.findDOMNode(this), {
             text: () => {
                 return this.props.value;

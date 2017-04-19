@@ -23,6 +23,7 @@ class LinkPlugin extends Webiny.Draft.EntityPlugin {
     }
 
     showDropdown() {
+        const formUi = this.ui(this.formId);
         const editorState = this.editor.getEditorState();
         if (editorState) {
             const contentState = editorState.getCurrentContent();
@@ -31,10 +32,10 @@ class LinkPlugin extends Webiny.Draft.EntityPlugin {
             if (entityKey) {
                 this.newLink = false;
                 const data = contentState.getEntity(entityKey).get('data');
-                this.ui(this.formId).setModel(data);
+                formUi && formUi.setModel(data);
             } else {
                 this.newLink = true;
-                this.ui(this.formId).resetForm();
+                formUi && formUi.resetForm();
             }
         }
         this.editor.setReadOnly(true);
@@ -52,7 +53,8 @@ class LinkPlugin extends Webiny.Draft.EntityPlugin {
             this.editor.setEditorState(Draft.EditorState.push(editorState, newContentState, 'apply-entity'));
         }
 
-        this.ui(this.formId).resetForm();
+        const formUi = this.ui(this.formId);
+        formUi && formUi.resetForm();
         this.ui(this.id).close();
     }
 
