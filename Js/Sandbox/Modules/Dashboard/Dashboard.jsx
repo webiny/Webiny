@@ -6,6 +6,8 @@ class Dashboard extends Webiny.Ui.View {
 
         const {Draft} = props;
 
+        this.infoId = null; // for growl
+
         this.plugins = [
             new Draft.Plugins.Heading(),
             new Draft.Plugins.Bold(),
@@ -22,6 +24,37 @@ class Dashboard extends Webiny.Ui.View {
             new Draft.Plugins.CodeBlock(),
             new Draft.Plugins.ToJSON()
         ];
+
+        this.bindMethods('growlInfo,growlWarning');
+    }
+
+    growlInfo() {
+        this.infoId = Webiny.Growl.info('A friendly info!', 'New info available', true);
+    }
+
+    growlSuccess() {
+        Webiny.Growl.success('You did it!', 'Success!', false, 5000);
+    }
+
+    growlDanger() {
+        Webiny.Growl.danger('Some things went terribly wrong...', 'Watch out!', true);
+    }
+
+    growlWarning() {
+        Webiny.Growl.warning(
+            <div>
+                You can even use components here:
+                <Webiny.Ui.LazyLoad modules={['Button']}>
+                    {(Ui) => (
+                        <Ui.Button
+                            onClick={() => Webiny.Growl.remove(this.infoId)}
+                            label="Close info growl"/>
+                    )}
+                </Webiny.Ui.LazyLoad>
+            </div>,
+            'You should investigate',
+            true
+        );
     }
 
 }
@@ -53,6 +86,8 @@ Dashboard.defaultProps = {
             'File',
             'Form',
             'Gallery',
+            'GoogleMap',
+            'Gravatar',
 
             'Input',
             'Image',
@@ -351,6 +386,27 @@ Dashboard.defaultProps = {
                                                     height: 300
                                                 }
                                             }}/>
+                                    </Ui.Grid.Col>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>GoogleMap</h2>
+                                        <div style={{width: '300px', height:'300px'}}>
+                                            <Ui.GoogleMap apiKey="AIzaSyCSATPF__n85eueKyE9UgjNUOpEuvFMmCk"/>
+                                        </div>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                                <hr/>
+
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Gravatar</h2>
+                                        <Ui.Gravatar hash="205e460b479e2e5b48aec07710c08d50" />
+                                    </Ui.Grid.Col>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Growl</h2>
+                                        <Ui.Button label="Info" onClick={this.growlInfo}/>
+                                        <Ui.Button label="Success" onClick={this.growlSuccess}/>
+                                        <Ui.Button label="Danger" onClick={this.growlDanger}/>
+                                        <Ui.Button label="Warning" onClick={this.growlWarning}/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                                 <hr/>
