@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles.css';
 
 // TODO: https://www.npmjs.com/package/react-google-maps
 
@@ -46,7 +47,7 @@ class GoogleMap extends Webiny.Ui.Component {
     }
 
     setupMap() {
-        this.map = new google.maps.Map(ReactDOM.findDOMNode(this).querySelector('.google-map'), {
+        this.map = new google.maps.Map(ReactDOM.findDOMNode(this).querySelector('.'+this.props.styles.map), {
             center: new google.maps.LatLng(this.props.lat, this.props.lng),
             zoom: this.props.zoom,
             mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -107,12 +108,13 @@ GoogleMap.defaultProps = {
     readOnly: false,
     style: null,
     renderer() {
+        const {styles} = this.props;
         return (
-            <div className="google-map--container" style={this.props.style}>
-                <div className="google-map" style={{width: '100%', height: '100%'}}>{this.props.children}</div>
+            <div className={styles.container}>
+                <div className={styles.map}>{this.props.children}</div>
             </div>
         );
     }
 };
 
-export default GoogleMap;
+export default Webiny.createComponent(GoogleMap, {styles});
