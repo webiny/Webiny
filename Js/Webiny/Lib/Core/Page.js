@@ -3,7 +3,13 @@ class Page {
         return new Promise(resolve => {
             const s = document.createElement('script');
             s.type = 'text/javascript';
-            s.src = webinyJsPath + url.replace('http://localhost:3000', '');
+
+            s.src = url;
+            const isAbsoluteUrl = url.indexOf('://') > 0 || url.indexOf('//') === 0;
+            if (!isAbsoluteUrl) {
+                s.src = webinyJsPath + url.replace('http://localhost:3000', '');
+            }
+
             s.async = true;
             s.onload = () => resolve();
             document.body.appendChild(s);
@@ -14,8 +20,13 @@ class Page {
         return new Promise(resolve => {
             const s = document.createElement('link');
             s.rel = 'stylesheet';
+
             s.href = url;
-            s.href = webinyCssPath + url.replace('http://localhost:3000', '');
+            const isAbsoluteUrl = url.indexOf('://') > 0 || url.indexOf('//') === 0;
+            if (!isAbsoluteUrl) {
+                s.href = webinyCssPath + url.replace('http://localhost:3000', '');
+            }
+
             s.onload = resolve;
             document.head.appendChild(s);
         });
