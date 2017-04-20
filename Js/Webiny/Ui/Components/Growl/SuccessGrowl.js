@@ -1,3 +1,4 @@
+import Webiny from 'Webiny';
 import Growl from './Growl';
 import styles from './styles/Growl.css';
 
@@ -5,8 +6,16 @@ class SuccessGrowl extends Growl {
 
 }
 
-SuccessGrowl.defaultProps = _.assign({}, Growl.defaultProps, {
-    className: styles.success
-});
+SuccessGrowl.defaultProps = {
+    title: null,
+    ttl: 3000,
+    sticky: false,
+    message: null,
+    renderer() {
+        return (
+            <Growl {..._.omit(this.props, ['renderer'])} className={this.props.styles.success}/>
+        );
+    }
+};
 
-export default SuccessGrowl;
+export default Webiny.createComponent(SuccessGrowl, {styles});

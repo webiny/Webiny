@@ -32,7 +32,9 @@ Growl.defaultProps = {
     ttl: 3000,
     sticky: false,
     message: null,
+    className: null,
     renderer() {
+        const {styles} = this.props;
         const classes = this.classSet(
             styles.notification,
             this.props.className
@@ -59,4 +61,4 @@ Growl.defaultProps = {
     }
 };
 
-export default Growl;
+export default Webiny.createComponent(Growl, {styles});

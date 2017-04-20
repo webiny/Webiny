@@ -1,12 +1,21 @@
+import Webiny from 'Webiny';
 import Growl from './Growl';
 import styles from './styles/Growl.css';
 
-class InfoGrowl extends Growl {
+class InfoGrowl extends Webiny.Ui.Component {
 
 }
 
-InfoGrowl.defaultProps = _.assign({}, Growl.defaultProps, {
-    className: styles.info
-});
+InfoGrowl.defaultProps = {
+    title: null,
+    ttl: 3000,
+    sticky: false,
+    message: null,
+    renderer() {
+        return (
+            <Growl {..._.omit(this.props, ['renderer'])}/>
+        );
+    }
+};
 
-export default InfoGrowl;
+export default Webiny.createComponent(InfoGrowl, {styles});
