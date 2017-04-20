@@ -62,7 +62,8 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         return <ValidationIcon success={false}/>;
     },
     renderer() {
-        const {styles} = this.props;
+        const {DelayedOnChange, Animate, Icon, styles} = this.props;
+
         const cssConfig = this.classSet(
             styles.wrapper,
             (this.state.isValid === false && styles.error),
@@ -101,16 +102,14 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         let iconLeft = '';
         if (this.props.iconLeft) {
             wrapperClassName += ' ' + styles.iconLeft;
-            iconLeft = <span className={this.props.iconLeft}/>;
+            iconLeft = <Icon icon={this.props.iconLeft}/>;
         }
 
         let iconRight = '';
         if (this.props.iconRight) {
             wrapperClassName += ' ' + styles.iconRight;
-            iconRight = <span className={this.props.iconRight}/>;
+            iconRight = <Icon icon={this.props.iconRight}/>;
         }
-
-        const {DelayedOnChange, Animate} = this.props;
 
         return (
             <div className={this.classSet(cssConfig, this.props.className)}>
@@ -139,4 +138,4 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     }
 });
 
-export default Webiny.createComponent(Input, {modules: ['Animate', 'DelayedOnChange'], styles});
+export default Webiny.createComponent(Input, {modules: ['Animate', 'DelayedOnChange', 'Icon'], styles});

@@ -29,7 +29,7 @@ class Dashboard extends Webiny.Ui.View {
     }
 
     growlInfo() {
-        this.infoId = Webiny.Growl.info('A friendly info!', 'New info available', true);
+        Webiny.Growl.info('A friendly info!', 'New info available', true).then(growlId => this.infoId = growlId);
     }
 
     growlSuccess() {
@@ -88,18 +88,20 @@ Dashboard.defaultProps = {
             'Gallery',
             'GoogleMap',
             'Gravatar',
-
-            'Input',
+            'HtmlEditor',
+            'Icon',
+            //'IconPicker',
             'Image',
+            'ImageUploader',
+            'Input',
+            'Label',
 
             'Link',
             'DownloadLink',
-            'HtmlEditor',
-            'Form',
+
             'Grid',
             'Time',
-            'DateRange',
-            'Icon'
+            'DateRange'
         ];
         const src = "https://scontent-amt2-1.xx.fbcdn.net/v/t31.0-8/17855125_536372119866416_7405702212874834803_o.jpg?oh=386fe327a0899af7461322ff3b00177b&oe=5987F465";
         return (
@@ -108,7 +110,6 @@ Dashboard.defaultProps = {
                     <Ui.Form>
                         {(model) => (
                             <div>
-                                <pre>{JSON.stringify(model, null, 4)}</pre>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>
                                         <h2>Alert</h2>
@@ -413,16 +414,24 @@ Dashboard.defaultProps = {
 
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>
-                                        <Ui.File name="file"/>
+                                        <h2>HtmlEditor</h2>
+                                        <Ui.HtmlEditor />
                                     </Ui.Grid.Col>
+
                                     <Ui.Grid.Col all={6}>
-                                        <Ui.DownloadLink type="secondary" align="right"
-                                                         download="/entities/demo/records/report/summary/csv">
-                                            <Ui.Icon icon="icon-file-o"/>
-                                            Export CSV
-                                        </Ui.DownloadLink>
+                                        <h2>Icon</h2>
+                                        <Ui.Icon icon="fa-cog"/>
                                     </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={12}>
+                                </Ui.Grid.Row>
+
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>IconPicker</h2>
+                                        @todo: waiting for select component
+                                    </Ui.Grid.Col>
+
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Image</h2>
                                         <Ui.Image
                                             name="image"
                                             cropper={{
@@ -436,23 +445,54 @@ Dashboard.defaultProps = {
                                                     height: 300
                                                 }
                                             }}/>
-                                        <Ui.Gallery
-                                            name="gallery"
-                                            maxImages={7}
-                                            newCropper={{
-                                                title: 'Crop your image',
-                                                action: 'Upload image',
-                                                config: {
-                                                    closeOnClick: false,
-                                                    autoCropArea: 0.7,
-                                                    aspectRatio: 1,
-                                                    width: 300,
-                                                    height: 300
-                                                }
-                                            }}/>
-                                        <Ui.HtmlEditor name="html"/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
+                                <hr/>
+
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>ImageUploader</h2>
+                                        <Ui.ImageUploader/>
+                                    </Ui.Grid.Col>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Input</h2>
+                                        <Ui.Input
+                                            placeholder="Enter a valid email address"
+                                            label="Email"
+                                            name="email"
+                                            validate="required,email"
+                                            info="Only email"
+                                            description="Your email will be used for logging in"/>
+                                        <br/>
+                                        <Ui.Input addonLeft="$" addonRight="USD" />
+                                        <Ui.Input iconRight="fa-user" />
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                                <hr/>
+
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Label</h2>
+                                        <Ui.Label>default</Ui.Label>
+                                        <Ui.Label type="info">info</Ui.Label>
+                                        <Ui.Label type="primary">primary</Ui.Label>
+                                        <Ui.Label type="success">success</Ui.Label>
+                                        <Ui.Label type="warning">warning</Ui.Label>
+                                        <Ui.Label type="error">error</Ui.Label>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <Ui.DownloadLink type="secondary" align="right"
+                                                         download="/entities/demo/records/report/summary/csv">
+                                            <Ui.Icon icon="icon-file-o"/>
+                                            Export CSV
+                                        </Ui.DownloadLink>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+
+                                <pre>{JSON.stringify(model, null, 4)}</pre>
                             </div>
                         )}
                     </Ui.Form>
