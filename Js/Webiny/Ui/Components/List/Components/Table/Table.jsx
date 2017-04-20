@@ -6,7 +6,7 @@ import FieldInfo from './FieldInfo';
 import Actions from './Actions';
 import Footer from './Footer';
 import RowDetails from './RowDetails';
-import Header from './Header ';
+import Header from './Header';
 import Empty from './Empty';
 
 class Table extends Webiny.Ui.Component {

@@ -8,11 +8,11 @@ class ImageUploader extends Webiny.Ui.FormComponent {
         this.lastId = null;
 
         this.bindMethods(
-            'applyCropping',
             'onCropperHidden',
             'fileChanged',
             'getFiles',
-            'getCropper'
+            'getCropper',
+            'uploadImage'
         );
 
         _.assign(this.state, {
@@ -27,8 +27,16 @@ class ImageUploader extends Webiny.Ui.FormComponent {
         this.uploader = new Webiny.Api.Uploader(this.api);
     }
 
-    applyCropping(newImage) {
-        this.props.onChange(newImage).then(() => this.setState({cropImage: null}));
+    uploadImage(image) {
+        this.uploader.upload(image, (percentage) => {
+            this.setState({progress: percentage});
+        }, (newImage) => {
+            this.props.onUploadSuccess(newImage);
+            this.setState({progress: null});
+        }, (apiResponse) => {
+            this.props.onUploadFailure(apiResponse);
+            this.setState({progress: null});
+        });
     }
 
     onCropperHidden() {
@@ -46,7 +54,7 @@ class ImageUploader extends Webiny.Ui.FormComponent {
             if (this.props.cropper) {
                 this.setState({cropImage: file});
             } else {
-                this.props.onChange(file);
+                this.uploadImage(file);
             }
         }
     }
@@ -72,7 +80,7 @@ class ImageUploader extends Webiny.Ui.FormComponent {
                     title={cropper.title}
                     action={cropper.action}
                     onHidden={this.onCropperHidden}
-                    onCrop={this.applyCropping}
+                    onCrop={this.uploadImage}
                     config={cropper.config}
                     image={this.state.cropImage}/>
             );
@@ -83,7 +91,7 @@ class ImageUploader extends Webiny.Ui.FormComponent {
                 title={cropper.title}
                 action={cropper.action}
                 onHidden={this.onCropperHidden}
-                onCrop={this.applyCropping}
+                onCrop={this.uploadImage}
                 config={cropper.config}
                 image={this.state.cropImage}/>
         );
@@ -98,18 +106,6 @@ class ImageUploader extends Webiny.Ui.FormComponent {
             );
         }
         return error;
-    }
-
-    applyCropping(image) {
-        this.uploader.upload(image, (percentage) => {
-            this.setState({progress: percentage});
-        }, (newImage) => {
-            this.props.onUploadSuccess(newImage);
-            this.setState({progress: null});
-        }, (apiResponse) => {
-            this.props.onUploadFailure(apiResponse);
-            this.setState({progress: null});
-        });
     }
 }
 
