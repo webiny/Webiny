@@ -1,5 +1,5 @@
 import Webiny from 'Webiny';
-import styles from './styles/Growl.css';
+import styles from './styles.css';
 
 class Growl extends Webiny.Ui.Component {
     constructor(props) {
@@ -33,10 +33,20 @@ Growl.defaultProps = {
     sticky: false,
     message: null,
     className: null,
+    type: 'default',
     renderer() {
         const {styles} = this.props;
+
+        const typeClasses = {
+            default: '',
+            danger: styles.danger,
+            success: styles.success,
+            warning: styles.warning
+        };
+
         const classes = this.classSet(
             styles.notification,
+            typeClasses[this.props.type],
             this.props.className
         );
         const title = this.props.title ? <div className={styles.header}>{this.props.title}</div> : null;

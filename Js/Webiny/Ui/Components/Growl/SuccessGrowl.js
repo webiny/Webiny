@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
 import Growl from './Growl';
-import styles from './styles/Growl.css';
 
 class SuccessGrowl extends Growl {
 
@@ -11,11 +10,12 @@ SuccessGrowl.defaultProps = {
     ttl: 3000,
     sticky: false,
     message: null,
+    type: 'success',
     renderer() {
         return (
-            <Growl {..._.omit(this.props, ['renderer'])} className={this.props.styles.success}/>
+            <Growl {..._.omit(this.props, ['renderer'])}/>
         );
     }
 };
 
-export default Webiny.createComponent(SuccessGrowl, {styles});
+export default Webiny.createComponent(SuccessGrowl);

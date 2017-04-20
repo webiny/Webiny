@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
 import Growl from './Growl';
-import styles from './styles/Growl.css';
 
 class InfoGrowl extends Webiny.Ui.Component {
 
@@ -18,4 +17,4 @@ InfoGrowl.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(InfoGrowl, {styles});
+export default Webiny.createComponent(InfoGrowl);
