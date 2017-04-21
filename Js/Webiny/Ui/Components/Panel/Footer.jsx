@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles.css';
 
 class Footer extends Webiny.Ui.Component {
 
@@ -7,9 +8,9 @@ class Footer extends Webiny.Ui.Component {
 Footer.defaultProps = {
     style: {},
     renderer() {
-        const classes = this.classSet('panel-footer', this.props.className);
+        const classes = this.classSet(this.props.styles.footer, this.props.className);
         return <div className={classes} style={this.props.style}>{this.props.children}</div>;
     }
 };
 
-export default Webiny.createComponent(Footer);
+export default Webiny.createComponent(Footer, {styles});

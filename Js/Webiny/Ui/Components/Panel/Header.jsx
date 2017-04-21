@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles.css';
 
 class Header extends Webiny.Ui.Component {
 
@@ -11,7 +12,7 @@ Header.defaultProps = {
             icon = <span className="panel-icon"><i className={this.props.icon}/></span>;
         }
 
-        const classes = this.classSet('panel-header panel-header--gray-bg', this.props.className);
+        const classes = this.classSet(this.props.styles.header, this.props.className);
         return (
             <div className={classes} style={this.props.style || null}>
                 {icon} {this.props.title}
@@ -21,4 +22,4 @@ Header.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Header);
+export default Webiny.createComponent(Header, {styles});

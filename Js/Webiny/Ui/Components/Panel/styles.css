@@ -1,0 +1,40 @@
+.panel {
+	margin-bottom: 40px;
+	box-shadow: none;
+	border-radius: 0;
+}
+
+.header {
+	margin: 0;
+	padding: 40px 0;
+
+	font-weight: 600;
+	font-size: 35px;
+}
+
+.body {
+	position: relative;
+	padding: 15px 0;
+}
+
+.footer {
+	border-top: 1px solid #f2f2f2;
+	overflow: hidden;
+}
+
+.boxed{
+	padding: 0;
+}
+
+.boxed .header{
+	padding: 40px;
+	background-color: #fbfbfb;
+}
+
+.boxed .body{
+	padding: 40px;
+}
+
+.body.noPadding{
+	padding: 0px;
+}

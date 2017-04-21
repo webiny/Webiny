@@ -97,6 +97,8 @@ Dashboard.defaultProps = {
             'Label',
             'List',
             'MarkdownEditor',
+            'Panel',
+            'Password',
 
             'Link',
             'DownloadLink',
@@ -276,7 +278,8 @@ Dashboard.defaultProps = {
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>
                                         <h2>Copy.Button</h2>
-                                        <Ui.Copy.Button type="secondary" icon="icon-pencil" value="Clipboard content" label="Click to copy!"/>
+                                        <Ui.Copy.Button type="secondary" icon="icon-pencil" value="Clipboard content"
+                                                        label="Click to copy!"/>
                                     </Ui.Grid.Col>
                                     <Ui.Grid.Col all={6}>
                                         <h2>Copy.Input</h2>
@@ -317,11 +320,15 @@ Dashboard.defaultProps = {
                                         <h2>Dropdown</h2>
                                         <Ui.Dropdown title="Actions">
                                             <Ui.Dropdown.Header title="Column"/>
-                                            <Ui.Dropdown.Link onClick={() => {}} icon="fa-plus" title="Insert"/>
-                                            <Ui.Dropdown.Link onClick={() => {}} icon="fa-plus" title="Update"/>
+                                            <Ui.Dropdown.Link onClick={() => {
+                                            }} icon="fa-plus" title="Insert"/>
+                                            <Ui.Dropdown.Link onClick={() => {
+                                            }} icon="fa-plus" title="Update"/>
                                             <Ui.Dropdown.Divider/>
-                                            <Ui.Dropdown.Link onClick={() => {}} icon="fa-plus" title="Insert"/>
-                                            <Ui.Dropdown.Link onClick={() => {}} icon="fa-remove" title="Delete"/>
+                                            <Ui.Dropdown.Link onClick={() => {
+                                            }} icon="fa-plus" title="Insert"/>
+                                            <Ui.Dropdown.Link onClick={() => {
+                                            }} icon="fa-remove" title="Delete"/>
                                         </Ui.Dropdown>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
@@ -392,7 +399,7 @@ Dashboard.defaultProps = {
                                     </Ui.Grid.Col>
                                     <Ui.Grid.Col all={6}>
                                         <h2>GoogleMap</h2>
-                                        <div style={{width: '300px', height:'300px'}}>
+                                        <div style={{width: '300px', height: '300px'}}>
                                             <Ui.GoogleMap apiKey="AIzaSyCSATPF__n85eueKyE9UgjNUOpEuvFMmCk"/>
                                         </div>
                                     </Ui.Grid.Col>
@@ -402,7 +409,7 @@ Dashboard.defaultProps = {
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>
                                         <h2>Gravatar</h2>
-                                        <Ui.Gravatar hash="205e460b479e2e5b48aec07710c08d50" />
+                                        <Ui.Gravatar hash="205e460b479e2e5b48aec07710c08d50"/>
                                     </Ui.Grid.Col>
                                     <Ui.Grid.Col all={6}>
                                         <h2>Growl</h2>
@@ -466,8 +473,8 @@ Dashboard.defaultProps = {
                                             info="Only email"
                                             description="Your email will be used for logging in"/>
                                         <br/>
-                                        <Ui.Input addonLeft="$" addonRight="USD" />
-                                        <Ui.Input iconRight="fa-user" />
+                                        <Ui.Input addonLeft="$" addonRight="USD"/>
+                                        <Ui.Input iconRight="fa-user"/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                                 <hr/>
@@ -501,7 +508,8 @@ Dashboard.defaultProps = {
                                                 <Ui.List.Table.Row>
                                                     <Ui.List.Table.RowDetailsField/>
 
-                                                    <Ui.List.Table.Field name="title" align="left" label="Title" sort="title" route="Dashboard"/>
+                                                    <Ui.List.Table.Field name="title" align="left" label="Title" sort="title"
+                                                                         route="Dashboard"/>
                                                     <Ui.List.Table.Field name="views" align="left" label="Views" sort="views"/>
                                                     <Ui.List.Table.ToggleField name="published" align="center" label="Published"/>
 
@@ -530,7 +538,8 @@ Dashboard.defaultProps = {
                                             </Ui.List.Table>
                                             <Ui.List.Pagination/>
                                             <Ui.List.MultiActions>
-                                                <Ui.List.MultiAction label="Log" onAction={()=>{}}/>
+                                                <Ui.List.MultiAction label="Log" onAction={() => {
+                                                }}/>
                                                 <Ui.Dropdown.Divider/>
                                             </Ui.List.MultiActions>
                                         </Ui.List>
@@ -543,7 +552,29 @@ Dashboard.defaultProps = {
                                         <h2>MarkdownEditor</h2>
                                         <Ui.MarkdownEditor/>
                                     </Ui.Grid.Col>
+
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Panel</h2>
+                                        <Ui.Panel>
+                                            <Ui.Panel.Header>Some Header</Ui.Panel.Header>
+                                            <Ui.Panel.Body>
+                                                This is body content
+                                            </Ui.Panel.Body>
+                                            <Ui.Panel.Footer>
+                                                This is the footer
+                                            </Ui.Panel.Footer>
+                                        </Ui.Panel>
+                                    </Ui.Grid.Col>
                                 </Ui.Grid.Row>
+                                <hr/>
+
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Password</h2>
+                                        <Ui.Password name="pass" validate="required" label="Your password"/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                                <hr/>
 
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>
