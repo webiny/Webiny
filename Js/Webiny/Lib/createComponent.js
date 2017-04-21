@@ -2,6 +2,7 @@ import hoistNonReactStatics from 'hoist-non-react-statics';
 import {Map} from 'immutable';
 import LazyLoad from './Ui/LazyLoad';
 import WebinyComponent from './Core/Component';
+import ModalComponent from './Core/ModalComponent';
 
 /**
  * This function creates a wrapper class around given component to allow component styling and lazy loading of dependencies
@@ -13,6 +14,11 @@ import WebinyComponent from './Core/Component';
 export default (Component, options = {}) => {
     // Create an immutable copy of styles to use as default styles
     const defaultStyles = Map(options.styles || {});
+
+    // Automatically expose modal dialog methods
+    if (Component.prototype instanceof ModalComponent) {
+        _.assign(options, {api: ['show', 'hide']});
+    }
 
     class ComponentWrapper extends WebinyComponent {
         constructor(props) {
@@ -52,6 +58,7 @@ export default (Component, options = {}) => {
     }
 
     ComponentWrapper.__originalComponent = Component;
+    ComponentWrapper.defaultProps = _.assign({}, Component.defaultProps);
 
     return hoistNonReactStatics(ComponentWrapper, Component);
 };

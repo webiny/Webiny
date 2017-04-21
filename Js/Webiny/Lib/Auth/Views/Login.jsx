@@ -41,7 +41,7 @@ Login.defaultProps = {
             name: 'password',
             placeholder: 'Password',
             label: 'Password',
-            validate: 'required,minLength:8'
+            validate: 'required'
         };
 
         const {Form, Input, Password, Button} = this.props;
