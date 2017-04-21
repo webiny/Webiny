@@ -1,5 +1,6 @@
 import Webiny from 'Webiny';
 import RouteAction from './Actions/RouteAction';
+import styles from '../../styles.css';
 
 class Field extends Webiny.Ui.Component {
 
@@ -23,7 +24,7 @@ Field.defaultProps = {
     default: '-',
     includeTd: true,
     align: 'left',
-    sortedClass: 'sorted',
+    sortedClass: styles.sorted,
     alignLeftClass: 'text-left',
     alignRightClass: 'text-right',
     alignCenterClass: 'text-center',
@@ -51,4 +52,4 @@ Field.defaultProps = {
     }
 };
 
-export default Field;
+export default Webiny.createComponent(Field, {styles});

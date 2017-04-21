@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from '../styles.css';
 
 class Pagination extends Webiny.Ui.Component {
 
@@ -62,7 +63,7 @@ class Pagination extends Webiny.Ui.Component {
         return _.map(pages, (page, i) => {
             const key = page !== null ? page + '-' + i : 'dots-' + i;
             const onClick = page !== null ? this.pageChanged.bind(this, page) : null;
-            const className = cp === page ? 'active' : null;
+            const className = cp === page ? this.props.styles.active : null;
             return (
                 <li key={key} className={className} onClick={onClick}>
                     <a href="javascript:void(0);">{page || '...'}</a>
@@ -97,27 +98,30 @@ Pagination.defaultProps = {
             return null;
         }
 
+        const {Grid, styles} = this.props;
         const cp = parseInt(this.props.currentPage);
         const previousPage = cp === 1 ? null : this.pageChanged.bind(this, cp - 1);
-        const previousClasses = this.classSet({
-            previous: true,
-            disabled: cp === 1
-        });
+        const previousClasses = this.classSet(
+            styles.previous,
+            {
+                [styles.disabled]: cp === 1
+            }
+        );
 
         const nextPage = cp === this.props.totalPages ? null : this.pageChanged.bind(this, cp + 1);
-        const nextClasses = this.classSet({
-            next: true,
-            disabled: cp === this.props.totalPages
-        });
-
-        const {Grid} = this.props;
+        const nextClasses = this.classSet(
+            styles.next,
+            {
+                [styles.disabled]: cp === this.props.totalPages
+            }
+        );
 
         return (
             <webiny-list-pagination>
                 <Grid.Row>
                     <Grid.Col all={12} className="text-right">
                         {this.renderPerPage()}
-                        <ul className="pagination pull-right">
+                        <ul className={this.classSet(styles.pagination, 'pull-right')}>
                             <li className={previousClasses} onClick={previousPage}>
                                 <a href="javascript:void(0)">
                                     <span className="icon icon-caret-down"/>
@@ -139,4 +143,4 @@ Pagination.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Pagination, {modules: ['Grid', 'Dropdown']});
+export default Webiny.createComponent(Pagination, {modules: ['Grid', 'Dropdown'], styles});

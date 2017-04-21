@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from '../../styles.css';
 
 class Empty extends Webiny.Ui.Component {
 
@@ -6,8 +7,8 @@ class Empty extends Webiny.Ui.Component {
 
 Empty.defaultProps = {
     message: (
-        <div className="porlet">
-            <div className="porlet-body text-center">
+        <div className={styles.emptyContainer}>
+            <div className={styles.content}>
                 <h2>Sorry, but no records matched your query.</h2>
 
                 <p>Try changing your search parameters.</p>
@@ -25,4 +26,4 @@ Empty.defaultProps = {
     }
 };
 
-export default Empty;
+export default Webiny.createComponent(Empty, {styles});

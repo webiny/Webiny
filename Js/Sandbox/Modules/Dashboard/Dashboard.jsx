@@ -79,7 +79,7 @@ Dashboard.defaultProps = {
             'Copy',
             'DateTime',
             'Date',
-            'Dropdown',
+            'Dropdown', // @todo: dropdown animacija ne radi
             'Email',
             'Fieldset',
             'Draft',
@@ -95,6 +95,7 @@ Dashboard.defaultProps = {
             'ImageUploader',
             'Input',
             'Label',
+            'List',
 
             'Link',
             'DownloadLink',
@@ -109,7 +110,7 @@ Dashboard.defaultProps = {
                 {(Ui) => (
                     <Ui.Form>
                         {(model) => (
-                            <div>
+                            <div style={{margin: "15px"}}>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>
                                         <h2>Alert</h2>
@@ -480,7 +481,75 @@ Dashboard.defaultProps = {
                                         <Ui.Label type="warning">warning</Ui.Label>
                                         <Ui.Label type="error">error</Ui.Label>
                                     </Ui.Grid.Col>
+                                    <Ui.Grid.Col all={6}>
+
+                                    </Ui.Grid.Col>
                                 </Ui.Grid.Row>
+                                <hr/>
+
+                                <Ui.Grid.Row style={{backgroundColor: 'white'}}>
+                                    <Ui.Grid.Col all={12}>
+                                        <h2>List</h2>
+                                        <Ui.List
+                                            connectToRouter={true}
+                                            api="/entities/the-hub/articles"
+                                            sort="id"
+                                            fields="*"
+                                            searchFields="title">
+                                            <Ui.List.Table>
+                                                <Ui.List.Table.Row>
+                                                    <Ui.List.Table.RowDetailsField/>
+
+                                                    <Ui.List.Table.Field name="title" align="left" label="Title" sort="title" route="Dashboard"/>
+                                                    <Ui.List.Table.Field name="views" align="left" label="Views" sort="views"/>
+                                                    <Ui.List.Table.ToggleField name="enabled" align="center" label="Status"/>
+
+                                                    <Ui.List.Table.Actions>
+                                                        <Ui.List.Table.DeleteAction/>
+                                                    </Ui.List.Table.Actions>
+
+                                                </Ui.List.Table.Row>
+
+                                                <Ui.List.Table.RowDetails>
+                                                    {(data, rowDetails) => {
+                                                        return (
+                                                            <Ui.List data={data.contacts}>
+                                                                <Ui.List.Loader/>
+                                                                <Ui.List.Table>
+                                                                    <Ui.List.Table.Row>
+                                                                        <Ui.List.Table.Field name="key" label="Key"/>
+                                                                        <Ui.List.Table.Field name="value" label="Value"/>
+                                                                        <Ui.List.Table.Field name="createdBy" label="User ID"/>
+                                                                    </Ui.List.Table.Row>
+                                                                </Ui.List.Table>
+                                                            </Ui.List>
+                                                        );
+                                                    }}
+                                                </Ui.List.Table.RowDetails>
+                                            </Ui.List.Table>
+                                            <Ui.List.Pagination/>
+                                            <Ui.List.MultiActions>
+                                                <Ui.List.MultiAction label="Log" onAction={this.log}/>
+                                                <Ui.List.MultiAction label="Export ZIP" download={(download, data) => {
+                                                    download('POST', '/entities/demo/records/report/business-cards', _.map(Array.from(data), 'id'))
+                                                }}/>
+                                                <Ui.Dropdown.Divider/>
+                                                <Ui.List.DeleteMultiAction>
+                                                    {rows => {
+                                                        const props = {
+                                                            message: 'Delete ' + rows.length + ' records?',
+                                                            onConfirm: this.delete
+                                                        };
+                                                        return (
+                                                            <Ui.Modal.Confirmation {...props}/>
+                                                        );
+                                                    }}
+                                                </Ui.List.DeleteMultiAction>
+                                            </Ui.List.MultiActions>
+                                        </Ui.List>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                                <hr/>
 
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>

@@ -8,6 +8,7 @@ import Footer from './Footer';
 import RowDetails from './RowDetails';
 import Header from './Header';
 import Empty from './Empty';
+import styles from '../../styles.css';
 
 class Table extends Webiny.Ui.Component {
 
@@ -237,9 +238,14 @@ Table.defaultProps = {
     showHeader: true,
     className: null,
     renderer() {
+
+        const typeClasses = {
+            simple: styles.simple
+        };
+
         const className = this.classSet([
-            'table',
-            'table-' + this.props.type,
+            styles.table,
+            typeClasses[this.props.type],
             this.props.className
         ]);
 
@@ -275,4 +281,4 @@ Table.defaultProps = {
     }
 };
 
-export default Table;
+export default Webiny.createComponent(Table, {styles});

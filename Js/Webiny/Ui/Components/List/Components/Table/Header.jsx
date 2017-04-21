@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from '../../styles.css';
 
 class Header extends Webiny.Ui.Component {
     constructor(props) {
@@ -33,9 +34,10 @@ Header.defaultProps = {
     sortedDescendingIcon: 'icon-caret-down',
     sortableIcon: 'icon-sort',
     renderer() {
-        const classes = {
-            sorted: this.props.sorted && this.props.sorted !== 0
-        };
+        let classes = {};
+        if(this.props.sorted && this.props.sorted !== 0){
+            classes[styles.sorted] = true;
+        }
 
         classes[this.props.alignLeftClass] = this.props.align === 'left';
         classes[this.props.alignRightClass] = this.props.align === 'right';
@@ -68,4 +70,4 @@ Header.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Header, {modules: ['Icon']});
+export default Webiny.createComponent(Header, {modules: ['Icon'], styles});
