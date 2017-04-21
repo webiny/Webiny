@@ -1,5 +1,5 @@
 import Webiny from 'Webiny';
-import styles from './styles/Section.css';
+import styles from './styles.css';
 
 class Section extends Webiny.Ui.Component {
 

@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
 
-class Actions extends Webiny.Component {
+class Actions extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);

@@ -1,3 +1,4 @@
+import Webiny from 'Webiny';
 import BaseContainer from './BaseContainer';
 
 class StaticContainer extends BaseContainer {

@@ -403,7 +403,7 @@ class Form extends Webiny.Ui.Component {
 
     /**
      * @private
-     * @param input
+     * @param input React element
      * @returns {*}
      */
     registerComponent(input) {
@@ -419,7 +419,6 @@ class Form extends Webiny.Ui.Component {
         if (_.get(input, 'props.formInject')) {
             input = React.cloneElement(input, {form: this});
         }
-
         if (Webiny.isElementOfType(input, Loader)) {
             input = React.cloneElement(input, {show: this.isLoading()});
         }

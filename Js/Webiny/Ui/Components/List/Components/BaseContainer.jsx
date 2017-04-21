@@ -2,6 +2,7 @@ import Webiny from 'Webiny';
 import localForage from 'localforage';
 import Filters from './Filters';
 import Table from './Table/Table';
+import MultiActions from './MultiActions';
 import Pagination from './Pagination';
 import Loader from './../Components/ListContainerLoader';
 

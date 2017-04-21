@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
 class FormContainerLoader extends Webiny.Ui.Component {
 
@@ -16,8 +15,10 @@ FormContainerLoader.defaultProps = {
             return this.props.children();
         }
 
-        return <Ui.Loader/>;
+        const {Loader} = this.props;
+
+        return <Loader/>;
     }
 };
 
-export default FormContainerLoader;
+export default Webiny.createComponent(FormContainerLoader, {modules: ['Loader']});

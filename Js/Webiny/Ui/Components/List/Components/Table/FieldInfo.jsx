@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
 
-class FieldInfo extends Webiny.Component {
+class FieldInfo extends Webiny.Ui.Component {
 
     constructor(props) {
         super(props);

@@ -1,5 +1,8 @@
 import Webiny from 'Webiny';
 import SelectRowField from './Fields/SelectRowField';
+import Field from './Field';
+import Actions from './Actions';
+import FieldInfo from './FieldInfo';
 
 class Row extends Webiny.Ui.Component {
 
@@ -41,7 +44,7 @@ class Row extends Webiny.Ui.Component {
             return child;
         }
 
-        const tableField = Webiny.isElementOfType(child, Ui.List.Table.Field);
+        const tableField = Webiny.isElementOfType(child, Field);
         if (tableField) {
             if (Webiny.isElementOfType(child, SelectRowField)) {
                 this.selectRowElement = true;
@@ -56,7 +59,7 @@ class Row extends Webiny.Ui.Component {
             return;
         }
 
-        const tableActions = Webiny.isElementOfType(child, Ui.List.Table.Actions);
+        const tableActions = Webiny.isElementOfType(child, Actions);
         if (tableActions && !child.props.hide) {
             this.actionsElement = React.cloneElement(child, {
                 data: this.data,
@@ -95,7 +98,7 @@ class Row extends Webiny.Ui.Component {
         const children = [];
         _.filter(childrenArray).map(fieldChild => {
             // Do not include FieldInfo in Field children
-            if (fieldChild.type !== Ui.List.Table.FieldInfo) {
+            if (fieldChild.type !== FieldInfo) {
                 children.push(fieldChild);
             }
         });
