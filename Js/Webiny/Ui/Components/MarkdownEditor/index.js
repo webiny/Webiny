@@ -1,5 +1,6 @@
 import Webiny from 'Webiny';
-import SimpleMDE from 'simplemde';  
+import SimpleMDE from 'simplemde';
+import styles from './styles.scss';
 
 class MarkdownEditor extends Webiny.Ui.FormComponent {
     constructor(props) {
@@ -85,4 +86,4 @@ MarkdownEditor.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(MarkdownEditor);
+export default Webiny.createComponent(MarkdownEditor, {styles});

@@ -96,6 +96,7 @@ Dashboard.defaultProps = {
             'Input',
             'Label',
             'List',
+            'MarkdownEditor',
 
             'Link',
             'DownloadLink',
@@ -536,6 +537,13 @@ Dashboard.defaultProps = {
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                                 <hr/>
+
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>MarkdownEditor</h2>
+                                        <Ui.MarkdownEditor/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
 
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>
