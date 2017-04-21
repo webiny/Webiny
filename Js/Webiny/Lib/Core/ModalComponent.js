@@ -19,11 +19,27 @@ class ModalComponent extends Component {
     }
 
     hide() {
-        return this.refs.dialog.hide();
+        return new Promise(resolve => {
+            const interval = setInterval(() => {
+                const ref = this.refs.dialog;
+                if (ref) {
+                    clearInterval(interval);
+                    resolve(ref.hide());
+                }
+            }, 30);
+        });
     }
 
     show() {
-        return this.refs.dialog.show();
+        return new Promise(resolve => {
+            const interval = setInterval(() => {
+                const ref = this.refs.dialog;
+                if (ref) {
+                    clearInterval(interval);
+                    resolve(ref.show());
+                }
+            }, 30);
+        });
     }
 
     isAnimating() {

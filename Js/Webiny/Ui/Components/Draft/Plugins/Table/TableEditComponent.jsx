@@ -214,7 +214,7 @@ TableEditComponent.defaultProps = {
             <Webiny.Ui.LazyLoad modules={['Dropdown']}>
                 {(Ui) => (
                     <div className="table-wrapper">
-                        <Ui.Dropdown title="Actions" className="balloon" align="right" renderIf={!this.props.editor.getPreview()}>
+                        <Ui.Dropdown title="Actions" type="balloon" align="right" renderIf={!this.props.editor.getPreview()}>
                             <Ui.Dropdown.Header title="Column"/>
                             <Ui.Dropdown.Link onClick={this.insertColumnBefore} icon="fa-plus" title="Insert before"/>
                             <Ui.Dropdown.Link onClick={this.insertColumnAfter} icon="fa-plus" title="Insert after"/>

@@ -20,8 +20,10 @@ ContainerError.defaultProps = {
             return this.props.children(error);
         }
 
+        const {Alert} = this.props;
+
         if (_.isString(error)) {
-            return <Ui.Alert title={this.props.title} type={this.props.type}>{error}</Ui.Alert>;
+            return <Alert title={this.props.title} type={this.props.type}>{error}</Alert>;
         }
 
         const data = [];
@@ -30,15 +32,15 @@ ContainerError.defaultProps = {
         });
 
         return (
-            <Ui.Alert
+            <Alert
                 title={this.props.title}
                 type={this.props.type}
                 className={this.props.className}>
                 {this.props.message || error.getMessage()}
                 {data.length > 0 && <ul>{data}</ul>}
-            </Ui.Alert>
+            </Alert>
         );
     }
 };
 
-export default ContainerError;
+export default Webiny.createComponent(ContainerError, {modules: ['Alert']});

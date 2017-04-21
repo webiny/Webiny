@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+
 class MultiActions extends Webiny.Ui.Component {
 
 }
@@ -6,6 +7,7 @@ class MultiActions extends Webiny.Ui.Component {
 MultiActions.defaultProps = {
     label: 'With selected...',
     renderer() {
+        const {Dropdown} = this.props;
         return (
             <Dropdown title={this.props.label}>
                 <Dropdown.Header title="Actions"/>

@@ -50,7 +50,6 @@ class Tabs extends Webiny.Ui.Component {
         this.tabsContent = [];
 
         React.Children.map(props.children, (child, index) => {
-            console.log(child)
             const active = parseInt(state.selected) === index;
 
             const headerProps = {

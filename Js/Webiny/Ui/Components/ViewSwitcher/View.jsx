@@ -28,24 +28,6 @@ class View extends Webiny.Ui.Component {
         }
     }
 
-    componentDidUpdate() {
-        super.componentDidUpdate();
-        if (this.props.modal && this.state.show) {
-            if (!_.isFunction(this.refs.view.show)) {
-                console.warn('Warning: view "' + this.props.view + '" is marked as modal but has no "show" method!');
-                if (_.isFunction(this.showResolve)) {
-                    this.showResolve();
-                }
-                return true;
-            }
-            return this.refs.view.show().then(this.showResolve || _.noop);
-        }
-
-        if (_.isFunction(this.showResolve)) {
-            this.showResolve();
-        }
-    }
-
     isShown() {
         return this.state.show;
     }
@@ -78,6 +60,11 @@ View.defaultProps = {
             const view = this.props.children(this.props.container.showView, ...this.state.params);
             const props = {ref: 'view'};
             if (this.props.modal) {
+                // onComponentDidMount is a special callback that will be executed once the actual component is mounted
+                // We need access to the actual mounted instance of component and not the proxy ComponentWrapper
+                props.onComponentDidMount = (instance) => {
+                    instance.show().then(this.showResolve || _.noop);
+                };
                 props.onHidden = () => {
                     this.setState({show: false, params: []});
                 };
