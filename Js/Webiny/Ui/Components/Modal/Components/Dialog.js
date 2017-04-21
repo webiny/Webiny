@@ -2,7 +2,7 @@ import Webiny from 'Webiny';
 import Header from './Header';
 import Footer from './Footer';
 import Body from './Body';
-import styles from '../styles/Modal.css';
+import styles from '../styles.css';
 
 const mountedDialogs = [];
 

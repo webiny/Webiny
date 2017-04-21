@@ -1,5 +1,5 @@
 import Webiny from 'Webiny';
-import styles from '../styles/Modal.css';
+import styles from '../styles.css';
 
 class Footer extends Webiny.Ui.Component {
 

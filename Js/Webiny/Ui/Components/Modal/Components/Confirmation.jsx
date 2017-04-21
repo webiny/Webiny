@@ -3,8 +3,6 @@ import Dialog from './Dialog';
 import Body from './Body';
 import Footer from './Footer';
 
-import styles from '../styles/Modal.css';
-
 class Confirmation extends Webiny.Ui.ModalComponent {
 
     constructor(props) {

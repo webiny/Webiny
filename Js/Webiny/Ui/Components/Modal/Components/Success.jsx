@@ -2,7 +2,7 @@ import Webiny from 'Webiny';
 import Dialog from './Dialog';
 import Body from './Body';
 import Footer from './Footer';
-import styles from '../styles/Modal.css';
+import styles from '../styles.css';
 
 class Success extends Webiny.Ui.ModalComponent {
 
