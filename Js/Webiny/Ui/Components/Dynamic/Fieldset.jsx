@@ -160,4 +160,4 @@ Fieldset.defaultProps = {
     }
 };
 
-export default Fieldset;
+export default Webiny.createComponent(Fieldset);

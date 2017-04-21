@@ -58,4 +58,4 @@ ImageSet.defaultProps = {
     }
 };
 
-export default ImageSet;
+export default Webiny.createComponent(ImageSet);

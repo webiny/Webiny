@@ -67,4 +67,4 @@ StaticContainer.defaultProps = _.merge({}, BaseContainer.defaultProps, {
     }
 });
 
-export default StaticContainer;
+export default Webiny.createComponent(StaticContainer);

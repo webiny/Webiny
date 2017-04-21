@@ -11,4 +11,4 @@ Panel.defaultProps = {
     }
 };
 
-export default Panel;
+export default Webiny.createComponent(Panel);

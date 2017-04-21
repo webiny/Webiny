@@ -21,4 +21,4 @@ Header.defaultProps = {
     }
 };
 
-export default Header;
+export default Webiny.createComponent(Header);

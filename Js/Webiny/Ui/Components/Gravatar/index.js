@@ -20,4 +20,4 @@ Gravatar.defaultProps = {
     }
 };
 
-export default Gravatar;
+export default Webiny.createComponent(Gravatar);

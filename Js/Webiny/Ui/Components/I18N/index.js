@@ -19,4 +19,4 @@ I18N.defaultProps = {
     }
 };
 
-export default I18N;
+export default Webiny.createComponent(I18N);

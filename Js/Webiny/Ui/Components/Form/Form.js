@@ -28,10 +28,6 @@ class Form extends Webiny.Ui.Component {
             Webiny.Mixins.ApiComponent.extend(this);
         }
 
-        this.noParsing = [
-            // TODO: Ui.List.Table
-        ];
-
         this.bindMethods(
             'resetForm',
             'getModel',
@@ -411,7 +407,7 @@ class Form extends Webiny.Ui.Component {
      * @returns {*}
      */
     registerComponent(input) {
-        if (typeof input !== 'object' || input === null || _.find(this.noParsing, np => Webiny.isElementOfType(input, np))) {
+        if (typeof input !== 'object' || input === null || _.get(input, 'props.formSkip')) {
             return input;
         }
 
@@ -420,7 +416,7 @@ class Form extends Webiny.Ui.Component {
             return input;
         }
 
-        if (_.find(this.props.injectInto(), injectInto => Webiny.isElementOfType(input, injectInto))) {
+        if (_.get(input, 'props.formInject')) {
             input = React.cloneElement(input, {form: this});
         }
 
@@ -477,8 +473,8 @@ class Form extends Webiny.Ui.Component {
 
         // Track Tabs to be able to focus the relevant tab when validation fails
         const {Tabs} = this.props;
-        // TODO: finish
-        /*if (Webiny.isElementOfType(input, Tabs)) {
+
+        if (Webiny.isElementOfType(input, Tabs)) {
             this.parsingTabsIndex++;
             this.parsingTabIndex = -1;
 
@@ -497,7 +493,7 @@ class Form extends Webiny.Ui.Component {
 
         if (Webiny.isElementOfType(input, Tabs.Tab) && this.parsingTabsIndex > 0) {
             this.parsingTabIndex++;
-        }*/
+        }
 
         return React.cloneElement(input, _.omit(input.props, ['key', 'ref']), this.registerComponents(input.props && input.props.children));
     }
@@ -675,7 +671,6 @@ Form.defaultProps = {
     onFailure: _.noop,
     onLoad: _.noop,
     prepareLoadedData: null,
-    injectInto: () => [],
     onProgress(pe) {
         const {Growl, Progress} = this.props;
         const cmp = <div>Your data is being uploaded...<Progress value={pe.progress}/></div>;
@@ -691,10 +686,8 @@ Form.defaultProps = {
     }
 };
 
-
-//TODO: add Tabs and List to modules
 export default Webiny.createComponent(Form, {
-    modules: ['Growl', 'Progress'],
+    modules: ['Growl', 'Progress', 'Tabs'],
     api: [
         'bindTo',
         'resetForm',

@@ -91,4 +91,4 @@ ExpandableList.defaultProps = {
     }
 };
 
-export default ExpandableList;
+export default Webiny.createComponent(ExpandableList);

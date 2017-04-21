@@ -10,4 +10,4 @@ Empty.defaultProps = {
     }
 };
 
-export default Empty;
+export default Webiny.createComponent(Empty);

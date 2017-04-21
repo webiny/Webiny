@@ -10,4 +10,4 @@ Menu.defaultProps = {
     }
 };
 
-export default Menu;
+export default Webiny.createComponent(Menu);

@@ -23,4 +23,4 @@ Image.defaultProps = {
     }
 };
 
-export default Image;
+export default Webiny.createComponent(Image);

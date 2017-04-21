@@ -85,4 +85,4 @@ MarkdownEditor.defaultProps = {
     }
 };
 
-export default MarkdownEditor;
+export default Webiny.createComponent(MarkdownEditor);

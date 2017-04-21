@@ -12,4 +12,4 @@ Body.defaultProps = {
     }
 };
 
-export default Body;
+export default Webiny.createComponent(Body);

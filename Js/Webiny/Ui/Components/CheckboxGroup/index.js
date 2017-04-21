@@ -27,6 +27,9 @@ class CheckboxGroup extends Webiny.Ui.OptionComponent {
 
     /**
      * Create options elements
+     *
+     * Callback parameter is used when you need to implement a custom renderer and optionally wrap each option element with custom markup
+     *
      * @returns {Array}
      */
     renderOptions(callback = null) {

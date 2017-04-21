@@ -228,6 +228,7 @@ class Table extends Webiny.Ui.Component {
 }
 
 Table.defaultProps = {
+    formSkip: true, // tells Form to stop descending into this element's children when looking for form components
     data: [],
     type: 'simple',
     onSelect: null,

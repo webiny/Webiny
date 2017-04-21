@@ -75,4 +75,4 @@ Downloader.defaultProps = {
     }
 };
 
-export default Downloader;
+export default Webiny.createComponent(Downloader);
