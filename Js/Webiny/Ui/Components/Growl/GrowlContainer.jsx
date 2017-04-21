@@ -1,5 +1,5 @@
 import Webiny from 'Webiny';
-import styles from './styles/Growl.css';
+import styles from './styles.css';
 
 class GrowlContainer extends Webiny.Ui.Component {
 
