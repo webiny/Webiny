@@ -8,10 +8,13 @@ class SelectRowField extends Field {
 SelectRowField.defaultProps = _.merge({}, Field.defaultProps, {
     className: 'select-row',
     headerRenderer() {
-        const {Checkbox} = this.props;
         return (
             <th className="select-row">
-                <Checkbox state={this.props.allRowsSelected} onChange={this.props.onSelectAll} className="checkbox--select-row"/>
+                <Webiny.Ui.LazyLoad modules={['Checkbox']}>
+                    {({Checkbox}) => (
+                        <Checkbox state={this.props.allRowsSelected} onChange={this.props.onSelectAll} className="checkbox--select-row"/>
+                    )}
+                </Webiny.Ui.LazyLoad>
             </th>
         );
     },
