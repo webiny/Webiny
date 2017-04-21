@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import Icon from './../Icon';
 
 class IconPicker extends Webiny.Ui.Component {
 
@@ -7,14 +8,12 @@ class IconPicker extends Webiny.Ui.Component {
 IconPicker.defaultProps = {
     minimumInputLength: 2,
     tooltip: 'Visit http://fontawesome.io for full list',
-    optionRenderer: option => {
-        const {Icon} = this.props;
+    optionRenderer(option) {
         return (
             <div><Icon icon={'fa ' + option.id}/> {option.text}</div>
         );
     },
-    selectedRenderer: option => {
-        const {Icon} = this.props;
+    selectedRenderer(option) {
         return (
             <div><Icon icon={'fa ' + option.id}/> {option.text}</div>
         );
@@ -615,4 +614,4 @@ IconPicker.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(IconPicker, {modules: ['Select', 'Icon']});
+export default Webiny.createComponent(IconPicker, {modules: ['Select']});

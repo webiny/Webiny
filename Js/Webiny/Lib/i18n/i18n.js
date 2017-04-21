@@ -67,7 +67,13 @@ i18n.parsers = [];
  * @returns {XML}
  */
 i18n.render = function render(key, label, variables, options) {
-    return <Webiny.Ui.Components.I18N placeholder={label} translationKey={key} variables={variables} options={options}/>;
+    return (
+        <Webiny.Ui.LazyLoad modules={['I18N']}>
+            {({I18N}) => (
+                <I18N placeholder={label} translationKey={key} variables={variables} options={options}/>
+            )}
+        </Webiny.Ui.LazyLoad>
+    );
 };
 
 // Following methods are plain-simple for now - let's make them smarter in the near future

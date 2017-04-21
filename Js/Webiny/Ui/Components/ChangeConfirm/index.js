@@ -61,7 +61,6 @@ class ChangeConfirm extends Webiny.Ui.Component {
     }
 
     onConfirm() {
-        console.log('ChangeConfirm onConfirm', this.value);
         return this.realOnChange(this.value);
     }
 }
