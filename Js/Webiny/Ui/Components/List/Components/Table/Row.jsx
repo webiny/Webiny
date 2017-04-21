@@ -3,6 +3,7 @@ import SelectRowField from './Fields/SelectRowField';
 import Field from './Field';
 import Actions from './Actions';
 import FieldInfo from './FieldInfo';
+import styles from '../../styles.css';
 
 class Row extends Webiny.Ui.Component {
 
@@ -131,7 +132,7 @@ Row.defaultProps = {
         }
 
         return (
-            <tr className={this.classSet(classes)} onClick={this.onClick}>
+            <tr className={this.classSet(classes, (this.props.selected && styles.selected))} onClick={this.onClick}>
                 {this.fields.map(this.renderField)}
                 {this.actionsElement ? <td className="text-center">{this.actionsElement}</td> : null}
             </tr>
@@ -139,4 +140,4 @@ Row.defaultProps = {
     }
 };
 
-export default Row;
+export default Webiny.createComponent(Row, {styles});

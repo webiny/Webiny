@@ -61,7 +61,8 @@ table.table > tbody > tr > td.sorted {
 	background: #EDEDED;
 }
 
-table.table > tbody > tr:hover > td {
+table.table > tbody > tr:hover > td,
+table.table > tbody > tr.selected > td {
 	background: #ffefea !important;
 }
 
@@ -181,6 +182,13 @@ table.table > tbody > tr:hover > td {
 	font-weight: 300;
 }
 
-.emptyContainer .content h2{
+.emptyContainer .content h2 {
 	margin-top: 0;
+}
+
+/* checkbox for selecting rows */
+.selectRow{
+	height: 19px; /* needs to match the checkbox height */
+	padding: 0;
+	margin: 0;
 }

@@ -79,7 +79,7 @@ Dashboard.defaultProps = {
             'Copy',
             'DateTime',
             'Date',
-            'Dropdown', // @todo: dropdown animacija ne radi
+            'Dropdown',
             'Email',
             'Fieldset',
             'Draft',
@@ -494,7 +494,7 @@ Dashboard.defaultProps = {
                                             connectToRouter={true}
                                             api="/entities/the-hub/articles"
                                             sort="id"
-                                            fields="*"
+                                            fields="*, published"
                                             searchFields="title">
                                             <Ui.List.Table>
                                                 <Ui.List.Table.Row>
@@ -502,7 +502,7 @@ Dashboard.defaultProps = {
 
                                                     <Ui.List.Table.Field name="title" align="left" label="Title" sort="title" route="Dashboard"/>
                                                     <Ui.List.Table.Field name="views" align="left" label="Views" sort="views"/>
-                                                    <Ui.List.Table.ToggleField name="enabled" align="center" label="Status"/>
+                                                    <Ui.List.Table.ToggleField name="published" align="center" label="Published"/>
 
                                                     <Ui.List.Table.Actions>
                                                         <Ui.List.Table.DeleteAction/>
@@ -529,22 +529,8 @@ Dashboard.defaultProps = {
                                             </Ui.List.Table>
                                             <Ui.List.Pagination/>
                                             <Ui.List.MultiActions>
-                                                <Ui.List.MultiAction label="Log" onAction={this.log}/>
-                                                <Ui.List.MultiAction label="Export ZIP" download={(download, data) => {
-                                                    download('POST', '/entities/demo/records/report/business-cards', _.map(Array.from(data), 'id'))
-                                                }}/>
+                                                <Ui.List.MultiAction label="Log" onAction={()=>{}}/>
                                                 <Ui.Dropdown.Divider/>
-                                                <Ui.List.DeleteMultiAction>
-                                                    {rows => {
-                                                        const props = {
-                                                            message: 'Delete ' + rows.length + ' records?',
-                                                            onConfirm: this.delete
-                                                        };
-                                                        return (
-                                                            <Ui.Modal.Confirmation {...props}/>
-                                                        );
-                                                    }}
-                                                </Ui.List.DeleteMultiAction>
                                             </Ui.List.MultiActions>
                                         </Ui.List>
                                     </Ui.Grid.Col>
