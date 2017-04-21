@@ -28,8 +28,8 @@ class Dashboard extends Webiny.Ui.View {
         this.bindMethods('growlInfo,growlWarning');
     }
 
-    growlInfo() {
-        this.infoId = Webiny.Growl.info('A friendly info!', 'New info available', true);
+    async growlInfo() {
+        this.infoId = await Webiny.Growl.info('A friendly info!', 'New info available', true);
     }
 
     growlSuccess() {
@@ -91,6 +91,14 @@ Dashboard.defaultProps = {
 
             'Input',
             'Image',
+            'ImageUploader',
+
+            'RadioGroup',
+            'Select',
+            'Switch',
+            'SwitchButton',
+            'Tabs',
+            'Tags',
 
             'Link',
             'DownloadLink',
@@ -107,153 +115,153 @@ Dashboard.defaultProps = {
                 {(Ui) => (
                     <Ui.Form>
                         {(model) => (
-                            <div>
-                                <pre>{JSON.stringify(model, null, 4)}</pre>
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>Alert</h2>
-                                        <Ui.Alert type="info" title="Well done!" close={true}>You successfully read this important alert
-                                            message.</Ui.Alert>
-                                        <Ui.Alert type="success" title="Well done!">You successfully read this important alert
-                                            message.</Ui.Alert>
-                                        <Ui.Alert type="warning" title="Well done!">You successfully read this important alert
-                                            message.</Ui.Alert>
-                                        <Ui.Alert type="error" title="Well done!">You successfully read this important alert
-                                            message.</Ui.Alert>
-                                    </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>Avatar</h2>
-                                        <Ui.Avatar
-                                            name="avatar"
-                                            cropper={{
-                                                title: 'Crop your image',
-                                                action: 'Upload image',
-                                                config: {
-                                                    closeOnClick: false,
-                                                    autoCropArea: 0.7,
-                                                    aspectRatio: 1,
-                                                    width: 300,
-                                                    height: 300
-                                                }
-                                            }}/>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-                                <hr/>
+                            <Ui.Tabs size="large">
+                                <Ui.Tabs.Tab label="Components" icon="icon-gauge">
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>Alert</h2>
+                                            <Ui.Alert type="info" title="Well done!" close={true}>You successfully read this important alert
+                                                message.</Ui.Alert>
+                                            <Ui.Alert type="success" title="Well done!">You successfully read this important alert
+                                                message.</Ui.Alert>
+                                            <Ui.Alert type="warning" title="Well done!">You successfully read this important alert
+                                                message.</Ui.Alert>
+                                            <Ui.Alert type="error" title="Well done!">You successfully read this important alert
+                                                message.</Ui.Alert>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>Avatar</h2>
+                                            <Ui.Avatar
+                                                name="avatar"
+                                                cropper={{
+                                                    title: 'Crop your image',
+                                                    action: 'Upload image',
+                                                    config: {
+                                                        closeOnClick: false,
+                                                        autoCropArea: 0.7,
+                                                        aspectRatio: 1,
+                                                        width: 300,
+                                                        height: 300
+                                                    }
+                                                }}/>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                    <hr/>
 
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>Button</h2>
-                                        <Ui.Button type="primary" icon="icon-plus-circled" label="Create" onClick={() => alert('Hi!')}/>
-                                        <Ui.Button type="secondary" icon="icon-plus-circled" label="Create" onClick={() => alert('Hi!')}/>
-                                        <Ui.Button type="default" icon="icon-plus-circled" label="Create" onClick={() => alert('Hi!')}/>
-                                    </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>ButtonGroup</h2>
-                                        <Ui.ButtonGroup>
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>Button</h2>
                                             <Ui.Button type="primary" icon="icon-plus-circled" label="Create" onClick={() => alert('Hi!')}/>
-                                            <Ui.Button type="secondary" icon="icon-plus-circled" label="Create"
-                                                       onClick={() => alert('Hi!')}/>
+                                            <Ui.Button type="secondary" icon="icon-plus-circled" label="Create" onClick={() => alert('Hi!')}/>
                                             <Ui.Button type="default" icon="icon-plus-circled" label="Create" onClick={() => alert('Hi!')}/>
-                                        </Ui.ButtonGroup>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-                                <hr/>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>ButtonGroup</h2>
+                                            <Ui.ButtonGroup>
+                                                <Ui.Button type="primary" icon="icon-plus-circled" label="Create" onClick={() => alert('Hi!')}/>
+                                                <Ui.Button type="secondary" icon="icon-plus-circled" label="Create"
+                                                           onClick={() => alert('Hi!')}/>
+                                                <Ui.Button type="default" icon="icon-plus-circled" label="Create" onClick={() => alert('Hi!')}/>
+                                            </Ui.ButtonGroup>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                    <hr/>
 
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>Carousel</h2>
-                                        <Ui.Carousel items="3">
-                                            <div style={{backgroundColor: "#ff3f4d"}}>
-                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>Swipe</h2>
-                                            </div>
-                                            <div style={{backgroundColor: "#ff3f4d"}}>
-                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>Drag</h2>
-                                            </div>
-                                            <div style={{backgroundColor: "#ff3f4d"}}>
-                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>Responsive</h2>
-                                            </div>
-                                            <div style={{backgroundColor: "#ff3f4d"}}>
-                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>CSS3</h2>
-                                            </div>
-                                            <div style={{backgroundColor: "#ff3f4d"}}>
-                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>Fast</h2>
-                                            </div>
-                                            <div style={{backgroundColor: "#ff3f4d"}}>
-                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>Easy</h2>
-                                            </div>
-                                            <div style={{backgroundColor: "#ff3f4d"}}>
-                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>Free</h2>
-                                            </div>
-                                            <div style={{backgroundColor: "#ff3f4d"}}>
-                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>Upgradable</h2>
-                                            </div>
-                                            <div style={{backgroundColor: "#ff3f4d"}}>
-                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>Tons of options</h2>
-                                            </div>
-                                            <div style={{backgroundColor: "#ff3f4d"}}>
-                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>Infinity</h2>
-                                            </div>
-                                            <div style={{backgroundColor: "#ff3f4d"}}>
-                                                <h2 style={{padding: "5rem 0", color: "#fff"}}>Auto Width</h2>
-                                            </div>
-                                        </Ui.Carousel>
-                                    </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>ChangeConfirm</h2>
-                                        // pending dependency upon Switch component
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-                                <hr/>
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>Carousel</h2>
+                                            <Ui.Carousel items="3">
+                                                <div style={{backgroundColor: "#ff3f4d"}}>
+                                                    <h2 style={{padding: "5rem 0", color: "#fff"}}>Swipe</h2>
+                                                </div>
+                                                <div style={{backgroundColor: "#ff3f4d"}}>
+                                                    <h2 style={{padding: "5rem 0", color: "#fff"}}>Drag</h2>
+                                                </div>
+                                                <div style={{backgroundColor: "#ff3f4d"}}>
+                                                    <h2 style={{padding: "5rem 0", color: "#fff"}}>Responsive</h2>
+                                                </div>
+                                                <div style={{backgroundColor: "#ff3f4d"}}>
+                                                    <h2 style={{padding: "5rem 0", color: "#fff"}}>CSS3</h2>
+                                                </div>
+                                                <div style={{backgroundColor: "#ff3f4d"}}>
+                                                    <h2 style={{padding: "5rem 0", color: "#fff"}}>Fast</h2>
+                                                </div>
+                                                <div style={{backgroundColor: "#ff3f4d"}}>
+                                                    <h2 style={{padding: "5rem 0", color: "#fff"}}>Easy</h2>
+                                                </div>
+                                                <div style={{backgroundColor: "#ff3f4d"}}>
+                                                    <h2 style={{padding: "5rem 0", color: "#fff"}}>Free</h2>
+                                                </div>
+                                                <div style={{backgroundColor: "#ff3f4d"}}>
+                                                    <h2 style={{padding: "5rem 0", color: "#fff"}}>Upgradable</h2>
+                                                </div>
+                                                <div style={{backgroundColor: "#ff3f4d"}}>
+                                                    <h2 style={{padding: "5rem 0", color: "#fff"}}>Tons of options</h2>
+                                                </div>
+                                                <div style={{backgroundColor: "#ff3f4d"}}>
+                                                    <h2 style={{padding: "5rem 0", color: "#fff"}}>Infinity</h2>
+                                                </div>
+                                                <div style={{backgroundColor: "#ff3f4d"}}>
+                                                    <h2 style={{padding: "5rem 0", color: "#fff"}}>Auto Width</h2>
+                                                </div>
+                                            </Ui.Carousel>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>ChangeConfirm</h2>
+                                            // pending dependency upon Switch component
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                    <hr/>
 
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>Checkbox</h2>
-                                        <Ui.Checkbox label="Single checkbox" name="enabled" grid={12}/>
-                                    </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>CheckboxGroup</h2>
-                                        <Ui.CheckboxGroup label="Choose your favorite fruit:" name="fruits" validate="minLength:2">
-                                            <option value="strawberry">Strawberry</option>
-                                            <option value="blackberry">Blackberry</option>
-                                            <option value="mango">Mango</option>
-                                            <option value="banana">Banana</option>
-                                            <validator name="minLength">Please select at least 2 options</validator>
-                                        </Ui.CheckboxGroup>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-                                <hr/>
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>Checkbox</h2>
+                                            <Ui.Checkbox label="Single checkbox" name="enabled" grid={12}/>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>CheckboxGroup</h2>
+                                            <Ui.CheckboxGroup label="Choose your favorite fruit:" name="fruits" validate="minLength:2">
+                                                <option value="strawberry">Strawberry</option>
+                                                <option value="blackberry">Blackberry</option>
+                                                <option value="mango">Mango</option>
+                                                <option value="banana">Banana</option>
+                                                <validator name="minLength">Please select at least 2 options</validator>
+                                            </Ui.CheckboxGroup>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                    <hr/>
 
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>ClickConfirm</h2>
-                                        <Ui.ClickConfirm message="Do you really want to delete your credit card?">
-                                            <Ui.Button type="primary" label="Delete credit card" onClick={() => {
-                                                // You can return a promise or any other value
-                                                return new Promise(r => {
-                                                    setTimeout(r, 1500);
-                                                });
-                                            }}/>
-                                        </Ui.ClickConfirm>
-                                    </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>ClickSuccess</h2>
-                                        <Ui.ClickSuccess message="That was easy!">
-                                            <Ui.Button type="primary" label="Click me!" onClick={() => {
-                                            }}/>
-                                        </Ui.ClickSuccess>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-                                <hr/>
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>ClickConfirm</h2>
+                                            <Ui.ClickConfirm message="Do you really want to delete your credit card?">
+                                                <Ui.Button type="primary" label="Delete credit card" onClick={() => {
+                                                    // You can return a promise or any other value
+                                                    return new Promise(r => {
+                                                        setTimeout(r, 1500);
+                                                    });
+                                                }}/>
+                                            </Ui.ClickConfirm>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>ClickSuccess</h2>
+                                            <Ui.ClickSuccess message="That was easy!">
+                                                <Ui.Button type="primary" label="Click me!" onClick={() => {
+                                                }}/>
+                                            </Ui.ClickSuccess>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                    <hr/>
 
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>CodeEditor</h2>
-                                        <Ui.CodeEditor name="content" description="Enter plain text or HTML content"/>
-                                    </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>CodeHighlight</h2>
-                                        <Ui.CodeHighlight>
-                                            {`<!DOCTYPE html>
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>CodeEditor</h2>
+                                            <Ui.CodeEditor name="content" description="Enter plain text or HTML content"/>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>CodeHighlight</h2>
+                                            <Ui.CodeHighlight>
+                                                {`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -265,195 +273,250 @@ Dashboard.defaultProps = {
 ...
 </body>
 </html>`}
-                                        </Ui.CodeHighlight>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-                                <hr/>
+                                            </Ui.CodeHighlight>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                    <hr/>
 
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>Copy.Button</h2>
-                                        <Ui.Copy.Button type="secondary" icon="icon-pencil" value="Clipboard content" label="Click to copy!"/>
-                                    </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>Copy.Input</h2>
-                                        <Ui.Copy.Input label="Your download link" value="http://download.me/35Tzy7"/>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-                                <hr/>
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>Copy.Button</h2>
+                                            <Ui.Copy.Button type="secondary" icon="icon-pencil" value="Clipboard content"
+                                                            label="Click to copy!"/>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>Copy.Input</h2>
+                                            <Ui.Copy.Input label="Your download link" value="http://download.me/35Tzy7"/>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                    <hr/>
 
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>DateTime</h2>
-                                        <Ui.DateTime label="Date & Time" name="datetime" placeholder="Select date and time"/>
-                                    </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>Date</h2>
-                                        <Ui.Date label="Date" name="date" placeholder="Select a date" validate="required"/>
-                                    </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>Time</h2>
-                                        <Ui.Time label="Time" name="time" placeholder="Select time"/>
-                                    </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>DateRange</h2>
-                                        <Ui.DateRange label="Date range" name="daterange" placeholder="Select a date range"/>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-                                <hr/>
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>DateTime</h2>
+                                            <Ui.DateTime label="Date & Time" name="datetime" placeholder="Select date and time"/>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>Date</h2>
+                                            <Ui.Date label="Date" name="date" placeholder="Select a date" validate="required"/>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>Time</h2>
+                                            <Ui.Time label="Time" name="time" placeholder="Select time"/>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>DateRange</h2>
+                                            <Ui.DateRange label="Date range" name="daterange" placeholder="Select a date range"/>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                    <hr/>
 
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>Draft</h2>
-                                        <DraftEditor
-                                            name="draft"
-                                            placeholder="Tell a story..."
-                                            plugins={this.plugins}/>
-                                    </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>Dropdown</h2>
-                                        <Ui.Dropdown title="Actions">
-                                            <Ui.Dropdown.Header title="Column"/>
-                                            <Ui.Dropdown.Link onClick={() => {}} icon="fa-plus" title="Insert"/>
-                                            <Ui.Dropdown.Link onClick={() => {}} icon="fa-plus" title="Update"/>
-                                            <Ui.Dropdown.Divider/>
-                                            <Ui.Dropdown.Link onClick={() => {}} icon="fa-plus" title="Insert"/>
-                                            <Ui.Dropdown.Link onClick={() => {}} icon="fa-remove" title="Delete"/>
-                                        </Ui.Dropdown>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-                                <hr/>
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>Draft</h2>
+                                            <DraftEditor
+                                                name="draft"
+                                                placeholder="Tell a story..."
+                                                plugins={this.plugins}/>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>Dropdown</h2>
+                                            <Ui.Dropdown title="Actions">
+                                                <Ui.Dropdown.Header title="Column"/>
+                                                <Ui.Dropdown.Link onClick={() => {
+                                                }} icon="fa-plus" title="Insert"/>
+                                                <Ui.Dropdown.Link onClick={() => {
+                                                }} icon="fa-plus" title="Update"/>
+                                                <Ui.Dropdown.Divider/>
+                                                <Ui.Dropdown.Link onClick={() => {
+                                                }} icon="fa-plus" title="Insert"/>
+                                                <Ui.Dropdown.Link onClick={() => {
+                                                }} icon="fa-remove" title="Delete"/>
+                                            </Ui.Dropdown>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                    <hr/>
 
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>Email</h2>
-                                        <Ui.Email
-                                            placeholder="Enter a valid email address"
-                                            label="Email"
-                                            name="email"
-                                            validate="required" // 'email' validator is added automatically
-                                            description="Your email will be used for logging in"/>
-                                    </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>Fieldset</h2>
-                                        <Ui.Fieldset title="Owner details">
-                                            <h4>Inside the fieldset</h4>
-                                        </Ui.Fieldset>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-                                <hr/>
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>Email</h2>
+                                            <Ui.Email
+                                                placeholder="Enter a valid email address"
+                                                label="Email"
+                                                name="email"
+                                                validate="required" // 'email' validator is added automatically
+                                                description="Your email will be used for logging in"/>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>Fieldset</h2>
+                                            <Ui.Fieldset title="Owner details">
+                                                <h4>Inside the fieldset</h4>
+                                            </Ui.Fieldset>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                    <hr/>
 
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>File</h2>
-                                        <Ui.File name="file"/>
-                                    </Ui.Grid.Col>
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>File</h2>
+                                            <Ui.File name="file"/>
+                                        </Ui.Grid.Col>
 
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>Form</h2>
-                                        <Ui.Form>
-                                            {(model, form) => {
-                                                return (
-                                                    <Ui.Grid.Row>
-                                                        <Ui.Grid.Col xs={12}>
-                                                            <Ui.Form.Error/>
-                                                            <Ui.Input name="title" label="Title" validate="required"/>
-                                                            <Ui.Input name="slug" label="Slug" validate="required"/>
-                                                            <Ui.Button type="primary" label="Submit" onClick={form.submit}/>
-                                                        </Ui.Grid.Col>
-                                                    </Ui.Grid.Row>
-                                                );
-                                            }}
-                                        </Ui.Form>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-                                <hr/>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>Form</h2>
+                                            <Ui.Form>
+                                                {(model, form) => {
+                                                    return (
+                                                        <Ui.Grid.Row>
+                                                            <Ui.Grid.Col xs={12}>
+                                                                <Ui.Form.Error/>
+                                                                <Ui.Input name="title" label="Title" validate="required"/>
+                                                                <Ui.Input name="slug" label="Slug" validate="required"/>
+                                                                <Ui.Button type="primary" label="Submit" onClick={form.submit}/>
+                                                            </Ui.Grid.Col>
+                                                        </Ui.Grid.Row>
+                                                    );
+                                                }}
+                                            </Ui.Form>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                    <hr/>
 
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>Gallery</h2>
-                                        <Ui.Gallery
-                                            name="gallery"
-                                            maxImages={7}
-                                            newCropper={{
-                                                title: 'Crop your image',
-                                                action: 'Upload image',
-                                                config: {
-                                                    closeOnClick: false,
-                                                    autoCropArea: 0.7,
-                                                    aspectRatio: 1,
-                                                    width: 300,
-                                                    height: 300
-                                                }
-                                            }}/>
-                                    </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>GoogleMap</h2>
-                                        <div style={{width: '300px', height:'300px'}}>
-                                            <Ui.GoogleMap apiKey="AIzaSyCSATPF__n85eueKyE9UgjNUOpEuvFMmCk"/>
-                                        </div>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-                                <hr/>
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>Gallery</h2>
+                                            <Ui.Gallery
+                                                name="gallery"
+                                                maxImages={7}
+                                                newCropper={{
+                                                    title: 'Crop your image',
+                                                    action: 'Upload image',
+                                                    config: {
+                                                        closeOnClick: false,
+                                                        autoCropArea: 0.7,
+                                                        aspectRatio: 1,
+                                                        width: 300,
+                                                        height: 300
+                                                    }
+                                                }}/>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>GoogleMap</h2>
+                                            <div style={{width: '300px', height: '300px'}}>
+                                                <Ui.GoogleMap apiKey="AIzaSyCSATPF__n85eueKyE9UgjNUOpEuvFMmCk"/>
+                                            </div>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                    <hr/>
 
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>Gravatar</h2>
-                                        <Ui.Gravatar hash="205e460b479e2e5b48aec07710c08d50" />
-                                    </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>Growl</h2>
-                                        <Ui.Button label="Info" onClick={this.growlInfo}/>
-                                        <Ui.Button label="Success" onClick={this.growlSuccess}/>
-                                        <Ui.Button label="Danger" onClick={this.growlDanger}/>
-                                        <Ui.Button label="Warning" onClick={this.growlWarning}/>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-                                <hr/>
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>Gravatar</h2>
+                                            <Ui.Gravatar hash="205e460b479e2e5b48aec07710c08d50"/>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>Growl</h2>
+                                            <Ui.Button label="Info" onClick={this.growlInfo}/>
+                                            <Ui.Button label="Success" onClick={this.growlSuccess}/>
+                                            <Ui.Button label="Danger" onClick={this.growlDanger}/>
+                                            <Ui.Button label="Warning" onClick={this.growlWarning}/>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                    <hr/>
 
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={6}>
-                                        <Ui.File name="file"/>
-                                    </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={6}>
-                                        <Ui.DownloadLink type="secondary" align="right"
-                                                         download="/entities/demo/records/report/summary/csv">
-                                            <Ui.Icon icon="icon-file-o"/>
-                                            Export CSV
-                                        </Ui.DownloadLink>
-                                    </Ui.Grid.Col>
-                                    <Ui.Grid.Col all={12}>
-                                        <Ui.Image
-                                            name="image"
-                                            cropper={{
-                                                title: 'Crop your image',
-                                                action: 'Upload image',
-                                                config: {
-                                                    closeOnClick: false,
-                                                    autoCropArea: 0.7,
-                                                    aspectRatio: 1,
-                                                    width: 300,
-                                                    height: 300
-                                                }
-                                            }}/>
-                                        <Ui.Gallery
-                                            name="gallery"
-                                            maxImages={7}
-                                            newCropper={{
-                                                title: 'Crop your image',
-                                                action: 'Upload image',
-                                                config: {
-                                                    closeOnClick: false,
-                                                    autoCropArea: 0.7,
-                                                    aspectRatio: 1,
-                                                    width: 300,
-                                                    height: 300
-                                                }
-                                            }}/>
-                                        <Ui.HtmlEditor name="html"/>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-                            </div>
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>RadioGroup</h2>
+                                            <Ui.RadioGroup label="Roles (static)" name="access" grid={12}>
+                                                <option value="Admin">Admin</option>
+                                                <option value="Billing">Billing</option>
+                                                <option value="Crm">CRM</option>
+                                                <option value="Dashboard">Dashboard</option>
+                                            </Ui.RadioGroup>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>Select</h2>
+                                            <Ui.Select name="staticSelect" label="Static select" placeholder="Select an option">
+                                                <option value="yes">Yes</option>
+                                                <option value="no">
+                                                    <webiny-no>No</webiny-no>
+                                                </option>
+                                                <option value="maybe"><strong>Maybe</strong></option>
+                                            </Ui.Select>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                    <hr/>
+
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>Switch</h2>
+                                            <Ui.Switch label="Enabled" name="switch"/>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>SwitchButton</h2>
+                                            <Ui.SwitchButton value={true} onChange={val => alert(val)}/>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                    <hr/>
+
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={6}>
+                                            <h2>Tags</h2>
+                                            <Ui.Tags name="tags" validateTags="minLength:3" placeholder="Add tags" label="Tags"/>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                    <hr/>
+
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={6}>
+                                            <Ui.File name="file"/>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={6}>
+                                            <Ui.DownloadLink type="secondary" align="right"
+                                                             download="/entities/demo/records/report/summary/csv">
+                                                <Ui.Icon icon="icon-file-o"/>
+                                                Export CSV
+                                            </Ui.DownloadLink>
+                                        </Ui.Grid.Col>
+                                        <Ui.Grid.Col all={12}>
+                                            <Ui.Image
+                                                name="image"
+                                                cropper={{
+                                                    title: 'Crop your image',
+                                                    action: 'Upload image',
+                                                    config: {
+                                                        closeOnClick: false,
+                                                        autoCropArea: 0.7,
+                                                        aspectRatio: 1,
+                                                        width: 300,
+                                                        height: 300
+                                                    }
+                                                }}/>
+                                            <Ui.Gallery
+                                                name="gallery"
+                                                maxImages={7}
+                                                newCropper={{
+                                                    title: 'Crop your image',
+                                                    action: 'Upload image',
+                                                    config: {
+                                                        closeOnClick: false,
+                                                        autoCropArea: 0.7,
+                                                        aspectRatio: 1,
+                                                        width: 300,
+                                                        height: 300
+                                                    }
+                                                }}/>
+                                            <Ui.HtmlEditor name="html"/>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+                                </Ui.Tabs.Tab>
+                                <Ui.Tabs.Tab label="Model" icon="fa-database">
+                                    <pre>{JSON.stringify(model, null, 4)}</pre>
+                                </Ui.Tabs.Tab>
+                            </Ui.Tabs>
                         )}
                     </Ui.Form>
                 )}
