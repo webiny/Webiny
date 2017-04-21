@@ -1,23 +1,40 @@
 import Webiny from 'Webiny';
-import Icon from './../Icon';
 
 class IconPicker extends Webiny.Ui.Component {
+    constructor(props){
+        super(props);
 
+        this.bindMethods('optionRenderer', 'selectedRenderer');
+    }
+
+    optionRenderer(option) {
+        if (this.props.optionRenderer) {
+            return this.props.optionRenderer(option);
+        }
+
+        const {Icon} = this.props;
+        return (
+            <div><Icon icon={'fa ' + option.id}/> {option.text}</div>
+        );
+    }
+
+    selectedRenderer(option) {
+        if (this.props.selectedRenderer) {
+            return this.props.selectedRenderer(option);
+        }
+
+        const {Icon} = this.props;
+        return (
+            <div><Icon icon={'fa ' + option.id}/> {option.text}</div>
+        );
+    }
 }
 
 IconPicker.defaultProps = {
     minimumInputLength: 2,
     tooltip: 'Visit http://fontawesome.io for full list',
-    optionRenderer(option) {
-        return (
-            <div><Icon icon={'fa ' + option.id}/> {option.text}</div>
-        );
-    },
-    selectedRenderer(option) {
-        return (
-            <div><Icon icon={'fa ' + option.id}/> {option.text}</div>
-        );
-    },
+    optionRenderer: null,
+    selectedRenderer: null,
     renderer() {
         const icons = {
             'fa-500px': '500px',
@@ -608,10 +625,12 @@ IconPicker.defaultProps = {
         };
 
         const props = _.omit(this.props, ['renderer']);
+        props.optionRenderer = this.optionRenderer;
+        props.selectedRenderer = this.selectedRenderer;
         const {Select} = this.props;
 
         return <Select {...props} options={icons}/>;
     }
 };
 
-export default Webiny.createComponent(IconPicker, {modules: ['Select']});
+export default Webiny.createComponent(IconPicker, {modules: ['Select', 'Icon']});
