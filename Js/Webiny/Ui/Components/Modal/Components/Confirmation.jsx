@@ -139,6 +139,5 @@ Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
 });
 
 export default Webiny.createComponent(Confirmation, {
-    modules: ['Button', 'Loader'],
-    api: ['show', 'hide', 'isAnimating']
+    modules: ['Button', 'Loader']
 });

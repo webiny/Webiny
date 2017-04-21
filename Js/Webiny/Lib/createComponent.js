@@ -17,7 +17,7 @@ export default (Component, options = {}) => {
 
     // Automatically expose modal dialog methods
     if (Component.prototype instanceof ModalComponent) {
-        _.assign(options, {api: ['show', 'hide']});
+        _.assign(options, {api: ['show', 'hide', 'isAnimating']});
     }
 
     class ComponentWrapper extends WebinyComponent {
@@ -30,6 +30,11 @@ export default (Component, options = {}) => {
                     });
                 })
             }
+        }
+
+        componentDidMount() {
+            // Do nothing since this is a proxy component
+            // 'onComponentDidMount' prop only needs to be handled by the actual component
         }
 
         render() {

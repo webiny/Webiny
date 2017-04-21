@@ -14,11 +14,6 @@ class UiDispatcher {
     }
 
     register(name, instance) {
-        if (DEVELOPMENT) {
-            if (_.has(container, name)) {
-                console.warn(`Component name '${name}' is already registered and will be overwritten!`);
-            }
-        }
         container[name] = instance;
         return this;
     }

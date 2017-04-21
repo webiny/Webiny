@@ -35,7 +35,7 @@ class Dialog extends Webiny.Ui.Component {
 
         this.modalContainer = document.querySelector(props.modalContainerTag);
 
-        this.bindMethods('show,hide,bindHandlers,unbindHandlers,prepareChildren,prepareChild,animationFinish');
+        this.bindMethods('show,hide,isAnimating,bindHandlers,unbindHandlers,prepareChildren,prepareChild,animationFinish');
     }
 
     componentWillUpdate(nextProps, nextState) {

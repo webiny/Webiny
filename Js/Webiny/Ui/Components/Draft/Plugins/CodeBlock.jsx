@@ -44,7 +44,7 @@ CodeBlockEditComponent.defaultProps = {
                     <Ui.Grid.Row>
                         <Ui.Grid.Col all={12} className="code-block">
                             <div style={{position: 'absolute', right: 20, top: 5}}>
-                                <Ui.Dropdown title={this.props.data.language || 'jsx'} className="balloon">
+                                <Ui.Dropdown title={this.props.data.language || 'jsx'} type="balloon">
                                     <Ui.Dropdown.Header title="Language"/>
                                     <Ui.Dropdown.Link title="HTML" onClick={() => this.switchLanguage('html')}/>
                                     <Ui.Dropdown.Link title="JSON" onClick={() => this.switchLanguage('json')}/>

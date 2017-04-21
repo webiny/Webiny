@@ -55,11 +55,14 @@ class Component extends React.Component {
 
     componentDidMount() {
         // Reserved for future system-wide functionality
+        if(this.props.onComponentDidMount) {
+            this.props.onComponentDidMount(this);
+        }
     }
 
     /* eslint-disable */
     componentWillReceiveProps(nextProps) {
-        if (nextProps.ui != this.props.ui) {
+        if (nextProps.ui !== this.props.ui) {
             UiDispatcher.unregister(this.props.ui);
             UiDispatcher.register(nextProps.ui, this);
         }
