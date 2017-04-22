@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles.css';
 
 class Progress extends Webiny.Ui.Component {
 }
@@ -6,11 +7,14 @@ class Progress extends Webiny.Ui.Component {
 Progress.defaultProps = {
     value: 0,
     renderer() {
+
+        const {styles} = this.props;
+
         return (
-            <div className="progress">
-                <div className="progress__bar">
+            <div className={styles.wrapper}>
+                <div className={styles.bar}>
                     <div
-                        className="progress__bar-inner"
+                        className={styles.barInner}
                         role="progressbar"
                         aria-valuenow={this.props.value}
                         aria-valuemin="0"
@@ -22,4 +26,4 @@ Progress.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Progress);
+export default Webiny.createComponent(Progress, {styles});

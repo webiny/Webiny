@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles.css';
 
 class Radio extends Webiny.Ui.Component {
 
@@ -47,7 +48,7 @@ Radio.defaultProps = {
     label: '',
     className: '',
     renderer() {
-        const css = this.classSet('radio-custom mt10', this.props.className, 'col-sm-' + this.props.grid);
+        const css = this.classSet(this.props.styles.radio, this.props.className, 'col-sm-' + this.props.grid);
 
         return (
             <div className={css}>
@@ -58,4 +59,4 @@ Radio.defaultProps = {
     }
 };
 
-export default Radio;
+export default Webiny.createComponent(Radio, {styles});

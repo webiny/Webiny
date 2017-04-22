@@ -1,5 +1,6 @@
 import Webiny from 'Webiny';
 import Radio from './Radio';
+import styles from './styles.css';
 
 class RadioGroup extends Webiny.Ui.OptionComponent {
     constructor(props) {
@@ -61,7 +62,7 @@ RadioGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
         return (
             <div className={this.classSet(classes)}>
                 {this.renderLabel()}
-                <div className="clearfix"/>
+                <div className={this.props.styles.clearfix}/>
                 {this.renderOptions()}
                 {this.renderValidationMessage()}
             </div>
@@ -69,4 +70,4 @@ RadioGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
     }
 });
 
-export default Webiny.createComponent(RadioGroup);
+export default Webiny.createComponent(RadioGroup, {styles});
