@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles.css';
 
 class SwitchButton extends Webiny.Ui.Component {
 
@@ -29,10 +30,11 @@ SwitchButton.defaultProps = {
     style: {},
     disabled: false,
     renderer() {
+        const {styles} = this.props;
         const value = this.props.value || null;
-        let classes = this.classSet('switch switch--inline');
+        let classes = this.classSet(styles.switch, styles.switchInline);
         if (this.props.disabled) {
-            classes += ' disabled';
+            classes += ' ' + styles.disabled;
         }
 
         return (
@@ -44,4 +46,4 @@ SwitchButton.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(SwitchButton);
+export default Webiny.createComponent(SwitchButton, {styles});
