@@ -95,10 +95,16 @@ Dashboard.defaultProps = {
             'ImageUploader',
             'Input',
             'Label',
-            'List',
+            'List', // @todo: zasto se switch ne renderira
             'MarkdownEditor',
             'Panel',
             'Password',
+            'Popover', // @todo: kako to testiram?
+            'Progress',
+            'RadioGroup', // @todo: iz nekog razloga clearfix ne radi
+            'SimpleCodeEditor',
+            'Switch',
+            'Tabs', // stao
 
             'Link',
             'DownloadLink',
@@ -205,7 +211,9 @@ Dashboard.defaultProps = {
                                     </Ui.Grid.Col>
                                     <Ui.Grid.Col all={6}>
                                         <h2>ChangeConfirm</h2>
-                                        // pending dependency upon Switch component
+                                        <Ui.ChangeConfirm message="Are you sure you want to toggle this switch?">
+                                            <Ui.Switch name="enabled" disabled={true}/>
+                                        </Ui.ChangeConfirm>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                                 <hr/>
@@ -436,7 +444,7 @@ Dashboard.defaultProps = {
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>
                                         <h2>IconPicker</h2>
-                                        <Ui.IconPicker placeholder="Select an icon" label="Icon Picker" name="icon"/>
+                                        <Ui.IconPicker/>
                                     </Ui.Grid.Col>
 
                                     <Ui.Grid.Col all={6}>
@@ -572,6 +580,49 @@ Dashboard.defaultProps = {
                                     <Ui.Grid.Col all={6}>
                                         <h2>Password</h2>
                                         <Ui.Password name="pass" validate="required" label="Your password"/>
+                                    </Ui.Grid.Col>
+
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Progress</h2>
+                                        <Ui.Progress value="50"/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                                <hr/>
+
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>RadioGroup</h2>
+                                        <Ui.RadioGroup label="Choose your favorite fruit:" name="fruits" validate="minLength:2">
+                                            <option value="strawberry">Strawberry</option>
+                                            <option value="blackberry">Blackberry</option>
+                                            <option value="mango">Mango</option>
+                                            <option value="banana">Banana</option>
+                                            <validator name="minLength">Please select at least 2 options</validator>
+                                        </Ui.RadioGroup>
+                                    </Ui.Grid.Col>
+
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>SimpleCodeEditor</h2>
+                                        <Ui.SimpleCodeEditor/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                                <hr/>
+
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Tabs</h2>
+                                        <Ui.Tabs>
+                                            <Ui.Tabs.Tab label="S3 Backup Location" icon="fa-hdd-o">
+                                                Some content
+                                            </Ui.Tabs.Tab>
+                                            <Ui.Tabs.Tab label="Tab 2">
+                                                This is tab 2
+                                            </Ui.Tabs.Tab>
+                                        </Ui.Tabs>
+                                    </Ui.Grid.Col>
+
+                                    <Ui.Grid.Col all={6}>
+                                        <h2></h2>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                                 <hr/>

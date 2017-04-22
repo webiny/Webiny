@@ -54,6 +54,7 @@ RadioGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
     radioRenderer: null,
     disabledClass: 'disabled',
     renderer() {
+        const {styles} = this.props;
         const classes = {'form-group': true};
         if (this.isDisabled()) {
             classes[this.props.disabledClass] = true;
@@ -62,7 +63,7 @@ RadioGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
         return (
             <div className={this.classSet(classes)}>
                 {this.renderLabel()}
-                <div className={this.props.styles.clearfix}/>
+                <div className={styles.clearfix}/>
                 {this.renderOptions()}
                 {this.renderValidationMessage()}
             </div>
