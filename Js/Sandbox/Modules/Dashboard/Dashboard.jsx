@@ -90,7 +90,7 @@ Dashboard.defaultProps = {
             'Gravatar',
             'HtmlEditor',
             'Icon',
-            //'IconPicker',
+            'IconPicker',
             'Image',
             'ImageUploader',
             'Input',
@@ -436,7 +436,7 @@ Dashboard.defaultProps = {
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>
                                         <h2>IconPicker</h2>
-                                        @todo: waiting for select component
+                                        <Ui.IconPicker placeholder="Select an icon" label="Icon Picker" name="icon"/>
                                     </Ui.Grid.Col>
 
                                     <Ui.Grid.Col all={6}>

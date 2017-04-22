@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Link = Webiny.Ui.Components.Link;
 
 class Navigation extends Webiny.Ui.Component {
 
@@ -22,6 +21,7 @@ class Navigation extends Webiny.Ui.Component {
     }
 
     getLink(route, linkProps = {}) {
+        const {Link} = this.props;
         route = _.isString(route) ? route : null;
 
         if (route && route.indexOf(Webiny.Router.getBaseUrl()) === 0) {
@@ -78,9 +78,9 @@ class Navigation extends Webiny.Ui.Component {
             key: menu.key,
             label: menu.label,
             children: [
-                <span key="icon" className={menuIconClass}></span>,
+                <span key="icon" className={menuIconClass}/>,
                 <span key="title" className="app-title">{menu.label}</span>,
-                <span key="caret" className="icon-caret-down icon mobile-caret"></span>
+                <span key="caret" className="icon-caret-down icon mobile-caret"/>
             ]
         };
 
@@ -136,6 +136,7 @@ class Navigation extends Webiny.Ui.Component {
         if (!this.canAccess(menu)) {
             return null;
         }
+        const {Link} = this.props;
         const mainAction = this.getLink(menu.route, {key: index, label: menu.label});
         let secondaryAction = null;
         let caret = null;
@@ -149,14 +150,14 @@ class Navigation extends Webiny.Ui.Component {
                 className: 'small quick-link',
                 children: [
                     <span key="label">{menu.action.label}</span>,
-                    <span key="icon" className={this.classSet('icon', actionIcon)}></span>
+                    <span key="icon" className={this.classSet('icon', actionIcon)}/>
                 ]
             };
             secondaryAction = this.getLink(menu.action.route, linkProps);
         }
 
         if (_.isArray(menu.route)) {
-            caret = <span className="icon icon-caret-down"></span>;
+            caret = <span className="icon icon-caret-down"/>;
             items = (
                 <ul>
                     {menu.route.map((i, key) => {
@@ -213,7 +214,7 @@ Navigation.defaultProps = {
                 <Webiny.Ui.Placeholder name="Header"/>
 
                 <div className="navbar-collapse collapse" id="left-sidebar">
-                    <div className="shield"></div>
+                    <div className="shield"/>
                     <div className="left-menu">
                         <ul className="nav navbar-nav navbar-right">
                             {menu}
@@ -231,4 +232,4 @@ Navigation.defaultProps = {
     }
 };
 
-export default Navigation;
+export default Webiny.createComponent(Navigation, {modules: ['Link']});

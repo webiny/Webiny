@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
 class SystemApiTokenModal extends Webiny.Ui.ModalComponent {
 
@@ -12,46 +11,51 @@ class SystemApiTokenModal extends Webiny.Ui.ModalComponent {
     }
 
     renderDialog() {
+        const {Button, Modal, Link, Copy, Alert, Grid, Label} = this.props;
         let showToken = (
-            <Ui.Button
+            <Button
                 type="primary"
                 label="I'm well aware of possible consequences of sharing this token. Reveal it!"
                 onClick={() => this.setState({confirmed: true})}/>
         );
 
         if (this.state.confirmed) {
-            showToken = <Ui.Copy.Input value={this.props.token}/>;
+            showToken = <Copy.Input value={this.props.token}/>;
         }
 
         return (
-            <Ui.Modal.Dialog>
-                <Ui.Modal.Header title="System API token"/>
-                <Ui.Modal.Body>
-                    <Ui.Alert type="info">
+            <Modal.Dialog>
+                <Modal.Header title="System API token"/>
+                <Modal.Body>
+                    <Alert type="info">
                         To grant access to your API to 3rd party clients,&nbsp;
-                        <Ui.Link onClick={() => this.hide().then(() => this.props.createToken())}>create a new API token</Ui.Link>.
-                    </Ui.Alert>
+                        <Link onClick={() => this.hide().then(() => this.props.createToken())}>
+                            Create a new API token
+                        </Link>.
+                    </Alert>
 
                     <p>
                         System API token allows its bearer to access resources exposed by your API.
                         <br/>This system token is not meant to be shared, it is for your system only!
                         <br/><br/>
-                        Use it when you need to make internal API calls, by sending a <Ui.Label inline>X-Webiny-Authorization</Ui.Label>
+                        Use it when you need to make internal API calls, by sending a <Label inline>X-Webiny-Authorization</Label>
                         header.
                     </p>
-                    <Ui.Grid.Row>
-                        <Ui.Grid.Col all={12} className="text-center">
+                    <Grid.Row>
+                        <Grid.Col all={12} className="text-center">
                             {showToken}
-                        </Ui.Grid.Col>
-                    </Ui.Grid.Row>
-                </Ui.Modal.Body>
-                <Ui.Modal.Footer>
-                    <Ui.Link type="default" align="left" route="ApiTokens.Logs" params={{token: 'system'}}>View logs</Ui.Link>
-                    <Ui.Button label="Close" onClick={this.hide}/>
-                </Ui.Modal.Footer>
-            </Ui.Modal.Dialog>
+                        </Grid.Col>
+                    </Grid.Row>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Link type="default" align="left" route="ApiTokens.Logs" params={{token: 'system'}}>View logs</Link>
+                    <Button label="Close" onClick={this.hide}/>
+                </Modal.Footer>
+            </Modal.Dialog>
         );
     }
 }
 
-export default SystemApiTokenModal;
+export default Webiny.createComponent(SystemApiTokenModal, {
+    modules: ['Button', 'Modal', 'Link', 'Copy', 'Alert', 'Grid', 'Label']
+});
