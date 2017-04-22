@@ -3,52 +3,51 @@ import Webiny from 'Webiny';
 class ApiTokenForm extends Webiny.Ui.ModalComponent {
 
     renderDialog() {
+        const {Modal, Form, Grid, Input, Switch, Button} = this.props;
+
         const formProps = {
             api: '/entities/core/api-token',
             fields: '*',
             onSubmitSuccess: () => {
-                this.props.showView('tokensListView')().then(this.ui('apiTokenList:loadData'));
+                this.hide().then(this.ui('apiTokenList:loadData'));
             },
             defaultModel: this.props.data
         };
 
         return (
-            <Webiny.Ui.LazyLoad modules={['Modal', 'Form', 'Grid', 'Input', 'Switch', 'Button']}>
-                {(Ui) => (
-                    <Ui.Modal.Dialog>
-                        {dialog => (
-                            <Ui.Form {...formProps}>
-                                {(model, form) => (
-                                    <modal>
-                                        <Ui.Modal.Header title="API Token" onClose={dialog.hide}/>
-                                        <Ui.Modal.Body>
-                                            <Ui.Grid.Row>
-                                                <Ui.Grid.Col all={12}>
-                                                    <Ui.Form.Error/>
-                                                    <Ui.Input readOnly label="Token" name="token" renderIf={() => model.id}/>
-                                                    <Ui.Input label="Owner" name="owner" validate="required" placeholder="Eg: webiny.com"/>
-                                                    <Ui.Input
-                                                        label="Description"
-                                                        name="description"
-                                                        validate="required"
-                                                        placeholder="Short description of usage"/>
-                                                    <Ui.Switch label="Enabled" name="enabled"/>
-                                                </Ui.Grid.Col>
-                                            </Ui.Grid.Row>
-                                        </Ui.Modal.Body>
-                                        <Ui.Modal.Footer>
-                                            <Ui.Button label="Cancel" onClick={this.hide}/>
-                                            <Ui.Button type="primary" label="Save token" onClick={form.submit}/>
-                                        </Ui.Modal.Footer>
-                                    </modal>
-                                )}
-                            </Ui.Form>
+            <Modal.Dialog>
+                {dialog => (
+                    <Form {...formProps}>
+                        {(model, form) => (
+                            <modal>
+                                <Form.Loader/>
+                                <Modal.Header title="API Token" onClose={dialog.hide}/>
+                                <Modal.Body>
+                                    <Grid.Row>
+                                        <Grid.Col all={12}>
+                                            <Form.Error/>
+                                            <Input readOnly label="Token" name="token" renderIf={() => model.id}/>
+                                            <Input label="Owner" name="owner" validate="required" placeholder="Eg: webiny.com"/>
+                                            <Input
+                                                label="Description"
+                                                name="description"
+                                                validate="required"
+                                                placeholder="Short description of usage"/>
+                                            <Switch label="Enabled" name="enabled"/>
+                                        </Grid.Col>
+                                    </Grid.Row>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <Button label="Cancel" onClick={this.hide}/>
+                                    <Button type="primary" label="Save token" onClick={form.submit}/>
+                                </Modal.Footer>
+                            </modal>
                         )}
-                    </Ui.Modal.Dialog>
+                    </Form>
                 )}
-            </Webiny.Ui.LazyLoad>
+            </Modal.Dialog>
         );
     }
 }
 
-export default ApiTokenForm;
+export default Webiny.createComponent(ApiTokenForm, {modules: ['Modal', 'Form', 'Grid', 'Input', 'Switch', 'Button']});

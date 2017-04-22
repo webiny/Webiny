@@ -1,7 +1,5 @@
 /* eslint-disable */
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
-const Table = Ui.List.Table;
 
 class UserPermissionsForm extends Webiny.Ui.View {
     constructor(props) {
@@ -22,8 +20,6 @@ class UserPermissionsForm extends Webiny.Ui.View {
             delete: '{id}.delete'
         };
 
-        this.crudPatterns = _.values(this.crud);
-
         this.bindMethods('renderService');
     }
 
@@ -37,14 +33,14 @@ class UserPermissionsForm extends Webiny.Ui.View {
         });
     }
 
-    renderService(service, model, container) {
+    renderService(service, model, container, Ui) {
         return (
             <div key={service.id}>
                 <h5><strong>{service.name}</strong></h5>
                 <table className="table table-simple no-hover">
                     <thead>
                     <tr>
-                        <th className="text-left" style={{width: 140}}></th>
+                        <th className="text-left" style={{width: 140}}/>
                         <th className="text-left">Method</th>
                     </tr>
                     </thead>
@@ -73,10 +69,8 @@ class UserPermissionsForm extends Webiny.Ui.View {
             </div>
         );
     }
-}
 
-UserPermissionsForm.defaultProps = {
-    renderer() {
+    renderView(Ui) {
         const formProps = {
             api: '/entities/core/user-permissions',
             fields: 'id,name,slug,description,permissions',
@@ -89,7 +83,6 @@ UserPermissionsForm.defaultProps = {
         };
 
         return (
-
             <Ui.Form {...formProps}>
                 {(model, container) => {
                     const entities = [];
@@ -153,7 +146,6 @@ UserPermissionsForm.defaultProps = {
                         services.push(servicePermissions);
                     });
 
-
                     const entityActions = {
                         update: (id, attrs) => {
                             const permissions = _.get(model, 'permissions.entities.' + id, {});
@@ -164,11 +156,12 @@ UserPermissionsForm.defaultProps = {
                         }
                     };
 
+                    const Table = Ui.List.Table;
                     return (
                         <Ui.View.Form>
                             <Ui.View.Header title={model.id ? 'ACL - Edit permission' : 'ACL - Create permission'}/>
                             <Ui.View.Body>
-                                <Ui.Form.Section title="General"/>
+                                <Ui.Section title="General"/>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>
                                         <Ui.Input label="Name" name="name" validate="required"/>
@@ -251,7 +244,7 @@ UserPermissionsForm.defaultProps = {
                                             </Ui.Tabs.Tab>
                                             <Ui.Tabs.Tab label="Services">
                                                 <Ui.Input placeholder="Filter services" {...this.bindTo('serviceFilter')} delay={0}/>
-                                                {services.map(service => this.renderService(service, model, container))}
+                                                {services.map(service => this.renderService(service, model, container, Ui))}
                                             </Ui.Tabs.Tab>
                                         </Ui.Tabs>
                                     </Ui.Grid.Col>
@@ -266,6 +259,17 @@ UserPermissionsForm.defaultProps = {
                 }}
             </Ui.Form>
         );
+    }
+}
+
+UserPermissionsForm.defaultProps = {
+    renderer() {
+        return (
+            <Webiny.Ui.LazyLoad modules={['Form', 'Section', 'View', 'Grid', 'Tabs', 'Input', 'List', 'Label', 'Button', 'SwitchButton']}>
+                {(Ui) => this.renderView(Ui)}
+            </Webiny.Ui.LazyLoad>
+        );
+
     }
 };
 

@@ -5,9 +5,9 @@ export default function Header(props) {
         <div className="navbar navbar-inverse" role="navigation">
             <div className="navbar-header">
                 <button type="button" className="nav" data-toggle="xcollapse" data-target=".navbar-collapse">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                    <span/>
+                    <span/>
+                    <span/>
                 </button>
                 <a href="#" className="search">
                 </a>

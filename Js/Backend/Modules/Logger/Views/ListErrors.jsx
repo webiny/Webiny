@@ -1,7 +1,6 @@
 import Webiny from 'Webiny';
 import ErrorGroup from './ErrorGroup';
 import ErrorCount from './ErrorCount';
-const Ui = Webiny.Ui.Components;
 
 class ListErrors extends Webiny.Ui.View {
 
@@ -46,55 +45,58 @@ ListErrors.defaultProps = {
         };
 
         return (
+            <Webiny.Ui.LazyLoad modules={['List', 'Section', 'Grid', 'ExpandableList', 'Filters']}>
+                {(Ui) => (
+                    <Ui.List {...jsErrorList}>
+                        {(data, meta, errorList) => {
+                            return (
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={12}>
+                                        <Ui.Section
+                                            title={`Found a total of ${meta.totalCount} records (showing ${meta.perPage} per page)`}/>
+                                    </Ui.Grid.Col>
+                                    <Ui.Grid.Col all={12}>
+                                        <Ui.List.Loader/>
+                                        <Ui.List.Table.Empty renderIf={!data.length}/>
+                                        <Ui.ExpandableList>
+                                            {data.map(row => {
+                                                return (
 
-            <Ui.List {...jsErrorList}>
-                {(data, meta, errorList) => {
-                    return (
-                        <Ui.Grid.Row>
-                            <Ui.Grid.Col all={12}>
-                                <Ui.Form.Section
-                                    title={`Found a total of ${meta.totalCount} records (showing ${meta.perPage} per page)`}/>
-                            </Ui.Grid.Col>
-                            <Ui.Grid.Col all={12}>
-                                <Ui.List.Loader/>
-                                <Ui.List.Table.Empty renderIf={!data.length}/>
-                                <Ui.ExpandableList>
-                                    {data.map(row => {
-                                        return (
+                                                    <Ui.ExpandableList.Row key={row.id}>
+                                                        <Ui.ExpandableList.Field all={1} name="Count" className="text-center">
+                                                            <ErrorCount count={row.errorCount} ui={'errorCount-' + row.id}/>
+                                                        </Ui.ExpandableList.Field>
+                                                        <Ui.ExpandableList.Field all={5} name="Error">{row.error}</Ui.ExpandableList.Field>
+                                                        <Ui.ExpandableList.Field all={4} name="Last Entry">
+                                                            <Ui.Filters.DateTime value={row.lastEntry}/>
+                                                        </Ui.ExpandableList.Field>
 
-                                            <Ui.ExpandableList.Row key={row.id}>
-                                                <Ui.ExpandableList.Field all={1} name="Count" className="text-center">
-                                                    <ErrorCount count={row.errorCount} ui={'errorCount-' + row.id}/>
-                                                </Ui.ExpandableList.Field>
-                                                <Ui.ExpandableList.Field all={5} name="Error">{row.error}</Ui.ExpandableList.Field>
-                                                <Ui.ExpandableList.Field all={4} name="Last Entry">
-                                                    <Ui.Filters.DateTime value={row.lastEntry}/>
-                                                </Ui.ExpandableList.Field>
+                                                        <Ui.ExpandableList.RowDetailsList title={row.error}>
+                                                            <ErrorGroup errorGroup={row} resolveError={this.resolveError} parentList={errorList}/>
+                                                        </Ui.ExpandableList.RowDetailsList>
 
-                                                <Ui.ExpandableList.RowDetailsList title={row.error}>
-                                                    <ErrorGroup errorGroup={row} resolveError={this.resolveError} parentList={errorList}/>
-                                                </Ui.ExpandableList.RowDetailsList>
+                                                        <Ui.ExpandableList.ActionSet>
+                                                            <Ui.ExpandableList.Action
+                                                                label="Resolve Group"
+                                                                icon="icon-check"
+                                                                onClick={() => this.resolveGroup(row, errorList)}/>
+                                                        </Ui.ExpandableList.ActionSet>
 
-                                                <Ui.ExpandableList.ActionSet>
-                                                    <Ui.ExpandableList.Action
-                                                        label="Resolve Group"
-                                                        icon="icon-check"
-                                                        onClick={() => this.resolveGroup(row, errorList)}/>
-                                                </Ui.ExpandableList.ActionSet>
+                                                    </Ui.ExpandableList.Row>
 
-                                            </Ui.ExpandableList.Row>
-
-                                        );
-                                    })}
-                                </Ui.ExpandableList>
-                            </Ui.Grid.Col>
-                            <Ui.Grid.Col all={12}>
-                                <Ui.List.Pagination/>
-                            </Ui.Grid.Col>
-                        </Ui.Grid.Row>
-                    );
-                }}
-            </Ui.List>
+                                                );
+                                            })}
+                                        </Ui.ExpandableList>
+                                    </Ui.Grid.Col>
+                                    <Ui.Grid.Col all={12}>
+                                        <Ui.List.Pagination/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                            );
+                        }}
+                    </Ui.List>
+                )}
+            </Webiny.Ui.LazyLoad>
         );
     }
 };

@@ -1,7 +1,5 @@
 /* eslint-disable */
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
-const Table = Ui.List.Table;
 
 class Form extends Webiny.Ui.View {
     constructor(props) {
@@ -21,7 +19,7 @@ class Form extends Webiny.Ui.View {
         });
     }
 
-    renderPermission(permission, model, container) {
+    renderPermission(permission, model, container, Ui) {
         const checkedIndex = _.findIndex(model.permissions, {id: permission.id});
         return (
             <tr key={permission.id}>
@@ -57,48 +55,52 @@ Form.defaultProps = {
         };
 
         return (
-            <Ui.Form ui="myForm" {...containerProps}>
-                {(model, container) => (
-                    <Ui.View.Form>
-                        <Ui.View.Header title={model.id ? 'ACL - Edit Role' : 'ACL - Create Role'}/>
-                        <Ui.View.Body noPadding>
-                            <Ui.Tabs size="large">
-                                <Ui.Tabs.Tab label="General" icon="fa-unlock-alt">
-                                    <Ui.Grid.Row>
-                                        <Ui.Grid.Col all={6}>
-                                            <Ui.Input label="Name" name="name" validate="required"/>
-                                        </Ui.Grid.Col>
-                                        <Ui.Grid.Col all={6}>
-                                            <Ui.Input label="Slug" name="slug" validate="required"/>
-                                        </Ui.Grid.Col>
-                                    </Ui.Grid.Row>
-                                    <Ui.Grid.Row>
-                                        <Ui.Grid.Col all={12}>
-                                            <Ui.Input label="Description" name="description" validate="required"/>
-                                        </Ui.Grid.Col>
-                                    </Ui.Grid.Row>
-                                    <table className="table table-simple">
-                                        <thead>
-                                        <tr>
-                                            <th className="text-left" style={{width: 140}}></th>
-                                            <th className="text-left">Permission</th>
-                                            <th className="text-left">Description</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {this.state.permissions.map(p => this.renderPermission(p, model, container))}
-                                        </tbody>
-                                    </table>
-                                </Ui.Tabs.Tab>
-                            </Ui.Tabs>
-                        </Ui.View.Body>
-                        <Ui.View.Footer>
-                            <Ui.Button type="default" onClick={container.cancel} label="Go back"/>
-                            <Ui.Button type="primary" onClick={container.submit} label="Save role" align="right"/>
-                        </Ui.View.Footer>
-                    </Ui.View.Form>
+            <Webiny.Ui.LazyLoad modules={['SwitchButton', 'Form', 'View', 'Tabs', 'Input', 'Button', 'Grid']}>
+                {(Ui) => (
+                    <Ui.Form ui="myForm" {...containerProps}>
+                        {(model, container) => (
+                            <Ui.View.Form>
+                                <Ui.View.Header title={model.id ? 'ACL - Edit Role' : 'ACL - Create Role'}/>
+                                <Ui.View.Body noPadding>
+                                    <Ui.Tabs size="large">
+                                        <Ui.Tabs.Tab label="General" icon="fa-unlock-alt">
+                                            <Ui.Grid.Row>
+                                                <Ui.Grid.Col all={6}>
+                                                    <Ui.Input label="Name" name="name" validate="required"/>
+                                                </Ui.Grid.Col>
+                                                <Ui.Grid.Col all={6}>
+                                                    <Ui.Input label="Slug" name="slug" validate="required"/>
+                                                </Ui.Grid.Col>
+                                            </Ui.Grid.Row>
+                                            <Ui.Grid.Row>
+                                                <Ui.Grid.Col all={12}>
+                                                    <Ui.Input label="Description" name="description" validate="required"/>
+                                                </Ui.Grid.Col>
+                                            </Ui.Grid.Row>
+                                            <table className="table table-simple">
+                                                <thead>
+                                                <tr>
+                                                    <th className="text-left" style={{width: 140}}/>
+                                                    <th className="text-left">Permission</th>
+                                                    <th className="text-left">Description</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {this.state.permissions.map(p => this.renderPermission(p, model, container, Ui))}
+                                                </tbody>
+                                            </table>
+                                        </Ui.Tabs.Tab>
+                                    </Ui.Tabs>
+                                </Ui.View.Body>
+                                <Ui.View.Footer>
+                                    <Ui.Button type="default" onClick={container.cancel} label="Go back"/>
+                                    <Ui.Button type="primary" onClick={container.submit} label="Save role" align="right"/>
+                                </Ui.View.Footer>
+                            </Ui.View.Form>
+                        )}
+                    </Ui.Form>
                 )}
-            </Ui.Form>
+            </Webiny.Ui.LazyLoad>
         );
     }
 };

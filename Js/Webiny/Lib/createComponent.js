@@ -3,6 +3,7 @@ import {Map} from 'immutable';
 import LazyLoad from './Ui/LazyLoad';
 import WebinyComponent from './Core/Component';
 import ModalComponent from './Core/ModalComponent';
+import Injector from './Core/Injector';
 
 /**
  * This function creates a wrapper class around given component to allow component styling and lazy loading of dependencies
@@ -39,8 +40,36 @@ export default (Component, options = {}) => {
 
         render() {
             const props = _.omit(this.props, ['styles']);
-            props.styles = defaultStyles.toJS();
             props.ref = c => this.component = c;
+
+            // Detect if component override is possible
+            if (props.context) {
+                const overrides = Injector.getByTag(props.context);
+                if (overrides.length) {
+                    const props = _.pick(this.props, ['value', 'children', 'onChange']);
+                    if(this.props.contextProps) {
+                        _.merge(props, this.props.contextProps);
+                    }
+                    const RenderComponent = overrides.pop().value;
+                    const options = RenderComponent.__options;
+
+                    // If lazy loaded modules are defined - return LazyLoad wrapper
+                    const modules = options.modules || {};
+                    if (Object.keys(modules).length > 0) {
+                        return (
+                            <LazyLoad modules={modules}>
+                                {(modules) => {
+                                    return <RenderComponent {...props} {...modules}/>;
+                                }}
+                            </LazyLoad>
+                        );
+                    }
+
+                    return <RenderComponent {...props}/>
+                }
+            }
+
+            props.styles = defaultStyles.toJS();
             // If new styles are given, merge them with default styles
             if (_.isPlainObject(this.props.styles)) {
                 _.merge(props.styles, this.props.styles);
@@ -63,6 +92,7 @@ export default (Component, options = {}) => {
     }
 
     ComponentWrapper.__originalComponent = Component;
+    ComponentWrapper.__options = options;
     ComponentWrapper.defaultProps = _.assign({}, Component.defaultProps);
 
     return hoistNonReactStatics(ComponentWrapper, Component);

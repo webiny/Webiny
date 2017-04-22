@@ -95,18 +95,14 @@ Dashboard.defaultProps = {
             'ImageUploader',
             'Input',
             'Label',
-            'List', // @todo: zasto se switch ne renderira
+            'List',
             'MarkdownEditor',
             'Panel',
             'Password',
-            'Popover', // @todo: kako to testiram?
-            'Progress',
-            'RadioGroup', // @todo: iz nekog razloga clearfix ne radi
 
             'Link',
             'DownloadLink',
 
-            'Switch',
             'Grid',
             'Time',
             'DateRange'
@@ -209,9 +205,7 @@ Dashboard.defaultProps = {
                                     </Ui.Grid.Col>
                                     <Ui.Grid.Col all={6}>
                                         <h2>ChangeConfirm</h2>
-                                        <Ui.ChangeConfirm message="Are you sure you want to toggle this switch?">
-                                            <Ui.Switch name="enabled"/>
-                                        </Ui.ChangeConfirm>
+                                        // pending dependency upon Switch component
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                                 <hr/>
@@ -442,7 +436,7 @@ Dashboard.defaultProps = {
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>
                                         <h2>IconPicker</h2>
-                                        <Ui.IconPicker/>
+                                        <Ui.IconPicker placeholder="Select an icon" label="Icon Picker" name="icon"/>
                                     </Ui.Grid.Col>
 
                                     <Ui.Grid.Col all={6}>
@@ -578,30 +572,6 @@ Dashboard.defaultProps = {
                                     <Ui.Grid.Col all={6}>
                                         <h2>Password</h2>
                                         <Ui.Password name="pass" validate="required" label="Your password"/>
-                                    </Ui.Grid.Col>
-
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>Progress</h2>
-                                        <Ui.Progress value="50"/>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-                                <hr/>
-
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={6}>
-                                        <h2>RadioGroup</h2>
-                                        <Ui.RadioGroup label="Choose your favorite fruit:" name="fruits" validate="minLength:2">
-                                            <option value="strawberry">Strawberry</option>
-                                            <option value="blackberry">Blackberry</option>
-                                            <option value="mango">Mango</option>
-                                            <option value="banana">Banana</option>
-                                            <validator name="minLength">Please select at least 2 options</validator>
-                                        </Ui.RadioGroup>
-                                    </Ui.Grid.Col>
-
-                                    <Ui.Grid.Col all={6}>
-                                        <h2></h2>
-
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                                 <hr/>
