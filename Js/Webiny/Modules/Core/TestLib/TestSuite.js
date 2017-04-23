@@ -176,5 +176,6 @@ const ts = new TestSuite();
 module.exports = {
     TestSuite: ts,
     By: webdriver.By,
-    until: webdriver.until
+    until: webdriver.until,
+    webdriver
 };
