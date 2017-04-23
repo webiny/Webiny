@@ -1,5 +1,7 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
+import Row from './Row';
+import Header from './Header';
+import Empty from './Empty';
 
 function insertKey(data) {
     if (!data) {
@@ -65,15 +67,15 @@ class Fieldset extends Webiny.Ui.FormComponent {
         }
 
         React.Children.map(children, child => {
-            if (Webiny.isElementOfType(child, Ui.Dynamic.Row)) {
+            if (Webiny.isElementOfType(child, Row)) {
                 this.rowTemplate = child.props.children;
             }
 
-            if (Webiny.isElementOfType(child, Ui.Dynamic.Header)) {
+            if (Webiny.isElementOfType(child, Header)) {
                 this.headerTemplate = child.props.children;
             }
 
-            if (Webiny.isElementOfType(child, Ui.Dynamic.Empty)) {
+            if (Webiny.isElementOfType(child, Empty)) {
                 this.emptyTemplate = child.props.children;
             }
         });

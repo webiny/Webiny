@@ -49,7 +49,7 @@ class UserPermissionsForm extends Webiny.Ui.View {
                         return (
                             <tr key={m.key}>
                                 <td className="text-left">
-                                    <Ui.SwitchButton value={m.exposed} onChange={enabled => {
+                                    <Ui.Switch value={m.exposed} onChange={enabled => {
                                     const permissions = _.get(model, 'permissions.services.' + service.name, {});
                                     _.set(permissions, m.key, enabled);
                                     _.set(model, 'permissions.services.' + service.name, permissions);
@@ -221,7 +221,7 @@ class UserPermissionsForm extends Webiny.Ui.View {
                                                                             return (
                                                                                 <tr key={m.key}>
                                                                                     <td className="text-left">
-                                                                                        <Ui.SwitchButton value={m.exposed} onChange={enabled => {
+                                                                                        <Ui.Switch value={m.exposed} onChange={enabled => {
                                                                                             entityActions.update(data.id, {[m.key]: enabled});
                                                                                         }}/>
                                                                                     </td>
@@ -265,7 +265,7 @@ class UserPermissionsForm extends Webiny.Ui.View {
 UserPermissionsForm.defaultProps = {
     renderer() {
         return (
-            <Webiny.Ui.LazyLoad modules={['Form', 'Section', 'View', 'Grid', 'Tabs', 'Input', 'List', 'Label', 'Button', 'SwitchButton']}>
+            <Webiny.Ui.LazyLoad modules={['Form', 'Section', 'View', 'Grid', 'Tabs', 'Input', 'List', 'Label', 'Button', 'Switch']}>
                 {(Ui) => this.renderView(Ui)}
             </Webiny.Ui.LazyLoad>
         );

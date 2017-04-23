@@ -24,7 +24,7 @@ class Form extends Webiny.Ui.View {
         return (
             <tr key={permission.id}>
                 <td className="text-left">
-                    <Ui.SwitchButton value={checkedIndex > -1} onChange={enabled => {
+                    <Ui.Switch value={checkedIndex > -1} onChange={enabled => {
                         model.permissions = _.get(model, 'permissions', []);
                         if(enabled){
                             model.permissions.push(permission);
@@ -55,7 +55,7 @@ Form.defaultProps = {
         };
 
         return (
-            <Webiny.Ui.LazyLoad modules={['SwitchButton', 'Form', 'View', 'Tabs', 'Input', 'Button', 'Grid']}>
+            <Webiny.Ui.LazyLoad modules={['Switch', 'Form', 'View', 'Tabs', 'Input', 'Button', 'Grid']}>
                 {(Ui) => (
                     <Ui.Form ui="myForm" {...containerProps}>
                         {(model, container) => (

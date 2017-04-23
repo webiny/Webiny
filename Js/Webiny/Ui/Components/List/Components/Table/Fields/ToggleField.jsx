@@ -24,13 +24,13 @@ ToggleField.defaultProps = _.merge({}, Field.defaultProps, {
             disabled: _.isFunction(this.props.disabled) ? this.props.disabled(this.props.data) : this.props.disabled
         };
 
-        const {ChangeConfirm, SwitchButton} = this.props;
+        const {ChangeConfirm, Switch} = this.props;
 
         if (this.props.message) {
             return (
                 <td className={this.getTdClasses()}>
                     <ChangeConfirm message={this.props.message}>
-                        <SwitchButton {...props}/>
+                        <Switch {...props}/>
                     </ChangeConfirm>
                 </td>
             );
@@ -38,10 +38,10 @@ ToggleField.defaultProps = _.merge({}, Field.defaultProps, {
 
         return (
             <td className={this.getTdClasses()}>
-                <SwitchButton {...props}/>
+                <Switch {...props}/>
             </td>
         );
     }
 });
 
-export default Webiny.createComponent(ToggleField, {modules: ['ChangeConfirm', 'SwitchButton']});
+export default Webiny.createComponent(ToggleField, {modules: ['ChangeConfirm', 'Switch']});

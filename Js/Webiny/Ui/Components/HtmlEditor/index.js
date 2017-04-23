@@ -20,8 +20,6 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
     }
 
     componentDidMount() {
-        super.componentDidMount();
-
         const {Quill} = this.props;
         this.editor = new Quill(this.getTextareaElement(), {
             modules: {
@@ -41,6 +39,7 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
         });
 
         this.editor.pasteHTML(this.props.value);
+        super.componentDidMount();
     }
 
     componentWillReceiveProps(props) {
@@ -218,6 +217,7 @@ HtmlEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
 });
 
 export default Webiny.createComponent(HtmlEditor, {
+    api: ['getEditor'],
     modules: {
         Alert: 'Alert',
         Cropper: 'Cropper',

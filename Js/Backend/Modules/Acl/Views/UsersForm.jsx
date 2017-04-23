@@ -25,13 +25,13 @@ class Form extends Webiny.Ui.View {
         return (
             <tr key={role.id}>
                 <td className="text-left">
-                    <Ui.SwitchButton value={checkedIndex > -1} onChange={enabled => {
+                    <Ui.Switch value={checkedIndex > -1} onChange={enabled => {
                         if(enabled){
                             model.roles.push(role);
                         } else {
                             model.roles.splice(checkedIndex, 1);
                         }
-                        container.setModel(model);
+                        container.setState('model.roles', model.roles);
                     }}/>
                 </td>
                 <td className="text-left"><strong>{role.name}</strong><br/>{role.slug}</td>
@@ -55,7 +55,7 @@ Form.defaultProps = {
         };
 
         return (
-            <Webiny.Ui.LazyLoad modules={['View', 'Form', 'Grid', 'Tabs', 'Input', 'Switch', 'SwitchButton', 'Button']}>
+            <Webiny.Ui.LazyLoad modules={['View', 'Form', 'Grid', 'Tabs', 'Input', 'Switch', 'Button']}>
                 {(Ui) => (
                     <Ui.Form ui="myForm" {...containerProps}>
                         {(model, container) => (
