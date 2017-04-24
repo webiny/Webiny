@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles.css';
 
 class TabContent extends Webiny.Ui.Component {
 
@@ -10,11 +11,16 @@ TabContent.defaultProps = {
     disabled: false,
     renderer() {
         if (!this.props.disabled && (this.props.active || this.props.alwaysRender)) {
-            const tabClass = this.classSet({active: this.props.active}, 'tab-pane');
+            const tabClass = this.classSet(
+                styles.pane,
+                {
+                    [styles.paneActive]: this.props.active
+                }
+            );
             return (
                 <div className={tabClass}>
                     {this.props.children}
-                    <div className="clearfix"/>
+                    <div className={this.props.styles.clearfix}/>
                 </div>
             );
         }
@@ -23,4 +29,4 @@ TabContent.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(TabContent);
+export default Webiny.createComponent(TabContent, {styles});

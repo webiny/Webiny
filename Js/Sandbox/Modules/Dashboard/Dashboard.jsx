@@ -104,7 +104,11 @@ Dashboard.defaultProps = {
             'RadioGroup', // @todo: iz nekog razloga clearfix ne radi
             'SimpleCodeEditor',
             'Switch',
-            'Tabs', // stao
+            'Tabs',
+            'Tags', // @todo: Icon on click se iz nekog razloga ne execute-a
+            'Textarea', // @todo: trebati ce napraviti neku form-control komponentu
+            'Tile',
+            'Tooltip',
 
             'Link',
             'DownloadLink',
@@ -619,13 +623,48 @@ Dashboard.defaultProps = {
                                                 This is tab 2
                                             </Ui.Tabs.Tab>
                                         </Ui.Tabs>
+                                        <br/>
+                                        <Ui.Tabs size="large">
+                                            <Ui.Tabs.Tab label="S3 Backup Location" icon="fa-hdd-o">
+                                                Large
+                                            </Ui.Tabs.Tab>
+                                            <Ui.Tabs.Tab label="Tab 2">
+                                                This is tab 2
+                                            </Ui.Tabs.Tab>
+                                        </Ui.Tabs>
                                     </Ui.Grid.Col>
 
                                     <Ui.Grid.Col all={6}>
-                                        <h2></h2>
+                                        <h2>Tags</h2>
+                                        <Ui.Tags name="test" label="Test"/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                                 <hr/>
+
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Textarea</h2>
+                                        <Ui.Textarea name="test" label="Test" validate="required"/>
+                                    </Ui.Grid.Col>
+
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Tile</h2>
+                                        <Ui.Tile>
+                                            <Ui.Tile.Header className="text-center" title="# of executions"/>
+                                            <Ui.Tile.Body>
+                                                <h1 className="text-center">1231.1231</h1>
+                                            </Ui.Tile.Body>
+                                        </Ui.Tile>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                                <hr/>
+
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={6}>
+                                        <h2>Tooltip</h2>
+                                        <Ui.Button tooltip="Testing tooltip">Hover me</Ui.Button>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
 
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>

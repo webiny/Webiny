@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles.css';
 
 class TabHeader extends Webiny.Ui.Component {
     constructor(props) {
@@ -17,8 +18,8 @@ TabHeader.defaultProps = {
     disabled: false,
     onClick: _.noop,
     icon: null,
-    activeTabClassName: 'active',
-    disabledTabClassName: 'disabled',
+    activeTabClassName: styles.active,
+    disabledTabClassName: styles.disabled,
     active: false,
     labelRenderer() {
         let label = this.props.label;
@@ -45,4 +46,4 @@ TabHeader.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(TabHeader, {modules: ['Icon']});
+export default Webiny.createComponent(TabHeader, {modules: ['Icon'], styles});

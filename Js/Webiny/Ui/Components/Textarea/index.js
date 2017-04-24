@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles.css';
 
 class Textarea extends Webiny.Ui.FormComponent {
 
@@ -7,16 +8,18 @@ class Textarea extends Webiny.Ui.FormComponent {
 Textarea.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     delay: 400,
     renderer() {
+        const {styles} = this.props;
+
         const cssConfig = {
-            'form-group': true,
-            'error': this.state.isValid === false,
-            'success': this.state.isValid === true
+            [styles.wrapper]: true,
+            [styles.error]: this.state.isValid === false,
+            [styles.success]: this.state.isValid === true
         };
 
         const props = {
             onBlur: this.validate,
             disabled: this.isDisabled(),
-            className: 'form-control',
+            className: this.classSet('form-control', styles.textarea),
             value: this.props.value || '',
             placeholder: this.getPlaceholder(),
             style: this.props.style,
@@ -38,4 +41,4 @@ Textarea.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     }
 });
 
-export default Webiny.createComponent(Textarea, {modules: ['DelayedOnChange']});
+export default Webiny.createComponent(Textarea, {modules: ['DelayedOnChange'], styles});

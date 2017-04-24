@@ -1,6 +1,7 @@
 import Webiny from 'Webiny';
 import TabHeader from './TabHeader';
 import TabContent from './TabContent';
+import styles from './styles.css';
 
 class Tabs extends Webiny.Ui.Component {
 
@@ -106,22 +107,26 @@ Tabs.defaultProps = {
     position: 'top', // top, left
     size: 'default',
     tabsRenderer() {
-        const tabsContainerCss = this.classSet({
-            'tabs': true,
-            'tabs--navigation-top': this.props.position === 'top',
-            'tabs--navigation-left': this.props.position === 'left'
-        });
+        const {styles} = this.props;
+
+        const tabsContainerCss = this.classSet(
+            styles.tabs,
+            {
+                [styles.navigationTop]: this.props.position === 'top',
+                [styles.navigationLeft]: this.props.position === 'left'
+            }
+        );
 
         const tabsNavClasses = {
-            'tabs__navigation nav nav-tabs': true,
-            'tabs__navigation--large': this.props.size === 'large'
+            [styles.navigation]: true,
+            [styles.navigationLarge]: this.props.size === 'large'
         };
 
         return (
             <div className={tabsContainerCss}>
-                <div className="tabs__body">
+                <div className={styles.body}>
                     <ul className={this.classSet(tabsNavClasses)}>{this.renderHeader()}</ul>
-                    <div className="tabs__panes">{this.renderContent()}</div>
+                    <div className={styles.panes}>{this.renderContent()}</div>
                 </div>
             </div>
         );
@@ -138,4 +143,4 @@ Tabs.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Tabs);
+export default Webiny.createComponent(Tabs, {styles});

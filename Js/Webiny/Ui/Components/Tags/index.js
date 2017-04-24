@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles.css';
 
 class Tags extends Webiny.Ui.FormComponent {
     constructor(props) {
@@ -80,6 +81,9 @@ Tags.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     onInvalidTag: _.noop,
     onChange: _.noop,
     renderer() {
+
+        const {Icon, styles} = this.props;
+
         const cssConfig = {
             'form-group': true,
             'error': this.state.isValid === false,
@@ -88,26 +92,22 @@ Tags.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
 
         const input = {
             type: 'text',
-            className: 'keyword-input',
+            className: styles.input,
             ref: tagInput => this.tagInput = tagInput,
             onKeyDown: this.addTag,
             placeholder: this.getPlaceholder(),
             readOnly: _.get(this.props, 'readOnly', false),
-            style: {
-                border: 'none',
-                outline: 'none'
-            }
         };
 
         return (
             <div className={this.classSet(cssConfig)}>
                 {this.renderLabel()}
-                <div className="keyword-container" onClick={this.focusTagInput}>
-                    <div className="tags-container">
+                <div className={styles.container} onClick={this.focusTagInput}>
+                    <div className={styles.tag}>
                         {_.isArray(this.props.value) && this.props.value.map((tag, index) => (
-                            <div key={tag} className="keyword-block">
+                            <div key={tag} className={styles.block}>
                                 <p>{tag}</p>
-                                <i className="icon icon-cancel" onClick={this.removeTag.bind(this, index)}/>
+                                <Icon icon="icon-cancel" onClick={this.removeTag.bind(this, index)}/>
                             </div>
                         ))}
                         <input {...input}/>
@@ -120,4 +120,4 @@ Tags.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     }
 });
 
-export default Webiny.createComponent(Tags);
+export default Webiny.createComponent(Tags, {modules: ['Icon'], styles});

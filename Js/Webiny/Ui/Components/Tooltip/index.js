@@ -1,5 +1,6 @@
 import Webiny from 'Webiny';
 import ReactDOMServer from 'react-dom/server';
+import './styles.scss';
 
 class Tooltip extends Webiny.Ui.Component {
 
