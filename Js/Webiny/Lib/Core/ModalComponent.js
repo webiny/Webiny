@@ -59,7 +59,11 @@ ModalComponent.defaultProps = {
     renderDialog: null,
     renderer() {
         const dialog = this.renderDialog();
-        return React.cloneElement(dialog, {ref: 'dialog', onHidden: this.props.onHidden});
+        const props = {ref: 'dialog'};
+        if(this.props.onHidden) {
+            props['onHidden'] =  this.props.onHidden;
+        }
+        return React.cloneElement(dialog, props);
     }
 };
 
