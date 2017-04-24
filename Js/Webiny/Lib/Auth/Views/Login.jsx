@@ -81,7 +81,7 @@ Login.defaultProps = {
                                                 size="large"
                                                 onClick={form.submit}
                                                 icon="icon-next"
-                                                styles={styles}>
+                                                className={styles.btnLogin}>
                                                 <span>Submit</span>
                                             </Button>
                                         </div>

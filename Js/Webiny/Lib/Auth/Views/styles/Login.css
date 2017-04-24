@@ -1,9 +1,9 @@
-.btnPrimary {
+.btnLogin {
 	padding-left: 25px !important;
 }
 
-.btnLarge .icon{
+.btnLogin :global(.icon) {
 	font-size: 32px;
 	height: 20px;
-	margin: 0px -8px 1px 0px;
+	margin: -2px -8px 0px 0px;
 }
