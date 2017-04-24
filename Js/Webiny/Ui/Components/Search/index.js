@@ -453,7 +453,6 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
 
                 <div className="input-group">
                     {this.props.renderSearchInput.call(this)}
-                    {this.renderValidationIcon()}
                 </div>
                 {this.renderDescription()}
                 {this.renderValidationMessage()}

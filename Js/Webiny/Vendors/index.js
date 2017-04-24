@@ -1,4 +1,5 @@
 export default () => {
+    import('./C3');
     import('./CodeMirror');
     import('./Cropper');
     import('./DateTimePicker');

@@ -13,13 +13,6 @@ class DownloadLink extends Webiny.Ui.Component {
         this.bindMethods('getDialog');
     }
 
-    componentDidUpdate() {
-        super.componentDidUpdate();
-        if (this.state.showDialog && !this.refs.dialog.isShown()) {
-            this.refs.dialog.show();
-        }
-    }
-
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
         if (this.dialog) {
@@ -28,8 +21,10 @@ class DownloadLink extends Webiny.Ui.Component {
     }
 
     getDialog() {
-        const result = this.props.download(this.refs.downloader.download, this.props.data || null);
-        if (Webiny.isElementOfType(result, Ui.Modal.Dialog)) {
+        const result = this.props.download(this.downloader.download, this.props.data || null);
+        // TODO: add check if the returned result is actually a Dialog component
+        // At this point we do not want to import Modal component to perform the check so we assume it is a Dialog if it is not null
+        if (result) {
             this.dialog = result;
         }
     }
@@ -39,10 +34,10 @@ DownloadLink.defaultProps = {
     method: 'GET',
     renderer() {
         const {Downloader, Link, ...props} = this.props;
-        const downloader = <Downloader ref="downloader"/>;
+        const downloader = <Downloader ref={downloader => this.downloader = downloader}/>;
         props.onClick = () => {
             if (_.isString(this.props.download)) {
-                this.refs.downloader.download(this.props.method, this.props.download);
+                this.downloader.download(this.props.method, this.props.download);
             } else {
                 this.getDialog();
                 this.setState({showDialog: true});
@@ -52,11 +47,17 @@ DownloadLink.defaultProps = {
 
         let dialog = null;
         if (this.dialog) {
-            const onHidden = () => {
-                this.dialog = null;
-                this.setState({showDialog: false});
-            };
-            dialog = React.cloneElement(this.dialog, {onHidden, ref: 'dialog'});
+            dialog = React.cloneElement(this.dialog, {
+                onHidden: () => {
+                    this.dialog = null;
+                    this.setState({showDialog: false});
+                },
+                onComponentDidMount: dialog => {
+                    if (this.state.showDialog && !dialog.isShown()) {
+                        dialog.show();
+                    }
+                }
+            });
         }
 
         return (

@@ -52,7 +52,11 @@ class LazyLoad extends Component {
 LazyLoad.defaultProps = {
     renderer() {
         if (this.state.loaded) {
-            return this.props.children(this.state.modules);
+            try {
+                return this.props.children(this.state.modules);
+            } catch (e) {
+                console.error(e);
+            }
         }
         return null;
     }
