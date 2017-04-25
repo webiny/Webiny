@@ -7,7 +7,7 @@ class DateTime extends Webiny.Ui.FormComponent {
         super(props);
         this.valueChanged = false;
 
-        this.bindMethods('setValue');
+        this.bindMethods('setValue,setup');
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -28,15 +28,7 @@ class DateTime extends Webiny.Ui.FormComponent {
      */
     componentDidMount() {
         super.componentDidMount();
-        // Tricky part: since we are lazy loading dependencies - Input may not yet be available in the DOM so we need to wait for it
-        this.interval = setInterval(() => {
-            const dom = ReactDOM.findDOMNode(this);
-            if (dom) {
-                clearInterval(this.interval);
-                this.interval = null;
-                this.setup();
-            }
-        }, 100);
+        this.getInput().then(this.setup);
     }
 
     componentDidUpdate() {
@@ -44,8 +36,25 @@ class DateTime extends Webiny.Ui.FormComponent {
         this.setValue(this.props.value);
     }
 
+    getInput() {
+        if (this.input) {
+            return Promise.resolve(this.input);
+        }
+
+        return new Promise(resolve => {
+            let interval = setInterval(() => {
+                const dom = ReactDOM.findDOMNode(this);
+                if (dom) {
+                    clearInterval(interval);
+                    interval = null;
+                    this.input = $(dom.querySelector('input'));
+                    resolve(this.input);
+                }
+            }, 100);
+        });
+    }
+
     setup() {
-        this.input = $(ReactDOM.findDOMNode(this).querySelector('input'));
         this.input.datetimepicker({
             format: this.props.inputFormat,
             stepping: this.props.stepping,
@@ -77,11 +86,13 @@ class DateTime extends Webiny.Ui.FormComponent {
             newValue = this.getPlaceholder();
         }
 
-        this.input.val(newValue);
+        this.getInput().then(() => {
+            this.input.val(newValue);
 
-        if (this.props.minDate) {
-            this.input.data('DateTimePicker').minDate(new Date(this.props.minDate));
-        }
+            if (this.props.minDate) {
+                this.input.data('DateTimePicker').minDate(new Date(this.props.minDate));
+            }
+        });
     }
 
     onChange(newValue) {

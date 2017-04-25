@@ -162,19 +162,14 @@ FormComponent.defaultProps = {
         let label = null;
         if (this.props.label) {
             label = (
-                <Webiny.Ui.LazyLoad modules={['Tooltip', 'FormGroup', 'Icon']}>
-                    {({Tooltip, FormGroup, Icon}) => {
-                        let tooltip = null;
-                        if (this.props.tooltip) {
-                            tooltip = <Tooltip key="label" target={<Icon icon="icon-info-circle"/>}>{this.props.tooltip}</Tooltip>;
-                        }
-
+                <Webiny.Ui.LazyLoad modules={['FormGroup']}>
+                    {({FormGroup}) => {
                         let required = null;
                         if (this.props.validate && this.props.validate.indexOf('required') > -1) {
                             required = <FormGroup.Required/>;
                         }
 
-                        return <FormGroup.Label>{this.props.label} {required} {tooltip}</FormGroup.Label>;
+                        return <FormGroup.Label tooltip={this.props.tooltip}>{this.props.label} {required}</FormGroup.Label>;
                     }}
                 </Webiny.Ui.LazyLoad>
             );
