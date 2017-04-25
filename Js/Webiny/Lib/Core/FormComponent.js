@@ -162,8 +162,8 @@ FormComponent.defaultProps = {
         let label = null;
         if (this.props.label) {
             label = (
-                <Webiny.Ui.LazyLoad modules={['Tooltip', 'Input', 'Icon']}>
-                    {({Tooltip, Input, Icon}) => {
+                <Webiny.Ui.LazyLoad modules={['Tooltip', 'FormGroup', 'Icon']}>
+                    {({Tooltip, FormGroup, Icon}) => {
                         let tooltip = null;
                         if (this.props.tooltip) {
                             tooltip = <Tooltip key="label" target={<Icon icon="icon-info-circle"/>}>{this.props.tooltip}</Tooltip>;
@@ -171,10 +171,10 @@ FormComponent.defaultProps = {
 
                         let required = null;
                         if (this.props.validate && this.props.validate.indexOf('required') > -1) {
-                            required = <Input.Mandat/>;
+                            required = <FormGroup.Required/>;
                         }
 
-                        return <Input.Label>{this.props.label} {required} {tooltip}</Input.Label>;
+                        return <FormGroup.Label>{this.props.label} {required} {tooltip}</FormGroup.Label>;
                     }}
                 </Webiny.Ui.LazyLoad>
             );
@@ -188,9 +188,9 @@ FormComponent.defaultProps = {
         }
         return (
             <div>
-                <Webiny.Ui.LazyLoad modules={['Input']}>
-                    {({Input}) => (
-                        <Input.ValidationMessage>{this.state.validationMessage}</Input.ValidationMessage>
+                <Webiny.Ui.LazyLoad modules={['FormGroup']}>
+                    {({FormGroup}) => (
+                        <FormGroup.ValidationMessage>{this.state.validationMessage}</FormGroup.ValidationMessage>
                     )}
                 </Webiny.Ui.LazyLoad>
             </div>
@@ -208,9 +208,9 @@ FormComponent.defaultProps = {
         }
 
         return (
-            <Webiny.Ui.LazyLoad modules={['Input']}>
-                {({Input}) => (
-                    <Input.InfoMessage>{info}</Input.InfoMessage>
+            <Webiny.Ui.LazyLoad modules={['FormGroup']}>
+                {({FormGroup}) => (
+                    <FormGroup.InfoMessage>{info}</FormGroup.InfoMessage>
                 )}
             </Webiny.Ui.LazyLoad>
         );
@@ -226,9 +226,9 @@ FormComponent.defaultProps = {
         }
 
         return (
-            <Webiny.Ui.LazyLoad modules={['Input']}>
-                {({Input}) => (
-                    <Input.DescriptionMessage>{description}</Input.DescriptionMessage>
+            <Webiny.Ui.LazyLoad modules={['FormGroup']}>
+                {({FormGroup}) => (
+                    <FormGroup.DescriptionMessage>{description}</FormGroup.DescriptionMessage>
                 )}
             </Webiny.Ui.LazyLoad>
         );

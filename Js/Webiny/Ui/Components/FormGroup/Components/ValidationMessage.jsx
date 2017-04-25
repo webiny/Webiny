@@ -1,5 +1,5 @@
 import Webiny from 'Webiny';
-import styles from '../styles.css';
+import styles from './../styles.css';
 
 class ValidationMessage extends Webiny.Ui.Component {
 
