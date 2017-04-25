@@ -1,4 +1,5 @@
 <?php
+
 namespace Apps\Core\Php\DevTools\Authorization;
 
 use Apps\Core\Php\DevTools\Interfaces\UserInterface;
@@ -168,6 +169,11 @@ class Authorization
         }
 
         return null;
+    }
+
+    public function processUsernameChange($oldUsername, $newUsername)
+    {
+        return $this->login->processLogin($oldUsername, $newUsername);
     }
 
     public function setUserClass(User $entity)

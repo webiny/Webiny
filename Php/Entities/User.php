@@ -1,4 +1,5 @@
 <?php
+
 namespace Apps\Core\Php\Entities;
 
 use Apps\Core\Php\DevTools\Interfaces\UserInterface;
@@ -34,6 +35,12 @@ class User extends AbstractEntity implements UserInterface
     protected static $entityCollection = 'Users';
     protected static $entityMask = '{email}';
 
+    /**
+     * If e-mail was changed, this will contain old e-mail, so that we can do additional actions in the save process.
+     * @var bool
+     */
+    private $oldEmail = false;
+
     public function __construct()
     {
         parent::__construct();
@@ -41,7 +48,15 @@ class User extends AbstractEntity implements UserInterface
         $this->index(new SingleIndex('email', 'email', false, true));
 
         $this->attr('email')->char()->setValidators('required,email,unique')->onSet(function ($email) {
+            if ($this->email === $email) {
+                return $email;
+            }
+
+            // Once single-execution callbacks
+            $this->oldEmail = $this->email;
+
             return trim(strtolower($email));
+
         })->setValidationMessages([
             'unique' => 'Given e-mail address already exists.'
         ])->setToArrayDefault();
@@ -194,6 +209,12 @@ class User extends AbstractEntity implements UserInterface
         $res = parent::save();
         if ($new) {
             $this->wAuth()->getLogin()->setUserAccountConfirmationStatus($this->email);
+        } else {
+            if ($this->oldEmail) {
+                $oldEmail = $this->oldEmail;
+                $this->oldEmail = null;
+                $this->wAuth()->getLogin()->processUsernameChange($oldEmail, $this->email);
+            }
         }
 
         return $res;
@@ -217,6 +238,7 @@ class User extends AbstractEntity implements UserInterface
                 return true;
             }
         }
+
         return false;
     }
 
