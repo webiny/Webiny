@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles.css';
 
 class Link extends Webiny.Ui.Component {
 
@@ -11,6 +12,7 @@ class Link extends Webiny.Ui.Component {
 
     getLinkProps() {
         const props = _.clone(this.props);
+        const {styles} = this.props;
 
         props.href = 'javascript:void(0)';
 
@@ -44,9 +46,9 @@ class Link extends Webiny.Ui.Component {
         }
 
         const typeClasses = {
-            default: 'btn-default',
-            primary: 'btn-primary',
-            secondary: 'btn-success'
+            default: styles.btnDefault,
+            primary: styles.btnPrimary,
+            secondary: styles.btnSuccess
         };
 
         const alignClasses = {
@@ -57,8 +59,8 @@ class Link extends Webiny.Ui.Component {
 
         const sizeClasses = {
             normal: '',
-            large: 'btn-lg',
-            small: 'btn-sm'
+            large: styles.btnLarge,
+            //small: 'btn-sm' // sven: this option doesn't exist in css
         };
 
         const classes = {
@@ -124,4 +126,4 @@ Link.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Link);
+export default Webiny.createComponent(Link, {styles});
