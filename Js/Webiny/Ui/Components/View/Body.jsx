@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles.css';
 
 class Body extends Webiny.Ui.Component {
 
@@ -7,13 +8,21 @@ class Body extends Webiny.Ui.Component {
 Body.defaultProps = {
     noPadding: false,
     renderer() {
-        const {Panel} = this.props;
+        const {Panel, styles} = this.props;
+
+        const classSet = this.classSet(
+            styles.panelBody,
+            {
+                [styles.panelNoPadding]: this.props.noPadding
+            }
+        );
+
         return (
-            <Panel.Body className={{'panel-body--no-padding': this.props.noPadding}}>
+            <Panel.Body className={classSet}>
                 {this.props.children}
             </Panel.Body>
         );
     }
 };
 
-export default Webiny.createComponent(Body, {modules: ['Panel']});
+export default Webiny.createComponent(Body, {modules: ['Panel'], styles});

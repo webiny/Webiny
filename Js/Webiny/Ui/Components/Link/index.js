@@ -63,9 +63,7 @@ class Link extends Webiny.Ui.Component {
             //small: 'btn-sm' // sven: this option doesn't exist in css
         };
 
-        const classes = {
-            btn: this.props.type || this.props.size
-        };
+        const classes = {};
 
         if (this.props.type) {
             classes[typeClasses[this.props.type]] = true;
