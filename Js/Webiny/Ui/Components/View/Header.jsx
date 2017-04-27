@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles.css';
 
 class Header extends Webiny.Ui.Component {
 
@@ -7,18 +8,19 @@ class Header extends Webiny.Ui.Component {
 Header.defaultProps = {
     title: null,
     renderer() {
+        const {styles} = this.props;
 
         // extract the app name
         const appName = Webiny.Router.getActiveRoute().module.app.name.split('.')[0];
 
         return (
-            <div className="master-content__header master-content__header--with-bg">
-                <div className="master-content__title-wrapper">
-                    <h2 className="master-content__title">
-                        <span className="master-content__app-name">{appName}/</span>{this.props.title}
+            <div className={styles.viewHeader}>
+                <div className={styles.titleWrapper}>
+                    <h2 className={styles.titleContent}>
+                        <span className={styles.appName}>{appName}/</span>{this.props.title}
                     </h2>
 
-                    <div className="master-content__description">{this.props.description}</div>
+                    <div className={styles.titleDescription}>{this.props.description}</div>
                 </div>
                 {this.props.children}
             </div>
@@ -26,4 +28,4 @@ Header.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Header);
+export default Webiny.createComponent(Header, {styles});

@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles.css'
 
 class Footer extends Webiny.Ui.Component {
 
@@ -7,8 +8,10 @@ class Footer extends Webiny.Ui.Component {
 Footer.defaultProps = {
     align: null,
     renderer() {
+        const {styles} = this.props;
+
         const css = this.classSet(
-            'panel-footer--white-bg',
+            styles.panelFooter,
             this.props.align === 'right' ? 'text-right' : null,
             this.props.className
         );
@@ -23,4 +26,4 @@ Footer.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Footer, {modules: ['Panel']});
+export default Webiny.createComponent(Footer, {modules: ['Panel'], styles});

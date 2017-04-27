@@ -1,0 +1,60 @@
+.viewContent {
+	padding: 50px 50px 0;
+}
+
+.viewContent .panel {
+	padding: 0;
+	position: relative;
+	background-color: #fff;
+	border: none;
+}
+
+.viewContent .panel .panelBody {
+	padding: 40px;
+	color: #666;
+	position: relative;
+}
+
+.viewContent .panel .panelNoPadding {
+	padding: 0px;
+}
+
+.viewContent .panel .panelFooter {
+	padding: 25px 35px;
+	background-color: #fff;
+}
+
+.viewHeader {
+	background-color: #fff;
+	position: relative;
+	padding: 40px 50px;
+}
+
+.viewHeader .titleWrapper {
+	display: inline-block;
+}
+
+.viewHeader .titleWrapper h2.titleContent {
+	border: 0;
+	margin: 0;
+	font-size: 2.25em;
+	color: #393939;
+	padding-bottom: 5px;
+	font-weight: 500;
+	border: none;
+}
+
+.viewHeader .titleWrapper .titleDescription,
+.viewHeader .titleWrapper .titleDescription a{
+	font-size: 14px;
+	top:0;
+}
+
+.viewHeader .titleWrapper .appName{
+	color: #999;
+}
+
+.viewHeader a, .viewHeader button {
+	position: relative;
+	top: 8px;
+}

@@ -2,6 +2,7 @@ import Webiny from 'Webiny';
 import Header from './Header';
 import Body from './Body';
 import Footer from './Footer';
+import styles from './styles.css';
 
 class FormView extends Webiny.Ui.Component {
 
@@ -87,13 +88,13 @@ class FormView extends Webiny.Ui.Component {
 FormView.defaultProps = {
     formInject: true,
     renderer() {
-        const {Panel} = this.props;
+        const {Panel, styles} = this.props;
         return (
             <view>
                 {this.headerComponent}
-                <div className="view-content">
+                <div className={styles.viewContent}>
                     {this.errorComponent}
-                    <Panel className={'panel--boxed'}>
+                    <Panel className={styles.panel}>
                         {this.bodyComponent}
                         {this.footerComponent}
                     </Panel>
@@ -103,4 +104,4 @@ FormView.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(FormView, {modules: ['Panel', 'Form']});
+export default Webiny.createComponent(FormView, {modules: ['Panel', 'Form'], styles});

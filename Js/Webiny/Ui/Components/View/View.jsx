@@ -2,6 +2,7 @@ import Webiny from 'Webiny';
 import Header from './Header';
 import Body from './Body';
 import Footer from './Footer';
+import styles from './styles.css';
 
 class View extends Webiny.Ui.Component {
 
@@ -50,12 +51,12 @@ class View extends Webiny.Ui.Component {
 
 View.defaultProps = {
     renderer() {
-        const {Panel} = this.props;
+        const {Panel,styles} = this.props;
         return (
             <view>
                 {this.headerComponent}
-                <div className="view-content">
-                    <Panel className={'panel--boxed'}>
+                <div className={styles.viewContent}>
+                    <Panel className={styles.panel}>
                         {this.bodyComponent}
                         {this.footerComponent}
                     </Panel>
@@ -65,4 +66,4 @@ View.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(View, {modules: ['Panel']});
+export default Webiny.createComponent(View, {modules: ['Panel'], styles});
