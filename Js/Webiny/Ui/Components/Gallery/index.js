@@ -296,7 +296,7 @@ Gallery.defaultProps = {
     newCropper: {},
     editCropper: {},
     renderer() {
-        const {FileReader, Alert, Input, styles} = this.props;
+        const {FileReader, Alert, Input, FormGroup, styles} = this.props;
 
         let message = null;
         if (this.state.images.length === 0) {
@@ -338,7 +338,7 @@ Gallery.defaultProps = {
         }
 
         return (
-            <div className="form-group">
+            <FormGroup>
                 <div className={css}>
                     {errors}
                     <div className={styles.container} {...props}>
@@ -374,9 +374,9 @@ Gallery.defaultProps = {
                         <a href="#" onClick={this.getFiles}>SELECT FILES HERE</a>
                     </div>
                 </div>
-            </div>
+            </FormGroup>
         );
     }
 };
 
-export default Webiny.createComponent(Gallery, {modules: ['Alert', 'Cropper', 'FileReader', 'Input'], styles});
+export default Webiny.createComponent(Gallery, {modules: ['Alert', 'Cropper', 'FileReader', 'Input', 'FormGroup'], styles});

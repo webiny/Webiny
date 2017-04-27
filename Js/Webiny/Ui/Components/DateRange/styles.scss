@@ -4,7 +4,7 @@
   top: 100px;
   left: 20px;
   margin-top: 1px;
-  border-radius: 4px;
+  border-radius: 0px;
   width: 278px;
 }
 
@@ -102,6 +102,9 @@
   max-width: none;
   z-index: 3000;
   padding: 0;
+  width: 635px;
+  background-color: transparent;
+
 }
 
 .daterangepicker.single .ranges, .daterangepicker.single .calendar {
@@ -227,10 +230,11 @@
   height: 50px;
   line-height: 30px;
   vertical-align: middle;
-  margin: 0 0 5px 0;
+  margin: 0;
   width: 100%;
   font-weight: 600;
   text-align: center;
+  border-radius: 0px;
 }
 
 .daterangepicker .input-mini.active {

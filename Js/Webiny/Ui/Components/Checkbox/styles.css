@@ -65,11 +65,3 @@
 	margin: 0px;
 	line-height: 20px;
 }
-
-/* todo: Clearfix should be global */
-.clearfix {
-	zoom: 1;
-	float: none;
-	display: block;
-	clear: both;
-}

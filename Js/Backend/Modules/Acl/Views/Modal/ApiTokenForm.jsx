@@ -16,7 +16,7 @@ class ApiTokenForm extends Webiny.Ui.ModalComponent {
         };
 
         return (
-            <Modal.Dialog>
+            <Modal.Dialog wide={true}>
                 {dialog => (
                     <Form {...formProps}>
                         {(model, form) => (

@@ -17,33 +17,28 @@ CodeEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     readOnly: false, // set 'nocursor' to disable cursor
     onFocus: _.noop,
     renderer() {
-        const cssConfig = {
-            'form-group': true,
-            'error': this.state.isValid === false,
-            'success': this.state.isValid === true
-        };
-
         const props = _.pick(this.props, ['value', 'onChange', 'onFocus', 'theme', 'mode', 'readOnly']);
+
         _.assign(props, {
             ref: (editor) => this.editor = editor,
             onBlur: this.validate,
-            className: 'form-control',
+            className: 'inputGroup',
             placeholder: this.getPlaceholder()
         });
 
-        const {SimpleCodeEditor, DelayedOnChange} = this.props;
+        const {SimpleCodeEditor, DelayedOnChange, FormGroup} = this.props;
 
         return (
-            <div className={this.classSet(cssConfig)}>
+            <FormGroup valid={this.state.isValid} className={this.props.className}>
                 {this.renderLabel()}
                 <DelayedOnChange>
                     <SimpleCodeEditor {...props}/>
                 </DelayedOnChange>
                 {this.renderDescription()}
                 {this.renderValidationMessage()}
-            </div>
+            </FormGroup>
         );
     }
 });
 
-export default Webiny.createComponent(CodeEditor, {modules: ['SimpleCodeEditor', 'DelayedOnChange'], api: ['focus']});
+export default Webiny.createComponent(CodeEditor, {modules: ['SimpleCodeEditor', 'DelayedOnChange', 'FormGroup'], api: ['focus']});

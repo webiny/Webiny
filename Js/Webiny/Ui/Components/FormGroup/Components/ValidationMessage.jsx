@@ -6,9 +6,15 @@ class ValidationMessage extends Webiny.Ui.Component {
 }
 
 ValidationMessage.defaultProps = {
+    success: true,
     renderer() {
-        return <span className={this.classSet(styles.message, styles.validationMessage)}>{this.props.children}</span>;
+        let css = null;
+        if (this.props.success === false) {
+            css = styles.validationMessageError;
+        }
+
+        return <span className={this.classSet(styles.validationMessage, css)}>{this.props.children}</span>;
     }
 };
 
-export default ValidationMessage;
+export default Webiny.createComponent(ValidationMessage, {modules: ['Animate'], styles});

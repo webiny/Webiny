@@ -82,13 +82,7 @@ Tags.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     onChange: _.noop,
     renderer() {
 
-        const {Icon, styles} = this.props;
-
-        const cssConfig = {
-            'form-group': true,
-            'error': this.state.isValid === false,
-            'success': this.state.isValid === true
-        };
+        const {FormGroup, Icon, styles} = this.props;
 
         const input = {
             type: 'text',
@@ -100,7 +94,7 @@ Tags.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         };
 
         return (
-            <div className={this.classSet(cssConfig)}>
+            <FormGroup valid={this.state.isValid} className={this.props.className}>
                 {this.renderLabel()}
                 <div className={styles.container} onClick={this.focusTagInput}>
                     <div className={styles.tag}>
@@ -115,9 +109,9 @@ Tags.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                 </div>
                 {this.renderDescription()}
                 {this.renderValidationMessage()}
-            </div>
+            </FormGroup>
         );
     }
 });
 
-export default Webiny.createComponent(Tags, {modules: ['Icon'], styles});
+export default Webiny.createComponent(Tags, {modules: ['Icon', 'FormGroup'], styles});

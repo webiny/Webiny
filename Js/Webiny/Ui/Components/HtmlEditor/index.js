@@ -183,7 +183,7 @@ HtmlEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         }
     },
     renderer() {
-        const {Alert, Progress, FileReader} = this.props;
+        const {Alert, Progress, FileReader, FormGroup} = this.props;
 
         let uploader = null;
         if (this.state.uploadPercentage !== null) {
@@ -196,10 +196,10 @@ HtmlEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         }
 
         return (
-            <div className="form-group">
+            <FormGroup className={this.props.className}>
                 {this.renderLabel()}
                 {this.renderInfo()}
-                <div className="input-group">
+                <div className="inputGroup">
                     {this.renderError()}
                     {uploader}
                     <div className="editor"/>
@@ -211,12 +211,12 @@ HtmlEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                     {this.getCropper(<Alert type="info" title="Hint">Scroll to zoom in/out</Alert>)}
                 </div>
                 {this.renderDescription()}
-            </div>
+            </FormGroup>
         );
     }
 });
 
 export default Webiny.createComponent(HtmlEditor, {
     api: ['getEditor'],
-    modules: ['Alert', 'Cropper', 'FileReader', 'Progress', {Quill: () => import('Core/Webiny/Vendors/Quill')}]
+    modules: ['Alert', 'Cropper', 'FileReader', 'Progress', 'FormGroup', {Quill: () => import('Core/Webiny/Vendors/Quill')}]
 });

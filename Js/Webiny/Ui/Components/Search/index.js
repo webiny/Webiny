@@ -439,15 +439,10 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         );
     },
     renderer() {
-        const cssConfig = {
-            'form-group': true,
-            'search-container': true,
-            'error': !this.isValid(),
-            'success': this.isValid()
-        };
+        const {FormGroup} = this.props;
 
         return (
-            <div className={this.classSet(cssConfig)}>
+            <FormGroup valid={this.isValid()} className={this.props.className}>
                 {this.renderLabel()}
                 {this.renderInfo()}
 
@@ -456,9 +451,9 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                 </div>
                 {this.renderDescription()}
                 {this.renderValidationMessage()}
-            </div>
+            </FormGroup>
         );
     }
 });
 
-export default Webiny.createComponent(Search, {modules: ['Link', 'Icon']});
+export default Webiny.createComponent(Search, {modules: ['Link', 'Icon', 'FormGroup']});

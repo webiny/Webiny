@@ -8,18 +8,12 @@ class Textarea extends Webiny.Ui.FormComponent {
 Textarea.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     delay: 400,
     renderer() {
-        const {styles} = this.props;
-
-        const cssConfig = {
-            [styles.wrapper]: true,
-            [styles.error]: this.state.isValid === false,
-            [styles.success]: this.state.isValid === true
-        };
+        const {FormGroup, styles} = this.props;
 
         const props = {
             onBlur: this.validate,
             disabled: this.isDisabled(),
-            className: this.classSet('form-control', styles.textarea),
+            className: this.classSet('inputGroup', styles.textarea),
             value: this.props.value || '',
             placeholder: this.getPlaceholder(),
             style: this.props.style,
@@ -29,16 +23,16 @@ Textarea.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         const {DelayedOnChange} = this.props;
         
         return (
-            <div className={this.classSet(cssConfig)}>
+            <FormGroup valid={this.state.isValid} className={this.props.className}>
                 {this.renderLabel()}
                 <DelayedOnChange delay={this.props.delay}>
                     <textarea {...props}/>
                 </DelayedOnChange>
                 {this.renderDescription()}
                 {this.renderValidationMessage()}
-            </div>
+            </FormGroup>
         );
     }
 });
 
-export default Webiny.createComponent(Textarea, {modules: ['DelayedOnChange'], styles});
+export default Webiny.createComponent(Textarea, {modules: ['DelayedOnChange', 'FormGroup'], styles});

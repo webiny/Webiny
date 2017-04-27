@@ -45,29 +45,29 @@ CopyInput.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     onSuccessMessage: 'Copied to clipboard!',
     onCopy: _.noop,
     renderer() {
-        const {Button, styles} = this.props;
+        const {Button, FormGroup, styles} = this.props;
 
         const props = {
-            className: styles['form-control'],
             readOnly: true,
             type: 'text',
+            className: styles.input,
             value: this.props.value || ''
         };
 
         return (
-            <div className={this.classSet(styles['form-group'], this.props.className)}>
+            <FormGroup valid={this.state.isValid} className={this.props.className}>
                 {this.renderLabel()}
                 {this.renderInfo()}
-                <div className={styles['input-group']}>
+                <div className="inputGroup">
                     <input {...props}/>
                     <Button type="primary" className={styles.btnCopy}>
                         {this.props.actionLabel}
                     </Button>
                 </div>
                 {this.renderDescription()}
-            </div>
+            </FormGroup>
         );
     }
 });
 
-export default Webiny.createComponent(CopyInput, {styles, modules: ['Button', {Clipboard: () => import('clipboard')}]});
+export default Webiny.createComponent(CopyInput, {styles, modules: ['Button', 'FormGroup', {Clipboard: () => import('clipboard')}]});

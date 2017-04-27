@@ -139,7 +139,7 @@ Fieldset.defaultProps = {
         const model = this.state.model;
         if (Object.keys(model).length) {
             return (
-                <div className="form-group">
+                <div>
                     {this.headerTemplate(this.actions)}
                     {Object.keys(model).map(key => {
                         const record = model[key];
@@ -155,7 +155,7 @@ Fieldset.defaultProps = {
         }
 
         return (
-            <div className="form-group">
+            <div>
                 {this.registerInputs(this.emptyTemplate(this.actions))}
             </div>
         );

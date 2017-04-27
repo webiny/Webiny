@@ -13,7 +13,18 @@ class FormGroup extends Webiny.Ui.Component {
 
 FormGroup.defaultProps = {
     renderer() {
-        return <div className="form-group">{this.props.children}</div>;
+        const cssConfig = this.classSet(
+            styles.wrapper,
+            this.props.className,
+            (this.props.valid === false && styles.error),
+            (this.props.valid === true && styles.success)
+        );
+
+        return (<div className={cssConfig}>
+            <div className={styles.inputGroup}>
+                {this.props.children}
+            </div>
+        </div>);
     }
 };
 
@@ -26,4 +37,4 @@ _.assign(FormGroup, {
     DescriptionMessage
 });
 
-export default FormGroup;
+export default Webiny.createComponent(FormGroup, {styles});

@@ -181,11 +181,20 @@ FormComponent.defaultProps = {
         if (!this.props.showValidationMessage || this.state.isValid !== false) {
             return null;
         }
+
+        const {Animate} = this.props;
+
         return (
-            <div>
-                <Webiny.Ui.LazyLoad modules={['FormGroup']}>
+            <div className="validationMessageHolder">
+                <Webiny.Ui.LazyLoad modules={['FormGroup', 'Animate']}>
                     {({FormGroup}) => (
-                        <FormGroup.ValidationMessage>{this.state.validationMessage}</FormGroup.ValidationMessage>
+                        <Animate
+                            trigger={this.renderValidationMessage()}
+                            show={this.props.showValidationAnimation}
+                            hide={this.props.hideValidationAnimation}>
+                            <FormGroup.ValidationMessage
+                                success={this.state.isValid}>{this.state.validationMessage}</FormGroup.ValidationMessage>
+                        </Animate>
                     )}
                 </Webiny.Ui.LazyLoad>
             </div>

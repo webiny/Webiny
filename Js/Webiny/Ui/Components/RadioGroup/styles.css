@@ -2,6 +2,7 @@
 	display: inline-block;
 	background-color: transparent;
 	color: inherit;
+	margin-bottom: 7px;
 }
 
 /* hide default input */
@@ -18,8 +19,9 @@
 	position: relative;
 	padding-left: 32px;
 	margin-right: 15px;
-	margin-bottom: 5px;
 	font-weight: normal;
+	font-size: 16px;
+	margin-bottom: 0px;
 }
 
 .radio.disabled label {
@@ -50,12 +52,4 @@
 	height: 8px;
 	color: #8BDBED;
 	background-color: #373737;
-}
-
-/* todo: Clearfix should be global */
-.clearfix {
-	zoom: 1;
-	float: none;
-	display: block;
-	clear: both;
 }

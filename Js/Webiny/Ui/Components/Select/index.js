@@ -34,21 +34,18 @@ class Select extends Webiny.Ui.OptionComponent {
 
 Select.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
     renderer() {
-        const cssConfig = {
-            'form-group': true,
-            'error': this.state.isValid === false,
-            'success': this.state.isValid === true
-        };
+
+        const {FormGroup} = this.props;
 
         return (
-            <div className={this.classSet(cssConfig)} style={this.props.style}>
+            <FormGroup className={this.props.className}>
                 {this.renderLabel()}
                 {this.renderSelect()}
                 {this.renderDescription()}
                 {this.renderValidationMessage()}
-            </div>
+            </FormGroup>
         );
     }
 });
 
-export default Webiny.createComponent(Select);
+export default Webiny.createComponent(Select, {modules: ['FormGroup']});

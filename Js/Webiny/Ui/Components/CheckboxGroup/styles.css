@@ -1,7 +1,4 @@
-/* todo: Clearfix should be global */
-.clearfix {
-	zoom: 1;
-	float: none;
-	display: block;
-	clear: both;
+.disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
 }

@@ -63,13 +63,7 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         return <FormGroup.ValidationIcon success={false}/>;
     },
     renderer() {
-        const {DelayedOnChange, Animate, Icon, styles} = this.props;
-
-        const cssConfig = this.classSet(
-            styles.wrapper,
-            (this.state.isValid === false && styles.error),
-            (this.state.isValid === true && styles.success)
-        );
+        const {DelayedOnChange, Animate, Icon, styles, FormGroup} = this.props;
 
         const props = {
             'data-on-enter': this.props.onEnter !== _.noop,
@@ -99,7 +93,7 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             showValidationIcon = false;
         }
 
-        let wrapperClassName = this.props.wrapperClassName + ' ' + styles.inputGroup;
+        let wrapperClassName = this.props.wrapperClassName + ' inputGroup';
         let iconLeft = '';
         if (this.props.iconLeft) {
             wrapperClassName += ' ' + styles.iconLeft;
@@ -113,7 +107,7 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         }
 
         return (
-            <div className={this.classSet(cssConfig, this.props.className)}>
+            <FormGroup valid={this.state.isValid} className={this.props.className}>
                 {this.renderLabel()}
                 {this.renderInfo()}
 
@@ -128,13 +122,8 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                     {showValidationIcon && this.renderValidationIcon()}
                 </div>
                 {this.renderDescription()}
-                <Animate
-                    trigger={this.renderValidationMessage()}
-                    show={this.props.showValidationAnimation}
-                    hide={this.props.hideValidationAnimation}>
-                    {this.renderValidationMessage()}
-                </Animate>
-            </div>
+                {this.renderValidationMessage()}
+            </FormGroup>
         );
     }
 });

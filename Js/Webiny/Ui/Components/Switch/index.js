@@ -2,7 +2,7 @@ import Webiny from 'Webiny';
 import styles from './styles.css';
 
 class Switch extends Webiny.Ui.FormComponent {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.bindMethods('switch');
@@ -31,14 +31,14 @@ Switch.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     style: {},
     disabled: false,
     renderer() {
-        const {styles} = this.props;
+        const {FormGroup, styles} = this.props;
         let classes = this.classSet(styles.switch, styles.switchInline);
         if (this.props.disabled) {
             classes += ' ' + styles.disabled;
         }
 
         return (
-            <div className="form-group">
+            <FormGroup>
                 {this.renderLabel()}
                 <div className="clearfix"/>
                 <div className={classes}>
@@ -46,9 +46,9 @@ Switch.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                     <label htmlFor={this.id} onClick={this.switch}/>
                 </div>
                 {this.renderDescription()}
-            </div>
+            </FormGroup>
         );
     }
 });
 
-export default Webiny.createComponent(Switch, {styles});
+export default Webiny.createComponent(Switch, {modules: ['FormGroup'], styles});

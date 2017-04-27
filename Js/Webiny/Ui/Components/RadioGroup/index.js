@@ -52,23 +52,18 @@ class RadioGroup extends Webiny.Ui.OptionComponent {
 
 RadioGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
     radioRenderer: null,
-    disabledClass: 'disabled',
     renderer() {
-        const {styles} = this.props;
-        const classes = {'form-group': true};
-        if (this.isDisabled()) {
-            classes[this.props.disabledClass] = true;
-        }
+        const {FormGroup, styles} = this.props;
 
         return (
-            <div className={this.classSet(classes)}>
+            <FormGroup className={this.classSet(this.props.className, (this.props.disabled && styles.disabled))}>
                 {this.renderLabel()}
-                <div className={styles.clearfix}/>
+                <div className="clearfix"/>
                 {this.renderOptions()}
                 {this.renderValidationMessage()}
-            </div>
+            </FormGroup>
         );
     }
 });
 
-export default Webiny.createComponent(RadioGroup, {styles});
+export default Webiny.createComponent(RadioGroup, {modules:['FormGroup'], styles});

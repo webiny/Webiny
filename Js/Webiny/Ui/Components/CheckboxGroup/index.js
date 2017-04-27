@@ -76,30 +76,23 @@ CheckboxGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps,
     valueKey: null,
     valueAttr: 'id',
     textAttr: 'name',
-    disabledClass: 'disabled',
     checkboxRenderer: null,
     checkboxLabelRenderer: null,
     formatValue: value => value.id,
     renderer() {
-        const {styles} = this.props;
-        const cssConfig = {
-            'error': this.state.isValid === false,
-            'success': this.state.isValid === true
-        };
-
-        if (this.isDisabled()) {
-            cssConfig[this.props.disabledClass] = true;
-        }
+        const {FormGroup,styles} = this.props;
 
         return (
-            <div className={this.classSet('formGroup', this.props.className)}>
+            <FormGroup valid={this.state.isValid} className={this.props.className}>
                 {this.renderLabel()}
-                <div className={styles.clearfix}/>
-                {this.renderOptions()}
+                <div className='clearfix'/>
+                <div className={'inputGroup '+(this.props.disabled && styles.disabled)}>
+                    {this.renderOptions()}
+                </div>
                 {this.renderValidationMessage()}
-            </div>
+            </FormGroup>
         );
     }
 });
 
-export default Webiny.createComponent(CheckboxGroup, {styles, modules: ['Checkbox']});
+export default Webiny.createComponent(CheckboxGroup, {styles, modules: ['Checkbox', 'FormGroup']});

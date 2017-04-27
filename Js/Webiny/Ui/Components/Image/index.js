@@ -154,7 +154,7 @@ Image.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             return this.getCropper();
         }
 
-        const {FileReader, styles} = this.props;
+        const {FileReader, FormGroup, styles} = this.props;
 
         let message = null;
         if (!this.props.value) {
@@ -198,7 +198,7 @@ Image.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         }
 
         return (
-            <div className="form-group">
+            <FormGroup className={this.props.className}>
                 <div className={this.classSet(css)} {...props}>
                     {this.renderError()}
                     <div className={styles.container}>
@@ -216,9 +216,9 @@ Image.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                     </div>
                 </div>
                 {this.getCropper()}
-            </div>
+            </FormGroup>
         );
     }
 });
 
-export default Webiny.createComponent(Image, {modules: ['FileReader', 'Alert', 'Cropper'], styles});
+export default Webiny.createComponent(Image, {modules: ['FileReader', 'Alert', 'Cropper', 'FormGroup'], styles});

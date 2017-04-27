@@ -39,7 +39,7 @@ SimpleFile.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     sizeLimit: 2485760,
     readAs: 'data', // or binary
     renderer() {
-        const {Animate, FileReader, styles} = this.props;
+        const {Animate, FileReader, FormGroup, styles} = this.props;
 
         const fileReaderProps = {
             accept: this.props.accept,
@@ -50,14 +50,8 @@ SimpleFile.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         };
         const fileReader = <FileReader {...fileReaderProps}/>;
 
-        const cssConfig = {
-            'form-group': true,
-            'error': this.state.isValid === false,
-            'success': this.state.isValid === true
-        };
-
         return (
-            <div className={this.classSet(cssConfig, this.props.className)}>
+            <FormGroup valid={this.state.isValid} className={this.props.className}>
                 {this.renderLabel()}
 
                 <div className={styles.wrapper}>
@@ -82,9 +76,9 @@ SimpleFile.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                         {this.renderValidationMessage()}
                     </Animate>
                 </div>
-            </div>
+            </FormGroup>
         );
     }
 });
 
-export default Webiny.createComponent(SimpleFile, {modules: ['Animate', 'FileReader'], styles});
+export default Webiny.createComponent(SimpleFile, {modules: ['Animate', 'FileReader', 'FormGroup'], styles});

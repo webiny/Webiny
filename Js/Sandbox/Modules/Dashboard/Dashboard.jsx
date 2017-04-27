@@ -321,6 +321,19 @@ Dashboard.defaultProps = {
                                 <hr/>
 
                                 <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={4}>
+                                        <Ui.DateRange label="Date range" name="daterange" placeholder="Select a date range"/>
+                                    </Ui.Grid.Col>
+                                    <Ui.Grid.Col all={4}>
+                                        <Ui.DateRange label="Date range" name="daterange" placeholder="Select a date range"/>
+                                    </Ui.Grid.Col>
+                                    <Ui.Grid.Col all={4}>
+                                        <Ui.DateRange label="Date range" name="daterange" placeholder="Select a date range"/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+
+
+                                <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>
                                         <h2>Draft</h2>
                                         <DraftEditor

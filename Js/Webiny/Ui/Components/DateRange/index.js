@@ -19,6 +19,7 @@ class DateRange extends Webiny.Ui.FormComponent {
         this.options = {
             autoApply: true,
             alwaysShowCalendars: true,
+            opens: 'left',
             locale: {
                 format: 'DD/MMM/YY'
             },
@@ -109,9 +110,28 @@ class DateRange extends Webiny.Ui.FormComponent {
     prepare() {
         this.element = $(this.getInput());
 
+        // detect to which side we need to open the range selector in case opens is set to auto
+        let opens = 'left';
+        if (this.props.opens === 'auto') {
+            let left = this.element.offset().left;
+            let windowWidth = window.innerWidth;
+
+            let offset = (left / windowWidth) * 100;
+
+            // if within first 30% of the screen, open to left
+            if (offset <= 30) {
+                opens = 'right';
+            } else if (offset > 30 && offset <= 60) {
+                opens = 'center';
+            } else {
+                opens = 'left';
+            }
+        }
+
         const range = _.get(this.options.ranges, _.get(this.props, 'rangeType'));
         _.assign(this.options, this.props.options || {}, _.pick(this.props, this.availableOptions));
         this.options.locale.format = this.props.inputFormat;
+        this.options.opens = opens;
 
         const value = this.getValue();
         if (value) {
@@ -177,28 +197,20 @@ DateRange.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     showValidationMessage: true,
     showValidationAnimation: {translateY: 50, opacity: 1, duration: 225},
     hideValidationAnimation: {translateY: 0, opacity: 0, duration: 225},
+    opens: 'auto',
     renderer() {
-        const {Animate, Input, Icon} = this.props;
-
-        const cssConfig = {
-            'form-group': true,
-            'error': this.state.isValid === false,
-            'success': this.state.isValid === true
-        };
-
-        const css = this.classSet({placeholder: !this.props.value});
+        const {Animate, Input, Icon, FormGroup} = this.props;
 
         const inputProps = {
             placeholder: this.props.placeholder,
             ref: 'daterange',
             addonRight: <Icon icon="icon-calendar"/>,
-            className: css,
             value: this.state.date.range
         };
 
 
         return (
-            <div className={this.classSet(cssConfig)}>
+            <FormGroup valid={this.state.isValid} className={this.props.className}>
                 {this.renderLabel()}
                 <div className="picker-holder">
                     <Input {...inputProps}/>
@@ -209,9 +221,9 @@ DateRange.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                     hide={this.props.hideValidationAnimation}>
                     {this.renderValidationMessage()}
                 </Animate>
-            </div>
+            </FormGroup>
         );
     }
 });
 
-export default Webiny.createComponent(DateRange, {modules: ['Animate', 'Icon', 'Input']});
+export default Webiny.createComponent(DateRange, {modules: ['Animate', 'Icon', 'Input', 'FormGroup']});
