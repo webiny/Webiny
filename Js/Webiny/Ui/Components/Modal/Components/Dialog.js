@@ -265,7 +265,7 @@ Dialog.defaultProps = {
     style: {},
     renderDialog() {
         const {Animate, styles} = this.props;
-        const className = this.classSet(styles.modal, (this.props.wide && styles.noPadding));
+        const className = this.classSet(styles.modal, (this.props.wide && styles.wide));
         let content = this.props.children;
         if (_.isFunction(content)) {
             content = content.call(this, this);

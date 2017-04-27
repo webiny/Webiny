@@ -1,7 +1,7 @@
 .modal {
 	z-index: 2001;
 	display: none;
-	overflow: hidden;
+	overflow: scroll; /* needs to be set to scroll in case the modal is bigger than the screen */
 	position: fixed;
 	top: 0;
 	right: 0;
@@ -82,8 +82,8 @@
 	padding: 15px;
 }
 
-.body .noPadding {
-	padding: 0px;
+.wide .dialog {
+	width: 90%;
 }
 
 .content h4 {
