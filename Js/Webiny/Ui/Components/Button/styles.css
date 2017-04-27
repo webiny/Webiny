@@ -21,6 +21,7 @@
 
 .btn:hover {
 	box-shadow: 0px 0px 0px 3px #cdcdcd;
+	text-decoration: none;
 }
 
 .btn:active, .btn.active {
@@ -69,6 +70,7 @@
 	border: 1px solid #ED4005;
 	background: #ED4005;
 	box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.9);
+	color: #fff;
 }
 
 .btnSuccess {
@@ -81,18 +83,21 @@
 .btnSuccess:focus, .btnSuccess:active:focus {
 	background: #3FBFB0;
 	border: 1px solid #3FBFB0;
+	color: #fff;
 }
 
 .btnSuccess:hover {
 	background: #32988B;
 	box-shadow: 0px 0px 0px 3px #3FBFB0;
 	border: 1px solid #3FBFB0;
+	color: #fff;
 }
 
 .btnSuccess:active {
 	border: 1px solid #32988B;
 	background: #32988B;
 	box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.9);
+	color: #fff;
 }
 
 .btnLarge {
