@@ -55,6 +55,7 @@ table.table tbody tr td {
 	vertical-align: middle;
 	border-top: 1px solid #ddd;
 	line-height: 150%;
+	word-break: break-all;
 }
 
 table.table > tbody > tr > td.sorted {
