@@ -18,7 +18,7 @@ class Tags extends Webiny.Ui.FormComponent {
     }
 
     removeTag(index) {
-        const value = this.props.value;
+        const {value} = this.props;
         value.splice(index, 1);
         this.props.onChange(value);
     }
@@ -107,7 +107,7 @@ Tags.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                         {_.isArray(this.props.value) && this.props.value.map((tag, index) => (
                             <div key={tag} className={styles.block}>
                                 <p>{tag}</p>
-                                <Icon icon="icon-cancel" onClick={this.removeTag.bind(this, index)}/>
+                                <Icon icon="icon-cancel" onClick={() => this.removeTag(index)}/>
                             </div>
                         ))}
                         <input {...input}/>
