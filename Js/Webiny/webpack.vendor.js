@@ -1,4 +1,9 @@
+const utils = require('webiny/lib/utils');
+const path = require('path');
+
 module.exports = (config) => {
+    config.resolve.alias['webiny-lodash'] = path.resolve(utils.projectRoot(), 'Apps/Core/Js/Webiny/Vendors/Lodash');
+
     config.entry['vendor'] = [
         'jquery',
         'bootstrap-sass',
@@ -12,7 +17,7 @@ module.exports = (config) => {
         'baobab',
         'js-cookie',
         'ismobilejs',
-        'lodash',
+        'webiny-lodash',
         'moment',
         'historyjs/scripts/bundled-uncompressed/html5/native.history',
         'jquery-deparam',

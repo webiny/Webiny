@@ -16,7 +16,7 @@ Promise.config({
 window['$'] = window['jQuery'] = require('jquery');
 window['React'] = require('react');
 window['ReactDOM'] = require('react-dom');
-window['_'] = require('lodash');
+window['_'] = require('webiny-lodash');
 require('bootstrap-sass');
 window['$Webiny'] = Webiny;
 

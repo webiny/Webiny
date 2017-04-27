@@ -11,8 +11,7 @@ Field.defaultProps = {
             content = this.props.children.call(this, this.props.data, this);
         }
 
-        let className = _.union([], [this.props.className]);
-        className = _.join(className, ' ');
+        let className = _.union([], [this.props.className]).join(' ');
 
         return (
             <div className={className + ' expandable-list__row__fields__field flex-cell flex-width-' + this.props.all} onClick={this.props.onClick}>{content}</div>
