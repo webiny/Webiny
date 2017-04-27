@@ -79,7 +79,7 @@ class ColorPickerPlugin extends Webiny.Draft.InlineStylePlugin {
                     <Webiny.Ui.LazyLoad modules={['Dropdown']}>
                         {({Dropdown}) => (
                             <Dropdown
-                                className="color-picker"
+                                className="color-picker, toolbar-dropdown"
                                 title={this.getDropdownTitle()}
                                 disabled={this.editor.getReadOnly()}
                                 listStyle={{padding: 0}}>
