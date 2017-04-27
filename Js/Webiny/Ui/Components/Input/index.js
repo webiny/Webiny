@@ -63,7 +63,7 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         return <FormGroup.ValidationIcon success={false}/>;
     },
     renderer() {
-        const {DelayedOnChange, Animate, Icon, styles, FormGroup} = this.props;
+        const {DelayedOnChange, Icon, styles, FormGroup} = this.props;
 
         const props = {
             'data-on-enter': this.props.onEnter !== _.noop,
@@ -128,4 +128,4 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     }
 });
 
-export default Webiny.createComponent(Input, {modules: ['Animate', 'DelayedOnChange', 'Icon', 'FormGroup'], styles});
+export default Webiny.createComponent(Input, {modules: ['DelayedOnChange', 'Icon', 'FormGroup'], styles});
