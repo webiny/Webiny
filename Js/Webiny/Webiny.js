@@ -168,7 +168,6 @@ class Webiny {
         try {
             return checkDeeper(Object.getPrototypeOf(elementType.prototype).constructor.__originalComponent);
         } catch (e) {
-            console.log(elementType);
             return false;
         }
     }

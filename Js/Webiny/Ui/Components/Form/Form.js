@@ -671,9 +671,12 @@ Form.defaultProps = {
     onLoad: _.noop,
     prepareLoadedData: null,
     onProgress(pe) {
-        const {Growl, Progress} = this.props;
-        const cmp = <div>Your data is being uploaded...<Progress value={pe.progress}/></div>;
-        Webiny.Growl(<Growl.Info id={this.growlId} title="Please be patient" sticky={true}>{cmp}</Growl.Info>);
+        Promise.all([import('Webiny/Ui/Components/Growl'), import('Webiny/Ui/Components/Progress')]).then(modules => {
+            const Growl = modules[0].default;
+            const Progress = modules[1].default;
+            const cmp = <div>Your data is being uploaded...<Progress value={pe.progress}/></div>;
+            Webiny.Growl(<Growl.Info id={this.growlId} title="Please be patient" sticky={true}>{cmp}</Growl.Info>);
+        });
     },
     onSuccessMessage: () => {
         return 'Your record was saved successfully!';
@@ -686,7 +689,7 @@ Form.defaultProps = {
 };
 
 export default Webiny.createComponent(Form, {
-    modules: ['Growl', 'Progress', 'Tabs'],
+    modules: ['Tabs'],
     api: [
         'bindTo',
         'resetForm',

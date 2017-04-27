@@ -43,6 +43,7 @@ class UserRole extends AbstractEntity
 
         $this->attr('description')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('users')->many2many('User2UserRole')->setEntity('\Apps\Core\Php\Entities\User');
+        $this->attr('apiTokens')->many2many('ApiToken2UserRole')->setEntity('\Apps\Core\Php\Entities\ApiToken');
         $this->attr('permissions')
              ->many2many('UserRole2UserPermission')
              ->setEntity('\Apps\Core\Php\Entities\UserPermission')

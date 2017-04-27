@@ -3,11 +3,12 @@ import Webiny from 'Webiny';
 class ApiTokenForm extends Webiny.Ui.ModalComponent {
 
     renderDialog() {
-        const {Modal, Form, Grid, Input, Switch, Button} = this.props;
+        const {Modal, Form, Grid, Input, Switch, Button, UserRoles} = this.props;
 
         const formProps = {
             api: '/entities/core/api-token',
-            fields: '*',
+            fields: '*,roles',
+            id: _.get(this.props.data, 'id'),
             onSubmitSuccess: () => {
                 this.hide().then(this.ui('apiTokenList:loadData'));
             },
@@ -34,6 +35,7 @@ class ApiTokenForm extends Webiny.Ui.ModalComponent {
                                                 validate="required"
                                                 placeholder="Short description of usage"/>
                                             <Switch label="Enabled" name="enabled"/>
+                                            <UserRoles name="roles"/>
                                         </Grid.Col>
                                     </Grid.Row>
                                 </Modal.Body>
@@ -50,4 +52,4 @@ class ApiTokenForm extends Webiny.Ui.ModalComponent {
     }
 }
 
-export default Webiny.createComponent(ApiTokenForm, {modules: ['Modal', 'Form', 'Grid', 'Input', 'Switch', 'Button']});
+export default Webiny.createComponent(ApiTokenForm, {modules: ['Modal', 'Form', 'Grid', 'Input', 'Switch', 'Button', 'UserRoles']});

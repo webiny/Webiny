@@ -7,7 +7,6 @@ class Progress extends Webiny.Ui.Component {
 Progress.defaultProps = {
     value: 0,
     renderer() {
-
         const {styles} = this.props;
 
         return (

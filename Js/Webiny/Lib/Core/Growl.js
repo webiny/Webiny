@@ -17,10 +17,10 @@ function getGrowler() {
                 </Webiny.Ui.LazyLoad>
             );
             ReactDOM.render(growlContainer, document.querySelector('webiny-growler'));
-        }).then(() => Webiny.Ui.Dispatcher.get('GrowlContainer'));
+        });
     }
 
-    return growler;
+    return Promise.resolve(growler);
 }
 
 function Growler(component) {
