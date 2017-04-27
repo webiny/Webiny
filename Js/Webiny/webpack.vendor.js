@@ -3,6 +3,7 @@ const path = require('path');
 
 module.exports = (config) => {
     config.resolve.alias['webiny-lodash'] = path.resolve(utils.projectRoot(), 'Apps/Core/Js/Webiny/Vendors/Lodash');
+    config.resolve.alias['bluebird'] = 'bluebird/js/browser/bluebird.core.js';
 
     config.entry['vendor'] = [
         'jquery',

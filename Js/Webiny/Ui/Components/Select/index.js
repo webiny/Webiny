@@ -9,17 +9,17 @@ class Select extends Webiny.Ui.OptionComponent {
     }
 
     getCurrentData() {
-        return this.refs.input.getCurrentData();
+        return this.input ? this.input.getCurrentData() : null;
     }
 
     getPreviousData() {
-        return this.refs.input.getPreviousData();
+        return this.input ? this.input.getPreviousData() : null;
     }
 
     renderSelect() {
         const props = _.pick(this.props, _.keys(_.omit(SimpleSelect.defaultProps, ['renderer'])));
         _.assign(props, {
-            ref: 'input',
+            ref: select => this.input = select,
             options: this.state.options,
             disabled: this.isDisabled(),
             placeholder: this.getPlaceholder(),
