@@ -50,9 +50,4 @@ CopyButton.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(CopyButton, {
-    modules: {
-        Button: 'Button',
-        Clipboard: () => import('clipboard')
-    }
-});
+export default Webiny.createComponent(CopyButton, {modules: ['Button', {Clipboard: () => import('clipboard')}]});

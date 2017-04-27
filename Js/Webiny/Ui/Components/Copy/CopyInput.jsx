@@ -70,10 +70,4 @@ CopyInput.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     }
 });
 
-export default Webiny.createComponent(CopyInput, {
-    styles,
-    modules: {
-        Button: 'Button',
-        Clipboard: () => import('clipboard')
-    }
-});
+export default Webiny.createComponent(CopyInput, {styles, modules: ['Button', {Clipboard: () => import('clipboard')}]});

@@ -218,11 +218,5 @@ HtmlEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
 
 export default Webiny.createComponent(HtmlEditor, {
     api: ['getEditor'],
-    modules: {
-        Alert: 'Alert',
-        Cropper: 'Cropper',
-        FileReader: 'FileReader',
-        Progress: 'Progress',
-        Quill: () => import('Webiny/Vendors/Quill')
-    }
+    modules: ['Alert', 'Cropper', 'FileReader', 'Progress', {Quill: () => import('Webiny/Vendors/Quill')}]
 });

@@ -28,7 +28,5 @@ Pluralize.defaultProps = {
 
 
 export default Webiny.createComponent(Pluralize, {
-    modules: {
-        pluralize: () => import('pluralize')
-    }
+    modules: [{pluralize: () => import('pluralize')}]
 });

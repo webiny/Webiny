@@ -41,5 +41,5 @@ InlineCropper.defaultProps = _.merge({}, BaseCropper.defaultProps, {
 });
 
 export default Webiny.createComponent(InlineCropper, {
-    modules: {Button: 'Button', Cropper: () => import('Webiny/Vendors/Cropper')},
+    modules: ['Button', {Cropper: () => import('Webiny/Vendors/Cropper')}],
 });

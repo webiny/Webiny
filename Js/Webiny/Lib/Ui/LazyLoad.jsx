@@ -16,7 +16,17 @@ class LazyLoad extends Component {
         const toLoad = this.props.modules;
         let modules = {};
         if (_.isArray(toLoad)) {
-            toLoad.map(name => modules[name] = name);
+            toLoad.map(name => {
+                if (_.isString(name)) {
+                    modules[name] = name
+                }
+
+                if (_.isPlainObject(name)) {
+                    _.each(name, (value, key) => {
+                        modules[key] = value;
+                    })
+                }
+            });
         } else {
             modules = _.clone(toLoad);
         }
@@ -30,7 +40,7 @@ class LazyLoad extends Component {
                 return import(`Webiny/Ui/Components/${module}/index`).then(m => m.default);
             }
             // If a function is given - execute it and return whatever that function is returning
-            return module();
+            return module().then(m => m.hasOwnProperty('default') ? m.default : m);
         });
 
         Promise.all(imports).then(values => {

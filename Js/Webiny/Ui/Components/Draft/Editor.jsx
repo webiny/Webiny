@@ -190,7 +190,5 @@ Editor.defaultProps = {
 
 export default Webiny.createComponent(Editor, {
     api: ['focus'],
-    modules: {
-        Draft: () => import('Webiny/Vendors/Draft')
-    }
+    modules: [{Draft: () => import('Webiny/Vendors/Draft')}]
 });

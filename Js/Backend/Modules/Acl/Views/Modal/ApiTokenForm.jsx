@@ -52,4 +52,6 @@ class ApiTokenForm extends Webiny.Ui.ModalComponent {
     }
 }
 
-export default Webiny.createComponent(ApiTokenForm, {modules: ['Modal', 'Form', 'Grid', 'Input', 'Switch', 'Button', 'UserRoles']});
+export default Webiny.createComponent(ApiTokenForm, {
+    modules: ['Modal', 'Form', 'Grid', 'Input', 'Switch', 'Button', {UserRoles: () => import('Core/Backend/Components/UserRoles')}]
+});

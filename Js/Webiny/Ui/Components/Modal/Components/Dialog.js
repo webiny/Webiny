@@ -304,9 +304,6 @@ Dialog.defaultProps = {
 
 export default Webiny.createComponent(Dialog, {
     styles,
-    modules: {
-        Animate: 'Animate',
-        dynamics: () => import('dynamics.js')
-    },
+    modules: ['Animate', {dynamics: () => import('dynamics.js')}],
     api: ['show', 'hide', 'isShown', 'isAnimating']
 });

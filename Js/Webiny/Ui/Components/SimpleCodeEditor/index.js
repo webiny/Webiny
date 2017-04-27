@@ -81,8 +81,6 @@ SimpleCodeEditor.defaultProps = {
 };
 
 export default Webiny.createComponent(SimpleCodeEditor, {
-    modules: {
-        CodeMirror: () => import('Webiny/Vendors/CodeMirror')
-    },
+    modules: [{CodeMirror: () => import('Webiny/Vendors/CodeMirror')}],
     api: ['focus']
 });
