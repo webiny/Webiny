@@ -16,11 +16,20 @@ class LazyLoad extends Component {
         const toLoad = this.props.modules;
         let modules = {};
         if (_.isArray(toLoad)) {
-            toLoad.map(name => {
+            toLoad.map((name, key) => {
+                // String value is most probably a Core/Webiny component name
                 if (_.isString(name)) {
-                    modules[name] = name
+                    modules[name] = name;
+                    return;
                 }
 
+                // Function value is most probably a vendor that does not export anything (attaches to jQuery or window directly)
+                if(_.isFunction(name)) {
+                    modules[key] = name;
+                    return;
+                }
+
+                // Object value is a custom map of modules (Core/Webiny components or import statements) to a desired prop name
                 if (_.isPlainObject(name)) {
                     _.each(name, (value, key) => {
                         modules[key] = value;
@@ -28,7 +37,7 @@ class LazyLoad extends Component {
                 }
             });
         } else {
-            modules = _.clone(toLoad);
+            modules = toLoad;
         }
 
         const keys = Object.keys(modules);
