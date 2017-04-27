@@ -230,4 +230,4 @@ SimpleSelect.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(SimpleSelect, {modules: [() => import('Webiny/Vendors/Select2')]});
+export default Webiny.createComponent(SimpleSelect, {modules: [() => import('Core/Webiny/Vendors/Select2')]});

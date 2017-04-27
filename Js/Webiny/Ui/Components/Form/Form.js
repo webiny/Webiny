@@ -671,7 +671,7 @@ Form.defaultProps = {
     onLoad: _.noop,
     prepareLoadedData: null,
     onProgress(pe) {
-        Promise.all([import('Webiny/Ui/Components/Growl'), import('Webiny/Ui/Components/Progress')]).then(modules => {
+        Promise.all([import('Core/Webiny/Ui/Components/Growl'), import('Core/Webiny/Ui/Components/Progress')]).then(modules => {
             const Growl = modules[0].default;
             const Progress = modules[1].default;
             const cmp = <div>Your data is being uploaded...<Progress value={pe.progress}/></div>;

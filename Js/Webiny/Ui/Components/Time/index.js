@@ -109,5 +109,5 @@ Time.defaultProps = {
 };
 
 export default Webiny.createComponent(Time, {
-    modules: ['Icon', 'Input', () => import('Webiny/Vendors/DateTimePicker')]
+    modules: ['Icon', 'Input', () => import('Core/Webiny/Vendors/DateTimePicker')]
 });

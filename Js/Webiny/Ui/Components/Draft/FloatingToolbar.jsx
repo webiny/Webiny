@@ -66,4 +66,4 @@ FloatingToolbar.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(FloatingToolbar, {modules: ['Animate', {Draft: () => import('Webiny/Vendors/Draft')}]});
+export default Webiny.createComponent(FloatingToolbar, {modules: ['Animate', {Draft: () => import('Core/Webiny/Vendors/Draft')}]});

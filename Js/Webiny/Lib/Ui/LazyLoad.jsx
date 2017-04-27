@@ -46,7 +46,7 @@ class LazyLoad extends Component {
             const module = modules[key];
             if (_.isString(module)) {
                 // If string is given, we expect it to be a Core component name
-                return import(`Webiny/Ui/Components/${module}/index`).then(m => m.default);
+                return import(`Core/Webiny/Ui/Components/${module}/index`).then(m => m.default);
             }
             // If a function is given - execute it and return whatever that function is returning
             return module().then(m => m.hasOwnProperty('default') ? m.default : m);
