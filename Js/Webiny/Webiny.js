@@ -130,7 +130,7 @@ class Webiny {
     }
 
     isElementOfType(element, type) {
-        if (!React.isValidElement(element)) {
+        if (!React.isValidElement(element) || _.isString(element.type)) {
             return false;
         }
 
@@ -148,7 +148,29 @@ class Webiny {
             elementType = elementType.__originalComponent;
         }
 
-        return elementType === targetType || elementType.prototype instanceof targetType;
+        // Check if targetType can be found in the inheritance tree with possible ComponentWrapper being an intermediate class
+        const checkDeeper = (elementType) => {
+            if (!elementType) {
+                return false;
+            }
+
+            if (elementType === targetType || elementType.prototype instanceof targetType) {
+                return true;
+            }
+
+            return checkDeeper(Object.getPrototypeOf(elementType.prototype).constructor.__originalComponent);
+        };
+
+        if (elementType === targetType || elementType.prototype instanceof targetType) {
+            return true;
+        }
+
+        try {
+            return checkDeeper(Object.getPrototypeOf(elementType.prototype).constructor.__originalComponent);
+        } catch (e) {
+            console.log(elementType);
+            return false;
+        }
     }
 }
 

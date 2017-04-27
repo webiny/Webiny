@@ -2,7 +2,7 @@
 import Webiny from 'Webiny';
 
 class Form extends Webiny.Ui.View {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -26,7 +26,7 @@ class Form extends Webiny.Ui.View {
             <tr key={role.id}>
                 <td className="text-left">
                     <Ui.Switch value={checkedIndex > -1} onChange={enabled => {
-                        if(enabled){
+                        if (enabled) {
                             model.roles.push(role);
                         } else {
                             model.roles.splice(checkedIndex, 1);
@@ -55,7 +55,7 @@ Form.defaultProps = {
         };
 
         return (
-            <Webiny.Ui.LazyLoad modules={['View', 'Form', 'Grid', 'Tabs', 'Input', 'Switch', 'Button']}>
+            <Webiny.Ui.LazyLoad modules={['View', 'Form', 'Grid', 'Tabs', 'List', 'Input', 'Switch', 'Button']}>
                 {(Ui) => (
                     <Ui.Form ui="myForm" {...containerProps}>
                         {(model, container) => (
@@ -73,7 +73,8 @@ Form.defaultProps = {
                                                     <Ui.Input label="Last name" name="lastName" validate="required"/>
                                                 </Ui.Grid.Col>
                                                 <Ui.Grid.Col all={6}>
-                                                    <Ui.Input label="Email" name="email" description="Your email" validate="required,email"/>
+                                                    <Ui.Input label="Email" name="email" description="Your email"
+                                                              validate="required,email"/>
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
                                             <Ui.Grid.Row>
@@ -81,18 +82,32 @@ Form.defaultProps = {
                                                     <Ui.Switch label="Enabled" name="enabled"/>
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
-                                            <table className="table table-simple">
-                                                <thead>
-                                                <tr>
-                                                    <th className="text-left" style={{width: 140}}/>
-                                                    <th className="text-left">Role</th>
-                                                    <th className="text-left">Description</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                {this.state.roles.map(r => this.renderRole(r, model, container, Ui))}
-                                                </tbody>
-                                            </table>
+                                            <Ui.List.Table data={this.state.roles}>
+                                                <Ui.List.Table.Row>
+                                                    <Ui.List.Table.Field style={{width: 140}}>
+                                                        {(role) => {
+                                                            const checkedIndex = _.findIndex(model.roles, {id: role.id});
+                                                            model.roles = model.roles || [];
+                                                            return (
+                                                                <Ui.Switch value={checkedIndex > -1} onChange={enabled => {
+                                                                    if (enabled) {
+                                                                        model.roles.push(role);
+                                                                    } else {
+                                                                        model.roles.splice(checkedIndex, 1);
+                                                                    }
+                                                                    container.setState('model.roles', model.roles);
+                                                                }}/>
+                                                            );
+                                                        }}
+                                                    </Ui.List.Table.Field>
+                                                    <Ui.List.Table.Field label="Role">
+                                                        {(role) => (
+                                                            <span><strong>{role.name}</strong><br/>{role.slug}</span>
+                                                        )}
+                                                    </Ui.List.Table.Field>
+                                                    <Ui.List.Table.Field label="Description" name="description"/>
+                                                </Ui.List.Table.Row>
+                                            </Ui.List.Table>
                                         </Ui.Tabs.Tab>
                                     </Ui.Tabs>
                                 </Ui.View.Body>
