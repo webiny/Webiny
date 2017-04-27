@@ -38,6 +38,10 @@ export default (Component, options = {}) => {
             // 'onComponentDidMount' prop only needs to be handled by the actual component
         }
 
+        static configure(config) {
+            _.merge(ComponentWrapper, config);
+        }
+
         render() {
             const props = _.omit(this.props, ['styles']);
             props.ref = c => this.component = c;
@@ -51,7 +55,7 @@ export default (Component, options = {}) => {
                         _.merge(props, this.props.contextProps);
                     }
                     const RenderComponent = overrides.pop().value;
-                    const options = RenderComponent.__options;
+                    const options = RenderComponent.options;
 
                     // If lazy loaded modules are defined - return LazyLoad wrapper
                     const modules = options.modules || {};
@@ -92,7 +96,7 @@ export default (Component, options = {}) => {
     }
 
     ComponentWrapper.__originalComponent = Component;
-    ComponentWrapper.__options = options;
+    ComponentWrapper.options = options;
     ComponentWrapper.defaultProps = _.assign({}, Component.defaultProps);
 
     return hoistNonReactStatics(ComponentWrapper, Component);

@@ -79,18 +79,8 @@ class Webiny {
         return this;
     }
 
-    configure(path, config) {
-        path = path.replace('Webiny.', '');
-        const props = _.get(this, path + '.defaultProps');
-        if (props) {
-            _.merge(props, config);
-        }
-
-        /*Webiny.configure('Form', (Form) => {
-         _.merge(Form.Error.defaultProps, {
-
-         });
-         });*/
+    configure(name, config) {
+        this.Ui.LazyLoad.setConfiguration(name, config);
     }
 
     includeApp(name, config) {

@@ -1,5 +1,7 @@
 import Component from './../Core/Component';
 
+const configurations = {};
+
 class LazyLoad extends Component {
     constructor(props) {
         super(props);
@@ -24,7 +26,7 @@ class LazyLoad extends Component {
                 }
 
                 // Function value is most probably a vendor that does not export anything (attaches to jQuery or window directly)
-                if(_.isFunction(name)) {
+                if (_.isFunction(name)) {
                     modules[key] = name;
                     return;
                 }
@@ -63,8 +65,25 @@ class LazyLoad extends Component {
             if (!this.isMounted()) {
                 return null;
             }
+
+            // Configure modules
+            _.each(modules, (module, name) => {
+                // Only configure modules that are requested as string
+                if (_.isString(name) && _.has(configurations, name) && !configurations[name].configured) {
+                    _.get(configurations[name], 'configs', []).map(config => config(module));
+                    configurations[name].configured = true;
+                }
+            });
+
+            // Finish loading and render content
             this.setState({loaded: true, modules});
         });
+    }
+
+    static setConfiguration(name, config) {
+        const current = _.get(configurations, 'name', {configured: false, configs: []});
+        current.configs.push(config);
+        configurations[name] = current;
     }
 }
 
