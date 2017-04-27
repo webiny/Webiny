@@ -1,29 +1,25 @@
 import Webiny from 'Webiny';
 
-class UserRoles extends Webiny.Ui.Component {
-    constructor(props){
+class UserPermissions extends Webiny.Ui.Component {
+    constructor(props) {
         super(props);
 
         this.state = {
-            roles: []
+            permissions: []
         };
-
-        this.bindMethods('onChange');
     }
 
     componentWillMount() {
         super.componentWillMount();
         new Webiny.Api.Endpoint(this.props.api).get('/', {_perPage: 1000, _sort: 'name'}).then(apiResponse => {
-            if (this.isMounted()) {
-                this.setState({roles: _.filter(apiResponse.getData('list'), r => r.slug !== 'public')});
-            }
+            this.setState({permissions: apiResponse.getData('list')});
         });
     }
 
-    onChange(index, role, enabled) {
+    onChange(index, permission, enabled) {
         const value = this.props.value || [];
         if (enabled) {
-            value.push(role);
+            value.push(permission);
         } else {
             value.splice(index, 1);
         }
@@ -31,26 +27,26 @@ class UserRoles extends Webiny.Ui.Component {
     }
 }
 
-UserRoles.defaultProps = {
-    api: '/entities/core/user-roles',
+UserPermissions.defaultProps = {
+    api: '/entities/core/user-permissions',
     value: [],
     onChange: _.noop,
     renderer() {
         const {List, Switch} = this.props;
         return (
-            <List.Table data={this.state.roles}>
+            <List.Table data={this.state.permissions}>
                 <List.Table.Row>
                     <List.Table.Field style={{width: 140}}>
-                        {(role) => {
-                            const checkedIndex = _.findIndex(this.props.value, {id: role.id});
+                        {(permission) => {
+                            const checkedIndex = _.findIndex(this.props.value, {id: permission.id});
                             return (
-                                <Switch value={checkedIndex > -1} onChange={enabled => this.onChange(checkedIndex, role, enabled)}/>
+                                <Switch value={checkedIndex > -1} onChange={enabled => this.onChange(checkedIndex, permission, enabled)}/>
                             );
                         }}
                     </List.Table.Field>
-                    <List.Table.Field label="Role">
-                        {(role) => (
-                            <span><strong>{role.name}</strong><br/>{role.slug}</span>
+                    <List.Table.Field label="Permission">
+                        {(permission) => (
+                            <span><strong>{permission.name}</strong><br/>{permission.slug}</span>
                         )}
                     </List.Table.Field>
                     <List.Table.Field label="Description" name="description"/>
@@ -60,4 +56,4 @@ UserRoles.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(UserRoles, {modules: ['List', 'Switch']});
+export default Webiny.createComponent(UserPermissions, {modules: ['List', 'Switch']});

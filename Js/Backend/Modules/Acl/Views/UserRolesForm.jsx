@@ -2,43 +2,7 @@
 import Webiny from 'Webiny';
 
 class Form extends Webiny.Ui.View {
-    constructor(props) {
-        super(props);
 
-        this.state = {
-            permissions: []
-        };
-
-        this.bindMethods();
-    }
-
-    componentWillMount() {
-        super.componentWillMount();
-        new Webiny.Api.Endpoint('/entities/core/user-permissions').get('/', {_perPage: 1000, _sort: 'name'}).then(apiResponse => {
-            this.setState({permissions: apiResponse.getData('list')});
-        });
-    }
-
-    renderPermission(permission, model, container, Ui) {
-        const checkedIndex = _.findIndex(model.permissions, {id: permission.id});
-        return (
-            <tr key={permission.id}>
-                <td className="text-left">
-                    <Ui.Switch value={checkedIndex > -1} onChange={enabled => {
-                        model.permissions = _.get(model, 'permissions', []);
-                        if(enabled){
-                            model.permissions.push(permission);
-                        } else {
-                            model.permissions.splice(checkedIndex, 1);
-                        }
-                        container.setModel(model);
-                    }}/>
-                </td>
-                <td className="text-left"><strong>{permission.name}</strong><br/>{permission.slug}</td>
-                <td className="text-left">{permission.description || '-'}</td>
-            </tr>
-        );
-    }
 }
 
 Form.defaultProps = {
@@ -54,8 +18,13 @@ Form.defaultProps = {
             }
         };
 
+        const modules = [
+            'Switch', 'Form', 'View', 'Tabs', 'Input', 'Button', 'Grid',
+            {UserPermissions: () => import('Core/Backend/Components/UserPermissions')}
+        ];
+
         return (
-            <Webiny.Ui.LazyLoad modules={['Switch', 'Form', 'View', 'Tabs', 'Input', 'Button', 'Grid']}>
+            <Webiny.Ui.LazyLoad modules={modules}>
                 {(Ui) => (
                     <Ui.Form ui="myForm" {...containerProps}>
                         {(model, container) => (
@@ -77,18 +46,7 @@ Form.defaultProps = {
                                                     <Ui.Input label="Description" name="description" validate="required"/>
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
-                                            <table className="table table-simple">
-                                                <thead>
-                                                <tr>
-                                                    <th className="text-left" style={{width: 140}}/>
-                                                    <th className="text-left">Permission</th>
-                                                    <th className="text-left">Description</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                {this.state.permissions.map(p => this.renderPermission(p, model, container, Ui))}
-                                                </tbody>
-                                            </table>
+                                            <Ui.UserPermissions name="permissions"/>
                                         </Ui.Tabs.Tab>
                                     </Ui.Tabs>
                                 </Ui.View.Body>
