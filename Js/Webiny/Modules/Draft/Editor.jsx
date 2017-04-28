@@ -19,7 +19,6 @@ class Editor extends Webiny.Ui.Component {
             readOnly: props.preview || props.readOnly,
             editorState: Draft.EditorState.createEmpty(this.plugins.getDecorators())
         };
-
         this.state.editorState = this.initialize(props);
     }
 
