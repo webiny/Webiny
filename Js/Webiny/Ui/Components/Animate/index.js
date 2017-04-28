@@ -72,28 +72,18 @@ Container.defaultProps = {
 };
 
 class Animate extends Webiny.Ui.Component {
-    constructor(props) {
-        super(props);
 
-        this.state = {
-            trigger: false
-        };
-    }
-
-    componentWillReceiveProps(props) {
-        this.setState({trigger: props.trigger});
-    }
 }
 
 Animate.defaultProps = {
-    trigger: null,
+    trigger: false,
     onFinish: _.noop,
     show: 'fadeIn',
     hide: 'fadeOut',
     renderer() {
         return (
             <ReactTransitionGroup>
-                {this.state.trigger && (
+                {this.props.trigger && (
                     <Container
                         onFinish={this.props.onFinish}
                         show={this.props.show}

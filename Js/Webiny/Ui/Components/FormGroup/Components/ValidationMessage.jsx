@@ -17,12 +17,14 @@ ValidationMessage.defaultProps = {
 
         //return <span className={this.classSet(styles.validationMessage, css)}>{this.props.children}</span>;
 
-        return (<Animate
-            trigger={true}
-            hide={{translateY: 0, opacity: 0, duration: 225}}
-            show={{translateY: 50, opacity: 1, duration: 225}}>
-            <span className={this.classSet(styles.validationMessage, css)}>{children}</span>
-        </Animate>);
+        return (
+            <Animate
+                trigger={true}
+                hide={{translateY: 0, opacity: 0, duration: 225}}
+                show={{translateY: 50, opacity: 1, duration: 225}}>
+                <span className={this.classSet(styles.validationMessage, css)}>{children}</span>
+            </Animate>
+        );
     }
 };
 
