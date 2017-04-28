@@ -95,17 +95,16 @@ Dashboard.defaultProps = {
             'ImageUploader',
             'Input',
             'Label',
-            'List', // @todo: zasto se switch ne renderira
+            'List',
             'MarkdownEditor',
             'Panel',
             'Password',
             'Popover', // @todo: kako to testiram?
             'Progress',
             'RadioGroup', // @todo: iz nekog razloga clearfix ne radi
-            'SimpleCodeEditor',
             'Switch',
             'Tabs',
-            'Tags', // @todo: Icon on click se iz nekog razloga ne execute-a
+            'Tags',
             'Textarea', // @todo: trebati ce napraviti neku form-control komponentu
             'Tile',
             'Tooltip',
@@ -619,8 +618,7 @@ Dashboard.defaultProps = {
                                     </Ui.Grid.Col>
 
                                     <Ui.Grid.Col all={6}>
-                                        <h2>SimpleCodeEditor</h2>
-                                        <Ui.SimpleCodeEditor/>
+
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                                 <hr/>
