@@ -15,17 +15,11 @@ class Route {
         }
 
         this.name = name;
-        this.layout = 'default';
-        this.module = false;
         this.pattern = pattern;
         this.components = nComponents;
         this.title = title;
-        this.regex = null;
         this.paramNames = [];
         this.paramValues = {};
-        this.namedParam = /:\w+/g;
-        this.splatParam = /\*\w+/g;
-        this.skipDefaults = false;
 
         // Extract params names
         const params = pattern.match(this.namedParam);
@@ -187,5 +181,11 @@ class Route {
         return this;
     }
 }
+
+Route.prototype.layout = 'default';
+Route.prototype.module = false;
+Route.prototype.namedParam = /:\w+/g;
+Route.prototype.splatParam = /\*\w+/g;
+Route.prototype.skipDefaults = false;
 
 export default Route;

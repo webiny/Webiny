@@ -1,6 +1,6 @@
 const registeredFilters = {};
 
-const parseFilters = function parseFilters(filters) {
+function parseFilters(filters) {
     if (!filters) {
         return {};
     }
@@ -12,18 +12,18 @@ const parseFilters = function parseFilters(filters) {
         filters[vName] = filter;
     });
     return filters;
-};
+}
 
-const getFilter = function getFilter(filter) {
+function getFilter(filter) {
     return registeredFilters[filter];
-};
+}
 
-const Filter = function Filter(value, filtersToApply) {
+function Filter(value, filtersToApply) {
     _.forEach(parseFilters(filtersToApply), (params, filter) => {
         value = getFilter(filter)(value, ...params);
     });
     return value;
-};
+}
 
 Filter.getFilters = function () {
     return registeredFilters;

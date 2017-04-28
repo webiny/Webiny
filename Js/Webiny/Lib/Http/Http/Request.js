@@ -18,13 +18,7 @@ function formatResponse(jqXhr) {
 class HttpRequest {
 
     constructor() {
-        this.url = '';
-        this.method = 'get';
         this.headers = {};
-        this.query = null;
-        this.body = null;
-        this.responseType = 'json';
-        this.progress = _.noop;
     }
 
     getUrl() {
@@ -101,6 +95,13 @@ class HttpRequest {
         return this;
     }
 
+    getXhr() {
+        const xhr = new window.XMLHttpRequest();
+        xhr.upload.addEventListener('progress', this.progress, false);
+
+        return xhr;
+    }
+
     getRequestObject() {
         const headers = this.getHeaders();
         const basicAuth = _.get(webinyConfig, 'Api.BasicAuth', null);
@@ -116,12 +117,7 @@ class HttpRequest {
             dataType: this.getResponseType(),
             contentType: 'application/json;charset=UTF-8',
             processData: false,
-            xhr: () => {
-                const xhr = new window.XMLHttpRequest();
-                xhr.upload.addEventListener('progress', this.progress, false);
-
-                return xhr;
-            }
+            xhr: this.getXhr
         };
 
         if (['put', 'post', 'patch'].indexOf(config.method) === -1) {
@@ -153,5 +149,12 @@ class HttpRequest {
         return this.promise;
     }
 }
+
+HttpRequest.prototype.url = '';
+HttpRequest.prototype.method = 'get';
+HttpRequest.prototype.query = null;
+HttpRequest.prototype.body = null;
+HttpRequest.prototype.responseType = 'json';
+HttpRequest.prototype.progress = _.noop;
 
 export default HttpRequest;

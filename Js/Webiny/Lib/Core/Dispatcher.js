@@ -1,3 +1,7 @@
+function logError(e) {
+    console.error(e);
+}
+
 class Dispatcher {
 
     constructor() {
@@ -14,7 +18,7 @@ class Dispatcher {
         let callbacksChain = Promise.resolve(data);
 
         this.listeners[event].forEach(listener => {
-            callbacksChain = callbacksChain.then(res => listener.listener(res)).catch(e => console.error(e));
+            callbacksChain = callbacksChain.then(res => listener.listener(res)).catch(logError);
         });
 
         return callbacksChain;

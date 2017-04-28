@@ -16,35 +16,36 @@ class Component extends React.Component {
         this.__mounted = true;
         this.bindMethods('bindTo,isRendered');
 
-        /**
-         * Method for a more convenient use of i18n module - this will automatically generate a complete namespace for the label
-         * If this method is called without parameters, it will return Webiny.i18n module, from which you can use other functions as well
-         * @param label
-         * @param variables
-         * @param options
-         * @returns {*}
-         */
-        this.i18n = (label, variables, options = {}) => {
-            if (!label) {
-                return Webiny.i18n;
-            }
-
-            let key = options.key || this.i18n.key;
-            if (!key) {
-                const app = _.get(Webiny.Router.getActiveRoute(), 'module.app.name');
-                const module = _.get(Webiny.Router.getActiveRoute(), 'module.name');
-                key = `${app}.${module}.${this.getClassName()}`;
-            }
-
-            key = _.trimEnd(key, '.') + '.' + md5(label);
-            return Webiny.i18n.render(key, label, variables, options);
-        };
 
         /**
          * If set, it will be used in the component instead of dynamically created key
          * @type {null}
          */
         this.i18n.key = null;
+    }
+
+    /**
+     * Method for a more convenient use of i18n module - this will automatically generate a complete namespace for the label
+     * If this method is called without parameters, it will return Webiny.i18n module, from which you can use other functions as well
+     * @param label
+     * @param variables
+     * @param options
+     * @returns {*}
+     */
+    i18n(label, variables, options = {}) {
+        if (!label) {
+            return Webiny.i18n;
+        }
+
+        let key = options.key || this.i18n.key;
+        if (!key) {
+            const app = _.get(Webiny.Router.getActiveRoute(), 'module.app.name');
+            const module = _.get(Webiny.Router.getActiveRoute(), 'module.name');
+            key = `${app}.${module}.${this.getClassName()}`;
+        }
+
+        key = _.trimEnd(key, '.') + '.' + md5(label);
+        return Webiny.i18n.render(key, label, variables, options);
     }
 
     componentWillMount() {
@@ -55,7 +56,7 @@ class Component extends React.Component {
 
     componentDidMount() {
         // Reserved for future system-wide functionality
-        if(this.props.onComponentDidMount) {
+        if (this.props.onComponentDidMount) {
             this.props.onComponentDidMount(this);
         }
     }
@@ -200,7 +201,6 @@ class Component extends React.Component {
     }
 
     apiParams(params) {
-        // TODO: need a simple Injector (like current Registry)
         // TODO: Things like `apiParams` will be constructed using a form in UI builder
         // TODO: values like '@activeLocation' will be dynamic, and are accessed through injector
         // TODO: Modules responsible for these values should make these values available to injector on module initialization
@@ -238,20 +238,19 @@ class Component extends React.Component {
                 return this.props.renderer.call(...params);
             } catch (e) {
                 Webiny.Logger.reportError('js', e.message, e.stack);
-                if (webinyEnvironment === 'production') {
-                    return null;
+                if (DEVELOPMENT) {
+                    console.error('[RENDER ERROR][' + this.getClassName() + ']', e);
+                    return (
+                        <div className="porlet porlet-primary">
+                            <div className="porlet-header">
+                                <h3>[RENDER ERROR] in component `{this.getClassName()}`</h3>
+                            </div>
+                            <div className="porlet-body">
+                                <pre>{e.stack}</pre>
+                            </div>
+                        </div>
+                    );
                 }
-                console.error('[RENDER ERROR][' + this.getClassName() + ']', e);
-                return (
-                    <div className="porlet porlet-primary">
-                        <div className="porlet-header">
-                            <h3>[RENDER ERROR] in component `{this.getClassName()}`</h3>
-                        </div>
-                        <div className="porlet-body">
-                            <pre>{e.stack}</pre>
-                        </div>
-                    </div>
-                );
             }
         }
 

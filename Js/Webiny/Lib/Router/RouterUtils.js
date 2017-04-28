@@ -3,10 +3,6 @@ import RouterEvent from './RouterEvent';
 
 class RouterUtils {
 
-    constructor() {
-        this.baseUrl = null;
-    }
-
     setBaseUrl(url) {
         this.baseUrl = url;
         return this;
@@ -144,5 +140,7 @@ class RouterUtils {
         return routeNotMatchedChain;
     }
 }
+
+RouterUtils.prototype.baseUrl = null;
 
 export default new RouterUtils();

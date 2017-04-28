@@ -44,14 +44,14 @@ function replaceVariables(text, values) {
     });
 }
 
-const i18n = function i18n(key, text, variables) {
+function i18n(key, text, variables) {
     let output = i18n.getTranslation(key) || text;
     output = replaceVariables(output, variables);
     i18n.parsers.forEach(parser => {
         output = parser(output, key, text, variables);
     });
     return output;
-};
+}
 
 i18n.language = '';
 i18n.api = null;

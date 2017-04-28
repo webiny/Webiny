@@ -7,7 +7,6 @@ class Link extends Webiny.Ui.Component {
         super(props);
 
         this.bindMethods('getLinkProps');
-        this.allowedProps = ['className', 'style', 'target', 'href', 'onClick', 'title', 'tabIndex'];
     }
 
     getLinkProps() {
@@ -101,6 +100,9 @@ class Link extends Webiny.Ui.Component {
         return finalProps;
     }
 }
+
+// We can define this on prototype since it is not going to change between instances and we want to it accessible via "this"
+Link.prototype.allowedProps = ['className', 'style', 'target', 'href', 'onClick', 'title', 'tabIndex'];
 
 Link.defaultProps = {
     align: null,
