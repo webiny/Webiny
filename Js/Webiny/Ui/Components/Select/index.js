@@ -38,7 +38,7 @@ Select.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
         const {FormGroup} = this.props;
 
         return (
-            <FormGroup className={this.props.className}>
+            <FormGroup valid={this.state.isValid} className={this.props.className}>
                 {this.renderLabel()}
                 {this.renderSelect()}
                 {this.renderDescription()}

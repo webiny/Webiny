@@ -2,13 +2,92 @@ import Webiny from 'Webiny';
 import AnimationSets from './AnimationSets';
 import ReactTransitionGroup from 'react-addons-transition-group';
 
+/**
+ * Only componentWillEnter and componentWillLeave can be used because they way Dialog component mounts into DOM.
+ */
 class Container extends Webiny.Ui.Component {
 
-    componentDidMount() {
-        this.animationContainer = ReactDOM.findDOMNode(this);
+    constructor(props) {
+        super(props);
+
+        this.state = {shown: false};
+        this.bindMethods('hideAction', 'showAction');
     }
 
+    componentDidMount() {
+        //this.animationContainer = ReactDOM.findDOMNode(this);
+    }
+
+    /*
     componentWillAppear(callback) {
+        callback();
+        console.log('will appear');
+        //this.showAction(callback);
+
+    }
+
+    componentDidAppear() {
+        console.log('componentDidAppear');
+    }
+    */
+
+    componentWillEnter(callback) {
+        this.showAction(callback);
+    }
+    
+    /*
+    componentDidEnter() {
+        console.log('did enter');
+    }
+
+    componentWillUnmount(callback) {
+        callback();
+        console.log('wiil unmount');
+        //this.hideAction(callback);
+    }
+    */
+
+    componentWillLeave(callback) {
+        this.hideAction(callback);
+    }
+
+    hideAction(callback) {
+        if (!this.state.shown) {
+            //callback();
+            return;
+        }
+        this.setState({shown: false});
+
+        const elements = ReactDOM.findDOMNode(this).childNodes;
+
+        const hideCallback = () => {
+            try {
+                callback();
+            } catch (e) {
+                // ignore
+            }
+
+            if (_.isFunction(this.props.onFinish)) {
+                this.props.onFinish();
+            }
+        };
+
+        _.forEach(elements, (el) => {
+            if (_.isObject(this.props.hide)) {
+                AnimationSets.custom(this.props.hide, el, hideCallback);
+            } else {
+                AnimationSets[this.props.hide](el, hideCallback);
+            }
+        });
+    }
+
+    showAction(callback) {
+        if (this.state.shown) {
+            //callback();
+            return;
+        }
+        this.setState({shown: true});
+
         const elements = ReactDOM.findDOMNode(this).childNodes;
 
         const showCallback = () => {
@@ -32,31 +111,6 @@ class Container extends Webiny.Ui.Component {
                 });
             } else {
                 AnimationSets[this.props.show](el, showCallback);
-            }
-        });
-
-    }
-
-    componentWillUnmount(callback) {
-        const elements = ReactDOM.findDOMNode(this).childNodes;
-
-        const hideCallback = () => {
-            try {
-                callback();
-            } catch (e) {
-                // ignore
-            }
-
-            if (_.isFunction(this.props.onFinish)) {
-                this.props.onFinish();
-            }
-        };
-
-        _.forEach(elements, (el) => {
-            if (_.isObject(this.props.hide)) {
-                AnimationSets.custom(this.props.hide, el, hideCallback);
-            } else {
-                AnimationSets[this.props.hide](el, hideCallback);
             }
         });
     }
@@ -84,7 +138,7 @@ Animate.defaultProps = {
     renderer() {
         return (
             <ReactTransitionGroup component={this.firstChild}>
-                {this.props.trigger && (
+                {(this.props.trigger === true) && (
                     <Container
                         onFinish={this.props.onFinish}
                         show={this.props.show}

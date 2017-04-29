@@ -176,10 +176,15 @@ FormComponent.defaultProps = {
         return label;
     },
     validationMessageRenderer() {
+        let success = false;
+        if (this.state.isValid === true || this.state.isValid === null) {
+            success = true;
+        }
+
         return (
             <Webiny.Ui.LazyLoad modules={['FormGroup']}>
                 {({FormGroup}) => (
-                    <FormGroup.ValidationMessage success={this.state.isValid}>
+                    <FormGroup.ValidationMessage success={success}>
                         {this.state.validationMessage}
                     </FormGroup.ValidationMessage>
                 )}
