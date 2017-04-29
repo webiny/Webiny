@@ -145,6 +145,7 @@ Avatar.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     cropper: false,
     defaultImage: null,
     empty: 'x',
+    sizeLimit: 2485760,
     renderer() {
         // If inline cropper is used - render only the cropper component
         if (this.state.cropImage && _.get(this.props, 'cropper.inline', false)) {
@@ -186,7 +187,11 @@ Avatar.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                     </span>
                     {imageAction}
                     <span className={styles.smallText}>JPG, PNG, GIF</span>
-                    <FileReader ref="reader" accept={this.props.accept} onChange={this.fileChanged}/>
+                    <FileReader
+                        ref="reader"
+                        sizeLimit={this.props.sizeLimit}
+                        accept={this.props.accept}
+                        onChange={this.fileChanged}/>
                     {this.getCropper()}
                 </div>
             </div>

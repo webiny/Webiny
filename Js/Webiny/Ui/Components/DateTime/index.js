@@ -106,14 +106,12 @@ class DateTime extends Webiny.Ui.FormComponent {
     }
 }
 
-DateTime.defaultProps = {
-    onChange: _.noop,
+DateTime.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     debug: false,
-    disabled: false,
-    readOnly: false,
-    placeholder: null,
     inputFormat: 'YYYY-MM-DD HH:mm:ss',
     modelFormat: 'YYYY-MM-DDTHH:mm:ssZ',
+    positionHorizontal: 'auto',
+    positionVertical: 'bottom',
     viewMode: 'days',
     renderer() {
         const props = _.omit(this.props, ['renderer']);
@@ -122,7 +120,7 @@ DateTime.defaultProps = {
 
         return <Input {...props}/>;
     }
-};
+});
 
 export default Webiny.createComponent(DateTime, {
     modules: ['Icon', 'Input', () => import('Core/Webiny/Vendors/DateTimePicker')]

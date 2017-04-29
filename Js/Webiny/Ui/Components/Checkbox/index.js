@@ -33,8 +33,13 @@ Checkbox.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     labelRenderer() {
         let tooltip = null;
         if (this.props.tooltip) {
-            const {Tooltip, Icon} = this.props;
-            tooltip = <Tooltip key="label" target={<Icon icon="icon-info-circle"/>}>{this.props.tooltip}</Tooltip>;
+            tooltip = (
+                <Webiny.Ui.LazyLoad modules={['Tooltip', 'Icon']}>
+                    {(Ui) => (
+                        <Tooltip key="label" target={<Icon icon="icon-info-circle"/>}>{this.props.tooltip}</Tooltip>
+                    )}
+                </Webiny.Ui.LazyLoad>
+            );
         }
         return <span>{this.props.label} {tooltip}</span>;
     },
@@ -63,4 +68,4 @@ Checkbox.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     }
 });
 
-export default Webiny.createComponent(Checkbox, {styles, modules: ['Tooltip', 'Icon']});
+export default Webiny.createComponent(Checkbox, {styles});

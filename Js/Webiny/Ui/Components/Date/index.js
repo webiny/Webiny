@@ -62,8 +62,8 @@ class Date extends Webiny.Ui.FormComponent {
             minDate: this.props.minDate ? new Date(this.props.minDate) : false,
             viewMode: this.props.viewMode,
             widgetPositioning: {
-                horizontal: this.props.positionHorizontal || 'auto',
-                vertical: this.props.positionVertical || 'bottom'
+                horizontal: this.props.positionHorizontal,
+                vertical: this.props.positionVertical
             }
         }).on('dp.hide', e => {
             if (this.valueChanged) {
@@ -105,14 +105,12 @@ class Date extends Webiny.Ui.FormComponent {
     }
 }
 
-Date.defaultProps = {
-    onChange: _.noop,
+Date.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     debug: false,
-    disabled: false,
-    readOnly: false,
-    placeholder: null,
     inputFormat: 'YYYY-MM-DD',
     modelFormat: 'YYYY-MM-DD',
+    positionHorizontal: 'auto',
+    positionVertical: 'bottom',
     viewMode: 'days',
     renderer() {
         const props = _.omit(this.props, ['renderer']);
@@ -121,7 +119,7 @@ Date.defaultProps = {
 
         return <Input {...props}/>;
     }
-};
+});
 
 export default Webiny.createComponent(Date, {
     modules: ['Icon', 'Input', () => import('Core/Webiny/Vendors/DateTimePicker')]
