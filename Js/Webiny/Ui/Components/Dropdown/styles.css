@@ -54,7 +54,7 @@
 	opacity: 0;
 	visibility: hidden;
 	position: absolute;
-	display: block;
+	display: none;
 }
 
 .dropdown.opened > .dropdownMenu {
