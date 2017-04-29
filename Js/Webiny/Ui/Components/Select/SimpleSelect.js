@@ -221,11 +221,11 @@ SimpleSelect.defaultProps = {
     selectedRenderer: null,
     renderer() {
         return (
-            <webiny-select>
+            <div className="inputGroup">
                 <select style={{'width': '100%'}}/>
 
                 <div className="dropdown-wrapper"/>
-            </webiny-select>
+            </div>
         );
     }
 };
