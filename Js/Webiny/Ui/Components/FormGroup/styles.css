@@ -46,13 +46,17 @@
 	float: none;
 }
 
-:global(.validationMessageHolder) {
+.validationMessage {
+	transition: all 250ms;
+	position: absolute;
+}
+
+.validationMessageHolder {
 	position: relative;
 	height: 25px;
 }
 
 .wrapper.error .validationMessage {
-	position: absolute;
 	top: -50px;
 }
 
@@ -62,6 +66,7 @@
 
 .wrapper.success .validationMessage {
 	color: #3fbfb0;
+	top: -100px;
 }
 
 .validationIconError, .validationIconSuccess {

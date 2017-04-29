@@ -7,7 +7,9 @@ class AnimationSets {
         }, {
             type: dynamics.spring,
             duration: 250,
-            complete: callback
+            complete: setTimeout(() => {
+                callback
+            }, 250)
         });
     }
 
@@ -17,7 +19,9 @@ class AnimationSets {
         }, {
             type: dynamics.easeInOut,
             duration: 250,
-            complete: callback
+            complete: setTimeout(() => {
+                callback
+            }, 250)
         });
     }
 
@@ -25,7 +29,9 @@ class AnimationSets {
         dynamics.animate(el, anim, {
             type: dynamics[_.get(anim, 'ease', 'easeIn')],
             duration: _.get(anim, 'duration', 250),
-            complete: callback
+            complete: setTimeout(() => {
+                callback
+            }, _.get(anim, 'duration', 250))
         });
     }
 }

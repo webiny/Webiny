@@ -153,8 +153,6 @@ FormComponent.defaultProps = {
     validate: null,
     value: null,
     onChange: _.noop,
-    hideValidationAnimation: {translateY: 0, opacity: 0, duration: 225},
-    showValidationAnimation: {translateY: 50, opacity: 1, duration: 225},
     showValidationMessage: true,
     showValidationIcon: true,
     tooltip: null,
@@ -178,20 +176,14 @@ FormComponent.defaultProps = {
         return label;
     },
     validationMessageRenderer() {
-        if (!this.props.showValidationMessage || this.state.isValid !== false) {
-            return null;
-        }
-
         return (
-            <div className="validationMessageHolder">
-                <Webiny.Ui.LazyLoad modules={['FormGroup']}>
-                    {({FormGroup}) => (
-                        <FormGroup.ValidationMessage success={this.state.isValid}>
-                            {this.state.validationMessage}
-                        </FormGroup.ValidationMessage>
-                    )}
-                </Webiny.Ui.LazyLoad>
-            </div>
+            <Webiny.Ui.LazyLoad modules={['FormGroup']}>
+                {({FormGroup}) => (
+                    <FormGroup.ValidationMessage success={this.state.isValid}>
+                        {this.state.validationMessage}
+                    </FormGroup.ValidationMessage>
+                )}
+            </Webiny.Ui.LazyLoad>
         );
     },
 

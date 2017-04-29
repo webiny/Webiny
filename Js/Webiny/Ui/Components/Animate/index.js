@@ -3,11 +3,12 @@ import AnimationSets from './AnimationSets';
 import ReactTransitionGroup from 'react-addons-transition-group';
 
 class Container extends Webiny.Ui.Component {
+
     componentDidMount() {
         this.animationContainer = ReactDOM.findDOMNode(this);
     }
 
-    componentWillEnter(callback) {
+    componentWillAppear(callback) {
         const elements = ReactDOM.findDOMNode(this).childNodes;
 
         const showCallback = () => {
@@ -33,9 +34,10 @@ class Container extends Webiny.Ui.Component {
                 AnimationSets[this.props.show](el, showCallback);
             }
         });
+
     }
 
-    componentWillLeave(callback) {
+    componentWillUnmount(callback) {
         const elements = ReactDOM.findDOMNode(this).childNodes;
 
         const hideCallback = () => {
@@ -58,21 +60,20 @@ class Container extends Webiny.Ui.Component {
             }
         });
     }
-
-    componentDidLeave() {
-    }
 }
 
 Container.defaultProps = {
     renderer() {
-        return (
-            <div>{this.props.children}</div>
-        );
+        return <div className={this.props.className}>{this.props.children}</div>;
     }
 };
 
 class Animate extends Webiny.Ui.Component {
 
+    firstChild(props) {
+        const childrenArray = React.Children.toArray(props.children);
+        return childrenArray[0] || null;
+    }
 }
 
 Animate.defaultProps = {
@@ -82,12 +83,13 @@ Animate.defaultProps = {
     hide: 'fadeOut',
     renderer() {
         return (
-            <ReactTransitionGroup>
+            <ReactTransitionGroup component={this.firstChild}>
                 {this.props.trigger && (
                     <Container
                         onFinish={this.props.onFinish}
                         show={this.props.show}
-                        hide={this.props.hide}>
+                        hide={this.props.hide}
+                        className={this.props.className}>
                         {this.props.children}
                     </Container>
                 )}
