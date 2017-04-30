@@ -29,7 +29,7 @@
 	opacity: 0.8;
 }
 
-.dialog{
+.dialog {
 	width: 600px;
 	margin: 30px auto;
 }
@@ -133,4 +133,9 @@
 	background-color: transparent;
 	padding: 35px;
 	text-align: center;
+}
+
+/* when we have a tab list in the root of modal body, we have to remove the padding */
+.body :global(.Core_Webiny_Tabs_tabs) {
+	margin: -15px;
 }
