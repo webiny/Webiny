@@ -1,5 +1,5 @@
 .tabs {
-	/*border: 1px solid #e7e5e5;*/
+	border: 1px solid #e7e5e5;
 }
 
 .header {
@@ -25,6 +25,11 @@
 
 .navigation.stacked {
 	margin-right: -1px;
+}
+
+.navigationTop,
+.navigationLeft {
+	/* just a placeholder so we don't have undefined in DOM */
 }
 
 .navigation > li {
@@ -99,7 +104,7 @@
 }
 
 .panes {
-	flex-basis: 75%;
+	/*flex-basis: 75%;*/
 	background-color: #fff;
 }
 
@@ -152,11 +157,6 @@
 		border-right: 1px solid #e7e5e5;
 	}
 
-	.navigationTop > .body > .navigation > li:last-child,
-	.navigationTop > .body > .navigationWrapper > .navigation > li:last-child {
-		border: none;
-	}
-
 	.navigationTop > .body > .navigation > .active > a,
 	.navigationTop > .body > .navigationWrapper > .navigation > .active > a {
 		border-bottom: 0px solid;
@@ -166,23 +166,25 @@
 		flex-basis: 1;
 	}
 
-	.tabs--navigation-left > .body > .navigation,
-	.tabs--navigation-left > .body > .navigationWrapper > .navigation {
+	/*
+	.navigationLeft > .body > .navigation,
+	.navigationLeft > .body > .navigationWrapper > .navigation {
 		display: flex;
 		flex-wrap: wrap;
 		flex-basis: 25%;
 		flex-direction: column;
 		flex-grow: 1;
 	}
+	*/
 
-	.tabs--navigation-left > .body > .navigation > li,
-	.tabs--navigation-left > .body > .navigationWrapper > .navigation > li {
+	.navigationLeft > .body > .navigation > li,
+	.navigationLeft > .body > .navigationWrapper > .navigation > li {
 		text-align: left;
 		border-bottom: 1px solid #e7e5e5;
 	}
 
-	.tabs--navigation-left > .body > .navigation > .active > a,
-	.tabs--navigation-left > .body > .navigationWrapper > .navigation > .active > a {
+	.navigationLeft > .body > .navigation > .active > a,
+	.navigationLeft > .body > .navigationWrapper > .navigation > .active > a {
 		border-right: 0px solid;
 	}
 }
@@ -192,4 +194,9 @@
 	float: none;
 	display: block;
 	clear: both;
+}
+
+/* tab inside a tab should not have margin */
+.panes .paneActive .tabs {
+	margin: -21px;
 }
