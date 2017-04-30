@@ -18,8 +18,9 @@
 }
 
 .footer {
-	border-top: 1px solid #f2f2f2;
+	border: 1px solid #e7e5e5;
 	overflow: hidden;
+	margin-top:-1px; /*fixes when a top element has a border-bottom set*/
 }
 
 .boxed{
