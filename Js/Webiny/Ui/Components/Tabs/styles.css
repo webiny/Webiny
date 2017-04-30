@@ -104,7 +104,7 @@
 }
 
 .panes {
-	/*flex-basis: 75%;*/
+	flex-basis: 100%;
 	background-color: #fff;
 }
 
@@ -176,7 +176,6 @@
 		flex-grow: 1;
 	}
 	*/
-
 	.navigationLeft > .body > .navigation > li,
 	.navigationLeft > .body > .navigationWrapper > .navigation > li {
 		text-align: left;

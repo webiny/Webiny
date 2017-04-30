@@ -17,6 +17,12 @@
 	padding: 15px 0;
 }
 
+/* first div in the body can't be floated, otherwise panel won't expand correctly */
+/* changing the overflow on panel body fixes that, but also introduces other problems, that's why this fix below */
+.body>div{
+	float: none !important;
+}
+
 .footer {
 	border: 1px solid #e7e5e5;
 	overflow: hidden;

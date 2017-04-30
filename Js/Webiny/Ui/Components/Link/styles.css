@@ -41,6 +41,9 @@
 .btnDefault.active:hover {
 	background: #F2F2F2;
 	box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.9);
+}
+
+.btnDefault:focus{
 	color: #333;
 }
 

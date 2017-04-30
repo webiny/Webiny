@@ -446,7 +446,7 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                 {this.renderLabel()}
                 {this.renderInfo()}
 
-                <div className="input-group">
+                <div className="inputGroup">
                     {this.props.renderSearchInput.call(this)}
                 </div>
                 {this.renderDescription()}
