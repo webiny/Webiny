@@ -36,12 +36,12 @@ Success.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
     close: 'Close',
     onClose: _.noop,
     renderDialog() {
-        const {Button} = this.props;
+        const {Button, Icon} = this.props;
         return (
             <Dialog modalContainerTag="success-modal" className={styles.alertModal}>
                 <Body>
                     <div className="text-center">
-                        <div className="icon icon-check-circle icon-success icon-4x"/>
+                        <Icon type="success" size="4x" icon="icon-check-circle" element="div"/>
                         <h4>{this.props.title}</h4>
 
                         <p>{this.renderContent()}</p>
@@ -56,6 +56,6 @@ Success.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
 });
 
 export default Webiny.createComponent(Success, {
-    modules: ['Button'],
+    modules: ['Button', 'Icon'],
     api: ['show', 'hide', 'isAnimating']
 });
