@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles.css';
 
 class Icon extends Webiny.Ui.Component {
 
@@ -7,18 +8,35 @@ class Icon extends Webiny.Ui.Component {
 Icon.defaultProps = {
     icon: null,
     className: null,
-    type: 'span', // span || i
+    element: 'span', // span || i
+    type: 'default',
+    size: 'default',
     renderer() {
-        const {icon, className, type, onClick} = this.props;
+        const {styles, icon, className, element, onClick} = this.props;
         let iconSet = 'icon';
         if (_.includes(icon, 'fa-')) {
             iconSet = 'fa icon';
         }
 
-        const classes = this.classSet(iconSet, icon, className);
+        const typeClasses = {
+            default: '',
+            danger: styles.danger,
+            success: styles.success,
+            info: styles.info,
+            warning: styles.warning,
+        };
 
-        return React.createElement(type, {className: classes, onClick});
+        const sizeClasses = {
+            default: '',
+            '2x': styles.size2x,
+            '3x': styles.size3x,
+            '4x': styles.size4x
+        };
+
+        const classes = this.classSet(iconSet, icon, className, sizeClasses[this.props.size], typeClasses[this.props.type]);
+
+        return React.createElement(element, {className: classes, onClick});
     }
 };
 
-export default Webiny.createComponent(Icon);
+export default Webiny.createComponent(Icon, {styles});
