@@ -36,7 +36,7 @@ Checkbox.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             tooltip = (
                 <Webiny.Ui.LazyLoad modules={['Tooltip', 'Icon']}>
                     {(Ui) => (
-                        <Tooltip key="label" target={<Icon icon="icon-info-circle"/>}>{this.props.tooltip}</Tooltip>
+                        <Ui.Tooltip key="label" target={<Ui.Icon icon="icon-info-circle"/>}>{this.props.tooltip}</Ui.Tooltip>
                     )}
                 </Webiny.Ui.LazyLoad>
             );
