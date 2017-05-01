@@ -160,7 +160,7 @@ Editor.defaultProps = {
         const DraftEditor = this.Draft.Editor;
 
         return (
-            <div className="rich-editor rich-editor__root" onMouseDown={this.focus}>
+            <div className={this.classSet('rich-editor', 'rich-editor__root', (this.props.preview && 'preview'))} onMouseDown={this.focus}>
                 {toolbar}
                 <div className={this.classSet(this.props.className, 'rich-editor__editor')}>
                     <DraftEditor
