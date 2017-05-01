@@ -45,7 +45,8 @@
 }
 
 .checkbox.checkboxDisabled label {
-	color: #cccccc;
+	opacity: 0.5;
+	cursor: not-allowed;
 }
 
 /* checked state icon */
