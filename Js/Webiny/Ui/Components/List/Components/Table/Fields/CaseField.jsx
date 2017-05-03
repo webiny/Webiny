@@ -23,6 +23,10 @@ CaseField.defaultProps = {
             content = defaultContent;
         }
 
+        if (_.isFunction(content)) {
+            content = content.call(this, this.props.data);
+        }
+
         const {List, ...props} = this.props;
 
         return (
