@@ -1,11 +1,10 @@
-import Field from './../Field';
+import Webiny from 'Webiny';
 
-class CaseField extends Field {
+class CaseField extends Webiny.Ui.Component {
 
 }
 
-CaseField.defaultProps = _.merge({}, Field.defaultProps, {
-    includeTd: true,
+CaseField.defaultProps = {
     renderer() {
         let content = null;
         let defaultContent = null;
@@ -24,16 +23,14 @@ CaseField.defaultProps = _.merge({}, Field.defaultProps, {
             content = defaultContent;
         }
 
-        if (_.isFunction(content)) {
-            content = content.call(this, this.props.data);
-        }
+        const {List, ...props} = this.props;
 
-        if (this.props.includeTd) {
-            return <td className={this.getTdClasses()}>{content}</td>;
-        }
-
-        return <case-field>{content}</case-field>;
+        return (
+            <List.Table.Field {..._.omit(props, ['renderer'])}>
+                {() => content}
+            </List.Table.Field>
+        );
     }
-});
+};
 
-export default CaseField;
+export default Webiny.createComponent(CaseField, {modules: ['List'], tableField: true});

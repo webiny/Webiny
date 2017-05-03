@@ -1,11 +1,10 @@
 import Webiny from 'Webiny';
-import Field from './../Field';
 
-class RowDetailsField extends Field {
+class RowDetailsField extends Webiny.Ui.Component {
 
 }
 
-RowDetailsField.defaultProps = _.merge({}, Field.defaultProps, {
+RowDetailsField.defaultProps = {
     hide: false,
     renderer() {
         let onClick = this.props.actions.hideRowDetails;
@@ -20,18 +19,18 @@ RowDetailsField.defaultProps = _.merge({}, Field.defaultProps, {
             className
         };
 
-        const {Link} = this.props;
+        const {Link, List, ...tdProps} = this.props;
         let content = <Link {...props}/>;
         if (_.isFunction(this.props.hide) ? this.props.hide(this.props.data) : this.props.hide) {
             content = null;
         }
 
         return (
-            <td className={this.getTdClasses('row-details')}>
-                {content}
-            </td>
+            <List.Table.Field {..._.omit(tdProps, ['renderer'])} className="row-details">
+                {() => content}
+            </List.Table.Field>
         );
     }
-});
+};
 
-export default Webiny.createComponent(RowDetailsField, {modules: ['Link']});
+export default Webiny.createComponent(RowDetailsField, {modules: ['Link', 'List'], tableField: true});

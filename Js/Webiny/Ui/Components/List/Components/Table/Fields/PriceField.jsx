@@ -1,18 +1,23 @@
-import Field from './../Field';
-import {accounting} from 'accounting';
+import Webiny from 'Webiny';
 
-class PriceField extends Field {
+class PriceField extends Webiny.Ui.Component {
 
 }
 
-PriceField.defaultProps = _.merge({}, Field.defaultProps, {
+PriceField.defaultProps = {
     renderer() {
         const value = _.get(this.props.data, this.props.name);
+        const {List, accounting, ...props} = this.props;
 
         return (
-            <td className={this.getTdClasses()}>{value ? accounting.formatMoney(value) : this.props.default}</td>
+            <List.Table.Field {..._.omit(props, ['renderer'])}>
+                {() => value ? accounting.formatMoney(value) : this.props.default}
+            </List.Table.Field>
         );
     }
-});
+};
 
-export default PriceField;
+export default Webiny.createComponent(PriceField, {
+    modules: ['List', {accounting: () => import('Core/Webiny/Vendors/Accounting')}],
+    tableField: true
+});

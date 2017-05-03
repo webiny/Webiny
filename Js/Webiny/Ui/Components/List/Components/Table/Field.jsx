@@ -52,4 +52,4 @@ Field.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Field, {styles});
+export default Webiny.createComponent(Field, {styles, tableField: true});

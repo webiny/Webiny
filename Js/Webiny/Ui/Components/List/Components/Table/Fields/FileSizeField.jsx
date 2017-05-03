@@ -1,17 +1,20 @@
+import Webiny from 'Webiny';
 import filesize from 'filesize';
-import Field from './../Field';
 
-class FileSizeField extends Field {
+class FileSizeField extends Webiny.Ui.Component {
 
 }
 
-FileSizeField.defaultProps = _.merge({}, Field.defaultProps, {
+FileSizeField.defaultProps = {
     options: {},
     renderer() {
+        const {List, ...props} = this.props;
         return (
-            <td className={this.getTdClasses()}>{filesize(_.get(this.props.data, this.props.name), this.props.options)}</td>
+            <List.Table.Field {..._.omit(props, ['renderer', 'options'])}>
+                {() => filesize(_.get(this.props.data, this.props.name), this.props.options)}
+            </List.Table.Field>
         );
     }
-});
+};
 
-export default FileSizeField;
+export default Webiny.createComponent(FileSizeField, {modules: ['List'], tableField: true});
