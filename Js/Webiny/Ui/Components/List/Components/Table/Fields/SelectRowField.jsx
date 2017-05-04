@@ -1,12 +1,11 @@
 import Webiny from 'Webiny';
-import Field from './../Field';
 import styles from '../../../styles.css';
 
-class SelectRowField extends Field {
+class SelectRowField extends Webiny.Ui.Component {
 
 }
 
-SelectRowField.defaultProps = _.merge({}, Field.defaultProps, {
+SelectRowField.defaultProps = {
     headerRenderer() {
         return (
             <th>
@@ -19,13 +18,13 @@ SelectRowField.defaultProps = _.merge({}, Field.defaultProps, {
         );
     },
     renderer() {
-        const {rowSelected, rowDisabled, onSelect, Checkbox} = this.props;
+        const {rowSelected, rowDisabled, onSelect, Checkbox, List, ...props} = this.props;
         return (
-            <td className={this.getTdClasses()}>
-                <Checkbox disabled={rowDisabled} state={rowSelected} onChange={onSelect} className={styles.selectRow}/>
-            </td>
+            <List.Table.Field {..._.omit(props, ['renderer'])} className="row-details">
+                {() => <Checkbox disabled={rowDisabled} state={rowSelected} onChange={onSelect} className={styles.selectRow}/>}
+            </List.Table.Field>
         );
     }
-});
+};
 
-export default Webiny.createComponent(SelectRowField, {modules: ['Checkbox'], styles});
+export default Webiny.createComponent(SelectRowField, {modules: ['Checkbox', 'List'], styles, tableField: true});

@@ -1,4 +1,5 @@
 export default () => {
+    import('./Accounting');
     import('./C3');
     import('./CodeMirror');
     import('./Cropper');

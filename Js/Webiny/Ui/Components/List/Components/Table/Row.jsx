@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
 import SelectRowField from './Fields/SelectRowField';
-import Field from './Field';
 import Actions from './Actions';
 import FieldInfo from './FieldInfo';
 import styles from '../../styles.css';
@@ -45,7 +44,7 @@ class Row extends Webiny.Ui.Component {
             return child;
         }
 
-        const tableField = Webiny.isElementOfType(child, Field);
+        const tableField = Webiny.elementHasFlag(child, 'tableField');
         if (tableField) {
             if (Webiny.isElementOfType(child, SelectRowField)) {
                 this.selectRowElement = true;

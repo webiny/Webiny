@@ -116,7 +116,7 @@ class Table extends Webiny.Ui.Component {
             // Parse Row fields to extract headers
             this.headers = [];
             React.Children.map(child.props.children, rowChild => {
-                if (Webiny.isElementOfType(rowChild, Field)) {
+                if (Webiny.elementHasFlag(rowChild, 'tableField')) {
                     if (Webiny.isElementOfType(rowChild, SelectRowField)) {
                         this.selectAllRowsElement = true;
                     }

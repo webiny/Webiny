@@ -1,17 +1,20 @@
-import Field from './../Field';
+import Webiny from 'Webiny';
 import moment from 'moment';
 
-class TimeField extends Field {
+class TimeField extends Webiny.Ui.Component {
 
 }
 
-TimeField.defaultProps = _.merge({}, Field.defaultProps, {
+TimeField.defaultProps = {
     format: 'HH:mm',
     renderer() {
+        const {List, ...props} = this.props;
         return (
-            <td className={this.getTdClasses()}>{moment(_.get(this.props.data, this.props.name)).format(this.props.format)}</td>
+            <List.Table.Field {..._.omit(props, ['renderer'])}>
+                {() => moment(_.get(this.props.data, this.props.name)).format(this.props.format)}
+            </List.Table.Field>
         );
     }
-});
+};
 
-export default TimeField;
+export default Webiny.createComponent(TimeField, {modules: ['List'], tableField: true});

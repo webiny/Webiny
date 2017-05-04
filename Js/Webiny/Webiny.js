@@ -119,6 +119,20 @@ class Webiny {
         });
     }
 
+    /**
+     * Check if given element's class has the given flag defined in its options
+     *
+     * @param element
+     * @param flag
+     */
+    elementHasFlag(element, flag) {
+        if (React.isValidElement(element)) {
+            return _.get(element.type, 'options.' + flag, false);
+        }
+
+        return false;
+    }
+
     isElementOfType(element, type) {
         if (!React.isValidElement(element) || _.isString(element.type)) {
             return false;

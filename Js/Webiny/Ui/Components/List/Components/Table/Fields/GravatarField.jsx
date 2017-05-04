@@ -1,21 +1,19 @@
 import Webiny from 'Webiny';
-import Field from './../Field';
 
-
-class GravatarField extends Field {
+class GravatarField extends Webiny.Ui.Component {
 
 }
 
-GravatarField.defaultProps = _.merge({}, Field.defaultProps, {
+GravatarField.defaultProps = {
     size: 48,
     renderer() {
-        const {Gravatar} = this.props;
+        const {Gravatar, List, size, ...props} = this.props;
         return (
-            <td className={this.getTdClasses()}>
-                <Gravatar hash={_.get(this.props.data, this.props.name)} size={this.props.size}/>
-            </td>
+            <List.Table.Field {..._.omit(props, ['renderer'])}>
+                {() => <Gravatar hash={_.get(this.props.data, this.props.name)} size={size}/>}
+            </List.Table.Field>
         );
     }
-});
+};
 
-export default Webiny.createComponent(GravatarField, {modules: ['Gravatar']});
+export default Webiny.createComponent(GravatarField, {modules: ['Gravatar', 'List'], tableField: true});

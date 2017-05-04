@@ -1,11 +1,10 @@
 import Webiny from 'Webiny';
-import Field from './../Field';
 
-class ToggleField extends Field {
+class ToggleField extends Webiny.Ui.Component {
 
 }
 
-ToggleField.defaultProps = _.merge({}, Field.defaultProps, {
+ToggleField.defaultProps = {
     message: null,
     onChange: null,
     disabled: false,
@@ -24,24 +23,26 @@ ToggleField.defaultProps = _.merge({}, Field.defaultProps, {
             disabled: _.isFunction(this.props.disabled) ? this.props.disabled(this.props.data) : this.props.disabled
         };
 
-        const {ChangeConfirm, Switch} = this.props;
+        const {ChangeConfirm, Switch, List, ...tdProps} = this.props;
 
         if (this.props.message) {
             return (
-                <td className={this.getTdClasses()}>
-                    <ChangeConfirm message={this.props.message}>
-                        <Switch {...props}/>
-                    </ChangeConfirm>
-                </td>
+                <List.Table.Field {..._.omit(tdProps, ['renderer'])}>
+                    {() => (
+                        <ChangeConfirm message={this.props.message}>
+                            <Switch {...props}/>
+                        </ChangeConfirm>
+                    )}
+                </List.Table.Field>
             );
         }
 
         return (
-            <td className={this.getTdClasses()}>
-                <Switch {...props}/>
-            </td>
+            <List.Table.Field {..._.omit(tdProps, ['renderer'])}>
+                {() => <Switch {...props}/>}
+            </List.Table.Field>
         );
     }
-});
+};
 
-export default Webiny.createComponent(ToggleField, {modules: ['ChangeConfirm', 'Switch']});
+export default Webiny.createComponent(ToggleField, {modules: ['List', 'ChangeConfirm', 'Switch'], tableField: true});
