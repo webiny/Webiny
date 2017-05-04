@@ -39,8 +39,14 @@ export default (Component, options = {}) => {
         }
 
         static configure(config) {
-            // TODO: think about merging: should 'modules' be merged or overwritten?
-            _.merge(ComponentWrapper, config);
+            // modules are overwritten
+            if (_.has(config, 'options.modules')) {
+                ComponentWrapper.options.modules = config.options.modules;
+                delete config.options.modules;
+            }
+
+            // Merge the rest
+            _.merge(ComponentWrapper.options, config);
         }
 
         render() {
@@ -52,7 +58,7 @@ export default (Component, options = {}) => {
                 const overrides = Injector.getByTag(props.context);
                 if (overrides.length) {
                     const props = _.pick(this.props, ['value', 'children', 'onChange']);
-                    if(this.props.contextProps) {
+                    if (this.props.contextProps) {
                         _.merge(props, this.props.contextProps);
                     }
                     const RenderComponent = overrides.pop().value;

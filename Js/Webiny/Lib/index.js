@@ -22,7 +22,7 @@ import Growl from './Core/Growl';
 import Router from './Router/Router';
 import Route from './Router/Route';
 import Http from './Http/Http';
-import i18n from './i18n/i18n';
+import i18n from './i18n';
 import Endpoint from './Api/Endpoint';
 import Placeholder from './Ui/Placeholder';
 import RootElement from './Ui/RootElement';

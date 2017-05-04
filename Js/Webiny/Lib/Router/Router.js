@@ -177,11 +177,11 @@ class Router {
     }
 
     routeExists(name) {
-        return _.find(this.routes, ['name', name]) ? true : false;
+        return _.find(this.routes, {name}) ? true : false;
     }
 
     getRoute(name) {
-        const route = _.find(this.routes, ['name', name]);
+        const route = _.find(this.routes, {name});
         if (!route) {
             return false;
         }
@@ -189,7 +189,7 @@ class Router {
     }
 
     getRouteByPattern(pattern) {
-        const route = _.find(this.routes, ['pattern', pattern]);
+        const route = _.find(this.routes, {pattern});
         if (!route) {
             return false;
         }

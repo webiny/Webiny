@@ -1,6 +1,7 @@
 import Webiny from 'Webiny';
 import moment from 'moment';
 import accounting from 'accounting';
+import I18N from './I18N';
 
 let translations = {};
 
@@ -68,11 +69,7 @@ i18n.parsers = [];
  */
 i18n.render = function render(key, label, variables, options) {
     return (
-        <Webiny.Ui.LazyLoad modules={['I18N']}>
-            {({I18N}) => (
-                <I18N placeholder={label} translationKey={key} variables={variables} options={options}/>
-            )}
-        </Webiny.Ui.LazyLoad>
+        <I18N placeholder={label} translationKey={key} variables={variables} options={options}/>
     );
 };
 
@@ -164,8 +161,8 @@ i18n.toText = function toText(element) {
         return element;
     }
 
-    if (Webiny.isElementOfType(element, I18N)) {
-        const props = element.props.label.props;
+    if (Webiny.elementHasFlag(element, 'i18n')) {
+        const props = element.props;
         return Webiny.i18n(props.translationKey, props.placeholder, props.variables, props.options);
     }
 

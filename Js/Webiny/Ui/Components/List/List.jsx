@@ -21,4 +21,4 @@ List.defaultProps = {
     }
 };
 
-export default List;
+export default Webiny.createComponent(List);

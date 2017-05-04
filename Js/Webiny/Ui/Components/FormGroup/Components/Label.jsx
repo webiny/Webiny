@@ -22,4 +22,4 @@ Label.defaultProps = {
     }
 };
 
-export default Label;
+export default Webiny.createComponent(Label);

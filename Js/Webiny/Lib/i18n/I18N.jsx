@@ -1,6 +1,8 @@
 import Webiny from 'Webiny';
+import createComponent from './../createComponent';
+import Component from './../Core/Component';
 
-class I18N extends Webiny.Ui.Component {
+class I18N extends Component {
 }
 
 I18N.defaultProps = {
@@ -19,4 +21,4 @@ I18N.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(I18N);
+export default createComponent(I18N, {i18n: true});
