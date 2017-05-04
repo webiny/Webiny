@@ -159,4 +159,17 @@ i18n.initialize = function setLanguage(language) {
     });
 };
 
+i18n.toText = function toText(element) {
+    if (_.isString(element)) {
+        return element;
+    }
+
+    if (Webiny.isElementOfType(element, I18N)) {
+        const props = element.props.label.props;
+        return Webiny.i18n(props.translationKey, props.placeholder, props.variables, props.options);
+    }
+
+    return '';
+};
+
 export default i18n;

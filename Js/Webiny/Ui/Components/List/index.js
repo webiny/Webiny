@@ -1,4 +1,6 @@
 import List from './List';
+import ApiContainer from './Components/ApiContainer';
+import StaticContainer from './Components/StaticContainer';
 import Table from './Components/Table/Table';
 import Row from './Components/Table/Row';
 import RowDetails from './Components/Table/RowDetails';
@@ -35,6 +37,8 @@ import EditModalAction from './Components/Table/Actions/EditModalAction';
 import Empty from './Components/Table/Empty';
 
 _.assign(List, {
+    ApiContainer,
+    StaticContainer,
     Table,
     MultiActions,
     MultiAction,

@@ -67,16 +67,25 @@ class LazyLoad extends Component {
             }
 
             // Configure modules
+            const configure = [];
             _.each(modules, (module, name) => {
                 // Only configure modules that are requested as string
                 if (_.isString(name) && _.has(configurations, name) && !configurations[name].configured) {
-                    _.get(configurations[name], 'configs', []).map(config => config(module));
-                    configurations[name].configured = true;
+                    // build promise chain to configure each component
+                    let chain = Promise.resolve();
+                    _.get(configurations[name], 'configs', []).map(config => {
+                        // We support async configuration functions to allow 3rd party apps to lazy load their configuration code
+                        // when the component is actually used
+                        chain = chain.then(() => config(module));
+                    });
+                    configure.push(chain.then(() => configurations[name].configured = true));
                 }
             });
 
-            // Finish loading and render content
-            this.setState({loaded: true, modules});
+            return Promise.all(configure).then(() => {
+                // Finish loading and render content
+                this.setState({loaded: true, modules});
+            });
         });
     }
 

@@ -39,6 +39,7 @@ export default (Component, options = {}) => {
         }
 
         static configure(config) {
+            // TODO: think about merging: should 'modules' be merged or overwritten?
             _.merge(ComponentWrapper, config);
         }
 

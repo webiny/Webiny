@@ -379,4 +379,6 @@ Gallery.defaultProps = {
     }
 };
 
+Gallery.Image = Image;
+
 export default Webiny.createComponent(Gallery, {modules: ['Alert', 'Cropper', 'FileReader', 'Input', 'FormGroup'], styles});
