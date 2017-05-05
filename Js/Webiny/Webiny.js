@@ -1,4 +1,5 @@
 const Page = require('./Lib/Core/Page');
+const ModuleLoader = require('./Lib/Core/ModuleLoader');
 
 function formatAjaxResponse(jqXhr) {
     return {
@@ -25,6 +26,7 @@ class Webiny {
         this.Apps = {};
         this.EMPTY = '__webiny_empty__';
         this.Page = new Page();
+        this.ModuleLoader = new ModuleLoader();
         this.Ui = {
             Components: {}
         };
@@ -39,6 +41,10 @@ class Webiny {
                 });
             }
         }
+    }
+
+    import(modules) {
+        return this.ModuleLoader.load(modules);
     }
 
     run(config) {
@@ -80,15 +86,15 @@ class Webiny {
     }
 
     registerModule(name, provider) {
-        if(_.isPlainObject(name)) {
-            _.each(name, (provider, name) => this.Ui.LazyLoad.setModule(name, provider));
+        if (_.isPlainObject(name)) {
+            _.each(name, (provider, name) => this.ModuleLoader.setModule(name, provider));
         } else {
-            this.Ui.LazyLoad.setModule(name, provider);
+            this.ModuleLoader.setModule(name, provider);
         }
     }
 
     configure(name, config) {
-        this.Ui.LazyLoad.setConfiguration(name, config);
+        this.ModuleLoader.setConfiguration(name, config);
     }
 
     includeApp(name, config) {
