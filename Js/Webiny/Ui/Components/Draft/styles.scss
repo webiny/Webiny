@@ -96,7 +96,8 @@
 
       ul, ol, span[data-text="true"] {
         font-size: 16px;
-        color: #393939;
+        /*color: #393939;*/
+        color: inherit;
         line-height: 150%;
       }
 
