@@ -214,7 +214,7 @@ class Router {
 
     goToRoute(route, params = {}, options = {}) {
         if (_.isString(route)) {
-            route = route !== 'current' ? _.find(this.routes, ['name', route]) : this.activeRoute;
+            route = route !== 'current' ? _.find(this.routes, {name: route}) : this.activeRoute;
         }
 
         if (!route) {

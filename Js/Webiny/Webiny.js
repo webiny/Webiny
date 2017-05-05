@@ -1,5 +1,4 @@
 const Page = require('./Lib/Core/Page');
-const ModuleLoader = require('./Lib/Core/ModuleLoader');
 
 function formatAjaxResponse(jqXhr) {
     return {
@@ -26,7 +25,7 @@ class Webiny {
         this.Apps = {};
         this.EMPTY = '__webiny_empty__';
         this.Page = new Page();
-        this.ModuleLoader = new ModuleLoader();
+        this.ModuleLoader = null;
         this.Ui = {
             Components: {}
         };
@@ -188,6 +187,10 @@ class Webiny {
         } catch (e) {
             return false;
         }
+    }
+
+    setModuleLoader(loader) {
+        this.ModuleLoader = loader;
     }
 }
 

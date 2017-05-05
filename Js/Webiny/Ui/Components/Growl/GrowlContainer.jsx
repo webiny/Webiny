@@ -54,7 +54,7 @@ class GrowlContainer extends Webiny.Ui.Component {
 
 GrowlContainer.defaultProps = {
     onComponentDidMount: _.noop,
-    renderer: function renderer() {
+    renderer() {
         return (
             <div className={this.classSet(styles.growl, styles.topRight)}>
                 <div className={styles.notification}/>
@@ -66,4 +66,4 @@ GrowlContainer.defaultProps = {
     }
 };
 
-export default GrowlContainer;
+export default Webiny.createComponent(GrowlContainer, {styles});

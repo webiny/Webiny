@@ -82,10 +82,10 @@ class ModuleLoader {
     }
 
     setConfiguration(name, config) {
-        const current = _.get(this.configurations, 'name', {configured: false, configs: []});
+        const current = _.get(this.configurations, name, {configured: false, configs: []});
         current.configs.push(config);
         this.configurations[name] = current;
     }
 }
 
-module.exports = ModuleLoader;
+export default ModuleLoader;
