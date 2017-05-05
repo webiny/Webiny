@@ -8,7 +8,6 @@ class Header extends Webiny.Ui.Component {
 Header.defaultProps = {
     onClose: _.noop,
     renderer() {
-
         let headerContent = '';
         if(_.get(this.props, 'title') && this.props.title!=''){
             headerContent = <h4>{this.props.title}</h4>;

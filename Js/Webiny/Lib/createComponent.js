@@ -39,6 +39,10 @@ export default (Component, options = {}) => {
         }
 
         static configure(config) {
+            // defaultProps are merged
+            _.merge(ComponentWrapper.defaultProps, config.defaultProps || {});
+            delete config.defaultProps;
+
             // modules are overwritten
             if (_.has(config, 'options.modules')) {
                 ComponentWrapper.options.modules = config.options.modules;
@@ -46,7 +50,7 @@ export default (Component, options = {}) => {
             }
 
             // Merge the rest
-            _.merge(ComponentWrapper.options, config);
+            _.merge(ComponentWrapper.options, config.options || {});
         }
 
         render() {
