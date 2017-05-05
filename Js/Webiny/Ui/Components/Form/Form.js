@@ -671,6 +671,7 @@ Form.defaultProps = {
     onLoad: _.noop,
     prepareLoadedData: null,
     onProgress(pe) {
+        // TODO: create a Webiny.import method to deal with lazy loading and module registry
         Promise.all([import('Core/Webiny/Ui/Components/Growl'), import('Core/Webiny/Ui/Components/Progress')]).then(modules => {
             const Growl = modules[0].default;
             const Progress = modules[1].default;

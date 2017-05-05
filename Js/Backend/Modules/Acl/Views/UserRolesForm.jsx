@@ -20,7 +20,7 @@ Form.defaultProps = {
 
         const modules = [
             'Switch', 'Form', 'View', 'Tabs', 'Input', 'Button', 'Grid',
-            {UserPermissions: () => import('Core/Backend/Components/UserPermissions')}
+            {UserPermissions: 'Core/Backend/UserPermissions'}
         ];
 
         return (

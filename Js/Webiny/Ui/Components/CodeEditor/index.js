@@ -100,6 +100,6 @@ CodeEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
 });
 
 export default Webiny.createComponent(CodeEditor, {
-    modules: ['FormGroup', {CodeMirror: () => import('Core/Webiny/Vendors/CodeMirror')}],
+    modules: ['FormGroup', {CodeMirror: 'Core/Webiny/Vendors/CodeMirror'}],
     api: ['focus']
 });

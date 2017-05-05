@@ -79,6 +79,14 @@ class Webiny {
         return this;
     }
 
+    registerModule(name, provider) {
+        if(_.isPlainObject(name)) {
+            _.each(name, (provider, name) => this.Ui.LazyLoad.setModule(name, provider));
+        } else {
+            this.Ui.LazyLoad.setModule(name, provider);
+        }
+    }
+
     configure(name, config) {
         this.Ui.LazyLoad.setConfiguration(name, config);
     }

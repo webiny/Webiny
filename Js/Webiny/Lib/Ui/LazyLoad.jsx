@@ -1,5 +1,9 @@
 import Component from './../Core/Component';
 
+// This object contains module providers registered by other apps (this allows lazy loading of chunks from other apps)
+const registeredModules = {};
+
+// This object will contain optional configurations for components
 const configurations = {};
 
 class LazyLoad extends Component {
@@ -45,12 +49,15 @@ class LazyLoad extends Component {
         const keys = Object.keys(modules);
 
         const imports = keys.map(key => {
-            const module = modules[key];
+            let module = modules[key];
             if (_.isString(module)) {
-                // If string is given, we expect it to be a Core component name
-                return import(`Core/Webiny/Ui/Components/${module}/index`).then(m => m.default);
+                module = registeredModules[module];
+                if (!module) {
+                    console.error('NOT FOUND ' + key);
+                    console.log(modules)
+                }
             }
-            // If a function is given - execute it and return whatever that function is returning
+            // If a function is given - execute it and return either the default export (if exists) or the entire export
             return module().then(m => m.hasOwnProperty('default') ? m.default : m);
         });
 
@@ -58,7 +65,10 @@ class LazyLoad extends Component {
             // Map loaded modules to requested modules object
             const modules = {};
             keys.map((key, i) => {
-                modules[key] = values[i];
+                // Only assign modules that export something (often vendor libraries like owlCarousel, select2, etc. do not export anything)
+                if (!_.isEmpty(values[i])) {
+                    modules[key] = values[i];
+                }
             });
             return modules;
         }).then(modules => {
@@ -87,6 +97,10 @@ class LazyLoad extends Component {
                 this.setState({loaded: true, modules});
             });
         });
+    }
+
+    static setModule(name, provider) {
+        registeredModules[name] = provider;
     }
 
     static setConfiguration(name, config) {

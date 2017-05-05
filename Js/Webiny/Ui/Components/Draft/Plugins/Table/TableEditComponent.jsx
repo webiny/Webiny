@@ -291,4 +291,4 @@ TableEditComponent.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(TableEditComponent, {modules: [{Draft: () => import('Core/Webiny/Vendors/Draft')}]});
+export default Webiny.createComponent(TableEditComponent, {modules: [{Draft: 'Core/Webiny/Vendors/Draft'}]});
