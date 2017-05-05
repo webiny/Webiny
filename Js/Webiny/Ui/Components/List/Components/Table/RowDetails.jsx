@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from '../../styles.css';
 
 class RowDetails extends Webiny.Ui.Component {
 
@@ -9,7 +10,7 @@ RowDetails.defaultProps = {
     className: null,
     renderer() {
         return (
-            <tr className={this.classSet(this.props.className)} style={{display: this.props.expanded ? 'table-row' : 'none'}}>
+            <tr className={this.classSet(this.props.className, styles.rowDetails)} style={{display: this.props.expanded ? 'table-row' : 'none'}}>
                 <td colSpan={this.props.fieldsCount}>
                     {this.props.expanded ? this.props.children(this.props.data, this) : null}
                 </td>
@@ -18,4 +19,4 @@ RowDetails.defaultProps = {
     }
 };
 
-export default RowDetails;
+export default Webiny.createComponent(RowDetails, {styles});

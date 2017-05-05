@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from '../../../styles.css';
 
 class RowDetailsField extends Webiny.Ui.Component {
 
@@ -7,11 +8,13 @@ class RowDetailsField extends Webiny.Ui.Component {
 RowDetailsField.defaultProps = {
     hide: false,
     renderer() {
+        const {styles} = this.props;
+
         let onClick = this.props.actions.hideRowDetails;
-        let className = 'expand close';
+        let className = this.classSet(styles.expand, styles.close);
         if (!this.props.rowDetailsExpanded) {
             onClick = this.props.actions.showRowDetails;
-            className = 'expand';
+            className = styles.expand;
         }
 
         const props = {
@@ -26,11 +29,11 @@ RowDetailsField.defaultProps = {
         }
 
         return (
-            <List.Table.Field {..._.omit(tdProps, ['renderer'])} className="row-details">
+            <List.Table.Field {..._.omit(tdProps, ['renderer'])} className={styles.rowDetailsField}>
                 {() => content}
             </List.Table.Field>
         );
     }
 };
 
-export default Webiny.createComponent(RowDetailsField, {modules: ['Link', 'List'], tableField: true});
+export default Webiny.createComponent(RowDetailsField, {modules: ['Link', 'List'], tableField: true, styles});

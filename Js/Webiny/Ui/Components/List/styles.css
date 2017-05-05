@@ -188,8 +188,56 @@ table.table > tbody > tr.selected > td {
 }
 
 /* checkbox for selecting rows */
-.selectRow{
+.selectRow {
 	height: 19px; /* needs to match the checkbox height */
 	padding: 0;
 	margin: 0;
+}
+
+/* expand button / row details */
+table.table td a.expand {
+	position: relative;
+	width: 22px;
+	height: 23px;
+	background: #D8D8D8;
+	font-size: 20px;
+	font-weight: 800;
+	float: left;
+	text-align: center;
+	margin-right: 15px;
+	line-height: 130%;
+	color: #fff;
+}
+
+table.table td a.expand:after {
+	content: '+';
+	position: absolute;
+	left: 6px;
+	top: -1px;
+}
+
+table.table td a.expand:hover {
+	text-decoration: none;
+	background: #999;
+}
+
+table.table td a.expand.close {
+	background: #3FBFB0;
+	opacity: 1;
+	line-height: 110%;
+}
+
+table.table td a.expand.close:after {
+	content: '-';
+	position: absolute;
+	left: 8px;
+	top: -1px;
+}
+
+table.table td.rowDetailsField {
+	max-width: 40px;
+}
+
+table.table tr.rowDetails:hover td {
+	background: #fff !important;
 }
