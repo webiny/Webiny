@@ -196,6 +196,6 @@
 }
 
 /* tab inside a tab should not have margin */
-.panes .paneActive .tabs {
+.panes .paneActive>.tabs {
 	margin: -21px;
 }
