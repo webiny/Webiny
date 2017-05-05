@@ -17,7 +17,7 @@ class LazyLoad extends Component {
     }
 
     componentWillMount() {
-        super.componentDidMount();
+        super.componentWillMount();
 
         const toLoad = this.props.modules;
         let modules = {};
@@ -52,13 +52,9 @@ class LazyLoad extends Component {
             let module = modules[key];
             if (_.isString(module)) {
                 module = registeredModules[module];
-                if (!module) {
-                    console.error('NOT FOUND ' + key);
-                    console.log(modules)
-                }
             }
             // If a function is given - execute it and return either the default export (if exists) or the entire export
-            return module().then(m => m.hasOwnProperty('default') ? m.default : m);
+            return Promise.resolve(module()).then(m => m.hasOwnProperty('default') ? m.default : m);
         });
 
         Promise.all(imports).then(values => {
@@ -66,7 +62,7 @@ class LazyLoad extends Component {
             const modules = {};
             keys.map((key, i) => {
                 // Only assign modules that export something (often vendor libraries like owlCarousel, select2, etc. do not export anything)
-                if (!_.isEmpty(values[i])) {
+                if (!_.isNil(values[i])) {
                     modules[key] = values[i];
                 }
             });
