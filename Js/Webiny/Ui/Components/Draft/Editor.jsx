@@ -2,7 +2,6 @@ import Webiny from 'Webiny';
 import Immutable from 'immutable';
 import PluginsContainer from './PluginsContainer';
 import Toolbar from './Toolbar';
-import FloatingToolbar from './FloatingToolbar';
 import CustomViews from './CustomViews';
 import './styles.scss';
 
@@ -137,6 +136,7 @@ Editor.defaultProps = {
     preview: false,
     readOnly: false,
     toolbar: true,
+    toolbarFloat: false,
     stripPastedStyles: false,
     onChange: _.noop,
     renderer() {
@@ -147,12 +147,7 @@ Editor.defaultProps = {
 
         let toolbar = null;
         if (this.props.toolbar === true) {
-            toolbar = <Toolbar readOnly={this.state.readOnly} plugins={this.plugins}/>;
-        }
-
-        if (this.props.toolbar === 'floating') {
-            const show = !editorState.getSelection().isCollapsed() && !this.state.readOnly;
-            toolbar = <FloatingToolbar editor={this} show={show} plugins={this.plugins}/>;
+            toolbar = <Toolbar readOnly={this.state.readOnly} plugins={this.plugins} floating={this.props.toolbarFloat}/>;
         }
 
         this.plugins.setPreview(this.props.preview);
