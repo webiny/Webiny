@@ -13,7 +13,11 @@ class Toolbar extends Webiny.Ui.Component {
     componentDidMount() {
         super.componentDidMount();
 
-        const floatingToolbarInterval = setInterval(()=> {
+        if (this.props.floating === false) {
+            return;
+        }
+
+        const floatingToolbarInterval = setInterval(() => {
             const doc = $(document);
             const elem = $(ReactDOM.findDOMNode(this));
             const editor = elem.closest('.rich-editor');
