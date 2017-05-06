@@ -88,7 +88,7 @@ class Date extends Webiny.Ui.FormComponent {
         this.getInput().then(() => {
             this.input.val(newValue);
             if (this.props.minDate) {
-                this.input.data('DateTimePicker').minDate(new Date(this.props.minDate));
+                this.input.data('DateTimePicker').minDate(this.props.minDate);
             }
         });
     }
