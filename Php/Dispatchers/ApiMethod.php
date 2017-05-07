@@ -33,6 +33,7 @@ class ApiMethod
      */
     private $context;
     private $callbacks = [];
+    private $eventCallbacks = [];
     private $bodyValidators;
     private $public = false;
 
@@ -74,7 +75,7 @@ class ApiMethod
         }
 
 
-        $url = $this->str($this->wConfig()->get('Application.ApiPath') . '/' . $contextUrl . '/' . $url)->trimRight('/');
+        $url = $this->str($this->wConfig()->get('Appli cation.ApiPath') . '/' . $contextUrl . '/' . $url)->trimRight('/');
 
         return $url->val();
     }
@@ -83,6 +84,11 @@ class ApiMethod
     {
         if (($this->httpMethod === 'post' || $this->httpMethod === 'patch') && count($this->bodyValidators)) {
             $this->validateBody($this->wRequest()->getRequestData());
+        }
+
+        // Prepend callbacks registered from events to callbacks registered from regular entity classes
+        foreach(array_reverse($this->eventCallbacks) as $cb) {
+            array_unshift($this->callbacks, $cb);
         }
 
         $callback = $this->callbacks[0];
@@ -102,9 +108,13 @@ class ApiMethod
         return $callback(...$params);
     }
 
-    public function addCallback($callable)
+    public function addCallback($callable, $processingEvent = null)
     {
-        array_unshift($this->callbacks, $callable);
+        if($processingEvent) {
+            array_unshift($this->eventCallbacks, $callable);
+        } else {
+            array_unshift($this->callbacks, $callable);
+        }
 
         return $this;
     }

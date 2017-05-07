@@ -46,6 +46,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     protected $indexes = [];
     protected $instanceCallbacks = [];
     protected static $classCallbacks = [];
+    private $processingEvent = null;
 
     public static function onExtend($callback)
     {
@@ -549,6 +550,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 
     protected function processCallbacks($eventName, ...$params)
     {
+        $this->processingEvent = $eventName;
         $className = get_called_class();
         $classes = array_values([$className] + class_parents($className));
         foreach ($classes as $class) {
@@ -571,6 +573,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                 return;
             }
         }
+        $this->processingEvent = null;
     }
 
     private function processDelete($permanent)
