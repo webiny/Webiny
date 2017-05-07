@@ -225,7 +225,7 @@ TableEditComponent.defaultProps = {
                             <Ui.Dropdown.Link onClick={this.deleteRow} icon="fa-remove" title="Delete"
                                               renderIf={isBody && rows.length > 1}/>
                         </Ui.Dropdown>
-                        <table className="table table-striped">
+                        <table className="Core_Webiny_List_table">
                             <thead>
                             <tr>
                                 {columns.map((col, colI) => {
@@ -264,7 +264,7 @@ TableEditComponent.defaultProps = {
                                             }
 
                                             return (
-                                                <td key={row.columns[colI].key} onMouseDown={() => this.setFocus('body', rowI, colI)}>
+                                                <td key={row.columns[colI].key} onMouseDown={() => this.setFocus('body', rowI, colI)} data-th={headers[colI].data}>
                                                     <Editor
                                                         stripPastedStyles={true}
                                                         ref={row.columns[colI].key}
