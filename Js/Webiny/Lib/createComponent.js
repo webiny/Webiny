@@ -74,7 +74,12 @@ export default (Component, options = {}) => {
                         return (
                             <LazyLoad modules={modules}>
                                 {(modules) => {
-                                    return <RenderComponent {...props} {...modules}/>;
+                                    if (options.modulesProp) {
+                                        props[options.modulesProp] = modules;
+                                    } else {
+                                        _.assign(props, modules);
+                                    }
+                                    return <RenderComponent {...props}/>;
                                 }}
                             </LazyLoad>
                         );
@@ -96,7 +101,12 @@ export default (Component, options = {}) => {
                 return (
                     <LazyLoad modules={modules}>
                         {(modules) => {
-                            return <Component {...props} {...modules}/>;
+                            if (options.modulesProp) {
+                                props[options.modulesProp] = modules;
+                            } else {
+                                _.assign(props, modules);
+                            }
+                            return <Component {...props}/>;
                         }}
                     </LazyLoad>
                 );
