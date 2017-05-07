@@ -48,7 +48,7 @@ Field.defaultProps = {
             );
         }
 
-        return this.props.includeTd ? <td className={this.getTdClasses()}>{content}</td> : content;
+        return this.props.includeTd ? <td className={this.getTdClasses()} data-th={this.props.name}>{content}</td> : content;
     }
 };
 

@@ -241,3 +241,47 @@ table.table td.rowDetailsField {
 table.table tr.rowDetails:hover td {
 	background: #fff !important;
 }
+
+/** Make tables responsive **/
+table.table td {
+	display: block;
+}
+
+table.table td:before {
+	content: attr(data-th);
+	font-weight: bold;
+
+	width: 100%;
+	display: block;
+	text-align: center;
+}
+
+@media (min-width: 768px) {
+	table.table td:before {
+		display: none;
+	}
+}
+
+@media (max-width: 768px) {
+	table.table thead {
+		display: none;
+	}
+
+	table.table tbody tr td, table.table thead tr th {
+		text-align: center !important;
+		border-top: none;
+	}
+
+	table.table tbody tr {
+		border: 1px solid #ccc;
+		display: block;
+		margin-bottom: 10px;
+		padding: 10px;
+	}
+}
+
+@media (min-width: 768px) {
+	table.table td, table.table th {
+		display: table-cell;
+	}
+}

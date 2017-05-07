@@ -82,6 +82,7 @@ class Row extends Webiny.Ui.Component {
         const props = _.omit(field.props, ['children']);
         _.assign(props, {
             data: this.data,
+            name: props.label,
             key: i,
             sorted: this.props.sorters[props.name] || null,
             actions: this.props.actions,
