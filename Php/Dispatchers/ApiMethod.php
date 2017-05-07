@@ -33,6 +33,7 @@ class ApiMethod
      */
     private $context;
     private $callbacks = [];
+    private $entityCallbacks = [];
     private $eventCallbacks = [];
     private $bodyValidators;
     private $public = false;
@@ -87,19 +88,20 @@ class ApiMethod
         }
 
         // Sort callbacks so that callbacks registered from events are executed first
-        $callbacks = [];
-        foreach($this->eventCallbacks as $cb) {
-            $callbacks[] = $cb;
-        }
-        foreach($this->callbacks as $cb) {
-            $callbacks[] = $cb;
+        if(count($this->callbacks) === 0) {
+            foreach($this->eventCallbacks as $cb) {
+                $this->callbacks[] = $cb;
+            }
+            foreach($this->entityCallbacks as $cb) {
+                $this->callbacks[] = $cb;
+            }
         }
 
-        $callback = $callbacks[0];
+        $callback = $this->callbacks[0];
         if ($bindTo) {
             $callback = $callback->bindTo($bindTo);
         }
-        $callbackCount = count($callbacks);
+        $callbackCount = count($this->callbacks);
 
         if (!$params) {
             $params = [];
@@ -117,7 +119,7 @@ class ApiMethod
         if ($processingEvent === 'onExtend') {
             array_unshift($this->eventCallbacks, $callable);
         } else {
-            array_unshift($this->callbacks, $callable);
+            array_unshift($this->entityCallbacks, $callable);
         }
 
         return $this;
