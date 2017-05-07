@@ -86,16 +86,20 @@ class ApiMethod
             $this->validateBody($this->wRequest()->getRequestData());
         }
 
-        // Prepend callbacks registered from events to callbacks registered from regular entity classes
-        foreach(array_reverse($this->eventCallbacks) as $cb) {
-            array_unshift($this->callbacks, $cb);
+        // Sort callbacks so that callbacks registered from events are executed first
+        $callbacks = [];
+        foreach($this->eventCallbacks as $cb) {
+            $callbacks[] = $cb;
+        }
+        foreach($this->callbacks as $cb) {
+            $callbacks[] = $cb;
         }
 
-        $callback = $this->callbacks[0];
+        $callback = $callbacks[0];
         if ($bindTo) {
             $callback = $callback->bindTo($bindTo);
         }
-        $callbackCount = count($this->callbacks);
+        $callbackCount = count($callbacks);
 
         if (!$params) {
             $params = [];
@@ -110,7 +114,7 @@ class ApiMethod
 
     public function addCallback($callable, $processingEvent = null)
     {
-        if($processingEvent) {
+        if ($processingEvent === 'onExtend') {
             array_unshift($this->eventCallbacks, $callable);
         } else {
             array_unshift($this->callbacks, $callable);

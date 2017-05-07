@@ -21,6 +21,8 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  */
 trait ApiExpositionTrait
 {
+    protected $processingEvent = null;
+
     /**
      * @var ArrayObject
      */
