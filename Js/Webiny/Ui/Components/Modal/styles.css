@@ -139,3 +139,26 @@
 .body :global(.Core_Webiny_Tabs_tabs) {
 	margin: -15px;
 }
+
+/* make modal responsive */
+@media (max-width: 768px) {
+	.modal .dialog {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1) !important;
+		width: 100%;
+		height: 100vh;
+		margin: 0;
+	}
+
+	.modal .dialog .content {
+		height: auto;
+		min-height: 100%;
+	}
+
+	.modal .dialog .content .body {
+		overflow: scroll;
+	}
+
+	.modal .dialog .content .header {
+		height: auto;
+	}
+}
