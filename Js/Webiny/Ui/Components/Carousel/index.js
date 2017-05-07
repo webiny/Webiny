@@ -47,9 +47,10 @@ Carousel.defaultProps = {
     itemElement: 'div',
     stageElement: 'div',
     mouseDrag: false,
+    className: null,
     renderer() {
         return (
-            <div className="owl-carousel">
+            <div className={this.classSet('owl-carousel', this.props.className)}>
                 {this.props.children}
             </div>
         );
