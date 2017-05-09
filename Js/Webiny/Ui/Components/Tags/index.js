@@ -10,7 +10,9 @@ class Tags extends Webiny.Ui.FormComponent {
 
     componentDidMount() {
         super.componentDidMount();
-        this.tagInput.focus();
+        if (this.props.autoFocus) {
+            this.tagInput.focus();
+        }
     }
 
     focusTagInput() {
@@ -76,6 +78,7 @@ class Tags extends Webiny.Ui.FormComponent {
 }
 
 Tags.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
+    autoFocus: true,
     validateTags: null,
     placeholder: 'Type and hit ENTER',
     onInvalidTag: _.noop,

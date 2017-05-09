@@ -43,6 +43,9 @@ class ModuleLoader {
                 module = this.registeredModules[module];
             }
             // If a function is given - execute it and return either the default export (if exists) or the entire export
+            if(!_.isFunction(module)) {
+                console.info('[MODULE LOADER] not a function: ' + key);
+            }
             return Promise.resolve(module()).then(m => m.hasOwnProperty('default') ? m.default : m);
         });
 
