@@ -67,6 +67,9 @@ class ApiCache extends AbstractApiDispatcher
             return false;
         }
 
+        // we need to flush the current HRC request because of the aggregated API requests
+        $this->hrc->flushRequest();
+
         // read cache
         $response = $this->hrc->read('response');
         if ($response !== false) {
@@ -104,10 +107,10 @@ class ApiCache extends AbstractApiDispatcher
         }
 
         // extract the data
-        $data = $response->getData();
+        $data = $response->getData(false);
 
         // save cache
-        $this->hrc->save('response', json_encode($data));
+        $this->hrc->save('response', json_encode(['data' => $data]));
     }
 
 }
