@@ -71,9 +71,9 @@ i18n.render = function render(key, label, variables, options) {
 };
 
 // Following methods are plain-simple for now - let's make them smarter in the near future
-i18n.price = function price(value, currency = '£') {
+i18n.price = function price(value, currency = '£', precision = 2) {
     const currencySymbols = {gbp: '£', usd: '$', eur: '€'}; // Plain simple for now
-    return accounting.formatMoney(value, _.get(currencySymbols, currency, currency));
+    return accounting.formatMoney(value, _.get(currencySymbols, currency, currency), precision);
 };
 
 i18n.number = function price(value, decimals = 0) {
