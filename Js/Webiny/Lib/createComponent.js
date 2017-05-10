@@ -33,6 +33,10 @@ export default (Component, options = {}) => {
             }
         }
 
+        componentWillMount() {
+            // Do nothing since this is a proxy component
+        }
+
         componentDidMount() {
             // Do nothing since this is a proxy component
             // 'onComponentDidMount' prop only needs to be handled by the actual component

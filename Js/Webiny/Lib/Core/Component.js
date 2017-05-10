@@ -14,7 +14,7 @@ class Component extends React.Component {
         this.__listeners = [];
         this.__cursors = [];
         this.__mounted = true;
-        this.bindMethods('bindTo,isRendered');
+        this.bindMethods('bindTo,isRendered,i18n');
 
 
         /**
@@ -37,7 +37,7 @@ class Component extends React.Component {
             return Webiny.i18n;
         }
 
-        let key = options.key || this.i18n.key;
+        let key = options.key || this.i18n.key || this.props.i18nKey;
         if (!key) {
             const app = _.get(Webiny.Router.getActiveRoute(), 'module.app.name');
             const module = _.get(Webiny.Router.getActiveRoute(), 'module.name');
@@ -187,6 +187,18 @@ class Component extends React.Component {
             return UiDispatcher.get(call);
         }
         return UiDispatcher.createSignal(this, call, params);
+    }
+
+    uiAwait(name) {
+        return new Promise(resolve => {
+            const interval = setInterval(() => {
+                let ui = this.ui(name);
+                if (ui) {
+                    clearInterval(interval);
+                    return resolve(ui);
+                }
+            }, 20);
+        });
     }
 
     watch(key, func) {

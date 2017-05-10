@@ -16,6 +16,7 @@ const findLastIndex = require('lodash/findLastIndex');
 const first = require('lodash/first');
 const forIn = require('lodash/forIn');
 const get = require('lodash/get');
+const hasIn = require('lodash/hasIn');
 const includes = require('lodash/includes');
 const isNil = require('lodash/isNil');
 const isPlainObject = require('lodash/isPlainObject');
@@ -58,6 +59,7 @@ lodash.mixin({
     first,
     forIn,
     get,
+    hasIn,
     includes,
     isNil,
     isPlainObject,

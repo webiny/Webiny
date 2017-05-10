@@ -40,15 +40,15 @@ class Dialog extends Webiny.Ui.Component {
     componentWillUpdate(nextProps, nextState) {
         super.componentWillUpdate(nextProps, nextState);
         const currentDialog = getShownDialog();
-        const {dynamics, styles} = this.props;
+        const {dynamics} = this.props;
 
         // Hide currently visible dialog but do not unmount it
         if (currentDialog && currentDialog.id !== this.id && nextState.isShown) {
             const container = $(currentDialog.modalContainer);
-            const modal = container.find('[data-role="modal"]');
+            const dialog = container.find('[data-role="dialog"]');
             const backdrop = container.find('[data-role="backdrop"]');
 
-            dynamics.animate(modal[0], {
+            dynamics.animate(dialog[0], {
                 opacity: 0,
                 translateY: -100
             }, {
@@ -56,9 +56,9 @@ class Dialog extends Webiny.Ui.Component {
                 duration: this.modalHideDuration,
                 complete: () => {
                     // Need to hide .modal to let mouse events through
-                    modal.closest('[data-role="modal"]').hide();
+                    dialog.closest('[data-role="modal"]').hide();
                     // Remove transform so next time we animate, we start from scratch, with no transformations applied
-                    modal.css('transform', '');
+                    dialog.css('transform', '');
                 }
             });
 
@@ -143,7 +143,6 @@ class Dialog extends Webiny.Ui.Component {
     show() {
         // This shows the modal container element in case it was previously hidden by another dialog
         this.props.onShow();
-        const {styles} = this.props;
 
         if (this.isShown()) {
             // Animate previously hidden dialog
@@ -151,17 +150,17 @@ class Dialog extends Webiny.Ui.Component {
                 const {dynamics} = this.props;
                 this.animating = true;
                 const prevContainer = $(this.modalContainer);
-                const prevModal = prevContainer.find('[data-role="dialog"]');
+                const prevDialog = prevContainer.find('[data-role="dialog"]');
                 const prevBackdrop = prevContainer.find('[data-role="backdrop"]');
-                prevModal.closest('[data-role="modal"]').show();
-                dynamics.animate(prevModal[0], {
+                prevDialog.closest('[data-role="modal"]').show();
+                dynamics.animate(prevDialog[0], {
                     opacity: 1,
                     translateY: 50
                 }, {
                     type: dynamics.spring,
                     duration: this.modalShowDuration,
                     complete: () => {
-                        prevModal.closest('[data-role="modal"]').focus();
+                        prevDialog.closest('[data-role="modal"]').focus();
                         this.animating = false;
                         resolve();
                     }
@@ -245,7 +244,7 @@ class Dialog extends Webiny.Ui.Component {
         this.animating = false;
         if (!isDialogShown) {
             this.setState({isShown: false}, this.props.onHidden);
-            this.hideResolve();
+            this.hideResolve && this.hideResolve();
         }
     }
 }
