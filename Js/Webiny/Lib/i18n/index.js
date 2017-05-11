@@ -3,8 +3,6 @@ import moment from 'moment';
 import accounting from 'accounting';
 import I18N from './I18N';
 
-let translations = {};
-
 /**
  * This is responsible for replacing given text with given values
  * It will automatically detect if it needs to return a string or JSX based on given variables
@@ -45,128 +43,148 @@ function replaceVariables(text, values) {
     });
 }
 
-function i18n(key, text, variables) {
-    let output = i18n.getTranslation(key) || text;
-    output = replaceVariables(output, variables);
-    i18n.parsers.forEach(parser => {
-        output = parser(output, key, text, variables);
-    });
-    return output;
+class i18n {
+    constructor() {
+        this.language = '';
+        this.api = null;
+        this.cacheKey = null;
+        this.parsers = [];
+        this.translations = {};
+        this.component = I18N;
+
+        const translate = (key, text, variables) => {
+            return this.translate(key, text, variables);
+        };
+
+        Object.getOwnPropertyNames(i18n.prototype).map(method => {
+            if (method !== 'constructor') {
+                translate[method] = this[method].bind(this);
+            }
+        });
+
+        return translate;
+    }
+
+    translate(key, text, variables) {
+        let output = this.getTranslation(key) || text;
+        output = replaceVariables(output, variables);
+        this.parsers.forEach(parser => {
+            output = parser(output, key, text, variables);
+        });
+        return output;
+    }
+
+    setComponent(component) {
+        this.component = component;
+    }
+
+    /**
+     * Used for rendering text in DOM
+     * @param key
+     * @param label
+     * @param variables
+     * @param options
+     * @returns {XML}
+     */
+    render(key, label, variables, options) {
+        return React.createElement(this.component, {placeholder: label, translationKey: key, variables, options});
+    }
+
+    // Following methods are plain-simple for now - let's make them smarter in the near future
+    price(value, currency = '£') {
+        const currencySymbols = {gbp: '£', usd: '$', eur: '€'}; // Plain simple for now
+        return accounting.formatMoney(value, _.get(currencySymbols, currency, currency));
+    }
+
+    number(value, decimals = 0) {
+        return accounting.formatNumber(value, decimals);
+    }
+
+    date(value, format = 'DD/MMM/YY') {
+        return moment(value).format(format);
+    }
+
+    time(value, format = 'HH:mm') {
+        return moment(value).format(format);
+    }
+
+    datetime(value, format = 'DD/MMM/YY HH:mm') {
+        return moment(value).format(format);
+    }
+
+    getTranslation(key) {
+        return this.translations[key] || '';
+    }
+
+    setTranslation(key, translation) {
+        this.translations[key] = translation;
+        return this;
+    }
+
+    getTranslations() {
+        return this.translations;
+    }
+
+    hasTranslation(key) {
+        return _.get(this.translations, key);
+    }
+
+    setApiEndpoint(api) {
+        this.api = api;
+        return this;
+    }
+
+    getLanguage() {
+        return this.language;
+    }
+
+    addParser(callback) {
+        this.parsers.push(callback);
+        return this;
+    }
+
+    removeParsers() {
+        this.parsers = [];
+        return this;
+    }
+
+    setCacheKey(cacheKey) {
+        this.cacheKey = cacheKey;
+        return this;
+    }
+
+    initialize(language) {
+        this.language = language;
+        // TODO: Set moment / accounting language settings here
+
+        // If we have the same cache key, that means we have latest translations - we can safely read from local storage.
+        if (this.cacheKey === parseInt(localStorage[`Webiny.i18n.cacheKey`])) {
+            this.translations = JSON.parse(localStorage[`Webiny.i18n.translations`]);
+            return Promise.resolve();
+        }
+
+        // If we have a different cache key (or no cache key at all), we must fetch translations from server
+        return this.api.setQuery({language: this.language}).execute().then(apiResponse => {
+            localStorage[`Webiny.i18n.language`] = this.language;
+            localStorage[`Webiny.i18n.cacheKey`] = apiResponse.getData('cacheKey', null);
+            localStorage[`Webiny.i18n.translations`] = JSON.stringify(apiResponse.getData('translations'));
+            this.translations = _.assign(translations, apiResponse.getData('translations'));
+            return apiResponse;
+        });
+    }
+
+    toText(element) {
+        if (_.isString(element)) {
+            return element;
+        }
+
+        if (Webiny.elementHasFlag(element, 'i18n')) {
+            const props = element.props;
+            return this.translate(props.translationKey, props.placeholder, props.variables, props.options);
+        }
+
+        return '';
+    }
 }
 
-i18n.language = '';
-i18n.api = null;
-i18n.cacheKey = null;
-i18n.parsers = [];
-
-/**
- * Used for rendering text in DOM
- * @param key
- * @param label
- * @param variables
- * @param options
- * @returns {XML}
- */
-i18n.render = function render(key, label, variables, options) {
-    return (
-        <I18N placeholder={label} translationKey={key} variables={variables} options={options}/>
-    );
-};
-
-// Following methods are plain-simple for now - let's make them smarter in the near future
-i18n.price = function price(value, currency = '£') {
-    const currencySymbols = {gbp: '£', usd: '$', eur: '€'}; // Plain simple for now
-    return accounting.formatMoney(value, _.get(currencySymbols, currency, currency));
-};
-
-i18n.number = function price(value, decimals = 0) {
-    return accounting.formatNumber(value, decimals);
-};
-
-i18n.date = function date(value, format = 'DD/MMM/YY') {
-    return moment(value).format(format);
-};
-
-i18n.time = function time(value, format = 'HH:mm') {
-    return moment(value).format(format);
-};
-
-i18n.datetime = function datetime(value, format = 'DD/MMM/YY HH:mm') {
-    return moment(value).format(format);
-};
-
-i18n.getTranslation = function getTranslation(key) {
-    return translations[key] || '';
-};
-
-i18n.setTranslation = function setTranslation(key, translation) {
-    translations[key] = translation;
-    return this;
-};
-
-i18n.getTranslations = function getTranslations() {
-    return translations;
-};
-
-i18n.hasTranslation = function hasTranslation(key) {
-    return _.get(translations, key);
-};
-
-i18n.setApiEndpoint = function setApiEndpoint(api) {
-    this.api = api;
-    return this;
-};
-
-i18n.getLanguage = function getLanguage() {
-    return this.language;
-};
-
-i18n.addParser = function addParser(callback) {
-    this.parsers.push(callback);
-    return this;
-};
-
-i18n.removeParsers = function removeParsers() {
-    this.parsers = [];
-    return this;
-};
-
-i18n.setCacheKey = function setCacheKey(cacheKey) {
-    this.cacheKey = cacheKey;
-    return this;
-};
-
-i18n.initialize = function setLanguage(language) {
-    this.language = language;
-    // TODO: Set moment / accounting language settings here
-
-    // If we have the same cache key, that means we have latest translations - we can safely read from local storage.
-    if (this.cacheKey === parseInt(localStorage[`Webiny.i18n.cacheKey`])) {
-        translations = JSON.parse(localStorage[`Webiny.i18n.translations`]);
-        return Promise.resolve();
-    }
-
-    // If we have a different cache key (or no cache key at all), we must fetch translations from server
-    return this.api.setQuery({language: this.language}).execute().then(apiResponse => {
-        localStorage[`Webiny.i18n.language`] = this.language;
-        localStorage[`Webiny.i18n.cacheKey`] = apiResponse.getData('cacheKey', null);
-        localStorage[`Webiny.i18n.translations`] = JSON.stringify(apiResponse.getData('translations'));
-        translations = _.assign(translations, apiResponse.getData('translations'));
-        return apiResponse;
-    });
-};
-
-i18n.toText = function toText(element) {
-    if (_.isString(element)) {
-        return element;
-    }
-
-    if (Webiny.elementHasFlag(element, 'i18n')) {
-        const props = element.props;
-        return Webiny.i18n(props.translationKey, props.placeholder, props.variables, props.options);
-    }
-
-    return '';
-};
-
-export default i18n;
+export default new i18n;
