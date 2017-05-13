@@ -18,6 +18,7 @@
 
 .container {
 	display: inline-block;
-	float: right;
+	float: none;
 	min-height: 35px;
+	width: 100%;
 }
