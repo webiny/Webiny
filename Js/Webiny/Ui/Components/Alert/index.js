@@ -9,14 +9,14 @@ class Alert extends Webiny.Ui.Component {
         this.bindMethods('close');
     }
 
-    close(){
+    close() {
         ReactDOM.findDOMNode(this).remove();
     }
 }
 
 Alert.defaultProps = {
     type: 'info',
-    icon: 'info',
+    icon: null,
     title: null,
     close: false,
     className: null,
@@ -45,7 +45,14 @@ Alert.defaultProps = {
             props.className
         );
 
-        const icon = this.props.icon ? <Icon icon={iconClasses[type]}/> : null;
+
+        let icon = null;
+        if (this.props.icon) {
+            icon = <Icon icon={this.props.icon}/>;
+        }else{
+            icon = <Icon icon={iconClasses[type]}/>;
+        }
+
         let close = null;
         if (props.close) {
             close = (
