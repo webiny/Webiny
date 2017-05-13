@@ -7,6 +7,10 @@
 	padding: 5px 15px;
 }
 
+.headerLabel {
+	/* needs to be defined so we don't get undefined error */
+}
+
 .title {
 	display: inline-block;
 }
@@ -196,6 +200,17 @@
 }
 
 /* tab inside a tab should not have margin */
-.panes .paneActive>.tabs {
+.panes .paneActive > .tabs {
 	margin: -21px;
+}
+
+/* make tabs responsive */
+@media (max-width: 768px) {
+	.headerLabel {
+		display: none;
+	}
+
+	.navigation > li > a {
+		padding: 20px;
+	}
 }

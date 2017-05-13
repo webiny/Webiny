@@ -23,13 +23,15 @@ TabHeader.defaultProps = {
     active: false,
     labelRenderer() {
         let label = this.props.label;
+        const styles = this.props.styles;
+
         const i18n = React.isValidElement(label) && Webiny.isElementOfType(label, Webiny.Ui.Components.I18N);
         if (_.isString(this.props.label) || i18n) {
             const {Icon} = this.props;
             label = (
                 <a href="javascript:void(0);">
                     {this.props.icon ? <Icon icon={'left ' + this.props.icon}/> : null}
-                    {label}
+                    <span className={styles.headerLabel}>{label}</span>
                 </a>
             );
         }
