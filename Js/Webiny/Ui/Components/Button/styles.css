@@ -2,6 +2,7 @@
 	all: initial;
 	display: inline-block;
 	margin-right: 0px; /* sven: this margin needs to be 0 */
+	margin-left: 5px;
 	padding: 14px 20px;
 	vertical-align: top;
 	text-align: center;
@@ -116,7 +117,7 @@
 }
 
 .btnLarge .iconRight {
-	margin: 0px -7px 0px 0px;
+	margin: -2px -8px 1px 0px; /* sven: top margin was originally 0, I set it to -2px to match the icon on login page */
 	float: right;
 }
 
@@ -126,10 +127,18 @@
 
 /* make button responsive */
 @media (max-width: 768px) {
-	.btn{
+	.btn {
 		width: 100%;
 		display: block;
-		margin: 0;
+		margin: 10px 0;
 		padding: 15px 0;
+	}
+
+	.btnGroup, :global(.btn-group) {
+		width: 100%;
+	}
+
+	.btn .iconRight {
+		margin: -2px 5px 0px 0px;
 	}
 }

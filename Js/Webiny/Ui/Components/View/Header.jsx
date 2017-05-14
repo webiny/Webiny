@@ -22,7 +22,9 @@ Header.defaultProps = {
 
                     <div className={styles.titleDescription}>{this.props.description}</div>
                 </div>
-                {this.props.children}
+                <div className={styles.titleRight}>
+                    {this.props.children}
+                </div>
             </div>
         );
     }

@@ -210,7 +210,18 @@
 		display: none;
 	}
 
+	.navigationTop > .body > .navigation > li{
+		display: table-cell;
+	}
+
+	.navigationLeft > .body > .navigation > li{
+		display: block;
+	}
+
 	.navigation > li > a {
 		padding: 20px;
+	}
+	.navigationTop > .body {
+		flex-direction: column;
 	}
 }

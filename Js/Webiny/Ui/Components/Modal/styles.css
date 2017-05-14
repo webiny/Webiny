@@ -152,13 +152,35 @@
 	.modal .dialog .content {
 		height: auto;
 		min-height: 100%;
+		display: flex;
+		flex-direction: column;
+		flex-wrap: nowrap;
+		justify-content: center;
+		align-items: stretch;
+		align-content: stretch;
 	}
 
 	.modal .dialog .content .body {
 		overflow: scroll;
+		padding: 15px;
+		min-height: 470px;
+		flex-grow: 1;
+		flex-shrink: 1;
+		flex-basis: auto;
+		align-self: auto;
+		background-color: #fff;
 	}
 
 	.modal .dialog .content .header {
 		height: auto;
+	}
+
+	.modal .dialog .header h4{
+		padding: 15px 0;
+		font-size: 1.5em;
+	}
+
+	.close {
+		padding: 17px;
 	}
 }

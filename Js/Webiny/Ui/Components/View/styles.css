@@ -34,6 +34,11 @@
 	display: inline-block;
 }
 
+.viewHeader .titleRight {
+	display: inline-block;
+	float: right;
+}
+
 .viewHeader .titleWrapper h2.titleContent {
 	border: 0;
 	margin: 0;
@@ -45,16 +50,52 @@
 }
 
 .viewHeader .titleWrapper .titleDescription,
-.viewHeader .titleWrapper .titleDescription a{
+.viewHeader .titleWrapper .titleDescription a {
 	font-size: 14px;
-	top:0;
+	top: 0;
 }
 
-.viewHeader .titleWrapper .appName{
+.viewHeader .titleWrapper .appName {
 	color: #999;
 }
 
 .viewHeader a, .viewHeader button {
 	position: relative;
 	top: 8px;
+}
+
+/* make some bits nicer for mobile */
+@media (max-width: 768px) {
+	.viewHeader {
+		padding: 20px;
+		margin-top: -20px;
+	}
+
+	.viewHeader .titleRight {
+		display: block;
+		width: 100%;
+		float: none;
+	}
+
+	.viewHeader .titleRight .Core_Webiny_Link_btn,
+	.viewHeader .titleRight a,
+	.viewHeader .titleRight button {
+		display: block;
+		float: none !important;
+		width: 100%;
+		box-sizing: border-box;
+		margin-bottom: 10px;
+	}
+
+	.viewHeader .titleWrapper h2.titleContent {
+		font-size: 1.25em;
+	}
+
+	.viewContent {
+		padding: 10px;
+	}
+
+	.viewContent .panel .panelBody {
+		padding: 20px;
+	}
 }

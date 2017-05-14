@@ -77,3 +77,11 @@
 .switchInline + .switchInline {
 	margin-left: 15px;
 }
+
+/* make switch look bit better on mobile */
+@media (max-width: 768px) {
+	.switch{
+		display: table;
+		margin: 0 auto;
+	}
+}

@@ -21,7 +21,7 @@ const propsMap = {
 
 function getCssClass(key, val) {
     if (key === 'all') {
-        return `${getCssClass('xs', val)}`;
+        return `${getCssClass('md', val)}`;
     }
     return _.has(propsMap, key) ? `col-${propsMap[key]}-${val}` : false;
 }

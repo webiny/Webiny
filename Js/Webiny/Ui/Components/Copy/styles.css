@@ -31,3 +31,19 @@
 .btnCopy:hover, .btnCopy:active, .btnCopy:focus {
 	box-shadow: none;
 }
+
+/* make it responsive */
+@media (max-width: 768px) {
+	.input {
+		margin-bottom: 40px;
+		padding: 20px 15px;
+	}
+
+	.btnCopy {
+		right: 0;
+		top: 40px;
+		padding: 15px;
+		font-size: 1em;
+		line-height: 2px;
+	}
+}

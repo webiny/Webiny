@@ -8,6 +8,11 @@
       box-sizing: border-box;
       align-items: center;
       display: flex;
+
+      @media (max-width: 768px) {
+        display: block;
+        width: 100%;
+      }
     }
 
     .flex-cell {
@@ -88,6 +93,9 @@
       font-weight: bold;
       margin-bottom: -1px;
       background-color: #ddd;
+      @media (max-width: 768px) {
+        display: none;
+      }
 
       .expandable-list__header__field {
         padding: 15px 10px;
@@ -121,6 +129,12 @@
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+
+          @media (max-width: 768px) {
+            max-width: 100%;
+            display: block;
+            text-align: center;
+          }
 
           &.expandable-list__row__action-set {
             padding-top: 0px;
@@ -197,6 +211,10 @@
             margin-bottom: 0px;
             padding: 20px;
 
+            @media (max-width: 768px) {
+              padding: 0;
+            }
+
             .expandable-list__row--active {
               margin: 0px;
               background-color: #fff;
@@ -208,6 +226,5 @@
         }
       }
     }
-
   }
 }

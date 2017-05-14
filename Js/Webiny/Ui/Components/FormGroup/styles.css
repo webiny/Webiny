@@ -42,6 +42,10 @@
 	float: right;
 }
 
+.infoMessage {
+	margin-bottom: 4px; /* sven: if higher it pushes the input field lower */
+}
+
 .descriptionMessage, .validationMessage {
 	float: none;
 	display: block; /* it needs to be block because when we have a switch element, the msg doesn't go into new line */

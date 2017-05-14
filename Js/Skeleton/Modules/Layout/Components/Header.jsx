@@ -9,8 +9,6 @@ export default function Header(props) {
                     <span/>
                     <span/>
                 </button>
-                <a href="#" className="search">
-                </a>
                 <a href="#" className="logo">
                     <img src={logo} width="62" height="20" alt="Webiny"/>
                 </a>

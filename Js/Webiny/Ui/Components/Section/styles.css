@@ -12,13 +12,13 @@
 .wrapper .title {
 	display: inline-block;
 	font-weight: 600;
-	font-size: 17px;
+	font-size: 18px;
 	color: #2B2B2B;
+	margin: 15px 2px;
 }
 
 .container {
 	display: inline-block;
-	float: none;
+	float: right;
 	min-height: 35px;
-	width: 100%;
 }

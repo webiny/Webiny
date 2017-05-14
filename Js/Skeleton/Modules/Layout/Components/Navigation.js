@@ -1,5 +1,9 @@
 import Webiny from 'Webiny';
 
+/**
+ * Note: this class needs to be optimized. The handling of mobile menu is just awful, a lot of (ughh) jquery code which needs to go out.
+ * For now it does the job, but once we have more time we'll clean it up.
+ */
 class Navigation extends Webiny.Ui.Component {
 
     constructor(props) {
@@ -7,10 +11,21 @@ class Navigation extends Webiny.Ui.Component {
 
         this.state = {
             menu: null,
-            submenu: null
+            submenu: null,
+            display: (window.outerWidth > 768 ? 'desktop' : 'mobile'),
+            checkDisplayInterval: null
         };
 
-        this.bindMethods('renderMainMenu,renderSubMenu,renderSubMenuItem,mainMenuItemClick');
+
+        this.bindMethods('renderMainMenu,renderSubMenu,renderSubMenuItem,mainMenuItemClick,openSubMenu,closeSubMenu,closeMobileMenu');
+    }
+
+    checkDisplay() {
+        this.setState({
+            checkDisplayInterval: setInterval(() => {
+                this.setState({display: (window.outerWidth > 768 ? 'desktop' : 'mobile')});
+            }, 500)
+        })
     }
 
     componentDidMount() {
@@ -18,6 +33,12 @@ class Navigation extends Webiny.Ui.Component {
         this.watch('User', () => {
             this.setState({time: _.now()});
         });
+        this.checkDisplay();
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        clearInterval(this.state.checkDisplayInterval);
     }
 
     getLink(route, linkProps = {}) {
@@ -39,6 +60,7 @@ class Navigation extends Webiny.Ui.Component {
 
     mainMenuItemClick(menu) {
         const submenu = _.isString(menu.route) || _.isNull(menu.route) ? null : menu.key;
+        this.openSubMenu(menu.key);
         if (this.state.submenu === menu.key) {
             return;
         }
@@ -141,6 +163,7 @@ class Navigation extends Webiny.Ui.Component {
         let secondaryAction = null;
         let caret = null;
         let items = null;
+        let onClick = this.closeMobileMenu;
 
         if (menu.action) {
             const actionIcon = menu.action.icon || 'icon-plus-circled';
@@ -158,15 +181,18 @@ class Navigation extends Webiny.Ui.Component {
 
         if (_.isArray(menu.route)) {
             caret = <span className="icon icon-caret-down"/>;
+            onClick = () => {
+                this.openSubSubMenu(menu.key)
+            };
             items = (
-                <ul>
+                <ul data-this-submenu={menu.key}>
                     {menu.route.map((i, key) => {
                         if (!this.canAccess(i)) {
                             return null;
                         }
                         return (
                             <li key={key}>
-                                <Link route={i.route}>{i.label}</Link>
+                                <Link route={i.route} onClick={this.closeMobileMenu}>{i.label}</Link>
                             </li>
                         );
                     })}
@@ -177,13 +203,43 @@ class Navigation extends Webiny.Ui.Component {
         const active = '';
 
         return (
-            <li key={index} className={active}>
+            <li key={index} className={active} onClick={onClick}>
                 {mainAction}
                 {secondaryAction}
                 {caret}
                 {items}
             </li>
         );
+    }
+
+    openSubMenu(key) {
+        if (this.state.display != 'mobile') {
+            return;
+        }
+        $('.left-menu-submenu li[data-this-menu="' + key + '"]').addClass('open');
+        $('.left-menu-submenu').addClass('active').show();
+    }
+
+    openSubSubMenu(key) {
+        if (this.state.display != 'mobile') {
+            return;
+        }
+        $('.left-menu-submenu ul[data-this-submenu="' + key + '"]').toggleClass('active');
+    }
+
+    closeSubMenu() {
+        if (this.state.display != 'mobile') {
+            return;
+        }
+        $('.left-menu-submenu li.subnavigation.open').removeClass('open');
+        $('.left-menu-submenu').removeClass('active').hide();
+    }
+
+    closeMobileMenu() {
+        if (this.state.display != 'mobile') {
+            return;
+        }
+        $('body').toggleClass('opened-mobile-nav');
     }
 }
 
@@ -216,6 +272,7 @@ Navigation.defaultProps = {
                 <div className="navbar-collapse collapse" id="left-sidebar">
                     <div className="shield"/>
                     <div className="left-menu">
+                        <div className="left-menu--close" onClick={this.closeMobileMenu}>Close</div>
                         <ul className="nav navbar-nav navbar-right">
                             {menu}
                         </ul>
@@ -223,6 +280,7 @@ Navigation.defaultProps = {
 
                     <div className="left-menu-submenu" style={{display: this.state.submenu ? 'block' : 'none'}}>
                         <div>
+                            <div className="left-menu-submenu--back" onClick={this.closeSubMenu}>Go Back</div>
                             {submenu}
                         </div>
                     </div>
