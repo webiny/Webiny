@@ -18,7 +18,7 @@ export default (Component, options = {}) => {
 
     // Automatically expose modal dialog methods
     if (Component.prototype instanceof ModalComponent) {
-        _.assign(options, {api: ['show', 'hide', 'isAnimating', 'isShown']});
+        _.assign(options, {api: ['show', 'hide', 'isAnimating', 'isShown', 'getDialog']});
     }
 
     class ComponentWrapper extends WebinyComponent {
@@ -48,7 +48,7 @@ export default (Component, options = {}) => {
             delete config.defaultProps;
 
             // modules are overwritten
-            if (_.has(config, 'options.modules')) {
+            if (_.hasIn(config, 'options.modules')) {
                 ComponentWrapper.options.modules = config.options.modules;
                 delete config.options.modules;
             }

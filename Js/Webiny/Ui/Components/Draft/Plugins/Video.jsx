@@ -63,8 +63,8 @@ class VideoEditComponent extends Webiny.Ui.Component {
 
     getSize(offset = 0) {
         return {
-            width: _.has(this.state, 'size.width') ? this.state.size.width - offset : 'auto',
-            height: _.has(this.state, 'size.height') ? this.state.size.height - offset : 'auto'
+            width: _.hasIn(this.state, 'size.width') ? this.state.size.width - offset : 'auto',
+            height: _.hasIn(this.state, 'size.height') ? this.state.size.height - offset : 'auto'
         };
     }
 
@@ -154,8 +154,8 @@ class VideoComponent extends Webiny.Ui.Component {
 
     getSize(offset = 0) {
         return {
-            width: _.has(this.props.data, 'size.width') ? this.props.data.size.width - offset : 'auto',
-            height: _.has(this.props.data, 'size.height') ? this.props.data.size.height - offset : 'auto'
+            width: _.hasIn(this.props.data, 'size.width') ? this.props.data.size.width - offset : 'auto',
+            height: _.hasIn(this.props.data, 'size.height') ? this.props.data.size.height - offset : 'auto'
         };
     }
 

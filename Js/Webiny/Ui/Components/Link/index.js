@@ -29,7 +29,8 @@ class Link extends Webiny.Ui.Component {
                 if (_.isString(route)) {
                     route = route === 'current' ? Webiny.Router.getActiveRoute() : Webiny.Router.getRoute(route);
                 }
-                if (route === null) {
+
+                if (!route) {
                     props.href = 'javascript:void(0)';
                 } else {
                     props.href = route.getHref(props.params, null);

@@ -18,10 +18,15 @@ class ModalComponent extends Component {
         return !_.isEqual(newProps, oldProps) || !_.isEqual(nextState, this.state);
     }
 
+    // This method is used to get reference to dialog instance. It can be overridden in child classes for more complex scenarios.
+    getDialog() {
+        return this.dialog;
+    }
+
     hide() {
         return new Promise(resolve => {
             const interval = setInterval(() => {
-                const ref = this.refs.dialog;
+                const ref = this.getDialog();
                 if (ref) {
                     clearInterval(interval);
                     resolve(ref.hide());
@@ -33,7 +38,7 @@ class ModalComponent extends Component {
     show() {
         return new Promise(resolve => {
             const interval = setInterval(() => {
-                const ref = this.refs.dialog;
+                const ref = this.getDialog();
                 if (ref) {
                     clearInterval(interval);
                     resolve(ref.show());
@@ -43,7 +48,7 @@ class ModalComponent extends Component {
     }
 
     isAnimating() {
-        return this.refs.dialog.isAnimating();
+        return this.getDialog().isAnimating();
     }
 
     renderDialog() {
@@ -59,7 +64,7 @@ ModalComponent.defaultProps = {
     renderDialog: null,
     renderer() {
         const dialog = this.renderDialog();
-        const props = {ref: 'dialog'};
+        const props = {ref: dialog => this.dialog = dialog};
         if(this.props.onHidden) {
             props['onHidden'] =  this.props.onHidden;
         }
