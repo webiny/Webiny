@@ -151,17 +151,19 @@ class Search extends Webiny.Ui.FormComponent {
         clearTimeout(this.delay);
 
         this.delay = setTimeout(() => {
-            if (_.isEmpty(this.state.query) || this.state.query.length < 2) {
+            if (_.isEmpty(this.state.query) || this.state.query.length < this.props.minQueryLength) {
                 return;
             }
 
-            this.setState({loading: true});
-            this.api.setQuery(_.merge({_searchQuery: this.state.query}, this.filters)).execute().then(apiResponse => {
-                const data = apiResponse.getData();
-                this.setState({options: _.get(data, 'list', data), loading: false}, () => {
-                    this.props.onLoadOptions(this.state.options);
+            if (this.isMounted()) {
+                this.setState({loading: true});
+                this.api.setQuery(_.merge({_searchQuery: this.state.query}, this.filters)).execute().then(apiResponse => {
+                    const data = apiResponse.getData();
+                    this.setState({options: _.get(data, 'list', data), loading: false}, () => {
+                        this.props.onLoadOptions(this.state.options);
+                    });
                 });
-            });
+            }
         }, this.props.allowFreeInput ? 300 : 500);
     }
 
@@ -360,6 +362,7 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     searchOperator: 'or',
     valueAttr: 'id',
     textAttr: 'name',
+    minQueryLength: 2,
     onEnter: _.noop,
     onChange: _.noop,
     onReset: _.noop,

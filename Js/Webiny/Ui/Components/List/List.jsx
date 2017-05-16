@@ -9,6 +9,10 @@ class List extends Webiny.Ui.Component {
             Webiny.Ui.Dispatcher.unregister(this.props.ui, this);
         }
     }
+
+    componentDidMount() {
+        // Disabled
+    }
 }
 
 List.defaultProps = {

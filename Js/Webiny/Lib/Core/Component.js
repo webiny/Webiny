@@ -37,7 +37,7 @@ class Component extends React.Component {
             return Webiny.i18n;
         }
 
-        let key = options.key || this.i18n.key || this.props.i18nKey;
+        let key = options.key || _.get(this.props, 'i18nKey', this.i18n.key);
         if (!key) {
             const app = _.get(Webiny.Router.getActiveRoute(), 'module.app.name');
             const module = _.get(Webiny.Router.getActiveRoute(), 'module.name');
