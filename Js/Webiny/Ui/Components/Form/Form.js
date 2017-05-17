@@ -564,6 +564,9 @@ class Form extends Webiny.Ui.Component {
 
     handleApiError(apiResponse) {
         this.setState({error: apiResponse}, () => {
+            // error callback
+            this.props.onSubmitError.call(this, apiResponse, this);
+            
             // Check error data and if validation error - try highlighting invalid fields
             const data = apiResponse.getData();
             if (_.isPlainObject(data)) {
@@ -670,6 +673,7 @@ Form.defaultProps = {
     onFailure: _.noop,
     onLoad: _.noop,
     prepareLoadedData: null,
+    onSubmitError: _.noop,
     onProgress(pe) {
         Webiny.import(['Growl', 'Progress']).then(({Growl, Progress})=> {
             const cmp = <div>Your data is being uploaded...<Progress value={pe.progress}/></div>;

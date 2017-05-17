@@ -6,7 +6,7 @@
 	font-family: "Source Sans Pro";
 }
 
-.dropdown.opened{
+.dropdown.opened {
 	overflow: visible;
 }
 
@@ -106,6 +106,12 @@
 	font-size: 14px;
 }
 
+.dropdown .dropdownMenu > li > a > span::before {
+	width: 1em;
+	margin-right: .2em;
+	margin-left: .2em;
+}
+
 .dropdownMenu > li a:hover {
 	color: inherit;
 	background-color: #f5f5f5;
@@ -165,7 +171,7 @@
 	box-shadow: none;
 }
 
-.dropdown.opened.balloon .dropdownToggle{
+.dropdown.opened.balloon .dropdownToggle {
 	border: none;
 	padding: 5px 26px 5px 5px;
 	background-color: transparent;
@@ -178,7 +184,6 @@
 	visibility: visible;
 	animation: slideInDown 225ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
-
 
 @keyframes slideInDown {
 	from {

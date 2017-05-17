@@ -49,7 +49,7 @@ class User extends AbstractEntity implements UserInterface
         $this->attr('avatar')->smart(new FileAttribute())->setTags('user', 'avatar')->setOnDelete('cascade');
         $this->attr('gravatar')->dynamic(function () {
             return md5($this->email);
-        });
+        })->setToArrayDefault();
         $this->attr('firstName')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('lastName')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('password')->char()->onSet(function ($password) {
