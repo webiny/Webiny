@@ -24,6 +24,7 @@ Field.defaultProps = {
     default: '-',
     includeTd: true,
     align: 'left',
+    className: null,
     sortedClass: styles.sorted,
     alignLeftClass: 'text-left',
     alignRightClass: 'text-right',

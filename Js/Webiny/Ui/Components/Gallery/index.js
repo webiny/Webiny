@@ -90,6 +90,7 @@ class Gallery extends Webiny.Ui.FormComponent {
             state.images.push(image);
         }
         this.props.onChange(state.images);
+        this.props.onSaveImage(image);
     }
 
     applyCropping(newImage) {
@@ -295,6 +296,7 @@ Gallery.defaultProps = {
     maxImagesMessage: 'Maximum number of images reached!',
     newCropper: {},
     editCropper: {},
+    onSaveImage: _.noop,
     renderer() {
         const {FileReader, Alert, Input, FormGroup, styles} = this.props;
 

@@ -63,7 +63,7 @@ class Auth {
                 }
 
                 if (user && _.isFunction(routerEvent.route.role)) {
-                    return Promise.resolve(routerEvent.route.role()).then(allowed => {
+                    return Promise.resolve(routerEvent.route.role(routerEvent.route)).then(allowed => {
                         if (!allowed) {
                             routerEvent.stop();
                             routerEvent.goToRoute(this.forbiddenRoute);
