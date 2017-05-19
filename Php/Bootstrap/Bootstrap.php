@@ -75,10 +75,7 @@ class Bootstrap
 
         /* @var $app App */
         foreach ($this->wApps() as $app) {
-            $bootstrap = $app->getBootstrap();
-            if ($bootstrap) {
-                $bootstrap->run($app);
-            }
+            $app->getLifeCycleObject('Bootstrap')->run($app);
         }
 
         $this->wEvents()->fire('Core.Bootstrap.End');

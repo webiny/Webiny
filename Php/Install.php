@@ -1,15 +1,16 @@
 <?php
 namespace Apps\Core\Php;
 
-use Apps\Core\Php\DevTools\AbstractInstall;
 use Apps\Core\Php\Entities\ApiTokenLog;
 use Apps\Core\Php\PackageManager\App;
 use MongoDB\Driver\Exception\RuntimeException;
 
-class Install extends AbstractInstall
+class Install extends \Apps\Core\Php\DevTools\LifeCycle\Install
 {
-    protected function run(App $app)
+    public function run(App $app)
     {
+        parent::run($app);
+
         // Insert permissions
         $permissions = json_decode(file_get_contents(__DIR__ . '/Install/UserPermissions.json'), true);
         $this->createUserPermissions($permissions);

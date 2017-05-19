@@ -7,8 +7,8 @@
 
 namespace Apps\Core\Php\PackageManager;
 
-use Apps\Core\Php\DevTools\AbstractInstall;
 use Apps\Core\Php\DevTools\Exceptions\AppException;
+use Apps\Core\Php\DevTools\LifeCycle\LifeCycleInterface;
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\Storage\Directory\Directory;
 use Webiny\Component\Storage\File\File;
@@ -177,31 +177,24 @@ class App extends AbstractPackage
         return $services;
     }
 
-    public function getBootstrap()
-    {
-        if (file_exists($this->getPath(true) . '/Php/Bootstrap.php')) {
-            $class = 'Apps\\' . $this->getName() . '\\Php\\Bootstrap';
-            if (in_array('Apps\Core\Php\DevTools\AbstractBootstrap', class_parents($class))) {
-                return new $class;
-            }
-        }
-
-        return null;
-    }
-
     /**
-     * @return null|AbstractInstall
+     * Get instance of a lifecycle object: Bootstrap, Install or Release
+     *
+     * @param string $name Life cycle object name
+     *
+     * @return LifeCycleInterface
      */
-    public function getInstall()
+    public function getLifeCycleObject($name)
     {
-        if (file_exists($this->getPath(true) . '/Php/Install.php')) {
-            $class = 'Apps\\' . $this->getName() . '\\Php\\Install';
-            if (in_array('Apps\Core\Php\DevTools\AbstractInstall', class_parents($class))) {
+        $builtInClass = 'Apps\Core\Php\DevTools\LifeCycle\\' . $name;
+        if (file_exists($this->getPath(true) . '/Php/' . $name . '.php')) {
+            $class = 'Apps\\' . $this->getName() . '\\Php\\' . $name;
+            if (in_array($builtInClass, class_parents($class))) {
                 return new $class;
             }
         }
 
-        return null;
+        return new $builtInClass();
     }
 
     private function registerAutoloaderMap()

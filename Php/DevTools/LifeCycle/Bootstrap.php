@@ -5,17 +5,18 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\DevTools;
+namespace Apps\Core\Php\DevTools\LifeCycle;
 
 use Apps\Core\Php\DevTools\Response\HtmlResponse;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\PackageManager\App;
 
 /**
- * Class AbstractBootstrap
+ * Class Bootstrap
  *
  * This class contains a few helper methods to simplify app bootstrap
  */
-abstract class AbstractBootstrap
+class Bootstrap implements LifeCycleInterface
 {
     use WebinyTrait;
 
@@ -24,7 +25,10 @@ abstract class AbstractBootstrap
      *
      * @param App $app Instance of PackageManager\App being run
      */
-    abstract public function run(App $app);
+    public function run(App $app)
+    {
+        // Override to implement
+    }
 
     /**
      * Add an app route and a template that will be rendered for that route.<br/>

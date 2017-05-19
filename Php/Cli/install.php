@@ -45,9 +45,8 @@ class Install
         $_SERVER['SERVER_NAME'] = $this->url($host)->getHost();
         \Apps\Core\Php\Bootstrap\Bootstrap::getInstance();
         $appInstance = $this->wApps($app);
-        $installer = $appInstance->getInstall();
-        if ($installer) {
-            $installer($appInstance);
+        if ($appInstance) {
+            $appInstance->getLifeCycleObject('Install')->run($appInstance);
         }
     }
 }

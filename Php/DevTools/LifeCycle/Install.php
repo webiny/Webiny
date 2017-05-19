@@ -5,43 +5,35 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\DevTools;
+namespace Apps\Core\Php\DevTools\LifeCycle;
 
 use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
+use Apps\Core\Php\DevTools\WebinyTrait;
 use Apps\Core\Php\Entities\UserPermission;
 use Apps\Core\Php\Entities\UserRole;
 use Apps\Core\Php\PackageManager\App;
 use Closure;
 use MongoDB\Driver\Exception\RuntimeException;
 use Webiny\Component\Entity\EntityException;
-use Webiny\Component\StdLib\Exception\Exception;
 
 /**
- * Class AbstractInstall
+ * Class Install
  *
  * This class serves as a base for app installer
  */
-abstract class AbstractInstall
+class Install implements LifeCycleInterface
 {
     use WebinyTrait;
-
-    /**
-     * @var App
-     */
-    private $app = null;
 
     /**
      * Run the installation
      *
      * @param App $app Instance of PackageManager\App being run
      */
-    abstract protected function run(App $app);
-
-    final public function __invoke(App $app)
+    public function run(App $app)
     {
-        $this->app = $app;
-        $this->installIndexes();
-        $this->run($app);
+        $this->installJsDependencies($app);
+        $this->createIndexes($app);
     }
 
     /**
@@ -122,9 +114,14 @@ abstract class AbstractInstall
         }
     }
 
-    private function installIndexes()
+    /**
+     * Scan app entities and create indexes if needed
+     *
+     * @param App $app
+     */
+    protected function createIndexes(App $app)
     {
-        foreach ($this->app->getEntities() as $e) {
+        foreach ($app->getEntities() as $e) {
             /* @var $entity \Apps\Core\Php\DevTools\Entity\AbstractEntity */
             $entity = new $e['class'];
             $collection = $entity->getEntityCollection();
@@ -140,6 +137,19 @@ abstract class AbstractInstall
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Install JS dependencies
+     * Default: `npm install` is executed in the root of the app to install both production and development dependencies
+     *
+     * @param App $app
+     */
+    protected function installJsDependencies($app)
+    {
+        if (file_exists($app->getPath() . '/package.json')) {
+            exec('cd ' . $app->getPath() . ' && npm install');
         }
     }
 
