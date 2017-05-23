@@ -11,4 +11,4 @@ Tab.defaultProps = {
     onClick: _.noop
 };
 
-export default Webiny.createComponent(Tab);
+export default Webiny.createComponent(Tab, {tab: true});

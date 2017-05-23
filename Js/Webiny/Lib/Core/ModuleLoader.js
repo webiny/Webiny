@@ -43,7 +43,7 @@ class ModuleLoader {
                 module = this.registeredModules[module];
             }
             // If a function is given - execute it and return either the default export (if exists) or the entire export
-            if(!_.isFunction(module)) {
+            if (!_.isFunction(module)) {
                 console.warn('[MODULE LOADER] not a function: ' + key);
             }
             return Promise.resolve(module()).then(m => m && m.hasOwnProperty('default') ? m.default : m);
@@ -51,32 +51,40 @@ class ModuleLoader {
 
         return Promise.all(imports).then(values => {
             // Map loaded modules to requested modules object
-            const modules = {};
+            const loadedModules = {};
             keys.map((key, i) => {
                 // Only assign modules that export something (often vendor libraries like owlCarousel, select2, etc. do not export anything)
                 if (!_.isNil(values[i])) {
-                    modules[key] = values[i];
+                    // Assign loaded module and the original source path which will be used for optional configuration of component
+                    // Source path is the name that was used to register a module via `Webiny.registerModule()` call
+                    loadedModules[key] = {module: values[i], source: modules[key]};
                 }
             });
-            return modules;
-        }).then(modules => {
+            return loadedModules;
+        }).then(loadedModules => {
             // Configure modules
             const configure = [];
-            _.each(modules, (module, name) => {
+            _.each(loadedModules, (obj, name) => {
                 // Only configure modules that are requested as string
-                if (_.isString(name) && _.has(this.configurations, name) && !this.configurations[name].configured) {
+                if (_.isString(name) && _.has(this.configurations, obj.source) && !this.configurations[obj.source].configured) {
                     // build promise chain to configure each component
                     let chain = Promise.resolve();
-                    _.get(this.configurations[name], 'configs', []).map(config => {
+                    _.get(this.configurations[obj.source], 'configs', []).map(config => {
                         // We support async configuration functions to allow 3rd party apps to lazy load their configuration code
                         // when the component is actually used
-                        chain = chain.then(() => config(module));
+                        chain = chain.then(() => config(obj.module));
                     });
-                    configure.push(chain.then(() => this.configurations[name].configured = true));
+                    configure.push(chain.then(() => this.configurations[obj.source].configured = true));
                 }
             });
 
-            return Promise.all(configure).then(() => modules);
+            return Promise.all(configure).then(() => {
+                const returnModules = {};
+                _.each(loadedModules, (obj, name) => {
+                    returnModules[name] = obj.module;
+                });
+                return returnModules;
+            });
         });
     }
 

@@ -84,6 +84,10 @@ class DateRange extends Webiny.Ui.FormComponent {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
+        if(!this.getInput()) {
+            return;
+        }
+
         if (!props.value) {
             this.getInput().value = this.getPlaceholder() || '';
         } else {

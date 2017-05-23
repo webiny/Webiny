@@ -143,4 +143,4 @@ Tabs.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Tabs, {styles});
+export default Webiny.createComponent(Tabs, {styles, tabs: true});
