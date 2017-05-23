@@ -395,11 +395,12 @@ class Form extends Webiny.Ui.Component {
     /**
      * HELPER METHODS FOR REGISTERING INPUTS
      */
-
-    // TODO: construct onChange callback to process watches, etc. (like here: Apps/Core/Js/Webiny/Modules/Form/Form.js:437)
-    bindTo(name, changeCallback = _.noop, defaultValue = null) {
-        const linkState = super.bindTo('model.' + name, changeCallback, defaultValue);
-
+    bindTo(element) {
+        try {
+            return this.registerComponent(element);
+        } catch(e) {
+            console.error('INVALID ELEMENT', element);
+        }
     }
 
     /**
@@ -462,7 +463,8 @@ class Form extends Webiny.Ui.Component {
             };
 
             // Assign value and onChange props
-            _.assign(newProps, this.bindTo(input.props.name, changeCallback.bind(this), input.props.defaultValue));
+            const linkState = super.bindTo('model.' + input.props.name, changeCallback.bind(this), input.props.defaultValue);
+            _.assign(newProps, linkState);
 
             if (this.parsingTabsIndex > 0) {
                 newProps['__tabs'] = {id: 'tabs-' + this.parsingTabsIndex, tab: this.parsingTabIndex};
