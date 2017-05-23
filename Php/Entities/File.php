@@ -1,4 +1,5 @@
 <?php
+
 namespace Apps\Core\Php\Entities;
 
 use Apps\Core\Php\DevTools\Entity\AbstractEntity;
@@ -70,7 +71,7 @@ class File extends AbstractEntity
         $data = parent::toArray($fields, $nestedLevel);
         if (isset($data['src']) && is_String($data['src'])) {
             $src = $this->str($data['src']);
-            if (!$src->containsAny(['http://', 'https://'])) {
+            if (!$src->containsAny(['http://', 'https://']) && !$src->startsWith('//')) {
                 $data['src'] = $this->getUrl();
             }
         }

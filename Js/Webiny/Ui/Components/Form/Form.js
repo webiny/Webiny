@@ -398,7 +398,8 @@ class Form extends Webiny.Ui.Component {
 
     // TODO: construct onChange callback to process watches, etc. (like here: Apps/Core/Js/Webiny/Modules/Form/Form.js:437)
     bindTo(name, changeCallback = _.noop, defaultValue = null) {
-        return super.bindTo('model.' + name, changeCallback, defaultValue);
+        const linkState = super.bindTo('model.' + name, changeCallback, defaultValue);
+
     }
 
     /**
@@ -471,9 +472,8 @@ class Form extends Webiny.Ui.Component {
         }
 
         // Track Tabs to be able to focus the relevant tab when validation fails
-        const {Tabs} = this.props;
 
-        if (Webiny.isElementOfType(input, Tabs)) {
+        if (Webiny.elementHasFlag(input, 'tabs')) {
             this.parsingTabsIndex++;
             this.parsingTabIndex = -1;
 
@@ -490,7 +490,7 @@ class Form extends Webiny.Ui.Component {
             return tabsContent;
         }
 
-        if (Webiny.isElementOfType(input, Tabs.Tab) && this.parsingTabsIndex > 0) {
+        if (Webiny.elementHasFlag(input, 'tab') && this.parsingTabsIndex > 0) {
             this.parsingTabIndex++;
         }
 
@@ -691,7 +691,6 @@ Form.defaultProps = {
 };
 
 export default Webiny.createComponent(Form, {
-    modules: ['Tabs'],
     api: [
         'bindTo',
         'resetForm',

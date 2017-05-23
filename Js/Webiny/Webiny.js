@@ -147,7 +147,7 @@ class Webiny {
     }
 
     isElementOfType(element, type) {
-        if (!React.isValidElement(element) || _.isString(element.type)) {
+        if (!element || !React.isValidElement(element) || _.isString(element.type)) {
             return false;
         }
 
