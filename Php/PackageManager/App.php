@@ -109,19 +109,6 @@ class App extends AbstractPackage
         return $jsAppsMeta;
     }
 
-    /**
-     * Get asset URL
-     *
-     * @param string $app JS app name
-     * @param string $asset Asset path
-     *
-     * @return string
-     */
-    public function getAsset($app, $asset)
-    {
-        return $this->wConfig()->get('Application.WebPath') . $this->getBuildPath() . '/' . $app . '/' . $asset;
-    }
-
     public function getEntities()
     {
         $version = $this->getVersionPath();

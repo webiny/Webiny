@@ -127,7 +127,11 @@ class Webiny {
             loadConfig = request(config).then(res => res.data);
         }
 
-        return loadConfig.then(runApp).then(() => {
+        return loadConfig.then(config => {
+            // Set config to meta to have chunks map ready for webpack
+            webinyMeta[name] = config;
+            return runApp(config);
+        }).then(() => {
             return _.get(this.Apps, name);
         });
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Apps\Core\Php\View;
 
 use Apps\Core\Php\DevTools\WebinyTrait;
@@ -62,15 +63,20 @@ class SmartyExtension extends AbstractSmartyExtension
         $metaConfig = ['Core.Webiny' => $meta];
 
         $apps = array_filter(explode(',', $params['apps'] ?? ''));
-        foreach ($apps as $app) {
-            $metaConfig[$app] = $appsHelper->getAppsMeta($app);
+
+        foreach ($apps as $jsApp) {
+            // Get meta for given JS app
+            $metaConfig[$jsApp] = $appsHelper->getAppsMeta($jsApp);
         }
 
         $flags = JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE;
         $config = json_encode($jsConfig, $flags);
         $appsMeta = json_encode($metaConfig, $flags);
 
-        $browserSync = '<script src="http://localhost:3000/browser-sync/browser-sync-client.js?v=2.18.6"></script>';
+        $bsConfig = file_get_contents($this->wStorage('Root')->getAbsolutePath('webiny.json'));
+        $bsConfig = $this->arr(json_decode($bsConfig, true));
+        $bsPath = $this->url($this->wConfig()->get('Application.WebPath'))->setPort($bsConfig->keyNested('browserSync.port', 3000, true));
+        $browserSync = '<script src="' . $bsPath . '/browser-sync/browser-sync-client.js?v=2.18.6"></script>';
         $jsDomain = '';
         $cssDomain = '';
         if ($this->wIsProduction()) {
@@ -89,15 +95,7 @@ class SmartyExtension extends AbstractSmartyExtension
         var webinyConfig = {$config};
         var webinyMeta = {$appsMeta};
 
-        var loadScript = function(url) {
-            var s = document.createElement('script');
-            s.type = 'text/javascript';
-            s.src = url;
-            s.async = true;
-            document.body.appendChild(s);
-            return s;
-        };
-
+        var loadScript=function(t){var e=document.createElement("script");return e.type="text/javascript",e.src=t,e.async=!0,document.body.appendChild(e),e};
         loadScript('{$jsDomain}{$meta['vendor']}').onload = function() {
             loadScript('{$jsDomain}{$meta['bootstrap']}');
         };
