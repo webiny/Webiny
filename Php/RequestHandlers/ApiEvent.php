@@ -5,10 +5,10 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\RequestHandlers;
+namespace Apps\Webiny\Php\RequestHandlers;
 
-use Apps\Core\Php\DevTools\Response\ApiResponse;
-use Apps\Core\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\DevTools\Response\ApiResponse;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
 use Webiny\Component\EventManager\Event;
 use Webiny\Component\Http\Request;
 use Webiny\Component\StdLib\StdObject\StringObject\StringObject;

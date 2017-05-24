@@ -11,7 +11,7 @@ List.defaultProps = {
                 {(Ui) => {
                     const Table = Ui.List.Table;
                     const listProps = {
-                        api: '/entities/core/user-permissions',
+                        api: '/entities/webiny/user-permissions',
                         fields: 'id,name,slug,createdOn,description',
                         connectToRouter: true,
                         query: {_sort: 'name'},

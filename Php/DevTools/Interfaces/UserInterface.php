@@ -1,5 +1,5 @@
 <?php
-namespace Apps\Core\Php\DevTools\Interfaces;
+namespace Apps\Webiny\Php\DevTools\Interfaces;
 
 use Webiny\Component\Entity\EntityCollection;
 

@@ -5,9 +5,9 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\DevTools;
+namespace Apps\Webiny\Php\DevTools;
 
-use Apps\Core\Php\View\View;
+use Apps\Webiny\Php\View\View;
 use Webiny\Component\StdLib\SingletonTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\TemplateEngine\TemplateEngineTrait;

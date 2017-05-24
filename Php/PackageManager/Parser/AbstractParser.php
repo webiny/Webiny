@@ -1,8 +1,8 @@
 <?php
-namespace Apps\Core\Php\PackageManager\Parser;
+namespace Apps\Webiny\Php\PackageManager\Parser;
 
-use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\DevTools\Exceptions\AppException;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\DevTools\Exceptions\AppException;
 use Webiny\Component\Mongo\MongoTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Storage\File\File;
@@ -90,7 +90,7 @@ abstract class AbstractParser
         $classes = [$class];
         $classes = array_merge($classes, $this->readClassParents($class));
         foreach ($classes as $c) {
-            if ($c === 'Apps\Core\Php\DevTools\Entity\AbstractEntity') {
+            if ($c === 'Apps\Webiny\Php\DevTools\Entity\AbstractEntity') {
                 break;
             }
             $classes = array_merge($classes, $this->readTraits($c));

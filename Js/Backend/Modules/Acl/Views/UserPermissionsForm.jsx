@@ -25,9 +25,9 @@ class UserPermissionsForm extends Webiny.Ui.View {
 
     componentWillMount() {
         super.componentWillMount();
-        new Webiny.Api.Endpoint('/services/core/entities', {query: {withDetails: true, crudMethods: true}}).get().then(apiResponse => {
+        new Webiny.Api.Endpoint('/services/webiny/entities', {query: {withDetails: true, crudMethods: true}}).get().then(apiResponse => {
             this.setState({entities: apiResponse.getData()});
-            return new Webiny.Api.Endpoint('/services/core/services', {query: {withDetails: true}}).get().then(apiResponse => {
+            return new Webiny.Api.Endpoint('/services/webiny/services', {query: {withDetails: true}}).get().then(apiResponse => {
                 this.setState({services: apiResponse.getData()});
             });
         });
@@ -72,7 +72,7 @@ class UserPermissionsForm extends Webiny.Ui.View {
 
     renderView(Ui) {
         const formProps = {
-            api: '/entities/core/user-permissions',
+            api: '/entities/webiny/user-permissions',
             fields: 'id,name,slug,description,permissions',
             connectToRouter: true,
             onSubmitSuccess: 'UserPermissions.List',

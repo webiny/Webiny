@@ -6,7 +6,7 @@ class ApiTokenForm extends Webiny.Ui.ModalComponent {
         const {Modal, Form, Grid, Input, Switch, Button, UserRoles} = this.props;
 
         const formProps = {
-            api: '/entities/core/api-token',
+            api: '/entities/webiny/api-token',
             fields: '*,roles',
             id: _.get(this.props.data, 'id'),
             onSubmitSuccess: () => {

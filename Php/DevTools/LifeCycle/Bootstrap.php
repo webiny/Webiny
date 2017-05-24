@@ -5,11 +5,11 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\DevTools\LifeCycle;
+namespace Apps\Webiny\Php\DevTools\LifeCycle;
 
-use Apps\Core\Php\DevTools\Response\HtmlResponse;
-use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\PackageManager\App;
+use Apps\Webiny\Php\DevTools\Response\HtmlResponse;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\PackageManager\App;
 
 /**
  * Class Bootstrap
@@ -40,7 +40,7 @@ class Bootstrap implements LifeCycleInterface
      */
     protected function addAppRoute($regex, $template, $priority = 400, $dataSource = [])
     {
-        $this->wEvents()->listen('Core.Bootstrap.Request', function () use ($regex, $template, $dataSource) {
+        $this->wEvents()->listen('Webiny.Bootstrap.Request', function () use ($regex, $template, $dataSource) {
             if ($this->wRequest()->getCurrentUrl(true)->getPath(true)->match($regex)) {
                 $data = $dataSource;
                 if (is_callable($dataSource)) {

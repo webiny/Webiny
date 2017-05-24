@@ -1,7 +1,7 @@
 <?php
-namespace Apps\Core\Php\Entities;
+namespace Apps\Webiny\Php\Entities;
 
-use Apps\Core\Php\DevTools\Exceptions\AppException;
+use Apps\Webiny\Php\DevTools\Exceptions\AppException;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Image\Bridge\ImageException;
 use Webiny\Component\Image\ImageLoader;
@@ -18,7 +18,7 @@ use Webiny\Component\Storage\File\File as StorageFile;
  * @property bool    $isPortrait
  * @property bool    $isLandscape
  *
- * @package Apps\Core\Php\Entities
+ * @package Apps\Webiny\Php\Entities
  */
 class Image extends File
 {

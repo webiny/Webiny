@@ -1,7 +1,7 @@
 <?php
-namespace Apps\Core\Php\Entities;
+namespace Apps\Webiny\Php\Entities;
 
-use Apps\Core\Php\DevTools\Entity\AbstractEntity;
+use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\Mongo\Index\SingleIndex;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
@@ -12,7 +12,7 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  * @property string      $slug
  * @property ArrayObject $permissions
  *
- * @package Apps\Core\Php\Entities
+ * @package Apps\Webiny\Php\Entities
  *
  */
 class UserPermission extends AbstractEntity
@@ -43,7 +43,7 @@ class UserPermission extends AbstractEntity
         })->setToArrayDefault();
 
         $this->attr('description')->char()->setToArrayDefault();
-        $this->attr('roles')->many2many('UserRole2UserPermission')->setEntity('\Apps\Core\Php\Entities\UserRole');
+        $this->attr('roles')->many2many('UserRole2UserPermission')->setEntity('\Apps\Webiny\Php\Entities\UserRole');
         $this->attr('permissions')->object();
 
         /**

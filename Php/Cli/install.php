@@ -1,5 +1,5 @@
 <?php
-// Execute as: php Apps/Core/Php/Cli/install.php domain.app Core
+// Execute as: php Apps/Webiny/Php/Cli/install.php domain.app Webiny
 
 use Webiny\Component\Config\ConfigException;
 
@@ -8,11 +8,11 @@ if (php_sapi_name() !== 'cli') {
 }
 
 $autoloader = require_once getcwd() . '/vendor/autoload.php';
-$autoloader->addPsr4('Apps\\Core\\', getcwd() . '/Apps/Core');
+$autoloader->addPsr4('Apps\\Webiny\\', getcwd() . '/Apps/Webiny');
 
 class Install
 {
-    use \Webiny\Component\StdLib\StdLibTrait, \Apps\Core\Php\DevTools\WebinyTrait;
+    use \Webiny\Component\StdLib\StdLibTrait, \Apps\Webiny\Php\DevTools\WebinyTrait;
 
     private $host = null;
 
@@ -43,7 +43,7 @@ class Install
 
         $_SERVER = [];
         $_SERVER['SERVER_NAME'] = $this->url($host)->getHost();
-        \Apps\Core\Php\Bootstrap\Bootstrap::getInstance();
+        \Apps\Webiny\Php\Bootstrap\Bootstrap::getInstance();
         $appInstance = $this->wApps($app);
         if ($appInstance) {
             $appInstance->getLifeCycleObject('Install')->run($appInstance);

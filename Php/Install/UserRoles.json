@@ -8,24 +8,24 @@
         "name": "Public",
         "slug": "public",
         "description": "This role is assumed for all public (anonymous) requests. Whatever is allowed here is becoming publicly accessible so be careful with it!",
-        "permissions": ["core-acl-user-profile", "core-logger-log-errors", "core-access-apps"]
+        "permissions": ["webiny-acl-user-profile", "webiny-logger-log-errors", "webiny-access-apps"]
     },
     {
         "name": "User Manager",
-        "slug": "core-acl-user-manager",
+        "slug": "webiny-acl-user-manager",
         "description": "This role allows management of users, roles and permissions.",
-        "permissions": ["core-discover-entities-services", "core-acl-manage-users", "core-acl-manage-roles", "core-acl-manage-permissions"]
+        "permissions": ["webiny-discover-entities-services", "webiny-acl-manage-users", "webiny-acl-manage-roles", "webiny-acl-manage-permissions"]
     },
     {
         "name": "API Token Manager",
-        "slug": "core-acl-api-token-manager",
+        "slug": "webiny-acl-api-token-manager",
         "description": "This role allows management of API tokens.",
-        "permissions": ["core-acl-manage-api-tokens"]
+        "permissions": ["webiny-acl-manage-api-tokens"]
     },
     {
         "name": "Logger Manager",
-        "slug": "core-logger-manager",
+        "slug": "webiny-logger-manager",
         "description": "This roles allows user to manage system error logger.",
-        "permissions": ["core-logger-manage-logs"]
+        "permissions": ["webiny-logger-manage-logs"]
     }
 ]

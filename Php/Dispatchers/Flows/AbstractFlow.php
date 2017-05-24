@@ -5,10 +5,10 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\Dispatchers\Flows;
+namespace Apps\Webiny\Php\Dispatchers\Flows;
 
-use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\DevTools\Entity\AbstractEntity;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\Mongo\MongoTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 

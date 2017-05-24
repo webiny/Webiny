@@ -5,10 +5,10 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\DevTools\LifeCycle;
+namespace Apps\Webiny\Php\DevTools\LifeCycle;
 
-use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\PackageManager\App;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\PackageManager\App;
 use MongoDB\Driver\Exception\RuntimeException;
 
 /**
@@ -39,7 +39,7 @@ class Release implements LifeCycleInterface
     protected function manageIndexes(App $app)
     {
         foreach ($app->getEntities() as $e) {
-            /* @var $entity \Apps\Core\Php\DevTools\Entity\AbstractEntity */
+            /* @var $entity \Apps\Webiny\Php\DevTools\Entity\AbstractEntity */
             $entity = new $e['class'];
             $collection = $entity->getEntityCollection();
             $indexes = $entity->getIndexes();

@@ -7,7 +7,7 @@
  * @license   http://www.webiny.com/framework/license
  */
 
-namespace Apps\Core\Php\DevTools\Entity\Export;
+namespace Apps\Webiny\Php\DevTools\Entity\Export;
 
 use Webiny\Component\Entity\EntityCollection;
 

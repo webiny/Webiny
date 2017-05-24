@@ -7,7 +7,7 @@ class List extends Webiny.Ui.View {
 List.defaultProps = {
     renderer() {
         const listProps = {
-            api: '/entities/core/user-roles',
+            api: '/entities/webiny/user-roles',
             fields: 'id,name,slug,description,createdOn',
             connectToRouter: true,
             query: {_sort: 'name'},

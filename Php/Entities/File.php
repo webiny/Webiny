@@ -1,8 +1,8 @@
 <?php
 
-namespace Apps\Core\Php\Entities;
+namespace Apps\Webiny\Php\Entities;
 
-use Apps\Core\Php\DevTools\Entity\AbstractEntity;
+use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\Mongo\Index\SingleIndex;
 use Webiny\Component\Storage\Storage;
 use Webiny\Component\Storage\StorageTrait;
@@ -24,7 +24,7 @@ if (!defined('DS')) {
  * @property string $ref Reference to entity
  * @property int    $order Order of file (used in image galleries)
  *
- * @package Apps\Core\Php\Entities
+ * @package Apps\Webiny\Php\Entities
  */
 class File extends AbstractEntity
 {

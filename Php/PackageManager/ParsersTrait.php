@@ -5,11 +5,11 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\PackageManager;
+namespace Apps\Webiny\Php\PackageManager;
 
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\StdLib\StdLibTrait;
-use Apps\Core\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
 use Webiny\Component\Storage\Storage;
 
 /**

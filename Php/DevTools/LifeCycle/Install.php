@@ -5,13 +5,13 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\DevTools\LifeCycle;
+namespace Apps\Webiny\Php\DevTools\LifeCycle;
 
-use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
-use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\Entities\UserPermission;
-use Apps\Core\Php\Entities\UserRole;
-use Apps\Core\Php\PackageManager\App;
+use Apps\Webiny\Php\DevTools\Response\ApiErrorResponse;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\Entities\UserPermission;
+use Apps\Webiny\Php\Entities\UserRole;
+use Apps\Webiny\Php\PackageManager\App;
 use Closure;
 use MongoDB\Driver\Exception\RuntimeException;
 use Webiny\Component\Entity\EntityException;
@@ -122,7 +122,7 @@ class Install implements LifeCycleInterface
     protected function createIndexes(App $app)
     {
         foreach ($app->getEntities() as $e) {
-            /* @var $entity \Apps\Core\Php\DevTools\Entity\AbstractEntity */
+            /* @var $entity \Apps\Webiny\Php\DevTools\Entity\AbstractEntity */
             $entity = new $e['class'];
             $collection = $entity->getEntityCollection();
             $indexes = $entity->getIndexes();

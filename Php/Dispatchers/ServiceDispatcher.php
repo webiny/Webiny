@@ -5,13 +5,13 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\Dispatchers;
+namespace Apps\Webiny\Php\Dispatchers;
 
-use Apps\Core\Php\DevTools\Interfaces\PublicApiInterface;
-use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
-use Apps\Core\Php\DevTools\Response\ApiResponse;
-use Apps\Core\Php\RequestHandlers\ApiEvent;
-use Apps\Core\Php\RequestHandlers\ApiException;
+use Apps\Webiny\Php\DevTools\Interfaces\PublicApiInterface;
+use Apps\Webiny\Php\DevTools\Response\ApiErrorResponse;
+use Apps\Webiny\Php\DevTools\Response\ApiResponse;
+use Apps\Webiny\Php\RequestHandlers\ApiEvent;
+use Apps\Webiny\Php\RequestHandlers\ApiException;
 
 class ServiceDispatcher extends AbstractApiDispatcher
 {

@@ -1,11 +1,11 @@
 <?php
-namespace Apps\Core\Php;
+namespace Apps\Webiny\Php;
 
-use Apps\Core\Php\Entities\ApiTokenLog;
-use Apps\Core\Php\PackageManager\App;
+use Apps\Webiny\Php\Entities\ApiTokenLog;
+use Apps\Webiny\Php\PackageManager\App;
 use MongoDB\Driver\Exception\RuntimeException;
 
-class Install extends \Apps\Core\Php\DevTools\LifeCycle\Install
+class Install extends \Apps\Webiny\Php\DevTools\LifeCycle\Install
 {
     public function run(App $app)
     {

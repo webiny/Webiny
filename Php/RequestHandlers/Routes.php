@@ -5,10 +5,10 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\RequestHandlers;
+namespace Apps\Webiny\Php\RequestHandlers;
 
-use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\DevTools\Response\HtmlResponse;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\DevTools\Response\HtmlResponse;
 
 class Routes
 {

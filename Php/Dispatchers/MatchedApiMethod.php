@@ -5,14 +5,14 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\Dispatchers;
+namespace Apps\Webiny\Php\Dispatchers;
 
 /**
  * Class MatchedApiMethod
  *
  * This class is used when ApiMethod is matched and URL parameters are extracted
  *
- * @package Apps\Core\Php\Dispatchers
+ * @package Apps\Webiny\Php\Dispatchers
  */
 class MatchedApiMethod
 {

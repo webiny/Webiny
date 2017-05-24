@@ -7,7 +7,7 @@ import Layout from './Modules/Layout';
 
 class Skeleton extends Webiny.App {
     constructor() {
-        super('Core.Skeleton');
+        super('Webiny.Skeleton');
         this.modules = [
             new Layout(this)
         ];

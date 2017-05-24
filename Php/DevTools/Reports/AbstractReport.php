@@ -1,7 +1,7 @@
 <?php
-namespace Apps\Core\Php\DevTools\Reports;
+namespace Apps\Webiny\Php\DevTools\Reports;
 
-use Apps\Core\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Storage\File\File;
 

@@ -5,10 +5,10 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\View;
+namespace Apps\Webiny\Php\View;
 
-use Apps\Core\Php\DevTools\Request;
-use Apps\Core\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\DevTools\Request;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
 use Webiny\Component\Config\Config;
 use Webiny\Component\StdLib\StdLibTrait;
 
@@ -24,7 +24,7 @@ class View
      */
     public static function wConfig()
     {
-        return \Apps\Core\Php\DevTools\Config::getInstance();
+        return \Apps\Webiny\Php\DevTools\Config::getInstance();
     }
 
     /**

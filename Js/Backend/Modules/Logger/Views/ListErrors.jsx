@@ -13,14 +13,14 @@ class ListErrors extends Webiny.Ui.View {
     }
 
     resolveGroup(error, list) {
-        const api = new Webiny.Api.Endpoint('/entities/core/logger-error-group');
+        const api = new Webiny.Api.Endpoint('/entities/webiny/logger-error-group');
         api.delete(error.id).then(() => {
             list.loadData();
         });
     }
 
     resolveError(error, list, parentList) {
-        const api = new Webiny.Api.Endpoint('/entities/core/logger-entry');
+        const api = new Webiny.Api.Endpoint('/entities/webiny/logger-entry');
         api.post(error.id + '/resolve').then((response) => {
             if (response.getData('errorCount') < 1) {
                 // if we have 0 errors in this group, we have to refresh the parent table
@@ -37,7 +37,7 @@ ListErrors.defaultProps = {
 
     renderer() {
         const jsErrorList = {
-            api: '/entities/core/logger-error-group',
+            api: '/entities/webiny/logger-error-group',
             fields: '*',
             searchFields: 'error',
             query: {'_sort': '-lastEntry', 'type': this.props.type},

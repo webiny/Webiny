@@ -1,12 +1,12 @@
 <?php
-namespace Apps\Core\Php\Entities;
+namespace Apps\Webiny\Php\Entities;
 
-use Apps\Core\Php\DevTools\Interfaces\UserInterface;
-use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\DevTools\Entity\Attributes\FileAttribute;
-use Apps\Core\Php\DevTools\Entity\AbstractEntity;
-use Apps\Core\Php\DevTools\Exceptions\AppException;
-use Apps\Core\Php\RequestHandlers\ApiException;
+use Apps\Webiny\Php\DevTools\Interfaces\UserInterface;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\DevTools\Entity\Attributes\FileAttribute;
+use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
+use Apps\Webiny\Php\DevTools\Exceptions\AppException;
+use Apps\Webiny\Php\RequestHandlers\ApiException;
 use Webiny\Component\Crypt\CryptTrait;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Mailer\Email;
@@ -24,7 +24,7 @@ use Webiny\Component\Mongo\Index\SingleIndex;
  * @property EntityCollection $roles
  * @property bool             $enabled
  *
- * @package Apps\Core\Php\Entities
+ * @package Apps\Webiny\Php\Entities
  *
  */
 class User extends AbstractEntity implements UserInterface
@@ -59,7 +59,7 @@ class User extends AbstractEntity implements UserInterface
         });
         $this->attr('passwordRecoveryCode')->char();
         $this->attr('enabled')->boolean()->setDefaultValue(true);
-        $userRole = '\Apps\Core\Php\Entities\UserRole';
+        $userRole = '\Apps\Webiny\Php\Entities\UserRole';
         $this->attr('roles')->many2many('User2UserRole')->setEntity($userRole)->onSet(function ($roles) {
             // If not mongo Ids - load roles by slugs
             if (is_array($roles)) {
@@ -154,7 +154,7 @@ class User extends AbstractEntity implements UserInterface
             $mailer = $this->mailer();
             $message = $mailer->getMessage();
 
-            $html = $this->wTemplateEngine()->fetch('Core:Templates/Emails/ResetPassword.tpl', ['code' => $user->passwordRecoveryCode]);
+            $html = $this->wTemplateEngine()->fetch('Webiny:Templates/Emails/ResetPassword.tpl', ['code' => $user->passwordRecoveryCode]);
             $message->setBody($html);
             $message->setSubject('Your password reset code!');
             $message->setTo(new Email($user->email));

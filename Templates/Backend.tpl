@@ -5,18 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Webiny</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-    <link rel="shortcut icon" href="{$Webiny->Assets('Core.Skeleton', 'images/public/favicon.ico')}"/>
+    <link rel="shortcut icon" href="{$Webiny->Assets('Webiny.Skeleton', 'images/public/favicon.ico')}"/>
     <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,300" rel="stylesheet" type="text/css">
     {literal}
         <script type="text/javascript">
-            var Webiny = {apps: ['Core.Skeleton', 'Core.Backend'], router: {baseUrl: '/admin', title: '%s | Webiny'}, auth: 'Core.Backend'};
+            var Webiny = {apps: ['Webiny.Skeleton', 'Webiny.Backend'], router: {baseUrl: '/admin', title: '%s | Webiny'}, auth: 'Webiny.Backend'};
         </script>
     {/literal}
 </head>
 <body>
 <style type="text/css">
     .preloader-wrap .box {
-        background: #FA5A28 url('{$Webiny->Assets('Core.Skeleton', 'images/public/bg-login.png')}') repeat;
+        background: #FA5A28 url('{$Webiny->Assets('Webiny.Skeleton', 'images/public/bg-login.png')}') repeat;
         top: 0;
         left: 0;
         z-index: 100000;
@@ -26,7 +26,7 @@
     }
 
     .loader {
-        background: url('{$Webiny->Assets('Core.Skeleton', 'images/public/preloader_2.png')}') no-repeat top left;
+        background: url('{$Webiny->Assets('Webiny.Skeleton', 'images/public/preloader_2.png')}') no-repeat top left;
     }
 
     .loader3 {
@@ -105,6 +105,6 @@
         <div class="loader loader4"></div>
     </div>
 </div>
-{webiny apps="Core.Skeleton,Core.Backend"}
+{webiny apps="Webiny.Skeleton,Webiny.Backend"}
 </body>
 </html>

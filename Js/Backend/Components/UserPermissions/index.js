@@ -28,7 +28,7 @@ class UserPermissions extends Webiny.Ui.Component {
 }
 
 UserPermissions.defaultProps = {
-    api: '/entities/core/user-permissions',
+    api: '/entities/webiny/user-permissions',
     value: [],
     onChange: _.noop,
     renderer() {

@@ -10,7 +10,7 @@ class Logger extends Webiny.Module {
         this.registerMenus(
             new Menu('System', [
                 new Menu('Error Logger', 'Logger.ListErrors')
-            ], 'icon-tools').setRole('core-logger-manager')
+            ], 'icon-tools').setRole('webiny-logger-manager')
         );
 
         this.registerRoutes(

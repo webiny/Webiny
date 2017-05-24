@@ -5,10 +5,10 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\PackageManager;
+namespace Apps\Webiny\Php\PackageManager;
 
-use Apps\Core\Php\DevTools\Exceptions\AppException;
-use Apps\Core\Php\DevTools\LifeCycle\LifeCycleInterface;
+use Apps\Webiny\Php\DevTools\Exceptions\AppException;
+use Apps\Webiny\Php\DevTools\LifeCycle\LifeCycleInterface;
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\Storage\Directory\Directory;
 use Webiny\Component\Storage\File\File;
@@ -148,8 +148,8 @@ class App extends AbstractPackage
             $cls = new \ReflectionClass($serviceClass);
             if (!$cls->isAbstract()) {
                 $interfaces = class_implements($serviceClass);
-                $public = in_array('Apps\Core\Php\DevTools\Interfaces\PublicApiInterface', $interfaces);
-                $authorization = !in_array('Apps\Core\Php\DevTools\Interfaces\NoAuthorizationInterface', $interfaces);
+                $public = in_array('Apps\Webiny\Php\DevTools\Interfaces\PublicApiInterface', $interfaces);
+                $authorization = !in_array('Apps\Webiny\Php\DevTools\Interfaces\NoAuthorizationInterface', $interfaces);
 
                 $services[$serviceName] = [
                     'app'           => $this->getName(),
@@ -173,7 +173,7 @@ class App extends AbstractPackage
      */
     public function getLifeCycleObject($name)
     {
-        $builtInClass = 'Apps\Core\Php\DevTools\LifeCycle\\' . $name;
+        $builtInClass = 'Apps\Webiny\Php\DevTools\LifeCycle\\' . $name;
         if (file_exists($this->getPath(true) . '/Php/' . $name . '.php')) {
             $class = 'Apps\\' . $this->getName() . '\\Php\\' . $name;
             if (in_array($builtInClass, class_parents($class))) {

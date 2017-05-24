@@ -1,13 +1,13 @@
 <?php
-namespace Apps\Core\Php\DevTools\Authorization;
+namespace Apps\Webiny\Php\DevTools\Authorization;
 
-use Apps\Core\Php\DevTools\Interfaces\UserInterface;
-use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\DevTools\Entity\AbstractEntity;
-use Apps\Core\Php\Entities\ApiToken;
-use Apps\Core\Php\Entities\User;
-use Apps\Core\Php\Entities\UserRole;
-use Apps\Core\Php\RequestHandlers\ApiException;
+use Apps\Webiny\Php\DevTools\Interfaces\UserInterface;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
+use Apps\Webiny\Php\Entities\ApiToken;
+use Apps\Webiny\Php\Entities\User;
+use Apps\Webiny\Php\Entities\UserRole;
+use Apps\Webiny\Php\RequestHandlers\ApiException;
 use Webiny\Component\Security\Security;
 use Webiny\Component\Security\SecurityTrait;
 use Webiny\Component\StdLib\SingletonTrait;
@@ -35,7 +35,7 @@ class Authorization
     /**
      * @var string
      */
-    private $userClass = 'Apps\Core\Php\Entities\User';
+    private $userClass = 'Apps\Webiny\Php\Entities\User';
 
     /**
      * @var Security
@@ -219,8 +219,8 @@ class Authorization
             $class = trim($class, '\\');
         }
 
-        $isService = in_array('Apps\Core\Php\DevTools\Services\AbstractService', class_parents($class));
-        if ($isService && in_array('Apps\Core\Php\DevTools\Interfaces\NoAuthorizationInterface', class_implements($class))) {
+        $isService = in_array('Apps\Webiny\Php\DevTools\Services\AbstractService', class_parents($class));
+        if ($isService && in_array('Apps\Webiny\Php\DevTools\Interfaces\NoAuthorizationInterface', class_implements($class))) {
             return true;
         }
 

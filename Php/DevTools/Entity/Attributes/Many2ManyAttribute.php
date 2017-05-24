@@ -5,9 +5,9 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\DevTools\Entity\Attributes;
+namespace Apps\Webiny\Php\DevTools\Entity\Attributes;
 
-use Apps\Core\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
 use MongoDB\Driver\Exception\BulkWriteException;
 use Webiny\Component\Entity\AbstractEntity;
 use Webiny\Component\Entity\Entity;
@@ -16,7 +16,7 @@ use Webiny\Component\Mongo\Index\CompoundIndex;
 
 /**
  * Many2ManyAttribute
- * @package Apps\Core\Php\DevTools\Entity\Attributes
+ * @package Apps\Webiny\Php\DevTools\Entity\Attributes
  */
 class Many2ManyAttribute extends \Webiny\Component\Entity\Attribute\Many2ManyAttribute
 {

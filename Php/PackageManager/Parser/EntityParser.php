@@ -1,14 +1,14 @@
 <?php
-namespace Apps\Core\Php\PackageManager\Parser;
+namespace Apps\Webiny\Php\PackageManager\Parser;
 
-use Apps\Core\Php\DevTools\Exceptions\AppException;
+use Apps\Webiny\Php\DevTools\Exceptions\AppException;
 use Webiny\Component\Entity\Attribute\AbstractAttribute;
 use Webiny\Component\Entity\Attribute\Many2OneAttribute;
 use Webiny\Component\Entity\Attribute\One2ManyAttribute;
 
 class EntityParser extends AbstractParser
 {
-    protected $baseClass = 'Apps\Core\Php\DevTools\Entity\AbstractEntity';
+    protected $baseClass = 'Apps\Webiny\Php\DevTools\Entity\AbstractEntity';
     private $apiMethods;
     private $defaultValues;
     private $attributeDescription;

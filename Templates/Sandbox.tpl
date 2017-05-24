@@ -9,7 +9,7 @@
     {literal}
         <script type="text/javascript">
             var Webiny = {
-                apps: ['Core.Skeleton', 'Core.Sandbox'],
+                apps: ['Webiny.Skeleton', 'Webiny.Sandbox'],
                 router: {baseUrl: '/sandbox', title: '%s', defaultRoute: 'Sandbox.Dashboard'},
                 auth: 'PortHop.Providers'
             };
@@ -17,6 +17,6 @@
     {/literal}
 </head>
 <body>
-{webiny apps="Core.Skeleton,Core.Sandbox"}
+{webiny apps="Webiny.Skeleton,Webiny.Sandbox"}
 </body>
 </html>

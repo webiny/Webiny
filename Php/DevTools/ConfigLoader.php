@@ -5,7 +5,7 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\DevTools;
+namespace Apps\Webiny\Php\DevTools;
 
 use Webiny\Component\Config\Config as ConfigComponent;
 use Webiny\Component\StdLib\SingletonTrait;
@@ -13,7 +13,7 @@ use Webiny\Component\StdLib\SingletonTrait;
 /**
  * Class ConfigLoader parses module config and injects variables from App config
  *
- * @package Apps\Core\Php\DevTools
+ * @package Apps\Webiny\Php\DevTools
  */
 class ConfigLoader
 {

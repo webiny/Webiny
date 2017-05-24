@@ -3,7 +3,7 @@ Security:
         UserProvider:
             Driver: \Webiny\Component\Security\User\Providers\Entity\Entity
             Params:
-                Entity: \Apps\Core\Php\Entities\User
+                Entity: \Apps\Webiny\Php\Entities\User
                 Username: email
                 Password: password
     Tokens:

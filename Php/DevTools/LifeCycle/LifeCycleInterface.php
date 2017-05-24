@@ -5,9 +5,9 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\DevTools\LifeCycle;
+namespace Apps\Webiny\Php\DevTools\LifeCycle;
 
-use Apps\Core\Php\PackageManager\App;
+use Apps\Webiny\Php\PackageManager\App;
 
 interface LifeCycleInterface
 {

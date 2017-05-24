@@ -1,17 +1,17 @@
 <?php
 
-namespace Apps\Core\Php\Services;
+namespace Apps\Webiny\Php\Services;
 
-use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\DevTools\Services\AbstractService;
-use Apps\Core\Php\PackageManager\Parser\ServiceParser;
-use Apps\Core\Php\PackageManager\App;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\DevTools\Services\AbstractService;
+use Apps\Webiny\Php\PackageManager\Parser\ServiceParser;
+use Apps\Webiny\Php\PackageManager\App;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\StdObjectWrapper;
 
 /**
  * Class Services
- * @package Apps\Core\Php\Services
+ * @package Apps\Webiny\Php\Services
  */
 class Services extends AbstractService
 {

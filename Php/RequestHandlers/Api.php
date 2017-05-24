@@ -5,19 +5,19 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\RequestHandlers;
+namespace Apps\Webiny\Php\RequestHandlers;
 
-use Apps\Core\Php\DevTools\Response\ApiResponse;
-use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\DevTools\Exceptions\AppException;
-use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
+use Apps\Webiny\Php\DevTools\Response\ApiResponse;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\DevTools\Exceptions\AppException;
+use Apps\Webiny\Php\DevTools\Response\ApiErrorResponse;
 use Webiny\Component\StdLib\StdLibTrait;
 
 class Api
 {
     use WebinyTrait, StdLibTrait;
 
-    private $apiResponse = '\Apps\Core\Php\DevTools\Response\ApiResponse';
+    private $apiResponse = '\Apps\Webiny\Php\DevTools\Response\ApiResponse';
     private $apiEvent;
 
     public function handle()
@@ -32,15 +32,15 @@ class Api
 
             $response = null;
 
-            $this->wEvents()->fire('Core.Api.Before', $this->apiEvent, $this->apiResponse);
+            $this->wEvents()->fire('Webiny.Api.Before', $this->apiEvent, $this->apiResponse);
             if ($this->apiEvent->getResponse() instanceof ApiResponse) {
                 return $this->apiEvent->getResponse();
             }
 
-            $response = $this->wEvents()->fire('Core.Api.Request', $this->apiEvent, $this->apiResponse, 1);
+            $response = $this->wEvents()->fire('Webiny.Api.Request', $this->apiEvent, $this->apiResponse, 1);
             $this->apiEvent->setResponse($response);
 
-            $this->wEvents()->fire('Core.Api.After', $this->apiEvent, $this->apiResponse);
+            $this->wEvents()->fire('Webiny.Api.After', $this->apiEvent, $this->apiResponse);
             if ($this->apiEvent->getResponse() instanceof ApiResponse) {
                 $response = $this->apiEvent->getResponse();
             }

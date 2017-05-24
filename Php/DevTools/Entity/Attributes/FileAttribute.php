@@ -5,14 +5,14 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\DevTools\Entity\Attributes;
+namespace Apps\Webiny\Php\DevTools\Entity\Attributes;
 
 use Webiny\Component\Entity\Attribute\Many2OneAttribute;
 use Webiny\Component\Storage\Storage;
 
 /**
  * File attribute
- * @package Apps\Core\Php\DevTools\Entity\Attributes
+ * @package Apps\Webiny\Php\DevTools\Entity\Attributes
  */
 class FileAttribute extends Many2OneAttribute
 {
@@ -26,7 +26,7 @@ class FileAttribute extends Many2OneAttribute
     public function __construct()
     {
         parent::__construct();
-        $this->setEntity('\Apps\Core\Php\Entities\File')->onSetNull('delete')->setUpdateExisting();
+        $this->setEntity('\Apps\Webiny\Php\Entities\File')->onSetNull('delete')->setUpdateExisting();
     }
 
     /**

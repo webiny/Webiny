@@ -32,7 +32,7 @@ class UserRoles extends Webiny.Ui.Component {
 }
 
 UserRoles.defaultProps = {
-    api: '/entities/core/user-roles',
+    api: '/entities/webiny/user-roles',
     value: [],
     onChange: _.noop,
     renderer() {

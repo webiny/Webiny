@@ -1,9 +1,9 @@
 <?php
 
-namespace Apps\Core\Php\View;
+namespace Apps\Webiny\Php\View;
 
-use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\Services\Apps;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\Services\Apps;
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Storage\StorageException;
@@ -45,7 +45,7 @@ class SmartyExtension extends AbstractSmartyExtension
         $appsHelper = new Apps();
 
         try {
-            $meta = $appsHelper->getAppsMeta('Core.Webiny');
+            $meta = $appsHelper->getAppsMeta('Webiny.Core');
         } catch (StorageException $e) {
             ob_end_clean();
             echo '<h2>Meta files are not available!</h2>';
@@ -60,7 +60,7 @@ class SmartyExtension extends AbstractSmartyExtension
             die();
         }
 
-        $metaConfig = ['Core.Webiny' => $meta];
+        $metaConfig = ['Webiny.Core' => $meta];
 
         $apps = array_filter(explode(',', $params['apps'] ?? ''));
 

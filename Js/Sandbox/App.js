@@ -3,7 +3,7 @@ import Dashboard from './Modules/Dashboard';
 
 class Sandbox extends Webiny.App {
     constructor(){
-        super('Core.Sandbox');
+        super('Webiny.Sandbox');
         this.modules = [
             new Dashboard(this)
         ];

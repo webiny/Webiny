@@ -22,7 +22,7 @@ class ApiTokensLogs extends Webiny.Ui.View {
             });
         }
 
-        new Webiny.Api.Endpoint('/entities/core/api-tokens').get(Webiny.Router.getParams('token')).then(apiResponse => {
+        new Webiny.Api.Endpoint('/entities/webiny/api-tokens').get(Webiny.Router.getParams('token')).then(apiResponse => {
             this.setState({token: apiResponse.getData()});
         });
     }
@@ -33,7 +33,7 @@ ApiTokensLogs.defaultProps = {
         const tokenId = _.get(this.state.token, 'id');
         const listProps = {
             ui: 'apiTokenList',
-            api: tokenId === 'system' ? '/services/core/acl/token-logs' : '/entities/core/api-token-logs',
+            api: tokenId === 'system' ? '/services/webiny/acl/token-logs' : '/entities/webiny/api-token-logs',
             fields: '*,createdOn',
             query: {
                 token: tokenId === 'system' ? null : Webiny.Router.getParams('token'),

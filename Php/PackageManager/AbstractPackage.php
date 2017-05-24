@@ -5,7 +5,7 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\PackageManager;
+namespace Apps\Webiny\Php\PackageManager;
 
 use Webiny\Component\Config\ConfigObject;
 

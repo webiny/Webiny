@@ -1,10 +1,8 @@
 <?php
-
 $autoloader = require_once __DIR__ . '/../vendor/autoload.php';
-$autoloader->addPsr4('Apps\\Core\\', __DIR__ . '/../Apps/Core');
+$autoloader->addPsr4('Apps\\Webiny\\', __DIR__ . '/../Apps/Webiny');
 
-use Apps\Core\Php\Bootstrap\Bootstrap;
-use Webiny\Component\Http\Response;
+use Apps\Webiny\Php\Bootstrap\Bootstrap;
 
 /**
  * Initialize the bootstrap

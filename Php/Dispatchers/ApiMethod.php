@@ -5,12 +5,12 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\Dispatchers;
+namespace Apps\Webiny\Php\Dispatchers;
 
-use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\DevTools\Entity\AbstractEntity;
-use Apps\Core\Php\DevTools\Services\AbstractService;
-use Apps\Core\Php\RequestHandlers\ApiException;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
+use Apps\Webiny\Php\DevTools\Services\AbstractService;
+use Apps\Webiny\Php\RequestHandlers\ApiException;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Validation\Validation;
 use Webiny\Component\Validation\ValidationException;
@@ -20,7 +20,7 @@ use Webiny\Component\Validation\ValidationException;
  *
  * This class is used when we want to expose class or service method to the API
  *
- * @package Apps\Core\Php\Dispatchers
+ * @package Apps\Webiny\Php\Dispatchers
  */
 class ApiMethod
 {
@@ -210,7 +210,7 @@ class ApiMethod
             if ($mp['class']) {
                 $requestedValue = $params[$pName];
                 // If parameter class is AbstractEntity, it means we need to replace it with the actual context class
-                if ($mp['class'] === 'Apps\Core\Php\DevTools\Entity\AbstractEntity') {
+                if ($mp['class'] === 'Apps\Webiny\Php\DevTools\Entity\AbstractEntity') {
                     $mp['class'] = get_class($this->context);
                 }
                 $paramValue = call_user_func_array([$mp['class'], 'findById'], [$requestedValue]);

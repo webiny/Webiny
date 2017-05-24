@@ -5,11 +5,11 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\Dispatchers;
+namespace Apps\Webiny\Php\Dispatchers;
 
-use Apps\Core\Php\DevTools\Response\ApiRawResponse;
-use Apps\Core\Php\Discover\Postman;
-use Apps\Core\Php\RequestHandlers\ApiEvent;
+use Apps\Webiny\Php\DevTools\Response\ApiRawResponse;
+use Apps\Webiny\Php\Discover\Postman;
+use Apps\Webiny\Php\RequestHandlers\ApiEvent;
 
 class DiscoverDispatcher extends AbstractApiDispatcher
 {

@@ -5,10 +5,10 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\DevTools\Services;
+namespace Apps\Webiny\Php\DevTools\Services;
 
-use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\Dispatchers\ApiExpositionTrait;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\Dispatchers\ApiExpositionTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 
 /**
@@ -33,7 +33,7 @@ abstract class AbstractService
         ];
 
         foreach ($service->getApiMethods() as $httpMethod => $methods) {
-            /* @var $method \Apps\Core\Php\Dispatchers\ApiMethod */
+            /* @var $method \Apps\Webiny\Php\Dispatchers\ApiMethod */
             foreach ($methods as $pattern => $method) {
                 $data['methods'][] = [
                     'key'        => $pattern . '.' . $httpMethod,

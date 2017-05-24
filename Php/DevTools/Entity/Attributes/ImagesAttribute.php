@@ -5,14 +5,14 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\DevTools\Entity\Attributes;
+namespace Apps\Webiny\Php\DevTools\Entity\Attributes;
 
-use Apps\Core\Php\Entities\Image;
+use Apps\Webiny\Php\Entities\Image;
 
 /**
  * Images attribute
  *
- * @package Apps\Core\Php\DevTools\Entity\Attributes
+ * @package Apps\Webiny\Php\DevTools\Entity\Attributes
  */
 class ImagesAttribute extends FilesAttribute
 {
@@ -24,7 +24,7 @@ class ImagesAttribute extends FilesAttribute
     public function __construct()
     {
         parent::__construct();
-        $this->setEntity('\Apps\Core\Php\Entities\Image')->setSorter('order');
+        $this->setEntity('\Apps\Webiny\Php\Entities\Image')->setSorter('order');
     }
 
     public function setDimensions(array $dimensions)

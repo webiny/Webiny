@@ -5,10 +5,10 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\DevTools\Entity\Event;
+namespace Apps\Webiny\Php\DevTools\Entity\Event;
 
 use Webiny\Component\EventManager\Event;
-use Apps\Core\Php\DevTools\Entity\AbstractEntity;
+use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
 
 /**
  * This class is passed along the following AbstractEntity events:

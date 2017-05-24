@@ -8,7 +8,7 @@ class Form extends Webiny.Ui.View {
 Form.defaultProps = {
     renderer() {
         const containerProps = {
-            api: '/entities/core/user-roles',
+            api: '/entities/webiny/user-roles',
             fields: '*,permissions',
             connectToRouter: true,
             onSubmitSuccess: 'UserRoles.List',

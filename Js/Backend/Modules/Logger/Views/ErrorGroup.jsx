@@ -11,7 +11,7 @@ ErrorGroup.defaultProps = {
 
     renderer() {
         const statProps = {
-            api: '/entities/core/logger-entry',
+            api: '/entities/webiny/logger-entry',
             query: {errorGroup: this.props.errorGroup.id, '_sort': '-createdOn'},
             fields: '*',
             layout: null

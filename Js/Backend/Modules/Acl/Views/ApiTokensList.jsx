@@ -13,7 +13,7 @@ class ApiTokensList extends Webiny.Ui.View {
 
     componentWillMount() {
         super.componentWillMount();
-        new Webiny.Api.Endpoint('/services/core/acl').get('token').then(apiResponse => {
+        new Webiny.Api.Endpoint('/services/webiny/acl').get('token').then(apiResponse => {
             if (!apiResponse.isError()) {
                 this.setState({apiToken: apiResponse.getData('token')});
             }
@@ -30,7 +30,7 @@ ApiTokensList.defaultProps = {
 
                     const listProps = {
                         ui: 'apiTokenList',
-                        api: '/entities/core/api-tokens',
+                        api: '/entities/webiny/api-tokens',
                         fields: '*,createdOn',
                         searchFields: 'owner,token',
                         connectToRouter: true,

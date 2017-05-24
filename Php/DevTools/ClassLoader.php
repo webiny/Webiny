@@ -5,7 +5,7 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\DevTools;
+namespace Apps\Webiny\Php\DevTools;
 
 use Webiny\Component\StdLib\SingletonTrait;
 

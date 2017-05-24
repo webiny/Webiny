@@ -5,7 +5,7 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\Bootstrap;
+namespace Apps\Webiny\Php\Bootstrap;
 
 use Webiny\Component\EventManager\Event;
 

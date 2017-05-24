@@ -5,23 +5,23 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\Dispatchers;
+namespace Apps\Webiny\Php\Dispatchers;
 
-use Apps\Core\Php\DevTools\Response\ApiCacheResponse;
-use Apps\Core\Php\RequestHandlers\ApiEvent;
+use Apps\Webiny\Php\DevTools\Response\ApiCacheResponse;
+use Apps\Webiny\Php\RequestHandlers\ApiEvent;
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Hrc\Hrc;
 
 /**
  * Class ApiCache
  *
- * Api cache listens on Core.Api.Before and Core.Api.After events.
+ * Api cache listens on Webiny.Api.Before and Webiny.Api.After events.
  * The first it to check if we have the response cached, and if we do, we deliver that response directly from cache.
  * In case the response is not cached, on the After event, we store the response, if it matches any of the defined cache rules.
  *
  * @link: https://github.com/Webiny/Hrc/
  *
- * @package Apps\Core\Php\Dispatchers
+ * @package Apps\Webiny\Php\Dispatchers
  */
 class ApiCache extends AbstractApiDispatcher
 {

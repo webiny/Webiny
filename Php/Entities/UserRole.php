@@ -1,7 +1,7 @@
 <?php
-namespace Apps\Core\Php\Entities;
+namespace Apps\Webiny\Php\Entities;
 
-use Apps\Core\Php\DevTools\Entity\AbstractEntity;
+use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\Entity\EntityCollection;
 
 /**
@@ -13,7 +13,7 @@ use Webiny\Component\Entity\EntityCollection;
  * @property EntityCollection $permissions
  * @property EntityCollection $users
  *
- * @package Apps\Core\Php\Entities
+ * @package Apps\Webiny\Php\Entities
  *
  */
 class UserRole extends AbstractEntity
@@ -42,11 +42,11 @@ class UserRole extends AbstractEntity
         })->setToArrayDefault();
 
         $this->attr('description')->char()->setValidators('required')->setToArrayDefault();
-        $this->attr('users')->many2many('User2UserRole')->setEntity('\Apps\Core\Php\Entities\User');
-        $this->attr('apiTokens')->many2many('ApiToken2UserRole')->setEntity('\Apps\Core\Php\Entities\ApiToken');
+        $this->attr('users')->many2many('User2UserRole')->setEntity('\Apps\Webiny\Php\Entities\User');
+        $this->attr('apiTokens')->many2many('ApiToken2UserRole')->setEntity('\Apps\Webiny\Php\Entities\ApiToken');
         $this->attr('permissions')
              ->many2many('UserRole2UserPermission')
-             ->setEntity('\Apps\Core\Php\Entities\UserPermission')
+             ->setEntity('\Apps\Webiny\Php\Entities\UserPermission')
              ->onSet(function ($permissions) {
                  // If not mongo Ids - load permissions by slugs
                  if (is_array($permissions)) {

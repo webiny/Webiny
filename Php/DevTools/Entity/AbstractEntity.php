@@ -5,15 +5,15 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\DevTools\Entity;
+namespace Apps\Webiny\Php\DevTools\Entity;
 
-use Apps\Core\Php\DevTools\Exceptions\AppException;
-use Apps\Core\Php\Dispatchers\ApiExpositionTrait;
-use Apps\Core\Php\Entities\User;
-use Apps\Core\Php\RequestHandlers\ApiException;
+use Apps\Webiny\Php\DevTools\Exceptions\AppException;
+use Apps\Webiny\Php\Dispatchers\ApiExpositionTrait;
+use Apps\Webiny\Php\Entities\User;
+use Apps\Webiny\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\Attribute\AttributeType;
 use Webiny\Component\Entity\Attribute\DateAttribute;
-use Apps\Core\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
 use Webiny\Component\Entity\Attribute\DateTimeAttribute;
 use Webiny\Component\Entity\Attribute\Many2ManyAttribute;
 use Webiny\Component\Entity\Attribute\One2ManyAttribute;
@@ -37,7 +37,7 @@ use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
  * @property DateTimeObject $deletedOn
  * @property User           $deletedBy
  * @method void on (string $eventName, \Closure $callback)
- * @package Apps\Core\Php\DevTools\Entity
+ * @package Apps\Webiny\Php\DevTools\Entity
  */
 abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 {
@@ -562,7 +562,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                 }
             }
 
-            if ($class == 'Apps\Core\Php\DevTools\Entity\AbstractEntity') {
+            if ($class == 'Apps\Webiny\Php\DevTools\Entity\AbstractEntity') {
                 $callbacks = $this->instanceCallbacks[$eventName] ?? [];
                 foreach ($callbacks as $callback) {
                     if (is_callable($callback)) {

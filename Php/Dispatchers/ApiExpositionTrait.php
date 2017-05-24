@@ -5,9 +5,9 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\Dispatchers;
+namespace Apps\Webiny\Php\Dispatchers;
 
-use Apps\Core\Php\RequestHandlers\ApiException;
+use Apps\Webiny\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Router\Route\Route;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
@@ -17,7 +17,7 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  *
  * This class is used when we want to expose entity or service methods to the API
  *
- * @package Apps\Core\Php\Dispatchers
+ * @package Apps\Webiny\Php\Dispatchers
  */
 trait ApiExpositionTrait
 {

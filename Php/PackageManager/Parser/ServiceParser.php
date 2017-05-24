@@ -1,9 +1,9 @@
 <?php
-namespace Apps\Core\Php\PackageManager\Parser;
+namespace Apps\Webiny\Php\PackageManager\Parser;
 
 class ServiceParser extends AbstractParser
 {
-    protected $baseClass = 'Apps\Core\Php\DevTools\Services\AbstractService';
+    protected $baseClass = 'Apps\Webiny\Php\DevTools\Services\AbstractService';
     protected $publicApiInterface;
     protected $noAuthorizationInterface;
 
@@ -13,8 +13,8 @@ class ServiceParser extends AbstractParser
         $this->url = '/services/' . $this->getAppSlug() . '/' . $this->slug;
 
         $interfaces = class_implements($class);
-        $this->publicApiInterface = in_array('Apps\Core\Php\DevTools\Interfaces\PublicApiInterface', $interfaces);
-        $this->noAuthorizationInterface = in_array('Apps\Core\Php\DevTools\Interfaces\NoAuthorizationInterface', $interfaces);
+        $this->publicApiInterface = in_array('Apps\Webiny\Php\DevTools\Interfaces\PublicApiInterface', $interfaces);
+        $this->noAuthorizationInterface = in_array('Apps\Webiny\Php\DevTools\Interfaces\NoAuthorizationInterface', $interfaces);
     }
 
     public function getApiMethods()

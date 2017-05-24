@@ -5,14 +5,14 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\DevTools\Entity\Attributes;
+namespace Apps\Webiny\Php\DevTools\Entity\Attributes;
 
 use Webiny\Component\Entity\Attribute\One2ManyAttribute;
 use Webiny\Component\Storage\Storage;
 
 /**
  * File attribute
- * @package Apps\Core\Php\DevTools\Entity\Attributes
+ * @package Apps\Webiny\Php\DevTools\Entity\Attributes
  */
 class FilesAttribute extends One2ManyAttribute
 {
@@ -26,7 +26,7 @@ class FilesAttribute extends One2ManyAttribute
     public function __construct()
     {
         parent::__construct(null, null, 'ref');
-        $this->setEntity('\Apps\Core\Php\Entities\File')->setSorter('order');
+        $this->setEntity('\Apps\Webiny\Php\Entities\File')->setSorter('order');
     }
 
     /**
