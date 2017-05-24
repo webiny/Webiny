@@ -1,0 +1,101 @@
+.viewContent {
+	padding: 50px 50px 0;
+}
+
+.viewContent .panel {
+	padding: 0;
+	position: relative;
+	background-color: #fff;
+	border: none;
+}
+
+.viewContent .panel .panelBody {
+	padding: 40px;
+	color: #666;
+	position: relative;
+}
+
+.viewContent .panel .panelNoPadding {
+	padding: 0px;
+}
+
+.viewContent .panel .panelFooter {
+	padding: 25px 35px;
+	background-color: #fff;
+}
+
+.viewHeader {
+	background-color: #fff;
+	position: relative;
+	padding: 40px 50px;
+}
+
+.viewHeader .titleWrapper {
+	display: inline-block;
+}
+
+.viewHeader .titleRight {
+	display: inline-block;
+	float: right;
+}
+
+.viewHeader .titleWrapper h2.titleContent {
+	border: 0;
+	margin: 0;
+	font-size: 2.25em;
+	color: #393939;
+	padding-bottom: 5px;
+	font-weight: 500;
+	border: none;
+}
+
+.viewHeader .titleWrapper .titleDescription,
+.viewHeader .titleWrapper .titleDescription a {
+	font-size: 14px;
+	top: 0;
+}
+
+.viewHeader .titleWrapper .appName {
+	color: #999;
+}
+
+.viewHeader a, .viewHeader button {
+	position: relative;
+	top: 8px;
+}
+
+/* make some bits nicer for mobile */
+@media (max-width: 768px) {
+	.viewHeader {
+		padding: 20px;
+		margin-top: -20px;
+	}
+
+	.viewHeader .titleRight {
+		display: block;
+		width: 100%;
+		float: none;
+	}
+
+	.viewHeader .titleRight .Webiny_Core_Link_btn,
+	.viewHeader .titleRight a,
+	.viewHeader .titleRight button {
+		display: block;
+		float: none !important;
+		width: 100%;
+		box-sizing: border-box;
+		margin-bottom: 10px;
+	}
+
+	.viewHeader .titleWrapper h2.titleContent {
+		font-size: 1.25em;
+	}
+
+	.viewContent {
+		padding: 10px;
+	}
+
+	.viewContent .panel .panelBody {
+		padding: 20px;
+	}
+}
