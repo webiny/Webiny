@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
+import ExportRoleModal from './Modal/ExportRoleModal';
 
 class List extends Webiny.Ui.View {
-
 }
 
 List.defaultProps = {
@@ -15,19 +15,22 @@ List.defaultProps = {
             perPage: 25
         };
 
-        return (
-            <Webiny.Ui.LazyLoad modules={['View', 'Link', 'Icon', 'Grid', 'Input', 'List']}>
-                {(Ui) => {
-                    const Table = Ui.List.Table;
-                    const users = <Ui.Link route="Users.List">Users</Ui.Link>;
-                    const permissions = <Ui.Link route="UserPermissions.List">Permissions</Ui.Link>;
+        const {Ui} = this.props;
+        const Table = Ui.List.Table;
 
-                    return (
+        const users = <Ui.Link route="Users.List">Users</Ui.Link>;
+        const permissions = <Ui.Link route="UserPermissions.List">Permissions</Ui.Link>;
+        return (
+            <Ui.ViewSwitcher>
+                <Ui.ViewSwitcher.View view="pageCacheViewView" defaultView>
+                    {showView => (
                         <Ui.View.List>
                             <Ui.View.Header
                                 title="ACL - Roles"
-                                description={<span>Roles are a simple way to control what permissions certain users have. Create a role with a set of {permissions} and then assign roles to {users}.</span>}>
-                                <Ui.Link type="primary" route="UserRoles.Create" align="right">
+                                description={
+                                    <span>Roles are a simple way to control what permissions certain users have. Create a role with a set of {permissions}
+                                        and then assign roles to {users}.</span>}>
+                                    <Ui.Link type="primary" route="UserRoles.Create" align="right">
                                     <Ui.Icon icon="icon-plus-circled"/>
                                     Create role
                                 </Ui.Link>
@@ -51,17 +54,21 @@ List.defaultProps = {
                                             <Table.Field name="name" label="Name" sort="name">
                                                 {data => (
                                                     <span>
-                                                        <Ui.Link route="UserRoles.Edit" params={{id: data.id}}>
-                                                            <strong>{data.name}</strong>
-                                                        </Ui.Link>
-                                                        <br/>
+                                            <Ui.Link route="UserRoles.Edit" params={{id: data.id}}>
+                                                <strong>{data.name}</strong>
+                                            </Ui.Link>
+                                            <br/>
                                                         {data.description}
-                                                    </span>
+                                        </span>
                                                 )}
                                             </Table.Field>
                                             <Table.Field name="slug" label="Slug" sort="slug"/>
                                             <Table.Actions>
                                                 <Table.EditAction route="UserRoles.Edit"/>
+                                                <Table.Action
+                                                    label="Export"
+                                                    icon="fa-download"
+                                                    onClick={showView('exportModal')}/>
                                                 <Table.DeleteAction/>
                                             </Table.Actions>
                                         </Table.Row>
@@ -70,11 +77,18 @@ List.defaultProps = {
                                 </Ui.List>
                             </Ui.View.Body>
                         </Ui.View.List>
-                    );
-                }}
-            </Webiny.Ui.LazyLoad>
+                    )}
+                </Ui.ViewSwitcher.View>
+
+                <Ui.ViewSwitcher.View view="exportModal" modal>
+                    {(showView, data) => <ExportRoleModal role={data} />}
+                </Ui.ViewSwitcher.View>
+            </Ui.ViewSwitcher>
         );
     }
 };
 
-export default List;
+export default Webiny.createComponent(List, {
+    modulesProp: 'Ui',
+    modules: ['ViewSwitcher', 'View', 'Link', 'Icon', 'Grid', 'Input', 'List']
+});
