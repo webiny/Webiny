@@ -12,7 +12,6 @@ class Bootstrap extends \Apps\Webiny\Php\DevTools\LifeCycle\Bootstrap
     {
         parent::run($app);
         $this->addAppRoute('/^\/' . $this->wConfig()->get('Application.Backend') . '/', 'Webiny:Templates/Backend.tpl', 380);
-        $this->addAppRoute('/^\/sandbox/', 'Webiny:Templates/Sandbox.tpl', 500);
 
         Entity::appendConfig([
             'Attributes' => [
