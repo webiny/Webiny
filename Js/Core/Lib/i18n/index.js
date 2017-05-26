@@ -174,7 +174,7 @@ class i18n {
     }
 
     toText(element) {
-        if (_.isString(element)) {
+        if (_.isString(element) || _.isNumber(element)) {
             return element;
         }
 
