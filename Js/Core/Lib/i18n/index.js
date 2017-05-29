@@ -91,9 +91,9 @@ class i18n {
     }
 
     // Following methods are plain-simple for now - let's make them smarter in the near future
-    price(value, currency = '£') {
+    price(value, currency = '£', precision = 2) {
         const currencySymbols = {gbp: '£', usd: '$', eur: '€'}; // Plain simple for now
-        return accounting.formatMoney(value, _.get(currencySymbols, currency, currency));
+        return accounting.formatMoney(value, _.get(currencySymbols, currency, currency), precision);
     }
 
     number(value, decimals = 0) {
@@ -174,7 +174,7 @@ class i18n {
     }
 
     toText(element) {
-        if (_.isString(element)) {
+        if (_.isString(element) || _.isNumber(element)) {
             return element;
         }
 

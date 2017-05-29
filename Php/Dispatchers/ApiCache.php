@@ -59,6 +59,12 @@ class ApiCache extends AbstractApiDispatcher
          */
         $this->hrc = $this->wService('Hrc');
         $this->hrc->setCacheRules($cacheRules);
+
+        // check if the callback is defined
+        $callback = $this->wConfig()->get('ApiCache.Callback', false);
+        if ($callback) {
+            $this->hrc->registerCallback(new $callback);
+        }
     }
 
     public function cacheRead(ApiEvent $event)
@@ -67,16 +73,16 @@ class ApiCache extends AbstractApiDispatcher
             return false;
         }
 
+        // we need to flush the current HRC request because of the aggregated API requests
+        $this->hrc->flushRequest();
+
         // read cache
         $response = $this->hrc->read('response');
         if ($response !== false) {
-
             $response = new ApiCacheResponse($response);
-
             // get matched rule
             $matchedRule = $this->hrc->getMatchedRule();
             $cacheRule = $this->wConfig()->get('ApiCache.CacheRules.' . $matchedRule->getCacheRule()->getName());
-
             // check if browser cache is turned on
             if ($cacheRule->get('BrowserCache', false)) {
                 // get the remaining ttl
@@ -85,7 +91,6 @@ class ApiCache extends AbstractApiDispatcher
                     $response->setCacheControl($remainingTtl);
                 }
             }
-
             $event->setResponse($response);
         }
     }
@@ -95,19 +100,15 @@ class ApiCache extends AbstractApiDispatcher
         if (!$this->cacheStatus) {
             return false;
         }
-
         $response = $event->getResponse();
-
         // we only cache 200 response code
         if ($response->getStatusCode() != 200) {
             return false;
         }
-
         // extract the data
-        $data = $response->getData();
-
+        $data = $response->getData(false);
         // save cache
-        $this->hrc->save('response', json_encode($data));
+        $this->hrc->save('response', json_encode(['data' => $data]));
     }
 
 }

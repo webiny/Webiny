@@ -117,7 +117,7 @@ class HttpRequest {
             dataType: this.getResponseType(),
             contentType: 'application/json;charset=UTF-8',
             processData: false,
-            xhr: this.getXhr
+            xhr: this.getXhr.bind(this)
         };
 
         if (['put', 'post', 'patch'].indexOf(config.method) === -1) {
