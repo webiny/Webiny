@@ -4,6 +4,7 @@ namespace Apps\Webiny\Php\Entities;
 use Apps\Webiny\Php\DevTools\Exceptions\AppException;
 use Apps\Webiny\Php\DevTools\WebinyTrait;
 use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
+use Webiny\Component\Mongo\Index\SingleIndex;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
 /**
@@ -27,6 +28,8 @@ class Settings extends AbstractEntity
     public function __construct()
     {
         parent::__construct();
+
+        $this->index(new SingleIndex('key', 'key', false, true));
 
         $this->attr('key')->char()->setValidators('required,unique')->setToArrayDefault();
         $this->attr('settings')->object()->setToArrayDefault();
