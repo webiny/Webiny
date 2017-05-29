@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-import CodeHighlight from "../../../../../Core/Modules/CodeHighlight/CodeHighlight";
 
 class ExportRoleModal extends Webiny.Ui.ModalComponent {
 
