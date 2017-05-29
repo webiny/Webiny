@@ -1,4 +1,5 @@
 <?php
+
 namespace Apps\Webiny\Php\DevTools\Response;
 
 use Webiny\Component\Http\Response\CacheControl;
@@ -21,9 +22,17 @@ class ApiCacheResponse extends ApiResponse
      *
      * @return string
      */
-    public function getData()
+    public function getData($format = false)
     {
-        return $this->data;
+        if (!$format) {
+            return $this->data;
+        } else {
+            // this is in case of an aggregated query we need to return an array
+            $data = json_decode($this->data, true);
+            $data['cache'] = true;
+
+            return $data;
+        }
     }
 
     public function setCacheControl($maxAge)
@@ -49,6 +58,6 @@ class ApiCacheResponse extends ApiResponse
         header('Content-Type: application/json');
         header('X-Webiny-Cache: true');
 
-        return $this->data; // the data is already stored in json format in cache, we just need to output it
+        return $this->data;
     }
 }
