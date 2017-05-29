@@ -32,11 +32,7 @@ class ExportRoleModal extends Webiny.Ui.ModalComponent {
             <Modal.Dialog wide>
                 <Modal.Header title="Export Role"/>
                 <Modal.Body>
-                    {this.state.content ?
-                        <CodeHighlight language="json">{this.state.content}</CodeHighlight>
-                        :
-                        <Loader style={{height: 200}}/>
-                    }
+                    <CodeHighlight language="json">{this.state.content}</CodeHighlight>
                 </Modal.Body>
                 <Modal.Footer>
                     <Copy.Button label="Copy" type="primary" value={this.state.content} renderIf={this.state.content}/>
