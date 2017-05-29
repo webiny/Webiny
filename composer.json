@@ -1,5 +1,5 @@
 {
-    "name": "webiny/core",
+    "name": "webiny/webiny",
     "type": "webiny-app",
     "require": {
         "webiny/app-installer": "dev-master",
