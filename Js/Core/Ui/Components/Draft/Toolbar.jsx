@@ -6,7 +6,7 @@ class Toolbar extends Webiny.Ui.Component {
         super(props);
 
         this.state = {
-            'floatingToolbarInterval': null
+            floatingToolbarInterval: null
         };
     }
 
@@ -35,12 +35,13 @@ class Toolbar extends Webiny.Ui.Component {
             }
         }, 250);
 
-        this.setState({'floatingToolbarInterval': floatingToolbarInterval});
+        this.setState({floatingToolbarInterval});
     }
 
     componentWillUnmount() {
         super.componentWillUnmount();
         clearInterval(this.state.floatingToolbarInterval);
+        this.setState({floatingToolbarInterval: null})
     }
 }
 

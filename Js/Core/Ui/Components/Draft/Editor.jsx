@@ -2,6 +2,7 @@ import Webiny from 'Webiny';
 import Immutable from 'immutable';
 import PluginsContainer from './PluginsContainer';
 import Toolbar from './Toolbar';
+import InlineToolbar from './InlineToolbar';
 import CustomViews from './CustomViews';
 import './styles.scss';
 
@@ -66,8 +67,8 @@ class Editor extends Webiny.Ui.Component {
     }
 
     focus(e) {
-        // Prevent editor focus if event originates from a dropdown (.dropdown-menu)
-        if ($(e.target).closest('.dropdown-menu').length > 0) {
+        // Prevent editor focus if event originates from a dropdown
+        if ($(e.target).closest('[data-role="dropdown"]').length > 0) {
             return;
         }
 
@@ -149,6 +150,12 @@ Editor.defaultProps = {
         if (this.props.toolbar === true) {
             toolbar = <Toolbar readOnly={this.state.readOnly} plugins={this.plugins} floating={this.props.toolbarFloat}/>;
         }
+
+        if (this.props.toolbar === 'inline') {
+            const show = !editorState.getSelection().isCollapsed() && !this.state.readOnly;
+            toolbar = <InlineToolbar editor={this} show={show} plugins={this.plugins}/>;
+        }
+
 
         this.plugins.setPreview(this.props.preview);
 

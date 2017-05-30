@@ -36,7 +36,6 @@ class LinkPlugin extends Webiny.Draft.EntityPlugin {
                 formUi && formUi.resetForm();
             }
         }
-        this.editor.setReadOnly(true);
     }
 
     submitForm(model) {
@@ -88,6 +87,8 @@ class LinkPlugin extends Webiny.Draft.EntityPlugin {
                                                                     validate={this.validate}
                                                                     showValidationIcon={false}/>
                                                             </Ui.Grid.Col>
+                                                        </Ui.Grid.Row>
+                                                        <Ui.Grid.Row>
                                                             <Ui.Grid.Col xs={6}>
                                                                 <Ui.Checkbox name="newTab" label="Open in new tab" grid={null}/>
                                                             </Ui.Grid.Col>
@@ -103,7 +104,7 @@ class LinkPlugin extends Webiny.Draft.EntityPlugin {
                                                             <Ui.Grid.Col xs={3} className="pull-right">
                                                                 <Ui.Button
                                                                     type="primary"
-                                                                    label={this.newLink ? 'Insert link' : 'Update link'}
+                                                                    label={this.newLink ? 'Insert' : 'Update'}
                                                                     onClick={form.submit}/>
                                                             </Ui.Grid.Col>
                                                         </Ui.Grid.Row>
