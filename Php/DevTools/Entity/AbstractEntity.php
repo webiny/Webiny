@@ -37,15 +37,15 @@ use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
  * @property DateTimeObject $deletedOn
  * @property User           $deletedBy
  * @method void on (string $eventName, \Closure $callback)
- * @method void onExtend (\Closure $callback)
- * @method void onBeforeCreate (\Closure $callback)
- * @method void onAfterCreate (\Closure $callback)
- * @method void onBeforeUpdate (\Closure $callback)
- * @method void onAfterUpdate (\Closure $callback)
- * @method void onBeforeSave (\Closure $callback)
- * @method void onAfterSave (\Closure $callback)
- * @method void onBeforeDelete (\Closure $callback)
- * @method void onAfterDelete (\Closure $callback)
+ * @method static void onExtend (\Closure $callback)
+ * @method static void onBeforeCreate (\Closure $callback)
+ * @method static void onAfterCreate (\Closure $callback)
+ * @method static void onBeforeUpdate (\Closure $callback)
+ * @method static void onAfterUpdate (\Closure $callback)
+ * @method static void onBeforeSave (\Closure $callback)
+ * @method static void onAfterSave (\Closure $callback)
+ * @method static void onBeforeDelete (\Closure $callback)
+ * @method static void onAfterDelete (\Closure $callback)
  * @package Apps\Webiny\Php\DevTools\Entity
  */
 abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
