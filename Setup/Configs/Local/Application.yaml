@@ -1,7 +1,5 @@
 Application:
     Environment: development
-    Acl:
-        ApiTokenControl: false
     Logger:
         DisplayErrors: true
         Enabled: false

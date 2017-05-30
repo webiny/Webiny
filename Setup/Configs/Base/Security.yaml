@@ -27,4 +27,3 @@ Login:
     SessionTtl: 30
     RateLimitWhitelist:
         - 127.0.0.1
-        - 192.168.10.10
