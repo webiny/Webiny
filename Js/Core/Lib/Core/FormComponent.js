@@ -150,7 +150,6 @@ FormComponent.defaultProps = {
     value: null,
     onChange: _.noop,
     showValidationMessage: true,
-    showValidationIcon: true,
     tooltip: null,
     labelRenderer() {
         let label = null;
@@ -175,6 +174,10 @@ FormComponent.defaultProps = {
         let success = false;
         if (this.state.isValid === true || this.state.isValid === null) {
             success = true;
+        }
+
+        if(this.props.showValidationMessage) {
+            return null;
         }
 
         return (

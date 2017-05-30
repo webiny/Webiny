@@ -85,12 +85,12 @@ Dropdown.defaultProps = {
         );
 
         return (
-            <div className={classes}>
+            <div className={classes} data-role="dropdown">
                 <button className={buttonClasses} type="button" data-toggle="dropdown">
                     {props.title}
                     <span className={'caret ' + styles.caret}/>
                 </button>
-                <ul className={'dropdown-menu ' + styles.dropdownMenu} role="menu" style={this.props.listStyle}>
+                <ul className={'dropdown-menu ' + styles.dropdownMenu} role="menu" style={this.props.listStyle} data-role="dropdown-menu">
                     {_.isFunction(props.children) ? props.children.call(this, this) : props.children}
                 </ul>
             </div>

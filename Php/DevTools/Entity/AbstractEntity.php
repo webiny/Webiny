@@ -37,6 +37,15 @@ use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
  * @property DateTimeObject $deletedOn
  * @property User           $deletedBy
  * @method void on (string $eventName, \Closure $callback)
+ * @method void onExtend (\Closure $callback)
+ * @method void onBeforeCreate (\Closure $callback)
+ * @method void onAfterCreate (\Closure $callback)
+ * @method void onBeforeUpdate (\Closure $callback)
+ * @method void onAfterUpdate (\Closure $callback)
+ * @method void onBeforeSave (\Closure $callback)
+ * @method void onAfterSave (\Closure $callback)
+ * @method void onBeforeDelete (\Closure $callback)
+ * @method void onAfterDelete (\Closure $callback)
  * @package Apps\Webiny\Php\DevTools\Entity
  */
 abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
@@ -46,51 +55,17 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     protected $indexes = [];
     protected $instanceCallbacks = [];
     protected static $classCallbacks = [];
-
-    public static function onExtend($callback)
-    {
-        static::on('onExtend', $callback);
-    }
-
-    public static function onBeforeCreate($callback)
-    {
-        static::on('onBeforeCreate', $callback);
-    }
-
-    public static function onAfterCreate($callback)
-    {
-        static::on('onAfterCreate', $callback);
-    }
-
-    public static function onBeforeUpdate($callback)
-    {
-        static::on('onBeforeUpdate', $callback);
-    }
-
-    public static function onAfterUpdate($callback)
-    {
-        static::on('onAfterUpdate', $callback);
-    }
-
-    public static function onBeforeSave($callback)
-    {
-        static::on('onBeforeSave', $callback);
-    }
-
-    public static function onAfterSave($callback)
-    {
-        static::on('onAfterSave', $callback);
-    }
-
-    public static function onBeforeDelete($callback)
-    {
-        static::on('onBeforeDelete', $callback);
-    }
-
-    public static function onAfterDelete($callback)
-    {
-        static::on('onAfterDelete', $callback);
-    }
+    const EVENT_NAMES = [
+        'onExtend',
+        'onBeforeCreate',
+        'onAfterCreate',
+        'onBeforeUpdate',
+        'onAfterUpdate',
+        'onBeforeSave',
+        'onAfterSave',
+        'onBeforeDelete',
+        'onAfterDelete'
+    ];
 
     /**
      * Find entity by ID - deleted entities won't be included in search by default
@@ -530,6 +505,15 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         return $builtFilters;
     }
 
+    /**
+     * Execute magic __call
+     * We need this to properly handle event callbacks and forward calls to attribute value getters
+     *
+     * @param $name
+     * @param $arguments
+     *
+     * @return mixed
+     */
     public function __call($name, $arguments)
     {
         if ($name == 'on') {
@@ -538,14 +522,37 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             return null;
         }
 
+        if (in_array($name, self::EVENT_NAMES)) {
+            $this->instanceCallbacks[$name][] = $arguments[0];
+
+            return null;
+        }
+
         return parent::__call($name, $arguments);
     }
 
+    /**
+     * Execute magic __callStatic
+     * We need this to properly handle event callbacks
+     *
+     * @param $name
+     * @param $arguments
+     *
+     * @return null
+     */
     public static function __callStatic($name, $arguments)
     {
+        $className = get_called_class();
         if ($name == 'on') {
-            $className = get_called_class();
             static::$classCallbacks[$className][$arguments[0]][] = $arguments[1];
+
+            return null;
+        }
+
+        if (in_array($name, self::EVENT_NAMES)) {
+            static::$classCallbacks[$className][$name][] = $arguments[0];
+
+            return null;
         }
     }
 

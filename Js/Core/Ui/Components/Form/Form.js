@@ -672,10 +672,10 @@ Form.defaultProps = {
     validateOnFirstSubmit: false,
     onSubmit: null,
     onSubmitSuccess: null,
+    onSubmitError: _.noop,
     onFailure: _.noop,
     onLoad: _.noop,
     prepareLoadedData: null,
-    onSubmitError: _.noop,
     onProgress(pe) {
         Webiny.import(['Growl', 'Progress']).then(({Growl, Progress})=> {
             const cmp = <div>Your data is being uploaded...<Progress value={pe.progress}/></div>;
