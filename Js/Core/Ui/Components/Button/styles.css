@@ -31,6 +31,12 @@
 	box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.3);
 }
 
+.btn:disabled{
+	cursor: not-allowed;
+	opacity: 0.8;
+	box-shadow: none !important;
+}
+
 .btnDefault {
 	composes: btn;
 	border: 1px solid #ccc;
