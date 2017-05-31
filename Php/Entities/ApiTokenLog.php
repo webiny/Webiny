@@ -1,9 +1,9 @@
 <?php
-namespace Apps\Core\Php\Entities;
+namespace Apps\Webiny\Php\Entities;
 
-use Apps\Core\Php\DevTools\Entity\AbstractEntity;
-use Apps\Core\Php\DevTools\Entity\Filter;
-use Apps\Core\Php\DevTools\Exceptions\AppException;
+use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
+use Apps\Webiny\Php\DevTools\Entity\Filter;
+use Apps\Webiny\Php\DevTools\Exceptions\AppException;
 use Webiny\Component\Mongo\Index\CompoundIndex;
 use Webiny\Component\Mongo\Index\SingleIndex;
 
@@ -15,7 +15,7 @@ use Webiny\Component\Mongo\Index\SingleIndex;
  * @property string $token Token ID or 'system' if request was made using system API token
  * @property array  $request Request details
  *
- * @package Apps\Core\Php\Entities
+ * @package Apps\Webiny\Php\Entities
  *
  */
 class ApiTokenLog extends AbstractEntity

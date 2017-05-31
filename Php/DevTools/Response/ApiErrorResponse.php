@@ -1,5 +1,5 @@
 <?php
-namespace Apps\Core\Php\DevTools\Response;
+namespace Apps\Webiny\Php\DevTools\Response;
 
 /**
  * Class ApiErrorResponse

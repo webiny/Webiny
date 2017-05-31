@@ -1,10 +1,10 @@
 <?php
-namespace Apps\Core\Php\Bootstrap;
+namespace Apps\Webiny\Php\Bootstrap;
 
-use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
-use Apps\Core\Php\DevTools\Response\CliResponse;
-use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\Entities\LoggerErrorGroup;
+use Apps\Webiny\Php\DevTools\Response\ApiErrorResponse;
+use Apps\Webiny\Php\DevTools\Response\CliResponse;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\Entities\LoggerErrorGroup;
 use Webiny\Component\Http\Response;
 
 class ErrorHandler

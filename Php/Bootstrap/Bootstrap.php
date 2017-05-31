@@ -5,16 +5,16 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\Bootstrap;
+namespace Apps\Webiny\Php\Bootstrap;
 
-use Apps\Core\Php\DevTools\Authorization\Authorization;
-use Apps\Core\Php\DevTools\Request;
-use Apps\Core\Php\DevTools\Response\ApiResponse;
-use Apps\Core\Php\DevTools\Response\HtmlResponse;
-use Apps\Core\Php\DevTools\Response\AbstractResponse;
-use Apps\Core\Php\DevTools\Response\ResponseEvent;
-use Apps\Core\Php\PackageManager\App;
-use Apps\Core\Php\PackageManager\AppScanner;
+use Apps\Webiny\Php\DevTools\Authorization\Authorization;
+use Apps\Webiny\Php\DevTools\Request;
+use Apps\Webiny\Php\DevTools\Response\ApiResponse;
+use Apps\Webiny\Php\DevTools\Response\HtmlResponse;
+use Apps\Webiny\Php\DevTools\Response\AbstractResponse;
+use Apps\Webiny\Php\DevTools\Response\ResponseEvent;
+use Apps\Webiny\Php\PackageManager\App;
+use Apps\Webiny\Php\PackageManager\AppScanner;
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\Entity\Entity;
 use Webiny\Component\Http\Http;
@@ -24,7 +24,7 @@ use Webiny\Component\Security\Security;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\UrlObject\UrlObjectException;
 use Webiny\Component\StdLib\SingletonTrait;
-use Apps\Core\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
 use Webiny\Component\Storage\Storage;
 
 /**
@@ -75,13 +75,10 @@ class Bootstrap
 
         /* @var $app App */
         foreach ($this->wApps() as $app) {
-            $bootstrap = $app->getBootstrap();
-            if ($bootstrap) {
-                $bootstrap->run($app);
-            }
+            $app->getLifeCycleObject('Bootstrap')->run($app);
         }
 
-        $this->wEvents()->fire('Core.Bootstrap.End');
+        $this->wEvents()->fire('Webiny.Bootstrap.End');
     }
 
     public function run()
@@ -90,9 +87,9 @@ class Bootstrap
             return $this->processMultipleRequests();
         }
 
-        $responseClass = '\Apps\Core\Php\DevTools\Response\AbstractResponse';
+        $responseClass = '\Apps\Webiny\Php\DevTools\Response\AbstractResponse';
         /* @var $response AbstractResponse */
-        $response = $this->wEvents()->fire('Core.Bootstrap.Request', new BootstrapEvent(), $responseClass, 1);
+        $response = $this->wEvents()->fire('Webiny.Bootstrap.Request', new BootstrapEvent(), $responseClass, 1);
         if ($response) {
             if ($response instanceof ApiResponse) {
                 $response->setErrors($this->errorHandler->getErrors());
@@ -110,13 +107,13 @@ class Bootstrap
      * This will read aggregated requests and execute each one of them as if they were sent individually.
      * All responses are aggregated into a single response.
      *
-     * @return $this
+     * @return Response
      */
     public function processMultipleRequests()
     {
         $requests = $this->wRequest()->getRequestData()['requests'];
         $responses = [];
-        $responseClass = '\Apps\Core\Php\DevTools\Response\AbstractResponse';
+        $responseClass = '\Apps\Webiny\Php\DevTools\Response\AbstractResponse';
         $headers = [];
         foreach ($requests as $req) {
             if (count($headers)) {
@@ -140,7 +137,7 @@ class Bootstrap
             }
             Request::getInstance();
             Authorization::getInstance()->reset();
-            $response = $this->wEvents()->fire('Core.Bootstrap.Request', new BootstrapEvent(), $responseClass, 1);
+            $response = $this->wEvents()->fire('Webiny.Bootstrap.Request', new BootstrapEvent(), $responseClass, 1);
             if ($response instanceof ApiResponse) {
                 $responseData = $this->processResponse($response, true);
                 $responseData['statusCode'] = $response->getStatusCode();
@@ -218,7 +215,7 @@ class Bootstrap
     private function processResponse(AbstractResponse $webinyResponse, $return = false)
     {
         $event = new ResponseEvent($webinyResponse);
-        $this->wEvents()->fire('Core.Bootstrap.Response', $event);
+        $this->wEvents()->fire('Webiny.Bootstrap.Response', $event);
 
         if ($return && $webinyResponse instanceof ApiResponse) {
             return $webinyResponse->getData(true);

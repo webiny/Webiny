@@ -5,9 +5,9 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\Dispatchers;
+namespace Apps\Webiny\Php\Dispatchers;
 
-use Apps\Core\Php\RequestHandlers\ApiException;
+use Apps\Webiny\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Router\Route\Route;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
@@ -17,10 +17,12 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  *
  * This class is used when we want to expose entity or service methods to the API
  *
- * @package Apps\Core\Php\Dispatchers
+ * @package Apps\Webiny\Php\Dispatchers
  */
 trait ApiExpositionTrait
 {
+    protected $processingEvent = null;
+
     /**
      * @var ArrayObject
      */
@@ -148,8 +150,9 @@ trait ApiExpositionTrait
         $pattern = $pattern != '/' ? trim($pattern, '/') : '/';
         $httpMethod = strtolower($httpMethod);
         if ($callable) {
-            $apiMethod = $this->apiMethods->keyNested($httpMethod . '.' . $pattern, new ApiMethod($httpMethod, $pattern, $this), true);
-            $apiMethod->addCallback($callable);
+            $apiInstance = new ApiMethod($httpMethod, $pattern, $this);
+            $apiMethod = $this->apiMethods->keyNested($httpMethod . '.' . $pattern, $apiInstance, true);
+            $apiMethod->addCallback($callable, $this->processingEvent);
         } else {
             $apiMethod = $this->apiMethods->keyNested($httpMethod . '.' . $pattern);
         }

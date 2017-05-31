@@ -12,7 +12,6 @@ Layout.defaultProps = {
     renderer() {
         return (
             <div className="master minimized">
-                <Webiny.Ui.Components.Growl.Container ui="GrowlContainer"/>
                 <Components.Navigation/>
 
                 <div className="master-content">

@@ -5,9 +5,9 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\PackageManager;
+namespace Apps\Webiny\Php\PackageManager;
 
-use Apps\Core\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
 use Webiny\Component\StdLib\SingletonTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 
@@ -40,8 +40,8 @@ class AppScanner
         // Get list of enabled apps
         $apps = $this->wConfig()->get('Apps')->toArray();
 
-        // Add Core app which must always be included in the bootstrap process
-        $apps['Core'] = true;
+        // Add Webiny app which must always be included in the bootstrap process
+        $apps['Webiny'] = true;
 
         $result = [];
         foreach ($apps as $app => $enabled) {
@@ -52,7 +52,7 @@ class AppScanner
             $configPath = 'Apps/' . $app . '/App.yaml';
 
             // If App - detect version and setup auto-loader
-            if ($app !== 'Core') {
+            if ($app !== 'Webiny') {
                 $version = '';
                 if (!is_bool($enabled)) {
                     $version = '/' . str_replace('.', '_', $enabled);

@@ -1,7 +1,7 @@
 <?php
-namespace Apps\Core\Php\Entities;
+namespace Apps\Webiny\Php\Entities;
 
-use Apps\Core\Php\DevTools\Entity\AbstractEntity;
+use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
 
 
 /**
@@ -13,7 +13,7 @@ use Apps\Core\Php\DevTools\Entity\AbstractEntity;
  * @property string           $clientData
  * @property LoggerErrorGroup $errorGroup
  *
- * @package Apps\Core\Php\Entities
+ * @package Apps\Webiny\Php\Entities
  *
  */
 class LoggerEntry extends AbstractEntity
@@ -32,7 +32,7 @@ class LoggerEntry extends AbstractEntity
         $this->attr('stack')->char();
         $this->attr('clientData')->object();
 
-        $this->attr('errorGroup')->many2one()->setEntity('Apps\Core\Php\Entities\LoggerErrorGroup');
+        $this->attr('errorGroup')->many2one()->setEntity('Apps\Webiny\Php\Entities\LoggerErrorGroup');
 
         $this->api('POST', '{id}/resolve', function () {
             // re-calculate the number of errors inside the same group

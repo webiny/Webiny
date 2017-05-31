@@ -5,12 +5,12 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\Dispatchers;
+namespace Apps\Webiny\Php\Dispatchers;
 
-use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\DevTools\Entity\AbstractEntity;
-use Apps\Core\Php\DevTools\Services\AbstractService;
-use Apps\Core\Php\RequestHandlers\ApiException;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
+use Apps\Webiny\Php\DevTools\Services\AbstractService;
+use Apps\Webiny\Php\RequestHandlers\ApiException;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Validation\Validation;
 use Webiny\Component\Validation\ValidationException;
@@ -20,7 +20,7 @@ use Webiny\Component\Validation\ValidationException;
  *
  * This class is used when we want to expose class or service method to the API
  *
- * @package Apps\Core\Php\Dispatchers
+ * @package Apps\Webiny\Php\Dispatchers
  */
 class ApiMethod
 {
@@ -33,6 +33,8 @@ class ApiMethod
      */
     private $context;
     private $callbacks = [];
+    private $entityCallbacks = [];
+    private $eventCallbacks = [];
     private $bodyValidators;
     private $public = false;
 
@@ -74,7 +76,7 @@ class ApiMethod
         }
 
 
-        $url = $this->str($this->wConfig()->get('Application.ApiPath') . '/' . $contextUrl . '/' . $url)->trimRight('/');
+        $url = $this->str($this->wConfig()->get('Appli cation.ApiPath') . '/' . $contextUrl . '/' . $url)->trimRight('/');
 
         return $url->val();
     }
@@ -83,6 +85,16 @@ class ApiMethod
     {
         if (($this->httpMethod === 'post' || $this->httpMethod === 'patch') && count($this->bodyValidators)) {
             $this->validateBody($this->wRequest()->getRequestData());
+        }
+
+        // Sort callbacks so that callbacks registered from events are executed first
+        if(count($this->callbacks) === 0) {
+            foreach($this->eventCallbacks as $cb) {
+                $this->callbacks[] = $cb;
+            }
+            foreach($this->entityCallbacks as $cb) {
+                $this->callbacks[] = $cb;
+            }
         }
 
         $callback = $this->callbacks[0];
@@ -102,9 +114,13 @@ class ApiMethod
         return $callback(...$params);
     }
 
-    public function addCallback($callable)
+    public function addCallback($callable, $processingEvent = null)
     {
-        array_unshift($this->callbacks, $callable);
+        if ($processingEvent === 'onExtend') {
+            array_unshift($this->eventCallbacks, $callable);
+        } else {
+            array_unshift($this->entityCallbacks, $callable);
+        }
 
         return $this;
     }
@@ -194,7 +210,7 @@ class ApiMethod
             if ($mp['class']) {
                 $requestedValue = $params[$pName];
                 // If parameter class is AbstractEntity, it means we need to replace it with the actual context class
-                if ($mp['class'] === 'Apps\Core\Php\DevTools\Entity\AbstractEntity') {
+                if ($mp['class'] === 'Apps\Webiny\Php\DevTools\Entity\AbstractEntity') {
                     $mp['class'] = get_class($this->context);
                 }
                 $paramValue = call_user_func_array([$mp['class'], 'findById'], [$requestedValue]);

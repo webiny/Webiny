@@ -5,10 +5,10 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\DevTools;
+namespace Apps\Webiny\Php\DevTools;
 
-use Apps\Core\Php\DevTools\Authorization\Authorization;
-use Apps\Core\Php\PackageManager\App;
+use Apps\Webiny\Php\DevTools\Authorization\Authorization;
+use Apps\Webiny\Php\PackageManager\App;
 use Webiny\AnalyticsDb\AnalyticsDb;
 use Webiny\Component\Cache\CacheStorage;
 use Webiny\Component\Mongo\Mongo;

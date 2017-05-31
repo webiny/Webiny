@@ -5,14 +5,14 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\RequestHandlers;
+namespace Apps\Webiny\Php\RequestHandlers;
 
-use Apps\Core\Php\DevTools\Exceptions\AppException;
+use Apps\Webiny\Php\DevTools\Exceptions\AppException;
 
 /**
  * ApiExceptions are thrown by the API methods.
  *
- * @package Apps\Core\Php\RequestHandlers
+ * @package Apps\Webiny\Php\RequestHandlers
  */
 class ApiException extends AppException
 {

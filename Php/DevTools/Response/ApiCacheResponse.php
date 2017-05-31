@@ -1,6 +1,6 @@
 <?php
 
-namespace Apps\Core\Php\DevTools\Response;
+namespace Apps\Webiny\Php\DevTools\Response;
 
 use Webiny\Component\Http\Response\CacheControl;
 use Webiny\Component\StdLib\StdObjectTrait;

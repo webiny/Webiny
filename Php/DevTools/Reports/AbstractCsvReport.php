@@ -1,8 +1,8 @@
 <?php
-namespace Apps\Core\Php\DevTools\Reports;
+namespace Apps\Webiny\Php\DevTools\Reports;
 
-use Apps\Core\Php\DevTools\Entity\AbstractEntity;
-use Apps\Core\Php\DevTools\Exceptions\AppException;
+use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
+use Apps\Webiny\Php\DevTools\Exceptions\AppException;
 use League\Csv\Writer;
 use League\Csv\Reader;
 

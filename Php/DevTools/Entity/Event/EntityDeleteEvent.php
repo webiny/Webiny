@@ -5,7 +5,7 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\DevTools\Entity\Event;
+namespace Apps\Webiny\Php\DevTools\Entity\Event;
 
 /**
  * This class is passed along with the events fired by Entity delete() method:

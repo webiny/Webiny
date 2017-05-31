@@ -1,20 +1,21 @@
 <?php
-namespace Apps\Core\Php;
 
-use Apps\Core\Php\DevTools\AbstractBootstrap;
-use Apps\Core\Php\Entities\User;
+namespace Apps\Webiny\Php;
+
+use Apps\Webiny\Php\Entities\User;
 use Webiny\Component\Entity\Entity;
 use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
 
-class Bootstrap extends AbstractBootstrap
+class Bootstrap extends \Apps\Webiny\Php\DevTools\LifeCycle\Bootstrap
 {
     public function run(PackageManager\App $app)
     {
-        $this->addAppRoute('/^\/' . $this->wConfig()->get('Application.Backend') . '/', 'Core:Templates/Backend.tpl', 380);
+        parent::run($app);
+        $this->addAppRoute('/^\/' . $this->wConfig()->get('Application.Backend') . '/', 'Webiny:Templates/Backend.tpl', 380);
 
         Entity::appendConfig([
             'Attributes' => [
-                'many2many' => '\Apps\Core\Php\DevTools\Entity\Attributes\Many2ManyAttribute'
+                'many2many' => '\Apps\Webiny\Php\DevTools\Entity\Attributes\Many2ManyAttribute'
             ]
         ]);
 

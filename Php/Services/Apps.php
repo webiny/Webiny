@@ -1,9 +1,9 @@
 <?php
-namespace Apps\Core\Php\Services;
+namespace Apps\Webiny\Php\Services;
 
-use Apps\Core\Php\DevTools\Exceptions\AppException;
-use Apps\Core\Php\DevTools\Services\AbstractService;
-use Apps\Core\Php\PackageManager\App;
+use Apps\Webiny\Php\DevTools\Exceptions\AppException;
+use Apps\Webiny\Php\DevTools\Services\AbstractService;
+use Apps\Webiny\Php\PackageManager\App;
 
 /**
  * Class Apps
@@ -32,7 +32,7 @@ class Apps extends AbstractService
                 // Get Backend apps
                 $apps = [];
                 foreach ($this->getAppsMeta() as $meta) {
-                    if ($this->str($meta['name'])->endsWith('.Backend') && $meta['name'] != 'Core.Backend') {
+                    if ($this->str($meta['name'])->endsWith('.Backend') && $meta['name'] != 'Webiny.Backend') {
                         $apps[] = $meta;
                     }
                 }

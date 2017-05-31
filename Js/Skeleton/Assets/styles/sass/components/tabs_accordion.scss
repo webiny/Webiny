@@ -117,11 +117,11 @@
   position: relative;
 
   clear: both;
-  border: 1px solid $borderColor;
+  border: 1px solid #CDCDCD;
   padding: 5px;
   padding-right: 85px;
 
-  background-color: $formBgColor;
+  background-color: #FBFBFB;
 
   .keyword-block{
     position: relative;
@@ -129,7 +129,7 @@
     float: left;
     margin: 2px 2px;
     padding: 8px 35px 8px 15px;
-    background-color: $highlightColor;
+    background-color: #00CCAE;
     border-radius: 20px;
     p{
       margin: 0;
@@ -151,7 +151,7 @@
   .keyword-input{
     width: 250px;
     padding: 8px;
-    background-color: $formBgColor;
+    background-color: #FBFBFB;
   }
   .remove-keyword{
     position: absolute;
@@ -168,7 +168,7 @@
       i{
         height: 8px;
         font-size: 12px;
-        color: $importantColor;
+        color: #FA5A28;
         vertical-align: middle;
 
         &:before {

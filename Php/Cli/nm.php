@@ -6,17 +6,17 @@ if (php_sapi_name() !== 'cli') {
 }
 
 $autoloader = require_once getcwd() . '/vendor/autoload.php';
-$autoloader->addPsr4('Apps\\Core\\', getcwd() . '/Apps/Core');
+$autoloader->addPsr4('Apps\\Webiny\\', getcwd() . '/Apps/Webiny');
 
 class Nm
 {
-    use \Webiny\Component\StdLib\StdLibTrait, \Apps\Core\Php\DevTools\WebinyTrait, \Webiny\Component\Mongo\MongoTrait;
+    use \Webiny\Component\StdLib\StdLibTrait, \Apps\Webiny\Php\DevTools\WebinyTrait, \Webiny\Component\Mongo\MongoTrait;
 
     public function run()
     {
         $_SERVER = [];
         $_SERVER['SERVER_NAME'] = $this->url('http://selecto.app')->getHost();
-        \Apps\Core\Php\Bootstrap\Bootstrap::getInstance();
+        \Apps\Webiny\Php\Bootstrap\Bootstrap::getInstance();
 
         $records = $this->mongo()->find(Notification::getEntityCollection());
 

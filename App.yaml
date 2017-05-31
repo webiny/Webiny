@@ -1,4 +1,4 @@
-Name: Core
+Name: Webiny
 Version: 0.1.0
 Link: http://www.webiny.com/store/webiny/core/
 Description: The Core app provides the essential functions for Webiny platform.
@@ -63,7 +63,7 @@ Storage:
                             Create: true
 
 Events:
-    Core:
+    Webiny:
         Bootstrap:
             Request:
                 - {Handler: Php/RequestHandlers/Api, Priority: 400}
@@ -81,11 +81,11 @@ Events:
 
 Services:
     ExecuteEntityMethodFlow:
-        Class: \Apps\Core\Php\Dispatchers\Flows\ExecuteEntityMethodFlow
+        Class: \Apps\Webiny\Php\Dispatchers\Flows\ExecuteEntityMethodFlow
         Tags: [entity-dispatcher-flow]
 
     SmartyExtension:
-        Class: \Apps\Core\Php\View\SmartyExtension
+        Class: \Apps\Webiny\Php\View\SmartyExtension
         Tags: [Smarty.Extension]
 
     AnalyticsDb:

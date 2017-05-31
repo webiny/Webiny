@@ -1,13 +1,12 @@
 <?php
+namespace Apps\Webiny\Php\Entities;
 
-namespace Apps\Core\Php\Entities;
-
-use Apps\Core\Php\DevTools\Interfaces\UserInterface;
-use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\DevTools\Entity\Attributes\FileAttribute;
-use Apps\Core\Php\DevTools\Entity\AbstractEntity;
-use Apps\Core\Php\DevTools\Exceptions\AppException;
-use Apps\Core\Php\RequestHandlers\ApiException;
+use Apps\Webiny\Php\DevTools\Interfaces\UserInterface;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\DevTools\Entity\Attributes\FileAttribute;
+use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
+use Apps\Webiny\Php\DevTools\Exceptions\AppException;
+use Apps\Webiny\Php\RequestHandlers\ApiException;
 use Webiny\Component\Crypt\CryptTrait;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Mailer\Email;
@@ -25,7 +24,7 @@ use Webiny\Component\Mongo\Index\SingleIndex;
  * @property EntityCollection $roles
  * @property bool             $enabled
  *
- * @package Apps\Core\Php\Entities
+ * @package Apps\Webiny\Php\Entities
  *
  */
 class User extends AbstractEntity implements UserInterface
@@ -35,12 +34,6 @@ class User extends AbstractEntity implements UserInterface
     protected static $entityCollection = 'Users';
     protected static $entityMask = '{email}';
 
-    /**
-     * If e-mail was changed, this will contain old e-mail, so that we can do additional actions in the save process.
-     * @var bool
-     */
-    private $oldEmail = false;
-
     public function __construct()
     {
         parent::__construct();
@@ -48,15 +41,7 @@ class User extends AbstractEntity implements UserInterface
         $this->index(new SingleIndex('email', 'email', false, true));
 
         $this->attr('email')->char()->setValidators('required,email,unique')->onSet(function ($email) {
-            if ($this->email === $email) {
-                return $email;
-            }
-
-            // Once single-execution callbacks
-            $this->oldEmail = $this->email;
-
             return trim(strtolower($email));
-
         })->setValidationMessages([
             'unique' => 'Given e-mail address already exists.'
         ])->setToArrayDefault();
@@ -64,7 +49,7 @@ class User extends AbstractEntity implements UserInterface
         $this->attr('avatar')->smart(new FileAttribute())->setTags('user', 'avatar')->setOnDelete('cascade');
         $this->attr('gravatar')->dynamic(function () {
             return md5($this->email);
-        });
+        })->setToArrayDefault();
         $this->attr('firstName')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('lastName')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('password')->char()->onSet(function ($password) {
@@ -74,7 +59,7 @@ class User extends AbstractEntity implements UserInterface
         });
         $this->attr('passwordRecoveryCode')->char();
         $this->attr('enabled')->boolean()->setDefaultValue(true);
-        $userRole = '\Apps\Core\Php\Entities\UserRole';
+        $userRole = '\Apps\Webiny\Php\Entities\UserRole';
         $this->attr('roles')->many2many('User2UserRole')->setEntity($userRole)->onSet(function ($roles) {
             // If not mongo Ids - load roles by slugs
             if (is_array($roles)) {
@@ -169,7 +154,7 @@ class User extends AbstractEntity implements UserInterface
             $mailer = $this->mailer();
             $message = $mailer->getMessage();
 
-            $html = $this->wTemplateEngine()->fetch('Core:Templates/Emails/ResetPassword.tpl', ['code' => $user->passwordRecoveryCode]);
+            $html = $this->wTemplateEngine()->fetch('Webiny:Templates/Emails/ResetPassword.tpl', ['code' => $user->passwordRecoveryCode]);
             $message->setBody($html);
             $message->setSubject('Your password reset code!');
             $message->setTo(new Email($user->email));
@@ -209,12 +194,6 @@ class User extends AbstractEntity implements UserInterface
         $res = parent::save();
         if ($new) {
             $this->wAuth()->getLogin()->setUserAccountConfirmationStatus($this->email);
-        } else {
-            if ($this->oldEmail) {
-                $oldEmail = $this->oldEmail;
-                $this->oldEmail = null;
-                $this->wAuth()->getLogin()->processUsernameChange($oldEmail, $this->email);
-            }
         }
 
         return $res;
@@ -238,7 +217,6 @@ class User extends AbstractEntity implements UserInterface
                 return true;
             }
         }
-
         return false;
     }
 

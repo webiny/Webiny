@@ -5,11 +5,11 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\DevTools\Entity\Attributes;
+namespace Apps\Webiny\Php\DevTools\Entity\Attributes;
 
 /**
  * File ImageAttribute
- * @package Apps\Core\Php\DevTools\Entity\Attributes
+ * @package Apps\Webiny\Php\DevTools\Entity\Attributes
  */
 class ImageAttribute extends FileAttribute
 {
@@ -21,7 +21,7 @@ class ImageAttribute extends FileAttribute
     public function __construct()
     {
         parent::__construct();
-        $this->setEntity('\Apps\Core\Php\Entities\Image');
+        $this->setEntity('\Apps\Webiny\Php\Entities\Image');
     }
 
     public function setDimensions(array $dimensions)

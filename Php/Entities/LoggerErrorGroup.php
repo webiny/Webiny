@@ -1,7 +1,7 @@
 <?php
-namespace Apps\Core\Php\Entities;
+namespace Apps\Webiny\Php\Entities;
 
-use Apps\Core\Php\DevTools\Entity\AbstractEntity;
+use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\Entity\EntityCollection;
 
 /**
@@ -14,7 +14,7 @@ use Webiny\Component\Entity\EntityCollection;
  * @property integer          $errorCount
  * @property EntityCollection $errorEntries
  *
- * @package Apps\Core\Php\Entities
+ * @package Apps\Webiny\Php\Entities
  *
  */
 class LoggerErrorGroup extends AbstractEntity
@@ -35,7 +35,7 @@ class LoggerErrorGroup extends AbstractEntity
 
         $this->attr('type')->char()->setToArrayDefault()->setValidators('in:api:js:php');
 
-        $this->attr('errorEntries')->one2many('errorGroup')->setEntity('\Apps\Core\Php\Entities\LoggerEntry');
+        $this->attr('errorEntries')->one2many('errorGroup')->setEntity('\Apps\Webiny\Php\Entities\LoggerEntry');
 
         $this->attr('lastEntry')->datetime()->setToArrayDefault();
         $this->attr('errorCount')->integer()->setToArrayDefault()->setDefaultValue(0);

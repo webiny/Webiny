@@ -1,15 +1,15 @@
 <?php
 
-namespace Apps\Core\Php\Services;
+namespace Apps\Webiny\Php\Services;
 
-use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\DevTools\Services\AbstractService;
-use Apps\Core\Php\Entities\ApiTokenLog;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\DevTools\Services\AbstractService;
+use Apps\Webiny\Php\Entities\ApiTokenLog;
 use Webiny\Component\StdLib\StdLibTrait;
 
 /**
  * Class Acl
- * @package Apps\Core\Php\Services
+ * @package Apps\Webiny\Php\Services
  */
 class Acl extends AbstractService
 {

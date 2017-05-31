@@ -1,5 +1,5 @@
 {
-    "dependencies": {
+    "devDependencies": {
         "accounting": "^0.4.1",
         "animate.css": "^3.5.2",
         "babel-polyfill": "^6.23.0",

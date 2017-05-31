@@ -1,7 +1,7 @@
 <?php
-namespace Apps\Core\Php\DevTools\Reports;
+namespace Apps\Webiny\Php\DevTools\Reports;
 
-use Apps\Core\Php\DevTools\Exceptions\AppException;
+use Apps\Webiny\Php\DevTools\Exceptions\AppException;
 use mikehaertl\wkhtmlto\Pdf;
 use Webiny\Component\Storage\File\File;
 

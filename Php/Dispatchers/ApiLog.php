@@ -5,18 +5,18 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\Dispatchers;
+namespace Apps\Webiny\Php\Dispatchers;
 
-use Apps\Core\Php\DevTools\Authorization\SystemApiToken;
-use Apps\Core\Php\DevTools\Request;
-use Apps\Core\Php\Entities\ApiToken;
-use Apps\Core\Php\Entities\ApiTokenLog;
-use Apps\Core\Php\RequestHandlers\ApiEvent;
+use Apps\Webiny\Php\DevTools\Authorization\SystemApiToken;
+use Apps\Webiny\Php\DevTools\Request;
+use Apps\Webiny\Php\Entities\ApiToken;
+use Apps\Webiny\Php\Entities\ApiTokenLog;
+use Apps\Webiny\Php\RequestHandlers\ApiEvent;
 
 /**
  * Class ApiLog
  *
- * @package Apps\Core\Php\Dispatchers
+ * @package Apps\Webiny\Php\Dispatchers
  */
 class ApiLog extends AbstractApiDispatcher
 {

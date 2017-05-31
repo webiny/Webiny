@@ -1,10 +1,10 @@
 [
     {
         "name": "User profile",
-        "slug": "core-acl-user-profile",
+        "slug": "webiny-acl-user-profile",
         "permissions": {
             "entities": {
-                "Apps\\Core\\Php\\Entities\\User": {
+                "Apps\\Webiny\\Php\\Entities\\User": {
                     "login": {
                         "post": true
                     },
@@ -25,11 +25,11 @@
     },
     {
         "name": "Log errors",
-        "slug": "core-logger-log-errors",
+        "slug": "webiny-logger-log-errors",
         "description": "Allows user to log JS/PHP/API errors",
         "permissions": {
             "entities": {
-                "Apps\\Core\\Php\\Entities\\LoggerErrorGroup": {
+                "Apps\\Webiny\\Php\\Entities\\LoggerErrorGroup": {
                     "save-report": {
                         "post": true
                     }
@@ -39,7 +39,7 @@
     },
     {
         "name": "Access Apps",
-        "slug": "core-access-apps",
+        "slug": "webiny-access-apps",
         "description": "Allows users to read data about system apps (needed for app bootstrap!)",
         "permissions": {
             "entities": {
@@ -48,7 +48,7 @@
                 }
             },
             "services": {
-                "Apps\\Core\\Php\\Services\\Apps": {
+                "Apps\\Webiny\\Php\\Services\\Apps": {
                     "/": {
                         "get": true
                     },
@@ -61,17 +61,17 @@
     },
     {
         "name": "Manage API tokens",
-        "slug": "core-acl-manage-api-tokens",
+        "slug": "webiny-acl-manage-api-tokens",
         "description": "Allows user to manage API tokens",
         "permissions": {
             "entities": {
-                "Apps\\Core\\Php\\Entities\\ApiToken": {
+                "Apps\\Webiny\\Php\\Entities\\ApiToken": {
                     "crudCreate": true,
                     "crudRead": true,
                     "crudUpdate": true,
                     "crudDelete": true
                 },
-                "Apps\\Core\\Php\\Entities\\ApiTokenLog": {
+                "Apps\\Webiny\\Php\\Entities\\ApiTokenLog": {
                     "crudDelete": true,
                     "crudUpdate": true,
                     "crudRead": true,
@@ -79,7 +79,7 @@
                 }
             },
             "services": {
-                "Apps\\Core\\Php\\Services\\Acl": {
+                "Apps\\Webiny\\Php\\Services\\Acl": {
                     "token": {
                         "get": true
                     },
@@ -92,16 +92,16 @@
     },
     {
         "name": "Discover system Entities and Services",
-        "slug": "core-discover-entities-services",
+        "slug": "webiny-discover-entities-services",
         "description": "Allows user to get info about system entities and services (their class names, attributes, methods, etc.)",
         "permissions": {
             "services": {
-                "Apps\\Core\\Php\\Services\\Services": {
+                "Apps\\Webiny\\Php\\Services\\Services": {
                     "/": {
                         "get": true
                     }
                 },
-                "Apps\\Core\\Php\\Services\\Entities": {
+                "Apps\\Webiny\\Php\\Services\\Entities": {
                     "/": {
                         "get": true
                     },
@@ -117,23 +117,23 @@
     },
     {
         "name": "Manage users",
-        "slug": "core-acl-manage-users",
+        "slug": "webiny-acl-manage-users",
         "description": "Allows user to manage user accounts (create, read, update and delete them)",
         "permissions": {
             "entities": {
-                "Apps\\Core\\Php\\Entities\\User": {
+                "Apps\\Webiny\\Php\\Entities\\User": {
                     "crudCreate": true,
                     "crudRead": true,
                     "crudUpdate": true,
                     "crudDelete": true
                 },
-                "Apps\\Core\\Php\\Entities\\UserPermission": {
+                "Apps\\Webiny\\Php\\Entities\\UserPermission": {
                     "crudCreate": false,
                     "crudRead": false,
                     "crudUpdate": false,
                     "crudDelete": false
                 },
-                "Apps\\Core\\Php\\Entities\\UserRole": {
+                "Apps\\Webiny\\Php\\Entities\\UserRole": {
                     "crudDelete": false,
                     "crudUpdate": false,
                     "crudRead": true,
@@ -144,17 +144,17 @@
     },
     {
         "name": "Manage user roles",
-        "slug": "core-acl-manage-roles",
+        "slug": "webiny-acl-manage-roles",
         "description": "Allow user to manage user roles",
         "permissions": {
             "entities": {
-                "Apps\\Core\\Php\\Entities\\UserRole": {
+                "Apps\\Webiny\\Php\\Entities\\UserRole": {
                     "crudCreate": true,
                     "crudRead": true,
                     "crudUpdate": true,
                     "crudDelete": true
                 },
-                "Apps\\Core\\Php\\Entities\\UserPermission": {
+                "Apps\\Webiny\\Php\\Entities\\UserPermission": {
                     "crudRead": true
                 }
             }
@@ -162,11 +162,11 @@
     },
     {
         "name": "Manage permissions",
-        "slug": "core-acl-manage-permissions",
+        "slug": "webiny-acl-manage-permissions",
         "description": "Allow user to manage user permissions",
         "permissions": {
             "entities": {
-                "Apps\\Core\\Php\\Entities\\UserPermission": {
+                "Apps\\Webiny\\Php\\Entities\\UserPermission": {
                     "crudCreate": true,
                     "crudRead": true,
                     "crudUpdate": true,
@@ -177,11 +177,11 @@
     },
     {
         "name": "Manage error logs",
-        "slug": "core-logger-manage-logs",
+        "slug": "webiny-logger-manage-logs",
         "description": "Allow user to manage error logs",
         "permissions": {
             "entities": {
-                "Apps\\Core\\Php\\Entities\\LoggerEntry": {
+                "Apps\\Webiny\\Php\\Entities\\LoggerEntry": {
                     "crudCreate": true,
                     "crudRead": true,
                     "crudUpdate": true,
@@ -190,7 +190,7 @@
                         "post": true
                     }
                 },
-                "Apps\\Core\\Php\\Entities\\LoggerErrorGroup": {
+                "Apps\\Webiny\\Php\\Entities\\LoggerErrorGroup": {
                     "crudDelete": true,
                     "crudUpdate": true,
                     "crudCreate": true,

@@ -7,8 +7,8 @@ class Module extends Webiny.Module {
         this.name = 'Acl';
         const Menu = Webiny.Ui.Menu;
 
-        const aclManageUsers = 'core-acl-user-manager';
-        const aclApiTokens = 'core-acl-api-token-manager';
+        const aclManageUsers = 'webiny-acl-user-manager';
+        const aclApiTokens = 'webiny-acl-api-token-manager';
 
         this.registerMenus(
             new Menu('ACL', [

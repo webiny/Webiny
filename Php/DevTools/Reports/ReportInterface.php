@@ -1,5 +1,5 @@
 <?php
-namespace Apps\Core\Php\DevTools\Reports;
+namespace Apps\Webiny\Php\DevTools\Reports;
 
 /**
  * Interface ReportInterface

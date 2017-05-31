@@ -1,51 +1,57 @@
 import Webiny from 'Webiny';
-const Ui = Webiny.Ui.Components;
 
 class ApiTokenForm extends Webiny.Ui.ModalComponent {
 
     renderDialog() {
+        const {Modal, Form, Grid, Input, Switch, Button, UserRoles} = this.props;
+
         const formProps = {
-            api: '/entities/core/api-token',
-            fields: '*',
+            api: '/entities/webiny/api-token',
+            fields: '*,roles',
+            id: _.get(this.props.data, 'id'),
             onSubmitSuccess: () => {
-                this.props.showView('tokensListView')().then(this.ui('apiTokenList:loadData'));
+                this.hide().then(this.ui('apiTokenList:loadData'));
             },
             defaultModel: this.props.data
         };
 
         return (
-            <Ui.Modal.Dialog>
+            <Modal.Dialog wide={true}>
                 {dialog => (
-                    <Ui.Form {...formProps}>
+                    <Form {...formProps}>
                         {(model, form) => (
                             <modal>
-                                <Ui.Modal.Header title="API Token" onClose={dialog.hide}/>
-                                <Ui.Modal.Body>
-                                    <Ui.Grid.Row>
-                                        <Ui.Grid.Col all={12}>
-                                            <Ui.Form.Error/>
-                                            <Ui.Input readOnly label="Token" name="token" renderIf={() => model.id}/>
-                                            <Ui.Input label="Owner" name="owner" validate="required" placeholder="Eg: webiny.com"/>
-                                            <Ui.Input
+                                <Form.Loader/>
+                                <Modal.Header title="API Token" onClose={dialog.hide}/>
+                                <Modal.Body>
+                                    <Grid.Row>
+                                        <Grid.Col all={12}>
+                                            <Form.Error/>
+                                            <Input readOnly label="Token" name="token" renderIf={() => model.id}/>
+                                            <Input label="Owner" name="owner" validate="required" placeholder="Eg: webiny.com"/>
+                                            <Input
                                                 label="Description"
                                                 name="description"
                                                 validate="required"
                                                 placeholder="Short description of usage"/>
-                                            <Ui.Switch label="Enabled" name="enabled"/>
-                                        </Ui.Grid.Col>
-                                    </Ui.Grid.Row>
-                                </Ui.Modal.Body>
-                                <Ui.Modal.Footer>
-                                    <Ui.Button label="Cancel" onClick={this.hide}/>
-                                    <Ui.Button type="primary" label="Save token" onClick={form.submit}/>
-                                </Ui.Modal.Footer>
+                                            <Switch label="Enabled" name="enabled"/>
+                                            <UserRoles name="roles"/>
+                                        </Grid.Col>
+                                    </Grid.Row>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <Button label="Cancel" onClick={this.hide}/>
+                                    <Button type="primary" label="Save token" onClick={form.submit}/>
+                                </Modal.Footer>
                             </modal>
                         )}
-                    </Ui.Form>
+                    </Form>
                 )}
-            </Ui.Modal.Dialog>
+            </Modal.Dialog>
         );
     }
 }
 
-export default ApiTokenForm;
+export default Webiny.createComponent(ApiTokenForm, {
+    modules: ['Modal', 'Form', 'Grid', 'Input', 'Switch', 'Button', {UserRoles: 'Core/Backend/UserRoles'}]
+});

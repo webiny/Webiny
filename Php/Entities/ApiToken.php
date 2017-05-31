@@ -1,9 +1,9 @@
 <?php
-namespace Apps\Core\Php\Entities;
+namespace Apps\Webiny\Php\Entities;
 
-use Apps\Core\Php\DevTools\Interfaces\UserInterface;
-use Apps\Core\Php\DevTools\WebinyTrait;
-use Apps\Core\Php\DevTools\Entity\AbstractEntity;
+use Apps\Webiny\Php\DevTools\Interfaces\UserInterface;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\Crypt\CryptTrait;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Mongo\Index\SingleIndex;
@@ -19,7 +19,7 @@ use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
  * @property DateTimeObject   $lastActivity
  * @property EntityCollection $roles
  *
- * @package Apps\Core\Php\Entities
+ * @package Apps\Webiny\Php\Entities
  */
 class ApiToken extends AbstractEntity implements UserInterface
 {
@@ -44,7 +44,7 @@ class ApiToken extends AbstractEntity implements UserInterface
         $this->attr('lastActivity')->datetime()->setToArrayDefault();
         $this->attr('requests')->integer()->setToArrayDefault()->setDefaultValue(0);
         $this->attr('enabled')->boolean()->setDefaultValue(true)->setToArrayDefault();
-        $userRole = '\Apps\Core\Php\Entities\UserRole';
+        $userRole = '\Apps\Webiny\Php\Entities\UserRole';
         $this->attr('roles')->many2many('ApiToken2UserRole')->setEntity($userRole)->onSet(function ($roles) {
             // If not mongo Ids - load roles by slugs
             if (is_array($roles)) {

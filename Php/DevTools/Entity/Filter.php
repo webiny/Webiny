@@ -7,14 +7,14 @@
  * @license   http://www.webiny.com/framework/license
  */
 
-namespace Apps\Core\Php\DevTools\Entity;
+namespace Apps\Webiny\Php\DevTools\Entity;
 
-use Apps\Core\Php\DevTools\Exceptions\AppException;
+use Apps\Webiny\Php\DevTools\Exceptions\AppException;
 use Closure;
 use Webiny\Component\StdLib\StdLibTrait;
 
 /**
- * @package Apps\Core\Php\DevTools\Entity
+ * @package Apps\Webiny\Php\DevTools\Entity
  */
 class Filter
 {
@@ -46,7 +46,7 @@ class Filter
             $function = new \ReflectionFunction($this->filter);
             foreach ($function->getParameters() as $parameter) {
                 $entityClass = $parameter->getClass()->name ?? null;
-                if ($entityClass && is_subclass_of($entityClass, 'Apps\Core\Php\DevTools\Entity\AbstractEntity')) {
+                if ($entityClass && is_subclass_of($entityClass, 'Apps\Webiny\Php\DevTools\Entity\AbstractEntity')) {
                     /* @var AbstractEntity $entityClass */
                     if ($entity = $entityClass::findById($filterValue)) {
                         $filterParams[] = $entity;

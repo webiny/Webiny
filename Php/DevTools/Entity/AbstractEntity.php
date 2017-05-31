@@ -5,15 +5,15 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\DevTools\Entity;
+namespace Apps\Webiny\Php\DevTools\Entity;
 
-use Apps\Core\Php\DevTools\Exceptions\AppException;
-use Apps\Core\Php\Dispatchers\ApiExpositionTrait;
-use Apps\Core\Php\Entities\User;
-use Apps\Core\Php\RequestHandlers\ApiException;
+use Apps\Webiny\Php\DevTools\Exceptions\AppException;
+use Apps\Webiny\Php\Dispatchers\ApiExpositionTrait;
+use Apps\Webiny\Php\Entities\User;
+use Apps\Webiny\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\Attribute\AttributeType;
 use Webiny\Component\Entity\Attribute\DateAttribute;
-use Apps\Core\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\DevTools\WebinyTrait;
 use Webiny\Component\Entity\Attribute\DateTimeAttribute;
 use Webiny\Component\Entity\Attribute\Many2ManyAttribute;
 use Webiny\Component\Entity\Attribute\One2ManyAttribute;
@@ -37,7 +37,16 @@ use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
  * @property DateTimeObject $deletedOn
  * @property User           $deletedBy
  * @method void on (string $eventName, \Closure $callback)
- * @package Apps\Core\Php\DevTools\Entity
+ * @method static void onExtend (\Closure $callback)
+ * @method static void onBeforeCreate (\Closure $callback)
+ * @method static void onAfterCreate (\Closure $callback)
+ * @method static void onBeforeUpdate (\Closure $callback)
+ * @method static void onAfterUpdate (\Closure $callback)
+ * @method static void onBeforeSave (\Closure $callback)
+ * @method static void onAfterSave (\Closure $callback)
+ * @method static void onBeforeDelete (\Closure $callback)
+ * @method static void onAfterDelete (\Closure $callback)
+ * @package Apps\Webiny\Php\DevTools\Entity
  */
 abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 {
@@ -46,51 +55,17 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     protected $indexes = [];
     protected $instanceCallbacks = [];
     protected static $classCallbacks = [];
-
-    public static function onExtend($callback)
-    {
-        static::on('onExtend', $callback);
-    }
-
-    public static function onBeforeCreate($callback)
-    {
-        static::on('onBeforeCreate', $callback);
-    }
-
-    public static function onAfterCreate($callback)
-    {
-        static::on('onAfterCreate', $callback);
-    }
-
-    public static function onBeforeUpdate($callback)
-    {
-        static::on('onBeforeUpdate', $callback);
-    }
-
-    public static function onAfterUpdate($callback)
-    {
-        static::on('onAfterUpdate', $callback);
-    }
-
-    public static function onBeforeSave($callback)
-    {
-        static::on('onBeforeSave', $callback);
-    }
-
-    public static function onAfterSave($callback)
-    {
-        static::on('onAfterSave', $callback);
-    }
-
-    public static function onBeforeDelete($callback)
-    {
-        static::on('onBeforeDelete', $callback);
-    }
-
-    public static function onAfterDelete($callback)
-    {
-        static::on('onAfterDelete', $callback);
-    }
+    const EVENT_NAMES = [
+        'onExtend',
+        'onBeforeCreate',
+        'onAfterCreate',
+        'onBeforeUpdate',
+        'onAfterUpdate',
+        'onBeforeSave',
+        'onAfterSave',
+        'onBeforeDelete',
+        'onAfterDelete'
+    ];
 
     /**
      * Find entity by ID - deleted entities won't be included in search by default
@@ -419,7 +394,9 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 
     public function trigger($eventName, ...$params)
     {
+        $this->processingEvent = $eventName;
         $this->processCallbacks($eventName, ...$params);
+        $this->processingEvent = null;
     }
 
     /**
@@ -528,6 +505,15 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         return $builtFilters;
     }
 
+    /**
+     * Execute magic __call
+     * We need this to properly handle event callbacks and forward calls to attribute value getters
+     *
+     * @param $name
+     * @param $arguments
+     *
+     * @return mixed
+     */
     public function __call($name, $arguments)
     {
         if ($name == 'on') {
@@ -536,14 +522,37 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             return null;
         }
 
+        if (in_array($name, self::EVENT_NAMES)) {
+            $this->instanceCallbacks[$name][] = $arguments[0];
+
+            return null;
+        }
+
         return parent::__call($name, $arguments);
     }
 
+    /**
+     * Execute magic __callStatic
+     * We need this to properly handle event callbacks
+     *
+     * @param $name
+     * @param $arguments
+     *
+     * @return null
+     */
     public static function __callStatic($name, $arguments)
     {
+        $className = get_called_class();
         if ($name == 'on') {
-            $className = get_called_class();
             static::$classCallbacks[$className][$arguments[0]][] = $arguments[1];
+
+            return null;
+        }
+
+        if (in_array($name, self::EVENT_NAMES)) {
+            static::$classCallbacks[$className][$name][] = $arguments[0];
+
+            return null;
         }
     }
 
@@ -560,7 +569,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                 }
             }
 
-            if ($class == 'Apps\Core\Php\DevTools\Entity\AbstractEntity') {
+            if ($class == 'Apps\Webiny\Php\DevTools\Entity\AbstractEntity') {
                 $callbacks = $this->instanceCallbacks[$eventName] ?? [];
                 foreach ($callbacks as $callback) {
                     if (is_callable($callback)) {

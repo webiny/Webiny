@@ -5,16 +5,16 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Core\Php\Dispatchers;
+namespace Apps\Webiny\Php\Dispatchers;
 
-use Apps\Core\Php\DevTools\Response\ApiErrorResponse;
-use Apps\Core\Php\DevTools\Response\ApiResponse;
-use Apps\Core\Php\Dispatchers\Flows\AbstractFlow;
-use Apps\Core\Php\RequestHandlers\ApiEvent;
+use Apps\Webiny\Php\DevTools\Response\ApiErrorResponse;
+use Apps\Webiny\Php\DevTools\Response\ApiResponse;
+use Apps\Webiny\Php\Dispatchers\Flows\AbstractFlow;
+use Apps\Webiny\Php\RequestHandlers\ApiEvent;
 
 /**
  * Class EntityDispatcher
- * @package Apps\Core\Php\Dispatchers
+ * @package Apps\Webiny\Php\Dispatchers
  */
 class EntityDispatcher extends AbstractApiDispatcher
 {
@@ -38,7 +38,7 @@ class EntityDispatcher extends AbstractApiDispatcher
             $entityClass = $plural;
         }
 
-        $flows = $this->wService()->getServicesByTag('entity-dispatcher-flow', '\Apps\Core\Php\Dispatchers\Flows\AbstractFlow');
+        $flows = $this->wService()->getServicesByTag('entity-dispatcher-flow', '\Apps\Webiny\Php\Dispatchers\Flows\AbstractFlow');
 
         usort($flows, function (AbstractFlow $flow1, AbstractFlow $flow2) {
             return $flow1->getPriority() <=> $flow2->getPriority();

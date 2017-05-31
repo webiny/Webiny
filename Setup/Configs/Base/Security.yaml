@@ -3,7 +3,7 @@ Security:
         UserProvider:
             Driver: \Webiny\Component\Security\User\Providers\Entity\Entity
             Params:
-                Entity: \Apps\Core\Php\Entities\User
+                Entity: \Apps\Webiny\Php\Entities\User
                 Username: email
                 Password: password
     Tokens:
@@ -27,4 +27,3 @@ Login:
     SessionTtl: 30
     RateLimitWhitelist:
         - 127.0.0.1
-        - 192.168.10.10

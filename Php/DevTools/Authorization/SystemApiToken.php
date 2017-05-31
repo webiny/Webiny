@@ -1,8 +1,8 @@
 <?php
-namespace Apps\Core\Php\DevTools\Authorization;
+namespace Apps\Webiny\Php\DevTools\Authorization;
 
-use Apps\Core\Php\DevTools\Interfaces\UserInterface;
-use Apps\Core\Php\Entities\UserRole;
+use Apps\Webiny\Php\DevTools\Interfaces\UserInterface;
+use Apps\Webiny\Php\Entities\UserRole;
 use Webiny\Component\Entity\EntityCollection;
 
 /**
