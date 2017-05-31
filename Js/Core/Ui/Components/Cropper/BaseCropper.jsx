@@ -10,6 +10,8 @@ class BaseCropper extends Webiny.Ui.Component {
             height: 0
         };
 
+        this.id = _.uniqueId('img-cropper-');
+
         this.options = {
             // Define the view mode of the cropper
             viewMode: 1, // 0, 1, 2, 3
@@ -128,7 +130,8 @@ class BaseCropper extends Webiny.Ui.Component {
                 });
             }
         };
-        this.cropper = new Cropper(document.querySelector('.img-cropper'), data);
+
+        this.cropper = new Cropper(document.querySelector('#' + this.id), data);
     }
 
     destroyCropper() {
@@ -168,7 +171,8 @@ class BaseCropper extends Webiny.Ui.Component {
 
 BaseCropper.defaultProps = {
     config: {},
-    onCrop: _.noop
+    onCrop: _.noop,
+    action: 'Apply cropping'
 };
 
 export default BaseCropper;

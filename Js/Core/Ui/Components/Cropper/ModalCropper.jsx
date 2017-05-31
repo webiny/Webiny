@@ -31,18 +31,17 @@ class ModalCropper extends BaseCropper {
     }
 
     hide() {
-        return this.refs.dialog && this.refs.dialog.hide();
+        return this.dialog && this.dialog.hide();
     }
 
     show() {
-        return this.refs.dialog && this.refs.dialog.show();
+        return this.dialog && this.dialog.show();
     }
 }
 
 ModalCropper.defaultProps = _.merge({}, BaseCropper.defaultProps, {
     config: {},
     title: 'Crop image',
-    action: 'Apply cropping',
     closeOnClick: false,
     onCrop: _.noop,
     onShown: _.noop,
@@ -51,18 +50,9 @@ ModalCropper.defaultProps = _.merge({}, BaseCropper.defaultProps, {
         const props = this.props;
 
         const modalProps = {
-            onShown: () => {
-                // Execute callback first
-                props.onShown();
-                // Initialize cropper plugin
-                setTimeout(this.initCropper);
-            },
-            onHide: () => {
-                this.destroyCropper();
-            },
-            onHidden: () => {
-                props.onHidden();
-            },
+            onShown: props.onShown,
+            onHide: this.destroyCropper,
+            onHidden: props.onHidden,
             closeOnClick: props.config.closeOnClick || props.closeOnClick,
             className: ''
         };
@@ -70,13 +60,14 @@ ModalCropper.defaultProps = _.merge({}, BaseCropper.defaultProps, {
         const {Modal, Button} = props;
 
         return (
-            <Modal.Dialog ref="dialog" {...modalProps}>
+            <Modal.Dialog {...modalProps} ref={dialog => this.dialog = dialog}>
                 <Modal.Header title={props.title}/>
                 <Modal.Body>
                     {props.children}
                     <div className="col-xs-12 no-padding">
                         <img
-                            className="img-cropper"
+                            id={this.id}
+                            onLoad={this.initCropper}
                             width="100%"
                             src={props.image && props.image.src + this.getCacheBust()}
                             style={{maxWidth: '100%'}}/>
