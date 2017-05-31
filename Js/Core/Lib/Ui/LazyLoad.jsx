@@ -16,11 +16,13 @@ class LazyLoad extends Component {
         Webiny.import(this.props.modules).then(modules => {
             // Finish loading and render content
             this.setState({loaded: true, modules});
+            this.props.onLoad(modules);
         });
     }
 }
 
 LazyLoad.defaultProps = {
+    onLoad: _.noop,
     renderer() {
         if (this.state.loaded) {
             try {
