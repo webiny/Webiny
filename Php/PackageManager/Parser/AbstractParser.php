@@ -154,6 +154,10 @@ abstract class AbstractParser
 
                 if ($code->startsWith('* @api')) {
                     $annotationLine = $code->replace('* @api.', '')->explode(' ', 2)->val();
+
+                    // This is for cases where developers accidentally type eg. "* @api.name", without actually specifying the name
+                    $annotationLine[1] = $annotationLine[1] ?? '';
+
                     $line = $this->str($annotationLine[0]);
 
                     if ($line->startsWith('name')) {
