@@ -24,6 +24,9 @@
 
 }
 
-.btnGroup button:not(:last-child):not(:first-child):hover {
+.btnGroup :global(button.Webiny_Core_Button_btn):hover,
+.btnGroup :global(button.Webiny_Core_Button_btn):active,
+.btnGroup :global(button.Webiny_Core_Button_btn):focus,
+.btnGroup :global(button.Webiny_Core_Button_btn):focus:active{
 	box-shadow: none;
 }
