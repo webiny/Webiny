@@ -294,4 +294,30 @@
       text-align: right;
     }
   }
+
+  // fixes for when an editor is inside a table
+  table {
+    .rich-editor,
+    .rich-editor__editor,
+    .rich-editor__editor .public-DraftEditor-content {
+      padding: 0;
+      margin: 0;
+      background-color: transparent;
+      border: none;
+      min-height: 20px;
+    }
+    .rich-editor__root {
+      position: relative;
+      .editor-toolbar {
+        position: absolute;
+        top: -70px;
+        background-color: #fff;
+        padding: 10px 10px 5px 10px;
+        box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.175);
+        border: 1px solid #ccc;
+        min-width: 341px;
+        z-index: 1000;
+      }
+    }
+  }
 }
