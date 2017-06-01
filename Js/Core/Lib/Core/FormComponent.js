@@ -176,7 +176,7 @@ FormComponent.defaultProps = {
             success = true;
         }
 
-        if(this.props.showValidationMessage) {
+        if (!this.props.showValidationMessage) {
             return null;
         }
 
