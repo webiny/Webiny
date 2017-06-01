@@ -18,7 +18,7 @@ Form.defaultProps = {
         };
 
         return (
-            <Webiny.Ui.LazyLoad modules={['View', 'Form', 'Grid', 'Tabs', 'Input', 'Switch', 'Button', {UserRoles: 'Core/Backend/UserRoles'}]}>
+            <Webiny.Ui.LazyLoad modules={['View', 'Form', 'Grid', 'Tabs', 'Input', 'Switch', 'Button', {UserRoles: 'Webiny/Backend/UserRoles'}]}>
                 {(Ui) => (
                     <Ui.Form ui="myForm" {...containerProps}>
                         {(model, container) => (

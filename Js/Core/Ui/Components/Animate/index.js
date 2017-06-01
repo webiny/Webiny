@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
 import AnimationSets from './AnimationSets';
-import ReactTransitionGroup from 'react-addons-transition-group';
+import {TransitionGroup} from 'react-transition-group';
 
 /**
  * Only componentWillEnter and componentWillLeave can be used because they way Dialog component mounts into DOM.
@@ -137,7 +137,7 @@ Animate.defaultProps = {
     hide: 'fadeOut',
     renderer() {
         return (
-            <ReactTransitionGroup component={this.firstChild}>
+            <TransitionGroup component={this.firstChild}>
                 {(this.props.trigger === true) && (
                     <Container
                         onFinish={this.props.onFinish}
@@ -147,7 +147,7 @@ Animate.defaultProps = {
                         {this.props.children}
                     </Container>
                 )}
-            </ReactTransitionGroup>
+            </TransitionGroup>
         );
     }
 };

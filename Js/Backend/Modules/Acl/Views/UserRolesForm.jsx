@@ -20,7 +20,7 @@ Form.defaultProps = {
 
         const modules = [
             'Switch', 'Form', 'View', 'Tabs', 'Input', 'Button', 'Grid',
-            {UserPermissions: 'Core/Backend/UserPermissions'}
+            {UserPermissions: 'Webiny/Backend/UserPermissions'}
         ];
 
         return (

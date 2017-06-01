@@ -12,7 +12,7 @@ module.exports = (config) => {
         'react',
         'react-dom',
         'react-dom/server',
-        'react-addons-transition-group',
+        'react-transition-group',
         'classnames',
         'immutable',
         'baobab',
