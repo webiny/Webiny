@@ -1,7 +1,7 @@
 // import Core vendors
-import 'babel-polyfill';
-import Webiny from 'Webiny';
-import Promise from 'bluebird';
+console.timeStamp('Bootstrap.js Started');
+const Webiny = require('Webiny');
+const Promise = require('bluebird');
 
 window.Promise = Promise;
 Promise.config({
