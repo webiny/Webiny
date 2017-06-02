@@ -94,10 +94,8 @@ class SmartyExtension extends AbstractSmartyExtension
         var webinyJsPath = '{$jsDomain}';
         var webinyConfig = {$config};
         var webinyMeta = {$appsMeta};
-
-        var loadScript=function(t){var e=document.createElement("script");return e.type="text/javascript",e.src=t,e.async=!0,document.body.appendChild(e),e};
-        loadScript('{$jsDomain}{$meta['vendor']}');
     </script>
+    <script src="{$jsDomain}{$meta['vendor']}" async></script> 
     {$browserSync}
     <webiny-app/>
 EOT;
