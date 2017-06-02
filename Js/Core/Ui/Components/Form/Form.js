@@ -398,7 +398,7 @@ class Form extends Webiny.Ui.Component {
     bindTo(element) {
         try {
             return this.registerComponent(element);
-        } catch(e) {
+        } catch (e) {
             console.error('INVALID ELEMENT', element);
         }
     }
@@ -452,19 +452,33 @@ class Form extends Webiny.Ui.Component {
                 const inputConfig = this.inputs[input.props.name];
                 const component = inputConfig && inputConfig.component;
                 if (component) {
-                    callback.call(this, newValue, oldValue, component);
+                    // If component callback returns a value we will use that as our new value
+                    const callbackValue = callback.call(this, newValue, oldValue, component);
+                    if (callbackValue) {
+                        newValue = callbackValue;
+                    }
                     // See if there is a watch registered for changed input
                     const watches = this.watches[input.props.name] || new Set();
                     _.map(Array.from(watches), w => w(newValue, oldValue, component));
                 }
-                if (_.isFunction(this.props.onChange)) {
-                    this.props.onChange(this.getModel(), this);
-                }
+
+                return newValue;
             };
 
             // Assign value and onChange props
             const linkState = super.bindTo('model.' + input.props.name, changeCallback.bind(this), input.props.defaultValue);
-            _.assign(newProps, linkState);
+            _.assign(newProps, {
+                value: linkState.value,
+                onChange: (newValue, cb) => {
+                    // When linkState is done processing the value change, we need to call the Form onChange with updated model
+                    return linkState.onChange(newValue, cb).then(value => {
+                        if (_.isFunction(this.props.onChange)) {
+                            this.props.onChange(this.getModel(), this);
+                        }
+                        return value;
+                    });
+                }
+            });
 
             if (this.parsingTabsIndex > 0) {
                 newProps['__tabs'] = {id: 'tabs-' + this.parsingTabsIndex, tab: this.parsingTabIndex};
@@ -568,7 +582,7 @@ class Form extends Webiny.Ui.Component {
         this.setState({error: apiResponse}, () => {
             // error callback
             this.props.onSubmitError.call(this, apiResponse, this);
-            
+
             // Check error data and if validation error - try highlighting invalid fields
             const data = apiResponse.getData();
             if (_.isPlainObject(data)) {
@@ -677,7 +691,7 @@ Form.defaultProps = {
     onLoad: _.noop,
     prepareLoadedData: null,
     onProgress(pe) {
-        Webiny.import(['Growl', 'Progress']).then(({Growl, Progress})=> {
+        Webiny.import(['Growl', 'Progress']).then(({Growl, Progress}) => {
             const cmp = <div>Your data is being uploaded...<Progress value={pe.progress}/></div>;
             Webiny.Growl(<Growl.Info id={this.growlId} title="Please be patient" sticky={true}>{cmp}</Growl.Info>);
         });

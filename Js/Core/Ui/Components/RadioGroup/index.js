@@ -9,6 +9,12 @@ class RadioGroup extends Webiny.Ui.OptionComponent {
         this.bindMethods('renderOptions');
     }
 
+    shouldComponentUpdate(nextProps, nextState){
+        const propsChanged = !_.isEqual(nextProps.options, this.props.options) || !_.isEqual(nextProps.value, this.props.value);
+        const stateChanged = !_.isEqual(nextState.options, this.state.options);
+        return propsChanged || stateChanged;
+    }
+
     /**
      * Render options elements
      *
@@ -27,12 +33,14 @@ class RadioGroup extends Webiny.Ui.OptionComponent {
 
             const props = {
                 key,
-                grid: item.grid || this.props.grid,
+                grid: this.props.grid,
                 label: item.text,
                 disabled: this.isDisabled(),
-                value: item.id,
+                value: item,
                 checked,
-                onChange: newValue => this.props.onChange(newValue, this.validate)
+                onChange: newValue => {
+                    this.props.onChange(this.props.useDataAsValue ? newValue.data : newValue[this.props.valueAttr], this.validate);
+                }
             };
 
             if (this.props.radioRenderer) {

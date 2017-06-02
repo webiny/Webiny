@@ -217,8 +217,10 @@ class OptionComponent extends FormComponent {
 }
 
 OptionComponent.defaultProps = _.merge({}, FormComponent.defaultProps, {
-    valueAttr: 'id',
-    textAttr: 'name',
+    valueAttr: 'id', // Attribute to use as option value (when option is a an object, usually used with API)
+    textAttr: 'name', // Attribute to use as option text (when option is a an object, usually used with API)
+    useDataAsValue: false, // Will assign selected/checked value in form of data (usually from API)
+    valueKey: null, // used only for rendering to map complex options to model values (only used when component value is an object)
     filterBy: null
 });
 

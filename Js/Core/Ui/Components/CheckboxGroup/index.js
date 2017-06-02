@@ -12,7 +12,7 @@ class CheckboxGroup extends Webiny.Ui.OptionComponent {
         const option = this.state.options[key];
         const newState = this.props.value || [];
         if (newValue) {
-            newValue = this.props.formatValue(option);
+            newValue = this.props.formatValue(this.props.useDataAsValue ? option.data : option);
             newState.push(newValue);
         } else {
             const currentIndex = _.findIndex(newState, opt => {
@@ -73,9 +73,6 @@ class CheckboxGroup extends Webiny.Ui.OptionComponent {
 
 CheckboxGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
     grid: 12,
-    valueKey: null,
-    valueAttr: 'id',
-    textAttr: 'name',
     checkboxRenderer: null,
     checkboxLabelRenderer: null,
     formatValue: value => value.id,

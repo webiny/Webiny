@@ -30,18 +30,23 @@ class LinkState {
                 }
                 const oldValue = _this.__getValue(key);
 
-                let partialState = component.state;
-                _.set(partialState, key, value);
-                component.setState(partialState, () => {
-                    if (_.isFunction(callback)) {
-                        callback(value, oldValue);
-                    }
-                    partialState = null;
+                let promise = Promise.resolve(value);
+                if (_this.callback) {
+                    promise = Promise.resolve(_this.callback(value, oldValue)).then(newValue => {
+                        return newValue === undefined ? value : newValue;
+                    });
+                }
 
-                    if (_this.callback) {
-                        _this.callback(value, oldValue);
-                    }
-                    resolve(value, oldValue);
+                return promise.then(value => {
+                    let partialState = component.state;
+                    _.set(partialState, key, value);
+                    component.setState(partialState, () => {
+                        if (_.isFunction(callback)) {
+                            callback(value, oldValue);
+                        }
+                        partialState = null;
+                        resolve(value);
+                    });
                 });
             });
         };
