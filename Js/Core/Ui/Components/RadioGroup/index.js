@@ -26,7 +26,10 @@ class RadioGroup extends Webiny.Ui.OptionComponent {
         return this.state.options.map((item, key) => {
             let checked = false;
             if (_.isPlainObject(this.props.value)) {
-                checked = _.get(this.props.value, this.props.valueKey) === item.id;
+                // If value is an object we need to fetch a single value to compare against option id.
+                // `valueKey` should be used for this purpose but we also use `valueAttr` as a fallback
+                // (although `valueAttr` should only be used for generating options, it contains the default identification attribute name)
+                checked = _.get(this.props.value, this.props.valueKey || this.props.valueAttr) === item.id;
             } else {
                 checked = this.props.value === item.id;
             }
