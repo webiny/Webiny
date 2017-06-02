@@ -20,6 +20,7 @@ class RootElement extends View {
     }
 
     componentDidMount() {
+        console.timeStamp('RootElement DidMount');
         this.unsubscribe = Dispatcher.on('RenderView', () => {
             return this.setState({
                 time: _.now()

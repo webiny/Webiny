@@ -7,9 +7,10 @@ class App {
     }
 
     run() {
-        console.info(this.name + ' app bootstrap');
         this.modules.map(m => m.init());
-        return Promise.resolve(this.onBeforeRender());
+        return Promise.resolve(this.onBeforeRender()).then(() => {
+            console.timeStamp('App run: ' + this.name);
+        });
     }
 
     beforeRender(callback = null) {

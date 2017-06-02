@@ -1,3 +1,4 @@
+require('babel-polyfill');
 const Page = require('./Lib/Core/Page');
 
 function formatAjaxResponse(jqXhr) {
@@ -47,6 +48,7 @@ class Webiny {
     }
 
     run(config) {
+        console.timeStamp("Webiny Run");
         this.Page.loadStylesheet(webinyMeta['Webiny.Core'].css);
         return this.Page.loadScript(webinyMeta['Webiny.Core'].app).then(() => {
             // Configure Core
@@ -114,6 +116,7 @@ class Webiny {
             return loader;
         };
 
+        console.time(name);
         let loadConfig = Promise.resolve(config);
 
         if (!config) {
