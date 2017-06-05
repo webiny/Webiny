@@ -38,8 +38,6 @@ class SmartyExtension extends AbstractSmartyExtension
         $env = $this->wConfig()->get('Application.Environment', 'production');
         $webPath = $this->wConfig()->getConfig()->get('Application.WebPath');
         $apiPath = $this->wConfig()->getConfig()->get('Application.ApiPath');
-        $assetsCssPath = $this->wConfig()->getConfig()->get('Application.CssPath');
-        $assetsJsPath = $this->wConfig()->getConfig()->get('Application.JsPath');
         $jsConfig = $this->wConfig()->getConfig()->get('Js', new ConfigObject())->toArray();
 
         $appsHelper = new Apps();
@@ -77,12 +75,8 @@ class SmartyExtension extends AbstractSmartyExtension
         $bsConfig = $this->arr(json_decode($bsConfig, true));
         $bsPath = $this->url($this->wConfig()->get('Application.WebPath'))->setPort($bsConfig->keyNested('browserSync.port', 3000, true));
         $browserSync = '<script src="' . $bsPath . '/browser-sync/browser-sync-client.js?v=2.18.6"></script>';
-        $jsDomain = '';
-        $cssDomain = '';
         if ($this->wIsProduction()) {
             $browserSync = '';
-            $jsDomain = $assetsJsPath;
-            $cssDomain = $assetsCssPath;
         }
 
         return <<<EOT
@@ -90,12 +84,10 @@ class SmartyExtension extends AbstractSmartyExtension
         var webinyEnvironment = '{$env}';
         var webinyWebPath = '{$webPath}';
         var webinyApiPath = '{$apiPath}';
-        var webinyCssPath = '{$cssDomain}';
-        var webinyJsPath = '{$jsDomain}';
         var webinyConfig = {$config};
         var webinyMeta = {$appsMeta};
     </script>
-    <script src="{$jsDomain}{$meta['vendor']}" async></script> 
+    <script src="{$meta['vendor']}" async></script> 
     {$browserSync}
     <webiny-app/>
 EOT;
