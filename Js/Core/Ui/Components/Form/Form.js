@@ -440,8 +440,13 @@ class Form extends Webiny.Ui.Component {
                 disabled: _.get(input.props, 'disabled', null)
             };
 
+            // If Form has a `disabled` prop we must evaluate it to see if form input needs to be disabled
             if (this.props.disabled) {
-                newProps['disabled'] = _.isFunction(this.props.disabled) ? this.props.disabled(this.getModel()) : this.props.disabled;
+                const inputDisabledByForm = _.isFunction(this.props.disabled) ? this.props.disabled(this.getModel()) : this.props.disabled;
+                // Only override the input prop if the entire Form is disabled
+                if (inputDisabledByForm) {
+                    newProps['disabled'] = true;
+                }
             }
 
             // Create an onChange callback
