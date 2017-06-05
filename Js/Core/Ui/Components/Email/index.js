@@ -16,8 +16,8 @@ Email.defaultProps = {
     renderer() {
         const props = _.omit(this.props, ['renderer', 'Input']);
         if (props.onChange) {
-            props.onChange = (value, cb = _.noop) => {
-                this.props.onChange(value ? value.toLowerCase().trim() : value, cb);
+            props.onChange = (value, cb) => {
+                return this.props.onChange(value ? value.toLowerCase().trim() : value, cb);
             };
         }
 

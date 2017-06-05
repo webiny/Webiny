@@ -34,7 +34,6 @@ class Select extends Webiny.Ui.OptionComponent {
 
 Select.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
     renderer() {
-
         const {FormGroup} = this.props;
 
         return (

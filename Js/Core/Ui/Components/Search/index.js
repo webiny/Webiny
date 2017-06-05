@@ -268,8 +268,7 @@ class Search extends Webiny.Ui.FormComponent {
             preview: this.renderPreview(item),
             selectedData: item
         }, () => {
-            const value = this.props.formatValue(this.props.useDataAsValue ? item : item[this.props.valueAttr]);
-            this.props.onChange(value);
+            this.props.onChange(this.props.useDataAsValue ? item : item[this.props.valueAttr]);
             setTimeout(this.validate, 10);
             this.preventBlur = false;
         });
@@ -372,7 +371,6 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     loadingIcon: 'icon-search',
     placeholder: 'Type to search',
     useDataAsValue: false,
-    formatValue: value => value,
     allowFreeInput: false,
     optionRenderer: function optionRenderer(item) {
         const value = this.fetchValue(item);

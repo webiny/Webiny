@@ -3,43 +3,15 @@ import styles from './styles.css';
 
 class Radio extends Webiny.Ui.Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
-        this.bindMethods('onChange,isChecked');
-    }
-
-    componentWillMount() {
-        super.componentWillMount();
         this.id = _.uniqueId('radio-');
+        this.bindMethods('onChange');
     }
 
     onChange() {
         this.props.onChange(this.props.value);
-    }
-
-    isChecked() {
-        return this.props.checked;
-    }
-
-
-    shouldComponentUpdate(props) {
-        let update = super.shouldComponentUpdate(props);
-
-        if (!update) {
-            const keys = [
-                'state',
-                'stateKey'
-            ];
-
-            keys.forEach(key => {
-                if (_.get(this.props, key) !== _.get(props, key)) {
-                    update = true;
-                }
-            });
-        }
-
-        return update;
     }
 }
 
@@ -52,7 +24,7 @@ Radio.defaultProps = {
 
         return (
             <div className={css}>
-                <input type="radio" disabled={this.props.disabled} onChange={this.onChange} checked={this.isChecked()} id={this.id}/>
+                <input type="radio" disabled={this.props.disabled} onChange={this.onChange} checked={this.props.checked} id={this.id}/>
                 <label htmlFor={this.id}>{this.props.label}</label>
             </div>
         );

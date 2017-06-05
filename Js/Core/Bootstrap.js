@@ -1,29 +1,30 @@
-// import Core vendors
-console.timeStamp('Bootstrap.js Started');
-const Webiny = require('Webiny');
-const Promise = require('bluebird');
+(function (global) {
+    // import Core vendors
+    console.timeStamp('Bootstrap started');
+    const Webiny = require('Webiny');
+    const Promise = require('bluebird');
 
-window.Promise = Promise;
-Promise.config({
-    cancellation: true,
-    warnings: {
-        wForgottenReturn: false
+    global.Promise = Promise;
+    Promise.config({
+        cancellation: true,
+        warnings: {
+            wForgottenReturn: false
+        }
+    });
+
+    // Define global variables
+    // These are the basic requirements for the system to work and we don't want to import them all the time in every script
+    global['$'] = global['jQuery'] = require('jquery');
+    global['React'] = require('react');
+    global['ReactDOM'] = require('react-dom');
+    global['_'] = require('webiny-lodash');
+    require('bootstrap-sass');
+    global['$Webiny'] = Webiny;
+
+    // Check if `Webiny` config exists in the global
+    if (!global.Webiny) {
+        console.error('You must define a "Webiny" config to bootstrap your app!');
+    } else {
+        Webiny.run(global.Webiny);
     }
-});
-
-// Define global variables
-// These are the basic requirements for the system to work and we don't want to import them all the time in every script
-window['$'] = window['jQuery'] = require('jquery');
-window['React'] = require('react');
-window['ReactDOM'] = require('react-dom');
-window['_'] = require('webiny-lodash');
-require('bootstrap-sass');
-window['$Webiny'] = Webiny;
-
-const w = window;
-// Check if `Webiny` config exists in the window
-if (!w.Webiny) {
-    console.error('You must define a "Webiny" config to bootstrap your app!');
-} else {
-    Webiny.run(w.Webiny);
-}
+})(window);
