@@ -398,7 +398,7 @@ class Form extends Webiny.Ui.Component {
     bindTo(element) {
         try {
             return this.registerComponent(element);
-        } catch(e) {
+        } catch (e) {
             console.error('INVALID ELEMENT', element);
         }
     }
@@ -440,8 +440,13 @@ class Form extends Webiny.Ui.Component {
                 disabled: _.get(input.props, 'disabled', null)
             };
 
+            // If Form has a `disabled` prop we must evaluate it to see if form input needs to be disabled
             if (this.props.disabled) {
-                newProps['disabled'] = _.isFunction(this.props.disabled) ? this.props.disabled(this.getModel()) : this.props.disabled;
+                const inputDisabledByForm = _.isFunction(this.props.disabled) ? this.props.disabled(this.getModel()) : this.props.disabled;
+                // Only override the input prop if the entire Form is disabled
+                if (inputDisabledByForm) {
+                    newProps['disabled'] = true;
+                }
             }
 
             // Create an onChange callback
@@ -568,7 +573,7 @@ class Form extends Webiny.Ui.Component {
         this.setState({error: apiResponse}, () => {
             // error callback
             this.props.onSubmitError.call(this, apiResponse, this);
-            
+
             // Check error data and if validation error - try highlighting invalid fields
             const data = apiResponse.getData();
             if (_.isPlainObject(data)) {
@@ -677,7 +682,7 @@ Form.defaultProps = {
     onLoad: _.noop,
     prepareLoadedData: null,
     onProgress(pe) {
-        Webiny.import(['Growl', 'Progress']).then(({Growl, Progress})=> {
+        Webiny.import(['Growl', 'Progress']).then(({Growl, Progress}) => {
             const cmp = <div>Your data is being uploaded...<Progress value={pe.progress}/></div>;
             Webiny.Growl(<Growl.Info id={this.growlId} title="Please be patient" sticky={true}>{cmp}</Growl.Info>);
         });
