@@ -462,9 +462,6 @@ class Form extends Webiny.Ui.Component {
                     if (callbackValue) {
                         newValue = callbackValue;
                     }
-                    // See if there is a watch registered for changed input
-                    const watches = this.watches[input.props.name] || new Set();
-                    _.map(Array.from(watches), w => w(newValue, oldValue, component));
                 }
 
                 return newValue;
@@ -475,11 +472,19 @@ class Form extends Webiny.Ui.Component {
             _.assign(newProps, {
                 value: linkState.value,
                 onChange: (newValue, cb) => {
-                    // When linkState is done processing the value change, we need to call the Form onChange with updated model
+                    // When linkState is done processing the value change...
                     return linkState.onChange(newValue, cb).then(value => {
+                        // call the Form onChange with updated model
                         if (_.isFunction(this.props.onChange)) {
                             this.props.onChange(this.getModel(), this);
                         }
+
+                        // see if there is a watch registered for changed input
+                        const inputConfig = this.inputs[input.props.name];
+                        const component = inputConfig && inputConfig.component;
+                        const watches = this.watches[input.props.name] || new Set();
+                        _.map(Array.from(watches), w => w(value, component));
+
                         return value;
                     });
                 }
