@@ -3,11 +3,12 @@ import Error from './Error';
 import Loader from './Loader';
 
 function isValidModelType(value) {
-    if (typeof value === 'undefined' || typeof value === 'function') {
+    const type = typeof value;
+    if (type === 'undefined' || type === 'function') {
         return false;
     }
 
-    return _.isArray(value) || _.isPlainObject(value) || /boolean|number|string/.test(typeof value) || value instanceof Promise;
+    return _.isArray(value) || _.isPlainObject(value) || /boolean|number|string/.test(type);
 }
 
 class Form extends Webiny.Ui.Component {
