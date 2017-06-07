@@ -12,7 +12,7 @@ class CheckboxGroup extends Webiny.Ui.OptionComponent {
         const option = this.state.options[key];
         const newState = this.props.value || [];
         if (newValue) {
-            newValue = this.props.formatValue(this.props.useDataAsValue ? option.data : option[this.props.valueAttr]);
+            newValue = this.props.formatOptionValue(this.props.useDataAsValue ? option.data : option[this.props.valueAttr]);
             newState.push(newValue);
         } else {
             const currentIndex = _.findIndex(newState, opt => {
@@ -75,15 +75,15 @@ CheckboxGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps,
     grid: 12,
     checkboxRenderer: null,
     checkboxLabelRenderer: null,
-    formatValue: value => value,
+    formatOptionValue: value => value,
     renderer() {
-        const {FormGroup,styles} = this.props;
+        const {FormGroup, styles} = this.props;
 
         return (
             <FormGroup valid={this.state.isValid} className={this.props.className}>
                 {this.renderLabel()}
-                <div className='clearfix'/>
-                <div className={'inputGroup '+(this.props.disabled && styles.disabled)}>
+                <div className="clearfix"/>
+                <div className={'inputGroup ' + (this.props.disabled && styles.disabled)}>
                     {this.renderOptions()}
                 </div>
                 {this.renderValidationMessage()}

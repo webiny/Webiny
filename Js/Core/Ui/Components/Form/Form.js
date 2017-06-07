@@ -2,6 +2,14 @@ import Webiny from 'Webiny';
 import Error from './Error';
 import Loader from './Loader';
 
+function isValidModelType(value) {
+    if (typeof value === 'undefined' || typeof value === 'function') {
+        return false;
+    }
+
+    return _.isArray(value) || _.isPlainObject(value) || /boolean|number|string/.test(typeof value) || value instanceof Promise;
+}
+
 class Form extends Webiny.Ui.Component {
 
     constructor(props) {
@@ -450,17 +458,25 @@ class Form extends Webiny.Ui.Component {
             }
 
             // Create an onChange callback
-            const callback = _.get(input.props, 'onChange', _.noop);
+            let onAfterChange = _.get(input.props, 'onChange');
+            const formatValue = _.get(input.props, 'formatValue');
 
             // Input changed callback, triggered on each input change
             const changeCallback = function inputChanged(newValue, oldValue) {
                 const inputConfig = this.inputs[input.props.name];
                 const component = inputConfig && inputConfig.component;
-                if (component) {
-                    // If component callback returns a value we will use that as our new value
-                    const callbackValue = callback.call(this, newValue, oldValue, component);
-                    if (callbackValue) {
-                        newValue = callbackValue;
+
+                // Bind onChange callback params
+                if (_.isFunction(onAfterChange)) {
+                    onAfterChange = onAfterChange.bind(null, newValue, oldValue, component);
+                }
+
+                // Format value
+                if (component && _.isFunction(formatValue)) {
+                    // If component formatValue returns a value we will use that as our new value
+                    const cbValue = formatValue(newValue, oldValue, component);
+                    if (isValidModelType(cbValue)) {
+                        newValue = cbValue;
                     }
                 }
 
@@ -484,6 +500,9 @@ class Form extends Webiny.Ui.Component {
                         const component = inputConfig && inputConfig.component;
                         const watches = this.watches[input.props.name] || new Set();
                         _.map(Array.from(watches), w => w(value, component));
+
+                        // Execute onAfterChange
+                        onAfterChange && onAfterChange();
 
                         return value;
                     });

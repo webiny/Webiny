@@ -78,7 +78,7 @@ class SimpleSelect extends Webiny.Ui.Component {
                 this.triggerChange(e.target.value);
             });
             this.select2.on('select2:unselect', () => {
-                this.triggerChange('');
+                this.triggerChange(null);
             });
             this.select2.val(this.getValue()).trigger('change');
 

@@ -151,6 +151,7 @@ FormComponent.defaultProps = {
     onChange: _.noop,
     showValidationMessage: true,
     tooltip: null,
+    formatValue: null,
     labelRenderer() {
         let label = null;
         if (this.props.label) {
