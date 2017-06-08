@@ -7,6 +7,7 @@
 
 namespace Apps\Webiny\Php\Dispatchers;
 
+use Apps\Webiny\Php\DevTools\ApiCache\ApiCacheCallback;
 use Apps\Webiny\Php\DevTools\Response\ApiCacheResponse;
 use Apps\Webiny\Php\RequestHandlers\ApiEvent;
 use Webiny\Component\Config\ConfigObject;
@@ -65,6 +66,9 @@ class ApiCache extends AbstractApiDispatcher
         if ($callback) {
             $this->hrc->registerCallback(new $callback);
         }
+
+        // register core callback
+        $this->hrc->registerCallback(new ApiCacheCallback());
     }
 
     public function cacheRead(ApiEvent $event)
