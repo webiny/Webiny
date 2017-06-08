@@ -7,6 +7,9 @@
 
 namespace Apps\Webiny\Php\Dispatchers;
 
+use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
+use Apps\Webiny\Php\DevTools\Response\EntityResponse;
+use Apps\Webiny\Php\DevTools\Response\ListResponse;
 use Apps\Webiny\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Router\Route\Route;
@@ -34,7 +37,7 @@ trait ApiExpositionTrait
      * @param EntityCollection $collection
      * @param string           $fields
      *
-     * @return array
+     * @return ListResponse
      */
     public static function apiFormatList(EntityCollection $collection, $fields)
     {
@@ -45,16 +48,34 @@ trait ApiExpositionTrait
             $page = ($offset / $perPage) + 1;
         }
 
-        return [
+        return new ListResponse([
             'meta' => [
                 'totalCount'  => $collection->totalCount(),
                 'totalPages'  => $perPage > 0 ? ceil($collection->totalCount() / $perPage) : 1,
                 'perPage'     => $perPage,
-                'currentPage' => $page
+                'currentPage' => $page,
+                'fields'      => $fields
             ],
             'list' => $collection->toArray($fields)
-        ];
+        ]);
+    }
 
+    /**
+     * Format given Entity using $fields into a standard entity response
+     *
+     * @param AbstractEntity $entity
+     * @param string         $fields
+     *
+     * @return EntityResponse
+     */
+    public static function apiFormatEntity(AbstractEntity $entity, $fields)
+    {
+        return new EntityResponse([
+            'meta'   => [
+                'fields' => $fields
+            ],
+            'entity' => $entity->toArray($fields)
+        ]);
     }
 
     /**

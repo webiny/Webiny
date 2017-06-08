@@ -47,7 +47,9 @@ class EntityDispatcher extends AbstractApiDispatcher
         /* @var $flow AbstractFlow */
         foreach ($flows as $flow) {
             if ($flow->canHandle($httpMethod, $params)) {
-                return new ApiResponse($flow->handle(new $entityClass(), $params));
+                $response = $flow->handle(new $entityClass(), $params);
+
+                return $response instanceof ApiResponse ? $response : new ApiResponse($response);
             }
         }
 

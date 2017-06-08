@@ -2,6 +2,15 @@ import Webiny from 'Webiny';
 import Error from './Error';
 import Loader from './Loader';
 
+function isValidModelType(value) {
+    const type = typeof value;
+    if (type === 'undefined' || type === 'function') {
+        return false;
+    }
+
+    return _.isArray(value) || _.isPlainObject(value) || /boolean|number|string/.test(type);
+}
+
 class Form extends Webiny.Ui.Component {
 
     constructor(props) {
@@ -284,9 +293,9 @@ class Form extends Webiny.Ui.Component {
 
                 let newModel;
                 if (_.isFunction(this.props.prepareLoadedData) && this.props.prepareLoadedData !== _.noop) {
-                    newModel = _.merge({}, this.props.defaultModel || {}, this.props.prepareLoadedData(apiResponse.getData()));
+                    newModel = _.merge({}, this.props.defaultModel || {}, this.props.prepareLoadedData(apiResponse.getData('entity')));
                 } else {
-                    newModel = _.merge({}, this.props.defaultModel || {}, apiResponse.getData())
+                    newModel = _.merge({}, this.props.defaultModel || {}, apiResponse.getData('entity'))
                 }
 
                 this.setState({model: newModel, initialModel: _.cloneDeep(newModel), loading: false}, () => {
@@ -450,21 +459,26 @@ class Form extends Webiny.Ui.Component {
             }
 
             // Create an onChange callback
-            const callback = _.get(input.props, 'onChange', _.noop);
+            let onAfterChange = _.get(input.props, 'onChange');
+            const formatValue = _.get(input.props, 'formatValue');
 
             // Input changed callback, triggered on each input change
             const changeCallback = function inputChanged(newValue, oldValue) {
                 const inputConfig = this.inputs[input.props.name];
                 const component = inputConfig && inputConfig.component;
-                if (component) {
-                    // If component callback returns a value we will use that as our new value
-                    const callbackValue = callback.call(this, newValue, oldValue, component);
-                    if (callbackValue) {
-                        newValue = callbackValue;
+
+                // Bind onChange callback params
+                if (_.isFunction(onAfterChange)) {
+                    onAfterChange = onAfterChange.bind(null, newValue, oldValue, component);
+                }
+
+                // Format value
+                if (component && _.isFunction(formatValue)) {
+                    // If component formatValue returns a value we will use that as our new value
+                    const cbValue = formatValue(newValue, oldValue, component);
+                    if (isValidModelType(cbValue)) {
+                        newValue = cbValue;
                     }
-                    // See if there is a watch registered for changed input
-                    const watches = this.watches[input.props.name] || new Set();
-                    _.map(Array.from(watches), w => w(newValue, oldValue, component));
                 }
 
                 return newValue;
@@ -475,11 +489,22 @@ class Form extends Webiny.Ui.Component {
             _.assign(newProps, {
                 value: linkState.value,
                 onChange: (newValue, cb) => {
-                    // When linkState is done processing the value change, we need to call the Form onChange with updated model
+                    // When linkState is done processing the value change...
                     return linkState.onChange(newValue, cb).then(value => {
+                        // call the Form onChange with updated model
                         if (_.isFunction(this.props.onChange)) {
                             this.props.onChange(this.getModel(), this);
                         }
+
+                        // see if there is a watch registered for changed input
+                        const inputConfig = this.inputs[input.props.name];
+                        const component = inputConfig && inputConfig.component;
+                        const watches = this.watches[input.props.name] || new Set();
+                        _.map(Array.from(watches), w => w(value, component));
+
+                        // Execute onAfterChange
+                        onAfterChange && onAfterChange();
+
                         return value;
                     });
                 }
@@ -628,7 +653,7 @@ class Form extends Webiny.Ui.Component {
             return apiResponse;
         }
 
-        const newModel = apiResponse.getData();
+        const newModel = apiResponse.getData('entity');
         this.setState({model: newModel, initialModel: _.cloneDeep(newModel), error: null});
         if (_.isFunction(this.props.onSuccessMessage)) {
             Webiny.Growl.success(this.props.onSuccessMessage(model));

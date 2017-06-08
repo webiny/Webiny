@@ -5,8 +5,9 @@ function handleResponse(response) {
     return new ApiResponse(response);
 }
 
-function sanitize(string) {
-    return _.trimStart(string, '/ ');
+function sanitize(url) {
+    url = _.trimStart(url, '/ ');
+    return url.length ? '/' + url : '';
 }
 
 class Base {
@@ -16,27 +17,27 @@ class Base {
     }
 
     get(url = '', body = {}, config = {}) {
-        return Http.get(webinyApiPath + this.baseUrl + '/' + sanitize(url), body, config).then(handleResponse).catch(handleResponse);
+        return Http.get(webinyApiPath + this.baseUrl + sanitize(url), body, config).then(handleResponse).catch(handleResponse);
     }
 
     delete(url = '', config = {}) {
-        return Http.delete(webinyApiPath + this.baseUrl + '/' + sanitize(url), config).then(handleResponse).catch(handleResponse);
+        return Http.delete(webinyApiPath + this.baseUrl + sanitize(url), config).then(handleResponse).catch(handleResponse);
     }
 
     head(url = '', config = {}) {
-        return Http.head(webinyApiPath + this.baseUrl + '/' + sanitize(url), config).then(handleResponse).catch(handleResponse);
+        return Http.head(webinyApiPath + this.baseUrl + sanitize(url), config).then(handleResponse).catch(handleResponse);
     }
 
     post(url = '', body = {}, query = {}, config = {}) {
-        return Http.post(webinyApiPath + this.baseUrl + '/' + sanitize(url), body, query, config).then(handleResponse).catch(handleResponse);
+        return Http.post(webinyApiPath + this.baseUrl + sanitize(url), body, query, config).then(handleResponse).catch(handleResponse);
     }
 
     put(url = '', body = {}, query = {}, config = {}) {
-        return Http.put(webinyApiPath + this.baseUrl + '/' + sanitize(url), body, query, config).then(handleResponse).catch(handleResponse);
+        return Http.put(webinyApiPath + this.baseUrl + sanitize(url), body, query, config).then(handleResponse).catch(handleResponse);
     }
 
     patch(url = '', body = {}, query = {}, config = {}) {
-        return Http.patch(webinyApiPath + this.baseUrl + '/' + sanitize(url), body, query, config).then(handleResponse).catch(handleResponse);
+        return Http.patch(webinyApiPath + this.baseUrl + sanitize(url), body, query, config).then(handleResponse).catch(handleResponse);
     }
 }
 
