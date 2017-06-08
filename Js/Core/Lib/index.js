@@ -18,6 +18,8 @@ import UiDispatcher from './Core/UiDispatcher';
 import Injector from './Core/Injector';
 import ViewManager from './Core/ViewManager';
 import Filter from './Core/Filter';
+import LocalStorage from './Core/LocalStorage';
+import IndexedDB from './Core/IndexedDB';
 import Growl from './Core/Growl';
 import Router from './Router/Router';
 import Route from './Router/Route';
@@ -45,6 +47,8 @@ _.merge(Webiny, {
     Draft,
     Dispatcher,
     Filter,
+    LocalStorage,
+    IndexedDB,
     Growl,
     Http,
     Injector,
