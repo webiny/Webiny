@@ -57,6 +57,8 @@ class ServiceDispatcher extends AbstractApiDispatcher
             }
         }
 
-        return new ApiResponse($apiMethod($matchedServiceMethod->getParams()));
+        $response = $apiMethod($matchedServiceMethod->getParams());
+
+        return $response instanceof ApiResponse ? $response : new ApiResponse($response);
     }
 }
