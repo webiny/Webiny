@@ -25,7 +25,7 @@ IndexedDB.remove = function (key) {
     return localforage.removeItem(key)
 };
 
-IndexedDB.clearAll = function () {
+IndexedDB.clear = function () {
     return localforage.clear();
 };
 

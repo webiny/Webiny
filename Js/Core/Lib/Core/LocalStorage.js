@@ -26,13 +26,8 @@ LocalStorage.remove = function (key) {
     return this;
 };
 
-LocalStorage.clearAll = function () {
+LocalStorage.clear = function () {
     store.clearAll();
-    return this;
-};
-
-LocalStorage.each = function (callback) {
-    store.each(callback);
     return this;
 };
 
