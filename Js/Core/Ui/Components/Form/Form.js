@@ -293,9 +293,9 @@ class Form extends Webiny.Ui.Component {
 
                 let newModel;
                 if (_.isFunction(this.props.prepareLoadedData) && this.props.prepareLoadedData !== _.noop) {
-                    newModel = _.merge({}, this.props.defaultModel || {}, this.props.prepareLoadedData(apiResponse.getData()));
+                    newModel = _.merge({}, this.props.defaultModel || {}, this.props.prepareLoadedData(apiResponse.getData('entity')));
                 } else {
-                    newModel = _.merge({}, this.props.defaultModel || {}, apiResponse.getData())
+                    newModel = _.merge({}, this.props.defaultModel || {}, apiResponse.getData('entity'))
                 }
 
                 this.setState({model: newModel, initialModel: _.cloneDeep(newModel), loading: false}, () => {
@@ -653,7 +653,7 @@ class Form extends Webiny.Ui.Component {
             return apiResponse;
         }
 
-        const newModel = apiResponse.getData();
+        const newModel = apiResponse.getData('entity');
         this.setState({model: newModel, initialModel: _.cloneDeep(newModel), error: null});
         if (_.isFunction(this.props.onSuccessMessage)) {
             Webiny.Growl.success(this.props.onSuccessMessage(model));

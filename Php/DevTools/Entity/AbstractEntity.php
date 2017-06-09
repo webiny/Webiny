@@ -261,7 +261,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
          * @api.name Get a record by ID
          */
         $this->api('GET', '{id}', function () {
-            return $this->toArray($this->wRequest()->getFields());
+            return $this->apiFormatEntity($this, $this->wRequest()->getFields());
         });
 
         /**
@@ -287,7 +287,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                 throw new ApiException($e->getMessage(), $code, 422);
             }
 
-            return $this->toArray($this->wRequest()->getFields());
+            return $this->apiFormatEntity($this, $this->wRequest()->getFields());
         });
 
         /**
@@ -298,7 +298,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                 $data = $this->wRequest()->getRequestData();
                 $this->populate($data)->save();
 
-                return $this->toArray($this->wRequest()->getFields());
+                return $this->apiFormatEntity($this, $this->wRequest()->getFields());
             } catch (EntityException $e) {
                 if ($e->getCode() == EntityException::VALIDATION_FAILED) {
                     throw new ApiException($e->getMessage(), 'WBY-ED-CRUD_UPDATE-1', 422, $e->getInvalidAttributes());

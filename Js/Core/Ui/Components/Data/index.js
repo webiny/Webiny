@@ -64,7 +64,7 @@ class Data extends Webiny.Ui.Component {
             Webiny.Growl.info(response.getError(), 'Could not fetch data', true);
             return;
         }
-        this.setState({data: response.getData(), loading: false});
+        this.setState({data: this.props.prepareLoadedData(response.getData()), loading: false});
     }
 
     filter(filters = {}) {
@@ -85,6 +85,7 @@ Data.defaultProps = {
     autoRefresh: null,
     onLoad: _.noop,
     onInitialLoad: _.noop,
+    prepareLoadedData: data => data,
     renderer() {
         if (!_.isFunction(this.props.children)) {
             throw new Error('Warning: Data component only accepts a function as its child element!');
