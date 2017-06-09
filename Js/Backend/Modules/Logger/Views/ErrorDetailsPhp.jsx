@@ -10,7 +10,8 @@ ErrorDetailsPhp.defaultProps = {
         const statProps = {
             api: '/entities/webiny/logger-entry',
             url: this.props.errorEntry.id,
-            fields: 'id, stack'
+            fields: 'id,stack',
+            prepareLoadedData: data => data.entity
         };
 
         return (

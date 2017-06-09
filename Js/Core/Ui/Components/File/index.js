@@ -69,12 +69,7 @@ SimpleFile.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                         {fileReader}
                     </div>
                     {this.renderDescription()}
-                    <Animate
-                        trigger={this.renderValidationMessage()}
-                        show={this.props.showValidationAnimation}
-                        hide={this.props.hideValidationAnimation}>
-                        {this.renderValidationMessage()}
-                    </Animate>
+                    {this.renderValidationMessage()}
                 </div>
             </FormGroup>
         );
