@@ -22,8 +22,8 @@ ModalAction.defaultProps = {
             }
         };
 
-        const download = (httpMethod, url, filters = null) => {
-            this.refs.downloader.download(httpMethod, url, filters);
+        const download = (httpMethod, url, params = null) => {
+            this.refs.downloader.download(httpMethod, url, params);
             this.refs.dialog.hide();
         };
         const modal = this.props.children.call(this, this.props.data, this.props.actions, modalActions, download);

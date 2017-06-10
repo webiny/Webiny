@@ -17,9 +17,9 @@ class Downloader extends Webiny.Ui.Component {
         }
     }
 
-    download(httpMethod, url, body = null) {
+    download(httpMethod, url, params = null) {
         this.downloaded = false;
-        this.setState({httpMethod, url, body: _.pickBy(body, f => !_.isUndefined(f))});
+        this.setState({httpMethod, url, params: _.pickBy(params, f => !_.isUndefined(f))});
     }
 }
 
@@ -37,19 +37,19 @@ Downloader.defaultProps = {
             action = webinyApiPath + action;
         }
 
-        let filters = null;
-        if (this.state.body) {
-            filters = [];
-            _.each(this.state.body, (value, name) => {
+        let params = null;
+        if (this.state.params) {
+            params = [];
+            _.each(this.state.params, (value, name) => {
                 if (_.isArray(value)) {
                     value.map((v, index) => {
-                        filters.push(
+                        params.push(
                             <input type="hidden" name={name + '[]'} value={v} key={index}/>
                         );
                     });
                     return;
                 }
-                filters.push(<input type="hidden" name={name} value={value} key={name}/>);
+                params.push(<input type="hidden" name={name} value={value} key={name}/>);
             });
         }
 
@@ -67,7 +67,7 @@ Downloader.defaultProps = {
 
         return (
             <form ref="downloader" action={action} method={this.state.httpMethod} target="_blank">
-                {filters}
+                {params}
                 {authorization}
                 {debug}
             </form>
