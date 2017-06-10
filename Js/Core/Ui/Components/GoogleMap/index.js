@@ -13,21 +13,17 @@ class GoogleMap extends Webiny.Ui.Component {
         this.geoCoder = null;
         this.loading = null;
 
-        if (!window.google) {
-            Webiny.Page.loadScript('https://maps.googleapis.com/maps/api/js?key=' + this.props.apiKey);
-        }
-
         this.bindMethods('positionMarker,setupMap,search');
     }
 
     componentDidMount() {
-        this.loading = setInterval(() => {
-            if (window.google) {
-                clearInterval(this.loading);
-                this.loading = null;
+        if (!window.google) {
+            return Webiny.Page.loadScript('https://maps.googleapis.com/maps/api/js?key=' + this.props.apiKey).then(() => {
                 this.setupMap();
-            }
-        }, 50);
+            });
+        }
+
+        this.setupMap();
     }
 
     shouldComponentUpdate(newProps) {
@@ -110,11 +106,11 @@ GoogleMap.defaultProps = {
     renderer() {
         const {styles} = this.props;
         return (
-            <div className={styles.container}>
+            <div className={styles.container} style={this.props.style}>
                 <div className={styles.map}>{this.props.children}</div>
             </div>
         );
     }
 };
 
-export default Webiny.createComponent(GoogleMap, {styles});
+export default Webiny.createComponent(GoogleMap, {styles, api: ['search']});
