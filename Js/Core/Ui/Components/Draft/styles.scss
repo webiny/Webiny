@@ -247,6 +247,24 @@
         text-align: inherit;
       }
 
+      .alignment--left {
+        .public-DraftStyleDefault-block {
+          text-align: left;
+        }
+      }
+
+      .alignment--center {
+        .public-DraftStyleDefault-block {
+          text-align: center;
+        }
+      }
+
+      .alignment--right {
+        .public-DraftStyleDefault-block {
+          text-align: right;
+        }
+      }
+
     }
     .rich-editor__editor {
       margin: 0;
@@ -274,24 +292,6 @@
           color: white;
         }
       }
-    }
-  }
-
-  .alignment--left {
-    .public-DraftStyleDefault-block {
-      text-align: left;
-    }
-  }
-
-  .alignment--center {
-    .public-DraftStyleDefault-block {
-      text-align: center;
-    }
-  }
-
-  .alignment--right {
-    .public-DraftStyleDefault-block {
-      text-align: right;
     }
   }
 
