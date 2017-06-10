@@ -115,7 +115,7 @@ class Search extends Webiny.Ui.FormComponent {
             newState['preview'] = this.renderPreview(value);
         } else if (id) {
             this.api.get(this.api.getUrl(value)).then(apiResponse => {
-                const data = apiResponse.getData();
+                const data = apiResponse.getData('entity');
                 this.setState({selectedData: data, preview: this.renderPreview(data)});
             });
         }
