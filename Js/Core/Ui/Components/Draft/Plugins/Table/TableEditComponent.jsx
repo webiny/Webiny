@@ -16,13 +16,13 @@ class TableEditComponent extends Webiny.Ui.Component {
         this.Draft = props.Draft;
 
         this.state = {
-            rows: props.entity.data.rows || [{
+            rows: _.get(props, 'entity.data.rows', [{
                 key: this.Draft.genKey(), columns: [
                     {key: this.Draft.genKey(), data: null}
                 ]
-            }],
-            headers: props.entity.data.headers || [{key: this.Draft.genKey(), data: null}],
-            numberOfColumns: props.entity.data.numberOfColumns || 1,
+            }]),
+            headers: _.get(props, 'entity.data.headers', [{key: this.Draft.genKey(), data: null}]),
+            numberOfColumns: _.get(props, 'entity.data.numberOfColumns', 1),
             focusedEditor: null
         };
 
@@ -118,7 +118,8 @@ class TableEditComponent extends Webiny.Ui.Component {
                         if (type === 'head') {
                             this.refs[this.state.headers[col].key].moveFocusToEnd();
                         } else {
-                            this.refs[this.state.rows[row].columns[col].key].moveFocusToEnd();
+                            const column = this.refs[this.state.rows[row].columns[col].key];
+                            column && column.moveFocusToEnd();
                         }
                     });
                 }

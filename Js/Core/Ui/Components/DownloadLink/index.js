@@ -31,6 +31,7 @@ class DownloadLink extends Webiny.Ui.Component {
 }
 
 DownloadLink.defaultProps = {
+    download: null,
     method: 'GET',
     renderer() {
         const {Downloader, Link, ...props} = this.props;
