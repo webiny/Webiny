@@ -11,6 +11,7 @@ use Apps\Webiny\Php\DevTools\Authorization\Authorization;
 use Apps\Webiny\Php\PackageManager\App;
 use Webiny\AnalyticsDb\AnalyticsDb;
 use Webiny\Component\Cache\CacheStorage;
+use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\Mongo\Mongo;
 use Webiny\Component\ServiceManager\ServiceManager;
 use Webiny\Component\Storage\Storage as WebinyStorage;
@@ -198,5 +199,15 @@ trait WebinyTrait
         }
 
         return Apps::getInstance();
+    }
+
+    /**
+     * Get ApiCache instance.
+     *
+     * @return ApiCache
+     */
+    static protected function wApiCache()
+    {
+        return ApiCache::getInstance();
     }
 }

@@ -168,7 +168,7 @@ class i18n {
             localStorage[`Webiny.i18n.language`] = this.language;
             localStorage[`Webiny.i18n.cacheKey`] = apiResponse.getData('cacheKey', null);
             localStorage[`Webiny.i18n.translations`] = JSON.stringify(apiResponse.getData('translations'));
-            this.translations = _.assign(translations, apiResponse.getData('translations'));
+            this.translations = _.assign(this.translations, apiResponse.getData('translations'));
             return apiResponse;
         });
     }

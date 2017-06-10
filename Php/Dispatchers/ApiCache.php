@@ -9,8 +9,7 @@ namespace Apps\Webiny\Php\Dispatchers;
 
 use Apps\Webiny\Php\DevTools\Response\ApiCacheResponse;
 use Apps\Webiny\Php\RequestHandlers\ApiEvent;
-use Webiny\Component\Config\ConfigObject;
-use Webiny\Hrc\Hrc;
+
 
 /**
  * Class ApiCache
@@ -25,10 +24,6 @@ use Webiny\Hrc\Hrc;
  */
 class ApiCache extends AbstractApiDispatcher
 {
-    /**
-     * @var Hrc
-     */
-    private $hrc;
     private $cacheStatus = false;
 
     public function __construct()
@@ -45,26 +40,6 @@ class ApiCache extends AbstractApiDispatcher
 
             return;
         }
-
-        // extract cache rules
-        $cacheRules = $this->wConfig()->get('ApiCache.CacheRules', new ConfigObject())->toArray();
-        if (!is_array($cacheRules) || count($cacheRules) < 1) {
-            $this->cacheStatus = false;
-
-            return;
-        }
-
-        /**
-         * @var Hrc
-         */
-        $this->hrc = $this->wService('Hrc');
-        $this->hrc->setCacheRules($cacheRules);
-
-        // check if the callback is defined
-        $callback = $this->wConfig()->get('ApiCache.Callback', false);
-        if ($callback) {
-            $this->hrc->registerCallback(new $callback);
-        }
     }
 
     public function cacheRead(ApiEvent $event)
@@ -74,19 +49,19 @@ class ApiCache extends AbstractApiDispatcher
         }
 
         // we need to flush the current HRC request because of the aggregated API requests
-        $this->hrc->flushRequest();
+        self::wApiCache()->hrc()->flushRequest();
 
         // read cache
-        $response = $this->hrc->read('response');
+        $response = self::wApiCache()->hrc()->read('response');
         if ($response !== false) {
             $response = new ApiCacheResponse($response);
             // get matched rule
-            $matchedRule = $this->hrc->getMatchedRule();
+            $matchedRule = self::wApiCache()->hrc()->getMatchedRule();
             $cacheRule = $this->wConfig()->get('ApiCache.CacheRules.' . $matchedRule->getCacheRule()->getName());
             // check if browser cache is turned on
             if ($cacheRule->get('BrowserCache', false)) {
                 // get the remaining ttl
-                $remainingTtl = $this->hrc->getRemainingTtl();
+                $remainingTtl = self::wApiCache()->hrc()->getRemainingTtl();
                 if ($remainingTtl > 0) {
                     $response->setCacheControl($remainingTtl);
                 }
@@ -108,7 +83,7 @@ class ApiCache extends AbstractApiDispatcher
         // extract the data
         $data = $response->getData(false);
         // save cache
-        $this->hrc->save('response', json_encode(['data' => $data]));
+        self::wApiCache()->hrc()->save('response', json_encode(['data' => $data]));
     }
 
 }
