@@ -6,11 +6,11 @@ class ValidationIcon extends Webiny.Ui.Component {
 }
 
 ValidationIcon.defaultProps = {
-    success: true,
+    error: false,
     renderer() {
 
         let css = styles.validationIconSuccess;
-        if (this.props.success === false) {
+        if (this.props.error) {
             css = styles.validationIconError;
         }
 

@@ -43,7 +43,7 @@ class BasePlugin {
             insertionTargetSelection = targetSelection;
             insertionTargetBlock = afterRemovalContentState;
         } else {
-            // the only way to insert a new seems to be by splitting an existing in to two
+            // the only way to insert a new seems to be by splitting an existing in two
             insertionTargetBlock = Draft.Modifier.splitBlock(afterRemovalContentState, targetSelection);
             // the position to insert our blocks
             insertionTargetSelection = insertionTargetBlock.getSelectionAfter();

@@ -6,12 +6,12 @@ class ValidationMessage extends Webiny.Ui.Component {
 }
 
 ValidationMessage.defaultProps = {
-    success: true,
+    show: true,
     hideValidationAnimation: {translateY: 0, opacity: 0, duration: 225},
     showValidationAnimation: {translateY: 50, opacity: 1, duration: 225},
     renderer() {
         let css = null;
-        if (this.props.success === false) {
+        if (this.props.show) {
             css = styles.validationMessageError;
         }
 
@@ -19,7 +19,7 @@ ValidationMessage.defaultProps = {
 
         return (
             <Animate
-                trigger={!this.props.success}
+                trigger={this.props.show}
                 hide={this.props.hideValidationAnimation}
                 show={this.props.showValidationAnimation}
                 className={styles.validationMessageHolder}>

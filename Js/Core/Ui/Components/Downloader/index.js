@@ -17,9 +17,9 @@ class Downloader extends Webiny.Ui.Component {
         }
     }
 
-    download(httpMethod, url, ids = null, filters = null) {
+    download(httpMethod, url, params = null) {
         this.downloaded = false;
-        this.setState({httpMethod, url, ids, filters: _.pickBy(filters, f => !_.isUndefined(f))});
+        this.setState({httpMethod, url, params: _.pickBy(params, f => !_.isUndefined(f))});
     }
 }
 
@@ -37,18 +37,19 @@ Downloader.defaultProps = {
             action = webinyApiPath + action;
         }
 
-        let filters = null;
-        if (this.state.filters && !this.state.ids) {
-            filters = [];
-            _.each(this.state.filters, (value, name) => {
-                filters.push(<input type="hidden" name={name} value={value} key={name}/>);
-            });
-        }
-
-        let ids = null;
-        if (this.state.ids) {
-            ids = this.state.ids.map((id, index) => {
-                return <input type="hidden" name="ids[]" value={id} key={index}/>;
+        let params = null;
+        if (this.state.params) {
+            params = [];
+            _.each(this.state.params, (value, name) => {
+                if (_.isArray(value)) {
+                    value.map((v, index) => {
+                        params.push(
+                            <input type="hidden" name={name + '[]'} value={v} key={index}/>
+                        );
+                    });
+                    return;
+                }
+                params.push(<input type="hidden" name={name} value={value} key={name}/>);
             });
         }
 
@@ -66,8 +67,7 @@ Downloader.defaultProps = {
 
         return (
             <form ref="downloader" action={action} method={this.state.httpMethod} target="_blank">
-                {ids}
-                {filters}
+                {params}
                 {authorization}
                 {debug}
             </form>

@@ -60,7 +60,7 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         if (this.state.isValid === true) {
             return <FormGroup.ValidationIcon/>;
         }
-        return <FormGroup.ValidationIcon success={false}/>;
+        return <FormGroup.ValidationIcon error/>;
     },
     renderer() {
         const {DelayedOnChange, Icon, styles, FormGroup} = this.props;

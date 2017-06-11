@@ -184,7 +184,7 @@ FormComponent.defaultProps = {
         return (
             <Webiny.Ui.LazyLoad modules={['FormGroup']}>
                 {({FormGroup}) => (
-                    <FormGroup.ValidationMessage success={success}>
+                    <FormGroup.ValidationMessage show={!success}>
                         {this.state.validationMessage}
                     </FormGroup.ValidationMessage>
                 )}
