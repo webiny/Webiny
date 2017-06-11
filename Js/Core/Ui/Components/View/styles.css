@@ -74,6 +74,7 @@
 	background-color: white;
 	min-height: 75px;
 	padding: 30px 30px 0 30px;
+	z-index: 10;
 }
 
 .chartBlock .header:after, .infoBlock .header:after {
@@ -97,7 +98,6 @@
 	margin: 5px 0 0 0;
 	display: inline-block;
 	font-size: 13px;
-	opacity: 0.8;
 	vertical-align: middle;
 	float: right;
 	text-transform: uppercase;
@@ -108,6 +108,7 @@
 	background-color: white;
 	min-height: 295px;
 	overflow: hidden;
+	z-index: 20;
 }
 
 /* make some bits nicer for mobile */
