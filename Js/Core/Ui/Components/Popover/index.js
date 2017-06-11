@@ -23,6 +23,7 @@ class Popover extends Webiny.Ui.Component {
 }
 
 Popover.defaultProps = {
+    title: null,
     trigger: 'hover',
     placement: 'right',
     renderer() {

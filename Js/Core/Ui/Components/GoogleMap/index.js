@@ -43,16 +43,18 @@ class GoogleMap extends Webiny.Ui.Component {
     }
 
     setupMap() {
-        this.map = new google.maps.Map(ReactDOM.findDOMNode(this).querySelector('.'+this.props.styles.map), {
-            center: new google.maps.LatLng(this.props.lat, this.props.lng),
+        const lat = _.get(this.props, 'value.lat', this.props.center.lat);
+        const lng = _.get(this.props, 'value.lng', this.props.center.lng);
+
+        this.map = new google.maps.Map(ReactDOM.findDOMNode(this).querySelector('[data-role="map"]'), {
+            center: new google.maps.LatLng(lat, lng),
             zoom: this.props.zoom,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         });
 
         this.marker = new google.maps.Marker({
             map: this.map,
-            draggable: true,
-            position: {lat: this.props.lat, lng: this.props.lng}
+            draggable: true
         });
 
         if (!this.props.readOnly) {
@@ -99,15 +101,17 @@ class GoogleMap extends Webiny.Ui.Component {
 GoogleMap.defaultProps = {
     apiKey: null,
     zoom: 4,
-    lat: 0,
-    lng: 0,
+    center: {
+        lat: 0,
+        lng: 0
+    },
     readOnly: false,
     style: null,
     renderer() {
         const {styles} = this.props;
         return (
             <div className={styles.container} style={this.props.style}>
-                <div className={styles.map}>{this.props.children}</div>
+                <div data-role="map" className={styles.map}>{this.props.children}</div>
             </div>
         );
     }

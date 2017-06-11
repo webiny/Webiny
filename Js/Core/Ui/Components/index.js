@@ -44,7 +44,6 @@ export default () => {
         Icon: () => import('./Icon'),
         IconPicker: () => import('./IconPicker'),
         Image: () => import('./Image'),
-        ImageUploader: () => import('./ImageUploader'),
         Input: () => import('./Input'),
         Label: () => import('./Label'),
         LazyImage: () => import('./LazyImage'),
