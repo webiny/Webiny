@@ -274,7 +274,8 @@ class VideoPlugin extends Webiny.Draft.AtomicPlugin {
                                 title: <Ui.Icon icon="fa-video-camera"/>,
                                 closeOnClick: false,
                                 onShow: this.showDropdown,
-                                className: 'toolbar-dropdown'
+                                className: 'toolbar-dropdown',
+                                disabled: this.editor.getReadOnly()
                             };
                             return (
                                 <Ui.Dropdown {...props}>
