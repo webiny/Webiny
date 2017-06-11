@@ -118,3 +118,17 @@
 	text-transform: uppercase;
 	text-align: center;
 }
+
+:global(.tray-bin__file.placeholder) {
+	width: 163px;
+	height: 210px;
+	border: 2px dashed rgba(128, 128, 128, 0.31);
+	text-align: center;
+	display: inline-block;
+	background-color: transparent;
+	margin: 0 2px 15px;
+	color: rgb(198, 198, 198);
+	padding-top: 90px;
+	font-weight: bold;
+	font-size: 16px;
+}
