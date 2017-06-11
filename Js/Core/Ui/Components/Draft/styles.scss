@@ -75,6 +75,13 @@
           /* sven: causes problems when the toolbar goes into 2 lines */
           vertical-align: top;
 
+          actions{
+            display: table;
+            >span{
+              display: table-cell;
+            }
+          }
+
           .toolbar-dropdown {
             margin-right: 0px;
             button {
