@@ -14,7 +14,6 @@ trait ApiCacheEntityTrait
      */
     private function apiCacheRegisterCallbacks()
     {
-
         $this->onAfterUpdate(function () {
             $this->apiCacheUpdateAction();
         });
@@ -28,7 +27,7 @@ trait ApiCacheEntityTrait
     /**
      * Unlike the purge on update, which only purges the record inside the given cache rule, this method does a purge across all cache rules.
      */
-    public function apiCachePurgeRecord()
+    protected function apiCachePurgeRecord()
     {
         // we need to get the cache rule from the item we want to purge, so that in case of a list, we also purge the items linked to the same list
         $entries = self::wApiCache()->hrc()->readByTags(['entityCache', $this->id]);
@@ -52,7 +51,7 @@ trait ApiCacheEntityTrait
      * with the new values. Note: ttl is not refreshed, as that would cause that in some cases a single list entry record expires
      * before the other linked records.
      */
-    private function apiCacheUpdateAction()
+    protected function apiCacheUpdateAction()
     {
         // get the list cache objects for the current entity
         $entries = self::wApiCache()->hrc()->readByTags(['entityCache', $this->id]);
