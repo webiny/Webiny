@@ -30,6 +30,7 @@ Button.defaultProps = {
     label: null,
     onClick: _.noop,
     tooltip: null,
+    disabled: false,
     renderer() {
         const props = _.clone(this.props);
         const {Tooltip, Icon, styles} = props;
