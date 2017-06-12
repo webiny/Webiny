@@ -11,7 +11,7 @@ class Radio extends Webiny.Ui.Component {
     }
 
     onChange() {
-        this.props.onChange(this.props.value);
+        this.props.onChange(this.props.option);
     }
 }
 
@@ -19,12 +19,15 @@ Radio.defaultProps = {
     disabled: false,
     label: '',
     className: '',
+    option: null,
+    optionIndex: null,
+    value: false,
     renderer() {
         const css = this.classSet(this.props.styles.radio, this.props.className, 'col-sm-' + this.props.grid);
 
         return (
             <div className={css}>
-                <input type="radio" disabled={this.props.disabled} onChange={this.onChange} checked={this.props.checked} id={this.id}/>
+                <input type="radio" disabled={this.props.disabled} onChange={this.onChange} checked={this.props.value} id={this.id}/>
                 <label htmlFor={this.id}>{this.props.label}</label>
             </div>
         );

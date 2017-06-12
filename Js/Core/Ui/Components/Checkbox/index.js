@@ -19,7 +19,7 @@ class Checkbox extends Webiny.Ui.FormComponent {
     }
 
     isChecked() {
-        const value = this.props.value || this.props.state;
+        const {value} = this.props;
         return !_.isNull(value) && value !== false && value !== undefined;
     }
 }
@@ -29,6 +29,7 @@ Checkbox.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     grid: 3,
     className: null,
     style: null,
+    option: null,
     optionIndex: null,
     labelRenderer() {
         let tooltip = null;

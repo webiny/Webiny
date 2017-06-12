@@ -11,7 +11,7 @@ SelectRowField.defaultProps = {
             <th>
                 <Webiny.Ui.LazyLoad modules={['Checkbox']}>
                     {({Checkbox}) => (
-                        <Checkbox state={this.props.allRowsSelected} onChange={this.props.onSelectAll} className={styles.selectRow}/>
+                        <Checkbox value={this.props.allRowsSelected} onChange={this.props.onSelectAll} className={styles.selectRow}/>
                     )}
                 </Webiny.Ui.LazyLoad>
             </th>
@@ -21,7 +21,7 @@ SelectRowField.defaultProps = {
         const {rowSelected, rowDisabled, onSelect, Checkbox, List, ...props} = this.props;
         return (
             <List.Table.Field {..._.omit(props, ['renderer'])} className="row-details">
-                {() => <Checkbox disabled={rowDisabled} state={rowSelected} onChange={onSelect} className={styles.selectRow}/>}
+                {() => <Checkbox disabled={rowDisabled} value={rowSelected} onChange={onSelect} className={styles.selectRow}/>}
             </List.Table.Field>
         );
     }
