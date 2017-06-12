@@ -79,7 +79,7 @@ trait ApiCacheEntityTrait
                 $skipFields = $this->apiCacheGetSkipFields($cr);
 
                 // get the new updated record with the required fields
-                $updatedRecord = $this->apiCacheGetEntityArray($entry, $cr);
+                $updatedRecord = $this->apiCacheGetEntityData($entry, $cr);
 
                 // we need to loop through the cache entry as we need to explicitly define which fields to skip and which to update
                 $updatedEntry = $entry['content']['data']['entity'];
@@ -120,7 +120,7 @@ trait ApiCacheEntityTrait
      *
      * @return mixed
      */
-    private function apiCacheGetEntityArray($entry, CacheRule $cr)
+    private function apiCacheGetEntityData($entry, CacheRule $cr)
     {
         // get fields for the current entry
         $fields = $this->apiCacheExtractFields($entry);
