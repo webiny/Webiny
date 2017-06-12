@@ -139,7 +139,8 @@ class ApiCacheCallback implements \Webiny\Hrc\EventCallbackInterface
         // loop through the items and concatenate the key
         foreach ($keyItems as $k) {
             if (!isset($entity[$k])) {
-                throw new AppException('Webiny cache: Unable to compute cache key for rule ' . $cr->getName() . ' because key ".' . $k . '." is missing.');
+                // If key doesn't exist, just ignore it
+                continue;
             }
 
             $key .= $entity[$k];
