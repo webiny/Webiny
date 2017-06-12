@@ -131,6 +131,7 @@
 	width: 100%;
 	padding: 10px;
 }
+.search .autosuggest .plainSearch ul li.selected a,
 .search .autosuggest .plainSearch ul li a:hover {
 	text-decoration: none;
 	background-color: #FBFBFB;

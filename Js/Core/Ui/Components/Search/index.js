@@ -381,8 +381,9 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         return this.fetchValue(item);
     },
     renderOption(item, index) {
+        const {styles} = this.props;
         const itemClasses = {
-            selected: index === this.state.selectedOption
+            [styles.selected]: index === this.state.selectedOption
         };
 
         const linkProps = {
