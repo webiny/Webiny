@@ -366,18 +366,17 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     onChange: _.noop,
     onReset: _.noop,
     onLoadOptions: _.noop,
-    onSearch: _.noop,
     inputIcon: 'icon-search',
     loadingIcon: 'icon-search',
     placeholder: 'Type to search',
     useDataAsValue: false,
     allowFreeInput: false,
-    optionRenderer: function optionRenderer(item) {
+    optionRenderer(item) {
         const value = this.fetchValue(item);
         const content = {__html: value.replace(/\s+/g, '&nbsp;')};
         return <div dangerouslySetInnerHTML={content}/>;
     },
-    selectedRenderer: function selectedRenderer(item) {
+    selectedRenderer(item) {
         return this.fetchValue(item);
     },
     renderOption(item, index) {
