@@ -80,13 +80,12 @@ Dropdown.defaultProps = {
 
         const buttonClasses = this.classSet(
             'dropdown-toggle',
-            styles.dropdownToggle,
-            {disabled: this.props.disabled}
+            styles.dropdownToggle
         );
 
         return (
             <div className={classes} data-role="dropdown">
-                <button className={buttonClasses} type="button" data-toggle="dropdown">
+                <button className={buttonClasses} type="button" data-toggle="dropdown" disabled={this.props.disabled}>
                     {props.title}
                     <span className={'caret ' + styles.caret}/>
                 </button>

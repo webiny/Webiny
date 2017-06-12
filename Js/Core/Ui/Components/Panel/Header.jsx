@@ -6,6 +6,8 @@ class Header extends Webiny.Ui.Component {
 }
 
 Header.defaultProps = {
+    title: null,
+    icon: null,
     renderer() {
         let icon = null;
         if (this.props.icon) {

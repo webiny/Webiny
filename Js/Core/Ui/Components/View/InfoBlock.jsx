@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles.css';
 
 class InfoBlock extends Webiny.Ui.Component {
 
@@ -9,19 +10,17 @@ InfoBlock.defaultProps = {
     description: '',
     renderer() {
         return (
-            <div className="block info-block">
-                <div className="block-header">
-                    <h4 className="block-title">{this.props.title}</h4>
-                    <div className="block-period block-title-light">{this.props.description}</div>
+            <div className={styles.infoBlock}>
+                <div className={styles.header}>
+                    <h4 className={styles.title}>{this.props.title}</h4>
+                    <div className={styles.titleLight}>{this.props.description}</div>
                 </div>
-                <div className="block-content">
-                    <div className="chart-container">
-                        {this.props.children}
-                    </div>
+                <div className={styles.container}>
+                    {this.props.children}
                 </div>
             </div>
         );
     }
 };
 
-export default Webiny.createComponent(InfoBlock);
+export default Webiny.createComponent(InfoBlock, {styles});

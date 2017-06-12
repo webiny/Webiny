@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles.css';
 
 class ChartBlock extends Webiny.Ui.Component {
 
@@ -8,13 +9,15 @@ ChartBlock.defaultProps = {
     title: '',
     description: '',
     renderer() {
+        const {styles} = this.props;
+
         return (
-            <div className="block chart-block">
-                <div className="block-header">
-                    <h4 className="block-title">{this.props.title}</h4>
-                    <div className="block-period block-title-light">{this.props.description}</div>
+            <div className={styles.chartBlock}>
+                <div className={styles.header}>
+                    <h4 className={styles.title}>{this.props.title}</h4>
+                    <div className={styles.titleLight}>{this.props.description}</div>
                 </div>
-                <div className="chart-container">
+                <div className={styles.container}>
                     {this.props.children}
                 </div>
             </div>
@@ -22,4 +25,4 @@ ChartBlock.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(ChartBlock);
+export default Webiny.createComponent(ChartBlock, {styles});

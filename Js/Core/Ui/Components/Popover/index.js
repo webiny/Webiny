@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles.scss';
 import ReactDOMServer from 'react-dom/server';
 
 class Popover extends Webiny.Ui.Component {
@@ -23,6 +24,7 @@ class Popover extends Webiny.Ui.Component {
 }
 
 Popover.defaultProps = {
+    title: null,
     trigger: 'hover',
     placement: 'right',
     renderer() {

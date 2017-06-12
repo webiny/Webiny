@@ -64,6 +64,53 @@
 	top: 8px;
 }
 
+.chartBlock, .infoBlock {
+	width: 100%;
+	margin-top: 30px;
+}
+
+.chartBlock .header, .infoBlock .header {
+	position: relative;
+	background-color: white;
+	min-height: 75px;
+	padding: 30px 30px 0 30px;
+	z-index: 10;
+}
+
+.chartBlock .header:after, .infoBlock .header:after {
+	content: "";
+	display: block;
+	clear: both;
+	float: none;
+}
+
+.chartBlock .title, .infoBlock .title {
+	margin: 0 20px 0 0;
+	font-weight: 600;
+	font-size: 22px;
+	display: inline-block;
+	vertical-align: middle;
+	float: left;
+	max-width: 75%;
+}
+
+.chartBlock .titleLight, .infoBlock .titleLight {
+	margin: 5px 0 0 0;
+	display: inline-block;
+	font-size: 13px;
+	vertical-align: middle;
+	float: right;
+	text-transform: uppercase;
+}
+
+.chartBlock .container, .infoBlock .container {
+	padding: 5px 20px 30px 20px;
+	background-color: white;
+	min-height: 295px;
+	overflow: hidden;
+	z-index: 20;
+}
+
 /* make some bits nicer for mobile */
 @media (max-width: 768px) {
 	.viewHeader {
