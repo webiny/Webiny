@@ -9,7 +9,7 @@ class RadioGroup extends Webiny.Ui.OptionComponent {
         this.bindMethods('renderOptions');
     }
 
-    shouldComponentUpdate(nextProps, nextState){
+    shouldComponentUpdate(nextProps, nextState) {
         const propsChanged = !_.isEqual(nextProps.options, this.props.options) || !_.isEqual(nextProps.value, this.props.value);
         const stateChanged = !_.isEqual(nextState.options, this.state.options);
         return propsChanged || stateChanged;
@@ -39,10 +39,11 @@ class RadioGroup extends Webiny.Ui.OptionComponent {
                 grid: this.props.grid,
                 label: item.text,
                 disabled: this.isDisabled(),
-                value: item,
-                checked,
+                option: item,
+                optionIndex: key,
+                value: checked,
                 onChange: newValue => {
-                    this.props.onChange(this.props.useDataAsValue ? newValue.data : newValue[this.props.valueAttr], this.validate);
+                    this.props.onChange(this.props.useDataAsValue ? newValue.data : newValue.id, this.validate);
                 }
             };
 
@@ -61,6 +62,8 @@ class RadioGroup extends Webiny.Ui.OptionComponent {
     }
 }
 
+RadioGroup.Radio = Radio;
+
 RadioGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
     radioRenderer: null,
     renderer() {
@@ -77,4 +80,4 @@ RadioGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
     }
 });
 
-export default Webiny.createComponent(RadioGroup, {modules:['FormGroup'], styles});
+export default Webiny.createComponent(RadioGroup, {modules: ['FormGroup'], styles});
