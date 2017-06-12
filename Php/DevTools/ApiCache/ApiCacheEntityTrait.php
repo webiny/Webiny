@@ -63,9 +63,6 @@ trait ApiCacheEntityTrait
             // open up the entry content (content contains the thing we cached)
             $entry['content'] = self::jsonDecode($entry['content'], true);
 
-            // get fields for the current entry
-            $fields = $this->apiCacheExtractFields($entry);
-
             // get the cache rule configuration
             $cr = $this->apiCacheGetCacheRule($entry);
 
@@ -77,13 +74,12 @@ trait ApiCacheEntityTrait
             // check the update action for that rule
             $action = $this->apiCacheGetUpdateAction($cr);
 
-
             if ($action == 'update') {
                 // check if skip fields are defined in the config
                 $skipFields = $this->apiCacheGetSkipFields($cr);
 
                 // get the new updated record with the required fields
-                $updatedRecord = $this->toArray($fields);
+                $updatedRecord = $this->apiCacheGetEntityArray($entry, $cr);
 
                 // we need to loop through the cache entry as we need to explicitly define which fields to skip and which to update
                 $updatedEntry = $entry['content']['data']['entity'];
@@ -115,6 +111,22 @@ trait ApiCacheEntityTrait
             }
         }
 
+    }
+
+    /**
+     * Returns current entity up-to-date array, based on previously cached fields
+     * @param           $entry
+     * @param CacheRule $cr
+     *
+     * @return mixed
+     */
+    private function apiCacheGetEntityArray($entry, CacheRule $cr)
+    {
+        // get fields for the current entry
+        $fields = $this->apiCacheExtractFields($entry);
+
+        // get the new updated record with the required fields
+        return $this->toArray($fields);
     }
 
     /**
