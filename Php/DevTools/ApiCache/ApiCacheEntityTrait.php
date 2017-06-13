@@ -138,7 +138,8 @@ trait ApiCacheEntityTrait
     }
 
     /**
-     * Returns current entity up-to-date array, based on previously cached fields
+     * Returns current entity up-to-date array, based on previously cached fields. Although CacheRule isn't used in this method,
+     * we pass it anyways, in case it's needed when implementing custom logic.
      *
      * @param           $entry
      * @param CacheRule $cr
