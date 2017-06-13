@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles.css';
 
 class Search extends Webiny.Ui.FormComponent {
 
@@ -380,8 +381,9 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         return this.fetchValue(item);
     },
     renderOption(item, index) {
+        const {styles} = this.props;
         const itemClasses = {
-            selected: index === this.state.selectedOption
+            [styles.selected]: index === this.state.selectedOption
         };
 
         const linkProps = {
@@ -416,10 +418,11 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         const options = this.state.options.map(this.props.renderOption.bind(this));
 
         let dropdownMenu = null;
+        const {styles} = this.props;
         if (this.state.options.length > 0) {
             dropdownMenu = (
-                <div className="autosuggest">
-                    <div className="plain-search">
+                <div className={styles.autosuggest}>
+                    <div className={styles.plainSearch}>
                         <ul>{options}</ul>
                     </div>
                 </div>
@@ -429,9 +432,9 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         // Create search input
         const {Link, Icon} = this.props;
         return (
-            <div className="search">
-                <Link className="btn">
-                    <Icon icon={this.props.loading ? this.props.loadingIcon : this.props.inputIcon}/>
+            <div className={styles.search}>
+                <Link className={styles.btn}>
+                    <Icon className={styles.icon} icon={this.props.loading ? this.props.loadingIcon : this.props.inputIcon}/>
                 </Link>
                 <input {...inputProps}/>
                 {dropdownMenu}
@@ -456,4 +459,4 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     }
 });
 
-export default Webiny.createComponent(Search, {modules: ['Link', 'Icon', 'FormGroup']});
+export default Webiny.createComponent(Search, {modules: ['Link', 'Icon', 'FormGroup'], styles});
