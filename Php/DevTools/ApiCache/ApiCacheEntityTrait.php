@@ -39,7 +39,7 @@ trait ApiCacheEntityTrait
             $content = self::jsonDecode($entry['content'], true);
 
             // purge linked items
-            self::wApiCache()->hrc()->purgeByTag($content['meta']['cacheKey']);
+            self::wApiCache()->hrc()->purgeByTag($content['data']['meta']['cacheKey']);
         }
 
         // purge everything else
