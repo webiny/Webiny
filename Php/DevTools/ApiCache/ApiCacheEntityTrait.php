@@ -15,11 +15,17 @@ trait ApiCacheEntityTrait
     private function apiCacheRegisterCallbacks()
     {
         $this->onAfterUpdate(function () {
+            if ($this->apiCacheSkipUpdate()) {
+                return;
+            }
             $this->apiCacheUpdateAction();
         });
 
 
         $this->onAfterDelete(function () {
+            if ($this->apiCacheSkipPurge()) {
+                return;
+            }
             $this->apiCachePurgeRecord();
         });
     }
@@ -114,13 +120,32 @@ trait ApiCacheEntityTrait
     }
 
     /**
+     * This can be used to skip update of cache if specific conditions are met
+     * @return bool
+     */
+    protected function apiCacheSkipUpdate()
+    {
+        return false;
+    }
+
+    /**
+     * This can be used to skip purge of cache if specific conditions are met
+     * @return bool
+     */
+    private function apiCacheSkipPurge()
+    {
+        return false;
+    }
+
+    /**
      * Returns current entity up-to-date array, based on previously cached fields
+     *
      * @param           $entry
      * @param CacheRule $cr
      *
      * @return mixed
      */
-    private function apiCacheGetEntityData($entry, CacheRule $cr)
+    protected function apiCacheGetEntityData($entry, CacheRule $cr)
     {
         // get fields for the current entry
         $fields = $this->apiCacheExtractFields($entry);
