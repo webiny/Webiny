@@ -90,4 +90,4 @@ FileReader.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(FileReader, {api: ['getFiles']});
+export default Webiny.createComponent(FileReader, {api: ['getFiles', 'readFiles']});
