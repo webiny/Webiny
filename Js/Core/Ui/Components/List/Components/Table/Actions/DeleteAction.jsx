@@ -27,7 +27,7 @@ DeleteAction.defaultProps = {
             <ModalAction {..._.pick(this.props, 'data', 'actions', 'label', 'hide', 'afterDelete', 'icon')}>
                 {function render(record, actions) {
                     const props = {
-                        title: this.props.title,
+                        title: $this.props.title,
                         confirm: $this.props.confirmButtonLabel,
                         cancel: $this.props.cancelButtonLabel,
                         message,
