@@ -68,6 +68,16 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     ];
 
     /**
+     * Get class callbacks
+     *
+     * @return array
+     */
+    public static function getClassCallbacks()
+    {
+        return self::$classCallbacks;
+    }
+
+    /**
      * Find entity by ID - deleted entities won't be included in search by default
      *
      * @param string $id
