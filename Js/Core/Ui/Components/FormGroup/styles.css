@@ -34,7 +34,7 @@
 .infoMessage, .descriptionMessage, .validationMessage {
 	display: inline;
 	margin-top: 5px;
-	margin-bottom: 10px;
+	/*margin-bottom: 10px; sven: no need for this, looks better (removed mainly for .descriptionMessage)*/
 	color: #737373;
 	font-size: 13px;
 	opacity: 100;
