@@ -16,7 +16,7 @@ class DelayedOnChange extends Webiny.Ui.Component {
 
         this.delay = null;
         this.state = {
-            value: props.children.props.value
+            value: this.getChildElement(props).props.value
         };
 
         this.bindMethods('applyValue,changed');
@@ -25,7 +25,7 @@ class DelayedOnChange extends Webiny.Ui.Component {
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
         if (!this.delay) {
-            this.setState({value: props.children.props.value});
+            this.setState({value: this.getChildElement(props).props.value});
         }
     }
 
@@ -41,9 +41,18 @@ class DelayedOnChange extends Webiny.Ui.Component {
         this.delay = setTimeout(() => this.applyValue(this.state.value), this.props.delay);
     }
 
+    getChildElement(props = null) {
+        if (!props) {
+            props = this.props;
+        }
+
+        return React.Children.toArray(props.children)[0];
+    }
+
     render() {
-        this.realOnChange = this.props.children.props.onChange;
-        const props = _.omit(this.props.children.props, ['onChange']);
+        const childElement = this.getChildElement();
+        this.realOnChange = childElement.props.onChange;
+        const props = _.omit(childElement.props, ['onChange']);
         props.value = this.state.value;
         props.onChange = e => {
             const value = _.isString(e) ? e : e.target.value;
@@ -70,7 +79,7 @@ class DelayedOnChange extends Webiny.Ui.Component {
             }
         };
 
-        return React.cloneElement(this.props.children, props);
+        return React.cloneElement(childElement, props);
     }
 }
 

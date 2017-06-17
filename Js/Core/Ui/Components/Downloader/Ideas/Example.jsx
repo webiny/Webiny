@@ -32,7 +32,7 @@
                                             </Ui.Grid.Col>
                                         </Ui.Grid.Row>
                                     </Ui.Modal.Body>
-                                    <Ui.Modal.Footer align="right">
+                                    <Ui.Modal.Footer>
                                         <Ui.Button type="default" label="Cancel" onClick={dialog.hide}/>
                                         <Ui.Button type="primary" label="Export" onClick={form.submit}/>
                                     </Ui.Modal.Footer>

@@ -73,11 +73,7 @@ class MarkdownEditor extends Webiny.Ui.FormComponent {
 
 MarkdownEditor.defaultProps = {
     onChange: _.noop,
-    customParsers: [
-        (html) => {
-            return html.replace(new RegExp('<table>', 'g'), '<table class="table table-striped">');
-        }
-    ],
+    customParsers: [],
     renderer() {
         return (
             <div className="smde">

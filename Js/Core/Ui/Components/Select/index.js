@@ -47,4 +47,4 @@ Select.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
     }
 });
 
-export default Webiny.createComponent(Select, {modules: ['FormGroup']});
+export default Webiny.createComponent(Select, {modules: ['FormGroup'], api: ['loadOptions']});

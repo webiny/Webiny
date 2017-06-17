@@ -220,7 +220,7 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
                                                         </Ui.Tabs.Tab>
                                                     </Ui.Tabs>
                                                 </Ui.Modal.Body>
-                                                <Ui.Modal.Footer align="right">
+                                                <Ui.Modal.Footer>
                                                     <Ui.Button type="default" key="cancel" label="Cancel" onClick={dialog.hide}/>
                                                     <Ui.Button type="primary" key="submit" label="Insert" onClick={form.submit}/>
                                                 </Ui.Modal.Footer>
