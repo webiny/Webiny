@@ -1,29 +1,22 @@
 <?php
-use Apps\Webiny\Php\PackageManager\App;
-
-if (php_sapi_name() !== 'cli') {
-    die('Invalid invocation!');
-}
+/**
+ * Webiny Platform (http://www.webiny.com/)
+ *
+ * @copyright Copyright Webiny LTD
+ *
+ * Usage example:
+ * php Apps/Webiny/Php/Cli/release.php http://domain.app
+ */
 
 $autoloader = require_once getcwd() . '/vendor/autoload.php';
 $autoloader->addPsr4('Apps\\Webiny\\', getcwd() . '/Apps/Webiny');
 
-class Release
+use Apps\Webiny\Php\PackageManager\App;
+
+class Release extends \Apps\Webiny\Php\DevTools\AbstractCli
 {
-    use \Webiny\Component\StdLib\StdLibTrait, \Apps\Webiny\Php\DevTools\WebinyTrait;
-
-    public function __construct($autoloader)
+    public function run()
     {
-        $this->autoloader = $autoloader;
-        $this->absPath = getcwd() . '/';
-    }
-
-    public function run($domain)
-    {
-        $_SERVER = [];
-        $_SERVER['SERVER_NAME'] = $domain;
-        \Apps\Webiny\Php\Bootstrap\Bootstrap::getInstance();
-
         /* @var $app App */
         foreach ($this->wApps() as $app) {
             echo "Releasing '" . $app->getName() . "'...\n";
@@ -34,6 +27,6 @@ class Release
     }
 }
 
-$release = new Release($autoloader);
-$release->run($argv[1]);
+$release = new Release($argv[1]);
+$release->run();
 
