@@ -8,6 +8,57 @@
     padding: 10px;
     font: inherit;
     z-index: 1;
+    position: relative;
+    color: #333333;
+  }
+
+  .CodeMirror-line {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: normal;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    border-width: 0;
+    background: transparent;
+    font-family: inherit;
+    font-size: inherit;
+    margin: 0;
+    line-height: inherit;
+    color: inherit;
+    z-index: 2;
+    position: relative;
+    overflow: visible;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-variant-ligatures: contextual;
+    font-variant-ligatures: contextual;
+    padding: 0 4px;
+  }
+
+  .CodeMirror-cursors {
+    visibility: visible;
+    position: relative;
+    z-index: 3;
+    .CodeMirror-cursor {
+      position: absolute;
+      pointer-events: none;
+      border-left: 1px solid black;
+      border-right: none;
+      width: 0;
+    }
+  }
+
+  .CodeMirror-lines {
+    cursor: text;
+    min-height: 1px;
+    padding: 4px 0;
+  }
+
+  .CodeMirror-measure {
+    position: absolute;
+    width: 100%;
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
   }
 
   .smde .CodeMirror-scroll {
