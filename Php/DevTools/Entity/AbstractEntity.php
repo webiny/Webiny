@@ -7,6 +7,11 @@
 
 namespace Apps\Webiny\Php\DevTools\Entity;
 
+use Apps\Selecto\Php\Lib\SecurityProvider\Entity;
+use Apps\Webiny\Php\DevTools\Entity\EntityQuery\EntityQuery;
+use Apps\Webiny\Php\DevTools\Entity\EntityQuery\EntityQueryManipulator;
+use Apps\Webiny\Php\DevTools\Entity\EntityQuery\Filter;
+use Apps\Webiny\Php\DevTools\Entity\EntityQuery\Sorter;
 use Apps\Webiny\Php\DevTools\Exceptions\AppException;
 use Apps\Webiny\Php\Dispatchers\ApiExpositionTrait;
 use Apps\Webiny\Php\Entities\User;
@@ -21,7 +26,6 @@ use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Entity\EntityException;
 use Webiny\Component\Mongo\Index\AbstractIndex;
 use Webiny\Component\Mongo\Index\SingleIndex;
-use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObjectException;
 use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
 
 /**
@@ -90,9 +94,14 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         }
         $mongo = static::entity()->getDatabase();
 
-        $conditions = static::buildQuery(['_id' => $mongo->id($id)], $options);
+        $query = new EntityQuery(['_id' => $mongo->id($id)]);
+        static::processEntityQuery($query, $options);
 
-        $data = $mongo->findOne(static::$entityCollection, $conditions);
+        if ($query->isAborted()) {
+            return null;
+        }
+
+        $data = $mongo->findOne(static::$entityCollection, $query->getConditions());
         if (!$data) {
             return null;
         }
@@ -124,9 +133,14 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             }
         }
 
-        $conditions = static::buildQuery($conditions, $options);
+        $query = new EntityQuery($conditions);
+        static::processEntityQuery($query, $options);
 
-        return parent::findOne($conditions);
+        if ($query->isAborted()) {
+            return null;
+        }
+
+        return parent::findOne($query->getConditions());
     }
 
     /**
@@ -134,18 +148,25 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
      *
      * @param mixed $conditions
      *
-     * @param array $order Example: ['-name', '+title']
+     * @param array $sort Example: ['-name', '+title']
      * @param int   $limit
      * @param int   $page
      * @param array $options
      *
      * @return EntityCollection
      */
-    public static function find(array $conditions = [], array $order = [], $limit = 0, $page = 0, $options = [])
+    public static function find(array $conditions = [], array $sort = [], $limit = 0, $page = 0, $options = [])
     {
-        $conditions = static::buildQuery($conditions, $options);
+        $query = new EntityQuery($conditions, $sort, $limit, $page);
 
-        return parent::find($conditions, $order, $limit, $page);
+        // Query manipulation with entityFilters (also entitySorters)
+        static::processEntityQuery($query, $options);
+
+        if ($query->isAborted()) {
+            return new EntityCollection(get_called_class());
+        }
+
+        return parent::find($query->getConditions(), $query->getSorters(), $query->getLimit(), $query->getPage());
     }
 
     /**
@@ -159,9 +180,14 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
      */
     public static function count(array $conditions = [], $options = [])
     {
-        $conditions = static::buildQuery($conditions, $options);
+        $query = new EntityQuery($conditions);
+        static::processEntityQuery($query, $options);
 
-        return parent::count($conditions);
+        if ($query->isAborted()) {
+            return 0;
+        }
+
+        return parent::count($query->getConditions());
     }
 
     /**
@@ -400,71 +426,41 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     }
 
     /**
-     * Get array of entity filters
+     * Format conditions and apply options
+     *
+     * @param EntityQuery $query
+     * @param array       $options
      *
      * @return array
      */
-    protected static function entityFilters()
+    protected static function processEntityQuery(EntityQuery $query, $options)
     {
-        return [];
+        if (!isset($options['includeDeleted'])) {
+            $options['includeDeleted'] = false;
+        }
+
+        if (!isset($options['entityFilters'])) {
+            $options['entityFilters'] = true;
+        }
+
+        static::processEntityBaseFilters($query);
+        if ($options['entityFilters']) {
+            static::processEntityQueryManipulators($query);
+        }
+
+        if (!$options['includeDeleted']) {
+            $query->setCondition('deletedOn', null);
+        }
     }
 
     /**
-     * Sets custom filters that can be sent to find and findOne methods
-     *
-     * @param array $conditions
-     *
-     * @return array
-     * @throws AppException
+     * @param EntityQuery $query
      */
-    protected static function setEntityFilters($conditions)
+    protected static function processEntityBaseFilters(EntityQuery $query)
     {
-        // We must ensure original filter values are always sent to each defined filter
-        $originalConditions = $conditions;
-
-        $customFilters = static::entityFilters();
-        $staticFilter = null;
-        /* @var Filter $filter */
-        foreach ($customFilters as $filter) {
-            if (!($filter instanceof Filter)) {
-                continue;
-            }
-            $key = $filter->getName();
-            if ($key === '*') {
-                $staticFilter = $filter;
-                continue;
-            }
-            if (isset($originalConditions[$key])) {
-                $filterValue = $originalConditions[$key];
-                unset($conditions[$key]);
-                $conditions = array_merge($conditions, $filter($filterValue, $conditions, $originalConditions));
-            }
-        }
-
-        // If we have a static filter, let's apply those too
-        if ($staticFilter) {
-            $staticFilterConditions = is_callable($staticFilter) ? $staticFilter($conditions, $originalConditions) : $staticFilter;
-            if (is_array($staticFilterConditions)) {
-                try {
-                    $conditions = self::arr($conditions)->mergeSmart($staticFilterConditions)->val();
-                } catch (ArrayObjectException $e) {
-                    throw new AppException('Merging of filters failed.', '', [
-                        'conditions'             => $conditions,
-                        'staticFilterConditions' => $staticFilterConditions
-                    ]);
-                }
-            }
-        }
-
-        return $conditions;
-    }
-
-    protected static function prepareFilters($filters)
-    {
-        $builtFilters = [];
         $entity = new static;
         $attributes = $entity->getAttributes()->val();
-        foreach ($filters as $fName => $fValue) {
+        foreach ($query->getConditions() as $fName => $fValue) {
             // Construct an $in statement only if filter value is index-based
             if (!self::str($fName)->startsWith('$') && is_array($fValue) && !count(array_filter(array_keys($fValue), 'is_string')) > 0) {
                 $fValue = [
@@ -499,10 +495,70 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                 }
             }
 
-            $builtFilters[$fName] = $fValue;
+            $query->setCondition($fName, $fValue);
+        }
+    }
+
+    /**
+     * Get array of entity query filter and sorter manipulators
+     *
+     * @return array
+     */
+    protected static function entityQuery()
+    {
+        return [];
+    }
+
+    /**
+     * Sets custom filters that can be sent to find and findOne methods
+     *
+     * @param EntityQuery|array $query
+     *
+     * @throws AppException
+     */
+    protected static function processEntityQueryManipulators(EntityQuery $query)
+    {
+        $entityQueryManipulators = static::entityQuery();
+
+        $staticManipulators = [];
+
+        /* @var EntityQueryManipulator $manipulator */
+        foreach ($entityQueryManipulators as $manipulator) {
+            if (!($manipulator instanceof EntityQueryManipulator)) {
+                continue;
+            }
+
+            if ($manipulator->getName() === '*') {
+                $staticManipulators[] = $manipulator;
+                continue;
+            }
+
+            // If manipulator is Filter, then we check if we received a condition which it handles.
+            if ($manipulator instanceof Filter) {
+                if ($query->hasCondition($manipulator->getName())) {
+                    // We clone just so developer doesn't change the original query accidentally.
+                    $manipulator($query);
+                }
+            }
+
+            // If manipulator is Sorter, then we check if we received a sorter which it handles.
+            if ($manipulator instanceof Sorter) {
+                if ($query->hasSorter($manipulator->getName())) {
+                    // We clone just so developer doesn't change the original query accidentally.
+                    $manipulator($query);
+                }
+            }
+
+            // If query was aborted in current manipulator, then we can immediately exit.
+            if ($query->isAborted()) {
+                return;
+            }
         }
 
-        return $builtFilters;
+        // If we have a static filter, let's apply those too
+        foreach ($staticManipulators as $staticManipulator) {
+            $staticManipulator($query);
+        }
     }
 
     /**
@@ -673,35 +729,5 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         }
 
         return true;
-    }
-
-    /**
-     * Format conditions and apply options
-     *
-     * @param array $conditions
-     * @param array $options
-     *
-     * @return array
-     */
-    protected static function buildQuery($conditions, $options)
-    {
-        if (!isset($options['includeDeleted'])) {
-            $options['includeDeleted'] = false;
-        }
-
-        if (!isset($options['entityFilters'])) {
-            $options['entityFilters'] = true;
-        }
-
-        $conditions = static::prepareFilters($conditions);
-        if ($options['entityFilters']) {
-            $conditions = static::setEntityFilters($conditions);
-        }
-
-        if (!$options['includeDeleted']) {
-            $conditions['deletedOn'] = null;
-        }
-
-        return $conditions;
     }
 }

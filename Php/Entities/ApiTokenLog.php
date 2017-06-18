@@ -23,7 +23,7 @@ class ApiTokenLog extends AbstractEntity
     protected static $entityCollection = 'ApiTokenLogs';
     protected static $entityMask = '{id}';
 
-    protected static function entityFilters()
+    protected static function entityQuery()
     {
         return [
             new Filter('*', function ($conditions) {
