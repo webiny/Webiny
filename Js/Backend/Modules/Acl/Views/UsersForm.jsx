@@ -1,4 +1,3 @@
-/* eslint-disable */
 import Webiny from 'Webiny';
 
 class Form extends Webiny.Ui.View {
@@ -6,7 +5,7 @@ class Form extends Webiny.Ui.View {
 
 Form.defaultProps = {
     renderer() {
-        const containerProps = {
+        const formProps = {
             api: Webiny.Auth.getApiEndpoint(),
             fields: 'id,firstName,lastName,email,roles,enabled',
             connectToRouter: true,
@@ -20,8 +19,8 @@ Form.defaultProps = {
         return (
             <Webiny.Ui.LazyLoad modules={['View', 'Form', 'Grid', 'Tabs', 'Input', 'Switch', 'Button', {UserRoles: 'Webiny/Backend/UserRoles'}]}>
                 {(Ui) => (
-                    <Ui.Form ui="myForm" {...containerProps}>
-                        {(model, container) => (
+                    <Ui.Form {...formProps}>
+                        {(model, form) => (
                             <Ui.View.Form>
                                 <Ui.View.Header title={model.id ? 'ACL - Edit User' : 'ACL - Create User'}/>
                                 <Ui.Form.Error message="Something went wrong during save"/>
@@ -53,8 +52,8 @@ Form.defaultProps = {
                                     </Ui.Tabs>
                                 </Ui.View.Body>
                                 <Ui.View.Footer>
-                                    <Ui.Button type="default" onClick={container.cancel} label="Go back"/>
-                                    <Ui.Button type="primary" onClick={container.submit} label="Save user" align="right"/>
+                                    <Ui.Button type="default" onClick={form.cancel} label="Go back"/>
+                                    <Ui.Button type="primary" onClick={form.submit} label="Save user" align="right"/>
                                 </Ui.View.Footer>
                             </Ui.View.Form>
                         )}

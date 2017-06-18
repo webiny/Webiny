@@ -29,7 +29,7 @@ ApiTokensList.defaultProps = {
                     const Table = Ui.List.Table;
 
                     const listProps = {
-                        ui: 'apiTokenList',
+                        ref: ref => this.apiTokensList = ref,
                         api: '/entities/webiny/api-tokens',
                         fields: '*,createdOn',
                         searchFields: 'owner,token',
@@ -40,7 +40,7 @@ ApiTokensList.defaultProps = {
                     let systemApiToken = null;
                     if (this.state.apiToken) {
                         systemApiToken = (
-                            <Ui.Button type="secondary" align="right" onClick={this.ui('systemApiToken:show')}>
+                            <Ui.Button type="secondary" align="right" onClick={() => this.systemApiToken.show()}>
                                 <Ui.Icon icon="fa-key"/>
                                 System API token
                             </Ui.Button>
@@ -63,7 +63,7 @@ ApiTokensList.defaultProps = {
                                                 label="Create new token"/>
                                             {systemApiToken}
                                             <SystemApiTokenModal
-                                                ui="systemApiToken"
+                                                ref={ref => this.systemApiToken = ref}
                                                 token={this.state.apiToken}
                                                 createToken={showView('tokenModalView')}/>
                                         </Ui.View.Header>
@@ -132,9 +132,12 @@ ApiTokensList.defaultProps = {
                                     </Ui.View.List>
                                 )}
                             </Ui.ViewSwitcher.View>
-
                             <Ui.ViewSwitcher.View view="tokenModalView" modal>
-                                {(showView, data) => <ApiTokenModalForm {...{showView, data}} />}
+                                {(showView, data) => (
+                                    <ApiTokenModalForm
+                                        {...{showView, data}}
+                                        refreshTokens={() => this.apiTokensList.loadData()}/>
+                                )}
                             </Ui.ViewSwitcher.View>
                         </Ui.ViewSwitcher>
                     );

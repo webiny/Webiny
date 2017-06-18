@@ -16,7 +16,7 @@ class RootElement extends View {
 
         this.loader = document.querySelector('.preloader-wrap');
 
-        this.bindMethods('onDidUpdate,checkHash,forceUpdate');
+        this.bindMethods('onDidUpdate,forceUpdate');
     }
 
     componentDidMount() {
@@ -29,21 +29,12 @@ class RootElement extends View {
 
         Router.start().then(() => {
             this.setState({loading: false});
-            this.checkHash();
         });
     }
 
     componentWillUnmount() {
         super.componentWillUnmount();
         this.unsubscribe();
-    }
-
-    checkHash() {
-        const hash = window.location.hash;
-        if (hash.startsWith('#ui:')) {
-            const ui = _.trimStart(hash, '#ui:');
-            UiDispatcher.createSignal(this, ui)();
-        }
     }
 
     hideLoader() {
@@ -64,7 +55,6 @@ class RootElement extends View {
     onDidUpdate() {
         this.hideLoader();
         window.scrollTo(0, 0);
-        this.checkHash();
     }
 }
 

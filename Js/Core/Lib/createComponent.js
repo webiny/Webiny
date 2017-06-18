@@ -13,6 +13,10 @@ import Injector from './Core/Injector';
  * @returns {component}
  */
 export default (Component, options = {}) => {
+    // In case this is a dynamic component...
+    if (_.isPlainObject(Component)) {
+        options = Component;
+    }
     // Create an immutable copy of styles to use as default styles
     const defaultStyles = Map(options.styles || {});
 
@@ -114,10 +118,19 @@ export default (Component, options = {}) => {
                             } else {
                                 _.assign(props, modules);
                             }
+                            if (typeof options.getComponent === 'function') {
+                                const RenderComponent = options.getComponent(props);
+                                return <RenderComponent {...props}/>;
+                            }
                             return <Component {...props}/>;
                         }}
                     </LazyLoad>
                 );
+            }
+
+            if (typeof options.getComponent === 'function') {
+                const RenderComponent = options.getComponent(props);
+                return <RenderComponent {...props}/>;
             }
 
             return <Component {...props}/>

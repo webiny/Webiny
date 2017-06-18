@@ -2,17 +2,17 @@ import Webiny from 'Webiny';
 
 // These will be lazy loaded when first growl is performed
 let GrowlComponents = null;
+let GrowlContainer = null;
 
 function getGrowler() {
-    const growler = Webiny.Ui.Dispatcher.get('GrowlContainer');
-    if (!growler) {
+    if (!GrowlContainer) {
         document.body.appendChild(document.createElement('webiny-growler'));
         return new Promise((resolve) => {
             const growlContainer = (
                 <Webiny.Ui.LazyLoad modules={['Growl']}>
                     {({Growl}) => {
                         GrowlComponents = Growl;
-                        return <GrowlComponents.Container ui="GrowlContainer" onComponentDidMount={resolve}/>;
+                        return <GrowlComponents.Container ref={ref => GrowlContainer = ref} onComponentDidMount={resolve}/>;
                     }}
                 </Webiny.Ui.LazyLoad>
             );
@@ -20,7 +20,7 @@ function getGrowler() {
         });
     }
 
-    return Promise.resolve(growler);
+    return Promise.resolve(GrowlContainer);
 }
 
 function Growler(component) {

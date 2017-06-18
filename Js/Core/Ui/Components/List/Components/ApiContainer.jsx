@@ -133,4 +133,4 @@ ApiContainer.defaultProps = _.merge({}, BaseContainer.defaultProps, {
     prepareLoadedData: null
 });
 
-export default Webiny.createComponent(ApiContainer, {modules: ['Grid']});
+export default Webiny.createComponent(ApiContainer, {modules: ['Grid'], api: ['loadData']});

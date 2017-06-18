@@ -10,7 +10,8 @@ class ApiTokenForm extends Webiny.Ui.ModalComponent {
             fields: '*,roles',
             id: _.get(this.props.data, 'id'),
             onSubmitSuccess: () => {
-                this.hide().then(this.ui('apiTokenList:loadData'));
+                this.props.refreshTokens();
+                this.hide();
             },
             defaultModel: this.props.data
         };

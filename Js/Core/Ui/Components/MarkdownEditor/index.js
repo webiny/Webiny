@@ -16,6 +16,7 @@ class MarkdownEditor extends Webiny.Ui.FormComponent {
         super.componentDidMount();
 
         const mdConfig = {
+            autoDownloadFontAwesome: false,
             element: this.getTextareaElement(),
             renderingConfig: {
                 codeSyntaxHighlighting: true

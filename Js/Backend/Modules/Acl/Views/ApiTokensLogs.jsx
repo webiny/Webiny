@@ -32,7 +32,6 @@ ApiTokensLogs.defaultProps = {
     renderer() {
         const tokenId = _.get(this.state.token, 'id');
         const listProps = {
-            ui: 'apiTokenList',
             api: tokenId === 'system' ? '/services/webiny/acl/token-logs' : '/entities/webiny/api-token-logs',
             fields: '*,createdOn',
             query: {

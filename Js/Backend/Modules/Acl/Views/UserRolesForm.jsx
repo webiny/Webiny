@@ -1,4 +1,3 @@
-/* eslint-disable */
 import Webiny from 'Webiny';
 
 class Form extends Webiny.Ui.View {
@@ -7,7 +6,7 @@ class Form extends Webiny.Ui.View {
 
 Form.defaultProps = {
     renderer() {
-        const containerProps = {
+        const formProps = {
             api: '/entities/webiny/user-roles',
             fields: '*,permissions',
             connectToRouter: true,
@@ -26,8 +25,8 @@ Form.defaultProps = {
         return (
             <Webiny.Ui.LazyLoad modules={modules}>
                 {(Ui) => (
-                    <Ui.Form ui="myForm" {...containerProps}>
-                        {(model, container) => (
+                    <Ui.Form {...formProps}>
+                        {(model, form) => (
                             <Ui.View.Form>
                                 <Ui.View.Header title={model.id ? 'ACL - Edit Role' : 'ACL - Create Role'}/>
                                 <Ui.View.Body noPadding>
@@ -51,8 +50,8 @@ Form.defaultProps = {
                                     </Ui.Tabs>
                                 </Ui.View.Body>
                                 <Ui.View.Footer>
-                                    <Ui.Button type="default" onClick={container.cancel} label="Go back"/>
-                                    <Ui.Button type="primary" onClick={container.submit} label="Save role" align="right"/>
+                                    <Ui.Button type="default" onClick={form.cancel} label="Go back"/>
+                                    <Ui.Button type="primary" onClick={form.submit} label="Save role" align="right"/>
                                 </Ui.View.Footer>
                             </Ui.View.Form>
                         )}

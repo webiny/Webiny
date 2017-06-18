@@ -2,27 +2,12 @@ import Webiny from 'Webiny';
 import ApiContainer from './Components/ApiContainer';
 import StaticContainer from './Components/StaticContainer';
 
-class List extends Webiny.Ui.Component {
-    componentWillMount() {
-        super.componentWillMount();
-        if (this.props.ui) {
-            Webiny.Ui.Dispatcher.unregister(this.props.ui, this);
-        }
-    }
-
-    componentDidMount() {
-        // Disabled
-    }
-}
-
-List.defaultProps = {
-    renderer() {
-        const props = _.omit(this.props, ['renderer']);
+export default Webiny.createComponent({
+    api: ['loadData'],
+    getComponent(props) {
         if (_.has(props, 'api') && props.api) {
-            return <ApiContainer {...props}/>;
+            return ApiContainer;
         }
-        return <StaticContainer {...props}/>;
+        return StaticContainer;
     }
-};
-
-export default Webiny.createComponent(List);
+});
