@@ -175,7 +175,12 @@
 		height: auto;
 	}
 
-	.modal .dialog .header h4{
+	.modal .dialog .content .footer {
+		display: flex;
+		flex-direction: column-reverse;
+	}
+
+	.modal .dialog .header h4 {
 		padding: 15px 0;
 		font-size: 1.5em;
 	}
