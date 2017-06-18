@@ -57,6 +57,7 @@ class User extends AbstractEntity implements UserInterface
             if (!empty($password) && $this->wValidation()->validate($password, 'minLength:8')) {
                 return $this->wAuth()->createPasswordHash($password);
             }
+            return $this->password;
         });
         $this->attr('passwordRecoveryCode')->char();
         $this->attr('enabled')->boolean()->setDefaultValue(true);
@@ -127,9 +128,10 @@ class User extends AbstractEntity implements UserInterface
          */
         $this->api('PATCH', 'me', function () {
             $data = $this->wRequest()->getRequestData();
-            $this->wAuth()->getUser()->populate($data)->save();
-
             $user = $this->wAuth()->getUser();
+
+            $user->populate($data)->save();
+
             if (!$user) {
                 throw new ApiException('Invalid token', 'WBY-INVALID-TOKEN');
             }

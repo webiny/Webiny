@@ -10,6 +10,7 @@ class Navigation extends Webiny.Ui.Component {
         super(props);
 
         this.state = {
+            user: null,
             menu: null,
             submenu: null,
             display: (window.outerWidth > 768 ? 'desktop' : 'mobile'),
@@ -30,8 +31,8 @@ class Navigation extends Webiny.Ui.Component {
 
     componentDidMount() {
         super.componentDidMount();
-        this.watch('User', () => {
-            this.setState({time: _.now()});
+        this.watch('User', data => {
+            this.setState({user: data});
         });
         this.checkDisplay();
     }
@@ -87,7 +88,7 @@ class Navigation extends Webiny.Ui.Component {
             return true;
         }
 
-        const user = Webiny.Model.get('User');
+        const {user} = this.state;
         if (menu.role && menu.role.length && (!user || !_.find(user.roles, (r) => menu.role.indexOf(r.slug) > -1))) {
             return false;
         }

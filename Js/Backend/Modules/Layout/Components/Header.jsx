@@ -13,8 +13,8 @@ class Header extends Webiny.Ui.Component {
 
     componentDidMount() {
         super.componentDidMount();
-        this.watch('User', (data) => {
-            this.setState({user: data});
+        this.watch(data => {
+            this.setState({user: data.User});
         });
     }
 

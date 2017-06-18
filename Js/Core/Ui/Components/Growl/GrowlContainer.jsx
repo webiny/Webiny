@@ -66,4 +66,4 @@ GrowlContainer.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(GrowlContainer, {styles});
+export default Webiny.createComponent(GrowlContainer, {styles, api: ['addGrowl', 'removeGrowl', 'removeById']});
