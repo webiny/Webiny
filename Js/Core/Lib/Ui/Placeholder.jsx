@@ -8,8 +8,8 @@ class Placeholder extends Component {
     }
 
     componentDidMount() {
-        if (this.props.onDidUpdate) {
-            this.props.onDidUpdate();
+        if (this.props.componentDidMount) {
+            this.props.componentDidMount();
         }
     }
 

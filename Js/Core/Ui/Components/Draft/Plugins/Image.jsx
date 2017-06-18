@@ -141,7 +141,6 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
         super(config);
         this.validate = _.get(config, 'validate', 'required');
         this.name = 'image';
-        this.id = _.uniqueId('insertImage-');
         this.api = null;
         if (config.api) {
             this.api = new Webiny.Api.Endpoint(config.api);
@@ -167,7 +166,7 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
 
     createBlock() {
         this.editor.setReadOnly(true);
-        this.ui(this.id).show();
+        this.dialog.show();
     }
 
     createImageBlock(model) {
@@ -177,7 +176,7 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
             text: ' ',
             data: model
         };
-        this.ui(this.id).hide().then(() => {
+        this.dialog.hide().then(() => {
             const editorState = this.insertDataBlock(this.editor.getEditorState(), insert);
             this.editor.setEditorState(editorState);
         });
@@ -189,7 +188,7 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
             customView: (
                 <Webiny.Ui.LazyLoad modules={['Form', 'Input', 'Modal', 'Tabs', 'Image', 'Button']}>
                     {(Ui) => (
-                        <Ui.Modal.Dialog ui={this.id}>
+                        <Ui.Modal.Dialog ref={ref => this.dialog = ref}>
                             {dialog => (
                                 <Ui.Form onSubmit={this.submitModal.bind(this)}>
                                     {(model, form) => {

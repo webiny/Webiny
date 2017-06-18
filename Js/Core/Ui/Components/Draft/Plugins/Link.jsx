@@ -6,8 +6,6 @@ class LinkPlugin extends Webiny.Draft.EntityPlugin {
         this.validate = _.get(config, 'validate', 'required,url');
         this.name = 'link';
         this.entity = 'LINK';
-        this.id = _.uniqueId('insertLink-');
-        this.formId = this.id + '-form';
         this.newLink = true;
 
         this.showDropdown = this.showDropdown.bind(this);
@@ -17,11 +15,11 @@ class LinkPlugin extends Webiny.Draft.EntityPlugin {
 
     removeEntity() {
         super.removeEntity();
-        this.ui(this.id).close();
+        this.dropdown.close();
     }
 
     showDropdown() {
-        const formUi = this.ui(this.formId);
+        const formUi = this.form;
         const editorState = this.editor.getEditorState();
         if (editorState) {
             const contentState = editorState.getCurrentContent();
@@ -50,9 +48,9 @@ class LinkPlugin extends Webiny.Draft.EntityPlugin {
             this.editor.setEditorState(this.Draft.EditorState.push(editorState, newContentState, 'apply-entity'));
         }
 
-        const formUi = this.ui(this.formId);
+        const formUi = this.form;
         formUi && formUi.resetForm();
-        this.ui(this.id).close();
+        this.dropdown.close();
     }
 
     getEditConfig() {
@@ -65,7 +63,7 @@ class LinkPlugin extends Webiny.Draft.EntityPlugin {
                         {(Ui) => {
                             const props = {
                                 disabled,
-                                ui: this.id,
+                                ref: ref => this.dropdown = ref,
                                 title: <Ui.Icon icon="fa-link"/>,
                                 closeOnClick: false,
                                 onShow: this.showDropdown,
@@ -75,7 +73,7 @@ class LinkPlugin extends Webiny.Draft.EntityPlugin {
                             return (
                                 <Ui.Dropdown {...props}>
                                     {() => (
-                                        <Ui.Form ui={this.formId} onSubmit={this.submitForm}>
+                                        <Ui.Form ref={ref => this.form = ref} onSubmit={this.submitForm}>
                                             {(model, form) => {
                                                 return (
                                                     <div style={{width: 400}}>

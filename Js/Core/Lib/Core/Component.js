@@ -155,9 +155,6 @@ class Component extends React.Component {
     }
 
     /**
-     * Ex: onChangeImportant(newValue, oldValue){...}
-     * Ex: onChangeName(newValue, oldValue){...}
-     *
      * @param key
      * @param callback
      * @param defaultValue
@@ -182,6 +179,15 @@ class Component extends React.Component {
         });
     }
 
+    /**
+     * This method is DEPRECATED.
+     * For current release it will remain here to support projects that were developed in the meantime.
+     * However, future use of this method will not be supported and it will be removed.
+     *
+     * @param call
+     * @param params
+     * @returns {*}
+     */
     ui(call, ...params) {
         if (call.indexOf(':') < 0) {
             return UiDispatcher.get(call);
@@ -189,23 +195,19 @@ class Component extends React.Component {
         return UiDispatcher.createSignal(this, call, params);
     }
 
-    uiAwait(name) {
-        return new Promise(resolve => {
-            const interval = setInterval(() => {
-                let ui = this.ui(name);
-                if (ui) {
-                    clearInterval(interval);
-                    return resolve(ui);
-                }
-            }, 20);
-        });
-    }
-
     watch(key, func) {
-        const cursor = Webiny.Model.select(key.split('.'));
+        let cursor = null;
+        if (_.isFunction(key)) {
+            cursor = Webiny.Model.select();
+            func = key;
+        } else {
+            cursor = Webiny.Model.select(key.split('.'));
+        }
+
         cursor.on('update', e => {
             func(e.data.currentData, e.data.previousData, e);
         });
+
         this.__cursors.push(cursor);
         // Execute callback with initial data
         func(cursor.get());

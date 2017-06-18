@@ -27,7 +27,7 @@ class ListErrors extends Webiny.Ui.View {
                 parentList.loadData();
             } else {
                 list.loadData();
-                this.ui('errorCount-' + response.getData('errorGroup')).updateCount(response.getData('errorCount'));
+                this['errorCount-' + response.getData('errorGroup')].updateCount(response.getData('errorCount'));
             }
         });
     }
@@ -64,7 +64,7 @@ ListErrors.defaultProps = {
 
                                                     <Ui.ExpandableList.Row key={row.id}>
                                                         <Ui.ExpandableList.Field all={1} name="Count" className="text-center">
-                                                            <ErrorCount count={row.errorCount} ui={'errorCount-' + row.id}/>
+                                                            <ErrorCount count={row.errorCount} ref={ref => this['errorCount-' + row.id] = ref}/>
                                                         </Ui.ExpandableList.Field>
                                                         <Ui.ExpandableList.Field all={5} name="Error">{row.error}</Ui.ExpandableList.Field>
                                                         <Ui.ExpandableList.Field all={4} name="Last Entry">

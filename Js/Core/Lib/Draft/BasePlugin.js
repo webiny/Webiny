@@ -151,13 +151,6 @@ class BasePlugin {
         return entitySelection;
     }
 
-    ui(call, ...params) {
-        if (call.indexOf(':') < 0) {
-            return Webiny.Ui.Dispatcher.get(call);
-        }
-        return Webiny.Ui.Dispatcher.createSignal(this, call, params);
-    }
-
     getStartBlockType(defaultValue = null) {
         const editorState = this.editor.getEditorState();
         const selection = editorState.getSelection();

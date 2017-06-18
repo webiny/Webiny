@@ -19,8 +19,8 @@ class VideoEditComponent extends Webiny.Ui.Component {
     resizeStart(e) {
         this.setState({resizing: true});
         this.size = {
-            width: this.refs.resizer.clientWidth,
-            height: this.refs.resizer.clientHeight
+            width: this.resizer.clientWidth,
+            height: this.resizer.clientHeight
         };
 
         this.aspectRatio = this.size.width / this.size.height;
@@ -131,7 +131,7 @@ VideoEditComponent.defaultProps = {
                         </Ui.Grid.Row>
 
                         <div className={'video-wrapper'} style={{textAlign: this.props.data.align}}>
-                            <div className="resizer" ref="resizer" style={this.getSize()}>
+                            <div className="resizer" ref={ref => this.resizer = ref} style={this.getSize()}>
                                 {this.state.resizing ? <div style={resizeOverlay}/> : null}
                                 {this.renderVideo()}
                                 <span className="resize-handle br" {...draggable}/>
@@ -200,8 +200,6 @@ class VideoPlugin extends Webiny.Draft.AtomicPlugin {
         super(config);
         this.validate = _.get(config, 'validate', 'required');
         this.name = 'video';
-        this.id = _.uniqueId('insertVideo-');
-        this.formId = this.id + '-form';
 
         this.showDropdown = this.showDropdown.bind(this);
         this.submitForm = this.submitForm.bind(this);
@@ -258,8 +256,8 @@ class VideoPlugin extends Webiny.Draft.AtomicPlugin {
         }
 
         this.createVideoBlock(data);
-        this.ui(this.formId).resetForm();
-        this.ui(this.id).close();
+        this.form.resetForm();
+        this.dropdown.close();
     }
 
 
@@ -270,7 +268,7 @@ class VideoPlugin extends Webiny.Draft.AtomicPlugin {
                     <Webiny.Ui.LazyLoad modules={['Form', 'Input', 'Dropdown', 'Grid', 'Icon', 'Button']}>
                         {(Ui) => {
                             const props = {
-                                ui: this.id,
+                                ref: ref => this.dropdown = ref,
                                 title: <Ui.Icon icon="fa-video-camera"/>,
                                 closeOnClick: false,
                                 onShow: this.showDropdown,
@@ -280,7 +278,7 @@ class VideoPlugin extends Webiny.Draft.AtomicPlugin {
                             return (
                                 <Ui.Dropdown {...props}>
                                     {() => (
-                                        <Ui.Form ui={this.formId} onSubmit={this.submitForm}>
+                                        <Ui.Form ref={ref => this.form = ref} onSubmit={this.submitForm}>
                                             {(model, form) => (
                                                 <div style={{width: 400}}>
                                                     <Ui.Grid.Row>

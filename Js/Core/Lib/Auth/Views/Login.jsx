@@ -28,7 +28,7 @@ class Login extends View {
             }
 
             Webiny.Cookies.set(Webiny.Auth.getCookieName(), data.authToken, {expires: 30, path: '/'});
-            Webiny.Model.set({User: data.user});
+            Webiny.Model.set('User', data.user);
 
             Webiny.Router.goToRoute(Webiny.Router.getDefaultRoute());
         });

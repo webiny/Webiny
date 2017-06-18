@@ -1,3 +1,3 @@
 import Baobab from 'baobab';
 
-export default new Baobab({}).select();
+export default new Baobab({});
