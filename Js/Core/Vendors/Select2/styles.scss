@@ -10,6 +10,7 @@
   width: 100% !important;
   z-index: 10;
   height: 44px;
+  font-size: 14px;
 
   &:after {
     position: absolute;
@@ -455,6 +456,13 @@
 .select2-container--default .select2-results > .select2-results__options {
   max-height: 200px;
   overflow-y: auto;
+  margin: 0;
+  padding: 0 10px;
+  li{
+    font-size: 14px;
+    margin: 0;
+    padding: 5px 10px;
+  }
 }
 
 /* line 42, ../scss/theme/default/layout.scss */
