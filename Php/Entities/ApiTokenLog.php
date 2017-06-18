@@ -2,7 +2,8 @@
 namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
-use Apps\Webiny\Php\DevTools\Entity\Filter;
+use Apps\Webiny\Php\DevTools\Entity\EntityQuery\EntityQuery;
+use Apps\Webiny\Php\DevTools\Entity\EntityQuery\Filter;
 use Apps\Webiny\Php\DevTools\Exceptions\AppException;
 use Webiny\Component\Mongo\Index\CompoundIndex;
 use Webiny\Component\Mongo\Index\SingleIndex;
@@ -26,12 +27,10 @@ class ApiTokenLog extends AbstractEntity
     protected static function entityQuery()
     {
         return [
-            new Filter('*', function ($conditions) {
-                if (!isset($conditions['token'])) {
-                    $conditions['token'] = ['$ne' => 'system'];
+            new Filter('*', function (EntityQuery $query) {
+                if (!$query->hasCondition('token')) {
+                    $query->setCondition('token', ['$ne' => 'system']);
                 }
-
-                return $conditions;
             })
         ];
     }
