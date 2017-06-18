@@ -14,7 +14,7 @@ class Switch extends Webiny.Ui.FormComponent {
     }
 
     switch() {
-        if (this.props.disabled) {
+        if (this.isDisabled()) {
             return;
         }
         const el = ReactDOM.findDOMNode(this).querySelector('input');
@@ -24,12 +24,7 @@ class Switch extends Webiny.Ui.FormComponent {
 }
 
 Switch.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
-    label: null,
-    tooltip: null,
-    value: false,
-    onChange: _.noop,
     style: {},
-    disabled: false,
     renderer() {
         const {FormGroup, styles} = this.props;
         let classes = this.classSet(styles.switch, styles.switchInline);

@@ -1,7 +1,10 @@
 <?php
+
 namespace Apps\Webiny\Php\PackageManager\Parser;
 
+use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
 use Apps\Webiny\Php\DevTools\Exceptions\AppException;
+use ReflectionFunction;
 use Webiny\Component\Entity\Attribute\AbstractAttribute;
 use Webiny\Component\Entity\Attribute\Many2OneAttribute;
 use Webiny\Component\Entity\Attribute\One2ManyAttribute;
@@ -116,6 +119,17 @@ class EntityParser extends AbstractParser
             '{id}.delete'
         ];
         $apiDocs = $this->parseApi($this->class);
+
+        // Parse dynamic methods (appended via onExtend callback)
+        /* @var $instance AbstractEntity */
+        $instance = new $this->class;
+        $callbacks = $instance->getClassCallbacks();
+        foreach ($callbacks as $class => $events) {
+            foreach ($events['onExtend'] as $cb) {
+                $apiDocs->mergeSmart($this->readExtendedApi($cb));
+            }
+        }
+
         $methods = [];
         $entityInstance = new $this->class;
         foreach ($apiDocs as $name => $httpMethods) {
@@ -196,6 +210,19 @@ class EntityParser extends AbstractParser
         }
 
         return $methods;
+    }
+
+    protected function readExtendedApi($function)
+    {
+        $func = new ReflectionFunction($function);
+        $filename = $func->getFileName();
+        $startLine = $func->getStartLine() - 1; // we do -1 to also get the function block
+        $endLine = $func->getEndLine();
+
+        $source = file($filename);
+        $code = implode('', array_slice($source, $startLine, $endLine - $startLine));
+
+        return $this->parseCode($code);
     }
 
     private function getAttributeDescriptions()

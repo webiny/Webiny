@@ -107,6 +107,8 @@ GoogleMap.defaultProps = {
     },
     readOnly: false,
     style: null,
+    value: null,
+    onChange: _.noop,
     renderer() {
         const {styles} = this.props;
         return (

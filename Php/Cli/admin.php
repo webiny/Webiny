@@ -1,31 +1,39 @@
 <?php
+/**
+ * Webiny Platform (http://www.webiny.com/)
+ *
+ * @copyright Copyright Webiny LTD
+ *
+ * Usage example:
+ * php Apps/Webiny/Php/Cli/admin.php http://domain.app email password
+ */
+
+
 use Apps\Webiny\Php\Entities\User;
 use Webiny\Component\StdLib\Exception\AbstractException;
-
-if (php_sapi_name() !== 'cli') {
-    die('Invalid invocation!');
-}
 
 $autoloader = require_once getcwd() . '/vendor/autoload.php';
 $autoloader->addPsr4('Apps\\Webiny\\', getcwd() . '/Apps/Webiny');
 
-
-$_SERVER = [];
-$_SERVER['SERVER_NAME'] = $argv[1];
-
-\Apps\Webiny\Php\Bootstrap\Bootstrap::getInstance();
-
-
-// Create admin user
-try {
-    $user = new User();
-    $user->email = $argv[2];
-    $user->password = $argv[3];
-    $user->roles = ['administrator', 'webiny-acl-api-token-manager', 'webiny-logger-manager', 'webiny-acl-user-manager'];
-    $user->firstName = '';
-    $user->lastName = '';
-    $user->save();
-    echo('created');
-} catch (AbstractException $e) {
-    echo('exists');
+class Admin extends \Apps\Webiny\Php\DevTools\AbstractCli
+{
+    public function run($email, $password)
+    {
+        // Create admin user
+        try {
+            $user = new User();
+            $user->email = $email;
+            $user->password = $password;
+            $user->roles = ['administrator', 'webiny-acl-api-token-manager', 'webiny-logger-manager', 'webiny-acl-user-manager'];
+            $user->firstName = '';
+            $user->lastName = '';
+            $user->save();
+            die(json_encode(['status' => 'created']));
+        } catch (AbstractException $e) {
+            die(json_encode(['status' => 'exists']));
+        }
+    }
 }
+
+$release = new Admin($argv[1]);
+$release->run($argv[2], $argv[3]);

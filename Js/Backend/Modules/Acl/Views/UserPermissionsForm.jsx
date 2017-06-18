@@ -50,14 +50,16 @@ class UserPermissionsForm extends Webiny.Ui.View {
                             <tr key={m.key}>
                                 <td className="text-left">
                                     <Ui.Switch value={m.exposed} onChange={enabled => {
-                                    const permissions = _.get(model, 'permissions.services.' + service.name, {});
-                                    _.set(permissions, m.key, enabled);
-                                    _.set(model, 'permissions.services.' + service.name, permissions);
-                                    container.setModel(model);
-                                }}/>
+                                        const permissions = _.get(model, 'permissions.services.' + service.name, {});
+                                        _.set(permissions, m.key, enabled);
+                                        _.set(model, 'permissions.services.' + service.name, permissions);
+                                        container.setModel(model);
+                                    }}/>
                                 </td>
                                 <td className="text-left">
-                                    {m.description || 'No description available'}<br/>
+                                    {m.name ? <strong>{m.name}<br/></strong> : null}
+                                    <span>{m.description || 'No description available' }</span>
+                                    <br/>
                                     <Ui.Label type="info"><strong>{m.method.toUpperCase()}</strong></Ui.Label>
                                     <a>{m.url}</a>
                                 </td>
@@ -226,7 +228,9 @@ class UserPermissionsForm extends Webiny.Ui.View {
                                                                                         }}/>
                                                                                     </td>
                                                                                     <td className="text-left">
-                                                                                        {m.description || 'No description available'}<br/>
+                                                                                        {m.name ? <strong>{m.name}<br/></strong> : null}
+                                                                                        <span>{m.description || 'No description available' }</span>
+                                                                                        <br/>
                                                                                         <Ui.Label
                                                                                             type="info"><strong>{m.method.toUpperCase()}</strong></Ui.Label>
                                                                                         <a>{m.url}</a>

@@ -1,49 +1,20 @@
 <?php
-// Execute as: php Apps/Webiny/Php/Cli/install.php domain.app Webiny
-
-use Webiny\Component\Config\ConfigException;
-
-if (php_sapi_name() !== 'cli') {
-    die('Invalid invocation!');
-}
+/**
+ * Webiny Platform (http://www.webiny.com/)
+ *
+ * @copyright Copyright Webiny LTD
+ *
+ * Usage example:
+ * php Apps/Webiny/Php/Cli/install.php http://domain.app Webiny
+ */
 
 $autoloader = require_once getcwd() . '/vendor/autoload.php';
 $autoloader->addPsr4('Apps\\Webiny\\', getcwd() . '/Apps/Webiny');
 
-class Install
+class Install extends \Apps\Webiny\Php\DevTools\AbstractCli
 {
-    use \Webiny\Component\StdLib\StdLibTrait, \Apps\Webiny\Php\DevTools\WebinyTrait;
-
-    private $host = null;
-
-    public function __construct($autoloader)
+    public function run($app)
     {
-        $this->autoloader = $autoloader;
-        $this->absPath = getcwd() . '/';
-
-        // Install script can only be executed using Local config set
-        try {
-            $config = $this->wConfig()->parseConfig('Configs/Local/Application.yaml');
-            $this->host = $config->get('Application.WebPath');
-        } catch (ConfigException $e) {
-            // In case no Local config set is present, use domain in Production config set
-        } finally {
-            if (empty($this->host)) {
-                $config = $this->wConfig()->parseConfig('Configs/Production/Application.yaml');
-                $this->host = $config->get('Application.WebPath');
-            }
-        }
-    }
-
-    public function run($app, $host = null)
-    {
-        if (!$host) {
-            $host = $this->host;
-        }
-
-        $_SERVER = [];
-        $_SERVER['SERVER_NAME'] = $this->url($host)->getHost();
-        \Apps\Webiny\Php\Bootstrap\Bootstrap::getInstance();
         $appInstance = $this->wApps($app);
         if ($appInstance) {
             $appInstance->getLifeCycleObject('Install')->run($appInstance);
@@ -51,6 +22,6 @@ class Install
     }
 }
 
-$release = new Install($autoloader);
-$release->run($argv[1], $argv[2] ?? null);
+$release = new Install($argv[2]);
+$release->run($argv[1]);
 

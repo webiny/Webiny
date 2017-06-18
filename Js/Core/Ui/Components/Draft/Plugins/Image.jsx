@@ -18,8 +18,8 @@ class ImageEditComponent extends Webiny.Ui.Component {
 
     resizeStart(e) {
         this.size = {
-            width: this.refs.resizer.clientWidth,
-            height: this.refs.resizer.clientHeight
+            width: this.resizer.clientWidth,
+            height: this.resizer.clientHeight
         };
 
         this.aspectRatio = this.size.width / this.size.height;
@@ -101,7 +101,7 @@ ImageEditComponent.defaultProps = {
                         </Ui.Grid.Row>
 
                         <div className="image-wrapper" style={{textAlign: this.props.data.align}}>
-                            <div className="resizer" ref="resizer" style={this.getSize()}>
+                            <div className="resizer" ref={resizer => this.resizer = resizer} style={this.getSize()}>
                                 <img src={this.props.data.url} style={this.getSize(2)}/>
                                 <span className="resize-handle br" {...draggable}/>
                             </div>
@@ -178,9 +178,8 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
             data: model
         };
         this.ui(this.id).hide().then(() => {
-            this.insertDataBlock(this.editor.getEditorState(), insert).then(es => {
-                this.editor.setEditorState(es);
-            });
+            const editorState = this.insertDataBlock(this.editor.getEditorState(), insert);
+            this.editor.setEditorState(editorState);
         });
     }
 

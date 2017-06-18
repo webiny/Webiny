@@ -71,12 +71,12 @@ class SmartyExtension extends AbstractSmartyExtension
         $config = json_encode($jsConfig, $flags);
         $appsMeta = json_encode($metaConfig, $flags);
 
-        $bsConfig = file_get_contents($this->wStorage('Root')->getAbsolutePath('webiny.json'));
-        $bsConfig = $this->arr(json_decode($bsConfig, true));
-        $bsPath = $this->url($this->wConfig()->get('Application.WebPath'))->setPort($bsConfig->keyNested('browserSync.port', 3000, true));
-        $browserSync = '<script src="' . $bsPath . '/browser-sync/browser-sync-client.js?v=2.18.6"></script>';
-        if ($this->wIsProduction()) {
-            $browserSync = '';
+        $browserSync = '';
+        if (!$this->wIsProduction()) {
+            $bsConfig = file_get_contents($this->wStorage('Root')->getAbsolutePath('webiny.json'));
+            $bsConfig = $this->arr(json_decode($bsConfig, true));
+            $bsPath = $this->url($this->wConfig()->get('Application.WebPath'))->setPort($bsConfig->keyNested('browserSync.port', 3000, true));
+            $browserSync = '<script src="' . $bsPath . '/browser-sync/browser-sync-client.js?v=2.18.6"></script>';
         }
 
         return <<<EOT

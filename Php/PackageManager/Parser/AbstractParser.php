@@ -1,10 +1,13 @@
 <?php
+
 namespace Apps\Webiny\Php\PackageManager\Parser;
 
+use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
 use Apps\Webiny\Php\DevTools\WebinyTrait;
 use Apps\Webiny\Php\DevTools\Exceptions\AppException;
 use Webiny\Component\Mongo\MongoTrait;
 use Webiny\Component\StdLib\StdLibTrait;
+use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 use Webiny\Component\Storage\File\File;
 
 abstract class AbstractParser
@@ -80,7 +83,7 @@ abstract class AbstractParser
      *
      * @param $class
      *
-     * @return array
+     * @return array|ArrayObject
      * @throws AppException
      * @throws \Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObjectException
      * @throws \Webiny\Component\StdLib\StdObject\StringObject\StringObjectException
@@ -114,107 +117,114 @@ abstract class AbstractParser
             }
 
             $classContents = $classFile->getContents();
-            $classLines = $this->str($classContents)->explode("\n");
+            $classApi = $this->parseCode($classContents);
 
-            $tmpDoc = $this->arr();
-            $classApi = [];
-            $description = '';
-            $descriptionStarted = false;
-            foreach ($classLines as $line => $code) {
-                $code = $this->str($code)->trim();
-                $newApiLine = $code->containsAny(['@api', '$this->api(']);
-                if (!$newApiLine && !$descriptionStarted) {
-                    continue;
-                } elseif (!$newApiLine && $descriptionStarted && $code->val() !== '*/' && !$code->startsWith('* @')) {
-                    $description .= $code->trimLeft('*');
-                    continue;
-                } elseif ($descriptionStarted) {
-                    $tmpDoc->key('description', $description);
-                    $descriptionStarted = false;
-                }
-
-                if ($code->startsWith('/*') || $code->endsWith('*/')) {
-                    continue;
-                }
-
-                if ($code->startsWith('$this->api(')) {
-                    $match = $code->match('\'(\w+)\',\s?\'([\w+-{}/]+)\'');
-                    if (!$match) {
-                        continue;
-                    }
-                    $httpMethod = strtolower($match->keyNested('1.0'));
-                    $methodName = $match->keyNested('2.0');
-                    $methodName = $methodName != '/' ? trim($methodName, '/') : '/';
-                    if ($methodName) {
-                        $classApi[$methodName][$httpMethod] = $tmpDoc->val();
-                    }
-                    $tmpDoc = $this->arr();
-                    continue;
-                }
-
-                if ($code->startsWith('* @api')) {
-                    $annotationLine = $code->replace('* @api.', '')->explode(' ', 2)->val();
-
-                    // This is for cases where developers accidentally type eg. "* @api.name", without actually specifying the name
-                    $annotationLine[1] = $annotationLine[1] ?? '';
-
-                    $line = $this->str($annotationLine[0]);
-
-                    if ($line->startsWith('name')) {
-                        $tmpDoc->keyNested($annotationLine[0], trim($annotationLine[1]));
-                        continue;
-                    }
-
-                    if ($line == 'custom') {
-                        $tmpDoc->key('custom', true);
-                        continue;
-                    }
-
-                    if ($line->startsWith('description')) {
-                        $descriptionStarted = true;
-                        $description = $annotationLine[1] ?? '';
-                        continue;
-                    }
-
-                    // Parse parameters and fetch the appropriate value for given parameter type
-                    if ($line->startsWith('body.') || $line->startsWith('path.') || $line->startsWith('headers.')) {
-                        $paramName = $line->replace(['body.', 'path.', 'headers.'], '')->val();
-                        if (!strlen($paramName)) {
-                            continue;
-                        }
-
-                        $param = [
-                            'name'        => $paramName,
-                            'type'        => '',
-                            'description' => ''
-                        ];
-
-                        if (isset($annotationLine[1])) {
-                            $paramLine = $this->str($annotationLine[1])->explode(' ', 2);
-                            $param['type'] = $paramLine[0];
-                            $param['description'] = $paramLine[1];
-                        }
-
-                        $tmpDoc->keyNested($annotationLine[0], $param);
-                        continue;
-                    }
-
-                    // Query params will be appended to URL in the EntityParser/ServiceParser classes
-                    if ($line->startsWith('query.')) {
-                        $paramLine = $this->str($annotationLine[1])->explode(' ', 2);
-                        $tmpDoc->keyNested($annotationLine[0], $paramLine[0]);
-                    }
-                }
-
-                if ($descriptionStarted) {
-                    $description .= $line;
-                }
-            }
             self::$classApi[$apiClass] = $classApi;
             $apiDocs->mergeSmart($classApi);
         }
 
         return $apiDocs;
+    }
+
+    protected function parseCode($code)
+    {
+        $classLines = $this->str($code)->explode("\n");
+        $tmpDoc = $this->arr();
+        $classApi = [];
+        $description = '';
+        $descriptionStarted = false;
+        foreach ($classLines as $line => $code) {
+            $code = $this->str($code)->trim();
+            $newApiLine = $code->containsAny(['@api', '->api(']);
+            if (!$newApiLine && !$descriptionStarted) {
+                continue;
+            } elseif (!$newApiLine && $descriptionStarted && $code->val() !== '*/' && !$code->startsWith('* @')) {
+                $description .= $code->trimLeft('*');
+                continue;
+            } elseif ($descriptionStarted) {
+                $tmpDoc->key('description', $description);
+                $descriptionStarted = false;
+            }
+
+            if ($code->startsWith('/*') || $code->endsWith('*/')) {
+                continue;
+            }
+
+            if ($code->contains('->api(')) {
+                $match = $code->match('\'(\w+)\',\s?\'([\w+-{}/]+)\'');
+                if (!$match) {
+                    continue;
+                }
+                $httpMethod = strtolower($match->keyNested('1.0'));
+                $methodName = $match->keyNested('2.0');
+                $methodName = $methodName != '/' ? trim($methodName, '/') : '/';
+                if ($methodName) {
+                    $classApi[$methodName][$httpMethod] = $tmpDoc->val();
+                }
+                $tmpDoc = $this->arr();
+                continue;
+            }
+
+            if ($code->startsWith('* @api')) {
+                $annotationLine = $code->replace('* @api.', '')->explode(' ', 2)->val();
+
+                // This is for cases where developers accidentally type eg. "* @api.name", without actually specifying the name
+                $annotationLine[1] = $annotationLine[1] ?? '';
+
+                $line = $this->str($annotationLine[0]);
+
+                if ($line->startsWith('name')) {
+                    $tmpDoc->keyNested($annotationLine[0], trim($annotationLine[1]));
+                    continue;
+                }
+
+                if ($line == 'custom') {
+                    $tmpDoc->key('custom', true);
+                    continue;
+                }
+
+                if ($line->startsWith('description')) {
+                    $descriptionStarted = true;
+                    $description = $annotationLine[1] ?? '';
+                    continue;
+                }
+
+                // Parse parameters and fetch the appropriate value for given parameter type
+                if ($line->startsWith('body.') || $line->startsWith('path.') || $line->startsWith('headers.')) {
+                    $paramName = $line->replace(['body.', 'path.', 'headers.'], '')->val();
+                    if (!strlen($paramName)) {
+                        continue;
+                    }
+
+                    $param = [
+                        'name'        => $paramName,
+                        'type'        => '',
+                        'description' => ''
+                    ];
+
+                    if (isset($annotationLine[1])) {
+                        $paramLine = $this->str($annotationLine[1])->explode(' ', 2);
+                        $param['type'] = $paramLine[0];
+                        $param['description'] = $paramLine[1];
+                    }
+
+                    $tmpDoc->keyNested($annotationLine[0], $param);
+                    continue;
+                }
+
+                // Query params will be appended to URL in the EntityParser/ServiceParser classes
+                if ($line->startsWith('query.')) {
+                    $paramLine = $this->str($annotationLine[1])->explode(' ', 2);
+                    $tmpDoc->keyNested($annotationLine[0], $paramLine[0]);
+                }
+            }
+
+            if ($descriptionStarted) {
+                $description .= $line;
+            }
+        }
+
+        return $classApi;
     }
 
     private function readTraits($class)

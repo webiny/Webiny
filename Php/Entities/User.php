@@ -21,6 +21,7 @@ use Webiny\Component\Mongo\Index\SingleIndex;
  * @property string           $password
  * @property string           $firstName
  * @property string           $lastName
+ * @property string           $passwordRecoveryCode
  * @property EntityCollection $roles
  * @property bool             $enabled
  *
