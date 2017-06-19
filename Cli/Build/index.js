@@ -10,6 +10,8 @@ class Build extends Plugin {
 
         this.task = 'build';
         this.title = 'Production build';
+
+        program.option('-c, --config-set [configSet]', 'ConfigSet to use for production build.');
     }
 
     runTask(config, onFinish) {

@@ -13,6 +13,12 @@ class Deploy extends Plugin {
         this.task = 'deploy';
         this.title = 'Deploy existing release archive';
         this.selectApps = false;
+
+        program
+            .option('-h, --host [host]', 'Connection string for your target server.')
+            .option('-w --website [website]', 'Target server domain.') // https://github.com/tj/commander.js/issues/370
+            .option('-b, --basic-auth [basicAuth]', 'Basic Authentication string for your target server.')
+            .option('-r, --release [release]', 'Location of release archive to use. Can be an absolute path or a path relative to project root.')
     }
 
     runTask(config, onFinish) {
