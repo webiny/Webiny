@@ -29,11 +29,13 @@ FieldInfo.defaultProps = {
 
         const modal = (
             <Modal.Dialog ref="dialog">
-                <Modal.Header title={this.props.title}/>
-                <Modal.Body children={this.props.children}/>
-                <Modal.Footer>
-                    <Button label="Close" onClick={this.hideInfo}/>
-                </Modal.Footer>
+                <Modal.Content>
+                    <Modal.Header title={this.props.title}/>
+                    <Modal.Body children={this.props.children}/>
+                    <Modal.Footer>
+                        <Button label="Close" onClick={this.hideInfo}/>
+                    </Modal.Footer>
+                </Modal.Content>
             </Modal.Dialog>
         );
 

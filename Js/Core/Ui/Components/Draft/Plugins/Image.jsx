@@ -194,7 +194,7 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
                                     {(model, form) => {
                                         const urlValidator = model.image ? null : 'required,url';
                                         return (
-                                            <wrapper>
+                                            <Ui.Modal.Content>
                                                 <Ui.Form.Loader/>
                                                 <Ui.Modal.Header title="Insert image"/>
                                                 <Ui.Modal.Body noPadding>
@@ -223,7 +223,7 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
                                                     <Ui.Button type="default" key="cancel" label="Cancel" onClick={dialog.hide}/>
                                                     <Ui.Button type="primary" key="submit" label="Insert" onClick={form.submit}/>
                                                 </Ui.Modal.Footer>
-                                            </wrapper>
+                                            </Ui.Modal.Content>
                                         );
                                     }}
                                 </Ui.Form>

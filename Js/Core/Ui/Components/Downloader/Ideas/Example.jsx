@@ -14,7 +14,7 @@
                     {dialog => (
                         <Ui.Form onSubmit={submit}>
                             {form => (
-                                <wrapper>
+                                <Ui.Modal.Content>
                                     <Ui.Modal.Header title="Export summary"/>
                                     <Ui.Modal.Body>
                                         <Ui.Grid.Row>
@@ -36,7 +36,7 @@
                                         <Ui.Button type="default" label="Cancel" onClick={dialog.hide}/>
                                         <Ui.Button type="primary" label="Export" onClick={form.submit}/>
                                     </Ui.Modal.Footer>
-                                </wrapper>
+                                </Ui.Modal.Content>
                             )}
                         </Ui.Form>
                     )}
