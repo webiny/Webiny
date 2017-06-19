@@ -1,0 +1,12 @@
+{
+    "cliPlugins": [
+        "./Cli/Develop",
+        "./Cli/Build",
+        "./Cli/RunTests",
+        "./Cli/Release",
+        "./Cli/Deploy",
+        "./Cli/Revert",
+        "./Cli/InstallApps",
+        "./Cli/ServerHelp"
+    ]
+}

@@ -1,9 +1,9 @@
-const utils = require('webiny/lib/utils');
+const Webiny = require('webiny/lib/webiny');
 const path = require('path');
 const DllBootstrapPlugin = require('./Lib/Webpack/DllBootstrapPlugin');
 
 module.exports = (config) => {
-    config.resolve.alias['webiny-lodash'] = path.resolve(utils.projectRoot(), 'Apps/Webiny/Js/Core/Vendors/Lodash');
+    config.resolve.alias['webiny-lodash'] = path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Core/Vendors/Lodash');
     config.resolve.alias['bluebird'] = 'bluebird/js/browser/bluebird.core.js';
 
     config.entry['vendor'] = [
