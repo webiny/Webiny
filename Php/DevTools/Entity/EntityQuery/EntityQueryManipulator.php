@@ -50,7 +50,7 @@ class EntityQueryManipulator
 
         // Let's check if any of the Closure parameters are instance of AbstractEntity
         $callback = new \ReflectionFunction($this->callback);
-        $parameter = $callback->getParameters()[0] ?? null;
+        $parameter = $callback->getParameters()[1] ?? null;
         if ($parameter) {
             $entityClass = $parameter->getClass()->name ?? null;
             if ($entityClass && is_subclass_of($entityClass, 'Apps\Webiny\Php\DevTools\Entity\AbstractEntity')) {
