@@ -65,16 +65,16 @@ ModalCropper.defaultProps = _.merge({}, BaseCropper.defaultProps, {
                     <Modal.Header title={props.title}/>
                     <Modal.Body>
                         {props.children}
-                        <div className="col-xs-12 no-padding">
+                        <div className="modalCrop">
                             <img
                                 id={this.id}
                                 onLoad={this.initCropper}
                                 width="100%"
                                 src={props.image && props.image.src + this.getCacheBust()}
                                 style={{maxWidth: '100%'}}/>
+                            <div className="clearfix"/>
+                            Cropped image size: <strong>{this.state.width}x{this.state.height}</strong>
                         </div>
-                        <div className="clearfix"/>
-                        Cropped image size: <strong>{this.state.width}x{this.state.height}</strong>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button type="primary" className="pull-right ml5" onClick={this.applyCropping}>{props.action}</Button>
