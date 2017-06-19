@@ -50,7 +50,7 @@ Carousel.defaultProps = {
     className: null,
     renderer() {
         return (
-            <div className={this.classSet('owl-carousel', this.props.className)}>
+            <div className={this.classSet('owl-carousel owl-theme', this.props.className)}>
                 {this.props.children}
             </div>
         );
