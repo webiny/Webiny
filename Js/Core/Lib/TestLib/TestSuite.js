@@ -177,5 +177,6 @@ module.exports = {
     TestSuite: ts,
     By: webdriver.By,
     until: webdriver.until,
-    webdriver
+    webdriver,
+    assert
 };
