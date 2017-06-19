@@ -29,13 +29,15 @@ class ExportRoleModal extends Webiny.Ui.ModalComponent {
         const {Modal, Button, Copy, CodeHighlight, Loader} = this.props;
         return (
             <Modal.Dialog wide>
-                <Modal.Header title="Export Role"/>
-                <Modal.Body>
-                    <CodeHighlight language="json">{this.state.content}</CodeHighlight>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Copy.Button label="Copy" type="primary" value={this.state.content} renderIf={this.state.content}/>
-                </Modal.Footer>
+                <Modal.Content>
+                    <Modal.Header title="Export Role"/>
+                    <Modal.Body>
+                        <CodeHighlight language="json">{this.state.content}</CodeHighlight>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Copy.Button label="Copy" type="primary" value={this.state.content} renderIf={this.state.content}/>
+                    </Modal.Footer>
+                </Modal.Content>
             </Modal.Dialog>
         );
     }

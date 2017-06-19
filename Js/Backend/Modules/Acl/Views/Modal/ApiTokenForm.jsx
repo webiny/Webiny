@@ -21,7 +21,7 @@ class ApiTokenForm extends Webiny.Ui.ModalComponent {
                 {dialog => (
                     <Form {...formProps}>
                         {(model, form) => (
-                            <modal>
+                            <Modal.Content>
                                 <Form.Loader/>
                                 <Modal.Header title="API Token" onClose={dialog.hide}/>
                                 <Modal.Body>
@@ -44,7 +44,7 @@ class ApiTokenForm extends Webiny.Ui.ModalComponent {
                                     <Button label="Cancel" onClick={this.hide}/>
                                     <Button type="primary" label="Save token" onClick={form.submit}/>
                                 </Modal.Footer>
-                            </modal>
+                            </Modal.Content>
                         )}
                     </Form>
                 )}

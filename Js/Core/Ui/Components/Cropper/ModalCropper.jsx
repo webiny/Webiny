@@ -61,23 +61,25 @@ ModalCropper.defaultProps = _.merge({}, BaseCropper.defaultProps, {
 
         return (
             <Modal.Dialog {...modalProps} ref={dialog => this.dialog = dialog}>
-                <Modal.Header title={props.title}/>
-                <Modal.Body>
-                    {props.children}
-                    <div className="col-xs-12 no-padding">
-                        <img
-                            id={this.id}
-                            onLoad={this.initCropper}
-                            width="100%"
-                            src={props.image && props.image.src + this.getCacheBust()}
-                            style={{maxWidth: '100%'}}/>
-                    </div>
-                    <div className="clearfix"/>
-                    Cropped image size: <strong>{this.state.width}x{this.state.height}</strong>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button type="primary" className="pull-right ml5" onClick={this.applyCropping}>{props.action}</Button>
-                </Modal.Footer>
+                <Modal.Content>
+                    <Modal.Header title={props.title}/>
+                    <Modal.Body>
+                        {props.children}
+                        <div className="col-xs-12 no-padding">
+                            <img
+                                id={this.id}
+                                onLoad={this.initCropper}
+                                width="100%"
+                                src={props.image && props.image.src + this.getCacheBust()}
+                                style={{maxWidth: '100%'}}/>
+                        </div>
+                        <div className="clearfix"/>
+                        Cropped image size: <strong>{this.state.width}x{this.state.height}</strong>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button type="primary" className="pull-right ml5" onClick={this.applyCropping}>{props.action}</Button>
+                    </Modal.Footer>
+                </Modal.Content>
             </Modal.Dialog>
         );
     }

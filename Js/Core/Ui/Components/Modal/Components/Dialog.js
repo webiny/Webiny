@@ -283,9 +283,7 @@ Dialog.defaultProps = {
                         show={{translateY: 50, ease: 'spring', duration: this.modalShowDuration}}
                         hide={{translateY: -100, ease: 'easeOut', opacity: 0, duration: this.modalHideDuration}}>
                         <div className={this.classSet(styles.dialog, styles.show, this.props.className)} style={{top: -50}} data-role="dialog">
-                            <div className={styles.content}>
-                                {this.prepareChildren(content)}
-                            </div>
+                            {this.prepareChildren(content)}
                         </div>
                     </Animate>
                 </div>
