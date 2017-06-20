@@ -3,6 +3,7 @@ const inquirer = require('inquirer');
 const fetch = require('node-fetch');
 const _ = require('lodash');
 
+const Menu = require('webiny/lib/menu');
 const Plugin = require('webiny/lib/plugin');
 const Webiny = require('webiny/lib/webiny');
 
@@ -49,8 +50,11 @@ class InstallApps extends Plugin {
         super(program);
 
         this.task = 'install-apps';
-        this.title = 'Install apps';
         this.selectApps = false;
+    }
+
+    getMenu() {
+        return new Menu('Install apps');
     }
 
     runTask(config, onFinish) {

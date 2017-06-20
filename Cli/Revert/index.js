@@ -1,6 +1,7 @@
 const inquirer = require('inquirer');
 const _ = require('lodash');
 const Plugin = require('webiny/lib/plugin');
+const Menu = require('webiny/lib/menu');
 const Webiny = require('webiny/lib/webiny');
 const Task = require('./task');
 
@@ -9,8 +10,11 @@ class Revert extends Plugin {
         super(program);
 
         this.task = 'revert';
-        this.title = 'Switch release';
         this.selectApps = false;
+    }
+
+    getMenu() {
+        return new Menu('Switch release').addLineAfter();
     }
 
     runTask(config, onFinish) {

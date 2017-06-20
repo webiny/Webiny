@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 const moment = require('moment');
-const _ = require('lodash');
 const Plugin = require('webiny/lib/plugin');
+const Menu = require('webiny/lib/menu');
 const Webiny = require('webiny/lib/webiny');
 const Task = require('./task');
 
@@ -10,13 +10,16 @@ class Release extends Plugin {
         super(program);
 
         this.task = 'release';
-        this.title = 'Create release archive';
         this.selectApps = false;
 
         program
             .option('-h, --host [host]', 'Connection string for your target server.')
             .option('-w --website [website]', 'Target server domain.') // https://github.com/tj/commander.js/issues/370
             .option('-b, --basic-auth [basicAuth]', 'Basic Authentication string for your target server.')
+    }
+
+    getMenu() {
+        return new Menu('Create release archive').addLineBefore();
     }
 
     runTask(config, onFinish) {

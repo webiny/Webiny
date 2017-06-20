@@ -1,4 +1,5 @@
 const Plugin = require('webiny/lib/plugin');
+const Menu = require('webiny/lib/menu');
 const Webiny = require('webiny/lib/webiny');
 const inquirer = require('inquirer');
 const yaml = require('js-yaml');
@@ -9,9 +10,12 @@ class Build extends Plugin {
         super(program);
 
         this.task = 'build';
-        this.title = 'Production build';
 
         program.option('-c, --config-set [configSet]', 'ConfigSet to use for production build.');
+    }
+
+    getMenu() {
+        return new Menu('Production build');
     }
 
     runTask(config, onFinish) {

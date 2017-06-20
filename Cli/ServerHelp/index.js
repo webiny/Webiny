@@ -1,3 +1,4 @@
+const Menu = require('webiny/lib/menu');
 const Plugin = require('webiny/lib/plugin');
 const Webiny = require('webiny/lib/webiny');
 const chalk = require('chalk');
@@ -15,8 +16,11 @@ class ServerHelp extends Plugin {
         super(program);
 
         this.task = 'server-help';
-        this.title = 'View server setup overview';
         this.selectApps = false;
+    }
+
+    getMenu() {
+        return new Menu('View server setup overview');
     }
 
     runTask(config, onFinish) {

@@ -2,6 +2,7 @@ const inquirer = require('inquirer');
 const moment = require('moment');
 const fs = require('fs-extra');
 const _ = require('lodash');
+const Menu = require('webiny/lib/menu');
 const Plugin = require('webiny/lib/plugin');
 const Webiny = require('webiny/lib/webiny');
 const Task = require('./task');
@@ -11,7 +12,6 @@ class Deploy extends Plugin {
         super(program);
 
         this.task = 'deploy';
-        this.title = 'Deploy existing release archive';
         this.selectApps = false;
 
         program
@@ -19,6 +19,10 @@ class Deploy extends Plugin {
             .option('-w --website [website]', 'Target server domain.') // https://github.com/tj/commander.js/issues/370
             .option('-b, --basic-auth [basicAuth]', 'Basic Authentication string for your target server.')
             .option('-r, --release [release]', 'Location of release archive to use. Can be an absolute path or a path relative to project root.')
+    }
+
+    getMenu() {
+        return new Menu('Deploy existing release archive');
     }
 
     runTask(config, onFinish) {

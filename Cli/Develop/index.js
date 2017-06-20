@@ -1,4 +1,5 @@
 const Plugin = require('webiny/lib/plugin');
+const Menu = require('webiny/lib/menu');
 const Task = require('./task');
 
 class Develop extends Plugin {
@@ -6,7 +7,10 @@ class Develop extends Plugin {
         super(program);
 
         this.task = 'develop';
-        this.title = 'Develop! (watches for file changes and rebuilds apps for you)';
+    }
+
+    getMenu() {
+        return new Menu('Develop! (watches for file changes and rebuilds apps for you)').addLineBefore();
     }
 
     runTask(config, onFinish) {

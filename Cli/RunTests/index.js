@@ -6,6 +6,8 @@ const gulp = require('gulp');
 const mocha = require('gulp-mocha');
 const gulpCount = require('gulp-count');
 const babel = require('babel-register');
+
+const Menu = require('webiny/lib/menu');
 const Plugin = require('webiny/lib/plugin');
 const Webiny = require('webiny/lib/webiny');
 
@@ -14,8 +16,11 @@ class RunTests extends Plugin {
         super(program);
 
         this.task = 'run-tests';
-        this.title = 'Run tests';
         this.selectApps = true;
+    }
+
+    getMenu() {
+        return new Menu('Run tests');
     }
 
     runTask(config, onFinish) {
