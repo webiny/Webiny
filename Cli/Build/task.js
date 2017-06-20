@@ -26,7 +26,7 @@ class Build {
 
         // Remove all files from build folder
         this.config.apps.map(app => {
-            fs.emptyDirSync(Webiny.projectRoot('public_html') + '/build/' + process.env.NODE_ENV + '/' + app.path);
+            fs.emptyDirSync(Webiny.projectRoot('public_html') + '/build/' + process.env.NODE_ENV + '/' + app.getPath());
         });
 
         return this.buildConfigs(vendorConfigs).then(() => {
