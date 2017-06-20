@@ -1,5 +1,6 @@
 import Webiny from 'Webiny';
 import Dialog from './Dialog';
+import Content from './Content';
 import Body from './Body';
 import Footer from './Footer';
 
@@ -120,17 +121,19 @@ Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
                 onCancel={cancel}
                 closeOnClick={this.props.closeOnClick}>
                 {this.renderLoader()}
-                <Body>
+                <Content>
+                    <Body>
                     <div className="text-center">
                         <h4>{this.props.title}</h4>
 
                         <p>{this.renderContent()}</p>
                     </div>
-                </Body>
-                <Footer>
-                    <Button type="default" label={this.props.cancel} onClick={cancel}/>
-                    <Button type="primary" label={this.props.confirm} onClick={confirm}/>
-                </Footer>
+                    </Body>
+                    <Footer>
+                        <Button type="default" label={this.props.cancel} onClick={cancel}/>
+                        <Button type="primary" label={this.props.confirm} onClick={confirm}/>
+                    </Footer>
+                </Content>
             </Dialog>
         );
     }

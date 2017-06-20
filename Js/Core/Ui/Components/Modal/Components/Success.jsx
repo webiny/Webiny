@@ -1,5 +1,6 @@
 import Webiny from 'Webiny';
 import Dialog from './Dialog';
+import Content from './Content';
 import Body from './Body';
 import Footer from './Footer';
 import styles from '../styles.css';
@@ -39,17 +40,19 @@ Success.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
         const {Button, Icon} = this.props;
         return (
             <Dialog modalContainerTag="success-modal" className={styles.alertModal}>
-                <Body>
+                <Content>
+                    <Body>
                     <div className="text-center">
                         <Icon type="success" size="4x" icon="icon-check-circle" element="div"/>
                         <h4>{this.props.title}</h4>
 
                         <p>{this.renderContent()}</p>
                     </div>
-                </Body>
-                <Footer>
-                    <Button type="primary" label="Close" onClick={() => this.hide().then(this.props.onClose)}/>
-                </Footer>
+                    </Body>
+                    <Footer>
+                        <Button type="primary" label="Close" onClick={() => this.hide().then(this.props.onClose)}/>
+                    </Footer>
+                </Content>
             </Dialog>
         );
     }
