@@ -34,6 +34,7 @@ module.exports = function (app, config) {
                 'NODE_ENV': JSON.stringify(process.env.NODE_ENV)
             }
         }),
+        new webpack.optimize.ModuleConcatenationPlugin(),
         // To generate module ids that are preserved between builds
         new webpack.HashedModuleIdsPlugin(),
         // This is required to base the file hashes on file contents (to allow long term caching)
