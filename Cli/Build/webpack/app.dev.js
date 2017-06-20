@@ -101,16 +101,16 @@ module.exports = function (app) {
                             loader: 'babel-loader',
                             options: {
                                 presets: [
-                                    'es2016',
-                                    'es2015',
-                                    'react'
+                                    require.resolve('babel-preset-es2016'),
+                                    require.resolve('babel-preset-es2015'),
+                                    require.resolve('babel-preset-react')
                                 ],
                                 plugins: [
-                                    'react-hot-loader/babel',
-                                    'transform-async-to-generator',
-                                    ['transform-object-rest-spread', {'useBuiltIns': true}],
-                                    ['babel-plugin-syntax-dynamic-import'],
-                                    ['babel-plugin-transform-builtin-extend', {
+                                    require.resolve('react-hot-loader/babel'),
+                                    require.resolve('babel-plugin-transform-async-to-generator'),
+                                    [require.resolve('babel-plugin-transform-object-rest-spread'), {'useBuiltIns': true}],
+                                    [require.resolve('babel-plugin-syntax-dynamic-import')],
+                                    [require.resolve('babel-plugin-transform-builtin-extend'), {
                                         globals: ['Error']
                                     }]
                                 ]
@@ -159,7 +159,10 @@ module.exports = function (app) {
         },
         resolve: sharedResolve,
         resolveLoader: {
-            modules: [__dirname + '/loaders', 'node_modules']
+            modules: [
+                __dirname + '/loaders', 'node_modules',
+                path.resolve(Webiny.projectRoot(), 'Apps/Webiny/node_modules')
+            ]
         }
     }
 };

@@ -19,7 +19,10 @@
     global['ReactDOM'] = require('react-dom');
     global['_'] = require('webiny-lodash');
     require('bootstrap-sass');
-    global['$Webiny'] = Webiny;
+
+    if (DEVELOPMENT) {
+        global['$Webiny'] = Webiny;
+    }
 
     // Check if `Webiny` config exists in the global
     if (!global.Webiny) {

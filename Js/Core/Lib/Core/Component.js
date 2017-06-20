@@ -268,7 +268,6 @@ class Component extends React.Component {
             }
         }
 
-        console.warn('Component ' + this.getClassName() + ' has no renderer!');
         return null;
     }
 }
