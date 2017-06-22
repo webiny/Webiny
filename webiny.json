@@ -7,6 +7,7 @@
         "./Cli/Deploy",
         "./Cli/Revert",
         "./Cli/InstallApps",
-        "./Cli/ServerHelp"
+        "./Cli/ServerHelp",
+        "./Cli/Setup"
     ]
 }

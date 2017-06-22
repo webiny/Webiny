@@ -1,4 +1,5 @@
 <?php
+
 namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\DevTools\Interfaces\UserInterface;
@@ -54,9 +55,10 @@ class User extends AbstractEntity implements UserInterface
         $this->attr('firstName')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('lastName')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('password')->char()->onSet(function ($password) {
-            if (!empty($password) && $this->wValidation()->validate($password, 'minLength:8')) {
+            if (!empty($password) && (in_array($password, ['dev', 'admin']) || $this->wValidation()->validate($password, 'minLength:8'))) {
                 return $this->wAuth()->createPasswordHash($password);
             }
+
             return $this->password;
         });
         $this->attr('passwordRecoveryCode')->char();
@@ -220,6 +222,7 @@ class User extends AbstractEntity implements UserInterface
                 return true;
             }
         }
+
         return false;
     }
 
