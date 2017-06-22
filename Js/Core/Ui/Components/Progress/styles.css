@@ -23,6 +23,8 @@
 	left: 0;
 	bottom: 0;
 	background-color: #41bfaf;
+	transition: width 2s;
+	width: 0;
 }
 
 /* sven: this is probably file-manager code, not needed now

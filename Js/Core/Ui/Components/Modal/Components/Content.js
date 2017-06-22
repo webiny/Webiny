@@ -17,3 +17,4 @@ Content.defaultProps = {
 };
 
 export default Webiny.createComponent(Content, {styles});
+
