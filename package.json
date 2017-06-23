@@ -60,6 +60,7 @@
         "node-sshclient": "^0.2.0",
         "null-loader": "^0.1.1",
         "owl.carousel": "^2.2.0",
+        "password-generator": "^2.0.2",
         "platform": "^1.3.3",
         "pluralize": "^4.0.0",
         "quill": "^1.2.0",
@@ -81,5 +82,8 @@
         "webpack-hot-middleware": "^2.18.0",
         "webpack-visualizer-plugin": "^0.1.11",
         "write-file-webpack-plugin": "^3.4.2"
+    },
+    "optionalDependencies": {
+        "fsevents": "^1.0.17"
     }
 }

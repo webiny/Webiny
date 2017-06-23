@@ -3,6 +3,8 @@ const Webiny = require('webiny/lib/webiny');
 const inquirer = require('inquirer');
 const yaml = require('js-yaml');
 const generatePassword = require('password-generator');
+const chalk = require('chalk');
+const {magenta, white} = chalk;
 
 const configs = {
     configSets: Webiny.projectRoot('Configs/ConfigSets.yaml'),
@@ -25,9 +27,9 @@ function setupVirtualHost(answers, callback) {
     hostFile = hostFile.replace('{ERROR_LOG}', answers.errorLogFile);
 
     try {
-        Webiny.log("================================================\n");
-        Webiny.log(hostFile);
-        Webiny.log("================================================\n");
+        Webiny.writeFile(Webiny.projectRoot('vhost.conf'), hostFile);
+        Webiny.success(white('Your nginx virtual host config was saved to ') + magenta('vhost.conf') + white(' file in your project root.'));
+        Webiny.info('NOTE: you need to manually activate vhost config to finish the nginx setup.');
 
         callback(answers);
     } catch (err) {
@@ -81,7 +83,7 @@ class Setup extends Plugin {
             }
         ];
 
-        inquirer.prompt(questions).then(function (answers) {
+        return inquirer.prompt(questions).then(function (answers) {
             try {
                 // Populate ConfigSets.yaml
                 let config = yaml.safeLoad(Webiny.readFile(configs.configSets));
@@ -150,7 +152,7 @@ class Setup extends Plugin {
                         hostAnswers.createHost = true;
                         return errorLogFile();
                     }
-                    callback(answers);
+                    onFinish(answers);
                 });
             };
 
@@ -162,11 +164,10 @@ class Setup extends Plugin {
                     default: function () {
                         const server = answers.domain.replace('http://', '').replace('https://', '').split(':')[0];
                         return '/var/log/nginx/' + server + '-error.log';
-                    },
-                    validate: Webiny.validate.writable
+                    }
                 }).then(function (a) {
                     hostAnswers.errorLogFile = a.errorLogFile;
-                    setupVirtualHost(hostAnswers, callback);
+                    setupVirtualHost(hostAnswers, onFinish);
                 });
             };
 
@@ -177,8 +178,6 @@ class Setup extends Plugin {
                 // Skip host prompts
             }
         });
-
-        return Promise.resolve().then(onFinish);
     }
 }
 
