@@ -118,7 +118,7 @@ class Setup extends Plugin {
             }
 
             // Run Webiny installation procedure
-            Webiny.shellExecute('php Apps/Webiny/Php/Cli/install.php Webiny', {stdio: 'pipe'});
+            Webiny.shellExecute('php Apps/Webiny/Php/Cli/install.php Webiny');
 
             // Create admin user
             const params = [answers.domain, answers.user, answers.password].join(' ');

@@ -90,7 +90,7 @@ class Release implements LifeCycleInterface
     protected function installJsDependencies($app)
     {
         if (file_exists($app->getPath() . '/package.json')) {
-            exec('cd ' . $app->getPath() . ' && npm install --production');
+            exec('cd ' . $app->getPath() . ' && yarn install --production');
         }
     }
 }
