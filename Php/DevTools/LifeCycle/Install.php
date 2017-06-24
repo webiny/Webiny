@@ -142,7 +142,7 @@ class Install implements LifeCycleInterface
 
     /**
      * Install JS dependencies
-     * Default: `npm install` is executed in the root of the app to install both production and development dependencies
+     * Default: `yarn install` is executed in the root of the app to install both production and development dependencies
      *
      * @param App $app
      */

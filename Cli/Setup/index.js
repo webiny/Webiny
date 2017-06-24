@@ -118,6 +118,7 @@ class Setup extends Plugin {
             }
 
             // Run Webiny installation procedure
+            Webiny.info('Running Webiny app installation...');
             Webiny.shellExecute('php Apps/Webiny/Php/Cli/install.php Webiny');
 
             // Create admin user
