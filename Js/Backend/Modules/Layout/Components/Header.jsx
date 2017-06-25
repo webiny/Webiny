@@ -18,6 +18,14 @@ class Header extends Webiny.Ui.Component {
         });
     }
 
+    getUsersName() {
+        if (_.get(this.state.user, 'firstName', '') === '' && _.get(this.state.user, 'lastName', '') === '') {
+            return _.get(this.state.user, 'email', '');
+        }
+
+        return _.get(this.state.user, 'firstName', '') + ' ' + _.get(this.state.user, 'lastName', '');
+    }
+
     logout() {
         Webiny.Dispatcher.dispatch('Logout');
     }
@@ -30,7 +38,7 @@ Header.defaultProps = {
                 {(Ui) => (
                     <div className="navbar navbar-inverse" role="navigation">
                         <div className="navbar-header">
-                            <button type="button" className="nav" data-toggle="xcollapse" data-target=".navbar-collapse" onClick={()=>{
+                            <button type="button" className="nav" data-toggle="xcollapse" data-target=".navbar-collapse" onClick={() => {
                                 $('body').toggleClass('opened-mobile-nav');
                             }}>
                                 <span/>
@@ -45,7 +53,7 @@ Header.defaultProps = {
                                 <a href="#" className="profile" id="dropdownMenu4" data-toggle="dropdown">
                                     <span className="icon-user icon"/>
                                     <span className="user">
-                                        {_.get(this.state.user, 'firstName', '')} {_.get(this.state.user, 'lastName', '')}
+                                        {this.getUsersName()}
                                     </span>
                                 </a>
 
