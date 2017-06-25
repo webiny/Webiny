@@ -2,6 +2,7 @@ const Plugin = require('webiny/lib/plugin');
 const Webiny = require('webiny/lib/webiny');
 const inquirer = require('inquirer');
 const yaml = require('js-yaml');
+const _ = require('lodash');
 const generatePassword = require('password-generator');
 const chalk = require('chalk');
 const {magenta, white} = chalk;
@@ -84,6 +85,7 @@ class Setup extends Plugin {
         ];
 
         return inquirer.prompt(questions).then(function (answers) {
+            answers.domain = _.trimEnd(answers.domain, '/');
             try {
                 // Populate ConfigSets.yaml
                 let config = yaml.safeLoad(Webiny.readFile(configs.configSets));
