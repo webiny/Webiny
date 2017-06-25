@@ -24,7 +24,7 @@ class ExpandableList extends Webiny.Ui.Component {
         }
 
         return (
-            <div className={className + ' expandable-list__header__field flex-cell flex-width-' + header.all} key={i}>{header.name}</div>
+            <div className={className + ' expandable-list__header__field flex-cell flex-width-' + header.width} key={i}>{header.name}</div>
         );
     }
 }
@@ -56,7 +56,7 @@ ExpandableList.defaultProps = {
 
                     if (headers.length > 0) {
                         if (actionSet) {
-                            headers.push({key: 99, all: 2});
+                            headers.push({key: 99, width: 2});
                         }
                         headers = <div className="expandable-list__header flex-row">{headers.map(this.renderHeader)}</div>;
                         return false; // exit foreach

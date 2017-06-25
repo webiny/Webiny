@@ -32,10 +32,10 @@ ErrorGroup.defaultProps = {
                                 {errorData.map(row => {
                                     return (
                                         <Ui.ExpandableList.Row key={row.id}>
-                                            <Ui.ExpandableList.Field all={6}>
+                                            <Ui.ExpandableList.Field width={6}>
                                                 {row.url}
                                             </Ui.ExpandableList.Field>
-                                            <Ui.ExpandableList.Field all={4}>
+                                            <Ui.ExpandableList.Field width={4}>
                                                 <Ui.Filters.DateTime value={row.date}/>
                                             </Ui.ExpandableList.Field>
 
