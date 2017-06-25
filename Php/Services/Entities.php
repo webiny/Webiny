@@ -27,6 +27,9 @@ class Entities extends AbstractService
          */
         $this->api('get', '/', function () {
 
+            // Entities listed here will not be returned in the final response.
+            $excludeEntities = $this->wRequest()->query('exclude', []);
+
             $singleEntity = false;
             $multipleEntities = $this->wRequest()->query('entities', false);
 
@@ -44,6 +47,10 @@ class Entities extends AbstractService
             /* @var $app App */
             foreach ($this->wApps() as $app) {
                 foreach ($app->getEntities() as $entity) {
+                    if (in_array($entity['class'], $excludeEntities)) {
+                        continue;
+                    }
+
                     if ($multipleEntities && !in_array($entity['class'], $multipleEntities)) {
                         continue;
                     }

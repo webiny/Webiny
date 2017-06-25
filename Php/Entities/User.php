@@ -174,6 +174,7 @@ class User extends AbstractEntity implements UserInterface
         /**
          * @api.name Set new password
          * @api.url /set-password
+         * @api.description Proceeds with user's password change by receiving a valid reset code
          * @api.body.code string Password reset code (received via email)
          * @api.body.password string New password to set
          */

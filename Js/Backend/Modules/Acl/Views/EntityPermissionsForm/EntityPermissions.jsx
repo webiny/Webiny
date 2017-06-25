@@ -58,7 +58,7 @@ EntityPermissions.defaultProps = {
                                         <div>
                                             <h2>{this.i18n(`No entities selected.`)}</h2>
                                             <p>
-                                                {this.i18n(`To manage access, please select an entity first.`)}
+                                                {this.i18n(`To manage access, please add an entity first.`)}
                                             </p>
                                         </div>
                                     </Grid.Col>
@@ -89,6 +89,7 @@ EntityPermissions.defaultProps = {
                 <ViewSwitcher.View view="addEntityModal" modal>
                     {(showView, data) => (
                         <AddEntityModal
+                            exclude={this.state.entities}
                             onSubmit={entity => {
                                 this.setState('entities', _.clone(this.state.entities).concat([entity]), () => {
                                     Webiny.Growl.success(this.i18n('Entity was added successfully!'));

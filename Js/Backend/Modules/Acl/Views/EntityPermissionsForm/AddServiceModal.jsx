@@ -1,10 +1,10 @@
 import Webiny from 'Webiny';
 
-class AddEntityModal extends Webiny.Ui.ModalComponent {
+class AddServiceModal extends Webiny.Ui.ModalComponent {
 
     constructor() {
         super();
-        this.api = new Webiny.Api.Endpoint('/services/webiny/entities');
+        this.api = new Webiny.Api.Endpoint('/services/webiny/services');
     }
 
     renderDialog() {
@@ -18,8 +18,7 @@ class AddEntityModal extends Webiny.Ui.ModalComponent {
                             form.showLoading();
                             const query = {
                                 withDetails: true,
-                                crudMethods: true,
-                                entity: model.class
+                                service: model.class
                             };
 
                             const apiResponse = await this.api.setQuery(query).get();
@@ -41,7 +40,7 @@ class AddEntityModal extends Webiny.Ui.ModalComponent {
                                                 placeholder={this.i18n('Select entity...')}
                                                 name="class"
                                                 validate="required"
-                                                api="/services/webiny/entities"
+                                                api="/services/webiny/services"
                                                 query={{exclude: this.props.exclude.map(item => item.class)}}
                                                 valueAttr="class"
                                                 textAttr="class"
@@ -62,11 +61,11 @@ class AddEntityModal extends Webiny.Ui.ModalComponent {
     }
 }
 
-AddEntityModal.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps, {
+AddServiceModal.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps, {
     onSubmit: _.noop,
     exclude: []
 });
 
-export default Webiny.createComponent(AddEntityModal, {
+export default Webiny.createComponent(AddServiceModal, {
     modules: ['Modal', 'Form', 'Grid', 'Select', 'Button']
 });

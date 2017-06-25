@@ -115,15 +115,20 @@ class UserPermissionsForm extends Webiny.Ui.View {
                                                 )}
                                             </Ui.Tabs.Tab>
                                             <Ui.Tabs.Tab label="Services">
-                                                {/*{permissions && (
+                                                {(newUserPermission || model.id) && (
                                                     <ServicePermissions
-                                                        permissions={permissions.services}
-                                                        onChange={(entity, method) => {
-                                                            const key = `permissions.services.${entity}.${method}`;
+                                                        permissions={services}
+                                                        onTogglePermission={(service, method) => {
+                                                            const key = `permissions.services.${service}.${method}`;
                                                             const value = _.get(model, key);
                                                             form.setModel(key, !value);
+                                                        }}
+                                                        onRemoveService={service => {
+                                                            const services = _.clone(model.permissions.services);
+                                                            delete services[service.class];
+                                                            form.setModel('permissions.services', services);
                                                         }}/>
-                                                )}*/}
+                                                )}
                                             </Ui.Tabs.Tab>
                                         </Ui.Tabs>
                                     </Ui.Grid.Col>

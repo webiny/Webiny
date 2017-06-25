@@ -6,7 +6,7 @@
 	margin: 20px;
 }
 
-.entityBox {
+.accessBox {
 	border: 1px solid #e7e5e5;
 	color: #333;
 	display: inline-block;
@@ -16,7 +16,7 @@
 	margin-bottom: 20px;
 }
 
-.entityBox .removeEntity {
+.removeEntity {
 	font-size: 25px;
 	opacity: 0.4;
 	cursor: pointer;
@@ -25,11 +25,11 @@
 	right: 40px;
 }
 
-.entityBox .removeEntity:hover {
+.accessBox .removeEntity:hover {
 	opacity: 1;
 }
 
-.entityBox h1 {
+.accessBox h1 {
 	text-align: left;
 	border-bottom: 2px solid #fa5a28;
 	margin: 0 0 15px;
@@ -43,14 +43,14 @@
 	text-overflow: ellipsis;
 }
 
-.entityBox h2 {
+.accessBox h2 {
 	font-size: 16px;
 	border-bottom: 1px solid #e2e2e2;
 	margin-bottom: 10px;
 	margin-top: 25px;
 }
 
-.entityBox button {
+.accessBox button {
 	border-radius: 2px;
 	width: 40px;
 	height: 40px;
@@ -62,13 +62,13 @@
 	display: inline-block;
 }
 
-.entityBox button:global(.exposed) {
+.accessBox button:global(.exposed) {
 	color: white;
 	background-color: #FA5723;
 	border: 1px solid #ED4005;
 }
 
-.entityBox button:hover:not(:disabled) {
+.accessBox button:hover:not(:disabled) {
 	box-shadow: 0 0 0 0 #FA5723;
 }
 
@@ -97,6 +97,18 @@
 	color: white;
 	border: none;
 	pointer-events: none;
+}
+
+.customMethods ul li .method {
+	font-size: 14px;
+}
+
+.customMethodTooltip {
+	text-align: left;
+}
+
+.customMethodTooltip div {
+	padding: 2px;
 }
 
 .customMethods :global(.empty) {

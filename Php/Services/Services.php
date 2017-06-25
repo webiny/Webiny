@@ -25,17 +25,34 @@ class Services extends AbstractService
          * @api.description This method returns an overview of all active services
          */
         $this->api('get', '/', function () {
-            $singleService = $this->wRequest()->query('service', false);
+
+            // Services listed here will not be returned in the final response.
+            $excludeServices = $this->wRequest()->query('exclude', []);
+
+            $singleService = false;
+            $multipleServices = $this->wRequest()->query('services', false);
+
+            if (!$multipleServices) {
+                $singleService = $this->wRequest()->query('service', false);
+                if ($singleService) {
+                    $multipleServices = [$singleService];
+                }
+            }
+
             $withDetails = StdObjectWrapper::toBool($this->wRequest()->query('withDetails', false));
             $services = [];
             /* @var $app App */
             foreach ($this->wApps() as $app) {
-                foreach($app->getServices() as $service){
-                    if ($singleService && $service['class'] != $singleService) {
+                foreach ($app->getServices() as $service) {
+                    if (in_array($service['class'], $excludeServices)) {
                         continue;
                     }
 
-                    if($withDetails){
+                    if ($multipleServices && !in_array($service['class'], $multipleServices)) {
+                        continue;
+                    }
+
+                    if ($withDetails) {
                         $serviceParser = new ServiceParser($service['class']);
                         $service['methods'] = $serviceParser->getApiMethods();
                     }
@@ -47,7 +64,7 @@ class Services extends AbstractService
                     $services[] = $service;
                 }
             }
-            
+
             return $services;
         });
     }
