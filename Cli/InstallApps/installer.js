@@ -11,7 +11,7 @@ class InstallApps {
                 if (config.packagist && config.packagist !== '') {
                     Webiny.shellExecute('composer require ' + config.packagist);
                 } else {
-                    Webiny.shellExecute('cd ' + Webiny.projectRoot('Apps') + ' && git clone ' + config.repository);
+                    Webiny.shellExecute('cd ' + Webiny.projectRoot('Apps') + ' && git clone --depth=1 ' + config.repository);
                 }
                 // Activate app in Application.yaml
                 const applicationConfig = Webiny.projectRoot('Configs/Base/Application.yaml');

@@ -63,11 +63,11 @@ ListErrors.defaultProps = {
                                                 return (
 
                                                     <Ui.ExpandableList.Row key={row.id}>
-                                                        <Ui.ExpandableList.Field all={1} name="Count" className="text-center">
+                                                        <Ui.ExpandableList.Field width={1} name="Count" className="text-center">
                                                             <ErrorCount count={row.errorCount} ref={ref => this['errorCount-' + row.id] = ref}/>
                                                         </Ui.ExpandableList.Field>
-                                                        <Ui.ExpandableList.Field all={5} name="Error">{row.error}</Ui.ExpandableList.Field>
-                                                        <Ui.ExpandableList.Field all={4} name="Last Entry">
+                                                        <Ui.ExpandableList.Field width={5} name="Error">{row.error}</Ui.ExpandableList.Field>
+                                                        <Ui.ExpandableList.Field width={4} name="Last Entry">
                                                             <Ui.Filters.DateTime value={row.lastEntry}/>
                                                         </Ui.ExpandableList.Field>
 

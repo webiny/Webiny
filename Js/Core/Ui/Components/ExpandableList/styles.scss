@@ -105,6 +105,12 @@
       }
     }
 
+    .expandable-list__action-set {
+      .dropdown-menu{
+        left: -65px;
+      }
+    }
+
     .expandable-list__row {
       width: 100%;
       will-change: transform, -webkit-transform;

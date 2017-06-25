@@ -1,4 +1,10 @@
 {
+    "contributors": [
+        "Pavel Denisjuk <pavel@webiny.com>",
+        "Sven Al Hamad <sven@webiny.com>",
+        "Adrian Smijulj <adrian.1358@gmail.com>"
+    ],
+    "license": "MIT",
     "devDependencies": {
         "accounting": "^0.4.1",
         "animate.css": "^3.5.2",
@@ -60,6 +66,7 @@
         "node-sshclient": "^0.2.0",
         "null-loader": "^0.1.1",
         "owl.carousel": "^2.2.0",
+        "password-generator": "^2.1.0",
         "platform": "^1.3.3",
         "pluralize": "^4.0.0",
         "quill": "^1.2.0",
@@ -81,5 +88,8 @@
         "webpack-hot-middleware": "^2.18.0",
         "webpack-visualizer-plugin": "^0.1.11",
         "write-file-webpack-plugin": "^3.4.2"
+    },
+    "optionalDependencies": {
+        "fsevents": "^1.0.17"
     }
 }
