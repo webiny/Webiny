@@ -26,14 +26,25 @@ class Entities extends AbstractService
          * @api.query.withDetails boolean Return full details (default: false)
          */
         $this->api('get', '/', function () {
-            $singleEntity = $this->wRequest()->query('entity', false);
+
+            $singleEntity = false;
+            $multipleEntities = $this->wRequest()->query('entities', false);
+
+            if (!$multipleEntities) {
+                $singleEntity = $this->wRequest()->query('entity', false);
+                if ($singleEntity) {
+                    $multipleEntities = [$singleEntity];
+                }
+            }
+
             $withDetails = StdObjectWrapper::toBool($this->wRequest()->query('withDetails', false));
             $includeCrudMethods = StdObjectWrapper::toBool($this->wRequest()->query('crudMethods', false));
             $entities = [];
+
             /* @var $app App */
             foreach ($this->wApps() as $app) {
                 foreach ($app->getEntities() as $entity) {
-                    if ($singleEntity && $entity['class'] != $singleEntity) {
+                    if ($multipleEntities && !in_array($entity['class'], $multipleEntities)) {
                         continue;
                     }
 
@@ -44,7 +55,7 @@ class Entities extends AbstractService
                         $entity['relations'] = $entityParser->getRelations();
                     }
 
-                    if ($entity['class'] == $singleEntity) {
+                    if ($singleEntity && $entity['class'] == $singleEntity) {
                         return $entity;
                     }
                     

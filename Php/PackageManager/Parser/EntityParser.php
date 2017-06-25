@@ -108,7 +108,7 @@ class EntityParser extends AbstractParser
      *
      * @return array
      * @throws AppException
-     */
+    */
     private function getMethods($includeCrudMethods)
     {
         $crudPatterns = [
@@ -125,8 +125,10 @@ class EntityParser extends AbstractParser
         $instance = new $this->class;
         $callbacks = $instance->getClassCallbacks();
         foreach ($callbacks as $class => $events) {
-            foreach ($events['onExtend'] as $cb) {
-                $apiDocs->mergeSmart($this->readExtendedApi($cb));
+            if (isset($events['onExtend'])) {
+                foreach ($events['onExtend'] as $cb) {
+                    $apiDocs->mergeSmart($this->readExtendedApi($cb));
+                }
             }
         }
 

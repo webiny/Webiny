@@ -1,5 +1,5 @@
 import Webiny from 'Webiny';
-import ApiTokenModalForm from './Modal/ApiTokenForm';
+import ApiTokenModal from './Modal/ApiTokenModal';
 import SystemApiTokenModal from './Modal/SystemApiToken';
 
 class ApiTokensList extends Webiny.Ui.View {
@@ -134,7 +134,7 @@ ApiTokensList.defaultProps = {
                             </Ui.ViewSwitcher.View>
                             <Ui.ViewSwitcher.View view="tokenModalView" modal>
                                 {(showView, data) => (
-                                    <ApiTokenModalForm
+                                    <ApiTokenModal
                                         {...{showView, data}}
                                         refreshTokens={() => this.apiTokensList.loadData()}/>
                                 )}

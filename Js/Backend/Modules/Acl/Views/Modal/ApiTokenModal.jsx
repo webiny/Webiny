@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
 
-class ApiTokenForm extends Webiny.Ui.ModalComponent {
+class ApiTokenModal extends Webiny.Ui.ModalComponent {
 
     renderDialog() {
         const {Modal, Form, Grid, Input, Switch, Button, UserRoles} = this.props;
@@ -53,6 +53,6 @@ class ApiTokenForm extends Webiny.Ui.ModalComponent {
     }
 }
 
-export default Webiny.createComponent(ApiTokenForm, {
+export default Webiny.createComponent(ApiTokenModal, {
     modules: ['Modal', 'Form', 'Grid', 'Input', 'Switch', 'Button', {UserRoles: 'Webiny/Backend/UserRoles'}]
 });

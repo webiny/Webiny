@@ -27,13 +27,14 @@ List.defaultProps = {
                         <Ui.View.List>
                             <Ui.View.Header
                                 title="ACL - Roles"
-                                description={
+                                description={(
                                     <span>Roles are a simple way to control what permissions certain users have. Create a role with a set
-                                        of {permissions} and then assign roles to {users}.</span>}>
+                                        of {permissions} and then assign roles to {users}.</span>
+                                )}>
                                     <Ui.Link type="primary" route="UserRoles.Create" align="right">
-                                    <Ui.Icon icon="icon-plus-circled"/>
-                                    Create role
-                                </Ui.Link>
+                                        <Ui.Icon icon="icon-plus-circled"/>
+                                        Create role
+                                    </Ui.Link>
                             </Ui.View.Header>
                             <Ui.View.Body>
                                 <Ui.List {...listProps}>
