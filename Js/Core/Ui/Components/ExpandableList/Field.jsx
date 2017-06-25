@@ -5,6 +5,9 @@ class Field extends Webiny.Ui.Component {
 }
 
 Field.defaultProps = {
+    className: null,
+    onClick: _.noop,
+    width: null,
     renderer() {
         let content = this.props.children;
         if (_.isFunction(this.props.children)) {
@@ -14,7 +17,7 @@ Field.defaultProps = {
         let className = _.union([], [this.props.className]).join(' ');
 
         return (
-            <div className={className + ' expandable-list__row__fields__field flex-cell flex-width-' + this.props.all} onClick={this.props.onClick}>{content}</div>
+            <div className={className + ' expandable-list__row__fields__field flex-cell flex-width-' + this.props.width} onClick={this.props.onClick}>{content}</div>
         );
     }
 };

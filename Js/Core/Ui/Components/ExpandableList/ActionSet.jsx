@@ -9,7 +9,7 @@ ActionSet.defaultProps = {
     renderer() {
         const {Dropdown} = this.props;
         return (
-            <Dropdown title={this.props.label} type="balloon">
+            <Dropdown title={this.props.label} type="balloon" className="expandable-list__action-set">
                 <Dropdown.Header title="Actions"/>
                 {React.Children.map(this.props.children, child => {
                     if (Webiny.isElementOfType(child, Dropdown.Divider) || Webiny.isElementOfType(child, Dropdown.Header)) {
