@@ -36,7 +36,6 @@ class RadioGroup extends Webiny.Ui.OptionComponent {
 
             const props = {
                 key,
-                grid: this.props.grid,
                 label: item.text,
                 disabled: this.isDisabled(),
                 option: item,

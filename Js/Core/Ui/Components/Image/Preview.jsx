@@ -32,7 +32,7 @@ ImagePreview.defaultProps = {
         return (
             <div className={styles.file} style={{float: 'none'}}>
                 <img className={styles.filePreview} src={image.src + cacheBust} style={{width: '100%'}}/>
-                <Link onClick={this.editImage} className={styles.fileEdit}/>
+                {this.props.onEdit ? <Link onClick={this.editImage} className={styles.fileEdit}/> : null}
                 <Link onClick={this.deleteImage} className={styles.fileRemove}/>
             </div>
         );

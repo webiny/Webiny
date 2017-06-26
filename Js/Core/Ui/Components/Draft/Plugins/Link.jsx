@@ -88,7 +88,7 @@ class LinkPlugin extends Webiny.Draft.EntityPlugin {
                                                         </Ui.Grid.Row>
                                                         <Ui.Grid.Row>
                                                             <Ui.Grid.Col xs={6}>
-                                                                <Ui.Checkbox name="newTab" label="Open in new tab" grid={null}/>
+                                                                <Ui.Checkbox name="newTab" label="Open in new tab"/>
                                                             </Ui.Grid.Col>
                                                             <Ui.Grid.Col xs={3} className="no-padding">
                                                                 <Ui.Logic.Hide if={() => this.newLink}>

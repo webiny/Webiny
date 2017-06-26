@@ -164,7 +164,7 @@ class BaseCropper extends Webiny.Ui.Component {
             };
         }
 
-        model.src = this.cropper.getCroppedCanvas(options).toDataURL();
+        model.src = this.cropper.getCroppedCanvas(options).toDataURL(model.type);
         return model;
     }
 }
