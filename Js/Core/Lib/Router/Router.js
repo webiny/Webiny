@@ -18,7 +18,7 @@ class Router {
         this.defaultComponents = {};
         this.layouts = {};
         this.defaultRoute = null; // If router didn't match anything, it will reroute here
-        this.titlePattern = '{title}';
+        this.titlePattern = '%s';
         this.activeRoute = null;
         this.beforeStart = [];
         this.routeWillChange = [];
