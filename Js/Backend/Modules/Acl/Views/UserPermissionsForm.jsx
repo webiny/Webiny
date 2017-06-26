@@ -107,6 +107,11 @@ class UserPermissionsForm extends Webiny.Ui.View {
                                                             const value = _.get(model, key);
                                                             form.setModel(key, !value);
                                                         }}
+                                                        onAddEntity={entity => {
+                                                            const entities = _.clone(model.permissions.entities);
+                                                            entities[entity.class] = {};
+                                                            form.setModel('permissions.entities', entities);
+                                                        }}
                                                         onRemoveEntity={entity => {
                                                             const entities = _.clone(model.permissions.entities);
                                                             delete entities[entity.class];
@@ -122,6 +127,11 @@ class UserPermissionsForm extends Webiny.Ui.View {
                                                             const key = `permissions.services.${service}.${method}`;
                                                             const value = _.get(model, key);
                                                             form.setModel(key, !value);
+                                                        }}
+                                                        onAddService={service => {
+                                                            const services = _.clone(model.permissions.services);
+                                                            services[service.class] = {};
+                                                            form.setModel('permissions.services', services);
                                                         }}
                                                         onRemoveService={service => {
                                                             const services = _.clone(model.permissions.services);

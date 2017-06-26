@@ -143,7 +143,7 @@ EntityBox.defaultProps = {
                             message={this.i18n('Are you sure you want to remove {entity}?', {
                                 entity: <strong>{this.props.entity.class}</strong>
                             })}>
-                            <span onClick={_.noop} className={styles.removeEntity}>×</span>
+                            <span onClick={_.noop} className={styles.removeButton}>×</span>
                         </ClickConfirm>
                         {this.renderCrudMethods()}
                         {this.renderCustomMethods()}

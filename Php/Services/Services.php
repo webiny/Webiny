@@ -39,7 +39,9 @@ class Services extends AbstractService
                 }
             }
 
-            $withDetails = StdObjectWrapper::toBool($this->wRequest()->query('withDetails', false));
+            $details = $this->wRequest()->query('details', '');
+            $details = explode(',', $details);
+
             $services = [];
             /* @var $app App */
             foreach ($this->wApps() as $app) {
@@ -52,7 +54,7 @@ class Services extends AbstractService
                         continue;
                     }
 
-                    if ($withDetails) {
+                    if (in_array('methods', $details)) {
                         $serviceParser = new ServiceParser($service['class']);
                         $service['methods'] = $serviceParser->getApiMethods();
                     }

@@ -17,7 +17,7 @@ class AddServiceModal extends Webiny.Ui.ModalComponent {
                         onSubmit={async (model, form) => {
                             form.showLoading();
                             const query = {
-                                withDetails: true,
+                                details: 'methods',
                                 service: model.class
                             };
 
@@ -44,7 +44,7 @@ class AddServiceModal extends Webiny.Ui.ModalComponent {
                                                 query={{exclude: this.props.exclude.map(item => item.class)}}
                                                 valueAttr="class"
                                                 textAttr="class"
-                                                minimumResultsForSearch={10}/>
+                                                minimumResultsForSearch={5}/>
                                         </Grid.Col>
                                     </Grid.Row>
                                 </Modal.Body>

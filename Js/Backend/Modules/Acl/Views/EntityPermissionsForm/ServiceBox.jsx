@@ -3,19 +3,11 @@ import ToggleAccessButton from './ToggleAccessButton';
 
 import styles from './styles.css';
 
-class EntityBox extends Webiny.Ui.Component {
+class ServiceBox extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
         this.state = {serviceFilter: ''};
         this.api = new Webiny.Api.Endpoint('/services/webiny/user-permissions');
-
-        this.crud = {
-            create: '/.post',
-            read: '{id}.get',
-            list: '/.get',
-            update: '{id}.patch',
-            delete: '{id}.delete'
-        };
     }
 
     /**
@@ -31,7 +23,7 @@ class EntityBox extends Webiny.Ui.Component {
             customMethods.push(_.assign({}, method, {exposed}));
         });
 
-        let header = <h2>{this.i18n(`Custom methods`)}</h2>;
+        let header = null;
         let content = <div className="empty">{this.i18n(`No custom methods.`)}</div>
 
         if (_.isEmpty(customMethods)) {
@@ -45,7 +37,6 @@ class EntityBox extends Webiny.Ui.Component {
 
         header = (
             <span>
-                <h2>{this.i18n(`Custom methods`)}</h2>
                 <Input placeholder="Filter methods..." {...this.bindTo('serviceFilter')} delay={0}/>
             </span>
         );
@@ -93,11 +84,11 @@ class EntityBox extends Webiny.Ui.Component {
     }
 }
 
-EntityBox.defaultProps = {
+ServiceBox.defaultProps = {
     service: {},
     permissions: {},
     onTogglePermission: _.noop,
-    onRemoveEntity: _.noop,
+    onRemoveService: _.noop,
     renderer() {
         const {ClickConfirm} = this.props;
 
@@ -107,11 +98,11 @@ EntityBox.defaultProps = {
                     <div>
                         <h1>{this.props.service.class}</h1>
                         <ClickConfirm
-                            onComplete={() => this.props.onRemoveEntity(this.props.service)}
+                            onComplete={() => this.props.onRemoveService(this.props.service)}
                             message={this.i18n('Are you sure you want to remove {service}?', {
                                 service: <strong>{this.props.service.class}</strong>
                             })}>
-                            <span onClick={_.noop} className={styles.removeEntity}>×</span>
+                            <span onClick={_.noop} className={styles.removeButton}>×</span>
                         </ClickConfirm>
                         {this.renderCustomMethods()}
                     </div>
@@ -121,6 +112,6 @@ EntityBox.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(EntityBox, {
+export default Webiny.createComponent(ServiceBox, {
     modules: ['Icon', 'Input', 'Button', 'ClickConfirm', 'Tooltip']
 });

@@ -40,7 +40,9 @@ class Entities extends AbstractService
                 }
             }
 
-            $withDetails = StdObjectWrapper::toBool($this->wRequest()->query('withDetails', false));
+            $details = $this->wRequest()->query('details', '');
+            $details = explode(',', $details);
+
             $includeCrudMethods = StdObjectWrapper::toBool($this->wRequest()->query('crudMethods', false));
             $entities = [];
 
@@ -55,17 +57,23 @@ class Entities extends AbstractService
                         continue;
                     }
 
-                    if ($withDetails) {
-                        $entityParser = new EntityParser($entity['class']);
+                    $entityParser = new EntityParser($entity['class']);
+                    if (in_array('attributes', $details)) {
                         $entity['attributes'] = $entityParser->getAttributes();
+                    }
+
+                    if (in_array('methods', $details)) {
                         $entity['methods'] = $entityParser->getApiMethods($includeCrudMethods);
+                    }
+
+                    if (in_array('relations', $details)) {
                         $entity['relations'] = $entityParser->getRelations();
                     }
 
                     if ($singleEntity && $entity['class'] == $singleEntity) {
                         return $entity;
                     }
-                    
+
                     $entities[] = $entity;
                 }
             }

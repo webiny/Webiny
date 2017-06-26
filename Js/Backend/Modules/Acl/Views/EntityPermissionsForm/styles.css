@@ -2,8 +2,13 @@
 	position: relative;
 }
 
-.newEntity {
-	margin: 20px;
+.addAction {
+	margin-bottom: 20px;
+}
+
+.accessBoxesWrapper {
+	display: flex;
+	flex-wrap: wrap;
 }
 
 .accessBox {
@@ -16,7 +21,7 @@
 	margin-bottom: 20px;
 }
 
-.removeEntity {
+.removeButton {
 	font-size: 25px;
 	opacity: 0.4;
 	cursor: pointer;
@@ -25,7 +30,7 @@
 	right: 40px;
 }
 
-.accessBox .removeEntity:hover {
+.accessBox .removeButton:hover {
 	opacity: 1;
 }
 

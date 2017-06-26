@@ -20,7 +20,7 @@ class ServicePermissions extends Webiny.Ui.Component {
         if (!_.isEmpty(this.props.permissions)) {
             this.setState('loading', true, () => {
                 this.api.setQuery({
-                    withDetails: true,
+                    details: 'methods',
                     crudMethods: true,
                     services: _.keys(this.props.permissions)
                 }).get().then(apiResponse => this.setState({loading: false, services: apiResponse.getData()}));
@@ -44,7 +44,7 @@ ServicePermissions.defaultProps = {
                     {showView => (
                         <div className={styles.servicePermissionsWrapper}>
                             {this.state.loading && <Loader/>}
-                            <Grid.Row className={styles.newService}>
+                            <Grid.Row className={styles.addAction}>
                                 <Grid.Col all={12} className="text-center">
                                     <Button type="primary" onClick={showView('addServiceModal')}>
                                         <Icon icon="icon-plus-circled"/>
@@ -65,7 +65,7 @@ ServicePermissions.defaultProps = {
                                     </Grid.Col>
                                 </Grid.Row>
                             ) : (
-                                <Grid.Row>
+                                <Grid.Row className={styles.accessBoxesWrapper}>
                                     {this.state.services.map(service => (
                                         <ServiceBox
                                             onTogglePermission={(service, method) => this.props.onTogglePermission(service, method)}
@@ -93,6 +93,7 @@ ServicePermissions.defaultProps = {
                             exclude={this.state.services}
                             onSubmit={service => {
                                 this.setState('services', _.clone(this.state.services).concat([service]), () => {
+                                    this.props.onAddService(service);
                                     Webiny.Growl.success(this.i18n('Service was added successfully!'));
                                 });
                             }}/>
