@@ -75,9 +75,9 @@
           /* sven: causes problems when the toolbar goes into 2 lines */
           vertical-align: top;
 
-          actions{
+          actions {
             display: table;
-            >span{
+            > span {
               display: table-cell;
             }
           }
@@ -182,6 +182,38 @@
           content: ''
         }
       }
+
+      .alignment--left {
+        .public-DraftStyleDefault-block {
+          text-align: left;
+        }
+      }
+
+      .alignment--center {
+        .public-DraftStyleDefault-block {
+          text-align: center;
+        }
+      }
+
+      .alignment--right {
+        .public-DraftStyleDefault-block {
+          text-align: right;
+        }
+      }
+
+      .alignment--justify {
+        .public-DraftStyleDefault-block {
+          text-align: justify;
+        }
+      }
+
+      .alignment--justify:after {
+        .public-DraftStyleDefault-block {
+          content: "";
+          display: inline-block;
+          width: 100%;
+        }
+      }
     }
 
     .image-plugin-wrapper {
@@ -253,25 +285,6 @@
       .public-DraftStyleDefault-ltr {
         text-align: inherit;
       }
-
-      .alignment--left {
-        .public-DraftStyleDefault-block {
-          text-align: left;
-        }
-      }
-
-      .alignment--center {
-        .public-DraftStyleDefault-block {
-          text-align: center;
-        }
-      }
-
-      .alignment--right {
-        .public-DraftStyleDefault-block {
-          text-align: right;
-        }
-      }
-
     }
     .rich-editor__editor {
       margin: 0;

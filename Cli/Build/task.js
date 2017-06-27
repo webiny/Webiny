@@ -59,7 +59,7 @@ class Build {
             const appCfgPath = Webiny.projectRoot(app.getSourceDir() + '/webpack.app.js');
             if (Webiny.fileExists(appCfgPath)) {
                 // Import app config and pass the base app config for modification
-                appConfig = require(appCfgPath)(appConfig);
+                appConfig = require(appCfgPath)(appConfig, app);
             }
 
             appConfigs.push(appConfig);

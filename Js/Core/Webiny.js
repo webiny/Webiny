@@ -56,6 +56,7 @@ class Webiny {
                 this.Router.setBaseUrl(config.router.baseUrl || '/');
                 this.Router.setTitlePattern(config.router.title || '');
                 this.Router.setDefaultRoute(config.router.defaultRoute || null);
+                this.Router.setHistory(config.router.history || null);
             }
 
             let loader = Promise.resolve();

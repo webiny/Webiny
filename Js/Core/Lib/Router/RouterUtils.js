@@ -8,6 +8,11 @@ class RouterUtils {
         return this;
     }
 
+    setHistory(history) {
+        this.history = history;
+        return this;
+    }
+
     /**
      * When using promises, in our case Q library which is based on ES6 Promise class, thrown exceptions are suppressed by default.
      * Q library has support for handling that by passing second parameter to `then()`, so this is the exceptionHandler we pass to Q
@@ -109,8 +114,8 @@ class RouterUtils {
         });
 
         routeNotMatchedChain = routeNotMatchedChain.then(() => {
-            if (_.isNumber(History.getState().data.scrollY)) {
-                window.scrollTo(0, History.getState().data.scrollY);
+            if (_.isNumber(_.get(this.history, 'location.state.scrollY'))) {
+                window.scrollTo(0, _.get(this.history, 'location.state.scrollY'));
             }
 
             if (!rEvent.isStopped()) {
@@ -122,7 +127,7 @@ class RouterUtils {
                     } else {
                         url = Webiny.Router.getBaseUrl();
                     }
-                    History.replaceState({url, replace: true}, null, url);
+                    this.history.replace(url);
                     return true;
                 }
 

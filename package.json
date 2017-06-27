@@ -48,7 +48,6 @@
         "gulp-print": "^1.1.0",
         "gulp-zip": "^3.2.0",
         "highlight.js": "^9.9.0",
-        "historyjs": "^1.8.0-b2",
         "hoist-non-react-statics": "^1.2.0",
         "inquirer": "^3.1.1",
         "isarray": "^2.0.1",
@@ -91,5 +90,8 @@
     },
     "optionalDependencies": {
         "fsevents": "^1.0.17"
+    },
+    "dependencies": {
+        "history": "^4.6.3"
     }
 }
