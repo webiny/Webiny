@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
 import styles from './styles.css';
-import EntityBox from './EntityBox';
+import EntityBox from './AccessBox/EntityBox';
 import AddEntityModal from './AddEntityModal';
 
 class EntityPermissions extends Webiny.Ui.Component {

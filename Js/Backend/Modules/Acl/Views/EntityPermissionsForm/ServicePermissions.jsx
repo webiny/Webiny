@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
 import styles from './styles.css';
-import ServiceBox from './ServiceBox';
+import ServiceBox from './AccessBox/ServiceBox';
 import AddServiceModal from './AddServiceModal';
 
 class ServicePermissions extends Webiny.Ui.Component {

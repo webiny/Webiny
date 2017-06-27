@@ -1,4 +1,5 @@
 import Webiny from 'Webiny';
+import styles from './styles.css';
 
 const crudLabels = {
     '/.post': 'C',
@@ -22,7 +23,7 @@ ToggleAccessButton.defaultProps = {
     renderer() {
         const {Button, method, onClick, value} = this.props;
         if (method.public) {
-            return <Button type="primary" className="public">P</Button>;
+            return <Button type="primary" className={this.classSet(styles.toggleAccessButton, styles.toggleAccessButtonPublic)}>P</Button>;
         }
 
         return (
@@ -33,7 +34,7 @@ ToggleAccessButton.defaultProps = {
                         this.ref.querySelector('button').blur();
                         onClick();
                     }}
-                    className={this.classSet({exposed: value})}>
+                    className={this.classSet(styles.toggleAccessButton, {[styles.toggleAccessButtonExposed]: value})}>
                     {this.renderLabel()}
                 </Button>
             </wrapper>

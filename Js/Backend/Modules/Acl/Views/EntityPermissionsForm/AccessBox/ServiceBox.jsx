@@ -24,7 +24,7 @@ class ServiceBox extends Webiny.Ui.Component {
         });
 
         let header = null;
-        let content = <div className="empty">{this.i18n(`No custom methods.`)}</div>
+        let content = <div className={styles.noCustomMethods}>{this.i18n(`No custom methods.`)}</div>
 
         if (_.isEmpty(customMethods)) {
             return (
@@ -58,7 +58,7 @@ class ServiceBox extends Webiny.Ui.Component {
                         <div className={styles.method}>
                             {method.method.toUpperCase()}
                             <Tooltip key="label" target={<Icon icon="icon-info-circle"/>}>
-                                <div className={styles.customMethodTooltip}>
+                                <div>
                                     <strong>{method.name}</strong>
                                     <div>{method.description}</div>
                                 </div>
@@ -93,8 +93,8 @@ ServiceBox.defaultProps = {
         const {ClickConfirm} = this.props;
 
         return (
-            <div className="col-lg-4 col-md-6 col-sm-12">
-                <div className={styles.accessBox}>
+            <div className="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div className={styles.box}>
                     <div>
                         <h1>{this.props.service.class}</h1>
                         <ClickConfirm

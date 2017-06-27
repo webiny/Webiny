@@ -8,7 +8,6 @@ class EntityBox extends Webiny.Ui.Component {
         super(props);
         this.state = {entityFilter: ''};
         this.api = new Webiny.Api.Endpoint('/entities/webiny/user-permissions');
-
         this.crud = {
             create: '/.post',
             read: '{id}.get',
@@ -63,8 +62,8 @@ class EntityBox extends Webiny.Ui.Component {
             customMethods.push(_.assign({}, method, {exposed}));
         });
 
-        let header = <h2>{this.i18n(`Custom methods`)}</h2>;
-        let content = <div className="empty">{this.i18n(`No custom methods.`)}</div>
+        let header = <h2 className={styles.customMethodsTitle}>{this.i18n(`Custom methods`)}</h2>;
+        let content = <div className={styles.noCustomMethods}>{this.i18n(`No custom methods.`)}</div>
 
         if (_.isEmpty(customMethods)) {
             return (
@@ -77,7 +76,7 @@ class EntityBox extends Webiny.Ui.Component {
 
         header = (
             <span>
-                <h2>{this.i18n(`Custom methods`)}</h2>
+                <h2 className={styles.customMethodsTitle}>{this.i18n(`Custom methods`)}</h2>
                 <Input placeholder="Filter methods..." {...this.bindTo('entityFilter')} delay={0}/>
             </span>
         );
@@ -88,7 +87,7 @@ class EntityBox extends Webiny.Ui.Component {
             }
 
             return (
-                <li key={method.key}>
+                <li key={method.key} className={styles.customMethodListItem}>
                     <ToggleAccessButton
                         key={method.key}
                         method={method}
@@ -96,10 +95,10 @@ class EntityBox extends Webiny.Ui.Component {
                         value={_.get(permissions, method.key)}/>
 
                     <div>
-                        <div className={styles.method}>
+                        <div className={styles.methodTypeLabel}>
                             {method.method.toUpperCase()}
-                            <Tooltip key="label" target={<Icon icon="icon-info-circle"/>}>
-                                <div className={styles.customMethodTooltip}>
+                            <Tooltip placement="top" key="label" target={<Icon icon="icon-info-circle"/>}>
+                                <div>
                                     <strong>{method.name}</strong>
                                     <div>{method.description}</div>
                                 </div>
@@ -114,10 +113,10 @@ class EntityBox extends Webiny.Ui.Component {
 
         // Filter out undefined values (when method filtering is active)
         methods = _.filter(methods, item => !_.isUndefined(item));
-        content = _.isEmpty(methods) ? <div className="empty">{this.i18n(`Nothing to show.`)}</div> : <ul>{methods}</ul>;
+        content = _.isEmpty(methods) ? <div className={styles.noCustomMethods}>{this.i18n(`Nothing to show.`)}</div> : <ul className={styles.customMethodsList}>{methods}</ul>;
 
         return (
-            <div className={styles.customMethods}>
+            <div>
                 <header>{header}</header>
                 {content}
             </div>
@@ -134,10 +133,10 @@ EntityBox.defaultProps = {
         const {ClickConfirm} = this.props;
 
         return (
-            <div className="col-lg-4 col-md-6 col-sm-12">
-                <div className={styles.accessBox}>
+            <div className="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div className={styles.box}>
                     <div>
-                        <h1>{this.props.entity.class}</h1>
+                        <h1 className={styles.title}>{this.props.entity.class}</h1>
                         <ClickConfirm
                             onComplete={() => this.props.onRemoveEntity(this.props.entity)}
                             message={this.i18n('Are you sure you want to remove {entity}?', {

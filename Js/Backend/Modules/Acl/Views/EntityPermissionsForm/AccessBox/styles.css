@@ -1,0 +1,118 @@
+div.box {
+	border: 1px solid #e7e5e5;
+	color: #333;
+	display: inline-block;
+	background-color: #F3F3F3;
+	padding: 20px;
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+h1.title {
+	text-align: left;
+	border-bottom: 2px solid #fa5a28;
+	margin: 0 0 15px;
+	font-size: 17px;
+	padding-bottom: 10px;
+	padding-right: 20px;
+	display: block;
+	font-weight: 500;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+h2.customMethodsTitle {
+	font-size: 16px;
+	border-bottom: 1px solid #e2e2e2;
+	margin-bottom: 10px;
+	margin-top: 25px;
+}
+
+span.removeButton {
+	font-size: 25px;
+	opacity: 0.4;
+	cursor: pointer;
+	position: absolute;
+	top: 20px;
+	right: 40px;
+}
+
+span.removeButton:hover {
+	opacity: 1;
+}
+
+button.toggleAccessButton {
+	border-radius: 2px;
+	width: 40px;
+	height: 40px;
+	margin: 0 5px 5px 0;
+	background-color: #d8d8d8;
+	color: #333;
+	border: 1px solid #b7b7b7;
+	padding: 10px;
+	display: inline-block;
+}
+
+button.toggleAccessButton:hover:not(:disabled) {
+	box-shadow: 0 0 0 0 #FA5723;
+}
+
+button.toggleAccessButtonExposed {
+	color: white;
+	background-color: #FA5723;
+	border: 1px solid #ED4005;
+}
+
+button.toggleAccessButtonPublic {
+	background-color: #26AFA6;
+	color: white;
+	border: none;
+	pointer-events: none;
+}
+
+ul.customMethodsList {
+	margin: 0;
+	padding: 5px 0 0 0;
+	list-style: none;
+	height: 180px;
+	overflow: hidden;
+	overflow-y: auto;
+}
+
+li.customMethodListItem {
+	font-size: 12px;
+	margin-bottom: 5px;
+	list-style: none;
+	padding-left: 0;
+}
+
+ul.customMethodsList button.toggleAccessButton {
+	float: left;
+}
+
+ul.customMethodsList .methodTypeLabel {
+	font-size: 14px;
+}
+
+ul.customMethodsList :global(.tooltip-inner) {
+	width: auto;
+	max-width: 300px;
+	border-radius: 2px;
+	text-align: left;
+	white-space: initial;
+}
+
+ul.customMethodsList :global(.tooltip-inner strong) {
+	width: 200px;
+	border-radius: 2px;
+}
+
+div.noCustomMethods  {
+	text-align: center;
+	width: 100%;
+	display: block;
+	padding: 50px;
+	color: #c1c0c0;
+	font-weight: 300;
+}
