@@ -21,6 +21,10 @@ class Alignment extends Webiny.Draft.BasePlugin {
                     {
                         align: 'right',
                         tooltip: 'Align block to the right'
+                    },
+                    {
+                        align: 'justify',
+                        tooltip: 'Align block to justify'
                     }
                 ];
 

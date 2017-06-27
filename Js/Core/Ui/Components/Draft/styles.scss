@@ -272,6 +272,12 @@
         }
       }
 
+      .alignment--justify {
+        .public-DraftStyleDefault-block {
+          text-align: justify;
+        }
+      }
+
     }
     .rich-editor__editor {
       margin: 0;
