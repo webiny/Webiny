@@ -91,5 +91,9 @@
     },
     "optionalDependencies": {
         "fsevents": "^1.0.17"
+    },
+    "dependencies": {
+        "cssnano": "^3.10.0",
+        "optimize-css-assets-webpack-plugin": "^2.0.0"
     }
 }
