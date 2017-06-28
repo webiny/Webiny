@@ -48,7 +48,10 @@ module.exports = function (app, config) {
         new webpack.optimize.UglifyJsPlugin({mangle: true, sourceMap: false}),
         new OptimizeCssAssetsPlugin({
             assetNameRegExp: /\.css$/,
-            cssProcessorOptions: {discardComments: {removeAll: true}}
+            cssProcessorOptions: {
+                discardComments: {removeAll: true},
+                safe: true
+            }
         }),
         new webpack.optimize.OccurrenceOrderPlugin()
     ];

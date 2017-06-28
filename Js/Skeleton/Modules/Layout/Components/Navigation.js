@@ -13,20 +13,11 @@ class Navigation extends Webiny.Ui.Component {
             user: null,
             menu: null,
             submenu: null,
-            display: (window.outerWidth > 768 ? 'desktop' : 'mobile'),
-            checkDisplayInterval: null
+            display: window.outerWidth > 768 ? 'desktop' : 'mobile'
         };
 
-
+        this.checkDisplayInterval = null;
         this.bindMethods('renderMainMenu,renderSubMenu,renderSubMenuItem,mainMenuItemClick,openSubMenu,closeSubMenu,closeMobileMenu');
-    }
-
-    checkDisplay() {
-        this.setState({
-            checkDisplayInterval: setInterval(() => {
-                this.setState({display: (window.outerWidth > 768 ? 'desktop' : 'mobile')});
-            }, 500)
-        })
     }
 
     componentDidMount() {
@@ -34,12 +25,19 @@ class Navigation extends Webiny.Ui.Component {
         this.watch('User', data => {
             this.setState({user: data});
         });
-        this.checkDisplay();
+
+        this.checkDisplayInterval = setInterval(() => {
+            this.setState({display: window.outerWidth > 768 ? 'desktop' : 'mobile'});
+        }, 500);
     }
 
     componentWillUnmount() {
         super.componentWillUnmount();
-        clearInterval(this.state.checkDisplayInterval);
+        clearInterval(this.checkDisplayInterval);
+    }
+
+    shouldComponentUpdate(nextProps, nextState){
+        return !_.isEqual(this.state, nextState);
     }
 
     getLink(route, linkProps = {}) {
@@ -214,7 +212,7 @@ class Navigation extends Webiny.Ui.Component {
     }
 
     openSubMenu(key) {
-        if (this.state.display != 'mobile') {
+        if (this.state.display !== 'mobile') {
             return;
         }
         $('.left-menu-submenu li[data-this-menu="' + key + '"]').addClass('open');
@@ -222,14 +220,14 @@ class Navigation extends Webiny.Ui.Component {
     }
 
     openSubSubMenu(key) {
-        if (this.state.display != 'mobile') {
+        if (this.state.display !== 'mobile') {
             return;
         }
         $('.left-menu-submenu ul[data-this-submenu="' + key + '"]').toggleClass('active');
     }
 
     closeSubMenu() {
-        if (this.state.display != 'mobile') {
+        if (this.state.display !== 'mobile') {
             return;
         }
         $('.left-menu-submenu li.subnavigation.open').removeClass('open');
@@ -237,7 +235,7 @@ class Navigation extends Webiny.Ui.Component {
     }
 
     closeMobileMenu() {
-        if (this.state.display != 'mobile') {
+        if (this.state.display !== 'mobile') {
             return;
         }
         $('body').toggleClass('opened-mobile-nav');
