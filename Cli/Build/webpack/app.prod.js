@@ -3,6 +3,7 @@ const _ = require('lodash');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const WebpackChunkHash = require('webpack-chunk-hash');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 // Custom libs
 const AssetsPlugin = require('./plugins/Assets');
@@ -45,6 +46,10 @@ module.exports = function (app, config) {
         // Generate meta.json to use for app bootstrap based on generated assets
         assetsPlugin,
         new webpack.optimize.UglifyJsPlugin({mangle: true, sourceMap: false}),
+        new OptimizeCssAssetsPlugin({
+            assetNameRegExp: /\.css$/,
+            cssProcessorOptions: {discardComments: {removeAll: true}}
+        }),
         new webpack.optimize.OccurrenceOrderPlugin()
     ];
 
