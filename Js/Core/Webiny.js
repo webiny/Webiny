@@ -95,7 +95,7 @@ class Webiny {
         }
     }
 
-    configure(name, config) {
+    configureModule(name, config) {
         this.ModuleLoader.setConfiguration(name, config);
     }
 

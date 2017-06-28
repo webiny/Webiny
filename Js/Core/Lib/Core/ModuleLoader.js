@@ -46,7 +46,10 @@ class ModuleLoader {
             if (!_.isFunction(module)) {
                 console.warn('[MODULE LOADER] not a function: ' + key);
             }
-            return Promise.resolve(module()).then(m => m && m.hasOwnProperty('default') ? m.default : m);
+            return Promise.resolve(module()).then(m => m && m.hasOwnProperty('default') ? m.default : m).catch((err) => {
+                console.log('[Failed to import]', key, module);
+                console.error(err);
+            });
         });
 
         return Promise.all(imports).then(values => {
