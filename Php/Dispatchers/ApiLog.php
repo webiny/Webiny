@@ -22,17 +22,21 @@ class ApiLog extends AbstractApiDispatcher
 {
     public function handle(ApiEvent $event)
     {
-        $user = $this->wAuth()->getUser();
+        $token = $this->wAuth()->getUser();
         $request = $this->wRequest();
-        if ($user instanceof ApiToken) {
-            /* @var ApiToken $user */
-            $user->lastActivity = $this->datetime();
-            $user->requests += 1;
-            $user->save();
+        if ($token instanceof ApiToken) {
+            /* @var ApiToken $token */
+            $token->lastActivity = $this->datetime();
+            $token->requests += 1;
+            $token->save();
 
-            $this->saveTokenLog($request, $user);
-        } elseif ($user instanceof SystemApiToken) {
-            $this->saveTokenLog($request, 'system');
+            if ($token->logRequests) {
+                $this->saveTokenLog($request, $token);
+            }
+        } elseif ($token instanceof SystemApiToken) {
+            if ($this->wConfig()->get('Application.Acl.LogSystemApiTokenRequests', false)) {
+                $this->saveTokenLog($request, 'system');
+            }
         }
     }
 
