@@ -101,6 +101,7 @@ class UserPermissionsForm extends Webiny.Ui.View {
                                             <Ui.Tabs.Tab label="Entities">
                                                 {(newUserPermission || model.id) && (
                                                     <EntityPermissions
+                                                        model={model}
                                                         permissions={entities}
                                                         onTogglePermission={(entity, method) => {
                                                             const key = `permissions.entities.${entity}.${method}`;
@@ -122,6 +123,7 @@ class UserPermissionsForm extends Webiny.Ui.View {
                                             <Ui.Tabs.Tab label="Services">
                                                 {(newUserPermission || model.id) && (
                                                     <ServicePermissions
+                                                        model={model}
                                                         permissions={services}
                                                         onTogglePermission={(service, method) => {
                                                             const key = `permissions.services.${service}.${method}`;

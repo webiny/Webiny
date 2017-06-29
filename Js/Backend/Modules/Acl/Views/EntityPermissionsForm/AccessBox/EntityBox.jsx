@@ -50,7 +50,7 @@ class EntityBox extends Webiny.Ui.Component {
      * Renders toggle buttons for custom API endpoints (if they exist on given entity).
      */
     renderCustomMethods() {
-        const {Icon, Input, Tooltip, entity, permissions, onTogglePermission} = this.props;
+        const {Icon, Link, Input, Tooltip, entity, permissions, currentlyEditingPermission, onTogglePermission} = this.props;
 
         let customMethods = [];
 
@@ -88,21 +88,85 @@ class EntityBox extends Webiny.Ui.Component {
 
             return (
                 <li key={method.key} className={styles.customMethodListItem}>
-                    <ToggleAccessButton
-                        key={method.key}
-                        method={method}
-                        onClick={() => onTogglePermission(entity.class, method.key)}
-                        value={_.get(permissions, method.key)}/>
+                    <Tooltip placement="top" key="label" target={(
+                        <ToggleAccessButton
+                            key={method.key}
+                            method={method}
+                            onClick={() => onTogglePermission(entity.class, method.key)}
+                            value={_.get(permissions, method.key)}/>
+                    )}>
+                        <div className={styles.detailsTooltip}>
+                            <h3>{method.name} {method.public && <span className={styles.publicMethod}>{this.i18n(`(public)`)}</span>}</h3>
+                            <div>{method.description}</div>
+
+                            <br/>
+                            <h3>{this.i18n(`Execution:`)}</h3>
+                            <div>
+                                <div className={styles.methodBox}>{method.method}</div>
+                                {method.path}
+                            </div>
+                            <br/>
+                            {_.isEmpty(method.usages) ? (
+                                <wrapper>
+                                    <h3>{this.i18n(`Usages`)}</h3>
+                                    <div>
+                                        No usages.
+                                    </div>
+                                </wrapper>
+                            ) : (
+                                <wrapper>
+                                    <h3>{this.i18n(`Usages ({total}):`, {total: method.usages.length})}</h3>
+                                    <div>
+                                        <table>
+                                            <thead>
+                                            <tr>
+                                                <th>{this.i18n(`Permission`)}</th>
+                                                <th>{this.i18n(`Roles`)}</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {method.usages.map(permission => {
+
+                                                return (
+                                                    <tr key={permission.id}>
+                                                        <td>
+                                                            {permission.id === currentlyEditingPermission.id ? (
+                                                                <span>{permission.name}</span>
+                                                            ) : (
+                                                                <Link
+                                                                    separate
+                                                                    route="UserPermissions.Edit"
+                                                                    params={{id: permission.id}}>
+                                                                    {permission.name}
+                                                                </Link>
+                                                            )}
+                                                        </td>
+                                                        <td className={this.classSet({[styles.moreRoles]: true})}>
+                                                            {permission.roles.map(role => (
+                                                                <Link
+                                                                    separate
+                                                                    key={permission.id}
+                                                                    route="UserRoles.Edit"
+                                                                    params={{id: role.id}}>
+                                                                    {role.name}
+                                                                </Link>
+                                                            ))}
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </wrapper>
+                            )}
+
+                        </div>
+                    </Tooltip>
 
                     <div>
                         <div className={styles.methodTypeLabel}>
                             {method.method.toUpperCase()}
-                            <Tooltip placement="top" key="label" target={<Icon icon="icon-info-circle"/>}>
-                                <div>
-                                    <strong>{method.name}</strong>
-                                    <div>{method.description}</div>
-                                </div>
-                            </Tooltip>
                         </div>
                         <div>{method.url.replace(webinyApiPath, '')}</div>
                     </div>
@@ -113,7 +177,8 @@ class EntityBox extends Webiny.Ui.Component {
 
         // Filter out undefined values (when method filtering is active)
         methods = _.filter(methods, item => !_.isUndefined(item));
-        content = _.isEmpty(methods) ? <div className={styles.noCustomMethods}>{this.i18n(`Nothing to show.`)}</div> : <ul className={styles.customMethodsList}>{methods}</ul>;
+        content = _.isEmpty(methods) ? <div className={styles.noCustomMethods}>{this.i18n(`Nothing to show.`)}</div> :
+            <ul className={styles.customMethodsList}>{methods}</ul>;
 
         return (
             <div>
@@ -125,6 +190,7 @@ class EntityBox extends Webiny.Ui.Component {
 }
 
 EntityBox.defaultProps = {
+    currentlyEditingPermission: null,
     entity: {},
     permissions: {},
     onTogglePermission: _.noop,
@@ -154,5 +220,5 @@ EntityBox.defaultProps = {
 };
 
 export default Webiny.createComponent(EntityBox, {
-    modules: ['Icon', 'Input', 'Button', 'ClickConfirm', 'Tooltip']
+    modules: ['Icon', 'Input', 'Button', 'ClickConfirm', 'Tooltip', 'Link']
 });

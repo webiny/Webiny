@@ -47,7 +47,7 @@ class ServiceBox extends Webiny.Ui.Component {
             }
 
             return (
-                <li key={method.key}>
+                <li key={method.key} className={styles.customMethodListItem}>
                     <ToggleAccessButton
                         key={method.key}
                         method={method}
@@ -73,7 +73,7 @@ class ServiceBox extends Webiny.Ui.Component {
 
         // Filter out undefined values (when method filtering is active)
         methods = _.filter(methods, item => !_.isUndefined(item));
-        content = _.isEmpty(methods) ? <div className="empty">{this.i18n(`Nothing to show.`)}</div> : <ul>{methods}</ul>;
+        content = _.isEmpty(methods) ? <div className="empty">{this.i18n(`Nothing to show.`)}</div> : <ul className={styles.customMethodsList}>{methods}</ul>;
 
         return (
             <div className={styles.customMethods}>
@@ -85,6 +85,7 @@ class ServiceBox extends Webiny.Ui.Component {
 }
 
 ServiceBox.defaultProps = {
+    currentlyEditingPermission: null,
     service: {},
     permissions: {},
     onTogglePermission: _.noop,
@@ -96,7 +97,7 @@ ServiceBox.defaultProps = {
             <div className="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div className={styles.box}>
                     <div>
-                        <h1>{this.props.service.class}</h1>
+                        <h1 className={styles.title}>{this.props.service.class}</h1>
                         <ClickConfirm
                             onComplete={() => this.props.onRemoveService(this.props.service)}
                             message={this.i18n('Are you sure you want to remove {service}?', {

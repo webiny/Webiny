@@ -12,7 +12,7 @@ class EntityPermissions extends Webiny.Ui.Component {
             loading: false
         };
 
-        this.api = new Webiny.Api.Endpoint('/services/webiny/entities');
+        this.api = new Webiny.Api.Endpoint('/entities/webiny/user-permissions');
     }
 
     componentWillMount() {
@@ -20,16 +20,15 @@ class EntityPermissions extends Webiny.Ui.Component {
         if (!_.isEmpty(this.props.permissions)) {
             this.setState('loading', true, () => {
                 this.api.setQuery({
-                    details: 'methods',
-                    crudMethods: true,
                     entities: _.keys(this.props.permissions)
-                }).get().then(apiResponse => this.setState({loading: false, entities: apiResponse.getData()}));
+                }).get('/entity').then(apiResponse => this.setState({loading: false, entities: apiResponse.getData()}));
             });
         }
     }
 }
 
 EntityPermissions.defaultProps = {
+    model: null,
     permissions: {},
     onTogglePermission: _.noop,
     onAddEntity: _.noop,
@@ -67,6 +66,7 @@ EntityPermissions.defaultProps = {
                                 <Grid.Row className={styles.accessBoxesWrapper}>
                                     {this.state.entities.map(entity => (
                                         <EntityBox
+                                            currentlyEditingPermission={this.props.model}
                                             onTogglePermission={(entity, method) => this.props.onTogglePermission(entity, method)}
                                             onRemoveEntity={entity => {
                                                 const index = this.state.entities.indexOf(entity);

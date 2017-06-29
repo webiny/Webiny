@@ -30,6 +30,7 @@ class ServicePermissions extends Webiny.Ui.Component {
 }
 
 ServicePermissions.defaultProps = {
+    model: null,
     permissions: {},
     onTogglePermission: _.noop,
     onAddService: _.noop,
@@ -68,6 +69,7 @@ ServicePermissions.defaultProps = {
                                 <Grid.Row className={styles.accessBoxesWrapper}>
                                     {this.state.services.map(service => (
                                         <ServiceBox
+                                            currentlyEditingPermission={this.props.model}
                                             onTogglePermission={(service, method) => this.props.onTogglePermission(service, method)}
                                             onRemoveService={service => {
                                                 const index = this.state.services.indexOf(service);
