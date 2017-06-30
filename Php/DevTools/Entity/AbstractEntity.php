@@ -687,6 +687,10 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         $many2manyDelete = [];
         foreach ($this->getAttributes() as $key => $attr) {
             if ($this->isInstanceOf($attr, AttributeType::ONE2MANY)) {
+                if ($attr->getOnDelete() == 'ignore') {
+                    continue;
+                }
+
                 /* @var $attr One2ManyAttribute */
                 if ($attr->getOnDelete() == 'restrict' && $this->getAttribute($key)->getValue()->count() > 0) {
                     throw new EntityException(EntityException::ENTITY_DELETION_RESTRICTED, [$key]);
