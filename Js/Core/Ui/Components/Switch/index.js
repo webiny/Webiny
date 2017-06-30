@@ -32,12 +32,16 @@ Switch.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             classes += ' ' + styles.disabled;
         }
 
+        // The JSON.parse was added since sometimes value can come in as a string (eg. when value is coming from URL, as a query parameter).
+        // With the JSON.parse, we ensure we get non-string, pure boolean value, and that the switch button is correctly rendered.
+        const value = JSON.parse(this.props.value || null);
+
         return (
             <FormGroup>
                 {this.renderLabel()}
                 <div className="clearfix"/>
                 <div className={classes}>
-                    <input id={this.id} type="checkbox" readOnly checked={this.props.value === true}/>
+                    <input id={this.id} type="checkbox" readOnly checked={value === true}/>
                     <label htmlFor={this.id} onClick={this.switch}/>
                 </div>
                 {this.renderDescription()}
