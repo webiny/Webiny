@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
 import Views from './Views/Views';
 
-class Module extends Webiny.Module {
+class Module extends Webiny.App.Module {
 
     init() {
         this.name = 'Acl';

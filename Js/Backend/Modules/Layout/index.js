@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
 import Components from './Components';
 
-class Layout extends Webiny.Module {
+class Layout extends Webiny.App.Module {
 
     init() {
         this.name = 'Layout';

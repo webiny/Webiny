@@ -1,7 +1,8 @@
 import Webiny from 'Webiny';
 import Cookies from 'js-cookie';
-import WebinyModule from './Core/Module';
+import Module from './Core/Module';
 import App from './Core/App';
+import AppModule from './Core/AppModule';
 import Auth from './Auth';
 import Draft from './Draft';
 import Component from './Core/Component';
@@ -33,6 +34,8 @@ import createComponent from './createComponent';
 import LazyLoad from './Ui/LazyLoad';
 import Validator from './Validation/Validator';
 
+App.Module = AppModule;
+
 _.merge(Webiny, {
     Api: {
         Uploader,
@@ -58,7 +61,7 @@ _.merge(Webiny, {
         ApiComponent
     },
     Model,
-    Module: WebinyModule,
+    Module,
     Router,
     Route,
     RootElement,
