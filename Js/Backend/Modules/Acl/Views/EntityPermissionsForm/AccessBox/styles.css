@@ -108,7 +108,7 @@ div.noCustomMethods {
 
 ul.customMethodsList :global(.tooltip-inner) {
 	width: auto;
-	max-width: 400px;
+	max-width: 450px;
 	border-radius: 2px;
 	text-align: left;
 	white-space: initial;
@@ -149,24 +149,30 @@ ul.customMethodsList :global(.tooltip-inner strong) {
 	margin-right: 5px;
 }
 
-.detailsTooltip table {
+/* Parameters tables */
+.detailsTooltip table.parametersTable tr td {
+	padding: 2px 8px 2px 0;
+	vertical-align: top;
+}
+
+.detailsTooltip table.usagesTable {
 	width: 100%;
 }
 
-.detailsTooltip table tr td {
+.detailsTooltip table.usagesTable tr td {
 	border-bottom: 1px solid #e2e2e2;
 	padding: 5px 0;
 	vertical-align: top;
 }
 
-.detailsTooltip table tr:last-child td {
+.detailsTooltip table.usagesTable tr:last-child td {
 	border-bottom: none;
 }
 
-.detailsTooltip table tr td:first-child {
+.detailsTooltip table.usagesTable tr td:first-child {
 	width: 60%;
 }
 
-.detailsTooltip table .moreRoles a {
+.detailsTooltip table.usagesTable .moreRoles a {
 	display: block;
 }

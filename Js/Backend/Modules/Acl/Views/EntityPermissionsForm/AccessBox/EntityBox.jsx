@@ -86,6 +86,27 @@ class EntityBox extends Webiny.Ui.Component {
                 return;
             }
 
+            console.log(method)
+
+            let parameters = {
+                body: [],
+                headers: [],
+                path: []
+            };
+
+
+            _.each(_.get(method, 'parameters', {}), (parameter, key) => {
+                parameters.path.push({key, type: parameter.type, description: parameter.description})
+            });
+
+            _.each(_.get(method, 'body', {}), (parameter, key) => {
+                parameters.body.push({key, type: parameter.type, description: parameter.description})
+            });
+
+            _.each(_.get(method, 'headers', []), parameter => {
+                parameters.headers.push({key: parameter.name, type: parameter.type, description: parameter.description});
+            });
+
             return (
                 <li key={method.key} className={styles.customMethodListItem}>
                     <Tooltip placement="top" key="label" target={(
@@ -105,7 +126,63 @@ class EntityBox extends Webiny.Ui.Component {
                                 <div className={styles.methodBox}>{method.method}</div>
                                 {method.path}
                             </div>
+
                             <br/>
+                            {!_.isEmpty(parameters.path) && (
+                                <wrapper>
+                                    <h3>{this.i18n(`Path:`)}</h3>
+                                    <table className={styles.parametersTable}>
+                                        <tbody>
+                                        {parameters.path.map(item => (
+                                            <tr key={item.key}>
+                                                <td>{item.type}</td>
+                                                <td><strong>{item.key}</strong></td>
+                                                <td>{item.description}</td>
+                                            </tr>
+                                        ))}
+                                        </tbody>
+                                    </table>
+                                </wrapper>
+                            )}
+
+                            <br/>
+                            {!_.isEmpty(parameters.body) && (
+                                <wrapper>
+                                    <h3>{this.i18n(`Body:`)}</h3>
+                                    <table className={styles.parametersTable}>
+                                        <tbody>
+                                        {parameters.body.map(item => (
+                                            <tr key={item.key}>
+                                                <td>{item.type}</td>
+                                                <td><strong>{item.key}</strong></td>
+                                                <td>{item.description}</td>
+                                            </tr>
+                                        ))}
+                                        </tbody>
+                                    </table>
+                                </wrapper>
+                            )}
+
+                            <br/>
+                            {!_.isEmpty(parameters.headers) && (
+                                <wrapper>
+                                    <h3>{this.i18n(`Headers:`)}</h3>
+                                    <table className={styles.parametersTable}>
+                                        <tbody>
+                                        {parameters.headers.map(item => (
+                                            <tr key={item.key}>
+                                                <td>{item.type}</td>
+                                                <td><strong>{item.key}</strong></td>
+                                                <td>{item.description}</td>
+                                            </tr>
+                                        ))}
+                                        </tbody>
+                                    </table>
+                                </wrapper>
+                            )}
+
+                            <br/>
+
                             {_.isEmpty(method.usages) ? (
                                 <wrapper>
                                     <h3>{this.i18n(`Usages`)}</h3>
@@ -117,7 +194,7 @@ class EntityBox extends Webiny.Ui.Component {
                                 <wrapper>
                                     <h3>{this.i18n(`Usages ({total}):`, {total: method.usages.length})}</h3>
                                     <div>
-                                        <table>
+                                        <table className={styles.usagesTable}>
                                             <thead>
                                             <tr>
                                                 <th>{this.i18n(`Permission`)}</th>
