@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
 import Views from './Views/Views';
 
-class Logger extends Webiny.Module {
+class Logger extends Webiny.App.Module {
 
     init() {
         this.name = 'Logger';

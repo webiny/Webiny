@@ -4,7 +4,7 @@ import DefaultLayout from './Layout';
 import EmptyLayout from './EmptyLayout';
 import Dashboard from './Views/Dashboard';
 
-class Layout extends Webiny.Module {
+class Layout extends Webiny.App.Module {
 
     init() {
         this.name = 'Layout';

@@ -47,6 +47,10 @@ class Webiny {
         return this.ModuleLoader.load(modules);
     }
 
+    importByTag(tag) {
+        return this.ModuleLoader.loadByTag(tag);
+    }
+
     run(config) {
         console.timeStamp("Webiny Run");
         this.Page.loadStylesheet(webinyMeta['Webiny.Core'].css);
@@ -87,12 +91,9 @@ class Webiny {
         return this;
     }
 
-    registerModule(name, provider) {
-        if (_.isPlainObject(name)) {
-            _.each(name, (provider, name) => this.ModuleLoader.setModule(name, provider));
-        } else {
-            this.ModuleLoader.setModule(name, provider);
-        }
+    registerModule(...modules) {
+        modules.map(m => this.ModuleLoader.setModule(m));
+        return this;
     }
 
     configureModule(name, config) {
