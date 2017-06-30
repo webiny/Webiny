@@ -14,7 +14,7 @@ class Router {
     constructor() {
         this.baseUrl = null;
         this.appUrl = '';
-        this.history = null;
+        this.history = createBrowserHistory();
         this.routes = [];
         this.defaultComponents = {};
         this.layouts = {};
@@ -26,20 +26,20 @@ class Router {
         this.routeChanged = [];
         this.routeNotMatched = [];
         this.started = false;
+
+        Utils.setHistory(this.history);
     }
 
     setHistory(history) {
-        this.history = history;
+        if (history) {
+            this.history = history;
+            Utils.setHistory(this.history);
+        }
+
         return this;
     }
 
     start() {
-        if (!this.history) {
-            this.history = createBrowserHistory();
-        }
-
-        Utils.setHistory(this.history);
-
         if (!this.baseUrl) {
             return Promise.resolve();
         }
