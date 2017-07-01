@@ -1,38 +1,24 @@
 import Webiny from 'Webiny';
-import ReactDOMServer from 'react-dom/server';
-import './styles.scss';
+import TooltipWrapper from './TooltipWrapper';
 
 class Tooltip extends Webiny.Ui.Component {
-
-    componentDidMount() {
-        super.componentDidMount();
-        this.initTooltip.call(this);
-    }
-
-    componentDidUpdate() {
-        super.componentDidUpdate();
-        this.initTooltip.call(this);
-    }
-
-    initTooltip() {
-        $(ReactDOM.findDOMNode(this)).tooltip({
-            html: true,
-            placement: this.props.placement
-        });
-    }
 }
 
 Tooltip.defaultProps = {
     placement: 'right',
+    trigger: 'click',
+    interactive: false,
+    target: null,
+    delay: [50, 50],
     renderer() {
-        let html = this.props.children;
-        if (!_.isString(html)) {
-            html = ReactDOMServer.renderToStaticMarkup(this.props.children);
-        }
         return (
-            <span title={html}>
-                {this.props.target}
-            </span>
+            <TooltipWrapper
+                placement={this.props.placement}
+                trigger={this.props.trigger}
+                interactive={this.props.interactive}
+                target={this.props.target}
+                delay={this.props.delay}
+                content={this.props.children}/>
         );
     }
 };
