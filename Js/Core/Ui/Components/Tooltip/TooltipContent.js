@@ -15,12 +15,10 @@ class TooltipContent extends Webiny.Ui.Component {
 
     setupPlacement() {
         const refs = {
-            wrapper: {
+            wrapper: _.assign({
                 width: this.props.wrapper.offsetWidth,
                 height: this.props.wrapper.offsetHeight,
-                top: this.props.wrapper.offsetTop,
-                left: this.props.wrapper.offsetLeft
-            },
+            }, $(this.props.wrapper).position()),
             content: {
                 width: this.ref.offsetWidth,
                 height: this.ref.offsetHeight
@@ -76,7 +74,7 @@ TooltipContent.defaultProps = {
         return (
             <div
                 style={this.state.style}
-                className={this.classSet('animated fadeIn', styles.content, styles['content' + _.upperFirst(this.props.placement)])}
+                className={this.classSet(styles.content, styles['content' + _.upperFirst(this.props.placement)])}
                 ref={ref => this.ref = ref}
                 onMouseEnter={this.props.onMouseEnter}
                 onMouseLeave={this.props.onMouseLeave}>
