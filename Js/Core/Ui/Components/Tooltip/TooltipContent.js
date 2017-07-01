@@ -6,11 +6,18 @@ class TooltipContent extends Webiny.Ui.Component {
         super();
         this.ref = null;
         this.state = {style: {}};
+        this.bindMethods('onClick');
     }
 
     componentDidMount() {
         super.componentDidMount();
         this.setupPlacement();
+        this.registerEventListeners();
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        this.unregisterEventListeners();
     }
 
     setupPlacement() {
@@ -62,12 +69,35 @@ class TooltipContent extends Webiny.Ui.Component {
 
         this.setState('style', style);
     }
+
+    /**
+     * If tooltip was triggered by 'click' event, then we want to watch for all outside clicks, to automatically close the tooltip.
+     */
+    registerEventListeners() {
+        if (this.props.trigger === 'click') {
+            document.addEventListener('click', this.onClick)
+        }
+    }
+
+    unregisterEventListeners() {
+        if (this.props.trigger === 'click') {
+            document.removeEventListener('click', this.onClick)
+        }
+    }
+
+    onClick(event) {
+        if (!this.ref.contains(event.target)) {
+            this.props.onOutsideClick();
+        }
+    }
 }
 
 TooltipContent.defaultProps = {
     wrapper: null,
     content: null,
     placement: 'right',
+    trigger: 'hover',
+    onOutsideClick: _.noop,
     onMouseEnter: _.noop,
     onMouseLeave: _.noop,
     renderer() {

@@ -102,6 +102,8 @@ TooltipWrapper.defaultProps = {
                 {this.props.target}
                 {this.mustShowTooltipContent() && (
                     <TooltipContent
+                        trigger={this.props.trigger}
+                        onOutsideClick={this.onClick}
                         onMouseEnter={() => this.setState('hover.content', true)}
                         onMouseLeave={() => this.setState('hover.content', false)}
                         content={this.props.content}
