@@ -31,7 +31,7 @@ class ChunkBundlerPlugin {
                         chunk.mapModules(module => {
                             if (module.resource && paths.includes(module.resource)) {
                                 mappedChunks[url].push(
-                                    '// ' + chunk.files[0] + "\n\n" + compilation.assets[chunk.files[0]].source()
+                                    (process.env.NODE_ENV !== 'production' ? '// ' + chunk.files[0] + "\n\n" : '') + compilation.assets[chunk.files[0]].source()
                                 );
                             }
                         });
