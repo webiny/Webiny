@@ -1,9 +1,5 @@
 const Plugin = require('webiny/lib/plugin');
 const Menu = require('webiny/lib/menu');
-const Webiny = require('webiny/lib/webiny');
-const inquirer = require('inquirer');
-const yaml = require('js-yaml');
-const Task = require('./task');
 
 class Build extends Plugin {
     constructor(program) {
@@ -19,12 +15,17 @@ class Build extends Plugin {
     }
 
     runTask(config, onFinish) {
+        const Task = require('./task');
         process.env.NODE_ENV = 'production';
         const task = new Task(config);
         return task.run().then(onFinish);
     }
 
     runWizard(config, onFinish) {
+        const Webiny = require('webiny/lib/webiny');
+        const inquirer = require('inquirer');
+        const yaml = require('js-yaml');
+        
         const configSets = yaml.safeLoad(Webiny.readFile(Webiny.projectRoot('Configs/ConfigSets.yaml')));
         const choices = Object.keys(configSets.ConfigSets);
 

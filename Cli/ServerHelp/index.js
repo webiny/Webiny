@@ -1,15 +1,5 @@
 const Menu = require('webiny/lib/menu');
 const Plugin = require('webiny/lib/plugin');
-const Webiny = require('webiny/lib/webiny');
-const chalk = require('chalk');
-
-const blue = chalk.blue;
-const cyan = chalk.cyan;
-const magenta = chalk.magenta;
-const white = chalk.white;
-const grey = chalk.grey;
-const help = [];
-
 
 class ServerHelp extends Plugin {
     constructor(program) {
@@ -24,6 +14,16 @@ class ServerHelp extends Plugin {
     }
 
     runTask(config, onFinish) {
+        const Webiny = require('webiny/lib/webiny');
+        const chalk = require('chalk');
+
+        const blue = chalk.blue;
+        const cyan = chalk.cyan;
+        const magenta = chalk.magenta;
+        const white = chalk.white;
+        const grey = chalk.grey;
+        const help = [];
+        
         Webiny.exclamation('\nMake sure you are able to ssh into your remote server without password! (HINT: setup an SSH key)');
 
         Webiny.info('\nThis is the server folder structure created by our deploy process:');

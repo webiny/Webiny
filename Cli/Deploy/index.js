@@ -1,11 +1,5 @@
-const inquirer = require('inquirer');
-const moment = require('moment');
-const fs = require('fs-extra');
-const _ = require('lodash');
 const Menu = require('webiny/lib/menu');
 const Plugin = require('webiny/lib/plugin');
-const Webiny = require('webiny/lib/webiny');
-const Task = require('./task');
 
 class Deploy extends Plugin {
     constructor(program) {
@@ -26,11 +20,18 @@ class Deploy extends Plugin {
     }
 
     runTask(config, onFinish) {
+        const Task = require('./task');
         const task = new Task();
         return task.run(config).then(onFinish);
     }
 
     runWizard(config, onFinish) {
+        const Webiny = require('webiny/lib/webiny');
+        const inquirer = require('inquirer');
+        const moment = require('moment');
+        const fs = require('fs-extra');
+        const _ = require('lodash');
+
         const lastRun = Webiny.getConfig().lastRun;
         let steps = [{
             type: 'input',
