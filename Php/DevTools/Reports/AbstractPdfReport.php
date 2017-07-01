@@ -58,17 +58,18 @@ abstract class AbstractPdfReport extends AbstractReport
         $storage = $this->wStorage('Temp');
 
         // This way we do not need to worry about where the binary is installed
-        $binary = [];
-        exec('locate wkhtmltopdf', $binary);
+        $result = [];
+        exec('whereis -b wkhtmltopdf', $result);
+        $binary = $this->str($result[0])->explode(' ')->removeFirst()->first()->val();
 
-        if (!count($binary)) {
-            throw new AppException('Unable to locate "wkhtmltopdf" binary. Make sure the library is installed and visible using "locate" command.');
+        if (!$binary) {
+            throw new AppException('Unable to locate "wkhtmltopdf" binary. Make sure the library is installed and visible using "whereis -b wkhtmltopdf" command.');
         }
 
         // Convert to PDF
         $pdf = new Pdf([
             'tmpDir' => $storage->getAbsolutePath(),
-            'binary' => $binary[0],
+            'binary' => $binary,
             'print-media-type'
         ]);
         $pdf->addPage($html);
