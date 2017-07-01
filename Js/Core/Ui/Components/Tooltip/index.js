@@ -5,11 +5,11 @@ class Tooltip extends Webiny.Ui.Component {
 }
 
 Tooltip.defaultProps = {
-    placement: 'right',
+    placement: 'top',
     trigger: 'click',
     interactive: false,
     target: null,
-    delay: [50, 50],
+    delay: [5, 5],
     renderer() {
         return (
             <TooltipWrapper

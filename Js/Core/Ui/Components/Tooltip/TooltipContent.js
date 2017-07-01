@@ -68,7 +68,6 @@ class TooltipContent extends Webiny.Ui.Component {
 
 TooltipContent.defaultProps = {
     wrapper: null,
-    target: null,
     content: null,
     placement: 'right',
     onMouseEnter: _.noop,
@@ -77,7 +76,7 @@ TooltipContent.defaultProps = {
         return (
             <div
                 style={this.state.style}
-                className={this.classSet(styles.content, 'tooltip-content')}
+                className={this.classSet(styles.content, styles['content' + _.upperFirst(this.props.placement)])}
                 ref={ref => this.ref = ref}
                 onMouseEnter={this.props.onMouseEnter}
                 onMouseLeave={this.props.onMouseLeave}>

@@ -98,7 +98,7 @@ TooltipWrapper.defaultProps = {
     delay: [50, 50],
     renderer() {
         return (
-            <div className={this.classSet(styles.wrapper, 'tooltip-wrapper')} ref={ref => this.ref = ref}>
+            <div className={this.classSet(styles.wrapper)} ref={ref => this.ref = ref}>
                 {this.props.target}
                 {this.mustShowTooltipContent() && (
                     <TooltipContent
@@ -106,8 +106,7 @@ TooltipWrapper.defaultProps = {
                         onMouseLeave={() => this.setState('hover.content', false)}
                         content={this.props.content}
                         placement={this.props.placement}
-                        wrapper={this.ref}
-                        target={this.ref.firstChild}/>
+                        wrapper={this.ref}/>
                 )}
             </div>
         );
