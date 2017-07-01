@@ -118,7 +118,8 @@
         li {
           list-style-position: outside;
           > div {
-            display: inline-block;
+            /*display: inline-block;*/
+            display: block; /* inline-block causes the bullets to be positioned to the bottom of the list item, instead to the top */
           }
         }
       }
