@@ -76,7 +76,7 @@ TooltipContent.defaultProps = {
         return (
             <div
                 style={this.state.style}
-                className={this.classSet(styles.content, styles['content' + _.upperFirst(this.props.placement)])}
+                className={this.classSet('animated fadeIn', styles.content, styles['content' + _.upperFirst(this.props.placement)])}
                 ref={ref => this.ref = ref}
                 onMouseEnter={this.props.onMouseEnter}
                 onMouseLeave={this.props.onMouseLeave}>

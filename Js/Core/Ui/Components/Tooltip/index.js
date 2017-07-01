@@ -5,8 +5,8 @@ class Tooltip extends Webiny.Ui.Component {
 }
 
 Tooltip.defaultProps = {
-    placement: 'top',
-    trigger: 'click',
+    placement: 'right',
+    trigger: 'hover',
     interactive: false,
     target: null,
     delay: [5, 5],
