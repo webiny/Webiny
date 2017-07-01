@@ -7,7 +7,6 @@
 
 namespace Apps\Webiny\Php\DevTools\Entity;
 
-use Apps\Selecto\Php\Lib\SecurityProvider\Entity;
 use Apps\Webiny\Php\DevTools\Entity\EntityQuery\EntityQuery;
 use Apps\Webiny\Php\DevTools\Entity\EntityQuery\EntityQueryManipulator;
 use Apps\Webiny\Php\DevTools\Entity\EntityQuery\Filter;
