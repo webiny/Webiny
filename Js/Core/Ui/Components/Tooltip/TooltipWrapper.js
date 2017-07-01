@@ -1,5 +1,4 @@
 import Webiny from 'Webiny';
-import styles from './styles.css';
 import TooltipContent from './TooltipContent';
 
 class TooltipWrapper extends Webiny.Ui.Component {
@@ -8,10 +7,10 @@ class TooltipWrapper extends Webiny.Ui.Component {
         this.ref = null;
         this.state = {
             click: {
-                wrapper: false
+                target: false
             },
             hover: {
-                wrapper: false,
+                target: false,
                 content: false
             }
         };
@@ -20,9 +19,7 @@ class TooltipWrapper extends Webiny.Ui.Component {
 
     componentDidMount() {
         super.componentDidMount();
-        setTimeout(() => {
-            this.registerEventListeners();
-        }, 100);
+        setTimeout(() => this.registerEventListeners(), 100);
     }
 
     componentWillUnmount() {
@@ -60,15 +57,15 @@ class TooltipWrapper extends Webiny.Ui.Component {
     }
 
     onClick() {
-        setTimeout(() => this.setState('click.wrapper', !this.state.click.wrapper), this.props.delay[0]);
+        setTimeout(() => this.setState('click.target', !this.state.click.target), this.props.delay[0]);
     }
 
     onMouseEnter() {
-        setTimeout(() => this.setState('hover.wrapper', true), this.props.delay[0]);
+        setTimeout(() => this.setState('hover.target', true), this.props.delay[0]);
     }
 
     onMouseLeave() {
-        setTimeout(() => this.setState('hover.wrapper', false), this.props.delay[1]);
+        setTimeout(() => this.setState('hover.target', false), this.props.delay[1]);
     }
 
     /**
@@ -78,17 +75,16 @@ class TooltipWrapper extends Webiny.Ui.Component {
     mustShowTooltipContent() {
         switch (this.props.trigger) {
             case 'click':
-                return this.state.click.wrapper;
+                return this.state.click.target;
                 break;
             default: // hover
                 if (this.props.interactive) {
-                    return this.state.hover.wrapper || this.state.hover.content;
+                    return this.state.hover.target || this.state.hover.content;
                 }
-                return this.state.hover.wrapper;
+                return this.state.hover.target;
         }
     }
 }
-
 
 TooltipWrapper.defaultProps = {
     placement: 'right',
@@ -98,7 +94,7 @@ TooltipWrapper.defaultProps = {
     delay: [50, 50],
     renderer() {
         return (
-            <div className={this.classSet(styles.wrapper)} ref={ref => this.ref = ref}>
+            <tooltip-target ref={ref => this.ref = ref}>
                 {this.props.target}
                 {this.mustShowTooltipContent() && (
                     <TooltipContent
@@ -108,9 +104,10 @@ TooltipWrapper.defaultProps = {
                         onMouseLeave={() => this.setState('hover.content', false)}
                         content={this.props.content}
                         placement={this.props.placement}
-                        wrapper={this.ref}/>
+                        target={this.ref}
+                        targetFirstChildElement={this.ref.firstChild}/>
                 )}
-            </div>
+            </tooltip-target>
         );
     }
 };

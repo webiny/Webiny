@@ -22,10 +22,10 @@ class TooltipContent extends Webiny.Ui.Component {
 
     setupPlacement() {
         const refs = {
-            wrapper: _.assign({
-                width: this.props.wrapper.offsetWidth,
-                height: this.props.wrapper.offsetHeight,
-            }, $(this.props.wrapper).position()),
+            targetElement: _.assign({
+                width: this.props.targetFirstChildElement.offsetWidth,
+                height: this.props.targetFirstChildElement.offsetHeight,
+            }, $(this.props.targetFirstChildElement).position()),
             content: {
                 width: this.ref.offsetWidth,
                 height: this.ref.offsetHeight
@@ -35,36 +35,36 @@ class TooltipContent extends Webiny.Ui.Component {
         const style = {};
         switch (this.props.placement) {
             case 'bottomRight':
-                style.top = refs.wrapper.top + refs.wrapper.height;
-                style.left = refs.wrapper.left + refs.wrapper.width;
+                style.top = refs.targetElement.top + refs.targetElement.height;
+                style.left = refs.targetElement.left + refs.targetElement.width;
                 break;
             case 'bottom':
-                style.top = refs.wrapper.top + refs.wrapper.height;
-                style.left = refs.wrapper.left + (-(refs.content.width - refs.wrapper.width) / 2);
+                style.top = refs.targetElement.top + refs.targetElement.height;
+                style.left = refs.targetElement.left + (-(refs.content.width - refs.targetElement.width) / 2);
                 break;
             case 'bottomLeft':
-                style.top = refs.wrapper.top + refs.wrapper.height;
-                style.left = refs.wrapper.left - refs.content.width;
+                style.top = refs.targetElement.top + refs.targetElement.height;
+                style.left = refs.targetElement.left - refs.content.width;
                 break;
             case 'left':
-                style.top = refs.wrapper.top + (-(refs.content.height - refs.wrapper.height) / 2);
-                style.left = refs.wrapper.left - refs.content.width;
+                style.top = refs.targetElement.top + (-(refs.content.height - refs.targetElement.height) / 2);
+                style.left = refs.targetElement.left - refs.content.width;
                 break;
             case 'topLeft':
-                style.top = refs.wrapper.top - refs.content.height;
-                style.left = refs.wrapper.left - refs.content.width;
+                style.top = refs.targetElement.top - refs.content.height;
+                style.left = refs.targetElement.left - refs.content.width;
                 break;
             case 'top':
-                style.top = refs.wrapper.top - refs.content.height;
-                style.left = refs.wrapper.left + (-(refs.content.width - refs.wrapper.width) / 2);
+                style.top = refs.targetElement.top - refs.content.height;
+                style.left = refs.targetElement.left + (-(refs.content.width - refs.targetElement.width) / 2);
                 break;
             case 'topRight':
-                style.top = refs.wrapper.top - refs.content.height;
-                style.left = refs.wrapper.left + refs.wrapper.width;
+                style.top = refs.targetElement.top - refs.content.height;
+                style.left = refs.targetElement.left + refs.targetElement.width;
                 break;
             default: // 'right'
-                style.top = refs.wrapper.top + (-(refs.content.height - refs.wrapper.height) / 2);
-                style.left = refs.wrapper.left + refs.wrapper.width;
+                style.top = refs.targetElement.top + (-(refs.content.height - refs.targetElement.height) / 2);
+                style.left = refs.targetElement.left + refs.targetElement.width;
         }
 
         this.setState('style', style);
@@ -93,7 +93,8 @@ class TooltipContent extends Webiny.Ui.Component {
 }
 
 TooltipContent.defaultProps = {
-    wrapper: null,
+    targetElement: null,
+    targetFirstChildElement: null,
     content: null,
     placement: 'right',
     trigger: 'hover',
