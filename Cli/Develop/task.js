@@ -1,3 +1,16 @@
+// We need this to override some webpack classes (did not have time to tinker with pull requests, etc.)
+const Module = require('module');
+const originalRequire = Module.prototype.require;
+
+Module.prototype.require = function () {
+    // Override MultiCompiler to force chained builds instead of parallel
+    if (arguments[0].includes('MultiCompiler')) {
+        return originalRequire.apply(this, ['./MultiCompiler']);
+    }
+    return originalRequire.apply(this, arguments);
+};
+
+
 const path = require('path');
 const webpack = require('webpack');
 const _ = require('lodash');
@@ -74,6 +87,7 @@ class Develop extends Build {
                     devMiddleware(compiler, {
                         publicPath,
                         noInfo: false,
+                        // stats: false,
                         stats: {
                             colors: true
                         }
