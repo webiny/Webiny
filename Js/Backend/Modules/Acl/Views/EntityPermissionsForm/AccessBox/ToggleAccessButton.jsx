@@ -27,7 +27,7 @@ ToggleAccessButton.defaultProps = {
         }
 
         return (
-            <wrapper ref={ref => this.ref = ref}>
+            <div className={styles.toggleAccessButtonWrapper} ref={ref => this.ref = ref}>
                 <Button
                     type="primary"
                     onClick={() => {
@@ -37,7 +37,7 @@ ToggleAccessButton.defaultProps = {
                     className={this.classSet(styles.toggleAccessButton, {[styles.toggleAccessButtonExposed]: value})}>
                     {this.renderLabel()}
                 </Button>
-            </wrapper>
+            </div>
         );
     }
 };

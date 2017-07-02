@@ -57,15 +57,15 @@ class TooltipWrapper extends Webiny.Ui.Component {
     }
 
     onClick() {
-        setTimeout(() => this.setState('click.target', !this.state.click.target), this.props.delay[0]);
+        this.setState('click.target', !this.state.click.target);
     }
 
     onMouseEnter() {
-        setTimeout(() => this.setState('hover.target', true), this.props.delay[0]);
+        this.setState('hover.target', true);
     }
 
     onMouseLeave() {
-        setTimeout(() => this.setState('hover.target', false), this.props.delay[1]);
+        this.setState('hover.target', false);
     }
 
     /**
@@ -91,20 +91,19 @@ TooltipWrapper.defaultProps = {
     trigger: 'hover',
     interactive: false,
     target: null,
-    delay: [50, 50],
     renderer() {
         return (
             <tooltip-target ref={ref => this.ref = ref}>
                 {this.props.target}
                 {this.mustShowTooltipContent() && (
                     <TooltipContent
+                        
                         trigger={this.props.trigger}
                         onOutsideClick={this.onClick}
                         onMouseEnter={() => this.setState('hover.content', true)}
                         onMouseLeave={() => this.setState('hover.content', false)}
                         content={this.props.content}
                         placement={this.props.placement}
-                        target={this.ref}
                         targetFirstChildElement={this.ref.firstChild}/>
                 )}
             </tooltip-target>

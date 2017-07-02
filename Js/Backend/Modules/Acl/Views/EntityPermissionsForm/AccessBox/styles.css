@@ -42,7 +42,11 @@ span.removeButton:hover {
 	opacity: 1;
 }
 
-button.toggleAccessButton {
+.toggleAccessButtonWrapper {
+	display: inline-block;
+}
+
+.toggleAccessButtonWrapper button.toggleAccessButton {
 	border-radius: 2px;
 	width: 40px;
 	height: 40px;
@@ -87,12 +91,16 @@ li.customMethodListItem {
 	padding-left: 0;
 }
 
-ul.customMethodsList button.toggleAccessButton {
+ul.customMethodsList .toggleAccessButtonWrapper {
 	float: left;
 }
 
 ul.customMethodsList .methodTypeLabel {
 	font-size: 14px;
+}
+
+ul.customMethodsList .methodPathLabel {
+	font-size: 13px;
 }
 
 div.noCustomMethods {
@@ -106,9 +114,12 @@ div.noCustomMethods {
 
 /* Method Details Tooltip */
 
-ul.customMethodsList :global(.tooltip-inner) {
-	width: auto;
-	max-width: 450px;
+div.box :global(.Webiny_Core_Tooltip_content) {
+	padding: 7px;
+}
+
+div.box :global(.Webiny_Core_Tooltip_innerContent) {
+	max-width: initial;
 	border-radius: 2px;
 	text-align: left;
 	white-space: initial;
@@ -116,13 +127,15 @@ ul.customMethodsList :global(.tooltip-inner) {
 	background-color: white;
 	box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
 	font-family: 'Source Sans Pro', sans-serif;
+	font-size: 14px;
+	font-weight: 100;
 }
 
-ul.customMethodsList :global(.tooltip-arrow) {
+div.box :global(.Webiny_Core_Tooltip_content:before) {
 	display: none;
 }
 
-ul.customMethodsList :global(.tooltip-inner strong) {
+div.box :global(.Webiny_Core_Tooltip_content strong) {
 	width: 200px;
 	border-radius: 2px;
 }

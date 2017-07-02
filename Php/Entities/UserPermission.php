@@ -1,7 +1,10 @@
 <?php
+
 namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
+use Apps\Webiny\Php\PackageManager\App;
+use Apps\Webiny\Php\PackageManager\Parser\EntityParser;
 use Webiny\Component\Mongo\Index\SingleIndex;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
@@ -46,59 +49,65 @@ class UserPermission extends AbstractEntity
         $this->attr('roles')->many2many('UserRole2UserPermission')->setEntity('\Apps\Webiny\Php\Entities\UserRole');
         $this->attr('permissions')->object();
 
-        /**
-         * @api.name                Toggle crud operation availability
-         * @api.description         Toggles basic crud operation availability on given entity in loaded permission
-         * @api.body.entity         Entity class
-         * @api.body.crudOperation  Crud operation that needs to be toggled (can be crudCreate, crudRead, crudUpdate, crudDelete)
-         */
-        $this->api('PATCH', '/{id}/entity/toggle', function () {
-            $data = $this->wRequest()->getRequestData();
-            $key = 'entities.' . $data['entity'] . '.' . $data['crudOperation'];
-            $this->permissions->keyNested($key, !$this->permissions->keyNested($key));
-            $this->save();
-        })->setBodyValidators([
-            'entity'        => 'required',
-            'crudOperation' => 'in:crudCreate:crudRead:crudUpdate:crudDelete'
-        ]);
 
         /**
-         * @api.name                Toggle custom API method availability on an entity
-         * @api.description         Toggles custom api method availability on given entity in loaded permission
-         * @api.body.entity         Entity class
-         * @api.body.api            API method's URL
-         * @api.body.method         API method's method (can be post, get, delete, patch)
+         * @api.name                    List entity API methods
+         * @api.description             Lists CRUD and custom entity methods from applications
+         * @api.query.exclude   array   Array of entities that must be excluded in the response
+         * @api.query.entities  array   Array of entities that must be included in the response
+         * @api.query.entity    string  Single entity for which the information is needed
          */
-        $this->api('PATCH', '/{id}/entity/toggle/api', function () {
-            $data = $this->wRequest()->getRequestData();
-            $key = 'entities.' . $data['entity'] . '.' . $data['url'] . '.' . $data['method'];
-            $this->permissions->keyNested($key, !$this->permissions->keyNested($key));
-            $this->save();
-        })->setBodyValidators([
-            'entity' => 'required',
-            'url'    => 'required',
-            'method' => 'in:post:get:patch:delete'
-        ]);
+        $this->api('GET', '/entity', function () {
+            // Entities listed here will not be returned in the final response.
+            $excludeEntities = $this->wRequest()->query('exclude', []);
 
-        /**
-         * @api.name                Toggle custom API method availability in a service
-         * @api.description         Toggles custom api method availability on given service in loaded permission
-         * @api.body.service        Service class
-         * @api.body.api            API method's URL
-         * @api.body.method         API method's method (can be post, get, delete, patch)
-         */
-        $this->api('PATCH', '/{id}/service/toggle/api', function () {
-            $data = $this->wRequest()->getRequestData();
-            $key = 'services.' . $data['service'] . '.' . $data['url'] . '.' . $data['method'];
-            $this->permissions->keyNested($key, !$this->permissions->keyNested($key));
-            $this->save();
-        })->setBodyValidators([
-            'service' => 'required',
-            'url'     => 'required',
-            'method'  => 'in:post:get:patch:delete'
-        ]);
+            $singleEntity = false;
+            $multipleEntities = $this->wRequest()->query('entities', false);
+
+            if (!$multipleEntities) {
+                $singleEntity = $this->wRequest()->query('entity', false);
+                if ($singleEntity) {
+                    $multipleEntities = [$singleEntity];
+                }
+            }
+
+            $entities = [];
+
+            foreach ($this->wApps() as $app) {
+                /* @var $app App */
+                foreach ($app->getEntities() as $entity) {
+                    if (in_array($entity['class'], $excludeEntities)) {
+                        continue;
+                    }
+
+                    if ($multipleEntities && !in_array($entity['class'], $multipleEntities)) {
+                        continue;
+                    }
+
+                    $entityParser = new EntityParser($entity['class']);
+                    $entity['methods'] = $entityParser->getApiMethods(true);
+
+                    if ($singleEntity && $entity['class'] == $singleEntity) {
+                        foreach ($entity['methods'] as &$method) {
+                            $method['usages'] = $this->getEntityMethodUsages($entity, $method);
+                        }
+                        return $entity;
+                    }
+
+                    $entities[] = $entity;
+                }
+            }
+
+            // Additionally, we want to know who else is exposing particular method.
+            foreach ($entities as &$entity) {
+                foreach ($entity['methods'] as &$method) {
+                    $method['usages'] = $this->getEntityMethodUsages($entity, $method);
+                }
+            }
+
+            return $entities;
+        })->setPublic();
     }
-
 
     public function checkPermission($item, $permission)
     {
@@ -116,5 +125,42 @@ class UserPermission extends AbstractEntity
         }
 
         return $this->permissions->keyNested($key . '.' . $permission);
+    }
+
+    private function getEntityMethodUsages($entity, $method)
+    {
+        $key = 'permissions.entities.' . $entity['class'] . '.' . $method['key'];
+        $params = ['UserPermissions', [$key => true], [], 0, 0, ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1]]];
+        $permissions = $this->wDatabase()->find(...$params);
+
+        if (empty($permissions)) {
+            return [];
+        }
+
+        $ids = [];
+        foreach ($permissions as $permission) {
+            $ids[$permission['id']] = $permission['name'];
+        }
+
+        $permissions = $this->wDatabase()->aggregate('UserRole2UserPermission', [
+            ['$match' => ['UserPermission' => ['$in' => array_keys($ids)]]],
+            [
+                '$lookup' => [
+                    'from'         => 'UserRoles',
+                    'localField'   => 'UserRole',
+                    'foreignField' => 'id',
+                    'as'           => 'roles'
+                ]
+            ],
+            [
+                '$project' => ['_id' => 0, 'id' => '$UserPermission', 'roles.name' => 1, 'roles.id' => 1]
+            ]
+        ]);
+
+        return array_map(function ($permission) use ($ids) {
+            $permission['name'] = $ids[$permission['id']];
+
+            return $permission;
+        }, $permissions->toArray());
     }
 }

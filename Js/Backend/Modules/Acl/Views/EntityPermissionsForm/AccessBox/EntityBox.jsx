@@ -1,5 +1,6 @@
 import Webiny from 'Webiny';
 import ToggleAccessButton from './ToggleAccessButton';
+import MethodTooltip from './MethodTooltip';
 
 import styles from './styles.css';
 
@@ -21,7 +22,7 @@ class EntityBox extends Webiny.Ui.Component {
      * Renders toggle buttons for basic CRUD API endpoints (if they exist on given entity).
      */
     renderCrudMethods() {
-        const {entity, permissions, onTogglePermission} = this.props;
+        const {Tooltip, entity, permissions, onTogglePermission, currentlyEditingPermission} = this.props;
 
         const existingOperations = {
             crudCreate: _.find(entity.methods, {key: this.crud.create}),
@@ -34,11 +35,14 @@ class EntityBox extends Webiny.Ui.Component {
         _.each(existingOperations, (method, key) => {
             if (method) {
                 buttons.push(
-                    <ToggleAccessButton
-                        key={key}
-                        method={method}
-                        onClick={() => onTogglePermission(entity.class, key)}
-                        value={permissions[key]}/>
+                    <Tooltip key={key} target={(
+                        <ToggleAccessButton
+                            method={method}
+                            onClick={() => onTogglePermission(entity.class, key)}
+                            value={permissions[key]}/>
+                    )}>
+                        <MethodTooltip method={method} currentlyEditingPermission={currentlyEditingPermission}/>
+                    </Tooltip>
                 );
             }
         });
@@ -86,159 +90,16 @@ class EntityBox extends Webiny.Ui.Component {
                 return;
             }
 
-            console.log(method)
-
-            let parameters = {
-                body: [],
-                headers: [],
-                path: []
-            };
-
-
-            _.each(_.get(method, 'parameters', {}), (parameter, key) => {
-                parameters.path.push({key, type: parameter.type, description: parameter.description})
-            });
-
-            _.each(_.get(method, 'body', {}), (parameter, key) => {
-                parameters.body.push({key, type: parameter.type, description: parameter.description})
-            });
-
-            _.each(_.get(method, 'headers', []), parameter => {
-                parameters.headers.push({key: parameter.name, type: parameter.type, description: parameter.description});
-            });
-
             return (
                 <li key={method.key} className={styles.customMethodListItem}>
-                    <Tooltip placement="top" key="label" target={(
+                    <Tooltip target={(
                         <ToggleAccessButton
                             key={method.key}
                             method={method}
                             onClick={() => onTogglePermission(entity.class, method.key)}
                             value={_.get(permissions, method.key)}/>
                     )}>
-                        <div className={styles.detailsTooltip}>
-                            <h3>{method.name} {method.public && <span className={styles.publicMethod}>{this.i18n(`(public)`)}</span>}</h3>
-                            <div>{method.description}</div>
-
-                            <br/>
-                            <h3>{this.i18n(`Execution:`)}</h3>
-                            <div>
-                                <div className={styles.methodBox}>{method.method}</div>
-                                {method.path}
-                            </div>
-
-                            <br/>
-                            {!_.isEmpty(parameters.path) && (
-                                <wrapper>
-                                    <h3>{this.i18n(`Path:`)}</h3>
-                                    <table className={styles.parametersTable}>
-                                        <tbody>
-                                        {parameters.path.map(item => (
-                                            <tr key={item.key}>
-                                                <td>{item.type}</td>
-                                                <td><strong>{item.key}</strong></td>
-                                                <td>{item.description}</td>
-                                            </tr>
-                                        ))}
-                                        </tbody>
-                                    </table>
-                                </wrapper>
-                            )}
-
-                            <br/>
-                            {!_.isEmpty(parameters.body) && (
-                                <wrapper>
-                                    <h3>{this.i18n(`Body:`)}</h3>
-                                    <table className={styles.parametersTable}>
-                                        <tbody>
-                                        {parameters.body.map(item => (
-                                            <tr key={item.key}>
-                                                <td>{item.type}</td>
-                                                <td><strong>{item.key}</strong></td>
-                                                <td>{item.description}</td>
-                                            </tr>
-                                        ))}
-                                        </tbody>
-                                    </table>
-                                </wrapper>
-                            )}
-
-                            <br/>
-                            {!_.isEmpty(parameters.headers) && (
-                                <wrapper>
-                                    <h3>{this.i18n(`Headers:`)}</h3>
-                                    <table className={styles.parametersTable}>
-                                        <tbody>
-                                        {parameters.headers.map(item => (
-                                            <tr key={item.key}>
-                                                <td>{item.type}</td>
-                                                <td><strong>{item.key}</strong></td>
-                                                <td>{item.description}</td>
-                                            </tr>
-                                        ))}
-                                        </tbody>
-                                    </table>
-                                </wrapper>
-                            )}
-
-                            <br/>
-
-                            {_.isEmpty(method.usages) ? (
-                                <wrapper>
-                                    <h3>{this.i18n(`Usages`)}</h3>
-                                    <div>
-                                        No usages.
-                                    </div>
-                                </wrapper>
-                            ) : (
-                                <wrapper>
-                                    <h3>{this.i18n(`Usages ({total}):`, {total: method.usages.length})}</h3>
-                                    <div>
-                                        <table className={styles.usagesTable}>
-                                            <thead>
-                                            <tr>
-                                                <th>{this.i18n(`Permission`)}</th>
-                                                <th>{this.i18n(`Roles`)}</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            {method.usages.map(permission => {
-
-                                                return (
-                                                    <tr key={permission.id}>
-                                                        <td>
-                                                            {permission.id === currentlyEditingPermission.id ? (
-                                                                <span>{permission.name}</span>
-                                                            ) : (
-                                                                <Link
-                                                                    separate
-                                                                    route="UserPermissions.Edit"
-                                                                    params={{id: permission.id}}>
-                                                                    {permission.name}
-                                                                </Link>
-                                                            )}
-                                                        </td>
-                                                        <td className={this.classSet({[styles.moreRoles]: true})}>
-                                                            {permission.roles.map(role => (
-                                                                <Link
-                                                                    separate
-                                                                    key={permission.id}
-                                                                    route="UserRoles.Edit"
-                                                                    params={{id: role.id}}>
-                                                                    {role.name}
-                                                                </Link>
-                                                            ))}
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            })}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </wrapper>
-                            )}
-
-                        </div>
+                        <MethodTooltip method={method} currentlyEditingPermission={currentlyEditingPermission}/>
                     </Tooltip>
 
                     <div>

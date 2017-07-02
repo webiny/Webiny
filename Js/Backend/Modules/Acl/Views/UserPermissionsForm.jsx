@@ -84,7 +84,7 @@ class UserPermissionsForm extends Webiny.Ui.View {
                                 <Ui.Section title="General"/>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>
-                                        <Ui.Input label="Name" name="name" validate="required"/>
+                                        <Ui.Input label="Name" tooltip={<span>bajo moj to ti je tako</span>} name="name" validate="required"/>
                                     </Ui.Grid.Col>
                                     <Ui.Grid.Col all={6}>
                                         <Ui.Input label="Slug" name="slug"/>

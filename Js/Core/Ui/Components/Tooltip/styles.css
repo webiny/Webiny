@@ -1,9 +1,20 @@
+.innerContent {
+	width: 100%;
+	vertical-align: baseline;
+	background-color: #3daf8f;
+	color: white;
+	font-size: 12px;
+	padding: 5px;
+}
+
 .content {
 	background-color: transparent;
 	position: absolute;
 	display: inline-block;
 	z-index: 10;
 	padding: 3px;
+	width: 100%;
+	max-width: 250px;
 }
 
 .content:before {
@@ -11,16 +22,6 @@
 	height: 0;
 	content: "";
 	position: absolute;
-}
-
-.innerContent {
-	max-width: 280px;
-	min-width: 50px;
-	vertical-align: baseline;
-	background-color: #3daf8f;
-	color: white;
-	font-size: 12px;
-	padding: 5px;
 }
 
 /* A bunch of arrows - different positioning depending on received 'placement' prop. */

@@ -5,14 +5,16 @@ class TooltipContent extends Webiny.Ui.Component {
     constructor() {
         super();
         this.ref = null;
-        this.state = {style: {}};
+        this.state = {style: {visibili2ty: 'hidden'}};
         this.bindMethods('onClick');
     }
 
     componentDidMount() {
         super.componentDidMount();
-        this.setupPlacement();
-        this.registerEventListeners();
+        setTimeout(() => {
+            this.setupPlacement();
+            this.registerEventListeners();
+        }, 1000);
     }
 
     componentWillUnmount() {
@@ -31,6 +33,8 @@ class TooltipContent extends Webiny.Ui.Component {
                 height: this.ref.offsetHeight
             }
         };
+
+        console.log(refs)
 
         const style = {};
         switch (this.props.placement) {
@@ -93,7 +97,6 @@ class TooltipContent extends Webiny.Ui.Component {
 }
 
 TooltipContent.defaultProps = {
-    targetElement: null,
     targetFirstChildElement: null,
     content: null,
     placement: 'right',
