@@ -14,7 +14,7 @@ class ServiceBox extends Webiny.Ui.Component {
      * Renders toggle buttons for custom API endpoints (if they exist on given service).
      */
     renderCustomMethods() {
-        const {Icon, Link, Input, Tooltip, service, permissions, currentlyEditingPermission, onTogglePermission} = this.props;
+        const {Input, Tooltip, service, permissions, currentlyEditingPermission, onTogglePermission} = this.props;
 
         let customMethods = [];
 
@@ -115,5 +115,5 @@ ServiceBox.defaultProps = {
 };
 
 export default Webiny.createComponent(ServiceBox, {
-    modules: ['Icon', 'Input', 'Button', 'ClickConfirm', 'Tooltip', 'Link']
+    modules: ['Input', 'Button', 'ClickConfirm', 'Tooltip']
 });

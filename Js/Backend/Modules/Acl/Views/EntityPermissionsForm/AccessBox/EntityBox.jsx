@@ -53,7 +53,7 @@ class EntityBox extends Webiny.Ui.Component {
      * Renders toggle buttons for custom API endpoints (if they exist on given entity).
      */
     renderCustomMethods() {
-        const {Icon, Link, Input, Tooltip, entity, permissions, currentlyEditingPermission, onTogglePermission} = this.props;
+        const {Input, Tooltip, entity, permissions, currentlyEditingPermission, onTogglePermission} = this.props;
 
         let customMethods = [];
 
@@ -158,5 +158,5 @@ EntityBox.defaultProps = {
 };
 
 export default Webiny.createComponent(EntityBox, {
-    modules: ['Icon', 'Input', 'Button', 'ClickConfirm', 'Tooltip', 'Link']
+    modules: ['Input', 'Button', 'ClickConfirm', 'Tooltip']
 });
