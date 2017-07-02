@@ -14,39 +14,10 @@ class Container extends Webiny.Ui.Component {
         this.bindMethods('hideAction', 'showAction');
     }
 
-    componentDidMount() {
-        //this.animationContainer = ReactDOM.findDOMNode(this);
-    }
-
-    /*
-    componentWillAppear(callback) {
-        callback();
-        console.log('will appear');
-        //this.showAction(callback);
-
-    }
-
-    componentDidAppear() {
-        console.log('componentDidAppear');
-    }
-    */
-
     componentWillEnter(callback) {
         this.showAction(callback);
     }
     
-    /*
-    componentDidEnter() {
-        console.log('did enter');
-    }
-
-    componentWillUnmount(callback) {
-        callback();
-        console.log('wiil unmount');
-        //this.hideAction(callback);
-    }
-    */
-
     componentWillLeave(callback) {
         this.hideAction(callback);
     }
