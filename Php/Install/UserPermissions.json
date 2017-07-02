@@ -170,7 +170,13 @@
                     "crudCreate": true,
                     "crudRead": true,
                     "crudUpdate": true,
-                    "crudDelete": true
+                    "crudDelete": true,
+                    "entity" : {
+                        "get" : true
+                    },
+                    "service" : {
+                        "get" : true
+                    }
                 }
             }
         }
