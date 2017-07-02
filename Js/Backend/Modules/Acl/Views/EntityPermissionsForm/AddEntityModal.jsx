@@ -38,6 +38,7 @@ class AddEntityModal extends Webiny.Ui.ModalComponent {
                                             <Form.Error/>
                                             <Form.Loader/>
                                             <Select
+                                                description={this.i18n(`Entities already added are not shown.`)}
                                                 placeholder={this.i18n('Select entity...')}
                                                 name="class"
                                                 validate="required"

@@ -158,5 +158,5 @@ EntityBox.defaultProps = {
 };
 
 export default Webiny.createComponent(EntityBox, {
-    modules: ['Input', 'Button', 'ClickConfirm', 'Tooltip']
+    modules: ['Input', 'ClickConfirm', 'Tooltip']
 });

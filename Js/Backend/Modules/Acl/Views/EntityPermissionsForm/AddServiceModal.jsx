@@ -37,7 +37,8 @@ class AddServiceModal extends Webiny.Ui.ModalComponent {
                                             <Form.Error/>
                                             <Form.Loader/>
                                             <Select
-                                                placeholder={this.i18n('Select entity...')}
+                                                description={this.i18n(`Services already added are not shown.`)}
+                                                placeholder={this.i18n('Select service...')}
                                                 name="class"
                                                 validate="required"
                                                 api="/services/webiny/services"

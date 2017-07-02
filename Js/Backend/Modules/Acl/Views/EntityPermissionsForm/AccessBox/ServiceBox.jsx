@@ -115,5 +115,5 @@ ServiceBox.defaultProps = {
 };
 
 export default Webiny.createComponent(ServiceBox, {
-    modules: ['Input', 'Button', 'ClickConfirm', 'Tooltip']
+    modules: ['Input', 'ClickConfirm', 'Tooltip']
 });
