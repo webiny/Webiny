@@ -6,10 +6,8 @@ import {TransitionGroup} from 'react-transition-group';
  * Only componentWillEnter and componentWillLeave can be used because they way Dialog component mounts into DOM.
  */
 class Container extends Webiny.Ui.Component {
-
     constructor(props) {
         super(props);
-
         this.state = {shown: false};
         this.bindMethods('hideAction', 'showAction');
     }
@@ -94,7 +92,6 @@ Container.defaultProps = {
 };
 
 class Animate extends Webiny.Ui.Component {
-
     firstChild(props) {
         const childrenArray = React.Children.toArray(props.children);
         return childrenArray[0] || null;
