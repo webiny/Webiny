@@ -108,7 +108,7 @@ class UserPermission extends AbstractEntity
             }
 
             return $entities;
-        })->setPublic();
+        });
 
         /**
          * @api.name Get system services
@@ -164,7 +164,7 @@ class UserPermission extends AbstractEntity
             }
 
             return $services;
-        })->setPublic();
+        });
     }
 
     public function checkPermission($item, $permission)
