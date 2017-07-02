@@ -124,8 +124,8 @@ div.noCustomMethods {
 /* Method Details Tooltip */
 
 div.box :global(.Webiny_Core_Tooltip_content) {
-	padding: 7px;
-	width: 400px;
+	padding: 10px 10px;
+	width: 350px;
 	max-width: initial;
 }
 
@@ -139,10 +139,27 @@ div.box :global(.Webiny_Core_Tooltip_innerContent) {
 	font-family: 'Source Sans Pro', sans-serif;
 	font-size: 14px;
 	font-weight: 100;
+	padding: 10px;
 }
 
-div.box :global(.Webiny_Core_Tooltip_content:before) {
-	display: none;
+div.box :global(.Webiny_Core_Tooltip_contentTop:before) {
+	border-left: 7px solid transparent;
+	border-right: 7px solid transparent;
+	border-top: 7px solid white;
+	bottom: 3px;
+	margin-left: auto;
+	margin-right: auto;
+	left: 0;
+	right: 0;
+}
+
+div.box :global(.Webiny_Core_Tooltip_contentRight:before) {
+	border-top: 7px solid transparent;
+	border-bottom: 7px solid transparent;
+	border-right: 7px solid white;
+	left: 3px;
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 div.box :global(.Webiny_Core_Tooltip_content strong) {
@@ -153,7 +170,7 @@ div.box :global(.Webiny_Core_Tooltip_content strong) {
 .detailsTooltip h3 {
 	text-align: left;
 	font-size: 18px;
-	padding: 10px 20px 2px 0;
+	padding: 0 20px 2px 0;
 	font-weight: 500;
 	margin: 0 0 5px;
 }

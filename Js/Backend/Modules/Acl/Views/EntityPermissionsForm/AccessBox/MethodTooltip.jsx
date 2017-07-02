@@ -10,17 +10,23 @@ MethodTooltip.defaultProps = {
         const {Link, method, currentlyEditingPermission} = this.props;
         return (
             <div className={styles.detailsTooltip}>
-                <h3>{method.name} {method.public && <span className={styles.publicMethod}>{this.i18n(`(public)`)}</span>}</h3>
-                <div>{method.description}</div>
+                {method.name && method.description && (
+                    <tooltip-header>
+                        <h3>
+                            {method.name} {method.public && <span className={styles.publicMethod}>{this.i18n(`(public)`)}</span>}
+                        </h3>
+                        {method.description && <div>{method.description}</div>}
+                        <br/>
+                    </tooltip-header>
+                )}
 
-                <br/>
                 <h3>{this.i18n(`Execution:`)}</h3>
                 <div>
                     <div className={styles.methodBox}>{method.method}</div>
                     {method.path}
                 </div>
-
                 <br/>
+
                 {_.isEmpty(method.usages) ? (
                     <wrapper>
                         <h3>{this.i18n(`Usages`)}</h3>
@@ -58,7 +64,7 @@ MethodTooltip.defaultProps = {
                                             {permission.roles.map(role => (
                                                 <Link
                                                     separate
-                                                    key={permission.id}
+                                                    key={role.id}
                                                     route="UserRoles.Edit"
                                                     params={{id: role.id}}>
                                                     {role.name}
