@@ -102,9 +102,14 @@ class UserPermissionsForm extends Webiny.Ui.View {
                                                         model={model}
                                                         permissions={entities}
                                                         onTogglePermission={(entity, method) => {
-                                                            const key = `permissions.entities.${entity}.${method}`;
-                                                            const value = _.get(model, key);
-                                                            form.setModel(key, !value);
+                                                            const key = `permissions.entities.${entity}`;
+                                                            let permissions = _.get(model, key, {});
+                                                            if (_.isArray(permissions)) {
+                                                                permissions = {};
+                                                            }
+
+                                                            _.set(permissions, method, !_.get(permissions, method));
+                                                            form.setModel(key, permissions);
                                                         }}
                                                         onAddEntity={entity => {
                                                             let entities = _.clone(model.permissions.entities);
@@ -127,9 +132,14 @@ class UserPermissionsForm extends Webiny.Ui.View {
                                                         model={model}
                                                         permissions={services}
                                                         onTogglePermission={(service, method) => {
-                                                            const key = `permissions.services.${service}.${method}`;
-                                                            const value = _.get(model, key);
-                                                            form.setModel(key, !value);
+                                                            const key = `permissions.services.${service}`;
+                                                            let permissions = _.get(model, key, {});
+                                                            if (_.isArray(permissions)) {
+                                                                permissions = {};
+                                                            }
+
+                                                            _.set(permissions, method, !_.get(permissions, method));
+                                                            form.setModel(key, permissions);
                                                         }}
                                                         onAddService={service => {
                                                             let services = _.clone(model.permissions.services);
