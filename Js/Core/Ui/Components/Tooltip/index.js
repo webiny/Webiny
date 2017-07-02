@@ -9,7 +9,6 @@ Tooltip.defaultProps = {
     trigger: 'hover',
     interactive: false,
     target: null,
-    delay: [5, 5],
     renderer() {
         return (
             <TooltipWrapper
@@ -17,7 +16,6 @@ Tooltip.defaultProps = {
                 trigger={this.props.trigger}
                 interactive={this.props.interactive}
                 target={this.props.target}
-                delay={this.props.delay}
                 content={this.props.children}/>
         );
     }
