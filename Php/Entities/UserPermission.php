@@ -5,6 +5,7 @@ namespace Apps\Webiny\Php\Entities;
 use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
 use Apps\Webiny\Php\PackageManager\App;
 use Apps\Webiny\Php\PackageManager\Parser\EntityParser;
+use Apps\Webiny\Php\PackageManager\Parser\ServiceParser;
 use Webiny\Component\Mongo\Index\SingleIndex;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
@@ -89,8 +90,9 @@ class UserPermission extends AbstractEntity
 
                     if ($singleEntity && $entity['class'] == $singleEntity) {
                         foreach ($entity['methods'] as &$method) {
-                            $method['usages'] = $this->getEntityMethodUsages($entity, $method);
+                            $method['usages'] = $this->getMethodUsages($entity, $method);
                         }
+
                         return $entity;
                     }
 
@@ -101,11 +103,67 @@ class UserPermission extends AbstractEntity
             // Additionally, we want to know who else is exposing particular method.
             foreach ($entities as &$entity) {
                 foreach ($entity['methods'] as &$method) {
-                    $method['usages'] = $this->getEntityMethodUsages($entity, $method);
+                    $method['usages'] = $this->getMethodUsages($entity, $method);
                 }
             }
 
             return $entities;
+        })->setPublic();
+
+        /**
+         * @api.name Get system services
+         * @api.description This method returns an overview of all active services
+         */
+        $this->api('get', '/service', function () {
+
+            // Services listed here will not be returned in the final response.
+            $excludeServices = $this->wRequest()->query('exclude', []);
+
+            $singleService = false;
+            $multipleServices = $this->wRequest()->query('services', false);
+
+            if (!$multipleServices) {
+                $singleService = $this->wRequest()->query('service', false);
+                if ($singleService) {
+                    $multipleServices = [$singleService];
+                }
+            }
+
+            $services = [];
+            /* @var $app App */
+            foreach ($this->wApps() as $app) {
+                foreach ($app->getServices() as $service) {
+                    if (in_array($service['class'], $excludeServices)) {
+                        continue;
+                    }
+
+                    if ($multipleServices && !in_array($service['class'], $multipleServices)) {
+                        continue;
+                    }
+
+                    $serviceParser = new ServiceParser($service['class']);
+                    $service['methods'] = $serviceParser->getApiMethods();
+
+                    if ($service['class'] == $singleService) {
+                        foreach ($service['methods'] as &$method) {
+                            $method['usages'] = $this->getMethodUsages($service, $method);
+                        }
+
+                        return $service;
+                    }
+
+                    $services[] = $service;
+                }
+            }
+
+            // Additionally, we want to know who else is exposing particular method.
+            foreach ($services as &$service) {
+                foreach ($service['methods'] as &$method) {
+                    $method['usages'] = $this->getMethodUsages($service, $method);
+                }
+            }
+
+            return $services;
         })->setPublic();
     }
 
@@ -127,9 +185,9 @@ class UserPermission extends AbstractEntity
         return $this->permissions->keyNested($key . '.' . $permission);
     }
 
-    private function getEntityMethodUsages($entity, $method)
+    private function getMethodUsages($entity, $method, $type = 'entities')
     {
-        $key = 'permissions.entities.' . $entity['class'] . '.' . $method['key'];
+        $key = 'permissions.' . $type . '.' . $entity['class'] . '.' . $method['key'];
         $params = ['UserPermissions', [$key => true], [], 0, 0, ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1]]];
         $permissions = $this->wDatabase()->find(...$params);
 
@@ -163,4 +221,5 @@ class UserPermission extends AbstractEntity
             return $permission;
         }, $permissions->toArray());
     }
+
 }

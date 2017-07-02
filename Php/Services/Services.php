@@ -7,7 +7,6 @@ use Apps\Webiny\Php\DevTools\Services\AbstractService;
 use Apps\Webiny\Php\PackageManager\Parser\ServiceParser;
 use Apps\Webiny\Php\PackageManager\App;
 use Webiny\Component\StdLib\StdLibTrait;
-use Webiny\Component\StdLib\StdObject\StdObjectWrapper;
 
 /**
  * Class Services
