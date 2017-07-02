@@ -11,7 +11,7 @@ class ChunkIds {
                         if (process.env.NODE_ENV === 'production') {
                             chunk.id = compiler.options.name + '-' + this.createChunkIdHash(chunk);
                         } else {
-                            const context = chunk.modules[0].context;
+                            const context = chunk.mapModules(m => m)[0].context;
                             if (context.includes('/node_modules/')) {
                                 id = context.split('/node_modules/')[1].split('/')[0];
                             } else if (context.includes('/Ui/Components/')) {
@@ -52,7 +52,7 @@ class ChunkIds {
     createChunkIdHash(chunk) {
         // We are generating chunk id based on containing modules (their `resource` path relative to `Apps` folder).
         // That way chunk id does not change as long as it contains the same modules (no matter the content).
-        const paths = chunk.modules.map(this.getRelativeModulePath).sort().join('\n');
+        const paths = chunk.mapModules(this.getRelativeModulePath).sort().join('\n');
         return crypto.createHash('md5').update(paths).digest('hex').substr(0, 10);
     }
 

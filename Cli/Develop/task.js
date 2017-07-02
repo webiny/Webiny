@@ -1,5 +1,3 @@
-require('console-stamp')(console, 'HH:MM:ss.l');
-
 // We need this to override some webpack classes (did not have time to tinker with pull requests, etc.)
 const Module = require('module');
 const originalRequire = Module.prototype.require;

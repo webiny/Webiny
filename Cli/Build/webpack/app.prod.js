@@ -47,6 +47,7 @@ module.exports = function (app, config) {
         assetsPlugin,
         new webpack.optimize.UglifyJsPlugin({mangle: true, sourceMap: false}),
         new OptimizeCssAssetsPlugin({
+            canPrint: false,
             assetNameRegExp: /\.css$/,
             cssProcessorOptions: {
                 discardComments: {removeAll: true},
@@ -102,6 +103,12 @@ module.exports = function (app, config) {
                     exclude: /node_modules/,
                     include: Webiny.projectRoot(),
                     use: [
+                        {
+                            loader: 'cache-loader',
+                            options: {
+                                cacheDirectory: path.resolve(Webiny.projectRoot(), 'public_html/build/cache', app.getPath())
+                            }
+                        },
                         {
                             loader: 'babel-loader',
                             options: {
