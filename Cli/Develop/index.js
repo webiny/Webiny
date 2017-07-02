@@ -1,6 +1,5 @@
 const Plugin = require('webiny/lib/plugin');
 const Menu = require('webiny/lib/menu');
-const Task = require('./task');
 
 class Develop extends Plugin {
     constructor(program) {
@@ -14,6 +13,7 @@ class Develop extends Plugin {
     }
 
     runTask(config, onFinish) {
+        const Task = require('./task');
         process.env.NODE_ENV = 'development';
         const task = new Task(config);
         return task.run();

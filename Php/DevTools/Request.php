@@ -7,6 +7,7 @@
 
 namespace Apps\Webiny\Php\DevTools;
 
+use MongoDB\BSON\Regex;
 use Webiny\Component\Rest\RestTrait;
 use Webiny\Component\StdLib\StdObject\StdObjectWrapper;
 
@@ -90,7 +91,7 @@ class Request extends \Webiny\Component\Http\Request
 
             // Add condition to filters
             foreach (explode(',', $searchFields) as $key) {
-                $queryFilters['$' . $searchOperator][][$key] = new \MongoDB\BSON\Regex($searchQuery, 'i');
+                $queryFilters['$' . $searchOperator][][$key] = new Regex($searchQuery, 'i');
             }
         }
 
@@ -108,6 +109,26 @@ class Request extends \Webiny\Component\Http\Request
         }
 
         return $data;
+    }
+
+    public function query($key = null, $value = null)
+    {
+        return $this->sanitizeValues(parent::query($key, $value));
+    }
+
+    public function post($key = null, $value = null)
+    {
+        return $this->sanitizeValues(parent::post($key, $value));
+    }
+
+    public function header($key = null, $value = null)
+    {
+        return $this->sanitizeValues(parent::header($key, $value));
+    }
+
+    public function payload($key = null, $value = null)
+    {
+        return $this->sanitizeValues(parent::payload($key, $value));
     }
 
     public static function getPage($default = 1)
@@ -144,4 +165,27 @@ class Request extends \Webiny\Component\Http\Request
     {
         return static::restGetFilter($name, $default);
     }
+
+    /**
+     * Iterates over all received values and sanitizes them. For now we only trim string values.
+     *
+     * @param $values
+     *
+     * @return string
+     */
+    private function sanitizeValues($values)
+    {
+        if ($this->isString($values)) {
+            return trim($values);
+        }
+
+        if ($this->isArray($values)) {
+            foreach ($values as &$value) {
+                $value = $this->sanitizeValues($value);
+            }
+        }
+
+        return $values;
+    }
+
 }

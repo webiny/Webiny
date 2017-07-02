@@ -47,17 +47,26 @@ class Webiny {
         return this.ModuleLoader.load(modules);
     }
 
+    importByTag(tag) {
+        return this.ModuleLoader.loadByTag(tag);
+    }
+
     run(config) {
         console.timeStamp("Webiny Run");
-        this.Page.loadStylesheet(webinyMeta['Webiny.Core'].css);
-        return this.Page.loadScript(webinyMeta['Webiny.Core'].app).then(() => {
-            // Configure Core
+        const coreConfig = webinyMeta['Webiny.Core'];
+        this.Page.loadStylesheet(coreConfig.css);
+        return this.Page.loadScript(coreConfig.app).then(() => {
+            // Configure Router
             if (config.router) {
                 this.Router.setBaseUrl(config.router.baseUrl || '/');
                 this.Router.setTitlePattern(config.router.title || '');
                 this.Router.setDefaultRoute(config.router.defaultRoute || null);
+                this.Router.setHistory(config.router.history);
             }
 
+            return this.loadBundle(coreConfig).then(() => this.Apps.Webiny.Core.run());
+        }).then(() => {
+            // Load and run apps
             let loader = Promise.resolve();
             config.apps.map(name => {
                 loader = loader.then(() => {
@@ -66,6 +75,7 @@ class Webiny {
             });
             return loader;
         }).then(() => {
+            // Initialize Authentication (if registered by one of the apps)
             config.apps.map(name => {
                 if (name === config.auth) {
                     this.Auth = _.get(this.Apps, name).getAuth();
@@ -75,6 +85,7 @@ class Webiny {
             if (this.Auth) {
                 this.Auth.init();
             }
+
             // Mount RootElement
             const RootElement = this.RootElement;
             this.app = ReactDOM.render(<RootElement/>, document.querySelector('webiny-app'));
@@ -86,15 +97,12 @@ class Webiny {
         return this;
     }
 
-    registerModule(name, provider) {
-        if (_.isPlainObject(name)) {
-            _.each(name, (provider, name) => this.ModuleLoader.setModule(name, provider));
-        } else {
-            this.ModuleLoader.setModule(name, provider);
-        }
+    registerModule(...modules) {
+        modules.map(m => this.ModuleLoader.setModule(m));
+        return this;
     }
 
-    configure(name, config) {
+    configureModule(name, config) {
         this.ModuleLoader.setConfiguration(name, config);
     }
 
@@ -112,6 +120,9 @@ class Webiny {
             if (_.has(appConfig, 'css')) {
                 this.Page.loadStylesheet(appConfig['css']);
             }
+
+            // Load extra bundle if route matches
+            loader = loader.then(() => this.loadBundle(appConfig));
 
             return loader;
         };
@@ -137,6 +148,26 @@ class Webiny {
         }).then(() => {
             return _.get(this.Apps, name);
         });
+    }
+
+    loadBundle(config) {
+        let load = Promise.resolve();
+        if (_.isPlainObject(config.bundles)) {
+            _.each(config.bundles, (bundleUrl, routerUrl) => {
+                if (routerUrl === '*') {
+                    load = this.Page.loadScript(bundleUrl);
+                    return false;
+                } else {
+                    const regex = new RegExp(routerUrl);
+                    if (regex.test(this.Router.history.location.pathname)) {
+                        load = this.Page.loadScript(bundleUrl);
+                        return false;
+                    }
+                }
+            });
+        }
+
+        return load;
     }
 
     /**

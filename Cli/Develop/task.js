@@ -1,3 +1,4 @@
+// We need this to override some webpack classes (did not have time to tinker with pull requests, etc.)
 const path = require('path');
 const webpack = require('webpack');
 const _ = require('lodash');

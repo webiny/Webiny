@@ -185,7 +185,7 @@ Image.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         if (this.props.value) {
             const imageProps = {
                 image: this.props.value,
-                onEdit: this.editFile,
+                onEdit: this.props.cropper ? this.editFile : null,
                 onDelete: this.removeFile,
                 onDragStart: this.onImageDragStart,
                 onDragEnd: this.onImageDragEnd,

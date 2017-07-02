@@ -21,7 +21,7 @@ module.exports = (config) => {
         'ismobilejs',
         'webiny-lodash',
         'moment',
-        'historyjs/scripts/bundled-uncompressed/html5/native.history',
+        'history',
         'jquery-deparam',
         'platform',
         './Webiny',

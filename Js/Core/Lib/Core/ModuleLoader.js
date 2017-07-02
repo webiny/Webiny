@@ -1,3 +1,5 @@
+import Module from './Module';
+
 class ModuleLoader {
     constructor() {
         // This object contains module providers registered by other apps (this allows lazy loading of chunks from other apps)
@@ -42,11 +44,13 @@ class ModuleLoader {
             if (_.isString(module)) {
                 module = this.registeredModules[module];
             }
-            // If a function is given - execute it and return either the default export (if exists) or the entire export
-            if (!_.isFunction(module)) {
-                console.warn('[MODULE LOADER] not a function: ' + key);
-            }
-            return Promise.resolve(module()).then(m => m && m.hasOwnProperty('default') ? m.default : m);
+
+            return Promise.resolve(module instanceof Module ? module.load() : module()).then(m => {
+                return m && m.hasOwnProperty('default') ? m.default : m;
+            }).catch((err) => {
+                console.log('[Failed to import]', key, module);
+                console.error(err);
+            });
         });
 
         return Promise.all(imports).then(values => {
@@ -88,8 +92,18 @@ class ModuleLoader {
         });
     }
 
-    setModule(name, provider) {
-        this.registeredModules[name] = provider;
+    loadByTag(tag) {
+        const modules = [];
+        _.each(this.registeredModules, (module, name) => {
+            if (_.isArray(module.tags) && module.tags.includes(tag)) {
+                modules.push(name);
+            }
+        });
+        return this.load(modules);
+    }
+
+    setModule(module) {
+        this.registeredModules[module.name] = module;
     }
 
     setConfiguration(name, config) {
@@ -98,5 +112,6 @@ class ModuleLoader {
         this.configurations[name] = current;
     }
 }
+
 
 export default ModuleLoader;

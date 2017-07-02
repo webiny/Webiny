@@ -2,7 +2,6 @@ import Webiny from 'Webiny';
 import Router from './Router';
 
 class Route {
-
     constructor(name, pattern, components, title = '') {
         // Normalize components
         const nComponents = {};
@@ -59,7 +58,7 @@ class Route {
         }
 
         // Parse query string params
-        _.merge(this.paramValues, $.deparam(window.location.search.substring(1)));
+        _.merge(this.paramValues, $.deparam(Router.history.location.search.substring(1)));
 
         return true;
     }

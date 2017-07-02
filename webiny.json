@@ -8,6 +8,8 @@
         "./Cli/Revert",
         "./Cli/InstallApps",
         "./Cli/ServerHelp",
-        "./Cli/Setup"
+        "./Cli/Setup",
+        "./Cli/Exit",
+        "./Cli/Overrides"
     ]
 }

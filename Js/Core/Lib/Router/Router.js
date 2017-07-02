@@ -2,8 +2,8 @@ import Webiny from 'Webiny';
 import RouterEvent from './RouterEvent';
 import Utils from './RouterUtils';
 import Dispatcher from './../Core/Dispatcher';
-import 'historyjs/scripts/bundled-uncompressed/html5/native.history';
 import 'jquery-deparam';
+import {createBrowserHistory} from 'history';
 
 /**
  * ROUTER
@@ -14,17 +14,29 @@ class Router {
     constructor() {
         this.baseUrl = null;
         this.appUrl = '';
+        this.history = createBrowserHistory();
         this.routes = [];
         this.defaultComponents = {};
         this.layouts = {};
         this.defaultRoute = null; // If router didn't match anything, it will reroute here
-        this.titlePattern = '{title}';
+        this.titlePattern = '%s';
         this.activeRoute = null;
         this.beforeStart = [];
         this.routeWillChange = [];
         this.routeChanged = [];
         this.routeNotMatched = [];
         this.started = false;
+
+        Utils.setHistory(this.history);
+    }
+
+    setHistory(history) {
+        if (history) {
+            this.history = history;
+            Utils.setHistory(this.history);
+        }
+
+        return this;
     }
 
     start() {
@@ -39,9 +51,9 @@ class Router {
                 $this.handleAnchorClick(this, e);
             });
 
-            History.Adapter.bind(window, 'statechange', () => {
+            this.history.listen(location => {
                 this.activeRoute = null;
-                let url = History.getState().data.url || History.getState().hash;
+                let url = location.pathname;
                 url = url.replace(this.appUrl, '');
                 if (url === '') {
                     url = '/';
@@ -56,8 +68,8 @@ class Router {
                 }
 
                 this.activeRoute = matched;
-                if (History.getState().data.title) {
-                    this.activeRoute.setTitle(History.getState().data.title);
+                if (_.has(History, 'location.state.title')) {
+                    this.activeRoute.setTitle(_.get(History, 'location.state.title'));
                 }
 
                 Utils.routeWillChange(matched, this.routeWillChange).then(routerEvent => {
@@ -71,8 +83,8 @@ class Router {
 
             // Listen for "RouteChanged" event and process callbacks
             Dispatcher.on('RouteChanged', (event) => {
-                if (_.isNumber(History.getState().data.scrollY)) {
-                    window.scrollTo(0, History.getState().data.scrollY);
+                if (_.isNumber(_.get(History, 'location.state.scrollY'))) {
+                    window.scrollTo(0, this.history.location.state.scrollY);
                 }
                 let chain = Promise.resolve(event);
                 this.routeChanged.forEach(callback => {
@@ -84,7 +96,7 @@ class Router {
             });
         }
 
-        const url = window.location.pathname;
+        const url = this.history.location.pathname;
         const matchedRoute = Utils.matchRoute(this, url);
         this.activeRoute = matchedRoute;
 
@@ -177,7 +189,7 @@ class Router {
     }
 
     routeExists(name) {
-        return _.find(this.routes, {name}) ? true : false;
+        return !!_.find(this.routes, {name});
     }
 
     getRoute(name) {
@@ -239,19 +251,20 @@ class Router {
             url,
             replace,
             scrollY: options.preventScroll ? window.scrollY : false,
-            title: options.title
+            title: options.title,
+            prevTitle: window.document.title
         };
 
         if (replace) {
-            History.replaceState(state, window.document.title, url);
+            this.history.replace(url, state);
         } else {
-            History.pushState(state, window.document.title, url);
+            this.history.push(url, state);
         }
         return url;
     }
 
     goBack() {
-        return History.back();
+        return this.history.goBack();
     }
 
     getActiveRoute() {
@@ -298,6 +311,7 @@ class Router {
         return this.baseUrl;
     }
 
+    // TODO: make this function configurable (overridable)
     handleAnchorClick(a, e) {
         let url = a.href;
 
@@ -318,14 +332,14 @@ class Router {
         }
 
         // Push state and let the Router process the rest
-        if (url.indexOf(webinyWebPath) === 0) {
+        if (url.startsWith(webinyWebPath) || url.startsWith('file://')) {
             e.preventDefault();
-            url = url.replace(webinyWebPath, '');
-            History.pushState({
-                url,
+            url = url.replace(webinyWebPath, '').replace('file://', '');
+            this.history.push(url, {
                 title: a.getAttribute('data-document-title') || null,
+                prevTitle: window.document.title,
                 scrollY: a.getAttribute('data-prevent-scroll') === 'true' ? window.scrollY : false
-            }, window.document.title, url);
+            });
         }
     }
 

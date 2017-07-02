@@ -19,11 +19,17 @@ class BasePlugin {
 
     // function borrowed from: https://github.com/draft-js-plugins/draft-js-plugins/blob/master/draft-js-dnd-plugin/src/modifiers/addBlock.js
     insertDataBlock(editorState, insertData = null) {
+        const Draft = this.Draft;
         let type = 'unstyled';
         let currentContentState = editorState.getCurrentContent();
-        const currentSelectionState = editorState.getSelection();
+        let currentSelectionState = editorState.getSelection();
 
-        const Draft = this.Draft;
+        if (!currentSelectionState.getHasFocus()) {
+            // Focus last line
+            editorState = Draft.EditorState.moveFocusToEnd(editorState);
+            currentSelectionState = editorState.getSelection();
+        }
+
         // in case text is selected it is removed and then the block is appended
         const afterRemovalContentState = Draft.Modifier.removeRange(currentContentState, currentSelectionState, 'backward');
 

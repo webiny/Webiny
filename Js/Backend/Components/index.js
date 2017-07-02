@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
 
-Webiny.registerModule({
-    'Webiny/Backend/UserRoles': () => import('./UserRoles'),
-    'Webiny/Backend/UserPermissions': () => import('./UserPermissions')
-});
+Webiny.registerModule(
+    new Webiny.Module('Webiny/Backend/UserRoles', () => import('./UserRoles')),
+    new Webiny.Module('Webiny/Backend/UserPermissions', () => import('./UserPermissions'))
+);

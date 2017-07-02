@@ -44,7 +44,6 @@ class CheckboxGroup extends Webiny.Ui.OptionComponent {
 
             const props = {
                 key, // React key
-                grid: item.grid || this.props.grid,
                 label: item.text,
                 disabled: this.isDisabled(),
                 value: checked, // true/false
@@ -72,7 +71,6 @@ class CheckboxGroup extends Webiny.Ui.OptionComponent {
 }
 
 CheckboxGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
-    grid: 12,
     checkboxRenderer: null,
     checkboxLabelRenderer: null,
     formatOptionValue: value => value,

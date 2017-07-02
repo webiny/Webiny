@@ -193,6 +193,24 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
                                 <Ui.Form onSubmit={this.submitModal.bind(this)}>
                                     {(model, form) => {
                                         const urlValidator = model.image ? null : 'required,url';
+                                        let uploadTab = null;
+                                        if (this.api) {
+                                            uploadTab = (
+                                                <Ui.Tabs.Tab label="Upload" icon="fa-upload">
+                                                    <Ui.Image
+                                                        name="image"
+                                                        cropper={{
+                                                            inline: true,
+                                                            title: 'Crop your image',
+                                                            action: 'Upload image',
+                                                            config: {
+                                                                closeOnClick: false,
+                                                                autoCropArea: 0.7
+                                                            }
+                                                        }}/>
+                                                </Ui.Tabs.Tab>
+                                            );
+                                        }
                                         return (
                                             <Ui.Modal.Content>
                                                 <Ui.Form.Loader/>
@@ -203,20 +221,7 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
                                                             <Ui.Input name="url" placeholder="Enter an image URL" label="URL"
                                                                       validate={urlValidator}/>
                                                         </Ui.Tabs.Tab>
-                                                        <Ui.Tabs.Tab label="Upload" icon="fa-upload">
-                                                            <Ui.Image
-                                                                name="image"
-                                                                cropper={{
-                                                                    inline: true,
-                                                                    title: 'Crop your image',
-                                                                    action: 'Upload image',
-                                                                    config: {
-                                                                        closeOnClick: false,
-                                                                        autoCropArea: 0.7
-                                                                    }
-                                                                }
-                                                                }/>
-                                                        </Ui.Tabs.Tab>
+                                                        {uploadTab}
                                                     </Ui.Tabs>
                                                 </Ui.Modal.Body>
                                                 <Ui.Modal.Footer>

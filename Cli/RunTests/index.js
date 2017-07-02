@@ -1,15 +1,5 @@
-const inquirer = require('inquirer');
-const chalk = require('chalk');
-const moment = require('moment');
-const glob = require('glob-all');
-const gulp = require('gulp');
-const mocha = require('gulp-mocha');
-const gulpCount = require('gulp-count');
-const babel = require('babel-register');
-
 const Menu = require('webiny/lib/menu');
 const Plugin = require('webiny/lib/plugin');
-const Webiny = require('webiny/lib/webiny');
 
 class RunTests extends Plugin {
     constructor(program) {
@@ -24,6 +14,16 @@ class RunTests extends Plugin {
     }
 
     runTask(config, onFinish) {
+        const Webiny = require('webiny/lib/webiny');
+        const inquirer = require('inquirer');
+        const chalk = require('chalk');
+        const moment = require('moment');
+        const glob = require('glob-all');
+        const gulp = require('gulp');
+        const mocha = require('gulp-mocha');
+        const gulpCount = require('gulp-count');
+        const babel = require('babel-register');
+
         return Promise.all(config.apps.map(appObj => {
             return new Promise(resolve => {
                 glob(appObj.getSourceDir() + '/Tests/*.js', function (er, files) {

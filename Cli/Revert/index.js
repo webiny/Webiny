@@ -1,9 +1,5 @@
-const inquirer = require('inquirer');
-const _ = require('lodash');
 const Plugin = require('webiny/lib/plugin');
 const Menu = require('webiny/lib/menu');
-const Webiny = require('webiny/lib/webiny');
-const Task = require('./task');
 
 class Revert extends Plugin {
     constructor(program) {
@@ -18,11 +14,16 @@ class Revert extends Plugin {
     }
 
     runTask(config, onFinish) {
+        const Task = require('./task');
         const task = new Task();
         return task.run(config).then(onFinish);
     }
 
     runWizard(config, onFinish) {
+        const Webiny = require('webiny/lib/webiny');
+        const inquirer = require('inquirer');
+        const _ = require('lodash');
+
         const lastRun = Webiny.getConfig().lastRun;
         return inquirer.prompt([{
             type: 'input',

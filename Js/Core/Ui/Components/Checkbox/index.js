@@ -26,7 +26,6 @@ class Checkbox extends Webiny.Ui.FormComponent {
 
 Checkbox.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     label: '',
-    grid: 3,
     className: null,
     style: null,
     option: null,
@@ -49,8 +48,7 @@ Checkbox.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         const css = this.classSet(
             styles.checkbox,
             this.isDisabled() && styles.checkboxDisabled,
-            this.props.className,
-            this.props.grid ? 'col-sm-' + this.props.grid : null
+            this.props.className
         );
 
         const checkboxProps = {

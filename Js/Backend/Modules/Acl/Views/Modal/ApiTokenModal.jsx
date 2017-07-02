@@ -36,6 +36,7 @@ class ApiTokenModal extends Webiny.Ui.ModalComponent {
                                                 validate="required"
                                                 placeholder="Short description of usage"/>
                                             <Switch label="Enabled" name="enabled"/>
+                                            <Switch label="Log requests" name="logRequests"/>
                                             <UserRoles name="roles"/>
                                         </Grid.Col>
                                     </Grid.Row>

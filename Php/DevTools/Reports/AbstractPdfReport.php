@@ -1,4 +1,5 @@
 <?php
+
 namespace Apps\Webiny\Php\DevTools\Reports;
 
 use Apps\Webiny\Php\DevTools\Exceptions\AppException;
@@ -56,10 +57,19 @@ abstract class AbstractPdfReport extends AbstractReport
         $html = $this->wTemplateEngine()->fetch($template, $data);
         $storage = $this->wStorage('Temp');
 
+        // This way we do not need to worry about where the binary is installed
+        $result = [];
+        exec('whereis -b wkhtmltopdf', $result);
+        $binary = $this->str($result[0])->explode(' ')->removeFirst()->first()->val();
+
+        if (!$binary) {
+            throw new AppException('Unable to locate "wkhtmltopdf" binary. Make sure the library is installed and visible using "whereis -b wkhtmltopdf" command.');
+        }
+
         // Convert to PDF
         $pdf = new Pdf([
             'tmpDir' => $storage->getAbsolutePath(),
-            'binary' => '/usr/local/bin/wkhtmltopdf',
+            'binary' => $binary,
             'print-media-type'
         ]);
         $pdf->addPage($html);

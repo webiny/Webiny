@@ -75,9 +75,9 @@
           /* sven: causes problems when the toolbar goes into 2 lines */
           vertical-align: top;
 
-          actions{
+          actions {
             display: table;
-            >span{
+            > span {
               display: table-cell;
             }
           }
@@ -118,7 +118,8 @@
         li {
           list-style-position: outside;
           > div {
-            display: inline-block;
+            /*display: inline-block;*/
+            display: block; /* inline-block causes the bullets to be positioned to the bottom of the list item, instead to the top */
           }
         }
       }
@@ -180,6 +181,38 @@
       .clearfix {
         &:before, &:after {
           content: ''
+        }
+      }
+
+      .alignment--left {
+        .public-DraftStyleDefault-block {
+          text-align: left;
+        }
+      }
+
+      .alignment--center {
+        .public-DraftStyleDefault-block {
+          text-align: center;
+        }
+      }
+
+      .alignment--right {
+        .public-DraftStyleDefault-block {
+          text-align: right;
+        }
+      }
+
+      .alignment--justify {
+        .public-DraftStyleDefault-block {
+          text-align: justify;
+        }
+      }
+
+      .alignment--justify:after {
+        .public-DraftStyleDefault-block {
+          content: "";
+          display: inline-block;
+          width: 100%;
         }
       }
     }
@@ -253,25 +286,6 @@
       .public-DraftStyleDefault-ltr {
         text-align: inherit;
       }
-
-      .alignment--left {
-        .public-DraftStyleDefault-block {
-          text-align: left;
-        }
-      }
-
-      .alignment--center {
-        .public-DraftStyleDefault-block {
-          text-align: center;
-        }
-      }
-
-      .alignment--right {
-        .public-DraftStyleDefault-block {
-          text-align: right;
-        }
-      }
-
     }
     .rich-editor__editor {
       margin: 0;

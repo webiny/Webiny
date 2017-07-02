@@ -1,7 +1,6 @@
 import View from './../Core/View';
 import Router from './../Router/Router';
 import Dispatcher from './../Core/Dispatcher';
-import UiDispatcher from './../Core/UiDispatcher';
 import Placeholder from './Placeholder';
 import dynamics from 'dynamics.js';
 

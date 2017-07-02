@@ -1,4 +1,5 @@
 <?php
+
 namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\DevTools\Interfaces\UserInterface;
@@ -15,6 +16,7 @@ use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
  * @property string           $id
  * @property string           $token
  * @property string           $owner
+ * @property boolean          $logRequests
  * @property integer          $requests
  * @property DateTimeObject   $lastActivity
  * @property EntityCollection $roles
@@ -42,6 +44,7 @@ class ApiToken extends AbstractEntity implements UserInterface
         $this->attr('owner')->char()->setToArrayDefault();
         $this->attr('description')->char()->setToArrayDefault();
         $this->attr('lastActivity')->datetime()->setToArrayDefault();
+        $this->attr('logRequests')->boolean()->setDefaultValue(false)->setToArrayDefault();
         $this->attr('requests')->integer()->setToArrayDefault()->setDefaultValue(0);
         $this->attr('enabled')->boolean()->setDefaultValue(true)->setToArrayDefault();
         $userRole = '\Apps\Webiny\Php\Entities\UserRole';
