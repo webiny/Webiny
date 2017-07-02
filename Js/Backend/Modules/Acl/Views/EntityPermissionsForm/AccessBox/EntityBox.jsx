@@ -101,7 +101,7 @@ class EntityBox extends Webiny.Ui.Component {
                         <MethodTooltip method={method} currentlyEditingPermission={currentlyEditingPermission}/>
                     </Tooltip>
 
-                    <div>
+                    <div className={styles.methodDetails}>
                         <div className={styles.methodTypeLabel}>
                             {method.method.toUpperCase()}
                         </div>

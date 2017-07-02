@@ -1,4 +1,3 @@
-/* eslint-disable */
 import Webiny from 'Webiny';
 import EntityPermissions from './EntityPermissionsForm/EntityPermissions';
 import ServicePermissions from './EntityPermissionsForm/ServicePermissions';
@@ -6,12 +5,10 @@ import ServicePermissions from './EntityPermissionsForm/ServicePermissions';
 class UserPermissionsForm extends Webiny.Ui.View {
     constructor(props) {
         super(props);
-
         this.state = {
             entities: [],
             services: []
         };
-
         this.bindMethods('renderService');
     }
 
@@ -55,26 +52,22 @@ class UserPermissionsForm extends Webiny.Ui.View {
     }
 
     renderView(Ui) {
-        const formProps = {
-            api: '/entities/webiny/user-permissions',
-            fields: 'id,name,slug,description,permissions',
-            connectToRouter: true,
-            onSubmitSuccess: 'UserPermissions.List',
-            onCancel: 'UserPermissions.List',
-            defaultModel: {permissions: {entities: {}, services: {}}},
-            onSuccessMessage: (record) => {
-                return <span>Permission <strong>{record.name}</strong> was saved!</span>;
-            }
-        };
-
         const newUserPermission = !Webiny.Router.getParams('id');
 
         return (
-            <Ui.Form {...formProps}>
+            <Ui.Form
+                api="/entities/webiny/user-permissions"
+                fields="id,name,slug,description,permissions"
+                connectToRouter
+                onSubmitSuccess="UserPermissions.List"
+                onCancel="UserPermissions.List"
+                defaultModel={{permissions: {entities: {}, services: {}}}}
+                onSuccessMessage={(record) => {
+                    return <span>Permission <strong>{record.name}</strong> was saved!</span>;
+                }}>
                 {(model, form) => {
                     const entities = _.get(model, 'permissions.entities');
                     const services = _.get(model, 'permissions.services');
-
                     return (
                         <Ui.View.Form>
                             <Ui.View.Header title={model.id ? 'ACL - Edit permission' : 'ACL - Create permission'}/>

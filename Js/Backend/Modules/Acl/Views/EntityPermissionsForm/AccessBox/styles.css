@@ -86,13 +86,22 @@ ul.customMethodsList {
 
 li.customMethodListItem {
 	font-size: 12px;
-	margin-bottom: 5px;
+	margin-bottom: 7px;
 	list-style: none;
 	padding-left: 0;
 }
 
 ul.customMethodsList .toggleAccessButtonWrapper {
 	float: left;
+}
+
+ul.customMethodsList .toggleAccessButtonWrapper button.toggleAccessButton {
+	margin: 0;
+}
+
+ul.customMethodsList .methodDetails {
+	float: left;
+	margin-left: 5px;
 }
 
 ul.customMethodsList .methodTypeLabel {
