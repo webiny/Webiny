@@ -12,7 +12,7 @@ class ServicePermissions extends Webiny.Ui.Component {
             loading: false
         };
 
-        this.api = new Webiny.Api.Endpoint('/services/webiny/services');
+        this.api = new Webiny.Api.Endpoint('/entities/webiny/user-permissions');
     }
 
     componentWillMount() {
@@ -20,10 +20,8 @@ class ServicePermissions extends Webiny.Ui.Component {
         if (!_.isEmpty(this.props.permissions)) {
             this.setState('loading', true, () => {
                 this.api.setQuery({
-                    details: 'methods',
-                    crudMethods: true,
                     services: _.keys(this.props.permissions)
-                }).get().then(apiResponse => this.setState({loading: false, services: apiResponse.getData()}));
+                }).get('/service').then(apiResponse => this.setState({loading: false, services: apiResponse.getData()}));
             });
         }
     }
@@ -37,7 +35,6 @@ ServicePermissions.defaultProps = {
     onRemoveService: _.noop,
     renderer() {
         const {Loader, Button, ViewSwitcher, Grid, Icon, permissions} = this.props;
-
 
         return (
             <ViewSwitcher>

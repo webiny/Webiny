@@ -146,7 +146,7 @@ class UserPermission extends AbstractEntity
 
                     if ($service['class'] == $singleService) {
                         foreach ($service['methods'] as &$method) {
-                            $method['usages'] = $this->getMethodUsages($service, $method);
+                            $method['usages'] = $this->getMethodUsages($service, $method, 'services');
                         }
 
                         return $service;
@@ -159,7 +159,7 @@ class UserPermission extends AbstractEntity
             // Additionally, we want to know who else is exposing particular method.
             foreach ($services as &$service) {
                 foreach ($service['methods'] as &$method) {
-                    $method['usages'] = $this->getMethodUsages($service, $method);
+                    $method['usages'] = $this->getMethodUsages($service, $method, 'services');
                 }
             }
 
@@ -187,20 +187,23 @@ class UserPermission extends AbstractEntity
 
     private function getMethodUsages($entity, $method, $type = 'entities')
     {
-        $key = 'permissions.' . $type . '.' . $entity['class'] . '.' . $method['key'];
-        $params = ['UserPermissions', [$key => true], [], 0, 0, ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1]]];
-        $permissions = $this->wDatabase()->find(...$params);
+        $key = $key = 'permissions.' . $type . '.' . $entity['class'] . '.';
+        $crudMethod = $type === 'services' ? false : $this->isCrudEntityMethod($method);
+        $key .= $crudMethod ? $crudMethod : $method['key'];
 
-        if (empty($permissions)) {
+        $params = ['UserPermissions', [$key => true], [], 0, 0, ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1]]];
+        $return = $this->wDatabase()->find(...$params);
+
+        if (empty($return)) {
             return [];
         }
 
         $ids = [];
-        foreach ($permissions as $permission) {
+        foreach ($return as $permission) {
             $ids[$permission['id']] = $permission['name'];
         }
 
-        $permissions = $this->wDatabase()->aggregate('UserRole2UserPermission', [
+        $permissionsWithRoles = $this->wDatabase()->aggregate('UserRole2UserPermission', [
             ['$match' => ['UserPermission' => ['$in' => array_keys($ids)]]],
             [
                 '$lookup' => [
@@ -213,13 +216,46 @@ class UserPermission extends AbstractEntity
             [
                 '$project' => ['_id' => 0, 'id' => '$UserPermission', 'roles.name' => 1, 'roles.id' => 1]
             ]
-        ]);
+        ])->toArray();
 
-        return array_map(function ($permission) use ($ids) {
-            $permission['name'] = $ids[$permission['id']];
+        $rolesPerPermission = [];
+        foreach ($permissionsWithRoles as $permissionWithRoles) {
+            $id = $permissionWithRoles['id'];
+            if (isset($rolesPerPermission[$id])) {
+                $rolesPerPermission[$id] = array_merge($rolesPerPermission[$id], $permissionWithRoles['roles']);
+            } else {
+                $rolesPerPermission[$id] = $permissionWithRoles['roles'];
+            }
+        }
 
-            return $permission;
-        }, $permissions->toArray());
+        foreach ($return as &$permission) {
+            $permission['roles'] = [];
+            if (isset($rolesPerPermission[$permission['id']])) {
+                $permission['roles'] = $rolesPerPermission[$permission['id']];
+            }
+        }
+
+        return $return;
+    }
+
+    private function isCrudEntityMethod($method)
+    {
+        $isCustom = $method['custom'] ?? false;
+        if (!$isCustom) {
+            switch ($method['key']) {
+                case '/.get':
+                case '{id}.get':
+                    return 'crudRead';
+                case '/.post':
+                    return 'crudCreate';
+                case '/.delete':
+                    return 'crudDelete';
+                case '/.patch':
+                    return 'crudUpdate';
+            }
+        }
+
+        return false;
     }
 
 }
