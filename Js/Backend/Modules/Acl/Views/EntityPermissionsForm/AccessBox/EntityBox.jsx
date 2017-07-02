@@ -8,7 +8,6 @@ class EntityBox extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
         this.state = {entityFilter: ''};
-        this.api = new Webiny.Api.Endpoint('/entities/webiny/user-permissions');
         this.crud = {
             create: '/.post',
             read: '{id}.get',
@@ -35,7 +34,7 @@ class EntityBox extends Webiny.Ui.Component {
         _.each(existingOperations, (method, key) => {
             if (method) {
                 buttons.push(
-                    <Tooltip key={key} target={(
+                    <Tooltip interactive placement="top" key={key} target={(
                         <ToggleAccessButton
                             method={method}
                             onClick={() => onTogglePermission(entity.class, key)}
@@ -92,7 +91,7 @@ class EntityBox extends Webiny.Ui.Component {
 
             return (
                 <li key={method.key} className={styles.customMethodListItem}>
-                    <Tooltip target={(
+                    <Tooltip interactive target={(
                         <ToggleAccessButton
                             key={method.key}
                             method={method}
@@ -106,7 +105,7 @@ class EntityBox extends Webiny.Ui.Component {
                         <div className={styles.methodTypeLabel}>
                             {method.method.toUpperCase()}
                         </div>
-                        <div>{method.url.replace(webinyApiPath, '')}</div>
+                        <div>{method.path}</div>
                     </div>
                     <div className="clearfix"/>
                 </li>

@@ -1,5 +1,6 @@
 import Webiny from 'Webiny';
 import ToggleAccessButton from './ToggleAccessButton';
+import MethodTooltip from './MethodTooltip';
 
 import styles from './styles.css';
 
@@ -7,23 +8,22 @@ class ServiceBox extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
         this.state = {serviceFilter: ''};
-        this.api = new Webiny.Api.Endpoint('/services/webiny/user-permissions');
     }
 
     /**
      * Renders toggle buttons for custom API endpoints (if they exist on given service).
      */
     renderCustomMethods() {
-        const {Icon, Input, Tooltip, service, permissions, onTogglePermission} = this.props;
+        const {Icon, Link, Input, Tooltip, service, permissions, currentlyEditingPermission, onTogglePermission} = this.props;
 
         let customMethods = [];
 
         _.each(service.methods, method => {
-            const exposed = _.get(permissions, service.class + '.' + method.key, false);
+            const exposed = _.get(permissions, method.key, false);
             customMethods.push(_.assign({}, method, {exposed}));
         });
 
-        let header = null;
+        let header = <h2 className={styles.customMethodsTitle}>{this.i18n(`Custom methods`)}</h2>;
         let content = <div className={styles.noCustomMethods}>{this.i18n(`No custom methods.`)}</div>
 
         if (_.isEmpty(customMethods)) {
@@ -37,6 +37,7 @@ class ServiceBox extends Webiny.Ui.Component {
 
         header = (
             <span>
+                <h2 className={styles.customMethodsTitle}>{this.i18n(`Custom methods`)}</h2>
                 <Input placeholder="Filter methods..." {...this.bindTo('serviceFilter')} delay={0}/>
             </span>
         );
@@ -48,23 +49,21 @@ class ServiceBox extends Webiny.Ui.Component {
 
             return (
                 <li key={method.key} className={styles.customMethodListItem}>
-                    <ToggleAccessButton
-                        key={method.key}
-                        method={method}
-                        onClick={() => onTogglePermission(service.class, method.key)}
-                        value={_.get(permissions, method.key)}/>
+                    <Tooltip interactive target={(
+                        <ToggleAccessButton
+                            key={method.key}
+                            method={method}
+                            onClick={() => onTogglePermission(service.class, method.key)}
+                            value={method.exposed}/>
+                    )}>
+                        <MethodTooltip method={method} currentlyEditingPermission={currentlyEditingPermission}/>
+                    </Tooltip>
 
                     <div>
-                        <div className={styles.method}>
+                        <div className={styles.methodTypeLabel}>
                             {method.method.toUpperCase()}
-                            <Tooltip key="label" target={<Icon icon="icon-info-circle"/>}>
-                                <div>
-                                    <strong>{method.name}</strong>
-                                    <div>{method.description}</div>
-                                </div>
-                            </Tooltip>
                         </div>
-                        <div>{method.url.replace(webinyApiPath, '')}</div>
+                        <div>{method.path}</div>
                     </div>
                     <div className="clearfix"/>
                 </li>
@@ -73,10 +72,11 @@ class ServiceBox extends Webiny.Ui.Component {
 
         // Filter out undefined values (when method filtering is active)
         methods = _.filter(methods, item => !_.isUndefined(item));
-        content = _.isEmpty(methods) ? <div className="empty">{this.i18n(`Nothing to show.`)}</div> : <ul className={styles.customMethodsList}>{methods}</ul>;
+        content = _.isEmpty(methods) ? <div className={styles.noCustomMethods}>{this.i18n(`Nothing to show.`)}</div> :
+            <ul className={styles.customMethodsList}>{methods}</ul>;
 
         return (
-            <div className={styles.customMethods}>
+            <div>
                 <header>{header}</header>
                 {content}
             </div>
@@ -114,5 +114,5 @@ ServiceBox.defaultProps = {
 };
 
 export default Webiny.createComponent(ServiceBox, {
-    modules: ['Icon', 'Input', 'Button', 'ClickConfirm', 'Tooltip']
+    modules: ['Icon', 'Input', 'Button', 'ClickConfirm', 'Tooltip', 'Link']
 });

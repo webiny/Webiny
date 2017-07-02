@@ -58,17 +58,17 @@ span.removeButton:hover {
 	display: inline-block;
 }
 
-button.toggleAccessButton:hover:not(:disabled) {
+.toggleAccessButtonWrapper button.toggleAccessButton:hover:not(:disabled) {
 	box-shadow: 0 0 0 0 #FA5723;
 }
 
-button.toggleAccessButtonExposed {
+.toggleAccessButtonWrapper button.toggleAccessButtonExposed {
 	color: white;
 	background-color: #FA5723;
 	border: 1px solid #ED4005;
 }
 
-button.toggleAccessButtonPublic {
+.toggleAccessButtonWrapper button.toggleAccessButtonPublic {
 	background-color: #26AFA6;
 	color: white;
 	border: none;
@@ -116,10 +116,11 @@ div.noCustomMethods {
 
 div.box :global(.Webiny_Core_Tooltip_content) {
 	padding: 7px;
+	width: 400px;
+	max-width: initial;
 }
 
 div.box :global(.Webiny_Core_Tooltip_innerContent) {
-	max-width: initial;
 	border-radius: 2px;
 	text-align: left;
 	white-space: initial;

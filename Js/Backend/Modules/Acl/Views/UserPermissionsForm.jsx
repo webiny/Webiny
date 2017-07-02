@@ -9,9 +9,7 @@ class UserPermissionsForm extends Webiny.Ui.View {
 
         this.state = {
             entities: [],
-            services: [],
-            entityFilter: '',
-            serviceFilter: ''
+            services: []
         };
 
         this.bindMethods('renderService');
@@ -70,7 +68,7 @@ class UserPermissionsForm extends Webiny.Ui.View {
         };
 
         const newUserPermission = !Webiny.Router.getParams('id');
-        
+
         return (
             <Ui.Form {...formProps}>
                 {(model, form) => {
@@ -84,7 +82,7 @@ class UserPermissionsForm extends Webiny.Ui.View {
                                 <Ui.Section title="General"/>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>
-                                        <Ui.Input label="Name" tooltip={<span>bajo moj to ti je tako</span>} name="name" validate="required"/>
+                                        <Ui.Input label="Name" name="name" validate="required"/>
                                     </Ui.Grid.Col>
                                     <Ui.Grid.Col all={6}>
                                         <Ui.Input label="Slug" name="slug"/>
@@ -109,7 +107,10 @@ class UserPermissionsForm extends Webiny.Ui.View {
                                                             form.setModel(key, !value);
                                                         }}
                                                         onAddEntity={entity => {
-                                                            const entities = _.clone(model.permissions.entities);
+                                                            let entities = _.clone(model.permissions.entities);
+                                                            if (_.isArray(entities)) {
+                                                                entities = {};
+                                                            }
                                                             entities[entity.class] = {};
                                                             form.setModel('permissions.entities', entities);
                                                         }}
@@ -131,7 +132,11 @@ class UserPermissionsForm extends Webiny.Ui.View {
                                                             form.setModel(key, !value);
                                                         }}
                                                         onAddService={service => {
-                                                            const services = _.clone(model.permissions.services);
+                                                            let services = _.clone(model.permissions.services);
+                                                            if (_.isArray(services)) {
+                                                                services = {};
+                                                            }
+
                                                             services[service.class] = {};
                                                             form.setModel('permissions.services', services);
                                                         }}

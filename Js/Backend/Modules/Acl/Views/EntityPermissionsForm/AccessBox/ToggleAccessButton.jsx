@@ -22,21 +22,21 @@ ToggleAccessButton.defaultProps = {
     onClick: _.noop,
     renderer() {
         const {Button, method, onClick, value} = this.props;
-        if (method.public) {
-            return <Button type="primary" className={this.classSet(styles.toggleAccessButton, styles.toggleAccessButtonPublic)}>P</Button>;
-        }
-
         return (
             <div className={styles.toggleAccessButtonWrapper} ref={ref => this.ref = ref}>
-                <Button
-                    type="primary"
-                    onClick={() => {
-                        this.ref.querySelector('button').blur();
-                        onClick();
-                    }}
-                    className={this.classSet(styles.toggleAccessButton, {[styles.toggleAccessButtonExposed]: value})}>
-                    {this.renderLabel()}
-                </Button>
+                {method.public ? (
+                    <Button type="primary" className={this.classSet(styles.toggleAccessButton, styles.toggleAccessButtonPublic)}>P</Button>
+                ) : (
+                    <Button
+                        type="primary"
+                        onClick={() => {
+                            this.ref.querySelector('button').blur();
+                            onClick();
+                        }}
+                        className={this.classSet(styles.toggleAccessButton, {[styles.toggleAccessButtonExposed]: value})}>
+                        {this.renderLabel()}
+                    </Button>
+                )}
             </div>
         );
     }
