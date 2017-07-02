@@ -147,13 +147,22 @@ module.exports = class MultiCompiler extends Tapable {
     }
 
     run(callback) {
+        let chainedBuild = Promise.resolve();
         const allStats = this.compilers.map(() => null);
         this.runWithDependencies(this.compilers, ((compiler, callback) => {
-            const compilerIdx = this.compilers.indexOf(compiler);
-            compiler.run((err, stats) => {
-                if (err) return callback(err);
-                allStats[compilerIdx] = stats;
-                callback();
+            chainedBuild = chainedBuild.then(() => {
+                return new Promise(resolve => {
+                    const compilerIdx = this.compilers.indexOf(compiler);
+                    compiler.run((err, stats) => {
+                        if (err) {
+                            callback(err);
+                        } else {
+                            allStats[compilerIdx] = stats;
+                            callback();
+                        }
+                        resolve();
+                    });
+                });
             });
         }), (err) => {
             if (err) return callback(err);
