@@ -11,12 +11,17 @@ const crudLabels = {
 
 class ToggleAccessButton extends Webiny.Ui.Component {
     renderLabel() {
+        if (this.props.label) {
+            return this.props.label;
+        }
+
         const key = this.props.method.key;
         return crudLabels[key] || 'E';
     }
 }
 
 ToggleAccessButton.defaultProps = {
+    label: null,
     method: null,
     value: false,
     onClick: _.noop,
@@ -25,7 +30,9 @@ ToggleAccessButton.defaultProps = {
         return (
             <div className={styles.toggleAccessButtonWrapper} ref={ref => this.ref = ref}>
                 {method.public ? (
-                    <Button type="primary" className={this.classSet(styles.toggleAccessButton, styles.toggleAccessButtonPublic)}>P</Button>
+                    <Button type="primary" className={this.classSet(styles.toggleAccessButton, styles.toggleAccessButtonPublic)}>
+                        {this.i18n(`P`)}
+                    </Button>
                 ) : (
                     <Button
                         type="primary"

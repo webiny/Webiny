@@ -51,6 +51,7 @@ class ServiceBox extends Webiny.Ui.Component {
                 <li key={method.key} className={styles.customMethodListItem}>
                     <Tooltip interactive target={(
                         <ToggleAccessButton
+                            label={this.i18n(`E`)}
                             key={method.key}
                             method={method}
                             onClick={() => onTogglePermission(service.class, method.key)}
