@@ -6,13 +6,13 @@
 
 const Tapable = require("tapable");
 const asyncLib = require("async");
-const MultiWatching = require("webpack/lib/MultiWatching");
+const MultiWatching = require("./MultiWatching");
 const MultiStats = require("webpack/lib/MultiStats");
 
 module.exports = class MultiCompiler extends Tapable {
     constructor(compilers) {
         super();
-        if(!Array.isArray(compilers)) {
+        if (!Array.isArray(compilers)) {
             compilers = Object.keys(compilers).map((name) => {
                 compilers[name].name = name;
                 return compilers[name];
@@ -24,17 +24,17 @@ module.exports = class MultiCompiler extends Tapable {
         this.compilers.forEach((compiler, idx) => {
             let compilerDone = false;
             compiler.plugin("done", stats => {
-                if(!compilerDone) {
+                if (!compilerDone) {
                     compilerDone = true;
                     doneCompilers++;
                 }
                 compilerStats[idx] = stats;
-                if(doneCompilers === this.compilers.length) {
+                if (doneCompilers === this.compilers.length) {
                     this.applyPlugins("done", new MultiStats(compilerStats));
                 }
             });
             compiler.plugin("invalid", () => {
-                if(compilerDone) {
+                if (compilerDone) {
                     compilerDone = false;
                     doneCompilers--;
                 }
@@ -45,13 +45,13 @@ module.exports = class MultiCompiler extends Tapable {
 
     get outputPath() {
         let commonPath = this.compilers[0].outputPath;
-        for(const compiler of this.compilers) {
-            while(compiler.outputPath.indexOf(commonPath) !== 0 && /[\/\\]/.test(commonPath)) {
+        for (const compiler of this.compilers) {
+            while (compiler.outputPath.indexOf(commonPath) !== 0 && /[\/\\]/.test(commonPath)) {
                 commonPath = commonPath.replace(/[\/\\][^\/\\]*$/, "");
             }
         }
 
-        if(!commonPath && this.compilers[0].outputPath[0] === "/") return "/";
+        if (!commonPath && this.compilers[0].outputPath[0] === "/") return "/";
         return commonPath;
     }
 
@@ -83,9 +83,9 @@ module.exports = class MultiCompiler extends Tapable {
             let readyCompilers = [];
             let list = remainingCompilers;
             remainingCompilers = [];
-            for(const c of list) {
+            for (const c of list) {
                 const ready = !c.dependencies || c.dependencies.every(isDependencyFulfilled);
-                if(ready)
+                if (ready)
                     readyCompilers.push(c);
                 else
                     remainingCompilers.push(c);
@@ -93,10 +93,10 @@ module.exports = class MultiCompiler extends Tapable {
             return readyCompilers;
         };
         const runCompilers = (callback) => {
-            if(remainingCompilers.length === 0) return callback();
+            if (remainingCompilers.length === 0) return callback();
             asyncLib.map(getReadyCompilers(), (compiler, callback) => {
                 fn(compiler, (err) => {
-                    if(err) return callback(err);
+                    if (err) return callback(err);
                     fulfilledNames[compiler.name] = true;
                     runCompilers(callback);
                 });
@@ -106,23 +106,22 @@ module.exports = class MultiCompiler extends Tapable {
     }
 
     watch(watchOptions, handler) {
-        let watchings = [];
         let allStats = this.compilers.map(() => null);
         let compilerStatus = this.compilers.map(() => false);
-        let chainedWatching = Promise.resolve();
+        let chainedWatching = Promise.resolve([]);
         this.runWithDependencies(this.compilers, (compiler, callback) => {
             const compilerIdx = this.compilers.indexOf(compiler);
             let firstRun = true;
 
-            chainedWatching = chainedWatching.then(() => {
+            chainedWatching = chainedWatching.then(watchings => {
                 return new Promise(resolve => {
                     const watching = compiler.watch(Array.isArray(watchOptions) ? watchOptions[compilerIdx] : watchOptions, (err, stats) => {
-                        if(err)
+                        if (err)
                             handler(err);
-                        if(stats) {
+                        if (stats) {
                             allStats[compilerIdx] = stats;
                             compilerStatus[compilerIdx] = "new";
-                            if(compilerStatus.every(Boolean)) {
+                            if (compilerStatus.every(Boolean)) {
                                 const freshStats = allStats.filter((s, idx) => {
                                     return compilerStatus[idx] === "new";
                                 });
@@ -131,11 +130,12 @@ module.exports = class MultiCompiler extends Tapable {
                                 handler(null, multiStats);
                             }
                         }
-                        if(firstRun && !err) {
+                        if (firstRun && !err) {
                             firstRun = false;
                             callback();
                         }
-                        resolve(watching);
+                        watchings.push(watching);
+                        resolve(watchings);
                     });
                 });
             });
@@ -151,19 +151,19 @@ module.exports = class MultiCompiler extends Tapable {
         this.runWithDependencies(this.compilers, ((compiler, callback) => {
             const compilerIdx = this.compilers.indexOf(compiler);
             compiler.run((err, stats) => {
-                if(err) return callback(err);
+                if (err) return callback(err);
                 allStats[compilerIdx] = stats;
                 callback();
             });
         }), (err) => {
-            if(err) return callback(err);
+            if (err) return callback(err);
             callback(null, new MultiStats(allStats));
         });
     }
 
     purgeInputFileSystem() {
         this.compilers.forEach((compiler) => {
-            if(compiler.inputFileSystem && compiler.inputFileSystem.purge)
+            if (compiler.inputFileSystem && compiler.inputFileSystem.purge)
                 compiler.inputFileSystem.purge();
         });
     }
