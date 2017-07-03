@@ -1,11 +1,5 @@
-const chalk = require('chalk');
-const inquirer = require('inquirer');
-const fetch = require('node-fetch');
-const _ = require('lodash');
-
 const Menu = require('webiny/lib/menu');
 const Plugin = require('webiny/lib/plugin');
-const Webiny = require('webiny/lib/webiny');
 
 const fallback = [
     {
@@ -58,6 +52,9 @@ class InstallApps extends Plugin {
     }
 
     runTask(config, onFinish) {
+        const Webiny = require('webiny/lib/webiny');
+        const fetch = require('node-fetch');
+
         const appsSource = 'http://www.webiny.com/api/services/the-hub/marketplace/apps';
         Webiny.info('Fetching list of available apps...');
         return fetch(appsSource).then(function (res) {
@@ -70,6 +67,10 @@ class InstallApps extends Plugin {
     }
 
     renderWizard(options) {
+        const Webiny = require('webiny/lib/webiny');
+        const _ = require('lodash');
+        const chalk = require('chalk');
+        const inquirer = require('inquirer');
         return inquirer.prompt([
             {
                 type: 'checkbox',

@@ -1,25 +1,10 @@
 const Plugin = require('webiny/lib/plugin');
 const Webiny = require('webiny/lib/webiny');
-const inquirer = require('inquirer');
-const yaml = require('js-yaml');
-const _ = require('lodash');
-const generatePassword = require('password-generator');
-const chalk = require('chalk');
-const {magenta, white} = chalk;
-
-const configs = {
-    configSets: Webiny.projectRoot('Configs/ConfigSets.yaml'),
-    base: {
-        application: Webiny.projectRoot('Configs/Base/Application.yaml'),
-        database: Webiny.projectRoot('Configs/Base/Database.yaml'),
-        security: Webiny.projectRoot('Configs/Base/Security.yaml')
-    },
-    local: {
-        application: Webiny.projectRoot('Configs/Local/Application.yaml')
-    }
-};
 
 function setupVirtualHost(answers, callback) {
+    const chalk = require('chalk');
+    const {magenta, white} = chalk;
+
     // Create host file
     let hostFile = Webiny.readFile(__dirname + '/host.cfg');
     let server = answers.domain.replace('http://', '').replace('https://', '').split(':')[0];
@@ -47,6 +32,11 @@ class Setup extends Plugin {
     }
 
     runWizard(config, onFinish) {
+        const inquirer = require('inquirer');
+        const yaml = require('js-yaml');
+        const _ = require('lodash');
+        const generatePassword = require('password-generator');
+
         Webiny.log("\nNow we need to create a platform configuration and your first user:\n");
 
         const questions = [
@@ -86,6 +76,19 @@ class Setup extends Plugin {
 
         return inquirer.prompt(questions).then(function (answers) {
             answers.domain = _.trimEnd(answers.domain, '/');
+
+            const configs = {
+                configSets: Webiny.projectRoot('Configs/ConfigSets.yaml'),
+                base: {
+                    application: Webiny.projectRoot('Configs/Base/Application.yaml'),
+                    database: Webiny.projectRoot('Configs/Base/Database.yaml'),
+                    security: Webiny.projectRoot('Configs/Base/Security.yaml')
+                },
+                local: {
+                    application: Webiny.projectRoot('Configs/Local/Application.yaml')
+                }
+            };
+
             try {
                 // Populate ConfigSets.yaml
                 let config = yaml.safeLoad(Webiny.readFile(configs.configSets));

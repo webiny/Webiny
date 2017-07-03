@@ -9,6 +9,7 @@
         "./Cli/InstallApps",
         "./Cli/ServerHelp",
         "./Cli/Setup",
-        "./Cli/Exit"
+        "./Cli/Exit",
+        "./Cli/Overrides"
     ]
 }
