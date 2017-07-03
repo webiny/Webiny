@@ -122,9 +122,14 @@ module.exports = function (app) {
                                 ]
                             }
                         },
-                        'hot-accept-loader',
-                        i18nPluginInstance.getLoader()
+                        'hot-accept-loader'
                     ]
+                },
+                {
+                    test: /\.(js|jsx)$/,
+                    exclude: /node_modules/,
+                    include: Webiny.projectRoot(),
+                    use: [i18nPluginInstance.getLoader()]
                 },
                 {
                     test: /\.scss$/,
