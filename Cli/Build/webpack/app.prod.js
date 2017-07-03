@@ -198,6 +198,22 @@ module.exports = function (app, config) {
                             return assetsPlugin.generateUrl(file, app.getPath());
                         }
                     }
+                },
+                {
+                    test: /\.(png|jpg|gif|jpeg|svg)$/,
+                    exclude: /node_modules/,
+                    loader: 'image-webpack-loader',
+                    options: {
+                        mozjpeg: {
+                            quality: 70
+                        },
+                        optipng: {
+                            optimizationLevel: 3,
+                            bitDepthReduction: true,
+                            colorTypeReduction: true,
+                            paletteReduction: true
+                        }
+                    }
                 }
             ]
         },
