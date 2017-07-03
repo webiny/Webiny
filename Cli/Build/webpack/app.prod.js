@@ -136,9 +136,14 @@ module.exports = function (app, config) {
                                     }]
                                 ]
                             }
-                        },
-                        i18nPluginInstance.getLoader()
+                        }
                     ]
+                },
+                {
+                    test: /\.(js|jsx)$/,
+                    exclude: /node_modules/,
+                    include: Webiny.projectRoot(),
+                    use: [i18nPluginInstance.getLoader()]
                 },
                 {
                     test: /\.scss$/,
