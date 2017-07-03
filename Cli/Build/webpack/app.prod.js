@@ -39,7 +39,17 @@ module.exports = function (app, config) {
         // To generate module ids that are preserved between builds
         new webpack.HashedModuleIdsPlugin(),
         // This is required to base the file hashes on file contents (to allow long term caching)
-        new WebpackChunkHash({additionalHashContent: chunk => chunk.id}),
+        new WebpackChunkHash({
+            additionalHashContent: chunk => {
+                let add = chunk.id;
+                chunk.mapModules(m => {
+                    if (m.delegated) {
+                        add += ':' + (m.delegateData.id || 0)
+                    }
+                });
+                return add;
+            }
+        }),
         new ExtractTextPlugin('app-[contenthash].css'),
         // Parse i18n strings and generate external file with translations
         i18nPluginInstance,
