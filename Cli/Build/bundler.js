@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const crypto = require('crypto');
+const chalk = require('chalk');
 const Webiny = require('webiny/lib/webiny');
 
 function sortByIndex(a, b) {
@@ -18,6 +19,7 @@ class Bundler {
     bundle() {
         return new Promise(finishBundling => {
             // Generate bundles
+            Webiny.info('Preparing bundles...');
             this.stats.stats.map(s => {
                 const compiler = s.compilation.compiler;
                 this.compilers[compiler.name] = {
@@ -32,7 +34,7 @@ class Bundler {
             // Build chunk manifest for all apps
             stats.children.map(app => {
                 app.chunks.map(chunk => {
-                    if (chunk.entry) {
+                    if (chunk.entry || !chunk.files) {
                         return;
                     }
 
@@ -63,6 +65,16 @@ class Bundler {
                         bundleModuleResolves.push(
                             new Promise(r => {
                                 compiler.resolver.resolve(compiler.context, '', m, (err, res) => {
+                                    if (err) {
+                                        Webiny.failure(chalk.red(m));
+                                        return r();
+                                    }
+
+                                    Webiny.success(m + chalk.magenta(' => ') + chalk.green(res));
+                                    if (!this.chunkManifest[res]) {
+                                        Webiny.failure(chalk.red('Chunk not found: ') + chalk.magenta(res));
+                                        return r();
+                                    }
                                     this.bundleDefinitions[app.name][url].push(this.chunkManifest[res]);
                                     r();
                                 });

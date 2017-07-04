@@ -130,21 +130,6 @@ class AssetsPlugin {
 
                 return _.replace("\"__CHUNK_MANIFEST__\"", manifestVariable + "[" + chunkIdVar + "]");
             });
-
-            // Add chunk main module path to the end of the chunk source to help with debugging
-            compilation.chunkTemplate.plugin("render", function (source, chunk) {
-                if (chunk.hasEntryModule()) {
-                    return source;
-                }
-                const modules = chunk.mapModules(m => m).filter(m => !m.resource.includes('/node_modules/'));
-                if (modules.length) {
-                    const file = modules.sort((a, b) => a.index - b.index)[0].resource;
-                    const hint = '/* ' + file.replace(compiler.context, '') + ' */';
-                    source.add(hint);
-                }
-
-                return source;
-            });
         });
     }
 
