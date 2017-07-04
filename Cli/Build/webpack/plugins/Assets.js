@@ -16,17 +16,7 @@ class AssetsPlugin {
     apply(compiler) {
         const outputName = 'meta.json';
         const cache = {};
-        const moduleAssets = {};
         const appPath = compiler.options.name.replace('.', '_');
-
-        compiler.plugin('compilation', function (compilation) {
-            compilation.plugin('module-asset', function (module, file) {
-                moduleAssets[file] = path.join(
-                    path.dirname(file),
-                    path.basename(module.userRequest)
-                );
-            });
-        });
 
         compiler.plugin('emit', (compilation, compileCallback) => {
             let manifest = {};
@@ -132,12 +122,28 @@ class AssetsPlugin {
         });
 
         compiler.plugin("compilation", function (compilation) {
+            // Replace placeholder with custom variable for manifest json
             compilation.mainTemplate.plugin("require-ensure", function (_, chunk, hash, chunkIdVar) {
                 if (oldChunkFilename) {
                     this.outputOptions.chunkFilename = oldChunkFilename;
                 }
 
                 return _.replace("\"__CHUNK_MANIFEST__\"", manifestVariable + "[" + chunkIdVar + "]");
+            });
+
+            // Add chunk main module path to the end of the chunk source to help with debugging
+            compilation.chunkTemplate.plugin("render", function (source, chunk) {
+                if (chunk.hasEntryModule()) {
+                    return source;
+                }
+                const modules = chunk.mapModules(m => m).filter(m => !m.resource.includes('/node_modules/'));
+                if (modules.length) {
+                    const file = modules.sort((a, b) => a.index - b.index)[0].resource;
+                    const hint = '/* ' + file.replace(compiler.context, '') + ' */';
+                    source.add(hint);
+                }
+
+                return source;
             });
         });
     }

@@ -1,0 +1,20 @@
+{
+    "/admin/acl/users": [
+        "Webiny/Backend/Components/UserRoles",
+        "Webiny/Backend/Components/UserPermissions",
+        "Webiny/Core/Ui/Components/Input",
+        "Webiny/Core/Ui/Components/List",
+        "Webiny/Core/Ui/Components/Link",
+        "Webiny/Core/Ui/Components/Tabs",
+        "Webiny/Core/Ui/Components/View",
+        "Webiny/Core/Ui/Components/Password",
+        "Webiny/Core/Ui/Components/Switch",
+        "Webiny/Core/Ui/Components/Email",
+        "Webiny/Core/Ui/Components/Button",
+        "Webiny/Core/Ui/Components/FormGroup",
+        "Webiny/Core/Ui/Components/Panel",
+        "Webiny/Core/Ui/Components/Tooltip",
+        "Webiny/Core/Ui/Components/Section",
+        "Webiny/Core/Ui/Components/Icon"
+    ]
+}
