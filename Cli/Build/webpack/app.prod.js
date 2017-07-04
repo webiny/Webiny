@@ -211,7 +211,8 @@ module.exports = function (app, config) {
             modules: [
                 __dirname + '/loaders',
                 'node_modules',
-                path.resolve(Webiny.projectRoot(), 'Apps/Webiny/node_modules')
+                path.resolve(Webiny.projectRoot(), 'Apps/Webiny/node_modules'),
+                path.resolve(Webiny.projectRoot(), 'Apps/' + app.getAppName() + '/node_modules'),
             ]
         }
     };
