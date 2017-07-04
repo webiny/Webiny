@@ -5,7 +5,6 @@
         "Webiny/Core/Ui/Components/Input",
         "Webiny/Core/Ui/Components/List",
         "Webiny/Core/Ui/Components/Link",
-        "Webiny/Core/Ui/Components/Tabs2",
         "Webiny/Core/Ui/Components/View",
         "Webiny/Core/Ui/Components/Password",
         "Webiny/Core/Ui/Components/Switch",
@@ -13,7 +12,6 @@
         "Webiny/Core/Ui/Components/Button",
         "Webiny/Core/Ui/Components/FormGroup",
         "Webiny/Core/Ui/Components/Panel",
-        "Webiny/Core/Ui/Components/Tooltip3",
         "Webiny/Core/Ui/Components/Section",
         "Webiny/Core/Ui/Components/Icon"
     ]

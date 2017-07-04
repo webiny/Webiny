@@ -19,7 +19,6 @@ class Bundler {
     bundle() {
         return new Promise(finishBundling => {
             // Generate bundles
-            Webiny.info('Preparing bundles...');
             this.stats.stats.map(s => {
                 const compiler = s.compilation.compiler;
                 this.compilers[compiler.name] = {
@@ -40,11 +39,13 @@ class Bundler {
 
                     const filteredModules = chunk.modules.filter(m => !m.name.includes('/node_modules/')).sort(sortByIndex);
                     if (filteredModules.length > 0) {
-                        const resolvedPath = Webiny.projectRoot() + _.trimStart(filteredModules[0].name, '.');
-                        this.chunkManifest[resolvedPath] = this.compilers[app.name].outputPath + '/' + chunk.files[0];
+                        const chunkFile = this.compilers[app.name].outputPath + '/' + chunk.files[0];
+                        this.chunkManifest[chunkFile] = filteredModules.map(m => Webiny.projectRoot() + _.trimStart(m.name, '.'));
                     }
                 });
             });
+
+            Webiny.info('Preparing bundles...');
 
             // Build bundles for each app
             const bundleModuleResolves = [];
@@ -71,11 +72,19 @@ class Bundler {
                                     }
 
                                     Webiny.success(m + chalk.magenta(' => ') + chalk.green(res));
-                                    if (!this.chunkManifest[res]) {
+                                    // Find entry module file in the list of modules for certain chunk
+                                    let chunkFile = null;
+                                    _.each(this.chunkManifest, (modules, file) => {
+                                        if (modules.includes(res)) {
+                                            chunkFile = file;
+                                            return false;
+                                        }
+                                    });
+                                    if (!chunkFile) {
                                         Webiny.failure(chalk.red('Chunk not found: ') + chalk.magenta(res));
                                         return r();
                                     }
-                                    this.bundleDefinitions[app.name][url].push(this.chunkManifest[res]);
+                                    this.bundleDefinitions[app.name][url].push(chunkFile);
                                     r();
                                 });
                             })
