@@ -75,7 +75,9 @@ class Develop extends Build {
                     devMiddleware(compiler, {
                         publicPath,
                         noInfo: false,
-                        stats: false
+                        stats: {
+                            colors: true
+                        }
                     }),
                     hotMiddleware(compiler)
                 ]
