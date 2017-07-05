@@ -16,17 +16,7 @@ class AssetsPlugin {
     apply(compiler) {
         const outputName = 'meta.json';
         const cache = {};
-        const moduleAssets = {};
         const appPath = compiler.options.name.replace('.', '_');
-
-        compiler.plugin('compilation', function (compilation) {
-            compilation.plugin('module-asset', function (module, file) {
-                moduleAssets[file] = path.join(
-                    path.dirname(file),
-                    path.basename(module.userRequest)
-                );
-            });
-        });
 
         compiler.plugin('emit', (compilation, compileCallback) => {
             let manifest = {};
@@ -132,6 +122,7 @@ class AssetsPlugin {
         });
 
         compiler.plugin("compilation", function (compilation) {
+            // Replace placeholder with custom variable for manifest json
             compilation.mainTemplate.plugin("require-ensure", function (_, chunk, hash, chunkIdVar) {
                 if (oldChunkFilename) {
                     this.outputOptions.chunkFilename = oldChunkFilename;

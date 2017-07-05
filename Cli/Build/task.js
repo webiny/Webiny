@@ -4,6 +4,7 @@ const webpack = require('webpack');
 const _ = require('lodash');
 const yaml = require('js-yaml');
 const Webiny = require('webiny/lib/webiny');
+const Bundler = require('./bundler');
 
 class Build {
     constructor(config) {
@@ -31,21 +32,22 @@ class Build {
 
         return this.buildConfigs(vendorConfigs).then(() => {
             const appConfigs = this.getAppConfigs();
-            return this.buildConfigs(appConfigs);
+            return this.buildConfigs(appConfigs).then(stats => {
+                return new Bundler(stats, {assetRules: this.config.assetRules}).bundle();
+            });
         });
     }
 
     buildConfigs(configs) {
         return new Promise((resolve, reject) => {
             webpack(configs).run(function (err, stats) {
-                if (err) {
-                    reject(err);
-                } else {
-                    console.log(stats.toString({
-                        colors: true
-                    }));
-                    resolve();
-                }
+                if (err) reject(err);
+
+                console.log(stats.toString({
+                    colors: true
+                }));
+
+                resolve(stats);
             });
         });
     }
