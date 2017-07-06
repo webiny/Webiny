@@ -69,10 +69,11 @@ class Bundler {
                 let meta = JSON.parse(Webiny.readFile(metaJson));
                 const bundles = JSON.parse(Webiny.readFile(bundlesManifest));
                 _.each(bundles, (modules, url) => {
-                    _.set(this.bundleDefinitions[app.name], url, []);
+                    _.set(this.bundleDefinitions[app.name], url, modules);
                     modules.map(m => {
                         bundleModuleResolves.push(
                             new Promise(r => {
+                                const moduleIndex = this.bundleDefinitions[app.name][url].indexOf(m);
                                 compiler.resolver.resolve(compiler.context, '', m, (err, res) => {
                                     if (err) {
                                         Webiny.failure(chalk.red(m));
@@ -88,16 +89,13 @@ class Bundler {
                                         }
                                     });
 
-                                    if (!Webiny.fileExists(chunkFile)) {
-                                        Webiny.failure(chalk.red('Chunk no longer exists found: ') + magenta(chunkFile));
-                                        return r();
-                                    }
-
                                     if (!chunkFile) {
+                                        delete this.bundleDefinitions[app.name][url][moduleIndex];
                                         Webiny.failure(chalk.red('Chunk not found: ') + magenta(res));
                                         return r();
                                     }
-                                    this.bundleDefinitions[app.name][url].push(chunkFile);
+
+                                    this.bundleDefinitions[app.name][url][moduleIndex] = chunkFile;
                                     r();
                                 });
                             })

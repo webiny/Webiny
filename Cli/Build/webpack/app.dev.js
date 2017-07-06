@@ -86,6 +86,7 @@ module.exports = function (app) {
             path: outputPath,
             filename: '[name].js',
             chunkFilename: 'chunks/[name].js',
+            jsonpFunction: 'webpackJsonp' + app.getName().replace('.', ''),
             publicPath: url + '/build/development/' + app.getPath() + '/'
         },
         externals: name === 'Webiny.Core' ? {} : externals,

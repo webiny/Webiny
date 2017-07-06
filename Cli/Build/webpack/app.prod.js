@@ -102,6 +102,7 @@ module.exports = function (app, config) {
             path: outputPath,
             filename: '[name]-[chunkhash:10][webinyhash].js',
             chunkFilename: 'chunks/[chunkhash:10].js',
+            jsonpFunction: 'webpackJsonp' + app.getName().replace('.', ''),
             publicPath: '' // In production builds we do not use public path. All asset paths are built into the bundles.
         },
         externals: name === 'Webiny.Core' ? {} : externals,
