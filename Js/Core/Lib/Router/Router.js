@@ -68,8 +68,8 @@ class Router {
                 }
 
                 this.activeRoute = matched;
-                if (_.has(History, 'location.state.title')) {
-                    this.activeRoute.setTitle(_.get(History, 'location.state.title'));
+                if (_.has(this.history, 'location.state.title')) {
+                    this.activeRoute.setTitle(_.get(this.history, 'location.state.title'));
                 }
 
                 Utils.routeWillChange(matched, this.routeWillChange).then(routerEvent => {
@@ -83,7 +83,7 @@ class Router {
 
             // Listen for "RouteChanged" event and process callbacks
             Dispatcher.on('RouteChanged', (event) => {
-                if (_.isNumber(_.get(History, 'location.state.scrollY'))) {
+                if (_.isNumber(_.get(this.history, 'location.state.scrollY'))) {
                     window.scrollTo(0, this.history.location.state.scrollY);
                 }
                 let chain = Promise.resolve(event);

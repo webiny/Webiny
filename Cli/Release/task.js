@@ -18,6 +18,7 @@ class Release {
             'Configs/**/*.yaml',
             'public_html/build/production/**/*',
             'public_html/*.{php,html}',
+            'public_html/robots.txt',
             'vendor/**/*.{php,crt,ser}',
             '!vendor/**/[tT]est*/**/*',
             '!vendor/**/*.git'

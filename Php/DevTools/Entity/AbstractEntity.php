@@ -20,6 +20,7 @@ use Webiny\Component\Entity\Attribute\DateAttribute;
 use Apps\Webiny\Php\DevTools\WebinyTrait;
 use Webiny\Component\Entity\Attribute\DateTimeAttribute;
 use Webiny\Component\Entity\Attribute\Many2ManyAttribute;
+use Webiny\Component\Entity\Attribute\Many2OneAttribute;
 use Webiny\Component\Entity\Attribute\One2ManyAttribute;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Entity\EntityException;
@@ -686,6 +687,10 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         $many2manyDelete = [];
         foreach ($this->getAttributes() as $key => $attr) {
             if ($this->isInstanceOf($attr, AttributeType::ONE2MANY)) {
+                if ($attr->getOnDelete() == 'ignore') {
+                    continue;
+                }
+
                 /* @var $attr One2ManyAttribute */
                 if ($attr->getOnDelete() == 'restrict' && $this->getAttribute($key)->getValue()->count() > 0) {
                     throw new EntityException(EntityException::ENTITY_DELETION_RESTRICTED, [$key]);
@@ -693,8 +698,12 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                 $one2manyDelete[] = $attr;
             }
 
-            if ($this->isInstanceOf($attr, AttributeType::MANY2ONE) && $attr->getOnDelete() === 'cascade') {
-                $many2oneDelete[] = $attr;
+            if ($this->isInstanceOf($attr, AttributeType::MANY2ONE)) {
+                /* @var $attr Many2OneAttribute  */
+                if ($attr->getOnDelete() === 'cascade') {
+                    $many2oneDelete[] = $attr;
+                }
+                continue;
             }
 
             if ($this->isInstanceOf($attr, AttributeType::MANY2MANY)) {
