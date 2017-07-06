@@ -116,7 +116,7 @@ module.exports = function (app, config) {
                         {
                             loader: 'cache-loader',
                             options: {
-                                cacheDirectory: path.resolve(Webiny.projectRoot(), 'public_html/build/cache', app.getPath())
+                                cacheDirectory: path.resolve(Webiny.projectRoot('public_html/build/cache'), app.getPath())
                             }
                         },
                         {

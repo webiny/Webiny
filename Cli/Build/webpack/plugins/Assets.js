@@ -1,6 +1,7 @@
-const path = require('path');
 const fs = require('fs');
 const _ = require('lodash');
+const ConcatSource = require("webpack-sources").ConcatSource;
+const NormalModule = require("webpack/lib/NormalModule");
 
 const appJs = new RegExp('app([-0-9a-z]+)?.js$');
 const vendorJs = new RegExp('vendor([-0-9a-z]+)?.js$');
@@ -33,6 +34,9 @@ class AssetsPlugin {
                     if (file.startsWith('chunks/')) {
                         memo.chunks = memo.chunks || {};
                         memo.chunks[chunk.id] = file;
+                        // Add chunk hint to source for easier debugging
+                        const chunkName = `/* ${this.generateChunkName(chunk)} */`;
+                        compilation.assets[file] = new ConcatSource(chunkName, compilation.assets[file].source());
                         return memo;
                     }
 
@@ -145,6 +149,25 @@ class AssetsPlugin {
         });
 
         return prefix + '/' + file;
+    }
+
+    generateChunkName(chunk) {
+        const chunkModules = chunk.mapModules(m => m).filter(this.filterJsModules).sort(this.sortByIndex);
+        const filteredModules = chunkModules.filter(m => !m.resource.includes('/node_modules/'));
+        let chunkName = _.get(filteredModules, '[0].resource', _.get(chunkModules, '0.resource', 'undefined')).split('/Apps/').pop();
+        return chunkName.replace('/index.js', '');
+    }
+
+    sortByIndex(a, b) {
+        return a.index - b.index;
+    }
+
+    filterJsModules(m) {
+        if (m instanceof NormalModule) {
+            return m.resource.endsWith('.js') || m.resource.endsWith('.jsx');
+        }
+
+        return false;
     }
 }
 
