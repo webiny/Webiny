@@ -119,6 +119,10 @@ class Bundler {
 
     writeBundles() {
         _.each(this.bundleDefinitions, (bundles, appName) => {
+            if (!Object.keys(bundles).length) {
+                return;
+            }
+
             Webiny.info('Writing bundles for ' + magenta(appName) + ':');
             const compiler = this.compilers[appName];
             const metaJson = compiler.outputPath + '/meta.json';
