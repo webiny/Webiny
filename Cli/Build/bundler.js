@@ -2,6 +2,9 @@ const _ = require('lodash');
 const crypto = require('crypto');
 const chalk = require('chalk');
 const Webiny = require('webiny/lib/webiny');
+const SizeFormatHelpers = require('webpack/lib/SizeFormatHelpers');
+
+const {magenta, yellow} = chalk;
 
 function sortByIndex(a, b) {
     return a.index - b.index;
@@ -14,6 +17,11 @@ class Bundler {
         this.bundleDefinitions = {};
         this.stats = stats;
         this.options = options;
+
+        const chunksJson = Webiny.projectRoot('public_html/build/cache/chunks.json');
+        if (Webiny.fileExists(chunksJson)) {
+            this.chunkManifest = JSON.parse(Webiny.readFile(chunksJson));
+        }
     }
 
     bundle() {
@@ -71,7 +79,6 @@ class Bundler {
                                         return r();
                                     }
 
-                                    Webiny.success(m + chalk.magenta(' => ') + chalk.green(res));
                                     // Find entry module file in the list of modules for certain chunk
                                     let chunkFile = null;
                                     _.each(this.chunkManifest, (modules, file) => {
@@ -80,8 +87,14 @@ class Bundler {
                                             return false;
                                         }
                                     });
+
+                                    if (!Webiny.fileExists(chunkFile)) {
+                                        Webiny.failure(chalk.red('Chunk no longer exists found: ') + magenta(chunkFile));
+                                        return r();
+                                    }
+
                                     if (!chunkFile) {
-                                        Webiny.failure(chalk.red('Chunk not found: ') + chalk.magenta(res));
+                                        Webiny.failure(chalk.red('Chunk not found: ') + magenta(res));
                                         return r();
                                     }
                                     this.bundleDefinitions[app.name][url].push(chunkFile);
@@ -90,30 +103,41 @@ class Bundler {
                             })
                         );
                     });
+
                 });
             });
 
             // Resolve module paths
             Promise.all(bundleModuleResolves).then(() => this.writeBundles()).then(() => {
                 finishBundling();
+            }).catch(err => {
+                console.log(err);
+                finishBundling();
             });
         });
     }
 
     writeBundles() {
-        const md5 = crypto.createHash('md5');
         _.each(this.bundleDefinitions, (bundles, appName) => {
+            Webiny.info('Writing bundles for ' + magenta(appName) + ':');
             const compiler = this.compilers[appName];
             const metaJson = compiler.outputPath + '/meta.json';
             const appMeta = JSON.parse(Webiny.readFile(metaJson));
             _.each(bundles, (chunks, url) => {
+                const md5 = crypto.createHash('md5');
                 const bundleContent = chunks.filter(c => !!c).map(chunk => Webiny.readFile(chunk)).join("\n");
                 const bundleHash = md5.update(bundleContent).digest('hex').substr(0, 10);
                 _.set(appMeta, 'bundles.' + url, this.generateUrl(compiler.publicPath + '/bundles/' + bundleHash + '.js'));
                 Webiny.writeFile(compiler.outputPath + '/bundles/' + bundleHash + '.js', bundleContent);
+                const size = SizeFormatHelpers.formatSize(bundleContent.length);
+                Webiny.success(`${url} => ${magenta(bundleHash + '.js')} (${yellow(size)})`);
             });
             Webiny.writeFile(metaJson, JSON.stringify(appMeta, null, 4));
         });
+
+        // Save chunk manifest
+        const chunksJson = Webiny.projectRoot('public_html/build/cache/chunks.json');
+        Webiny.writeFile(chunksJson, JSON.stringify(this.chunkManifest, null, 4));
     }
 
     generateUrl(file) {
