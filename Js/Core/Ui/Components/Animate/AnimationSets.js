@@ -25,6 +25,10 @@ class AnimationSets {
         dynamics.animate(el, anim, {
             type: dynamics[_.get(anim, 'ease', 'easeIn')],
             duration: _.get(anim, 'duration', 250),
+            friction: _.get(anim, 'friction', null),
+            frequency: _.get(anim, 'frequency', null),
+            bounciness: _.get(anim, 'bounciness', null),
+            elasticity: _.get(anim, 'elasticity', null),
             complete: callback
         });
     }
