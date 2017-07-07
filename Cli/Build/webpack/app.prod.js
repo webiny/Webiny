@@ -61,7 +61,8 @@ module.exports = function (app, config) {
             assetNameRegExp: /\.css$/,
             cssProcessorOptions: {
                 discardComments: {removeAll: true},
-                safe: true
+                safe: true,
+                reduceInitial: {disable: true}
             }
         }),
         new webpack.optimize.OccurrenceOrderPlugin()
