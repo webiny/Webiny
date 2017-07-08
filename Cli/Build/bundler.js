@@ -83,7 +83,7 @@ class Bundler {
                                     // Find entry module file in the list of modules for certain chunk
                                     let chunkFile = null;
                                     _.each(this.chunkManifest, (modules, file) => {
-                                        if (modules.includes(res)) {
+                                        if (modules.includes(res) && Webiny.fileExists(file)) {
                                             chunkFile = file;
                                             return false;
                                         }

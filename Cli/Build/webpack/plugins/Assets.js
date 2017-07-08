@@ -1,5 +1,6 @@
 const fs = require('fs');
 const _ = require('lodash');
+const crypto = require('crypto');
 const ConcatSource = require("webpack-sources").ConcatSource;
 const NormalModule = require("webpack/lib/NormalModule");
 
@@ -14,51 +15,80 @@ class AssetsPlugin {
         this.assetRules = options.assetRules || [];
     }
 
+    replaceChunkFile(chunk, file, source, nameFn) {
+        const fileIndex = chunk.files.indexOf(file);
+        // Remove old asset file
+        delete this.compilation.assets[file];
+        file = nameFn(this.createSourceHash(source));
+        this.compilation.assets[file] = source;
+        chunk.files[fileIndex] = file;
+        return file;
+    }
+
+    createSourceHash(source, length = 10) {
+        // Create hash based on new file contents
+        const hash = crypto.createHash('md5');
+        source.updateHash(hash);
+        return hash.digest('hex').substr(0, length);
+    }
+
     apply(compiler) {
         const outputName = 'meta.json';
         const cache = {};
         const appPath = compiler.options.name.replace('.', '_');
 
         compiler.plugin('emit', (compilation, compileCallback) => {
-            let manifest = {};
+            this.compilation = compilation;
+            let meta = {
+                name: compiler.name
+            };
 
-            _.merge(manifest, compilation.chunks.reduce((memo, chunk) => {
-                // Map original chunk name to output files.
-                // For nameless chunks, just map the files directly.
-                return chunk.files.reduce((memo, file) => {
-                    // Don't add hot updates to manifest
+            compilation.chunks.forEach(chunk => {
+                chunk.files.forEach(file => {
+                    // Don't add hot updates to meta
                     if (file.indexOf('hot-update') >= 0) {
-                        return memo;
+                        return;
                     }
+
+                    const fileSource = compilation.assets[file];
 
                     if (file.startsWith('chunks/')) {
-                        memo.chunks = memo.chunks || {};
-                        memo.chunks[chunk.id] = file;
-                        // Add chunk hint to source for easier debugging
-                        const chunkName = `/* ${this.generateChunkName(chunk)} */`;
-                        compilation.assets[file] = new ConcatSource(chunkName, compilation.assets[file].source());
-                        return memo;
+                        meta.chunks = meta.chunks || {};
+                        if (process.env.NODE_ENV === 'production') {
+                            // Add chunk hint to source for easier debugging
+                            const chunkName = `/* ${this.generateChunkName(chunk)} */`;
+                            const newSource = new ConcatSource(chunkName, fileSource);
+                            meta.chunks[chunk.id] = this.replaceChunkFile(chunk, file, newSource, hash => `chunks/${hash}.js`);
+                        } else {
+                            meta.chunks[chunk.id] = file;
+                        }
+                        return;
                     }
 
-                    memo['name'] = compiler.name;
-
                     if (appJs.test(file) && !file.startsWith('chunks/')) {
-                        memo['app'] = file;
+                        if (process.env.NODE_ENV === 'production') {
+                            meta['app'] = this.replaceChunkFile(chunk, file, fileSource, hash => `app-${hash}.js`);
+                        } else {
+                            meta['app'] = file;
+                        }
+                        return;
                     }
 
                     if (appCss.test(file)) {
-                        memo['css'] = file;
+                        if (process.env.NODE_ENV === 'production') {
+                            meta['css'] = this.replaceChunkFile(chunk, file, fileSource, hash => `css-${hash}.css`);
+                        } else {
+                            meta['css'] = file;
+                        }
                     }
-
-                    return memo;
-                }, memo);
-            }, {}));
+                });
+            });
 
             // Map vendor file
             try {
                 fs.readdirSync(compiler.options.output.path).map(f => {
                     if (vendorJs.test(f) && !f.startsWith('chunks/')) {
-                        manifest['vendor'] = f;
+                        meta['vendor'] = f;
                     }
                 });
             } catch (e) {
@@ -66,13 +96,13 @@ class AssetsPlugin {
             }
 
             // Append publicPath onto all references.
-            // This allows output path to be reflected in the manifest.
+            // This allows output path to be reflected in the meta file.
             if (process.env.NODE_ENV === 'production') {
                 const urlKeys = ['app', 'vendor', 'css', 'chunks'];
-                manifest = _.reduce(manifest, (memo, value, key) => {
+                meta = _.reduce(meta, (result, value, key) => {
                     if (!urlKeys.includes(key)) {
-                        memo[key] = value;
-                        return memo;
+                        result[key] = value;
+                        return result;
                     }
 
                     if (key === 'chunks') {
@@ -80,22 +110,22 @@ class AssetsPlugin {
                         _.each(value, (chkValue, chkKey) => {
                             chunks[chkKey] = this.generateUrl(chkValue, appPath);
                         });
-                        memo[key] = chunks;
+                        result[key] = chunks;
                     } else {
-                        memo[key] = this.generateUrl(value, appPath);
+                        result[key] = this.generateUrl(value, appPath);
                     }
-                    return memo;
+                    return result;
                 }, {});
             } else {
                 const urlKeys = ['app', 'vendor', 'css'];
-                manifest = _.reduce(manifest, (memo, value, key) => {
-                    memo[key] = urlKeys.includes(key) ? compiler.options.output.publicPath + value : value;
-                    return memo;
+                meta = _.reduce(meta, (result, value, key) => {
+                    result[key] = urlKeys.includes(key) ? compiler.options.output.publicPath + value : value;
+                    return result;
                 }, {});
             }
 
-            Object.keys(manifest).sort().forEach(key => {
-                cache[key] = manifest[key];
+            Object.keys(meta).sort().forEach(key => {
+                cache[key] = meta[key];
             });
 
             const json = JSON.stringify(cache, null, 2);

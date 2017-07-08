@@ -2,7 +2,6 @@ const path = require('path');
 const _ = require('lodash');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const WebpackChunkHash = require('webpack-chunk-hash');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 // Custom libs
@@ -38,19 +37,7 @@ module.exports = function (app, config) {
         new webpack.optimize.ModuleConcatenationPlugin(),
         // To generate module ids that are preserved between builds
         new webpack.HashedModuleIdsPlugin(),
-        // This is required to base the file hashes on file contents (to allow long term caching)
-        new WebpackChunkHash({
-            additionalHashContent: chunk => {
-                let add = chunk.id;
-                chunk.mapModules(m => {
-                    if (m.delegated) {
-                        add += ':' + (m.delegateData.id || 0)
-                    }
-                });
-                return add;
-            }
-        }),
-        new ExtractTextPlugin('app-[contenthash].css'),
+        new ExtractTextPlugin('app.css'),
         // Parse i18n strings and generate external file with translations
         i18nPluginInstance,
         // Generate meta.json to use for app bootstrap based on generated assets
@@ -101,8 +88,8 @@ module.exports = function (app, config) {
         },
         output: {
             path: outputPath,
-            filename: '[name]-[chunkhash:10][webinyhash].js',
-            chunkFilename: 'chunks/[chunkhash:10].js',
+            filename: 'app.js',
+            chunkFilename: 'chunks/[name].js',
             jsonpFunction: 'webpackJsonp' + app.getName().replace('.', ''),
             publicPath: '' // In production builds we do not use public path. All asset paths are built into the bundles.
         },

@@ -1,7 +1,10 @@
 const crypto = require('crypto');
+const _ = require('lodash');
+const NormalModule = require("webpack/lib/NormalModule");
 
 class ChunkIds {
     apply(compiler) {
+        this.compiler = compiler;
         compiler.plugin("compilation", (compilation) => {
             // Generate chunk IDs
             compilation.plugin("before-chunk-ids", (chunks) => {
@@ -11,48 +14,43 @@ class ChunkIds {
                         if (process.env.NODE_ENV === 'production') {
                             chunk.id = compiler.options.name + '-' + this.createChunkIdHash(chunk);
                         } else {
-                            const context = chunk.mapModules(m => m)[0].context;
-                            if (context.includes('/node_modules/')) {
-                                id = context.split('/node_modules/')[1].split('/')[0];
-                            } else if (context.includes('/Ui/Components/')) {
-                                id = context.split('/Ui/Components/')[1].split('/')[0];
-                            } else if (context.includes('/Vendors/')) {
-                                id = 'Vendors-' + context.split('/Vendors/')[1].split('/')[0];
-                            } else {
-                                id = context.split('/').pop();
-                            }
+                            id = this.generateChunkName(chunk);
                             // ID must contain the name of the app to avoid ID clashes between multiple apps
                             chunk.id = compiler.options.name + '-' + index;
                             // Name is only used in development for easier debugging
-                            chunk.name = id + '-' + index;
+                            chunk.name = id;
                         }
                     }
                 });
             });
-
-            // In production we parse [webinyhash] filename placeholder to populate it with chunkIds combined hash
-            // This is required due to the fact that chunk ids may change, but entry point [chunkhash] will not change.
-            // This will create an up-to-date hash and your CDN will not server wrong files :)
-            if (process.env.NODE_ENV === 'production') {
-                const mainTemplate = compilation.mainTemplate;
-                mainTemplate.plugin("asset-path", (path, data) => {
-                    if (path.includes('[webinyhash]')) {
-                        const chunkIds = data.chunk.chunks.map(chunk => chunk.renderedHash);
-                        const chunkIdsHash = crypto.createHash('md5').update(chunkIds.join(':')).digest('hex');
-
-                        return path.replace(/\[webinyhash\]/gi, chunkIdsHash.substring(0, 10));
-                    }
-
-                    return path;
-                });
-            }
         });
+    }
+
+    generateChunkName(chunk) {
+        const appName = this.compiler.options.name.split('.')[0] + '_';
+        const jsName = this.compiler.options.name.replace('.', '_Js_') + '_';
+        const chunkModules = chunk.mapModules(m => m).filter(this.filterJsModules).sort(this.sortByIndex);
+        const filteredModules = chunkModules.filter(m => !m.resource.includes('/node_modules/'));
+        let chunkName = _.get(filteredModules, '[0].resource', _.get(chunkModules, '0.resource', 'undefined')).split('/Apps/').pop();
+        return chunkName.replace('/index.js', '').replace(/\//g, '_').replace(/\.jsx?/, '').replace(jsName, '').replace(appName, '');
+    }
+
+    sortByIndex(a, b) {
+        return a.index - b.index;
+    }
+
+    filterJsModules(m) {
+        if (m instanceof NormalModule) {
+            return m.resource.endsWith('.js') || m.resource.endsWith('.jsx');
+        }
+
+        return false;
     }
 
     createChunkIdHash(chunk) {
         // We are generating chunk id based on containing modules (their `resource` path relative to `Apps` folder).
         // That way chunk id does not change as long as it contains the same modules (no matter the content).
-        const paths = chunk.mapModules(this.getRelativeModulePath).sort().join('\n');
+        const paths = chunk.mapModules(this.getRelativeModulePath).sort((a, b) => a.index - b.index).join("\n");
         return crypto.createHash('md5').update(paths).digest('hex').substr(0, 10);
     }
 
