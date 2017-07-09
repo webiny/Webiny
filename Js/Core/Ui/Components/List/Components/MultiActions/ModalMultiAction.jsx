@@ -1,7 +1,13 @@
 import Webiny from 'Webiny';
 
 class ModalMultiAction extends Webiny.Ui.Component {
+    constructor(props) {
+        super(props);
 
+        this.state = {
+            modal: null
+        };
+    }
 }
 
 ModalMultiAction.defaultProps = {
@@ -13,23 +19,33 @@ ModalMultiAction.defaultProps = {
 
         const modalActions = {
             hide: () => {
-                setTimeout(this.refs.dialog.hide);
+                if (this.dialog) {
+                    setTimeout(this.dialog.hide, 10);
+                }
             }
         };
 
-        const modal = this.props.children.call(this, this.props.data, this.props.actions, modalActions);
-
         const onAction = () => {
             if (this.props.data.length) {
-                this.refs.dialog.show();
+                const modal = this.props.children.call(this, this.props.data, this.props.actions, modalActions);
+                this.setState({modal});
             }
         };
 
         const {Link} = this.props;
 
+        const dialogProps = {
+            ref: ref => this.dialog = ref,
+            onComponentDidMount: dialog => dialog.show(),
+            onHidden: () => {
+                this.dialog = null;
+                this.setState({modal: null});
+            }
+        };
+
         return (
             <Link onClick={onAction}>
-                {React.cloneElement(modal, {ref: 'dialog'})}
+                {this.state.modal ? React.cloneElement(this.state.modal, dialogProps) : null}
                 {this.props.label}
             </Link>
         );
