@@ -151,23 +151,22 @@ class Webiny {
     }
 
     loadBundle(config) {
-        let load = Promise.resolve();
+        let load = [];
         if (_.isPlainObject(config.bundles)) {
             _.each(config.bundles, (bundleUrl, routerUrl) => {
                 if (routerUrl === '*') {
-                    load = this.Page.loadScript(bundleUrl);
-                    return false;
-                } else {
-                    const regex = new RegExp(routerUrl);
-                    if (regex.test(this.Router.history.location.pathname)) {
-                        load = this.Page.loadScript(bundleUrl);
-                        return false;
-                    }
+                    load.push(this.Page.loadScript(bundleUrl));
+                    return;
+                }
+
+                const regex = new RegExp(routerUrl);
+                if (regex.test(this.Router.history.location.pathname)) {
+                    load.push(this.Page.loadScript(bundleUrl));
                 }
             });
         }
 
-        return load;
+        return Promise.all(load);
     }
 
     /**

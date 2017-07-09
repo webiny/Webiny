@@ -76,6 +76,9 @@ class Develop extends Build {
                         publicPath,
                         noInfo: false,
                         stats: {
+                            all: false,
+                            errors: true,
+                            moduleTrace: true,
                             colors: true
                         }
                     }),

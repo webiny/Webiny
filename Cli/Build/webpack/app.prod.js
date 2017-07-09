@@ -2,7 +2,6 @@ const path = require('path');
 const _ = require('lodash');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const WebpackChunkHash = require('webpack-chunk-hash');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 // Custom libs
@@ -38,9 +37,7 @@ module.exports = function (app, config) {
         new webpack.optimize.ModuleConcatenationPlugin(),
         // To generate module ids that are preserved between builds
         new webpack.HashedModuleIdsPlugin(),
-        // This is required to base the file hashes on file contents (to allow long term caching)
-        new WebpackChunkHash({additionalHashContent: chunk => chunk.id}),
-        new ExtractTextPlugin('app-[contenthash].css'),
+        new ExtractTextPlugin('app.css'),
         // Parse i18n strings and generate external file with translations
         i18nPluginInstance,
         // Generate meta.json to use for app bootstrap based on generated assets
@@ -51,7 +48,8 @@ module.exports = function (app, config) {
             assetNameRegExp: /\.css$/,
             cssProcessorOptions: {
                 discardComments: {removeAll: true},
-                safe: true
+                safe: true,
+                reduceInitial: {disable: true}
             }
         }),
         new webpack.optimize.OccurrenceOrderPlugin()
@@ -90,8 +88,9 @@ module.exports = function (app, config) {
         },
         output: {
             path: outputPath,
-            filename: '[name]-[chunkhash:10][webinyhash].js',
-            chunkFilename: 'chunks/[chunkhash:10].js',
+            filename: 'app.js',
+            chunkFilename: 'chunks/[name].js',
+            jsonpFunction: 'webpackJsonp' + app.getName().replace('.', ''),
             publicPath: '' // In production builds we do not use public path. All asset paths are built into the bundles.
         },
         externals: name === 'Webiny.Core' ? {} : externals,
@@ -106,7 +105,7 @@ module.exports = function (app, config) {
                         {
                             loader: 'cache-loader',
                             options: {
-                                cacheDirectory: path.resolve(Webiny.projectRoot(), 'public_html/build/cache', app.getPath())
+                                cacheDirectory: path.resolve(Webiny.projectRoot('public_html/build/cache'), app.getPath())
                             }
                         },
                         {
@@ -126,9 +125,14 @@ module.exports = function (app, config) {
                                     }]
                                 ]
                             }
-                        },
-                        i18nPluginInstance.getLoader()
+                        }
                     ]
+                },
+                {
+                    test: /\.(js|jsx)$/,
+                    exclude: /node_modules/,
+                    include: Webiny.projectRoot(),
+                    use: [i18nPluginInstance.getLoader()]
                 },
                 {
                     test: /\.scss$/,
@@ -196,7 +200,8 @@ module.exports = function (app, config) {
             modules: [
                 __dirname + '/loaders',
                 'node_modules',
-                path.resolve(Webiny.projectRoot(), 'Apps/Webiny/node_modules')
+                path.resolve(Webiny.projectRoot(), 'Apps/Webiny/node_modules'),
+                path.resolve(Webiny.projectRoot(), 'Apps/' + app.getAppName() + '/node_modules'),
             ]
         }
     };

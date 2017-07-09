@@ -21,7 +21,7 @@ class Dialog extends Webiny.Ui.Component {
             isDialogShown: false
         };
 
-        this.modalShowDuration = 800;
+        this.modalShowDuration = 500;
         this.modalHideDuration = 250;
         this.backdropShowDuration = 100;
         this.backdropHideDuration = 200;
@@ -280,7 +280,7 @@ Dialog.defaultProps = {
                     <Animate
                         trigger={this.state.isDialogShown}
                         onFinish={this.animationFinish}
-                        show={{translateY: 50, ease: 'spring', duration: this.modalShowDuration}}
+                        show={{translateY: 50, ease: 'spring', duration: this.modalShowDuration, frequency: 50, friction: 300}}
                         hide={{translateY: -100, ease: 'easeOut', opacity: 0, duration: this.modalHideDuration}}>
                         <div className={this.classSet(styles.dialog, styles.show, this.props.className)} style={{top: -50}} data-role="dialog">
                             {this.prepareChildren(content)}
