@@ -429,24 +429,6 @@ BaseContainer.defaultProps = {
     trackLastUsedParameters: true,
     page: 1,
     perPage: 10,
-    layout() {
-        const {Grid} = this.props;
-        return (
-            <webiny-list-layout>
-                <loader/>
-                <filters/>
-                <table/>
-                <Grid.Row>
-                    <Grid.Col sm={4}>
-                        <multi-actions/>
-                    </Grid.Col>
-                    <Grid.Col sm={8}>
-                        <pagination/>
-                    </Grid.Col>
-                </Grid.Row>
-            </webiny-list-layout>
-        );
-    },
     renderer() {
         const content = this.getContent();
 

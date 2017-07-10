@@ -67,12 +67,25 @@ table.table > tbody > tr.selected > td {
 	background: #ffefea !important;
 }
 
+.footer{
+	text-align: right;
+}
+
+.multiAction{
+	text-align: left;
+}
+
 /* pagination */
+.paginationWrapper{
+	text-align: right;
+}
+
 .pagination {
 	display: inline-block;
 	padding-left: 0;
 	margin: 0 0 0 -10px;
 	border-radius: 4px;
+	float: right;
 }
 
 .pagination li {
@@ -185,6 +198,8 @@ table.table > tbody > tr.selected > td {
 
 .emptyContainer .content h2 {
 	margin-top: 0;
+	font-size: 2em;
+	float: none;
 }
 
 /* checkbox for selecting rows */
@@ -277,6 +292,19 @@ table.table td:before {
 		display: block;
 		margin-bottom: 10px;
 		padding: 10px;
+	}
+
+
+	.footer{
+		text-align: center;
+	}
+
+	.paginationWrapper, .multiAction{
+		text-align: center;
+	}
+
+	.pagination {
+		float: none;
 	}
 }
 

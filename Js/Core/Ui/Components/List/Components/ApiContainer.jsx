@@ -1,5 +1,6 @@
 import Webiny from 'Webiny';
 import BaseContainer from './BaseContainer';
+import styles from './../styles.css';
 
 class ApiContainer extends BaseContainer {
 
@@ -130,7 +131,25 @@ ApiContainer.defaultProps = _.merge({}, BaseContainer.defaultProps, {
     onLoad: _.noop,
     autoLoad: true,
     autoRefresh: null,
-    prepareLoadedData: null
+    prepareLoadedData: null,
+    layout() {
+        const {Grid, styles} = this.props;
+        return (
+            <webiny-list-layout>
+                <loader/>
+                <filters/>
+                <table/>
+                <Grid.Row className={styles.footer}>
+                    <Grid.Col sm={4} className={styles.multiAction}>
+                        <multi-actions/>
+                    </Grid.Col>
+                    <Grid.Col sm={8} className={styles.paginationWrapper}>
+                        <pagination/>
+                    </Grid.Col>
+                </Grid.Row>
+            </webiny-list-layout>
+        );
+    }
 });
 
-export default Webiny.createComponent(ApiContainer, {modules: ['Grid'], api: ['loadData']});
+export default Webiny.createComponent(ApiContainer, {modules: ['Grid'], api: ['loadData'], styles});
