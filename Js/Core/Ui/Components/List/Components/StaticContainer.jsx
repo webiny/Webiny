@@ -11,8 +11,7 @@ class StaticContainer extends BaseContainer {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        const omit = ['children', 'renderer'];
-        if (_.isEqual(_.omit(props, omit), _.omit(this.props, omit))) {
+        if (_.isEqual(props.data, this.props.data)) {
             return;
         }
         this.prepare(props);

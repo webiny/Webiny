@@ -41,13 +41,18 @@ class ApiContainer extends BaseContainer {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        const checkParams = ['sorters', 'filters', 'page', 'perPage', 'searchQuery', 'searchOperator', 'searchFields'];
-        const prevQueryParams = _.pick(this.state, checkParams);
-        const newQueryParams = _.pick(this.prepare(_.clone(props)), checkParams);
-        const queryParamsChanged = !_.isEqual(prevQueryParams, newQueryParams);
-        // Need to do this explicit check because 'query' prop can contain data coming from anywhere and it is not processed in 'prepare'
-        const queryPropsChanged = !_.isEqual(props.query, this.props.query);
-        if (this.props.autoLoad && (queryParamsChanged || queryPropsChanged)) {
+        let shouldLoad = false;
+
+        if (props.url !== this.props.url) {
+            shouldLoad = true;
+            this.api.setUrl(props.url);
+        }
+
+        if(!_.isEqual(props.query, this.props.query)) {
+            shouldLoad = true;
+        }
+
+        if (this.props.autoLoad && shouldLoad) {
             this.loadData(props).then(data => {
                 this.props.onLoad(_.get(data, 'list'), _.get(data, 'meta'));
             });
