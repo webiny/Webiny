@@ -163,7 +163,7 @@
 	.modal .dialog .content .body {
 		overflow: scroll;
 		padding: 15px;
-		min-height: 470px;
+		/*min-height: 470px; sven:causes scroll, but doesn't seem it's needed*/
 		flex-grow: 1;
 		flex-shrink: 1;
 		flex-basis: auto;
