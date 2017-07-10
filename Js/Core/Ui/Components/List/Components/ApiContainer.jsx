@@ -5,23 +5,25 @@ class ApiContainer extends BaseContainer {
 
     constructor(props) {
         super(props);
-        _.assign(this.state, {initiallyLoaded: false});
+        _.assign(this.state, {
+            initiallyLoaded: false
+        });
         Webiny.Mixins.ApiComponent.extend(this);
     }
 
     componentWillMount() {
         super.componentWillMount();
-        this.prepare(_.clone(this.props));
-        if (this.props.autoLoad) {
-            this.loadData().then(data => {
-                if (!this.isMounted()) {
-                    return;
-                }
-                this.setState('initiallyLoaded', true);
-                this.props.onInitialLoad(_.get(data, 'list'), _.get(data, 'meta'));
-
-            });
-        }
+        this.prepare(this.props).then(() => {
+            if (this.props.autoLoad) {
+                this.loadData().then(data => {
+                    if (!this.isMounted()) {
+                        return;
+                    }
+                    this.setState('initiallyLoaded', true);
+                    this.props.onInitialLoad(_.get(data, 'list'), _.get(data, 'meta'));
+                });
+            }
+        });
     }
 
     componentDidMount() {
@@ -48,13 +50,23 @@ class ApiContainer extends BaseContainer {
             this.api.setUrl(props.url);
         }
 
-        if(!_.isEqual(props.query, this.props.query)) {
+        if (!_.isEqual(props.query, this.props.query)) {
             shouldLoad = true;
         }
 
+        if (this.props.connectToRouter) {
+            const routerParams = Webiny.Router.getQueryParams();
+            if (!_.isEqual(this.state.routerParams, routerParams)) {
+                this.setState({routerParams});
+                shouldLoad = true;
+            }
+        }
+
         if (this.props.autoLoad && shouldLoad) {
-            this.loadData(props).then(data => {
-                this.props.onLoad(_.get(data, 'list'), _.get(data, 'meta'));
+            this.prepare(props).then(() => {
+                this.loadData(props).then(data => {
+                    this.props.onLoad(_.get(data, 'list'), _.get(data, 'meta'));
+                });
             });
         }
     }

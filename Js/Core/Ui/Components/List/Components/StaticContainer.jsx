@@ -5,8 +5,9 @@ class StaticContainer extends BaseContainer {
 
     componentWillMount() {
         super.componentWillMount();
-        this.prepare(this.props);
-        this.loadData(this.props);
+        this.prepare(this.props).then(() => {
+            this.loadData(this.props);
+        });
     }
 
     componentWillReceiveProps(props) {
@@ -14,8 +15,9 @@ class StaticContainer extends BaseContainer {
         if (_.isEqual(props.data, this.props.data)) {
             return;
         }
-        this.prepare(props);
-        this.loadData(props);
+        this.prepare(props).then(() => {
+            this.loadData(props);
+        });
     }
 
     loadData(props) {
