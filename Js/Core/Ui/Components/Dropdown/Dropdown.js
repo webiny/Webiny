@@ -56,6 +56,7 @@ Dropdown.defaultProps = {
     closeOnClick: true,
     disabled: false,
     listStyle: null,
+    className: null,
     onShow: _.noop,
     onShown: _.noop,
     onHide: _.noop,
