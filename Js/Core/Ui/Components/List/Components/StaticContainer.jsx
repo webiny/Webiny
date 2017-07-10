@@ -42,19 +42,13 @@ class StaticContainer extends BaseContainer {
         this.totalPages = meta.totalPages;
 
         const from = (this.state.page - 1) * this.state.perPage;
-
-        this.setState({
+        const newState = _.assign({
             list: data.slice(from, from + this.state.perPage),
             meta,
-            sorters: this.state.sorters,
-            filters: this.state.filters,
-            page: this.state.page,
-            perPage: this.state.perPage,
-            searchQuery: this.state.searchQuery,
-            searchOperator: this.state.searchOperator,
-            searchFields: this.state.searchFields,
             selectedRows: []
         });
+
+        return new Promise(resolve => this.setState(newState, resolve));
     }
 }
 
