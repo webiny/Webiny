@@ -653,7 +653,8 @@ class Form extends Webiny.Ui.Component {
             return apiResponse;
         }
 
-        const newModel = apiResponse.getData('entity');
+        const responseData = apiResponse.getData();
+        const newModel = _.has(responseData, 'entity') ? responseData.entity : responseData;
         this.setState({model: newModel, initialModel: _.cloneDeep(newModel), error: null});
         if (_.isFunction(this.props.onSuccessMessage)) {
             Webiny.Growl.success(this.props.onSuccessMessage(model));
