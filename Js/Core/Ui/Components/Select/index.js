@@ -33,6 +33,14 @@ class Select extends Webiny.Ui.OptionComponent {
 }
 
 Select.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
+    allowClear: false,
+    autoSelectFirstOption: false,
+    minimumInputLength: 0,
+    minimumResultsForSearch: 15,
+    dropdownParent: '.dropdown-wrapper',
+    dropdownClassName: '',
+    optionRenderer: null,
+    selectedRenderer: null,
     renderer() {
         const {FormGroup} = this.props;
 
