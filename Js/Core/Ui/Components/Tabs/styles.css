@@ -43,6 +43,12 @@
 	list-style-type: none;
 }
 
+.navigation > li.disabled{
+	opacity: 0.5;
+	cursor: not-allowed;
+	pointer-events: none;
+}
+
 .navigation > li > a {
 	position: relative;
 	transition: all 225ms;
