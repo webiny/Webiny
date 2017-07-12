@@ -38,7 +38,7 @@ Select.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
     minimumInputLength: 0,
     minimumResultsForSearch: 15,
     dropdownParent: '.dropdown-wrapper',
-    dropdownClassName: '',
+    dropdownClassName: null,
     optionRenderer: null,
     selectedRenderer: null,
     renderer() {

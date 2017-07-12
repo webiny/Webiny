@@ -91,21 +91,22 @@ class Tabs extends Webiny.Ui.Component {
     }
 
     renderTabs() {
-        return this.props.tabsRenderer.call(this);
+        return this.props.tabsRenderer.call(this, this.tabsContent);
     }
 
     renderHeader() {
-        return this.props.headerRenderer.call(this);
+        return this.props.headerRenderer.call(this, this.tabsContent);
     }
 
     renderContent() {
-        return this.props.contentRenderer.call(this);
+        return this.props.contentRenderer.call(this, this.tabsContent);
     }
 }
 
 Tabs.defaultProps = {
     position: 'top', // top, left
     size: 'default',
+    selected: 0,
     tabsRenderer() {
         const {styles} = this.props;
 

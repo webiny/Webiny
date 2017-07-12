@@ -15,12 +15,12 @@ class TabHeader extends Webiny.Ui.Component {
 
 TabHeader.defaultProps = {
     label: 'Tab',
-    disabled: false,
     onClick: _.noop,
     icon: null,
-    activeTabClassName: styles.active,
-    disabledTabClassName: styles.disabled,
-    active: false,
+    disabled: false, // "private" prop passed by Tabs component
+    activeTabClassName: styles.active, // "private" prop for render purposes only
+    disabledTabClassName: styles.disabled, // "private" prop for render purposes only
+    active: false, // "private" prop passed by Tabs component
     labelRenderer() {
         let label = this.props.label;
         const styles = this.props.styles;

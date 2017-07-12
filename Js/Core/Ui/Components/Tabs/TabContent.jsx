@@ -7,8 +7,8 @@ class TabContent extends Webiny.Ui.Component {
 
 TabContent.defaultProps = {
     alwaysRender: true,
-    active: false,
-    disabled: false,
+    active: false, // "private" prop passed by Tabs component
+    disabled: false, // "private" prop passed by Tabs component
     renderer() {
         if (!this.props.disabled && (this.props.active || this.props.alwaysRender)) {
             const tabClass = this.classSet(
