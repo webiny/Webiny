@@ -91,11 +91,11 @@ class Tabs extends Webiny.Ui.Component {
     }
 
     renderTabs() {
-        return this.props.tabsRenderer.call(this, this.tabsContent);
+        return this.props.tabsRenderer.call(this);
     }
 
     renderHeader() {
-        return this.props.headerRenderer.call(this, this.tabsContent);
+        return this.props.headerRenderer.call(this, this.tabsHeader);
     }
 
     renderContent() {
