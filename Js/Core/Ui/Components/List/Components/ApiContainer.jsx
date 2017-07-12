@@ -7,7 +7,8 @@ class ApiContainer extends BaseContainer {
     constructor(props) {
         super(props);
         _.assign(this.state, {
-            initiallyLoaded: false
+            initiallyLoaded: false,
+            routerParams: null
         });
         Webiny.Mixins.ApiComponent.extend(this);
     }

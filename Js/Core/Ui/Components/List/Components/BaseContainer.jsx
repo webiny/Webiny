@@ -129,7 +129,7 @@ class BaseContainer extends Webiny.Ui.Component {
                 state.perPage = props.perPage || 10;
             }
 
-            this.setState(_.assign({}, this.state, state), resolve);
+            this.setState(state, resolve);
         });
     }
 
