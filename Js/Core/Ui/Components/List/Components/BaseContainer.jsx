@@ -171,7 +171,7 @@ class BaseContainer extends Webiny.Ui.Component {
 
     setPerPage(perPage) {
         if (this.props.connectToRouter) {
-            this.goToRoute({_perPage: perPage});
+            this.goToRoute({_perPage: perPage, _page: 1});
         } else {
             this.setState({page: 1, perPage}, this.loadData);
         }
@@ -181,7 +181,7 @@ class BaseContainer extends Webiny.Ui.Component {
 
     setSearchQuery(query) {
         if (this.props.connectToRouter) {
-            this.goToRoute({_searchQuery: query});
+            this.goToRoute({_searchQuery: query, _page: 1});
         } else {
             this.setState({page: 1, searchQuery: query}, this.loadData);
         }
