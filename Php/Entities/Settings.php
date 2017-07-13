@@ -77,14 +77,16 @@ class Settings extends AbstractEntity
     /**
      * Load settings
      *
-     * @return ArrayObject
+     * @param bool $returnEntity Return settings instance (Default: false)
+     *
+     * @return $this|ArrayObject
      */
-    public static function load()
+    public static function load($returnEntity = false)
     {
-        /* @var $settings Settings */
+        /* @var $settings $this */
         $settings = static::findOne(['key' => static::$key]);
         if ($settings && $settings->settings->count()) {
-            return $settings->settings;
+            return $returnEntity ? $settings : $settings->settings;
         }
 
         return null;
