@@ -61,7 +61,17 @@ class DateRange extends Webiny.Ui.FormComponent {
             'alwaysShowCalendars'
         ];
 
-        this.bindMethods('prepare,onChange,setInitialRange');
+        this.bindMethods('setup,onChange,setInitialRange');
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        super.componentDidUpdate();
+        if (prevState.isValid !== this.state.isValid) {
+            this.input.setState({
+                isValid: this.state.isValid,
+                validationMessage: this.state.validationMessage
+            });
+        }
     }
 
     componentWillUnmount(props) {
@@ -71,13 +81,14 @@ class DateRange extends Webiny.Ui.FormComponent {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        if(!this.getInput()) {
+        if (!this.getInput()) {
             return;
         }
 
         if (!props.value) {
             this.getInput().value = this.getPlaceholder() || '';
         } else {
+            console.log('Attempting to split', props.value);
             const dates = props.value.split(this.props.rangeDelimiter);
             this.element.data('daterangepicker').setStartDate(dates[0]);
             this.element.data('daterangepicker').setEndDate(dates[1]);
@@ -94,11 +105,11 @@ class DateRange extends Webiny.Ui.FormComponent {
     }
 
     getInput() {
-        const dateRangeDom = ReactDOM.findDOMNode(this.daterange);
+        const dateRangeDom = ReactDOM.findDOMNode(this);
         return dateRangeDom && dateRangeDom.querySelector('input');
     }
 
-    prepare() {
+    setup() {
         this.element = $(this.getInput());
 
         // detect to which side we need to open the range selector in case opens is set to auto
@@ -165,8 +176,9 @@ class DateRange extends Webiny.Ui.FormComponent {
                     },
                     rangeType: _.get(picker, 'chosenLabel', this.state.rangeType)
                 };
-                this.setState(state);
-                this.props.onChange(state.date.range, this.validate);
+                this.setState(state, () => {
+                    this.props.onChange(this.state.date.range, this.validate);
+                });
             }
         } catch (e) {
             console.log(e);
@@ -198,12 +210,15 @@ DateRange.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     rangeType: 'Last 30 Days', // initial date range
     opens: 'auto',
     renderer() {
-        const props = _.omit(this.props, ['renderer', 'name', 'onChange']);
+        const omitProps = ['attachToForm', 'attachValidators', 'detachFromForm', 'validateInput', 'form', 'renderer', 'name', 'onChange'];
+        const props = _.omit(this.props, omitProps);
         const {Input, Icon} = props;
         props.addonRight = <Icon icon="icon-calendar"/>;
         props.value = this.renderPreview();
-        props.ref = ref => this.daterange = ref;
-        props.onComponentDidMount = this.prepare;
+        props.onComponentDidMount = input => {
+            this.input = input;
+            this.setup();
+        };
 
         return <Input {...props}/>;
     }

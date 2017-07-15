@@ -6,7 +6,7 @@ class Date extends Webiny.Ui.FormComponent {
         super(props);
         this.valueChanged = false;
 
-        this.bindMethods('setValue,setup');
+        this.bindMethods('setup');
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -21,40 +21,20 @@ class Date extends Webiny.Ui.FormComponent {
         return !_.isEqual(newProps, oldProps) || !_.isEqual(nextState, this.state);
     }
 
-    /**
-     * Initialize DateTimePicker
-     * @url https://eonasdan.github.io/bootstrap-datetimepicker/
-     */
-    componentDidMount() {
-        super.componentDidMount();
-        this.getInput().then(this.setup);
-    }
-
-    componentDidUpdate() {
+    componentDidUpdate(prevProps, prevState) {
         super.componentDidUpdate();
-        this.setValue(this.props.value);
-    }
-
-    getInput() {
-        if (this.input) {
-            return Promise.resolve(this.input);
+        if (prevState.isValid !== this.state.isValid) {
+            this.input.setState({
+                isValid: this.state.isValid,
+                validationMessage: this.state.validationMessage
+            });
         }
-
-        return new Promise(resolve => {
-            let interval = setInterval(() => {
-                const dom = ReactDOM.findDOMNode(this);
-                if (dom) {
-                    clearInterval(interval);
-                    interval = null;
-                    this.input = $(dom.querySelector('input'));
-                    resolve(this.input);
-                }
-            }, 100);
-        });
     }
 
     setup() {
-        this.input.datetimepicker({
+        const dom = ReactDOM.findDOMNode(this);
+        this.element = $(dom.querySelector('input'));
+        this.element.datetimepicker({
             format: this.props.inputFormat,
             stepping: this.props.stepping,
             keepOpen: false,
@@ -73,24 +53,6 @@ class Date extends Webiny.Ui.FormComponent {
         }).on('dp.change', () => {
             this.valueChanged = true;
         });
-
-        this.setValue(this.props.value);
-    }
-
-    setValue(newValue) {
-        if (!_.isEmpty(newValue)) {
-            newValue = moment(newValue, this.props.modelFormat);
-            newValue = newValue.isValid() ? newValue.format(this.props.inputFormat) : '';
-        } else {
-            newValue = this.getPlaceholder();
-        }
-
-        this.getInput().then(() => {
-            this.input.val(newValue);
-            if (this.props.minDate) {
-                this.input.data('DateTimePicker').minDate(this.props.minDate);
-            }
-        });
     }
 
     onChange(newValue) {
@@ -103,19 +65,34 @@ class Date extends Webiny.Ui.FormComponent {
             this.props.onChange(newValue, this.validate);
         }
     }
+
+    renderPreview() {
+        if (!_.isEmpty(this.props.value)) {
+            const value = moment(this.props.value, this.props.modelFormat);
+            return value.isValid() ? value.format(this.props.inputFormat) : '';
+        }
+
+        return this.getPlaceholder();
+    }
 }
 
 Date.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     debug: false,
-    inputFormat: 'YYYY-MM-DD',
+    inputFormat: 'DD/MM/YYYY',
     modelFormat: 'YYYY-MM-DD',
     positionHorizontal: 'auto',
     positionVertical: 'bottom',
     viewMode: 'days',
     renderer() {
-        const props = _.omit(this.props, ['renderer']);
+        const omitProps = ['attachToForm', 'attachValidators', 'detachFromForm', 'validateInput', 'form', 'renderer', 'name', 'onChange'];
+        const props = _.omit(this.props, omitProps);
         const {Input, Icon} = props;
+        props.value = this.renderPreview();
         props.addonRight = <Icon icon="icon-calendar"/>;
+        props.onComponentDidMount = input => {
+            this.input = input;
+            this.setup();
+        };
 
         return <Input {...props}/>;
     }
