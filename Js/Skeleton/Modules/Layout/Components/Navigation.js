@@ -26,6 +26,10 @@ class Navigation extends Webiny.Ui.Component {
             this.setState({user: data});
         });
 
+        Webiny.Router.onRouteChanged(event => {
+            this.setState({route: event.route.name});
+        });
+
         this.checkDisplayInterval = setInterval(() => {
             this.setState({display: window.outerWidth > 768 ? 'desktop' : 'mobile'});
         }, 500);

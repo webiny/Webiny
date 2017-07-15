@@ -88,7 +88,6 @@ class DateRange extends Webiny.Ui.FormComponent {
         if (!props.value) {
             this.getInput().value = this.getPlaceholder() || '';
         } else {
-            console.log('Attempting to split', props.value);
             const dates = props.value.split(this.props.rangeDelimiter);
             this.element.data('daterangepicker').setStartDate(dates[0]);
             this.element.data('daterangepicker').setEndDate(dates[1]);
