@@ -43,7 +43,10 @@ class Tabs extends Webiny.Ui.Component {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        this.setState({selected: _.isNil(props.selected) ? this.state.selected : props.selected});
+        // Tabs selected via props
+        if (props.selected !== this.props.selected) {
+            this.setState({selected: props.selected});
+        }
     }
 
     parseChildren(props, state) {
