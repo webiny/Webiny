@@ -27,7 +27,7 @@ class Auth {
 
                 if (response.status === 401) {
                     const target = document.querySelector('overlay');
-                    ReactDOM.render(<Login onSuccess={() => ReactDOM.unmountComponentAtNode(target)}/>, target);
+                    ReactDOM.render(<Login overlay={true} onSuccess={() => ReactDOM.unmountComponentAtNode(target)}/>, target);
                 }
             });
 

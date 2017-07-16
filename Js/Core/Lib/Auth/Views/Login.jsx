@@ -33,11 +33,12 @@ class Login extends View {
 }
 
 Login.defaultProps = {
+    overlay: false,
     renderer() {
         const {Form, Input, Password, Button} = this.props;
 
         return (
-            <sign-in-form class="sign-in">
+            <sign-in-form class={this.classSet('sign-in', (this.props.overlay && 'overlay'))}>
                 <Form onSubmit={(model, form) => this.onSubmit(model, form)}>
                     {(model, form) => (
                         <div className="container">
