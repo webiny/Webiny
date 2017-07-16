@@ -63,7 +63,6 @@ RootElement.defaultProps = _.merge({}, View.defaultProps, {
             return (
                 <div>
                     <Placeholder onDidUpdate={this.onDidUpdate} name="Layout"/>
-                    <overlay/>
                 </div>
             );
         }

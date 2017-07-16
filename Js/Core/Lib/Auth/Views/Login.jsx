@@ -43,9 +43,8 @@ Login.defaultProps = {
                     {(model, form) => (
                         <div className="container">
                             <div className="sign-in-holder">
-                                <Form.Loader/>
-
                                 <div className="form-signin">
+                                    <Form.Loader/>
                                     <a href="#" className="logo">
                                         <img src={logoOrange} width="180" height="58"/>
                                     </a>
