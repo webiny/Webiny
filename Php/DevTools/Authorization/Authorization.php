@@ -1,4 +1,5 @@
 <?php
+
 namespace Apps\Webiny\Php\DevTools\Authorization;
 
 use Apps\Webiny\Php\DevTools\Interfaces\UserInterface;
@@ -102,8 +103,8 @@ class Authorization
     /**
      * Get an instance of the user identified by X-Webiny-Authorization token.
      * A user can be a regular user, System token or API token - but they all implement `UserInterface`.
-     *
      * @return UserInterface
+     * @throws ApiException
      */
     public function getUser()
     {
@@ -125,8 +126,11 @@ class Authorization
                     }
 
                     return $this->user;
-                } catch (\Exception $le) {
-                    // Not a regular user
+                } catch (LoginException $le) {
+                    if ($le->getCode() === 7) {
+                        // Token expired
+                        throw new ApiException($le->getMessage(), 'WBY-AUTH-TOKEN-EXPIRED', 401);
+                    }
                 }
             }
 

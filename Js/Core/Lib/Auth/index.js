@@ -24,6 +24,11 @@ class Auth {
                 if (response.status === 403) {
                     this.onForbidden(routerEvent, response);
                 }
+
+                if (response.status === 401) {
+                    const target = document.querySelector('overlay');
+                    ReactDOM.render(<Login onSuccess={() => ReactDOM.unmountComponentAtNode(target)}/>, target);
+                }
             });
 
             return this.checkUser(routerEvent);
