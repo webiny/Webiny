@@ -37,13 +37,6 @@ class Login extends View {
 
 Login.defaultProps = {
     renderer() {
-        const passwordProps = {
-            name: 'password',
-            placeholder: 'Password',
-            label: 'Password',
-            validate: 'required'
-        };
-
         const {Form, Input, Password, Button} = this.props;
 
         return (
@@ -72,19 +65,24 @@ Login.defaultProps = {
                                         validate="required,email"
                                         onEnter={form.submit}
                                         autoFocus={true}/>
-                                    <Password {...passwordProps} onEnter={form.submit}/>
+
+                                    <Password
+                                        name="password"
+                                        placeholder="Password"
+                                        label="Password"
+                                        validate="required"
+                                        onEnter={form.submit}/>
 
                                     <div className="form-footer">
-                                        <div className="submit-wrapper">
-                                            <Button
-                                                type="primary"
-                                                size="large"
-                                                onClick={form.submit}
-                                                icon="icon-next"
-                                                className={styles.btnLogin}>
-                                                <span>Submit</span>
-                                            </Button>
-                                        </div>
+                                        <Button
+                                            type="primary"
+                                            style={{float: 'right'}}
+                                            size="large"
+                                            onClick={form.submit}
+                                            icon="icon-next"
+                                            className={styles.btnLogin}>
+                                            <span>Submit</span>
+                                        </Button>
                                     </div>
                                 </div>
 
