@@ -26,6 +26,7 @@ class Auth {
                 }
 
                 if (response.status === 401) {
+                    response.data.message = 'Unfortunately we could not perform your latest action. You can retry as soon as you log in again.';
                     const target = document.querySelector('overlay');
                     ReactDOM.render(<Login onSuccess={() => ReactDOM.unmountComponentAtNode(target)}/>, target);
                 }
