@@ -145,6 +145,8 @@ class Authorization
 
     public function processLogin($username)
     {
+        // Make sure we always process lowercase emails
+        $username = strtolower($username);
         try {
             $this->login->processLogin($username);
             // if login is successful, return device and auth tokens
