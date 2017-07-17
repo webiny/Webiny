@@ -5,19 +5,55 @@ class RunTests extends Plugin {
     constructor(program) {
         super(program);
 
-        this.task = 'run-tests';
+        this.task = 'test';
         this.selectApps = true;
+        program.option('-s, --source [source]', 'Test folder or file to run using Mocha.');
     }
 
     getMenu() {
         return new Menu('Run tests');
     }
 
+    /**
+     * This method will be used when running this plugin from a cli context (no GUI)
+     *
+     * @param config
+     * @param onFinish
+     */
     runTask(config, onFinish) {
+        const Webiny = require('webiny/lib/webiny');
+        const Mocha = require('mocha');
+        const fs = require('fs-extra');
+        const path = require('path');
+
+        const mocha = new Mocha({reporter: 'spec'});
+
+        let source = Webiny.projectRoot(config.source);
+        if (source.endsWith('.js')) {
+            mocha.addFile(source);
+        } else {
+            // Add each .js file to the mocha instance
+            fs.readdirSync(source).filter(file => {
+                // Only keep the .js files
+                return file.substr(-3) === '.js';
+
+            }).forEach(file => mocha.addFile(path.join(source, file)));
+        }
+
+        // Run the tests.
+        mocha.run(failures => onFinish(failures));
+    }
+
+    /**
+     * This method will be used when running JS app browser tests
+     * @param config
+     * @param onFinish
+     * @returns {Promise.<TResult>}
+     */
+    runAppTests(config, onFinish) {
         const Webiny = require('webiny/lib/webiny');
         const inquirer = require('inquirer');
         const chalk = require('chalk');
-        const moment = require('moment');
         const glob = require('glob-all');
         const gulp = require('gulp');
         const mocha = require('gulp-mocha');
@@ -37,7 +73,9 @@ class RunTests extends Plugin {
                             reporter: 'spec',
                             compilers: {
                                 js: babel({
-                                    "presets": ["es2015"],
+                                    presets: [
+                                        require.resolve('babel-preset-es2015')
+                                    ],
                                     resolveModuleSource: function (source) {
                                         if (source === 'Webiny/TestSuite') {
                                             return Webiny.projectRoot('Apps/Webiny/Js/Core/Lib/TestLib/TestSuite');
@@ -53,6 +91,10 @@ class RunTests extends Plugin {
                 });
             });
         })).then(onFinish);
+    }
+
+    runWizard(config, onFinish) {
+        return this.runAppTests(config, onFinish);
     }
 }
 

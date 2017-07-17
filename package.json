@@ -29,6 +29,7 @@
         "buffer": "^5.0.2",
         "c3": "^0.4.11",
         "cache-loader": "^1.0.3",
+        "chakram": "^1.5.0",
         "chokidar": "^1.6.0",
         "classnames": "^2.2.5",
         "clipboard": "^1.5.16",
