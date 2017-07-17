@@ -71,8 +71,6 @@ class ModuleLoader {
             _.each(loadedModules, (obj, name) => {
                 // Only configure modules that are requested as string
                 if (this.registeredModules[obj.source] && _.has(this.configurations, obj.source) && !this.configurations[obj.source].configured) {
-                    // Mark as `configured` to prevent running configuration function multiple times
-                    this.configurations[obj.source].configured = true;
                     // build promise chain to configure each component
                     let chain = Promise.resolve();
                     _.get(this.configurations[obj.source], 'configs', []).map(config => {
@@ -80,7 +78,7 @@ class ModuleLoader {
                         // when the component is actually used
                         chain = chain.then(() => config(obj.module));
                     });
-                    configure.push(chain);
+                    configure.push(chain.then(() => this.configurations[obj.source].configured = true));
                 }
             });
 
