@@ -33,8 +33,35 @@ class RunTests extends Plugin {
         const Mocha = require('mocha');
         const fs = require('fs-extra');
         const path = require('path');
+        const babel = require('babel-register');
 
-        const mocha = new Mocha({reporter: 'spec'});
+        const mocha = new Mocha({
+            reporter: 'spec',
+            compilers: {
+                js: babel({
+                    presets: [
+                        require.resolve('babel-preset-es2015'),
+                        require.resolve('babel-preset-es2016'),
+                        require.resolve('babel-preset-react'),
+                    ],
+                    plugins: [
+                        require.resolve('babel-plugin-transform-async-to-generator'),
+                        [require.resolve('babel-plugin-transform-object-rest-spread'), {'useBuiltIns': true}],
+                        [require.resolve('babel-plugin-syntax-dynamic-import')],
+                        [require.resolve('babel-plugin-dynamic-import-node')],
+                        [require.resolve('babel-plugin-transform-builtin-extend'), {
+                            globals: ['Error']
+                        }]
+                    ],
+                    resolveModuleSource: function (source) {
+                        if (source === 'Webiny/TestSuite') {
+                            return Webiny.projectRoot('Apps/Webiny/Js/Core/Lib/TestLib/TestSuite');
+                        }
+                        return source;
+                    }
+                })
+            }
+        });
 
         let source = Webiny.projectRoot(config.source);
         if (source.endsWith('.js')) {
