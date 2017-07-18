@@ -21,6 +21,14 @@ class RunTests extends Plugin {
      * @param onFinish
      */
     runTask(config, onFinish) {
+        if (config.source) {
+            this.runTestsFromSource(config, onFinish);
+        } else {
+            this.runBrowserTests(config, onFinish);
+        }
+    }
+
+    runTestsFromSource(config, onFinish) {
         const Webiny = require('webiny/lib/webiny');
         const Mocha = require('mocha');
         const fs = require('fs-extra');
@@ -50,7 +58,7 @@ class RunTests extends Plugin {
      * @param onFinish
      * @returns {Promise.<TResult>}
      */
-    runAppTests(config, onFinish) {
+    runBrowserTests(config, onFinish) {
         const Webiny = require('webiny/lib/webiny');
         const inquirer = require('inquirer');
         const chalk = require('chalk');
@@ -61,7 +69,7 @@ class RunTests extends Plugin {
         const babel = require('babel-register');
 
         return Promise.all(config.apps.map(appObj => {
-            return new Promise(resolve => {
+            return new Promise((resolve, reject) => {
                 glob(appObj.getSourceDir() + '/Tests/*.js', function (er, files) {
                     if (files.length < 1) {
                         return resolve();
@@ -87,14 +95,11 @@ class RunTests extends Plugin {
                         }))
                         .on('end', resolve).on('error', function (e) {
                             Webiny.failure(e.message);
+                            reject();
                         });
                 });
             });
-        })).then(onFinish);
-    }
-
-    runWizard(config, onFinish) {
-        return this.runAppTests(config, onFinish);
+        })).then(onFinish).catch(onFinish);
     }
 }
 
