@@ -1,5 +1,5 @@
 require('babel-polyfill');
-const Page = require('./Lib/Core/Page');
+const appendLibrary = require('./Lib');
 
 function formatAjaxResponse(jqXhr) {
     return {
@@ -25,11 +25,7 @@ class Webiny {
     constructor() {
         this.Apps = {};
         this.EMPTY = '__webiny_empty__';
-        this.Page = new Page();
-        this.ModuleLoader = null;
-        this.Ui = {
-            Components: {}
-        };
+        appendLibrary(this);
 
         if (DEVELOPMENT) {
             this.hotReloading = false;
@@ -231,4 +227,4 @@ class Webiny {
     }
 }
 
-module.exports = new Webiny;
+module.exports = new Webiny();

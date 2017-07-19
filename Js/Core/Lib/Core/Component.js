@@ -1,10 +1,13 @@
+import React from 'react';
+import {ReactDOM} from 'react-dom';
+import md5 from 'blueimp-md5';
+import isMobile from 'ismobilejs';
+import classNames from 'classnames';
 import Webiny from 'Webiny';
 import LinkState from './LinkState';
 import Dispatcher from './Dispatcher';
 import UiDispatcher from './UiDispatcher';
-import md5 from 'blueimp-md5';
-import isMobile from 'ismobilejs';
-import classNames from 'classnames';
+
 
 class Component extends React.Component {
 
@@ -251,18 +254,14 @@ class Component extends React.Component {
                 params.push(this);
                 return this.props.renderer.call(...params);
             } catch (e) {
-                Webiny.Logger.reportError('js', e.message, e.stack);
+                Webiny.Logger && Webiny.Logger.reportError('js', e.message, e.stack);
                 if (DEVELOPMENT) {
                     console.error('[RENDER ERROR][' + this.getClassName() + ']', e);
                     return (
-                        <div className="porlet porlet-primary">
-                            <div className="porlet-header">
-                                <h3>[RENDER ERROR] in component `{this.getClassName()}`</h3>
-                            </div>
-                            <div className="porlet-body">
-                                <pre>{e.stack}</pre>
-                            </div>
-                        </div>
+                        ReactDOM.createElement('div', null, [
+                            ReactDOM.createElement('h3', null, '[RENDER ERROR] in component `' + this.getClassName() + '`'),
+                            ReactDOM.createElement('pre', null, e.stack)
+                        ])
                     );
                 }
             }

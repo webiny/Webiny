@@ -1,6 +1,6 @@
 import Webiny from 'Webiny';
-import Forbidden from './Views/Forbidden';
-import Login from './Views/Login';
+/*import Forbidden from './Views/Forbidden';
+import Login from './Views/Login';*/
 
 class Auth {
     constructor() {
@@ -177,11 +177,11 @@ class Auth {
     }
 
     renderLogin() {
-        return Login;
+        return null;
     }
 
     renderForbidden() {
-        return Forbidden;
+        return null;
     }
 }
 

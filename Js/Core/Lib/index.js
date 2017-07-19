@@ -1,4 +1,3 @@
-import Webiny from 'Webiny';
 import Cookies from 'js-cookie';
 import Module from './Core/Module';
 import App from './Core/App';
@@ -33,53 +32,59 @@ import UiMenu from './Ui/Menu';
 import createComponent from './createComponent';
 import LazyLoad from './Ui/LazyLoad';
 import Validator from './Validation/Validator';
+import Page from './Core/Page';
+import ModuleLoader from './Core/ModuleLoader';
 
 App.Module = AppModule;
 
-_.merge(Webiny, {
-    Api: {
-        Uploader,
-        Endpoint
-    },
-    App,
-    Base: {
-        Auth
-    },
-    createComponent,
-    Cookies, // from js-cookies
-    Draft,
-    Dispatcher,
-    Filter,
-    LocalStorage,
-    IndexedDB,
-    Growl,
-    Http,
-    Injector,
-    i18n,
-    Menu,
-    Mixins: {
-        ApiComponent
-    },
-    Model,
-    Module,
-    Router,
-    Route,
-    RootElement,
-    Ui: {
-        LazyLoad,
-        Placeholder,
-        Component,
-        Components: {
-            Filters: {}
+export default (Webiny) => {
+    _.assign(Webiny, {
+        Api: {
+            Uploader,
+            Endpoint
         },
-        Dispatcher: UiDispatcher,
-        FormComponent,
-        ModalComponent,
-        OptionComponent,
-        Menu: UiMenu,
-        View,
-        Views: {}
-    },
-    Validator,
-    ViewManager
-});
+        App,
+        Base: {
+            Auth
+        },
+        createComponent,
+        Cookies, // from js-cookies
+        Draft,
+        Dispatcher,
+        Filter,
+        LocalStorage,
+        IndexedDB,
+        Growl,
+        Http,
+        Injector,
+        i18n,
+        Menu,
+        Mixins: {
+            ApiComponent
+        },
+        Model,
+        Module,
+        ModuleLoader: new ModuleLoader(),
+        Page: new Page(),
+        Router,
+        Route,
+        RootElement,
+        Ui: {
+            LazyLoad,
+            Placeholder,
+            Component,
+            Components: {
+                Filters: {}
+            },
+            Dispatcher: UiDispatcher,
+            FormComponent,
+            ModalComponent,
+            OptionComponent,
+            Menu: UiMenu,
+            View,
+            Views: {}
+        },
+        Validator,
+        ViewManager
+    });
+};
