@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
 import React from 'react';
-import {ReactDOM} from 'react-dom';
 import createComponent from './../createComponent';
 import Component from './../Core/Component';
 
@@ -13,7 +12,7 @@ I18N.defaultProps = {
     variables: {},
     options: {},
     renderer() {
-        return ReactDOM.createElement(
+        return React.createElement(
             'webiny-i18n',
             {
                 placeholder: this.props.placeholder,

@@ -1,5 +1,4 @@
 import React from 'react';
-import {ReactDOM} from 'react-dom';
 import md5 from 'blueimp-md5';
 import isMobile from 'ismobilejs';
 import classNames from 'classnames';
@@ -258,9 +257,9 @@ class Component extends React.Component {
                 if (DEVELOPMENT) {
                     console.error('[RENDER ERROR][' + this.getClassName() + ']', e);
                     return (
-                        ReactDOM.createElement('div', null, [
-                            ReactDOM.createElement('h3', null, '[RENDER ERROR] in component `' + this.getClassName() + '`'),
-                            ReactDOM.createElement('pre', null, e.stack)
+                        React.createElement('div', null, [
+                            React.createElement('h3', null, '[RENDER ERROR] in component `' + this.getClassName() + '`'),
+                            React.createElement('pre', null, e.stack)
                         ])
                     );
                 }

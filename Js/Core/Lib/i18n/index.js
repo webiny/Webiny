@@ -1,6 +1,5 @@
 import Webiny from 'Webiny';
 import React from 'react';
-import {ReactDOM} from 'react-dom';
 import moment from 'moment';
 import accounting from 'accounting';
 import I18N from './I18N';
@@ -89,7 +88,7 @@ class i18n {
      * @returns {XML}
      */
     render(key, label, variables, options) {
-        return ReactDOM.createElement(this.component, {placeholder: label, translationKey: key, variables, options});
+        return React.createElement(this.component, {placeholder: label, translationKey: key, variables, options});
     }
 
     // Following methods are plain-simple for now - let's make them smarter in the near future

@@ -1,5 +1,4 @@
 import React from 'react';
-import {ReactDOM} from 'react-dom';
 import ViewManager from './../Core/ViewManager';
 import Component from './../Core/Component';
 
@@ -37,10 +36,10 @@ Placeholder.defaultProps = {
                 _.assign(componentProps, item[1]);
                 item = item[0];
             }
-            component = ReactDOM.createElement(item, componentProps);
+            component = React.createElement(item, componentProps);
         }
 
-        return ReactDOM.createElement('webiny-placeholder', null, component);
+        return React.createElement('webiny-placeholder', null, component);
     }
 };
 
