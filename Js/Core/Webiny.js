@@ -1,5 +1,9 @@
-require('babel-polyfill');
-const appendLibrary = require('./Lib');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import _ from 'lodash';
+import $ from 'jquery';
+import 'babel-polyfill';
+import appendLibrary from './Lib';
 
 function formatAjaxResponse(jqXhr) {
     return {
@@ -227,4 +231,4 @@ class Webiny {
     }
 }
 
-module.exports = new Webiny();
+export default new Webiny();
