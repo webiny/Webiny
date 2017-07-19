@@ -216,7 +216,7 @@ SimpleSelect.defaultProps = {
     minimumResultsForSearch: 15,
     useDataAsValue: false,
     dropdownParent: '.dropdown-wrapper',
-    dropdownClassName: '',
+    dropdownClassName: null,
     optionRenderer: null,
     selectedRenderer: null,
     renderer() {

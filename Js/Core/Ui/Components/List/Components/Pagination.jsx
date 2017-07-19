@@ -119,9 +119,9 @@ Pagination.defaultProps = {
         return (
             <webiny-list-pagination>
                 <Grid.Row>
-                    <Grid.Col all={12} className="text-right">
+                    <Grid.Col all={12}>
                         {this.renderPerPage()}
-                        <ul className={this.classSet(styles.pagination, 'pull-right')}>
+                        <ul className={this.classSet(styles.pagination)}>
                             <li className={previousClasses} onClick={previousPage}>
                                 <a href="javascript:void(0)">
                                     <span className="icon icon-caret-down"/>

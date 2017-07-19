@@ -130,23 +130,39 @@ class Router {
     }
 
     onBeforeStart(callback) {
-        this.beforeStart.push(callback);
-        return this;
+        const itemIndex = this.beforeStart.push(callback) - 1;
+        const _this = this;
+
+        return function off() {
+            _this.beforeStart.splice(itemIndex);
+        };
     }
 
     onRouteWillChange(callback) {
-        this.routeWillChange.push(callback);
-        return this;
+        const itemIndex = this.routeWillChange.push(callback) - 1;
+        const _this = this;
+
+        return function off() {
+            _this.routeWillChange.splice(itemIndex);
+        };
     }
 
     onRouteChanged(callback) {
-        this.routeChanged.push(callback);
-        return this;
+        const itemIndex = this.routeChanged.push(callback) - 1;
+        const _this = this;
+
+        return function off() {
+            _this.routeChanged.splice(itemIndex);
+        };
     }
 
     onRouteNotMatched(callback) {
-        this.routeNotMatched.push(callback);
-        return this;
+        const itemIndex = this.routeNotMatched.push(callback) - 1;
+        const _this = this;
+
+        return function off() {
+            _this.routeNotMatched.splice(itemIndex);
+        };
     }
 
     addLayout(name, component) {

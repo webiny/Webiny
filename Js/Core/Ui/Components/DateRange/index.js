@@ -61,20 +61,17 @@ class DateRange extends Webiny.Ui.FormComponent {
             'alwaysShowCalendars'
         ];
 
-        this.bindMethods('prepare,onChange,setInitialRange');
+        this.bindMethods('setup,onChange,setInitialRange');
     }
 
-    componentDidMount() {
-        super.componentDidMount();
-        // Tricky part: since we are lazy loading dependencies - Input may not yet be available in the DOM so we need to wait for it
-        this.interval = setInterval(() => {
-            const dom = ReactDOM.findDOMNode(this);
-            if (dom && this.getInput()) {
-                clearInterval(this.interval);
-                this.interval = null;
-                this.prepare();
-            }
-        }, 100);
+    componentDidUpdate(prevProps, prevState) {
+        super.componentDidUpdate();
+        if (prevState.isValid !== this.state.isValid) {
+            this.input.setState({
+                isValid: this.state.isValid,
+                validationMessage: this.state.validationMessage
+            });
+        }
     }
 
     componentWillUnmount(props) {
@@ -84,7 +81,7 @@ class DateRange extends Webiny.Ui.FormComponent {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        if(!this.getInput()) {
+        if (!this.getInput()) {
             return;
         }
 
@@ -107,11 +104,11 @@ class DateRange extends Webiny.Ui.FormComponent {
     }
 
     getInput() {
-        const dateRangeDom = ReactDOM.findDOMNode(this.refs.daterange);
+        const dateRangeDom = ReactDOM.findDOMNode(this);
         return dateRangeDom && dateRangeDom.querySelector('input');
     }
 
-    prepare() {
+    setup() {
         this.element = $(this.getInput());
 
         // detect to which side we need to open the range selector in case opens is set to auto
@@ -178,8 +175,9 @@ class DateRange extends Webiny.Ui.FormComponent {
                     },
                     rangeType: _.get(picker, 'chosenLabel', this.state.rangeType)
                 };
-                this.setState(state);
-                this.props.onChange(state.date.range, this.validate);
+                this.setState(state, () => {
+                    this.props.onChange(this.state.date.range, this.validate);
+                });
             }
         } catch (e) {
             console.log(e);
@@ -190,44 +188,39 @@ class DateRange extends Webiny.Ui.FormComponent {
         this.element.off('apply.daterangepicker');
         return this;
     }
+
+    renderPreview() {
+        if (!this.state.date.range) {
+            return null;
+        }
+
+        const dates = this.state.date.range.split(this.props.rangeDelimiter);
+        const from = moment(dates[0], this.props.modelFormat, true);
+        const to = moment(dates[1], this.props.modelFormat, true);
+
+        return from.format(this.props.inputFormat + ' - ' + to.format(this.props.inputFormat));
+    }
 }
 
 DateRange.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
-    onChange: _.noop,
     inputFormat: 'YYYY-MM-DD',
     modelFormat: 'YYYY-MM-DD',
     rangeDelimiter: ':',
     rangeType: 'Last 30 Days', // initial date range
-    showValidationMessage: true,
-    showValidationAnimation: {translateY: 50, opacity: 1, duration: 225},
-    hideValidationAnimation: {translateY: 0, opacity: 0, duration: 225},
     opens: 'auto',
     renderer() {
-        const {Animate, Input, Icon, FormGroup} = this.props;
-
-        const inputProps = {
-            placeholder: this.props.placeholder,
-            ref: 'daterange',
-            addonRight: <Icon icon="icon-calendar"/>,
-            value: this.state.date.range
+        const omitProps = ['attachToForm', 'attachValidators', 'detachFromForm', 'validateInput', 'form', 'renderer', 'name', 'onChange'];
+        const props = _.omit(this.props, omitProps);
+        const {Input, Icon} = props;
+        props.addonRight = <Icon icon="icon-calendar"/>;
+        props.value = this.renderPreview();
+        props.onComponentDidMount = input => {
+            this.input = input;
+            this.setup();
         };
 
-
-        return (
-            <FormGroup valid={this.state.isValid} className={this.props.className}>
-                {this.renderLabel()}
-                <div className="picker-holder">
-                    <Input {...inputProps}/>
-                </div>
-                <Animate
-                    trigger={this.renderValidationMessage()}
-                    show={this.props.showValidationAnimation}
-                    hide={this.props.hideValidationAnimation}>
-                    {this.renderValidationMessage()}
-                </Animate>
-            </FormGroup>
-        );
+        return <Input {...props}/>;
     }
 });
 
-export default Webiny.createComponent(DateRange, {modules: ['Animate', 'Icon', 'Input', 'FormGroup']});
+export default Webiny.createComponent(DateRange, {modules: ['Icon', 'Input']});

@@ -70,7 +70,7 @@ class ModuleLoader {
             const configure = [];
             _.each(loadedModules, (obj, name) => {
                 // Only configure modules that are requested as string
-                if (_.isString(name) && _.has(this.configurations, obj.source) && !this.configurations[obj.source].configured) {
+                if (this.registeredModules[obj.source] && _.has(this.configurations, obj.source) && !this.configurations[obj.source].configured) {
                     // build promise chain to configure each component
                     let chain = Promise.resolve();
                     _.get(this.configurations[obj.source], 'configs', []).map(config => {

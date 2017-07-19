@@ -16,13 +16,13 @@ class TableEditComponent extends Webiny.Ui.Component {
         this.Draft = props.Draft;
 
         this.state = {
-            rows: _.get(props, 'entity.data.rows', [{
+            rows: _.get(props, 'data.rows', [{
                 key: this.Draft.genKey(), columns: [
                     {key: this.Draft.genKey(), data: null}
                 ]
             }]),
-            headers: _.get(props, 'entity.data.headers', [{key: this.Draft.genKey(), data: null}]),
-            numberOfColumns: _.get(props, 'entity.data.numberOfColumns', 1),
+            headers: _.get(props, 'data.headers', [{key: this.Draft.genKey(), data: null}]),
+            numberOfColumns: _.get(props, 'data.numberOfColumns', 1),
             focusedEditor: null
         };
 
@@ -57,7 +57,7 @@ class TableEditComponent extends Webiny.Ui.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !_.isEqual(nextProps.entity.data, this.props.entity.data) || !_.isEqual(this.state, nextState);
+        return !_.isEqual(nextProps.data, this.props.data) || !_.isEqual(this.state, nextState);
     }
 
     selectNextEditor() {
@@ -96,17 +96,17 @@ class TableEditComponent extends Webiny.Ui.Component {
     updateRowData(editorState, rowI, colI) {
         this.state.rows[rowI].columns[colI].data = editorState;
         this.setState({rows: this.state.rows}, () => {
-            const entityData = this.props.entity.data;
-            entityData.rows[rowI].columns[colI].data = this.Draft.convertToRaw(editorState.getCurrentContent());
-            this.props.updateEntityData(entityData, this.props.entity.key);
+            const blockData = this.props.data;
+            blockData.rows[rowI].columns[colI].data = this.Draft.convertToRaw(editorState.getCurrentContent());
+            this.props.updateBlockData(blockData);
         });
     }
 
     updateHeaderData(editorState, colI) {
         this.setState('headers.' + colI + '.data', editorState, () => {
-            const entityData = this.props.entity.data;
-            entityData.headers[colI].data = this.Draft.convertToRaw(editorState.getCurrentContent());
-            this.props.updateEntityData(entityData, this.props.entity.key);
+            const blockData = this.props.data;
+            blockData.headers[colI].data = this.Draft.convertToRaw(editorState.getCurrentContent());
+            this.props.updateBlockData(blockData);
         });
     }
 
@@ -153,12 +153,12 @@ class TableEditComponent extends Webiny.Ui.Component {
         const spliceArgs = insert ? [index, 0, {key: this.Draft.genKey(), data: null}] : [index, 1];
         headers.splice(...spliceArgs);
         const numberOfColumns = headers.length;
-        const entityData = this.props.entity.data;
+        const blockData = this.props.data;
         this.setState({rows, headers, numberOfColumns}, () => {
-            entityData.rows = rows;
-            entityData.headers = headers;
-            entityData.numberOfColumns = numberOfColumns;
-            this.props.updateEntityData(entityData, this.props.entity.key);
+            blockData.rows = rows;
+            blockData.headers = headers;
+            blockData.numberOfColumns = numberOfColumns;
+            this.props.updateBlockData(blockData);
             const editorState = this.props.editor.getEditorState();
             this.props.editor.setEditorState(this.Draft.EditorState.push(editorState, editorState.getCurrentContent(), `insert-column`));
         });
@@ -187,11 +187,11 @@ class TableEditComponent extends Webiny.Ui.Component {
             }];
         }
         const rows = _.cloneDeep(this.state.rows);
-        const entityData = this.props.entity.data;
+        const blockData = this.props.data;
         rows.splice(...spliceArgs);
         this.setState({rows}, () => {
-            entityData.rows = rows;
-            this.props.updateEntityData(entityData, this.props.entity.key);
+            blockData.rows = rows;
+            this.props.updateBlockData(blockData);
 
             // Focus first cell of the next available row
             if (rows.length < index + 1) {

@@ -445,7 +445,7 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         const {FormGroup} = this.props;
 
         return (
-            <FormGroup valid={this.isValid()} className={this.props.className}>
+            <FormGroup valid={this.state.isValid} className={this.props.className}>
                 {this.renderLabel()}
                 {this.renderInfo()}
 

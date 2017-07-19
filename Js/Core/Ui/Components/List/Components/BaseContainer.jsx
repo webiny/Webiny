@@ -88,49 +88,49 @@ class BaseContainer extends Webiny.Ui.Component {
     }
 
     prepare(props) {
-        const state = {
-            sorters: {},
-            filters: {}
-        };
+        return new Promise(resolve => {
+            const state = {
+                sorters: {},
+                filters: {}
+            };
 
-        if (props.connectToRouter) {
-            const params = Webiny.Router.getQueryParams();
-            const urlSort = params._sort || '';
-            urlSort.split(',').map(sorter => {
-                if (sorter === '') {
-                    return;
-                }
-                if (_.startsWith(sorter, '-')) {
-                    state.sorters[_.trimStart(sorter, '-')] = -1;
-                } else {
-                    state.sorters[sorter] = 1;
-                }
-            });
+            if (props.connectToRouter) {
+                const params = Webiny.Router.getQueryParams();
+                const urlSort = params._sort || '';
+                urlSort.split(',').map(sorter => {
+                    if (sorter === '') {
+                        return;
+                    }
+                    if (_.startsWith(sorter, '-')) {
+                        state.sorters[_.trimStart(sorter, '-')] = -1;
+                    } else {
+                        state.sorters[sorter] = 1;
+                    }
+                });
 
-            // Get limit and page
-            state.page = parseInt(params._page || props.page || 1);
-            state.perPage = params._perPage || props.perPage || 10;
-            state.searchQuery = params._searchQuery || null;
+                // Get limit and page
+                state.page = parseInt(params._page || props.page || 1);
+                state.perPage = params._perPage || props.perPage || 10;
+                state.searchQuery = params._searchQuery || null;
 
-            // Get filters
-            _.each(params, (value, name) => {
-                if (!_.startsWith(name, '_')) {
-                    state.filters[name] = value;
-                }
-            });
+                // Get filters
+                _.each(params, (value, name) => {
+                    if (!_.startsWith(name, '_')) {
+                        state.filters[name] = value;
+                    }
+                });
 
-            // Add _searchQuery to filters even if it starts with '_' - it's a special system parameter and is in fact a filter
-            state.filters._searchQuery = state.searchQuery;
-        } else {
-            state.sorters = props.sorters || {};
-            state.filters = props.filters || {};
-            state.page = props.page || 1;
-            state.perPage = props.perPage || 10;
-        }
+                // Add _searchQuery to filters even though it starts with '_' - it's a special system parameter and is in fact a filter
+                state.filters._searchQuery = state.searchQuery;
+            } else {
+                state.sorters = props.sorters || {};
+                state.filters = props.filters || {};
+                state.page = props.page || 1;
+                state.perPage = props.perPage || 10;
+            }
 
-        _.assign(this.state, state);
-        this.setState(this.state);
-        return this.state;
+            this.setState(state, resolve);
+        });
     }
 
     setSorters(sorters) {
@@ -171,7 +171,7 @@ class BaseContainer extends Webiny.Ui.Component {
 
     setPerPage(perPage) {
         if (this.props.connectToRouter) {
-            this.goToRoute({_perPage: perPage});
+            this.goToRoute({_perPage: perPage, _page: 1});
         } else {
             this.setState({page: 1, perPage}, this.loadData);
         }
@@ -181,7 +181,7 @@ class BaseContainer extends Webiny.Ui.Component {
 
     setSearchQuery(query) {
         if (this.props.connectToRouter) {
-            this.goToRoute({_searchQuery: query});
+            this.goToRoute({_searchQuery: query, _page: 1});
         } else {
             this.setState({page: 1, searchQuery: query}, this.loadData);
         }
@@ -429,24 +429,6 @@ BaseContainer.defaultProps = {
     trackLastUsedParameters: true,
     page: 1,
     perPage: 10,
-    layout() {
-        const {Grid} = this.props;
-        return (
-            <webiny-list-layout>
-                <loader/>
-                <filters/>
-                <table/>
-                <Grid.Row>
-                    <Grid.Col sm={4}>
-                        <multi-actions/>
-                    </Grid.Col>
-                    <Grid.Col sm={8}>
-                        <pagination/>
-                    </Grid.Col>
-                </Grid.Row>
-            </webiny-list-layout>
-        );
-    },
     renderer() {
         const content = this.getContent();
 

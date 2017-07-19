@@ -18,7 +18,7 @@ class ChunkIds {
                             // ID must contain the name of the app to avoid ID clashes between multiple apps
                             chunk.id = compiler.options.name + '-' + index;
                             // Name is only used in development for easier debugging
-                            chunk.name = id;
+                            chunk.name = id + '-' + index;
                         }
                     }
                 });

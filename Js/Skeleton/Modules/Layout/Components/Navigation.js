@@ -17,6 +17,7 @@ class Navigation extends Webiny.Ui.Component {
         };
 
         this.checkDisplayInterval = null;
+        this.offRouteChanged = _.noop;
         this.bindMethods('renderMainMenu,renderSubMenu,renderSubMenuItem,mainMenuItemClick,openSubMenu,closeSubMenu,closeMobileMenu');
     }
 
@@ -24,6 +25,10 @@ class Navigation extends Webiny.Ui.Component {
         super.componentDidMount();
         this.watch('User', data => {
             this.setState({user: data});
+        });
+
+        this.offRouteChanged = Webiny.Router.onRouteChanged(event => {
+            this.setState({route: event.route.name});
         });
 
         this.checkDisplayInterval = setInterval(() => {
@@ -34,6 +39,7 @@ class Navigation extends Webiny.Ui.Component {
     componentWillUnmount() {
         super.componentWillUnmount();
         clearInterval(this.checkDisplayInterval);
+        this.offRouteChanged();
     }
 
     shouldComponentUpdate(nextProps, nextState){

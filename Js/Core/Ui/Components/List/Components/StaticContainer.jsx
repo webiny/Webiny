@@ -5,18 +5,19 @@ class StaticContainer extends BaseContainer {
 
     componentWillMount() {
         super.componentWillMount();
-        this.prepare(this.props);
-        this.loadData(this.props);
+        this.prepare(this.props).then(() => {
+            this.loadData(this.props);
+        });
     }
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        const omit = ['children', 'renderer'];
-        if (_.isEqual(_.omit(props, omit), _.omit(this.props, omit))) {
+        if (_.isEqual(props.data, this.props.data)) {
             return;
         }
-        this.prepare(props);
-        this.loadData(props);
+        this.prepare(props).then(() => {
+            this.loadData(props);
+        });
     }
 
     loadData(props) {
@@ -41,19 +42,13 @@ class StaticContainer extends BaseContainer {
         this.totalPages = meta.totalPages;
 
         const from = (this.state.page - 1) * this.state.perPage;
-
-        this.setState({
+        const newState = _.assign({
             list: data.slice(from, from + this.state.perPage),
             meta,
-            sorters: this.state.sorters,
-            filters: this.state.filters,
-            page: this.state.page,
-            perPage: this.state.perPage,
-            searchQuery: this.state.searchQuery,
-            searchOperator: this.state.searchOperator,
-            searchFields: this.state.searchFields,
             selectedRows: []
         });
+
+        return new Promise(resolve => this.setState(newState, resolve));
     }
 }
 

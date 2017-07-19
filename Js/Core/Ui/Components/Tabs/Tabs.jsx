@@ -43,7 +43,10 @@ class Tabs extends Webiny.Ui.Component {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        this.setState({selected: _.isNil(props.selected) ? this.state.selected : props.selected});
+        // Tabs selected via props
+        if (props.selected !== this.props.selected) {
+            this.setState({selected: props.selected});
+        }
     }
 
     parseChildren(props, state) {
@@ -95,17 +98,18 @@ class Tabs extends Webiny.Ui.Component {
     }
 
     renderHeader() {
-        return this.props.headerRenderer.call(this);
+        return this.props.headerRenderer.call(this, this.tabsHeader);
     }
 
     renderContent() {
-        return this.props.contentRenderer.call(this);
+        return this.props.contentRenderer.call(this, this.tabsContent);
     }
 }
 
 Tabs.defaultProps = {
     position: 'top', // top, left
     size: 'default',
+    selected: 0,
     tabsRenderer() {
         const {styles} = this.props;
 
