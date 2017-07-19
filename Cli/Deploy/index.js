@@ -5,7 +5,6 @@ class Deploy extends Plugin {
     constructor(program) {
         super(program);
 
-        this.task = 'deploy';
         this.selectApps = false;
 
         program
@@ -87,5 +86,7 @@ class Deploy extends Plugin {
         });
     }
 }
+
+Deploy.task = 'deploy';
 
 module.exports = Deploy;

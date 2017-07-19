@@ -27,7 +27,6 @@ class Setup extends Plugin {
     constructor(program) {
         super(program);
 
-        this.task = 'setup';
         this.selectApps = false;
     }
 
@@ -186,5 +185,7 @@ class Setup extends Plugin {
         });
     }
 }
+
+Setup.task = 'setup';
 
 module.exports = Setup;

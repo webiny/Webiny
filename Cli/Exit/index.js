@@ -5,7 +5,6 @@ class Exit extends Plugin {
     constructor(program) {
         super(program);
 
-        this.task = 'exit';
         this.selectApps = false;
     }
 
@@ -17,5 +16,7 @@ class Exit extends Plugin {
         return process.exit(0);
     }
 }
+
+Exit.task = 'exit';
 
 module.exports = Exit;

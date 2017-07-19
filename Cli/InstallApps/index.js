@@ -43,7 +43,6 @@ class InstallApps extends Plugin {
     constructor(program) {
         super(program);
 
-        this.task = 'install-apps';
         this.selectApps = false;
     }
 
@@ -101,5 +100,7 @@ class InstallApps extends Plugin {
         });
     }
 }
+
+InstallApps.task = 'install-apps';
 
 module.exports = InstallApps;

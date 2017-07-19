@@ -4,7 +4,6 @@ class Overrides extends Plugin {
     constructor(program) {
         super(program);
 
-        this.task = 'overrides';
         this.selectApps = false;
 
         // We need to override webpack `MultiCompiler` to force build execution in a chain of promises instead of parallel execution.
@@ -22,5 +21,7 @@ class Overrides extends Plugin {
         }
     }
 }
+
+Overrides.task = 'overrides';
 
 module.exports = Overrides;

@@ -2,11 +2,6 @@ const Plugin = require('webiny/lib/plugin');
 const Menu = require('webiny/lib/menu');
 
 class Develop extends Plugin {
-    constructor(program) {
-        super(program);
-
-        this.task = 'develop';
-    }
 
     getMenu() {
         return new Menu('Develop! (watches for file changes and rebuilds apps for you)').addLineBefore();
@@ -19,5 +14,7 @@ class Develop extends Plugin {
         return task.run();
     }
 }
+
+Develop.task = 'develop';
 
 module.exports = Develop;

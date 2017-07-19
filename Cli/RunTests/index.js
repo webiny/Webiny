@@ -2,12 +2,6 @@ const Menu = require('webiny/lib/menu');
 const Plugin = require('webiny/lib/plugin');
 
 class RunTests extends Plugin {
-    constructor(program) {
-        super(program);
-
-        this.task = 'run-tests';
-        this.selectApps = true;
-    }
 
     getMenu() {
         return new Menu('Run tests');
@@ -55,5 +49,7 @@ class RunTests extends Plugin {
         })).then(onFinish);
     }
 }
+
+RunTests.task = 'test';
 
 module.exports = RunTests;

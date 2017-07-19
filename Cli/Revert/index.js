@@ -5,7 +5,6 @@ class Revert extends Plugin {
     constructor(program) {
         super(program);
 
-        this.task = 'revert';
         this.selectApps = false;
     }
 
@@ -49,5 +48,7 @@ class Revert extends Plugin {
         });
     }
 }
+
+Revert.task = 'revert';
 
 module.exports = Revert;
