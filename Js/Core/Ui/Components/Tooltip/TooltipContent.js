@@ -27,50 +27,49 @@ class TooltipContent extends Webiny.Ui.Component {
             return;
         }
 
-        const refs = {
-            targetElement: _.assign({
-                width: this.props.targetFirstChildElement.offsetWidth,
-                height: this.props.targetFirstChildElement.offsetHeight,
-            }, $(this.props.targetFirstChildElement).position()),
-            content: {
-                width: this.ref.offsetWidth,
-                height: this.ref.offsetHeight
-            }
+        const target = _.assign({
+            width: this.props.targetFirstChildElement.offsetWidth,
+            height: this.props.targetFirstChildElement.offsetHeight,
+        }, $(this.props.targetFirstChildElement).position());
+
+        const content = {
+            width: this.ref.offsetWidth,
+            height: this.ref.offsetHeight
         };
 
         const style = {};
         switch (this.props.placement) {
             case 'bottomRight':
-                style.top = refs.targetElement.top + refs.targetElement.height;
-                style.left = refs.targetElement.left + refs.targetElement.width;
+                style.top = target.top + target.height;
+                style.left = target.left + target.width;
                 break;
             case 'bottom':
-                style.top = refs.targetElement.top + refs.targetElement.height;
-                style.left = refs.targetElement.left + (-(refs.content.width - refs.targetElement.width) / 2);
+                style.top = target.top + target.height;
+                style.left = target.left + (-(content.width - target.width) / 2);
                 break;
             case 'bottomLeft':
-                style.top = refs.targetElement.top + refs.targetElement.height;
-                style.left = refs.targetElement.left - refs.content.width;
+                style.top = target.top + target.height;
+                style.left = target.left - content.width;
                 break;
             case 'left':
-                style.top = refs.targetElement.top + (-(refs.content.height - refs.targetElement.height) / 2);
-                style.left = refs.targetElement.left - refs.content.width;
+                style.top = target.top + (-(content.height - target.height) / 2);
+                style.left = target.left - content.width;
                 break;
             case 'topLeft':
-                style.top = refs.targetElement.top - refs.content.height;
-                style.left = refs.targetElement.left - refs.content.width;
+                style.top = target.top - content.height;
+                style.left = target.left - content.width;
                 break;
             case 'top':
-                style.top = refs.targetElement.top - refs.content.height;
-                style.left = refs.targetElement.left + (-(refs.content.width - refs.targetElement.width) / 2);
+                style.top = target.top - content.height;
+                style.left = target.left + (-(content.width - target.width) / 2);
                 break;
             case 'topRight':
-                style.top = refs.targetElement.top - refs.content.height;
-                style.left = refs.targetElement.left + refs.targetElement.width;
+                style.top = target.top - content.height;
+                style.left = target.left + target.width;
                 break;
             default: // 'right'
-                style.top = refs.targetElement.top + (-(refs.content.height - refs.targetElement.height) / 2);
-                style.left = refs.targetElement.left + refs.targetElement.width;
+                style.top = target.top + (-(content.height - target.height) / 2);
+                style.left = target.left + target.width;
         }
 
         this.setState('style', style);
