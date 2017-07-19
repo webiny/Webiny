@@ -10,8 +10,9 @@ ContainerError.defaultProps = {
     type: 'error',
     message: null,
     className: null,
+    close: true,
     renderer() {
-        const error = this.props.error;
+        const {error, close, title, type, className, message} = this.props;
         if (!error) {
             return null;
         }
@@ -23,7 +24,7 @@ ContainerError.defaultProps = {
         const {Alert} = this.props;
 
         if (_.isString(error)) {
-            return <Alert title={this.props.title} type={this.props.type}>{error}</Alert>;
+            return <Alert title={title} type={type} close={close}>{error}</Alert>;
         }
 
         const data = [];
@@ -33,10 +34,11 @@ ContainerError.defaultProps = {
 
         return (
             <Alert
-                title={this.props.title}
-                type={this.props.type}
-                className={this.props.className}>
-                {this.props.message || error.getMessage()}
+                title={title}
+                type={type}
+                close={close}
+                className={className}>
+                {message || error.getMessage()}
                 {data.length > 0 && <ul>{data}</ul>}
             </Alert>
         );

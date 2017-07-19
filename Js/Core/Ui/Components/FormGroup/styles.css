@@ -113,13 +113,15 @@
 .wrapper.error :global(.inputGroup) > input,
 .wrapper.error :global(.inputGroup) textarea,
 .wrapper.error :global(.inputGroup) select,
-.wrapper.error :global(.inputGroup .select2-selection) {
+.wrapper.error :global(.inputGroup .select2-selection),
+.wrapper.error :global(.inputGroup .Webiny_Core_Search_search){
 	border: 1px solid #cc3300;
 }
 
 .wrapper.success :global(.inputGroup) > input,
 .wrapper.success :global(.inputGroup) textarea,
 .wrapper.success :global(.inputGroup) select,
-.wrapper.success :global(.inputGroup .select2-selection) {
+.wrapper.success :global(.inputGroup .select2-selection),
+.wrapper.success :global(.inputGroup .Webiny_Core_Search_search){
 	border: 1px solid #3fbfb0;
 }

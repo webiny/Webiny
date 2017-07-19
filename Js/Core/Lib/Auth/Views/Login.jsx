@@ -6,20 +6,13 @@ import createComponent from './../../createComponent';
 
 class Login extends View {
 
-    componentWillMount() {
-        super.componentWillMount();
-
-        // If already logged in - redirect to default route
-        if (!_.isEmpty(Webiny.Model.get('User'))) {
-            Webiny.Router.goToRoute(Webiny.Router.getDefaultRoute());
-        }
-    }
-
     onSubmit(model, form) {
         form.setState({error: null});
+        form.showLoading();
         return Webiny.Auth.getApiEndpoint().post('login', model, {_fields: Webiny.Auth.getUserFields()}).then(apiResponse => {
+            form.hideLoading();
             if (apiResponse.isError()) {
-                return form.setState({error: apiResponse});
+                return form.handleApiError(apiResponse);
             }
 
             const data = apiResponse.getData();
@@ -30,24 +23,28 @@ class Login extends View {
             Webiny.Cookies.set(Webiny.Auth.getCookieName(), data.authToken, {expires: 30, path: '/'});
             Webiny.Model.set('User', data.user);
 
-            Webiny.Router.goToRoute(Webiny.Router.getDefaultRoute());
+            if (this.props.onSuccess) {
+                this.props.onSuccess();
+            } else {
+                Webiny.Router.goToRoute(Webiny.Router.getDefaultRoute());
+            }
         });
     }
 }
 
 Login.defaultProps = {
+    overlay: false,
     renderer() {
         const {Form, Input, Password, Button} = this.props;
 
         return (
-            <sign-in-form class="sign-in">
-                <Form onSubmit={this.onSubmit}>
+            <sign-in-form class={this.classSet('sign-in', (this.props.overlay && 'overlay'))}>
+                <Form onSubmit={(model, form) => this.onSubmit(model, form)}>
                     {(model, form) => (
                         <div className="container">
                             <div className="sign-in-holder">
-                                <Form.Loader/>
-
                                 <div className="form-signin">
+                                    <Form.Loader/>
                                     <a href="#" className="logo">
                                         <img src={logoOrange} width="180" height="58"/>
                                     </a>
@@ -55,7 +52,7 @@ Login.defaultProps = {
                                     <h2 className="form-signin-heading"><span/>Sign in to your Account</h2>
 
                                     <div className="clear"/>
-                                    <Form.Error className="testing"/>
+                                    <Form.Error/>
 
                                     <div className="clear"/>
                                     <Input

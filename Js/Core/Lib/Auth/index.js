@@ -4,6 +4,7 @@ import Login from './Views/Login';
 
 class Auth {
     constructor() {
+        this.showLogin = false;
         this.loginRoute = 'Login';
         this.forbiddenRoute = 'Forbidden';
     }
@@ -23,6 +24,29 @@ class Auth {
             Webiny.Http.addResponseInterceptor(response => {
                 if (response.status === 403) {
                     this.onForbidden(routerEvent, response);
+                }
+
+                if (response.status === 401 && response.data.code === 'WBY-AUTH-TOKEN-EXPIRED') {
+                    if (this.showLogin) {
+                        return;
+                    }
+
+                    this.showLogin = true;
+                    response.data.message = 'Unfortunately we could not perform your latest action. You can retry as soon as you log in again.';
+
+                    if (!document.querySelector('login-overlay')) {
+                        document.body.appendChild(document.createElement('login-overlay'));
+                    }
+
+                    const target = document.querySelector('login-overlay');
+
+                    ReactDOM.render(
+                        <Login overlay={true} onSuccess={() => {
+                            this.showLogin = false;
+                            ReactDOM.unmountComponentAtNode(target);
+                        }}/>,
+                        target
+                    );
                 }
             });
 
