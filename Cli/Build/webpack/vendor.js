@@ -59,12 +59,18 @@ module.exports = function (app) {
                             loader: 'babel-loader',
                             options: {
                                 presets: [
-                                    'es2016',
-                                    ['es2015', {modules: false}],
-                                    'react'
+                                    require.resolve('babel-preset-es2016'),
+                                    require.resolve('babel-preset-es2015'),
+                                    require.resolve('babel-preset-react')
                                 ],
                                 plugins: [
-                                    [require.resolve('babel-plugin-lodash')]
+                                    [require.resolve('babel-plugin-lodash')],
+                                    require.resolve('babel-plugin-transform-async-to-generator'),
+                                    [require.resolve('babel-plugin-transform-object-rest-spread'), {'useBuiltIns': true}],
+                                    [require.resolve('babel-plugin-syntax-dynamic-import')],
+                                    [require.resolve('babel-plugin-transform-builtin-extend'), {
+                                        globals: ['Error']
+                                    }]
                                 ]
                             }
                         }

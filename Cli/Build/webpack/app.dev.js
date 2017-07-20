@@ -114,7 +114,7 @@ module.exports = function (app) {
                                     require.resolve('babel-plugin-transform-async-to-generator'),
                                     [require.resolve('babel-plugin-transform-object-rest-spread'), {'useBuiltIns': true}],
                                     [require.resolve('babel-plugin-syntax-dynamic-import')],
-                                    //[require.resolve('babel-plugin-lodash')],
+                                    [require.resolve('babel-plugin-lodash')],
                                     [require.resolve('babel-plugin-transform-builtin-extend'), {
                                         globals: ['Error']
                                     }]

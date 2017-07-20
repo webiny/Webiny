@@ -3,6 +3,7 @@ const _ = require('lodash');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const Visualizer = require('webpack-visualizer-plugin');
 
 // Custom libs
 const AssetsPlugin = require('./plugins/Assets');
@@ -51,7 +52,8 @@ module.exports = function (app, config) {
                 reduceInitial: {disable: true}
             }
         }),
-        new webpack.optimize.OccurrenceOrderPlugin()
+        new webpack.optimize.OccurrenceOrderPlugin(),
+        new Visualizer({filename: 'stats.html'})
     ];
 
     // Check if app has vendor DLL defined
