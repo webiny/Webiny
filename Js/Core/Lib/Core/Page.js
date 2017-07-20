@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 class Page {
     loadScript(url) {
         return new Promise(resolve => {
@@ -50,4 +52,4 @@ class Page {
     }
 }
 
-module.exports = Page;
+export default Page;

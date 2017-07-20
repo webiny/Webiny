@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Webiny from 'Webiny';
 import ApiContainer from './Components/ApiContainer';
 import StaticContainer from './Components/StaticContainer';

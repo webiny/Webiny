@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Module from './Module';
 
 class ModuleLoader {

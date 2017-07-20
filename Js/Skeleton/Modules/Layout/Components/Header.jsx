@@ -1,3 +1,4 @@
+import React from 'react';
 import logo from 'Assets/images/logo.png';
 
 export default function Header(props) {

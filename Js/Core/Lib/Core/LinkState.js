@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 class LinkState {
 
     constructor(component, key, callback, defaultValue = null) {

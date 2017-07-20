@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Webiny from './../../Webiny';
 
 class DepsScanner {

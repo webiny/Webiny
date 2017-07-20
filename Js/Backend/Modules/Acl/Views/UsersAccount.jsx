@@ -1,3 +1,4 @@
+import React from 'react';
 import Webiny from 'Webiny';
 
 class UsersAccount extends Webiny.Ui.View {

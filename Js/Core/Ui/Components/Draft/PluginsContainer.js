@@ -1,3 +1,5 @@
+import React from 'react';
+import _ from 'lodash';
 import Immutable from 'immutable';
 import PluginBlock from './PluginBlock';
 

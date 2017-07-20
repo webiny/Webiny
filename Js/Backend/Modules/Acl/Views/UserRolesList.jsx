@@ -1,3 +1,4 @@
+import React from 'react';
 import Webiny from 'Webiny';
 import ExportRoleModal from './Modal/ExportRoleModal';
 

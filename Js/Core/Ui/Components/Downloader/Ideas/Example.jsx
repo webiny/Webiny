@@ -1,3 +1,4 @@
+import React from 'react';
 <Ui.Download>
     <Ui.Download.Element>
         {({download}) => (

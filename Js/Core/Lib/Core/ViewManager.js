@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Dispatcher from './Dispatcher';
 
 class ViewManager {

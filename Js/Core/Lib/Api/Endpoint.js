@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Base from './Base';
 
 const apiProps = [

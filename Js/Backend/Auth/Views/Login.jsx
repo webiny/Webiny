@@ -1,10 +1,9 @@
+import React from 'react';
 import Webiny from 'Webiny';
 import logoOrange from 'Assets/images/logo_orange.png';
 import styles from './styles/Login.css';
-import View from './../../Core/View';
-import createComponent from './../../createComponent';
 
-class Login extends View {
+class Login extends Webiny.Ui.View {
 
     onSubmit(model, form) {
         form.setState({error: null});
@@ -94,4 +93,4 @@ Login.defaultProps = {
     }
 };
 
-export default createComponent(Login, {modules: ['Form', 'Input', 'Password', 'Button']});
+export default Webiny.createComponent(Login, {modules: ['Form', 'Input', 'Password', 'Button']});

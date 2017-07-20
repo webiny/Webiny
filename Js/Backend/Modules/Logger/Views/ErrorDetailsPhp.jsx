@@ -1,3 +1,4 @@
+import React from 'react';
 import Webiny from 'Webiny';
 
 class ErrorDetailsPhp extends Webiny.Ui.View {

@@ -2,7 +2,6 @@ const path = require('path');
 const webpack = require('webpack');
 const Visualizer = require('webpack-visualizer-plugin');
 const Webiny = require('webiny/lib/webiny');
-let externals = require('./externals');
 
 module.exports = function (app) {
     const sharedResolve = require('./resolve')(app);
@@ -40,10 +39,6 @@ module.exports = function (app) {
         );
     }
 
-    if (name === 'Webiny.Core') {
-        externals = {};
-    }
-
     return {
         name,
         context,
@@ -54,20 +49,28 @@ module.exports = function (app) {
             library: 'Webiny_' + bundleName + '_Vendor'
         },
         plugins,
-        externals,
         module: {
             rules: [
                 {
-                    test: /\.js$/,
+                    test: /\.jsx?$/,
                     exclude: /node_modules/,
                     use: [
                         {
                             loader: 'babel-loader',
                             options: {
                                 presets: [
-                                    'es2016',
-                                    ['es2015', {modules: false}],
-                                    'react'
+                                    require.resolve('babel-preset-es2016'),
+                                    require.resolve('babel-preset-es2015'),
+                                    require.resolve('babel-preset-react')
+                                ],
+                                plugins: [
+                                    [require.resolve('babel-plugin-lodash')],
+                                    require.resolve('babel-plugin-transform-async-to-generator'),
+                                    [require.resolve('babel-plugin-transform-object-rest-spread'), {'useBuiltIns': true}],
+                                    [require.resolve('babel-plugin-syntax-dynamic-import')],
+                                    [require.resolve('babel-plugin-transform-builtin-extend'), {
+                                        globals: ['Error']
+                                    }]
                                 ]
                             }
                         }

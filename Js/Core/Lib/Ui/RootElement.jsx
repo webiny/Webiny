@@ -1,3 +1,5 @@
+import _ from 'lodash';
+import React from 'react';
 import View from './../Core/View';
 import Router from './../Router/Router';
 import Dispatcher from './../Core/Dispatcher';
@@ -60,11 +62,7 @@ class RootElement extends View {
 RootElement.defaultProps = _.merge({}, View.defaultProps, {
     renderer() {
         if (!this.state.loading) {
-            return (
-                <div>
-                    <Placeholder onDidUpdate={this.onDidUpdate} name="Layout"/>
-                </div>
-            );
+            return React.createElement('div', null, React.createElement(Placeholder, {onDidUpdate: this.onDidUpdate, name: 'Layout'}));
         }
         return null;
     }

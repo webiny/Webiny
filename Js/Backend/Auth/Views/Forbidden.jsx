@@ -1,7 +1,7 @@
-import View from './../../Core/View';
-import createComponent from './../../createComponent';
+import React from 'react';
+import Webiny from 'Webiny';
 
-class Forbidden extends View {
+class Forbidden extends Webiny.Ui.View {
 
 }
 
@@ -23,4 +23,4 @@ Forbidden.defaultProps = {
     }
 };
 
-export default createComponent(Forbidden, {modules: ['Icon', 'View']});
+export default Webiny.createComponent(Forbidden, {modules: ['Icon', 'View']});

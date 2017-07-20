@@ -1,3 +1,4 @@
+import _ from 'lodash';
 /* eslint-disable */
 const assert = require('assert');
 const webdriver = require('selenium-webdriver');

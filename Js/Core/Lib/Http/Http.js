@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import HttpRequest from './Http/Request';
 import HttpResponse from './Http/Response';
 

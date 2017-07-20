@@ -1,3 +1,5 @@
+import _ from 'lodash';
+import React from 'react';
 import ViewManager from './../Core/ViewManager';
 import Component from './../Core/Component';
 
@@ -38,9 +40,7 @@ Placeholder.defaultProps = {
             component = React.createElement(item, componentProps);
         }
 
-        return (
-            <webiny-placeholder>{component}</webiny-placeholder>
-        );
+        return React.createElement('webiny-placeholder', null, component);
     }
 };
 

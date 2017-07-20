@@ -1,3 +1,4 @@
+import React from 'react';
 import Webiny from 'Webiny';
 import Atomic from './../Toolbar/Atomic';
 import TableEditComponent from './Table/TableEditComponent';

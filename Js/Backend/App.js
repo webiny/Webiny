@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Webiny from 'Webiny';
 import Acl from './Modules/Acl';
 import Layout from './Modules/Layout';

@@ -1,3 +1,5 @@
+import React from 'react';
+import _ from 'lodash';
 import hoistNonReactStatics from 'hoist-non-react-statics';
 import {Map} from 'immutable';
 import LazyLoad from './Ui/LazyLoad';
@@ -71,6 +73,7 @@ export default (Component, options = {}) => {
 
             // Detect if component override is possible
             if (props.context) {
+                // TODO: replace Injector with Webiny.Module `context`
                 const overrides = Injector.getByTag(props.context);
                 if (overrides.length) {
                     const props = _.pick(this.props, ['value', 'children', 'onChange']);

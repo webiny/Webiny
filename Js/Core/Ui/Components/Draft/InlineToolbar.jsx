@@ -1,3 +1,6 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import $ from 'jquery';
 import Webiny from 'Webiny';
 
 class InlineToolbar extends Webiny.Ui.Component {
