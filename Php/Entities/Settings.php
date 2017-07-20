@@ -36,9 +36,8 @@ class Settings extends AbstractEntity
 
         $this->getApiMethods()->removeKey(['get', 'patch', 'post', 'delete']);
         /**
-         * @api.name Get settings
-         * @api.custom
-         * @api.description Get settings
+         * @api.name        Get settings
+         * @api.description Gets all Webiny settings.
          */
         $this->api('GET', '/', function () {
             if (!static::$key) {
@@ -55,8 +54,8 @@ class Settings extends AbstractEntity
         });
 
         /**
-         * @api.name Update settings
-         * @api.description Update settings
+         * @api.name        Update settings
+         * @api.description Updates Webiny settings.
          */
         $this->api('PATCH', '/', function () {
             if (!static::$key) {

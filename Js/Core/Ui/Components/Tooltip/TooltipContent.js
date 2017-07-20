@@ -4,22 +4,32 @@ import styles from './styles.css';
 class TooltipContent extends Webiny.Ui.Component {
     constructor() {
         super();
+        this.positioningInterval = null;
         this.ref = null;
         this.state = {style: {visibility: 'hidden'}};
-        this.bindMethods('onClick');
+        this.bindMethods('onClick,setupPlacement');
     }
 
+    /**
+     * During the first 500ms, we call the setupPlacement more frequently, every 50ms, because of the possible DOM changes in the child
+     * components. After that, we assume components are ready, and then we reduce the frequency to 750ms.
+     */
     componentDidMount() {
         super.componentDidMount();
+        this.positioningInterval = setInterval(this.setupPlacement, 50);
         setTimeout(() => {
-            this.setupPlacement();
-            this.registerEventListeners();
-        });
+            if (this.isMounted()) {
+                clearInterval(this.positioningInterval);
+                this.positioningInterval = setInterval(this.setupPlacement, 750);
+                this.registerEventListeners();
+            }
+        }, 500);
     }
 
     componentWillUnmount() {
         super.componentWillUnmount();
         this.unregisterEventListeners();
+        clearInterval(this.positioningInterval);
     }
 
     setupPlacement() {

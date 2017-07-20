@@ -34,6 +34,10 @@ class LoggerEntry extends AbstractEntity
 
         $this->attr('errorGroup')->many2one()->setEntity('Apps\Webiny\Php\Entities\LoggerErrorGroup');
 
+        /**
+         * @api.name        Resolve logger entry
+         * @api.description Resolves given logger entry.
+         */
         $this->api('POST', '{id}/resolve', function () {
             // re-calculate the number of errors inside the same group
             $this->errorGroup->errorCount--;

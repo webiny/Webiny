@@ -86,10 +86,10 @@ class User extends AbstractEntity implements UserInterface
         $this->attr('lastLogin')->datetime();
 
         /**
-         * @api.name Login
-         * @api.url /login
-         * @api.body.username string Username
-         * @api.body.password string Password
+         * @api.name        User login
+         * @api.description Logs in user with his username and password.
+         * @api.body.username   string  Username
+         * @api.body.password   string  Password
          * @api.body.rememberme boolean Remember Me
          */
         $this->api('POST', 'login', function () {
@@ -110,9 +110,9 @@ class User extends AbstractEntity implements UserInterface
         })->setBodyValidators(['username' => 'required,email', 'password' => 'required']);
 
         /**
-         * @api.name Get my profile
-         * @api.url /me
-         * @api.headers.Authorization string Authorization token
+         * @api.name        My profile
+         * @api.description Returns currently logged in user's data.
+         * @api.headers.X-Webiny-Authorization  string  Authorization token
          */
         $this->api('GET', 'me', function () {
             $user = $this->wAuth()->getUser();
@@ -124,9 +124,9 @@ class User extends AbstractEntity implements UserInterface
         });
 
         /**
-         * @api.name Update my profile
-         * @api.url /me
-         * @api.headers.Authorization string Authorization token
+         * @api.name        Update my profile
+         * @api.description Updates currently logged in user's profile.
+         * @api.headers.X-Webiny-Authorization  string  Authorization token
          */
         $this->api('PATCH', 'me', function () {
             $data = $this->wRequest()->getRequestData();
@@ -142,9 +142,9 @@ class User extends AbstractEntity implements UserInterface
         });
 
         /**
-         * @api.name Reset password (sends a password reset code via email)
-         * @api.url /reset-password
-         * @api.body.email string User's email address
+         * @api.name        Reset password
+         * @api.description Starts password reset process - sends a password reset code to the received e-mail address.
+         * @api.body.email  string  User's email address
          */
         $this->api('POST', 'reset-password', function () {
             $data = $this->wRequest()->getRequestData();
@@ -172,11 +172,10 @@ class User extends AbstractEntity implements UserInterface
         })->setBodyValidators(['email' => 'email']);
 
         /**
-         * @api.name Set new password
-         * @api.url /set-password
-         * @api.description Proceeds with user's password change by receiving a valid reset code
-         * @api.body.code string Password reset code (received via email)
-         * @api.body.password string New password to set
+         * @api.name        Set new password
+         * @api.description Proceeds with password reset process by receiving a valid reset code. If valid, new password will be set.
+         * @api.body.code       string  Password reset code (received via email)
+         * @api.body.password   string  New password to set
          */
         $this->api('POST', '/set-password', function () {
             $data = $this->wRequest()->getRequestData();

@@ -53,7 +53,7 @@ class UserPermission extends AbstractEntity
 
         /**
          * @api.name                    List entity API methods
-         * @api.description             Lists CRUD and custom entity methods from applications
+         * @api.description             Lists CRUD and custom entity methods from all available applications.
          * @api.query.exclude   array   Array of entities that must be excluded in the response
          * @api.query.entities  array   Array of entities that must be included in the response
          * @api.query.entity    string  Single entity for which the information is needed
@@ -111,8 +111,11 @@ class UserPermission extends AbstractEntity
         });
 
         /**
-         * @api.name Get system services
-         * @api.description This method returns an overview of all active services
+         * @api.name                    List available services
+         * @api.description             Lists service methods from all available applications.
+         * @api.query.exclude   array   Array of services that must be excluded in the response
+         * @api.query.services  array   Array of services that must be included in the response
+         * @api.query.service    string Single service for which the information is needed
          */
         $this->api('get', '/service', function () {
 

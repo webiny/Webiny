@@ -19,19 +19,7 @@ class Tooltip extends Webiny.Ui.Component {
 
     componentDidMount() {
         super.componentDidMount();
-        this.registerEventListeners();
-    }
-
-    componentWillUnmount() {
-        super.componentWillUnmount();
-        $(this.ref).first().off();
-    }
-
-    /**
-     * We attach different event listeners, depending on received 'trigger' prop. We are doing this with native JS
-     * because we need to access first child, or in other words, the real element on which the tooltip was applied.
-     */
-    registerEventListeners() {
+        // We attach different event listeners, depending on received 'trigger' prop.
         switch (this.props.trigger) {
             case 'click':
                 $(this.ref).first().on('click', this.onClick);
@@ -40,6 +28,11 @@ class Tooltip extends Webiny.Ui.Component {
                 $(this.ref).first().on('mouseenter', this.onMouseEnter);
                 $(this.ref).first().on('mouseleave', this.onMouseLeave);
         }
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        $(this.ref).first().off();
     }
 
     onClick() {
