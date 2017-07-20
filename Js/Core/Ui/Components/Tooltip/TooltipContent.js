@@ -16,12 +16,12 @@ class TooltipContent extends Webiny.Ui.Component {
      */
     componentDidMount() {
         super.componentDidMount();
-        this.positioningInterval = setInterval(this.setupPlacement, 50);
+        this.positioningInterval = setInterval(this.setupPlacement, 200);
         setTimeout(() => {
             if (this.isMounted()) {
                 clearInterval(this.positioningInterval);
-                this.positioningInterval = setInterval(this.setupPlacement, 750);
-                this.registerEventListeners();
+                // this.positioningInterval = setInterval(this.setupPlacement, 750);
+                // this.registerEventListeners();
             }
         }, 500);
     }
@@ -80,6 +80,36 @@ class TooltipContent extends Webiny.Ui.Component {
             default: // 'right'
                 style.top = target.top + (-(content.height - target.height) / 2);
                 style.left = target.left + target.width;
+        }
+
+        const offset = {
+            top: style.top + target.top,
+            left: style.left + target.left,
+        };
+
+
+        const targetFixedOffset = $(this.props.targetFirstChildElement).offset();
+        // Let's see if the tooltip went outside of the left window border
+
+        const overflowLeft = targetFixedOffset.left + (target.width / 2) - (content.width / 2);
+        if (overflowLeft < 0) {
+            style.left = style.left + Math.abs(overflowLeft);
+        }
+        console.log('content.width', content.width);
+        console.log('offset', $(this.props.targetFirstChildElement).offset());
+        // Let's detect if tooltip is outside window (this can be upgraded to be calculated against given container, using 'contain' prop).
+        console.log('style.left', style.left);
+        console.log('target.left', target.left);
+        console.log('target.width', target.width);
+        console.log('offset.left', offset.left);
+        // Overflow left?
+        if (offset.left < 0) {
+            // style.left = style.left - offset.left;
+        }
+
+        // Overflow right?
+        if (offset.left > 1500) {
+            //    style.left = style.left - offset.left
         }
 
         this.setState('style', style);
