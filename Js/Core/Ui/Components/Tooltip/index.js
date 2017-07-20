@@ -64,9 +64,6 @@ class Tooltip extends Webiny.Ui.Component {
                 return this.state.click.target;
                 break;
             default: // hover
-                if (this.props.interactive) {
-                    return this.state.hover.target || this.state.hover.content;
-                }
                 return this.state.hover.target;
         }
     }
@@ -75,7 +72,6 @@ class Tooltip extends Webiny.Ui.Component {
 Tooltip.defaultProps = {
     placement: 'right',
     trigger: 'hover',
-    interactive: false,
     target: null,
     renderer() {
         return (
