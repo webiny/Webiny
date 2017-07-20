@@ -34,7 +34,7 @@ class Tooltip extends Webiny.Ui.Component {
     registerEventListeners() {
         switch (this.props.trigger) {
             case 'click':
-                $(this.ref).on('click', ':first-child', this.onClick);
+                $(this.ref).first().on('click', this.onClick);
                 break;
             default: // Hover
                 $(this.ref).first().on('mouseenter', this.onMouseEnter);
