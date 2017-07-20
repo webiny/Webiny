@@ -1,3 +1,6 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import _ from 'lodash';
 import Webiny from 'Webiny';
 
 class ImageSet extends Webiny.Ui.Component {

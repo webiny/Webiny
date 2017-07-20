@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 class Menu {
 
     constructor(label, route = null, icon = '', key = '') {

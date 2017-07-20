@@ -2,7 +2,6 @@ const path = require('path');
 const webpack = require('webpack');
 const Visualizer = require('webpack-visualizer-plugin');
 const Webiny = require('webiny/lib/webiny');
-let externals = require('./externals');
 
 module.exports = function (app) {
     const sharedResolve = require('./resolve')(app);
@@ -40,10 +39,6 @@ module.exports = function (app) {
         );
     }
 
-    if (name === 'Webiny.Core') {
-        externals = {};
-    }
-
     return {
         name,
         context,
@@ -54,11 +49,10 @@ module.exports = function (app) {
             library: 'Webiny_' + bundleName + '_Vendor'
         },
         plugins,
-        externals,
         module: {
             rules: [
                 {
-                    test: /\.js$/,
+                    test: /\.jsx?$/,
                     exclude: /node_modules/,
                     use: [
                         {
@@ -68,6 +62,9 @@ module.exports = function (app) {
                                     'es2016',
                                     ['es2015', {modules: false}],
                                     'react'
+                                ],
+                                plugins: [
+                                    [require.resolve('babel-plugin-lodash')]
                                 ]
                             }
                         }

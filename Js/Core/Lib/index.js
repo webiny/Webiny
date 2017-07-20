@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Cookies from 'js-cookie';
 import Module from './Core/Module';
 import App from './Core/App';

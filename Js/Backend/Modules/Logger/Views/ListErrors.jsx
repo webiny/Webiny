@@ -1,3 +1,4 @@
+import React from 'react';
 import Webiny from 'Webiny';
 import ErrorGroup from './ErrorGroup';
 import ErrorCount from './ErrorCount';

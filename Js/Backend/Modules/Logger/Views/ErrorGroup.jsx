@@ -1,3 +1,4 @@
+import React from 'react';
 import Webiny from 'Webiny';
 import ErrorDetailsJs from './ErrorDetailsJs';
 import ErrorDetailsApi from './ErrorDetailsApi';

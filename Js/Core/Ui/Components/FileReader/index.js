@@ -1,3 +1,6 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import _ from 'lodash';
 import Webiny from 'Webiny';
 
 class FileReader extends Webiny.Ui.Component {

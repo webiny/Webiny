@@ -1,3 +1,4 @@
+import React from 'react';
 import Webiny from 'Webiny';
 import moment from 'moment';
 import styles from './styles.css';

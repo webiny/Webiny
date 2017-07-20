@@ -1,3 +1,5 @@
+import React from 'react';
+import _ from 'lodash';
 import hoistNonReactStatics from 'hoist-non-react-statics';
 import {Map} from 'immutable';
 import LazyLoad from './Ui/LazyLoad';

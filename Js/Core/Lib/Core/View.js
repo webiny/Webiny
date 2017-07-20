@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import Component from './Component';
 
 class View extends Component {

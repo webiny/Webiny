@@ -9,7 +9,6 @@ const AssetsPlugin = require('./plugins/Assets');
 const i18nPlugin = require('./plugins/i18n');
 const ChunkIdsPlugin = require('./plugins/ChunkIds');
 const Webiny = require('webiny/lib/webiny');
-let externals = require('./externals');
 
 module.exports = function (app, config) {
     const sharedResolve = require('./resolve')(app);
@@ -93,7 +92,6 @@ module.exports = function (app, config) {
             jsonpFunction: 'webpackJsonp' + app.getName().replace('.', ''),
             publicPath: '' // In production builds we do not use public path. All asset paths are built into the bundles.
         },
-        externals: name === 'Webiny.Core' ? {} : externals,
         plugins,
         module: {
             rules: [
@@ -120,6 +118,7 @@ module.exports = function (app, config) {
                                     require.resolve('babel-plugin-transform-async-to-generator'),
                                     [require.resolve('babel-plugin-transform-object-rest-spread'), {'useBuiltIns': true}],
                                     [require.resolve('babel-plugin-syntax-dynamic-import')],
+                                    [require.resolve('babel-plugin-lodash')],
                                     [require.resolve('babel-plugin-transform-builtin-extend'), {
                                         globals: ['Error']
                                     }]

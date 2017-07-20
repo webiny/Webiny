@@ -1,3 +1,4 @@
+import _ from 'lodash';
 /**
  * Menu class holds the entire system menu structure.
  * Menu items are registered when app modules are initiated.

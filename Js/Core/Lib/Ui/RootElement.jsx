@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import View from './../Core/View';
 import Router from './../Router/Router';

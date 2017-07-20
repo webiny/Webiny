@@ -1,3 +1,4 @@
+import React from 'react';
 import Webiny from 'Webiny';
 
 class MultiActions extends Webiny.Ui.Component {

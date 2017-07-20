@@ -1,3 +1,4 @@
+import React from 'react';
 import Webiny from 'Webiny';
 import ExportPermissionModal from './Modal/ExportPermissionModal';
 

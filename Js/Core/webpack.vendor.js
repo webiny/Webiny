@@ -11,7 +11,6 @@ module.exports = (config) => {
         'bluebird',
         'react',
         'react-dom',
-        'react-dom/server',
         'react-transition-group',
         'classnames',
         'immutable',

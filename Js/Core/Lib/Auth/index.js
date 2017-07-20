@@ -1,6 +1,7 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import _ from 'lodash';
 import Webiny from 'Webiny';
-/*import Forbidden from './Views/Forbidden';
-import Login from './Views/Login';*/
 
 class Auth {
     constructor() {

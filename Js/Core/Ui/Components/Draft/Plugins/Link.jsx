@@ -1,3 +1,5 @@
+import React from 'react';
+import _ from 'lodash';
 import Webiny from 'Webiny';
 
 class LinkPlugin extends Webiny.Draft.EntityPlugin {

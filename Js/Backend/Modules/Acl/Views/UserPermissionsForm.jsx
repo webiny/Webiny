@@ -1,3 +1,5 @@
+import React from 'react';
+import _ from 'lodash';
 /* eslint-disable */
 import Webiny from 'Webiny';
 

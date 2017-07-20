@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import md5 from 'blueimp-md5';
 import isMobile from 'ismobilejs';

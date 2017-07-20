@@ -11,7 +11,6 @@ const AssetsPlugin = require('./plugins/Assets');
 const i18nPlugin = require('./plugins/i18n');
 const ChunkIdsPlugin = require('./plugins/ChunkIds');
 const Webiny = require('webiny/lib/webiny');
-let externals = require('./externals');
 
 module.exports = function (app) {
     // Construct URL for hot-reload and assets
@@ -89,14 +88,12 @@ module.exports = function (app) {
             jsonpFunction: 'webpackJsonp' + app.getName().replace('.', ''),
             publicPath: url + '/build/development/' + app.getPath() + '/'
         },
-        externals: name === 'Webiny.Core' ? {} : externals,
         plugins,
         module: {
             rules: [
                 {
                     test: /\.(js|jsx)$/,
                     exclude: /node_modules/,
-                    include: Webiny.projectRoot(),
                     use: [
                         {
                             loader: 'cache-loader',
@@ -117,6 +114,7 @@ module.exports = function (app) {
                                     require.resolve('babel-plugin-transform-async-to-generator'),
                                     [require.resolve('babel-plugin-transform-object-rest-spread'), {'useBuiltIns': true}],
                                     [require.resolve('babel-plugin-syntax-dynamic-import')],
+                                    //[require.resolve('babel-plugin-lodash')],
                                     [require.resolve('babel-plugin-transform-builtin-extend'), {
                                         globals: ['Error']
                                     }]

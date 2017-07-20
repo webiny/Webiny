@@ -1,3 +1,5 @@
+import React from 'react';
+import _ from 'lodash';
 import Webiny from 'Webiny';
 import Component from './Component'; // Need to import this file directly because at this point `Webiny` is not fully populated
 
