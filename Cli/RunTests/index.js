@@ -39,18 +39,12 @@ class RunTests extends Plugin {
             compilers: {
                 js: babel({
                     presets: [
-                        require.resolve('babel-preset-es2015'),
-                        require.resolve('babel-preset-es2016'),
+                        [require.resolve('babel-preset-env'), {
+                            "targets": {
+                                "node": "current"
+                            }
+                        }],
                         require.resolve('babel-preset-react'),
-                    ],
-                    plugins: [
-                        require.resolve('babel-plugin-transform-async-to-generator'),
-                        [require.resolve('babel-plugin-transform-object-rest-spread'), {'useBuiltIns': true}],
-                        [require.resolve('babel-plugin-syntax-dynamic-import')],
-                        [require.resolve('babel-plugin-dynamic-import-node')],
-                        [require.resolve('babel-plugin-transform-builtin-extend'), {
-                            globals: ['Error']
-                        }]
                     ],
                     resolveModuleSource: function (source) {
                         if (source === 'Webiny/TestSuite') {
@@ -108,7 +102,11 @@ class RunTests extends Plugin {
                             compilers: {
                                 js: babel({
                                     presets: [
-                                        require.resolve('babel-preset-es2015')
+                                        [require.resolve('babel-preset-env'), {
+                                            "targets": {
+                                                "node": "current"
+                                            }
+                                        }],
                                     ],
                                     resolveModuleSource: function (source) {
                                         if (source === 'Webiny/TestSuite') {
