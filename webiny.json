@@ -1,15 +1,17 @@
 {
-    "cliPlugins": [
-        "./Cli/Develop",
-        "./Cli/Build",
-        "./Cli/RunTests",
-        "./Cli/Release",
-        "./Cli/Deploy",
-        "./Cli/Revert",
-        "./Cli/InstallApps",
-        "./Cli/ServerHelp",
-        "./Cli/Setup",
-        "./Cli/Exit",
-        "./Cli/Overrides"
-    ]
+    "cli": {
+        "plugins": [
+            "./Cli/Develop",
+            "./Cli/Build",
+            "./Cli/RunTests",
+            "./Cli/Release",
+            "./Cli/Deploy",
+            "./Cli/Revert",
+            "./Cli/InstallApps",
+            "./Cli/ServerHelp",
+            "./Cli/Setup",
+            "./Cli/Exit",
+            "./Cli/Overrides"
+        ]
+    }
 }

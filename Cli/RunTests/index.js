@@ -5,7 +5,6 @@ class RunTests extends Plugin {
     constructor(program) {
         super(program);
 
-        this.task = 'test';
         this.selectApps = true;
         program.option('-s, --source [source]', 'Test folder or file to run using Mocha.');
     }
@@ -129,5 +128,7 @@ class RunTests extends Plugin {
         })).then(onFinish).catch(onFinish);
     }
 }
+
+RunTests.task = 'test';
 
 module.exports = RunTests;

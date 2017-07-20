@@ -5,7 +5,6 @@ class ServerHelp extends Plugin {
     constructor(program) {
         super(program);
 
-        this.task = 'server-help';
         this.selectApps = false;
     }
 
@@ -49,5 +48,7 @@ class ServerHelp extends Plugin {
         return Promise.resolve().then(onFinish);
     }
 }
+
+ServerHelp.task = 'server-help';
 
 module.exports = ServerHelp;

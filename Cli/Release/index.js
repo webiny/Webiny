@@ -9,7 +9,6 @@ class Release extends Plugin {
     constructor(program) {
         super(program);
 
-        this.task = 'release';
         this.selectApps = false;
 
         program
@@ -23,8 +22,12 @@ class Release extends Plugin {
     }
 
     runTask(config, onFinish) {
-        const task = new Task();
-        return task.run(config);
+        return this.processHook('before-release-archive', {config, onFinish}).then(() => {
+            const task = new Task();
+            return task.run(config).then(releaseArchive => {
+                return this.processHook('after-release-archive', {config, onFinish, releaseArchive})
+            });
+        }).catch(onFinish);
     }
 
     runWizard(config, onFinish, runTask) {
@@ -65,5 +68,7 @@ class Release extends Plugin {
         });
     }
 }
+
+Release.task = 'release';
 
 module.exports = Release;

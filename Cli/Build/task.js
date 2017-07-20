@@ -33,7 +33,7 @@ class Build {
         return this.buildConfigs(vendorConfigs).then(() => {
             const appConfigs = this.getAppConfigs();
             return this.buildConfigs(appConfigs).then(stats => {
-                return new Bundler(stats, {assetRules: this.config.assetRules}).bundle();
+                return new Bundler(stats, {assetRules: this.config.assetRules}).bundle().then(() => stats);
             });
         });
     }

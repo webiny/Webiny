@@ -5,8 +5,6 @@ class Build extends Plugin {
     constructor(program) {
         super(program);
 
-        this.task = 'build';
-
         program.option('-c, --config-set [configSet]', 'ConfigSet to use for production build.');
     }
 
@@ -17,15 +15,19 @@ class Build extends Plugin {
     runTask(config, onFinish) {
         const Task = require('./task');
         process.env.NODE_ENV = 'production';
-        const task = new Task(config);
-        return task.run().then(onFinish);
+        return this.processHook('before-build', {config, onFinish}).then(() => {
+            const task = new Task(config);
+            return task.run().then(stats => {
+                return this.processHook('after-build', {config, onFinish, stats}).then(onFinish);
+            });
+        }).catch(onFinish);
     }
 
     runWizard(config, onFinish) {
         const Webiny = require('webiny/lib/webiny');
         const inquirer = require('inquirer');
         const yaml = require('js-yaml');
-        
+
         const configSets = yaml.safeLoad(Webiny.readFile(Webiny.projectRoot('Configs/ConfigSets.yaml')));
         const choices = Object.keys(configSets.ConfigSets);
 
@@ -40,5 +42,7 @@ class Build extends Plugin {
         });
     }
 }
+
+Build.task = 'build';
 
 module.exports = Build;
