@@ -49,6 +49,7 @@ module.exports = function (app) {
             library: 'Webiny_' + bundleName + '_Vendor'
         },
         plugins,
+        externals: name === 'Webiny.Core' ? {} : require('./externals'),
         module: {
             rules: [
                 {

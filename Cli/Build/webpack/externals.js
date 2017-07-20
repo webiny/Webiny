@@ -1,6 +1,3 @@
 module.exports = {
-    'react': 'React',
-    'react-dom': 'ReactDOM',
-    'jquery': '$',
-    'lodash': '_'
+    'jquery': '$'
 };

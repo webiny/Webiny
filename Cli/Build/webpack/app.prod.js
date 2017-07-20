@@ -94,6 +94,7 @@ module.exports = function (app, config) {
             jsonpFunction: 'webpackJsonp' + app.getName().replace('.', ''),
             publicPath: '' // In production builds we do not use public path. All asset paths are built into the bundles.
         },
+        externals: name === 'Webiny.Core' ? {} : require('./externals'),
         plugins,
         module: {
             rules: [

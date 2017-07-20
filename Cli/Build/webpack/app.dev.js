@@ -89,6 +89,7 @@ module.exports = function (app) {
             publicPath: url + '/build/development/' + app.getPath() + '/'
         },
         plugins,
+        externals: name === 'Webiny.Core' ? {} : require('./externals'),
         module: {
             rules: [
                 {
