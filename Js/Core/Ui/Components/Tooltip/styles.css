@@ -5,26 +5,36 @@
 	color: white;
 	font-size: 12px;
 	padding: 5px;
+	white-space: nowrap;
+	max-width: 300px;
 }
 
 .content {
 	background-color: transparent;
 	position: absolute;
-	display: inline-block;
-	z-index: 10;
+	display: block;
+	z-index: 1070;
 	padding: 3px;
-	width: 100%;
-	max-width: 100px;
+	letter-spacing: normal;
+	line-break: auto;
+	line-height: 1.42857;
+	text-align: start;
+	text-decoration: none;
+	text-shadow: none;
+	text-transform: none;
+	white-space: normal;
+	word-break: normal;
+	word-spacing: normal;
+	word-wrap: normal;
 }
 
+/* A bunch of arrows - different positioning depending on received 'placement' prop. */
 .content:before {
 	width: 0;
 	height: 0;
 	content: "";
 	position: absolute;
 }
-
-/* A bunch of arrows - different positioning depending on received 'placement' prop. */
 
 .contentTop:before {
 	border-left: 5px solid transparent;

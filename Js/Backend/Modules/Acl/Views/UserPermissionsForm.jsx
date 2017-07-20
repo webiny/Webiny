@@ -9,46 +9,6 @@ class UserPermissionsForm extends Webiny.Ui.View {
             entities: [],
             services: []
         };
-        this.bindMethods('renderService');
-    }
-
-    renderService(service, model, form, Ui) {
-        return (
-            <div key={service.id}>
-                <h5><strong>{service.name}</strong></h5>
-                <table className="table table-simple no-hover">
-                    <thead>
-                    <tr>
-                        <th className="text-left" style={{width: 140}}/>
-                        <th className="text-left">Method</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {service.methods.map(m => {
-                        return (
-                            <tr key={m.key}>
-                                <td className="text-left">
-                                    <Ui.Switch value={m.exposed} onChange={enabled => {
-                                        const permissions = _.get(model, 'permissions.services.' + service.name, {});
-                                        _.set(permissions, m.key, enabled);
-                                        _.set(model, 'permissions.services.' + service.name, permissions);
-                                        form.setModel(model);
-                                    }}/>
-                                </td>
-                                <td className="text-left">
-                                    {m.name ? <strong>{m.name}<br/></strong> : null}
-                                    <span>{m.description || 'No description available' }</span>
-                                    <br/>
-                                    <Ui.Label type="info"><strong>{m.method.toUpperCase()}</strong></Ui.Label>
-                                    <a>{m.url}</a>
-                                </td>
-                            </tr>
-                        );
-                    })}
-                    </tbody>
-                </table>
-            </div>
-        );
     }
 
     renderView(Ui) {
@@ -171,7 +131,7 @@ UserPermissionsForm.defaultProps = {
         return (
             <Webiny.Ui.LazyLoad
                 modules={['Form', 'Section', 'View', 'Grid', 'Tabs', 'Input', 'Label', 'Button', 'Switch']}>
-                {(Ui) => this.renderView(Ui)}
+                {Ui => this.renderView(Ui)}
             </Webiny.Ui.LazyLoad>
         );
     }

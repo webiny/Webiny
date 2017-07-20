@@ -1,7 +1,7 @@
 import Webiny from 'Webiny';
 import TooltipContent from './TooltipContent';
 
-class TooltipWrapper extends Webiny.Ui.Component {
+class Tooltip extends Webiny.Ui.Component {
     constructor() {
         super();
         this.ref = null;
@@ -19,12 +19,12 @@ class TooltipWrapper extends Webiny.Ui.Component {
 
     componentDidMount() {
         super.componentDidMount();
-        setTimeout(() => this.registerEventListeners(), 100);
+        this.registerEventListeners();
     }
 
     componentWillUnmount() {
         super.componentWillUnmount();
-        this.unregisterEventListeners();
+        $(this.ref).first().off();
     }
 
     /**
@@ -34,25 +34,11 @@ class TooltipWrapper extends Webiny.Ui.Component {
     registerEventListeners() {
         switch (this.props.trigger) {
             case 'click':
-                this.ref.firstChild.addEventListener('click', this.onClick);
+                $(this.ref).on('click', ':first-child', this.onClick);
                 break;
             default: // Hover
-                this.ref.firstChild.addEventListener('mouseenter', this.onMouseEnter);
-                this.ref.firstChild.addEventListener('mouseleave', this.onMouseLeave);
-        }
-    }
-
-    /**
-     * On componentWillUnmount, we make sure we cleanup all attached event listeners.
-     */
-    unregisterEventListeners() {
-        switch (this.props.trigger) {
-            case 'click':
-                this.ref.firstChild.removeEventListener('click', this.onClick);
-                break;
-            default: // Hover
-                this.ref.firstChild.removeEventListener('mouseenter', this.onMouseEnter);
-                this.ref.firstChild.removeEventListener('mouseleave', this.onMouseLeave);
+                $(this.ref).first().on('mouseenter', this.onMouseEnter);
+                $(this.ref).first().on('mouseleave', this.onMouseLeave);
         }
     }
 
@@ -86,7 +72,7 @@ class TooltipWrapper extends Webiny.Ui.Component {
     }
 }
 
-TooltipWrapper.defaultProps = {
+Tooltip.defaultProps = {
     placement: 'right',
     trigger: 'hover',
     interactive: false,
@@ -110,4 +96,4 @@ TooltipWrapper.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(TooltipWrapper);
+export default Webiny.createComponent(Tooltip);
