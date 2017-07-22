@@ -6,6 +6,7 @@ module.exports = (app) => {
         'Webiny/Core': path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Core'),
         'Webiny/Backend': path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Backend'),
         'Webiny/Skeleton': path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Skeleton'),
+        'Webiny/Ui': path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Ui'),
         'Webiny': path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Core/Webiny.js')
     };
 
