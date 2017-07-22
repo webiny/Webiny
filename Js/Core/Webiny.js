@@ -53,23 +53,28 @@ class Webiny {
 
     run(config) {
         console.timeStamp("Webiny Run");
+        const coreConfig = webinyMeta['Webiny.Core'];
+        this.Page.loadStylesheet(coreConfig.css);
+        return this.Page.loadScript(coreConfig.app).then(() => {
+            // Configure Router
+            if (config.router) {
+                this.Router.setBaseUrl(config.router.baseUrl || '/');
+                this.Router.setTitlePattern(config.router.title || '');
+                this.Router.setDefaultRoute(config.router.defaultRoute || null);
+                this.Router.setHistory(config.router.history);
+            }
 
-        if (config.router) {
-            this.Router.setBaseUrl(config.router.baseUrl || '/');
-            this.Router.setTitlePattern(config.router.title || '');
-            this.Router.setDefaultRoute(config.router.defaultRoute || null);
-            this.Router.setHistory(config.router.history);
-        }
-
-        // Load and run apps
-        let loader = Promise.resolve();
-        config.apps.map(name => {
-            loader = loader.then(() => {
-                return this.includeApp(name, webinyMeta[name] || null).then(app => app.run());
+            return this.loadBundle(coreConfig).then(() => this.Apps.Webiny.Core.run());
+        }).then(() => {
+            // Load and run apps
+            let loader = Promise.resolve();
+            config.apps.map(name => {
+                loader = loader.then(() => {
+                    return this.includeApp(name, webinyMeta[name] || null).then(app => app.run());
+                });
             });
-        });
-
-        loader.then(() => {
+            return loader;
+        }).then(() => {
             // Initialize Authentication (if registered by one of the apps)
             config.apps.map(name => {
                 if (name === config.auth) {
