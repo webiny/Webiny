@@ -54,7 +54,6 @@ class Webiny {
     run(config) {
         console.timeStamp("Webiny Run");
         const coreConfig = webinyMeta['Webiny.Core'];
-        this.Page.loadStylesheet(coreConfig.css);
         return this.Page.loadScript(coreConfig.app).then(() => {
             // Configure Router
             if (config.router) {
