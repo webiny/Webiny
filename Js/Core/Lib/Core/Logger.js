@@ -13,7 +13,9 @@ class Logger {
         this.errorHashMap = [];
         this.clientInfo = this.getClientInfo();
         this.interval = null;
+    }
 
+    startLogging() {
         // assign error handlers
         this.errorHandler();
 

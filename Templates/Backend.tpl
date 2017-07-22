@@ -7,9 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
     <link rel="shortcut icon" href="{$Webiny->Assets('Webiny.Skeleton', 'images/public/favicon.ico')}"/>
     <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,300" rel="stylesheet" type="text/css">
+    {webinyPreload apps="Webiny.Components,Webiny.Skeleton,Webiny.Backend"}
     {literal}
         <script type="text/javascript">
-            var Webiny = {apps: ['Webiny.Skeleton', 'Webiny.Backend'], router: {baseUrl: '/admin', title: '%s | Webiny'}, auth: 'Webiny.Backend'};
+            var Webiny = {apps: ['Webiny.Components', 'Webiny.Skeleton', 'Webiny.Backend'], router: {baseUrl: '/admin', title: '%s | Webiny'}, auth: 'Webiny.Backend'};
         </script>
     {/literal}
 </head>
@@ -105,6 +106,6 @@
         <div class="loader loader4"></div>
     </div>
 </div>
-{webiny apps="Webiny.Skeleton,Webiny.Backend"}
+{webiny apps="Webiny.Components,Webiny.Skeleton,Webiny.Backend"}
 </body>
 </html>

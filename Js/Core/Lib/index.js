@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import Cookies from 'js-cookie';
 import Module from './Core/Module';
 import App from './Core/App';
@@ -35,11 +34,12 @@ import LazyLoad from './Ui/LazyLoad';
 import Validator from './Validation/Validator';
 import Page from './Core/Page';
 import ModuleLoader from './Core/ModuleLoader';
+import Logger from './Core/Logger';
 
 App.Module = AppModule;
 
 export default (Webiny) => {
-    _.assign(Webiny, {
+    const lib = {
         Api: {
             Uploader,
             Endpoint
@@ -54,6 +54,7 @@ export default (Webiny) => {
         Dispatcher,
         Filter,
         LocalStorage,
+        Logger: new Logger(),
         IndexedDB,
         Growl,
         Http,
@@ -87,5 +88,9 @@ export default (Webiny) => {
         },
         Validator,
         ViewManager
+    };
+
+    Object.keys(lib).map(key => {
+        Webiny[key] = lib[key];
     });
 };

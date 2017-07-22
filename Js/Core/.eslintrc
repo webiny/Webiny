@@ -85,11 +85,6 @@
         "webinyConfig": false,
         "webinyEnvironment": false,
         "webinyMeta": false,
-        "jQuery": false,
-        "$": false,
-        "React": false,
-        "ReactDOM": false,
-        "_": false,
         "google": true
     }
 }

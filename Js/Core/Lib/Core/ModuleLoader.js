@@ -46,7 +46,7 @@ class ModuleLoader {
                 module = this.registeredModules[module];
             }
 
-            return Promise.resolve(module instanceof Module ? module.load() : module()).then(m => {
+            return Promise.resolve(module instanceof Module ? module.load() : _.isFunction(module) ? module() : null).then(m => {
                 return m && m.hasOwnProperty('default') ? m.default : m;
             }).catch((err) => {
                 console.log('[Failed to import]', key, module);
