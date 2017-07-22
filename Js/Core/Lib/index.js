@@ -34,7 +34,6 @@ import LazyLoad from './Ui/LazyLoad';
 import Validator from './Validation/Validator';
 import Page from './Core/Page';
 import ModuleLoader from './Core/ModuleLoader';
-import Logger from './Core/Logger';
 
 App.Module = AppModule;
 
@@ -54,7 +53,6 @@ export default (Webiny) => {
         Dispatcher,
         Filter,
         LocalStorage,
-        Logger: new Logger(),
         IndexedDB,
         Growl,
         Http,

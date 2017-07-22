@@ -54,8 +54,6 @@ class Webiny {
     run(config) {
         console.timeStamp("Webiny Run");
 
-        this.Logger.startLogging();
-
         if (config.router) {
             this.Router.setBaseUrl(config.router.baseUrl || '/');
             this.Router.setTitlePattern(config.router.title || '');
