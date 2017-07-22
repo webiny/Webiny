@@ -23,10 +23,10 @@
 	margin: 0;
 }
 
-.btnGroup :global(button.Webiny_Core_Button_btn):hover,
-.btnGroup :global(button.Webiny_Core_Button_btn):active,
-.btnGroup :global(button.Webiny_Core_Button_btn):focus,
-.btnGroup :global(button.Webiny_Core_Button_btn):focus:active {
+.btnGroup :global(button.Webiny_Ui_Button_btn):hover,
+.btnGroup :global(button.Webiny_Ui_Button_btn):active,
+.btnGroup :global(button.Webiny_Ui_Button_btn):focus,
+.btnGroup :global(button.Webiny_Ui_Button_btn):focus:active {
 	box-shadow: none;
 }
 
@@ -35,7 +35,7 @@
 		display: flex;
 	}
 
-	.btnGroup :global(button.Webiny_Core_Button_btn) {
+	.btnGroup :global(button.Webiny_Ui_Button_btn) {
 		flex-grow: 1;
 	}
 

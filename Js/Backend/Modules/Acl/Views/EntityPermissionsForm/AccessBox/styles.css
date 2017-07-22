@@ -123,13 +123,13 @@ div.noCustomMethods {
 
 /* Method Details Tooltip */
 
-div.box :global(.Webiny_Core_Tooltip_content) {
+div.box :global(.Webiny_Ui_Tooltip_content) {
 	padding: 10px 10px;
 	width: 350px;
 	max-width: initial;
 }
 
-div.box :global(.Webiny_Core_Tooltip_innerContent) {
+div.box :global(.Webiny_Ui_Tooltip_innerContent) {
 	border-radius: 2px;
 	text-align: left;
 	white-space: initial;
@@ -142,7 +142,7 @@ div.box :global(.Webiny_Core_Tooltip_innerContent) {
 	padding: 10px;
 }
 
-div.box :global(.Webiny_Core_Tooltip_contentTop:before) {
+div.box :global(.Webiny_Ui_Tooltip_contentTop:before) {
 	border-left: 7px solid transparent;
 	border-right: 7px solid transparent;
 	border-top: 7px solid white;
@@ -153,7 +153,7 @@ div.box :global(.Webiny_Core_Tooltip_contentTop:before) {
 	right: 0;
 }
 
-div.box :global(.Webiny_Core_Tooltip_contentRight:before) {
+div.box :global(.Webiny_Ui_Tooltip_contentRight:before) {
 	border-top: 7px solid transparent;
 	border-bottom: 7px solid transparent;
 	border-right: 7px solid white;
@@ -162,7 +162,7 @@ div.box :global(.Webiny_Core_Tooltip_contentRight:before) {
 	transform: translateY(-50%);
 }
 
-div.box :global(.Webiny_Core_Tooltip_content strong) {
+div.box :global(.Webiny_Ui_Tooltip_content strong) {
 	width: 200px;
 	border-radius: 2px;
 }
