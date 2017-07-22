@@ -20,6 +20,6 @@ PriceField.defaultProps = {
 };
 
 export default Webiny.createComponent(PriceField, {
-    modules: ['List', {accounting: 'Webiny/Core/Vendors/Accounting'}],
+    modules: ['List', {accounting: 'Webiny/Vendors/Accounting'}],
     tableField: true
 });

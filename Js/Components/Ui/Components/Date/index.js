@@ -103,5 +103,5 @@ Date.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
 });
 
 export default Webiny.createComponent(Date, {
-    modules: ['Icon', 'Input', 'Webiny/Core/Vendors/DateTimePicker']
+    modules: ['Icon', 'Input', 'Webiny/Vendors/DateTimePicker']
 });

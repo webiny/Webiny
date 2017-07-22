@@ -81,5 +81,5 @@ PluginBlock.defaultProps = {
 };
 
 export default Webiny.createComponent(PluginBlock, {
-    modules: [{Draft: 'Webiny/Core/Vendors/Draft'}]
+    modules: [{Draft: 'Webiny/Vendors/Draft'}]
 });

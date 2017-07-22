@@ -63,6 +63,6 @@ Carousel.defaultProps = {
 export default Webiny.createComponent(Carousel, {
     modules: [
         // owl.carousel attaches itself to jQuery object and does not export anything
-        'Webiny/Core/Vendors/OwlCarousel'
+        'Webiny/Vendors/OwlCarousel'
     ]
 });

@@ -69,4 +69,4 @@ InlineToolbar.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(InlineToolbar, {modules: ['Animate', {Draft: 'Webiny/Core/Vendors/Draft'}]});
+export default Webiny.createComponent(InlineToolbar, {modules: ['Animate', {Draft: 'Webiny/Vendors/Draft'}]});
