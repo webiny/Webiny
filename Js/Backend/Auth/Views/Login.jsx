@@ -1,6 +1,6 @@
 import React from 'react';
 import Webiny from 'Webiny';
-import logoOrange from 'Assets/images/logo_orange.png';
+import logoOrange from 'Webiny/Backend/Assets/images/logo_orange.png';
 import styles from './styles/Login.css';
 
 class Login extends Webiny.Ui.View {
