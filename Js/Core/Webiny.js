@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import $ from 'jquery';
 import 'babel-polyfill';
-import appendLibrary from './Lib';
+import Page from './Lib/Core/Page';
 
 function formatAjaxResponse(jqXhr) {
     return {
@@ -29,7 +29,7 @@ class Webiny {
     constructor() {
         this.Apps = {};
         this.EMPTY = '__webiny_empty__';
-        appendLibrary(this);
+        this.Page = new Page();
 
         if (DEVELOPMENT) {
             this.hotReloading = false;
@@ -43,8 +43,8 @@ class Webiny {
         }
     }
 
-    import(modules) {
-        return this.ModuleLoader.load(modules);
+    import(modules, options = {}) {
+        return this.ModuleLoader.load(modules, options);
     }
 
     importByTag(tag) {

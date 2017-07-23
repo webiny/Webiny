@@ -32,7 +32,6 @@ import UiMenu from './Ui/Menu';
 import createComponent from './createComponent';
 import LazyLoad from './Ui/LazyLoad';
 import Validator from './Validation/Validator';
-import Page from './Core/Page';
 import ModuleLoader from './Core/ModuleLoader';
 
 App.Module = AppModule;
@@ -65,7 +64,6 @@ export default (Webiny) => {
         Model,
         Module,
         ModuleLoader: new ModuleLoader(),
-        Page: new Page(),
         Router,
         Route,
         RootElement,

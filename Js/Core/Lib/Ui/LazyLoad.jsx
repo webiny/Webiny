@@ -14,7 +14,7 @@ class LazyLoad extends Component {
 
     componentWillMount() {
         super.componentWillMount();
-        Webiny.import(this.props.modules).then(modules => {
+        Webiny.import(this.props.modules, this.props.options).then(modules => {
             // Finish loading and render content
             this.setState({loaded: true, modules});
             this.props.onLoad(modules);
@@ -23,6 +23,8 @@ class LazyLoad extends Component {
 }
 
 LazyLoad.defaultProps = {
+    modules: [],
+    options: {},
     onLoad: _.noop,
     renderer() {
         if (this.state.loaded) {

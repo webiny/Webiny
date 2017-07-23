@@ -6,11 +6,13 @@ class ModuleLoader {
         // This object contains module providers registered by other apps (this allows lazy loading of chunks from other apps)
         this.registeredModules = {};
 
+        this.contextModules = {};
+
         // This object will contain optional this.configurations for components
         this.configurations = {};
     }
 
-    load(requiredModules) {
+    load(requiredModules, options = {}) {
         const toLoad = requiredModules;
         let modules = {};
         if (_.isArray(toLoad)) {
@@ -46,7 +48,9 @@ class ModuleLoader {
                 module = this.registeredModules[module];
             }
 
-            return Promise.resolve(module instanceof Module ? module.load() : _.isFunction(module) ? module() : null).then(m => {
+            const callable = module instanceof Module ? module.load.bind(module) : _.isFunction(module) ? module : _.noop;
+
+            return Promise.resolve(callable(options)).then(m => {
                 return m && m.hasOwnProperty('default') ? m.default : m;
             }).catch((err) => {
                 console.log('[Failed to import]', key, module);
@@ -103,8 +107,15 @@ class ModuleLoader {
         return this.load(modules);
     }
 
+    getContextModule(context) {
+        return this.contextModules[context];
+    }
+
     setModule(module) {
         this.registeredModules[module.name] = module;
+        if (module.context) {
+            this.contextModules[module.context] = module;
+        }
     }
 
     setConfiguration(name, config) {

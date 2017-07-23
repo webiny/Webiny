@@ -1,11 +1,11 @@
 import React from 'react';
 import _ from 'lodash';
+import Webiny from 'Webiny';
 import hoistNonReactStatics from 'hoist-non-react-statics';
 import {Map} from 'immutable';
 import LazyLoad from './Ui/LazyLoad';
 import WebinyComponent from './Core/Component';
 import ModalComponent from './Core/ModalComponent';
-import Injector from './Core/Injector';
 
 /**
  * This function creates a wrapper class around given component to allow component styling and lazy loading of dependencies
@@ -71,36 +71,41 @@ export default (Component, options = {}) => {
             const props = _.omit(this.props, ['styles']);
             props.ref = c => this.component = c;
 
-            // Detect if component override is possible
+            // Detect if component override based on `context` is possible
             if (props.context) {
-                // TODO: replace Injector with Webiny.Module `context`
-                const overrides = Injector.getByTag(props.context);
-                if (overrides.length) {
-                    const props = _.pick(this.props, ['value', 'children', 'onChange']);
-                    if (this.props.contextProps) {
-                        _.merge(props, this.props.contextProps);
-                    }
-                    const RenderComponent = overrides.pop().value;
-                    const options = RenderComponent.options;
+                const context = Webiny.ModuleLoader.getContextModule(props.context);
+                if (context) {
+                    return (
+                        <LazyLoad modules={[context.name]}>
+                            {(loaded) => {
+                                const props = _.pick(this.props, ['value', 'children', 'onChange']);
+                                if (this.props.contextProps) {
+                                    _.merge(props, this.props.contextProps);
+                                }
+                                const RenderComponent = loaded[context.name];
+                                const options = RenderComponent.options;
 
-                    // If lazy loaded modules are defined - return LazyLoad wrapper
-                    const modules = options.modules || {};
-                    if (Object.keys(modules).length > 0) {
-                        return (
-                            <LazyLoad modules={modules}>
-                                {(modules) => {
-                                    if (options.modulesProp) {
-                                        props[options.modulesProp] = modules;
-                                    } else {
-                                        _.assign(props, modules);
-                                    }
-                                    return <RenderComponent {...props}/>;
-                                }}
-                            </LazyLoad>
-                        );
-                    }
+                                // If lazy loaded modules are defined - return LazyLoad wrapper
+                                const modules = options.modules || {};
+                                if (Object.keys(modules).length > 0) {
+                                    return (
+                                        <LazyLoad modules={modules} options={{props}}>
+                                            {(modules) => {
+                                                if (options.modulesProp) {
+                                                    props[options.modulesProp] = modules;
+                                                } else {
+                                                    _.assign(props, modules);
+                                                }
+                                                return <RenderComponent {...props}/>;
+                                            }}
+                                        </LazyLoad>
+                                    );
+                                }
 
-                    return <RenderComponent {...props}/>
+                                return <RenderComponent {...props}/>
+                            }}
+                        </LazyLoad>
+                    );
                 }
             }
 
@@ -114,7 +119,7 @@ export default (Component, options = {}) => {
             const modules = options.modules || {};
             if (Object.keys(modules).length > 0) {
                 return (
-                    <LazyLoad modules={modules}>
+                    <LazyLoad modules={modules} options={{props}}>
                         {(modules) => {
                             if (options.modulesProp) {
                                 props[options.modulesProp] = modules;
