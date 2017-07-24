@@ -443,13 +443,9 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
      */
     protected static function processEntityQuery(EntityQuery $query, $options)
     {
-        if (!isset($options['includeDeleted'])) {
-            $options['includeDeleted'] = false;
-        }
-
-        if (!isset($options['entityFilters'])) {
-            $options['entityFilters'] = true;
-        }
+        $options['includeDeleted'] = $options['includeDeleted'] ?? false;
+        $options['onlyDeleted'] = $options['onlyDeleted'] ?? false;
+        $options['entityFilters'] = $options['entityFilters'] ?? true;
 
         static::processEntityBaseFilters($query);
         if ($options['entityFilters']) {
@@ -458,6 +454,10 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 
         if (!$options['includeDeleted']) {
             $query->setCondition('deletedOn', null);
+        } else {
+            if ($options['onlyDeleted']) {
+                $query->setCondition('deletedOn', ['$ne' => null]);
+            }
         }
     }
 
@@ -697,7 +697,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             }
 
             if ($this->isInstanceOf($attr, AttributeType::MANY2ONE)) {
-                /* @var $attr Many2OneAttribute  */
+                /* @var $attr Many2OneAttribute */
                 if ($attr->getOnDelete() === 'cascade') {
                     $many2oneDelete[] = $attr;
                 }
