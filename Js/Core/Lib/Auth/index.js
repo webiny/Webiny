@@ -41,13 +41,16 @@ class Auth {
 
                     const target = document.querySelector('login-overlay');
 
-                    ReactDOM.render(
-                        <Login overlay={true} onSuccess={() => {
-                            this.showLogin = false;
-                            ReactDOM.unmountComponentAtNode(target);
-                        }}/>,
-                        target
-                    );
+                    const LoginView = this.renderLogin();
+                    if (LoginView) {
+                        ReactDOM.render(
+                            <LoginView overlay={true} onSuccess={() => {
+                                this.showLogin = false;
+                                ReactDOM.unmountComponentAtNode(target);
+                            }}/>,
+                            target
+                        );
+                    }
                 }
             });
 
