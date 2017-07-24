@@ -277,4 +277,29 @@ class EntityQuery
     {
         return $this->page;
     }
+
+    public function getInitialParameters()
+    {
+        return $this->initialParameters;
+    }
+
+    public function getInitialConditions()
+    {
+        return $this->initialParameters['conditions'];
+    }
+
+    public function getInitialSorters()
+    {
+        return $this->initialParameters['sorters'];
+    }
+
+    public function getInitialLimit()
+    {
+        return $this->initialParameters['limit'];
+    }
+
+    public function getInitialPage()
+    {
+        return $this->initialParameters['page'];
+    }
 }
