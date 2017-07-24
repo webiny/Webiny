@@ -440,8 +440,6 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
      *
      * @param EntityQuery $query
      * @param array       $options
-     *
-     * @return array
      */
     protected static function processEntityQuery(EntityQuery $query, $options)
     {
