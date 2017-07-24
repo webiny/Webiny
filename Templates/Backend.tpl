@@ -10,7 +10,11 @@
     {webinyPreload apps="Webiny.Ui,Webiny.Skeleton,Webiny.Backend"}
     {literal}
         <script type="text/javascript">
-            var Webiny = {apps: ['Webiny.Ui', 'Webiny.Skeleton', 'Webiny.Backend'], router: {baseUrl: '/admin', title: '%s | Webiny'}, auth: 'Webiny.Backend'};
+            var Webiny = {
+                apps: ['Webiny.Ui', 'Webiny.Skeleton', 'Webiny.Backend'],
+                router: {baseUrl: '/admin', title: '%s | Webiny'},
+                auth: 'Webiny.Skeleton'
+            };
         </script>
     {/literal}
 </head>

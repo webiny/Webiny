@@ -3,7 +3,6 @@ import Webiny from 'Webiny';
 import Acl from './Modules/Acl';
 import Layout from './Modules/Layout';
 import Logger from './Modules/Logger';
-import Auth from './Auth';
 import './Components';
 
 class Backend extends Webiny.App {
@@ -31,10 +30,6 @@ class Backend extends Webiny.App {
                 return apps;
             });
         });
-    }
-
-    getAuth() {
-        return new Auth();
     }
 }
 

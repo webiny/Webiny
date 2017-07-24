@@ -228,7 +228,7 @@ TableEditComponent.defaultProps = {
                             <Ui.Dropdown.Link onClick={this.deleteRow} icon="fa-remove" title="Delete"
                                               renderIf={isBody && rows.length > 1}/>
                         </Ui.Dropdown>
-                        <table className="Webiny_Core_List_table">
+                        <table className="Webiny_Ui_List_table">
                             <thead>
                             <tr>
                                 {columns.map((col, colI) => {
