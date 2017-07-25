@@ -31,17 +31,6 @@ class Module {
     }
 
     /**
-     * @param components
-     * @returns {Module}
-     */
-    registerComponents(components) {
-        _.forEach(components, (value, key) => {
-            _.set(this.app, `${this.getName()}.Components.` + key, value);
-        });
-        return this;
-    }
-
-    /**
      * @returns {Module}
      */
     registerRoutes(...routes) {

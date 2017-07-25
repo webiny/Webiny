@@ -1,5 +1,6 @@
-import Webiny from 'Webiny';
-import Components from './Components/Components';
+import React from 'react';
+import Webiny from 'webiny';
+import Header from './Components/Header';
 import DefaultLayout from './Layout';
 import EmptyLayout from './EmptyLayout';
 import Dashboard from './Views/Dashboard';
@@ -10,17 +11,18 @@ class Layout extends Webiny.App.Module {
         this.name = 'Layout';
         this.registerDefaultLayout(DefaultLayout);
         this.registerLayout('empty', EmptyLayout);
-        this.registerComponents(Components);
-
-        this.registerDefaultComponents({
-            Header: Components.Header
-        });
+        this.registerDefaultComponents({Header});
 
         this.registerRoutes(
             new Webiny.Route('Dashboard', '/dashboard', Dashboard, 'Dashboard')
         );
 
         Webiny.Router.setDefaultRoute('Dashboard');
+
+        Webiny.registerModule(
+            new Webiny.Module('Webiny/Skeleton/AccountPreferencesMenuItem', () => import('./Components/UserMenu').then(m => m.AccountPreferences)).setTags('user-menu-item'),
+            new Webiny.Module('Webiny/Skeleton/LogoutMenuItem', () => import('./Components/UserMenu').then(m => m.Logout)).setTags('user-logout-menu-item')
+        );
     }
 }
 

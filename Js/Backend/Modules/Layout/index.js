@@ -1,15 +1,11 @@
 import Webiny from 'Webiny';
-import Components from './Components';
+import Footer from './Footer';
 
 class Layout extends Webiny.App.Module {
 
     init() {
         this.name = 'Layout';
-        this.registerComponents(Components);
-        this.registerDefaultComponents({
-            Header: Components.Header,
-            Footer: Components.Footer
-        });
+        this.registerDefaultComponents({Footer});
 
         // Remove route registered by Skeleton app
         Webiny.Router.deleteRoute('Dashboard');

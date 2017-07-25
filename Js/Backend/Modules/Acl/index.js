@@ -22,7 +22,6 @@ class Module extends Webiny.App.Module {
         );
 
         this.registerRoutes(
-            new Webiny.Route('Users.Account', '/acl/users/account', Views.UsersAccount, 'Account Settings'),
             new Webiny.Route('Users.Create', '/acl/users/new', Views.UsersForm, 'ACL - Create User').setRole(aclManageUsers),
             new Webiny.Route('Users.Edit', '/acl/users/:id', Views.UsersForm, 'ACL - Edit User').setRole(aclManageUsers),
             new Webiny.Route('Users.List', '/acl/users', Views.UsersList, 'ACL - Users').setRole(aclManageUsers),
@@ -35,10 +34,6 @@ class Module extends Webiny.App.Module {
             new Webiny.Route('ApiTokens.List', '/acl/api-tokens', Views.ApiTokensList, 'ACL - API Tokens').setRole(aclApiTokens),
             new Webiny.Route('ApiTokens.Logs', '/acl/api-tokens/logs/:token', Views.ApiTokensLogs, 'ACL - API Tokens - Logs').setRole(aclApiTokens)
         );
-
-        Webiny.Dispatcher.on('Acl.Account.Refresh', () => {
-            Webiny.Auth.getUser();
-        });
     }
 }
 

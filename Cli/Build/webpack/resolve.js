@@ -7,7 +7,8 @@ module.exports = (app) => {
         'Webiny/Backend': path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Backend'),
         'Webiny/Skeleton': path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Skeleton'),
         'Webiny/Ui': path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Ui'),
-        'Webiny': path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Core/Webiny.js')
+        'Webiny': path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Core/Webiny.js'),
+        'webiny': path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Core/Webiny.js')
     };
 
     // Add an alias for the app being built so we can easily point to the desired folders

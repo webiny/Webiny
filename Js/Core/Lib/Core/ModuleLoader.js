@@ -36,6 +36,8 @@ class ModuleLoader {
                     })
                 }
             });
+        } else if (_.isString(toLoad)) {
+            modules[toLoad] = toLoad;
         } else {
             modules = toLoad;
         }
@@ -92,7 +94,8 @@ class ModuleLoader {
                 _.each(loadedModules, (obj, name) => {
                     returnModules[name] = obj.module;
                 });
-                return returnModules;
+                
+                return _.isString(toLoad) ? returnModules[toLoad] : returnModules;
             });
         });
     }

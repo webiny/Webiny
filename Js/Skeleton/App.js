@@ -3,6 +3,7 @@ import 'Assets/styles.scss';
 import 'Assets/images/public/bg-login.png';
 import 'Assets/images/public/preloader_2.png';
 import 'Assets/images/public/favicon.ico';
+import UserAccount from './Modules/UserAccount';
 import Layout from './Modules/Layout';
 import Auth from './Auth';
 
@@ -10,7 +11,8 @@ class Skeleton extends Webiny.App {
     constructor() {
         super('Webiny.Skeleton');
         this.modules = [
-            new Layout(this)
+            new Layout(this),
+            new UserAccount(this)
         ];
     }
 
