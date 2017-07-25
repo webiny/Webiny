@@ -70,7 +70,7 @@ class Router {
                 }
 
                 this.activeRoute = matched;
-                if (_.has(this.history, 'location.state.title')) {
+                if (_.get(this.history, 'location.state.title')) {
                     this.activeRoute.setTitle(_.get(this.history, 'location.state.title'));
                 }
 
