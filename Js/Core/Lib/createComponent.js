@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import hoistNonReactStatics from 'hoist-non-react-statics';
 import {Map} from 'immutable';
 import LazyLoad from './Ui/LazyLoad';

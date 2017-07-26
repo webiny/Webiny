@@ -1,5 +1,5 @@
 import React from 'react';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 
 class PluginBlock extends Webiny.Ui.Component {
     constructor(props) {

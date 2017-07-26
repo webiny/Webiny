@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import AnimationSets from './AnimationSets';
 import {TransitionGroup} from 'react-transition-group';
 

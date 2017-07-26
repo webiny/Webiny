@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import './styles.scss';
 
 class CodeHighlight extends Webiny.Ui.Component {

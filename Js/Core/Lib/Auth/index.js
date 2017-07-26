@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 
 class Auth {
     constructor() {
@@ -13,8 +13,6 @@ class Auth {
     init() {
         Webiny.Router.addRoute(new Webiny.Route(this.loginRoute, '/login', this.renderLogin(), 'Login').setLayout('empty'));
         Webiny.Router.addRoute(new Webiny.Route(this.forbiddenRoute, '/forbidden', this.renderForbidden(), 'Forbidden'));
-
-        Webiny.Dispatcher.on('Logout', this.onLogout.bind(this));
 
         Webiny.Router.onBeforeStart(routerEvent => {
             Webiny.Http.addRequestInterceptor(http => {
@@ -57,10 +55,16 @@ class Auth {
             return this.checkUser(routerEvent);
         });
 
-
         Webiny.Router.onRouteWillChange(this.checkUser.bind(this));
     }
 
+    /**
+     * Check if user is authenticated and authorized to visit requested route.
+     * This method is the main "entry point" into the verification process.
+     *
+     * @param routerEvent
+     * @returns {*}
+     */
     checkUser(routerEvent) {
         if (Webiny.Model.get('User')) {
             return this.checkRouteRole(routerEvent);
@@ -74,11 +78,20 @@ class Auth {
         }
 
         // Try fetching user data
-        return this.getUser(routerEvent).then(this.checkRouteRole.bind(this));
+        return this.getUser().then(() => this.checkRouteRole(routerEvent));
     }
 
+    /**
+     * Use the given user data to check if the user is authorized to be in this app.
+     * This logic is completely specific to your application. Implement this as you see fit.
+     *
+     * This method is used by `verifyUser` and Login forms to check authorization of logged in user.
+     *
+     * @param user
+     * @returns {boolean}
+     */
     isAuthorized(user) {
-        return _.find(user.roles, {slug: 'administrator'}) !== undefined;
+        return !!_.find(user.roles, {slug: 'administrator'});
     }
 
     checkRouteRole(routerEvent) {
@@ -112,9 +125,14 @@ class Auth {
         return '*,roles.slug,gravatar';
     }
 
-    getUser(routerEvent) {
+    /**
+     * Fetch user profile and verify the returned data.
+     *
+     * @returns {Promise.<TResult>}
+     */
+    getUser() {
         return this.getApiEndpoint().get('/me', {_fields: this.getUserFields()}).then(apiResponse => {
-            return this.onVerifyUser(routerEvent, apiResponse);
+            return this.verifyUser(apiResponse);
         });
     }
 
@@ -129,20 +147,53 @@ class Auth {
         return this.authApi;
     }
 
-    /**
-     * Triggered when user is not authenticated
-     */
-    onForbidden() {
-        return Webiny.Dispatcher.dispatch('Logout').then(() => {
-            Webiny.Router.goToRoute(this.loginRoute);
-        });
+    refresh() {
+        return this.getUser();
     }
 
-    onNoToken(routerEvent) {
+    logout(redirect = true) {
+        let logout = Promise.resolve().then(() => {
+            Webiny.Model.set('User', null);
+            Webiny.Cookies.remove(this.getCookieName());
+        });
+
+        if (redirect) {
+            logout = logout.then(() => Webiny.Router.goToRoute(this.loginRoute));
+        }
+
+        return logout;
+    }
+
+    /**
+     * This method determines if the given response from the API is valid user data.
+     * It also executes `isAuthorized` to see if given user is allowed to be in this app.
+     *
+     * This method can be overridden to suit your app's needs.
+     * It is up to the developer to handle both `verified` and `unverified` cases as he sees fit.
+     *
+     * @param apiResponse
+     * @returns {*}
+     */
+    verifyUser(apiResponse) {
+        const data = apiResponse.getData();
+        if (!this.isAuthorized(data)) {
+            return this.logout();
+        }
+        Webiny.Model.set('User', data);
+    }
+
+    /**
+     * This method checks if current target route is already a login route and redirects (or not) properly.
+     *
+     * @param routerEvent
+     * @returns {*}
+     */
+    goToLogin(routerEvent) {
+        localStorage.loginRedirect = window.location.href;
+
         const isLoginRoute = _.get(routerEvent.route, 'name') === this.loginRoute;
 
         if (!isLoginRoute) {
-            localStorage.loginRedirect = window.location.href;
             routerEvent.stop();
             routerEvent.goToRoute(this.loginRoute);
         }
@@ -150,34 +201,15 @@ class Auth {
         return routerEvent;
     }
 
-    onVerifyUser(routerEvent, apiResponse) {
-        const data = apiResponse.getData();
-        if (!this.isAuthorized(data)) {
-            Webiny.Cookies.remove(this.getCookieName());
-            return this.goToLogin(routerEvent);
-        }
-        Webiny.Model.set('User', data);
-
-        return routerEvent;
+    /**
+     * Triggered when user is not authenticated
+     */
+    onForbidden() {
+        this.logout();
     }
 
-    onLogout() {
-        Webiny.Model.set('User', null);
-        Webiny.Cookies.remove(this.getCookieName());
-        Webiny.Router.goToRoute(this.loginRoute);
-    }
-
-    goToLogin(routerEvent) {
-        localStorage.loginRedirect = window.location.href;
-        routerEvent.stop();
-
-        const isLoginRoute = _.get(routerEvent.route, 'name') === this.loginRoute;
-
-        if (!isLoginRoute) {
-            routerEvent.goToRoute(this.loginRoute);
-        }
-
-        return routerEvent;
+    onNoToken(routerEvent) {
+        return this.goToLogin(routerEvent);
     }
 
     renderLogin() {

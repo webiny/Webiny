@@ -1,5 +1,5 @@
 import React from 'react';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import moment from 'moment';
 import styles from './styles.css';
 

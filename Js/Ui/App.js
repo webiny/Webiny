@@ -1,4 +1,4 @@
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import 'Assets/styles.scss';
 import registerComponents from './Components';
 import registerVendors from './Vendors';

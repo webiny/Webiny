@@ -1,4 +1,4 @@
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import Logger from './Logger';
 import appendLibrary from './Lib';
 import App from './Lib/Core/App';

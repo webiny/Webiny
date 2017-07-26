@@ -3,7 +3,7 @@ import React from 'react';
 import md5 from 'blueimp-md5';
 import isMobile from 'ismobilejs';
 import classNames from 'classnames';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import LinkState from './LinkState';
 import Dispatcher from './Dispatcher';
 import UiDispatcher from './UiDispatcher';

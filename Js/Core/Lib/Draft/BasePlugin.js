@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import Immutable from 'immutable';
 
 function filterKey(contentState, entityKey) {

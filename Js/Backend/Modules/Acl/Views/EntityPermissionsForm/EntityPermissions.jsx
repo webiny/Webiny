@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import styles from './styles.css';
 import EntityBox from './AccessBox/EntityBox';
 import AddEntityModal from './AddEntityModal';

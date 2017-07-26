@@ -1,4 +1,4 @@
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import Footer from './Footer';
 
 class Layout extends Webiny.App.Module {

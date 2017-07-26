@@ -1,5 +1,5 @@
 import React from 'react';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 
 const Header = (props) => {
     return React.createElement(props.header);

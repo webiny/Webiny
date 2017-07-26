@@ -1,4 +1,4 @@
-const Webiny = require('webiny/lib/webiny');
+const Webiny = require('webiny-cli/lib/webiny');
 const path = require('path');
 const DllBootstrapPlugin = require('./Lib/Webpack/DllBootstrapPlugin');
 

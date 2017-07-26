@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import ImagePreview from './Preview';
 import styles from './styles.css';
 

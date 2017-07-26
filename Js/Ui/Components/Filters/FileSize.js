@@ -1,5 +1,5 @@
 import React from 'react';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import filesize from 'filesize';
 
 class FileSize extends Webiny.Ui.Component {

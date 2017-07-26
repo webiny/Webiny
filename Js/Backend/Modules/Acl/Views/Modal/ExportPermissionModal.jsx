@@ -1,5 +1,5 @@
 import React from 'react';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 
 class ExportPermissionModal extends Webiny.Ui.ModalComponent {
 

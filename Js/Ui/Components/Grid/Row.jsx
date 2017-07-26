@@ -1,5 +1,5 @@
 import React from 'react';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 
 class Row extends Webiny.Ui.Component {
     // This component doesn't do much :)

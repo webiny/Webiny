@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import $ from 'jquery';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import styles from './styles.css';
 
 class TooltipContent extends Webiny.Ui.Component {

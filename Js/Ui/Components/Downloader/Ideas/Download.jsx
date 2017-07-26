@@ -1,5 +1,5 @@
 import React from 'react';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 const Ui = Webiny.Ui.Components;
 
 class Download extends Webiny.Ui.Component {

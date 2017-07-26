@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import $ from 'jquery';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 
 /**
  * Note: this class needs to be optimized. The handling of mobile menu is just awful, a lot of (ughh) jquery code which needs to go out.

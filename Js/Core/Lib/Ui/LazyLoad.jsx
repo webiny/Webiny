@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import Component from './../Core/Component';
 
 class LazyLoad extends Component {

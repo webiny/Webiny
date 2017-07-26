@@ -1,5 +1,5 @@
 import React from 'react';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import BlockType from './../Toolbar/BlockType';
 
 class UnorderedListPlugin extends Webiny.Draft.BlockTypePlugin {

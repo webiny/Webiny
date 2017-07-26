@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import localForage from 'localforage';
 import Filters from './Filters';
 import Table from './Table/Table';

@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 
 /**
  * This component is used to wrap Input and Textarea components to optimize form re-render.

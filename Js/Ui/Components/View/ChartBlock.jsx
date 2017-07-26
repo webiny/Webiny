@@ -1,5 +1,5 @@
 import React from 'react';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import styles from './styles.css';
 
 class ChartBlock extends Webiny.Ui.Component {

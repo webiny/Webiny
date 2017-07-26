@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import SelectRowField from './Fields/SelectRowField';
 import Actions from './Actions';
 import FieldInfo from './FieldInfo';

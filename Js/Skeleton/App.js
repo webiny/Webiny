@@ -1,4 +1,4 @@
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import 'Assets/styles.scss';
 import 'Assets/images/public/bg-login.png';
 import 'Assets/images/public/preloader_2.png';

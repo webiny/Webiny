@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import Atomic from './../Toolbar/Atomic';
 
 class ImageEditComponent extends Webiny.Ui.Component {

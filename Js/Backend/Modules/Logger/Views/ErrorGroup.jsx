@@ -1,5 +1,5 @@
 import React from 'react';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import ErrorDetailsJs from './ErrorDetailsJs';
 import ErrorDetailsApi from './ErrorDetailsApi';
 import ErrorDetailsPhp from './ErrorDetailsPhp';

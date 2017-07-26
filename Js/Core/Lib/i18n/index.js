@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import React from 'react';
 import moment from 'moment';
 import accounting from 'accounting';

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import ApiContainer from './Components/ApiContainer';
 import StaticContainer from './Components/StaticContainer';
 

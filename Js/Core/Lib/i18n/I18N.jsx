@@ -1,4 +1,4 @@
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import React from 'react';
 import createComponent from './../createComponent';
 import Component from './../Core/Component';

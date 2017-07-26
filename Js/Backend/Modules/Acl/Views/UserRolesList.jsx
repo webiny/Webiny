@@ -1,5 +1,5 @@
 import React from 'react';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import ExportRoleModal from './Modal/ExportRoleModal';
 
 class List extends Webiny.Ui.View {

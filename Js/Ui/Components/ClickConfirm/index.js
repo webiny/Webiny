@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 
 /**
  * If onClick function we are handling returns a function, the confirmation dialog will be hidden before executing the function.

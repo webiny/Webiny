@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import EntityPermissions from './EntityPermissionsForm/EntityPermissions';
 import ServicePermissions from './EntityPermissionsForm/ServicePermissions';
 

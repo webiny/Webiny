@@ -1,4 +1,4 @@
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 
 class Row extends Webiny.Ui.Component {
 

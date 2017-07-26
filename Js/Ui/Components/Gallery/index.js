@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import $ from 'jquery';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import Image from './Image';
 import styles from './styles.css';
 

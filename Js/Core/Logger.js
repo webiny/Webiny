@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import $ from 'jquery';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import platform from 'platform';
 
 class Logger {

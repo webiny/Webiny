@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import RouteAction from './RouteAction';
 
 class EditAction extends Webiny.Ui.Component {

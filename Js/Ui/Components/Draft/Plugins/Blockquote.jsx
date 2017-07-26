@@ -1,5 +1,5 @@
 import React from 'react';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import BlockType from './../Toolbar/BlockType';
 
 class BlockquotePlugin extends Webiny.Draft.BlockTypePlugin {

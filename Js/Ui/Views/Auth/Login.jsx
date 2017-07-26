@@ -1,5 +1,5 @@
 import React from 'react';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import logoOrange from 'Webiny/Ui/Assets/images/logo_orange.png';
 import styles from './styles/Login.css';
 

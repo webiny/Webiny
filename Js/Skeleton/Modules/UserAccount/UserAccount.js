@@ -1,5 +1,5 @@
 import React from 'react';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 
 class UserAccount extends Webiny.Ui.View {
 
@@ -25,8 +25,8 @@ UserAccount.defaultProps = {
                     }
 
                     form.setModel({password: null, confirmPassword: null});
-                    this.dispatch('Acl.Account.Refresh');
                     Webiny.Growl.success('Account settings were saved!');
+                    Webiny.Auth.refresh();
                 });
             }
         };

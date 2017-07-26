@@ -1,5 +1,5 @@
 import React from 'react';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 
 const AccountPreferencesMenu = (props) => {
     const {Link} = props;

@@ -1,4 +1,4 @@
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import Forbidden from 'Webiny/Ui/Views/Auth/Forbidden';
 import Login from 'Webiny/Ui/Views/Auth/Login';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 import InlineStyle from './../Toolbar/InlineStyle';
 
 class BoldPlugin extends Webiny.Draft.InlineStylePlugin {

@@ -1,7 +1,7 @@
 (function (global) {
     // import Core vendors
     console.timeStamp('Bootstrap started');
-    const Webiny = require('Webiny').default;
+    const Webiny = require('webiny').default;
     const jquery = require('jquery');
     const Promise = require('bluebird');
 

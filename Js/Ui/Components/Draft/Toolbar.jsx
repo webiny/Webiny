@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 
 class Toolbar extends Webiny.Ui.Component {
 

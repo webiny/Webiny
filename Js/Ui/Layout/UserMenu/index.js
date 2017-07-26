@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 
 class UserMenu extends Webiny.Ui.Component {
     constructor(props) {
@@ -28,7 +28,7 @@ class UserMenu extends Webiny.Ui.Component {
     }
 
     logout() {
-        Webiny.Dispatcher.dispatch('Logout');
+        Webiny.Auth.logout();
     }
 
     renderLogoutMenuItem() {

@@ -1,4 +1,4 @@
-import Webiny from 'Webiny';
+import Webiny from 'webiny';
 
 class Module extends Webiny.App.Module {
 
@@ -8,10 +8,6 @@ class Module extends Webiny.App.Module {
         this.registerRoutes(
             new Webiny.Route('Users.Account', '/acl/users/account', () => Webiny.import('Webiny/Skeleton/UserAccount'), 'Account Settings')
         );
-
-        Webiny.Dispatcher.on('Acl.Account.Refresh', () => {
-            Webiny.Auth.getUser();
-        });
 
         Webiny.registerModule(
             new Webiny.Module('Webiny/Skeleton/UserAccount', () => import('./UserAccount'))
