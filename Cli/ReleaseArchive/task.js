@@ -5,7 +5,7 @@ const chalk = require('chalk');
 const gulp = require('gulp');
 const gulpZip = require('gulp-zip');
 const gulpPrint = require('gulp-print');
-const Webiny = require('webiny/lib/webiny');
+const Webiny = require('webiny-cli/lib/webiny');
 
 class Release {
     run(config) {

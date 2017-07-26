@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const Visualizer = require('webpack-visualizer-plugin');
-const Webiny = require('webiny/lib/webiny');
+const Webiny = require('webiny-cli/lib/webiny');
 
 module.exports = function (app) {
     const sharedResolve = require('./resolve')(app);

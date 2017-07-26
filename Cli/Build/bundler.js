@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const crypto = require('crypto');
 const chalk = require('chalk');
-const Webiny = require('webiny/lib/webiny');
+const Webiny = require('webiny-cli/lib/webiny');
 const SizeFormatHelpers = require('webpack/lib/SizeFormatHelpers');
 
 const {magenta, yellow} = chalk;

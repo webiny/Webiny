@@ -1,5 +1,5 @@
 const path = require('path');
-const Webiny = require('webiny/lib/webiny');
+const Webiny = require('webiny-cli/lib/webiny');
 
 module.exports = (app) => {
     const aliases = {
@@ -7,13 +7,12 @@ module.exports = (app) => {
         'Webiny/Backend': path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Backend'),
         'Webiny/Skeleton': path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Skeleton'),
         'Webiny/Ui': path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Ui'),
-        'Webiny': path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Core/Webiny.js'),
         'webiny': path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Core/Webiny.js')
     };
 
     // Add an alias for the app being built so we can easily point to the desired folders
     const appName = app.getAppName();
-    if (appName !== 'Webiny') {
+    if (appName !== 'webiny') {
         aliases[appName] = path.resolve(Webiny.projectRoot(), 'Apps', appName, 'Js');
     }
 

@@ -2,7 +2,7 @@ const path = require('path');
 const chalk = require('chalk');
 const SshClient = require('node-sshclient');
 const _ = require('lodash');
-const Webiny = require('webiny/lib/webiny');
+const Webiny = require('webiny-cli/lib/webiny');
 
 class Deploy {
     run(config) {

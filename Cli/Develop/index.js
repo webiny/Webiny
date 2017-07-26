@@ -1,5 +1,5 @@
-const Plugin = require('webiny/lib/plugin');
-const Menu = require('webiny/lib/menu');
+const Plugin = require('webiny-cli/lib/plugin');
+const Menu = require('webiny-cli/lib/menu');
 
 class Develop extends Plugin {
 

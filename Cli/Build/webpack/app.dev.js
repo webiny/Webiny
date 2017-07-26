@@ -10,7 +10,7 @@ const _ = require('lodash');
 const AssetsPlugin = require('./plugins/Assets');
 const i18nPlugin = require('./plugins/i18n');
 const ChunkIdsPlugin = require('./plugins/ChunkIds');
-const Webiny = require('webiny/lib/webiny');
+const Webiny = require('webiny-cli/lib/webiny');
 
 module.exports = function (app) {
     // Construct URL for hot-reload and assets

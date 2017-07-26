@@ -3,7 +3,7 @@ const inquirer = require('inquirer');
 const SshClient = require('node-sshclient');
 const chalk = require('chalk');
 const _ = require('lodash');
-const Webiny = require('webiny/lib/webiny');
+const Webiny = require('webiny-cli/lib/webiny');
 
 class Revert {
     run(config) {

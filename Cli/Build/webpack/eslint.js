@@ -1,4 +1,4 @@
-const Webiny = require('webiny/lib/webiny');
+const Webiny = require('webiny-cli/lib/webiny');
 
 module.exports = {
     // If this will not be enough we will create eslint-config-webiny package and other apps will extend it.

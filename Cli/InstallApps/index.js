@@ -1,5 +1,5 @@
-const Menu = require('webiny/lib/menu');
-const Plugin = require('webiny/lib/plugin');
+const Menu = require('webiny-cli/lib/menu');
+const Plugin = require('webiny-cli/lib/plugin');
 
 const fallback = [
     {
@@ -51,7 +51,7 @@ class InstallApps extends Plugin {
     }
 
     runTask(config, onFinish) {
-        const Webiny = require('webiny/lib/webiny');
+        const Webiny = require('webiny-cli/lib/webiny');
         const fetch = require('node-fetch');
 
         const appsSource = 'http://www.webiny.com/api/services/the-hub/marketplace/apps';
@@ -61,12 +61,12 @@ class InstallApps extends Plugin {
                 return this.renderWizard(json.data);
             });
         }).catch(() => {
-            return this.renderWizard(fallback).then(onFinish);
-        });
+            return this.renderWizard(fallback);
+        }).then(onFinish);
     }
 
     renderWizard(options) {
-        const Webiny = require('webiny/lib/webiny');
+        const Webiny = require('webiny-cli/lib/webiny');
         const _ = require('lodash');
         const chalk = require('chalk');
         const inquirer = require('inquirer');

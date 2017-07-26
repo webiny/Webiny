@@ -1,5 +1,5 @@
-const Menu = require('webiny/lib/menu');
-const Plugin = require('webiny/lib/plugin');
+const Menu = require('webiny-cli/lib/menu');
+const Plugin = require('webiny-cli/lib/plugin');
 
 class RunTests extends Plugin {
     constructor(program) {
@@ -28,7 +28,7 @@ class RunTests extends Plugin {
     }
 
     runTestsFromSource(config, onFinish) {
-        const Webiny = require('webiny/lib/webiny');
+        const Webiny = require('webiny-cli/lib/webiny');
         const Mocha = require('mocha');
         const fs = require('fs-extra');
         const path = require('path');
@@ -79,7 +79,7 @@ class RunTests extends Plugin {
      * @returns {Promise.<TResult>}
      */
     runBrowserTests(config, onFinish) {
-        const Webiny = require('webiny/lib/webiny');
+        const Webiny = require('webiny-cli/lib/webiny');
         const inquirer = require('inquirer');
         const chalk = require('chalk');
         const glob = require('glob-all');

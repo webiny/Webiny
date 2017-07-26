@@ -1,4 +1,4 @@
-const Webiny = require('webiny/lib/webiny');
+const Webiny = require('webiny-cli/lib/webiny');
 const chalk = require('chalk');
 const yaml = require('js-yaml');
 const _ = require('lodash');

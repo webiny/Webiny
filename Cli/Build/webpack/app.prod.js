@@ -9,7 +9,7 @@ const Visualizer = require('webpack-visualizer-plugin');
 const AssetsPlugin = require('./plugins/Assets');
 const i18nPlugin = require('./plugins/i18n');
 const ChunkIdsPlugin = require('./plugins/ChunkIds');
-const Webiny = require('webiny/lib/webiny');
+const Webiny = require('webiny-cli/lib/webiny');
 
 module.exports = function (app, config) {
     const sharedResolve = require('./resolve')(app);

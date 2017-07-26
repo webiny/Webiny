@@ -1,4 +1,4 @@
-const Plugin = require('webiny/lib/plugin');
+const Plugin = require('webiny-cli/lib/plugin');
 
 class Overrides extends Plugin {
     constructor(program) {

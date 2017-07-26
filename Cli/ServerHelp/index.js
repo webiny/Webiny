@@ -1,5 +1,5 @@
-const Menu = require('webiny/lib/menu');
-const Plugin = require('webiny/lib/plugin');
+const Menu = require('webiny-cli/lib/menu');
+const Plugin = require('webiny-cli/lib/plugin');
 
 class ServerHelp extends Plugin {
     constructor(program) {
@@ -13,7 +13,7 @@ class ServerHelp extends Plugin {
     }
 
     runTask(config, onFinish) {
-        const Webiny = require('webiny/lib/webiny');
+        const Webiny = require('webiny-cli/lib/webiny');
         const chalk = require('chalk');
 
         const blue = chalk.blue;
@@ -45,7 +45,7 @@ class ServerHelp extends Plugin {
         Webiny.info('\nPoint your web server to one of the following:');
         Webiny.log('  - ' + magenta('~/www/active/production/public_html'));
 
-        return Promise.resolve().then(onFinish);
+        onFinish();
     }
 }
 

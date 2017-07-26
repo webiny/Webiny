@@ -1,5 +1,5 @@
-const Plugin = require('webiny/lib/plugin');
-const Menu = require('webiny/lib/menu');
+const Plugin = require('webiny-cli/lib/plugin');
+const Menu = require('webiny-cli/lib/menu');
 
 class Build extends Plugin {
     constructor(program) {
@@ -24,7 +24,7 @@ class Build extends Plugin {
     }
 
     runWizard(config, onFinish) {
-        const Webiny = require('webiny/lib/webiny');
+        const Webiny = require('webiny-cli/lib/webiny');
         const inquirer = require('inquirer');
         const yaml = require('js-yaml');
 

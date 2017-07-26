@@ -6,7 +6,7 @@ module.exports = function (source) {
 
     if (this.resourcePath.endsWith('/App.js')) {
         if (!/\bimport Webiny\b/.test(source)) {
-            source = `import Webiny from 'Webiny';\n${source}`
+            source = `import Webiny from 'webiny';\n${source}`
         }
 
         return `

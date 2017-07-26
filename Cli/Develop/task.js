@@ -7,7 +7,7 @@ const browserSync = require('browser-sync');
 const devMiddleware = require('webpack-dev-middleware');
 const hotMiddleware = require('webpack-hot-middleware');
 const WriteFilePlugin = require('write-file-webpack-plugin');
-const Webiny = require('webiny/lib/webiny');
+const Webiny = require('webiny-cli/lib/webiny');
 const Build = require('./../Build/task');
 
 class Develop extends Build {

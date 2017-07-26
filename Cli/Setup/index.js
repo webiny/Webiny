@@ -1,5 +1,5 @@
-const Plugin = require('webiny/lib/plugin');
-const Webiny = require('webiny/lib/webiny');
+const Plugin = require('webiny-cli/lib/plugin');
+const Webiny = require('webiny-cli/lib/webiny');
 
 function setupVirtualHost(answers, callback) {
     const chalk = require('chalk');
@@ -50,7 +50,7 @@ class Setup extends Plugin {
                 name: 'database',
                 message: 'What\'s your database name?',
                 default: () => {
-                    return 'Webiny';
+                    return 'webiny';
                 }
             },
             {

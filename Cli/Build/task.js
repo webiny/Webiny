@@ -3,7 +3,7 @@ const fs = require('fs-extra');
 const webpack = require('webpack');
 const _ = require('lodash');
 const yaml = require('js-yaml');
-const Webiny = require('webiny/lib/webiny');
+const Webiny = require('webiny-cli/lib/webiny');
 const Bundler = require('./bundler');
 
 class Build {

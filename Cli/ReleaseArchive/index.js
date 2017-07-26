@@ -1,8 +1,8 @@
 const inquirer = require('inquirer');
 const moment = require('moment');
-const Plugin = require('webiny/lib/plugin');
-const Menu = require('webiny/lib/menu');
-const Webiny = require('webiny/lib/webiny');
+const Plugin = require('webiny-cli/lib/plugin');
+const Menu = require('webiny-cli/lib/menu');
+const Webiny = require('webiny-cli/lib/webiny');
 const Task = require('./task');
 
 class Release extends Plugin {
@@ -25,7 +25,7 @@ class Release extends Plugin {
         return this.processHook('before-release-archive', {config, onFinish}).then(() => {
             const task = new Task();
             return task.run(config).then(releaseArchive => {
-                return this.processHook('after-release-archive', {config, onFinish, releaseArchive})
+                return this.processHook('after-release-archive', {config, onFinish, releaseArchive}).then(onFinish)
             });
         }).catch(onFinish);
     }
@@ -69,6 +69,6 @@ class Release extends Plugin {
     }
 }
 
-Release.task = 'release';
+Release.task = 'create-release-archive';
 
 module.exports = Release;
