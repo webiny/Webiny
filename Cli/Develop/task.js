@@ -33,7 +33,7 @@ class Develop extends Build {
         if (vendorConfigs) {
             return this.buildConfigs(vendorConfigs).then(() => {
                 const appConfigs = this.getAppConfigs();
-                this.buildAndWatch(appConfigs);
+                return this.buildAndWatch(appConfigs);
             });
         }
 
@@ -95,7 +95,10 @@ class Develop extends Build {
             })
         };
 
-        browserSync(bsConfig);
+        // Return a promise which never resolves. It will keep the task running until you abort the process.
+        return new Promise(() => {
+            browserSync(bsConfig);
+        });
     }
 }
 

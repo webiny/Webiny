@@ -8,7 +8,7 @@ class Deploy {
     run(config) {
         const folder = 'production';
         let port = 22;
-        let host = config.host;
+        let host = config.server;
         let user = null;
         let domain = null;
 
@@ -26,7 +26,7 @@ class Deploy {
             domain = hostParts[0];
         }
 
-        const file = path.parse(config.release);
+        const file = path.parse(config.archive);
 
         return new Promise((resolve, reject) => {
             const sshConfig = {
@@ -41,7 +41,7 @@ class Deploy {
                 const structure = 'mkdir -p ~/www/{files,releases,logs,active}';
                 ssh.command(structure, () => {
                     Webiny.info('Uploading release archive to remote server...');
-                    const rsync = 'rsync --progress -e \'ssh -p ' + port + '\' ' + config.release + ' ' + domain + ':~/www/releases';
+                    const rsync = 'rsync --progress -e \'ssh -p ' + port + '\' ' + config.archive + ' ' + domain + ':~/www/releases';
                     Webiny.shellExecute(rsync);
                     Webiny.success('Done! Release archive uploaded to ' + chalk.magenta('~/www/releases/' + file.base));
 
@@ -68,7 +68,7 @@ class Deploy {
                                 console.error(res);
                                 return reject();
                             }
-                            Webiny.info('Clearing cache for ' + chalk.magenta(config.domain) + '...');
+                            Webiny.info('Clearing cache for ' + chalk.magenta(config.website) + '...');
                             ssh.command(this.flushCache(config), res => {
                                 const commandOut = res.stdout || '{}';
                                 if (res.exitCode !== 0 || _.get(JSON.parse(commandOut), 'flushed') !== true) {
@@ -78,7 +78,7 @@ class Deploy {
 
                                 Webiny.info('Executing post-deploy scripts...');
                                 const postDeploy = [
-                                    'cd ~/www/active/' + folder + ' && php Apps/Webiny/Php/Cli/release.php ' + config.domain
+                                    'cd ~/www/active/' + folder + ' && php Apps/Webiny/Php/Cli/release.php ' + config.website
                                 ].join(' && ');
                                 ssh.command(postDeploy, res => {
                                     Webiny.log(res.stdout);
@@ -102,7 +102,7 @@ class Deploy {
             const credentials = config.basicAuth.split(':');
             basicAuth = ' --user ' + credentials[0] + ' --password ' + (credentials[1] || '');
         }
-        return 'wget ' + basicAuth + ' --no-check-certificate -qO- ' + config.domain + '/__clear-cache__';
+        return 'wget ' + basicAuth + ' --no-check-certificate -qO- ' + config.website + '/__clear-cache__';
     };
 }
 module.exports = Deploy;

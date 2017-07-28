@@ -1,3 +1,4 @@
+const Webiny = require('webiny-cli/lib/webiny');
 const Menu = require('webiny-cli/lib/menu');
 const Plugin = require('webiny-cli/lib/plugin');
 
@@ -6,13 +7,26 @@ class ServerHelp extends Plugin {
         super(program);
 
         this.selectApps = false;
+
+        program
+            .command('server-help')
+            .description('Show server setup help.')
+            .action(() => {
+                Webiny.runTask('server-help');
+            }).on('--help', () => {
+            console.log();
+            console.log('  Examples:');
+            console.log();
+            console.log('    $ webiny-cli server-help');
+            console.log();
+        });
     }
 
     getMenu() {
         return new Menu('View server setup overview');
     }
 
-    runTask(config, onFinish) {
+    runTask() {
         const Webiny = require('webiny-cli/lib/webiny');
         const chalk = require('chalk');
 
@@ -22,7 +36,7 @@ class ServerHelp extends Plugin {
         const white = chalk.white;
         const grey = chalk.grey;
         const help = [];
-        
+
         Webiny.exclamation('\nMake sure you are able to ssh into your remote server without password! (HINT: setup an SSH key)');
 
         Webiny.info('\nThis is the server folder structure created by our deploy process:');
@@ -45,7 +59,7 @@ class ServerHelp extends Plugin {
         Webiny.info('\nPoint your web server to one of the following:');
         Webiny.log('  - ' + magenta('~/www/active/production/public_html'));
 
-        onFinish();
+        return Promise.resolve();
     }
 }
 

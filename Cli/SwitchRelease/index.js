@@ -1,3 +1,5 @@
+const _ = require('lodash');
+const Webiny = require('webiny-cli/lib/webiny');
 const Plugin = require('webiny-cli/lib/plugin');
 const Menu = require('webiny-cli/lib/menu');
 
@@ -12,13 +14,13 @@ class Revert extends Plugin {
         return new Menu('Switch release').addLineAfter();
     }
 
-    runTask(config, onFinish) {
+    runTask(config) {
         const Task = require('./task');
         const task = new Task();
-        return task.run(config).then(onFinish);
+        return task.run(config);
     }
 
-    runWizard(config, onFinish) {
+    runWizard(config) {
         const Webiny = require('webiny-cli/lib/webiny');
         const inquirer = require('inquirer');
         const _ = require('lodash');
@@ -26,29 +28,29 @@ class Revert extends Plugin {
         const lastRun = Webiny.getConfig().lastRun;
         return inquirer.prompt([{
             type: 'input',
-            name: 'host',
+            name: 'server',
             message: 'Enter SSH connection string (e.g. username@server.com:port):',
-            default: lastRun.host || null
+            default: lastRun.server || null
         }, {
             type: 'input',
-            name: 'domain',
+            name: 'website',
             message: 'Enter the domain of the website you are reverting:',
             validate: Webiny.validate.url,
-            default: lastRun.domain || null
+            default: lastRun.website || null
         }, {
             type: 'input',
             name: 'basicAuth',
             message: 'Enter Basic Authentication credentials to access your website (leave blank if not required):'
         }]).then(answers => {
-            lastRun.host = answers.host;
+            lastRun.server = answers.server;
             Webiny.saveConfig(_.assign(Webiny.getConfig(), {lastRun}));
             _.merge(config, answers);
 
-            return this.runTask(config, onFinish);
+            return this.runTask(config);
         });
     }
 }
 
-Revert.task = 'revert';
+Revert.task = 'switch-release';
 
 module.exports = Revert;

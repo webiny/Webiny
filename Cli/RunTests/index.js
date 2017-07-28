@@ -1,3 +1,5 @@
+const _ = require('lodash');
+const Webiny = require('webiny-cli/lib/webiny');
 const Menu = require('webiny-cli/lib/menu');
 const Plugin = require('webiny-cli/lib/plugin');
 
@@ -6,7 +8,25 @@ class RunTests extends Plugin {
         super(program);
 
         this.selectApps = true;
-        program.option('-s, --source [source]', 'Test folder or file to run using Mocha.');
+
+        const command = program.command('test');
+        command.description('Run tests using Mocha.');
+        this.addAppOptions(command);
+        command.option('-s, --source [source]', 'Folder or file containing tests.');
+        command.action(cmd => {
+            const config = _.assign({}, cmd.parent.opts(), cmd.opts());
+            Webiny.runTask('test', config);
+        }).on('--help', () => {
+            console.log();
+            console.log('  NOTE: options -s and -a are mutually exclusive.');
+            console.log();
+            console.log('  Examples:');
+            console.log();
+            console.log('    $ webiny-cli test -a CronManager.Backend');
+            console.log('    $ webiny-cli test -s Apps/Webiny/Tests/Api');
+            console.log();
+        });
+
     }
 
     getMenu() {
@@ -17,17 +37,16 @@ class RunTests extends Plugin {
      * This method will be used when running this plugin from a cli context (no GUI)
      *
      * @param config
-     * @param onFinish
      */
-    runTask(config, onFinish) {
+    runTask(config) {
         if (config.source) {
-            this.runTestsFromSource(config, onFinish);
+            this.runTestsFromSource(config);
         } else {
-            this.runBrowserTests(config, onFinish);
+            this.runBrowserTests(config);
         }
     }
 
-    runTestsFromSource(config, onFinish) {
+    runTestsFromSource(config) {
         const Webiny = require('webiny-cli/lib/webiny');
         const Mocha = require('mocha');
         const fs = require('fs-extra');
@@ -69,16 +88,17 @@ class RunTests extends Plugin {
         }
 
         // Run the tests.
-        mocha.run(failures => onFinish(failures));
+        return new Promise(resolve => {
+            mocha.run(failures => resolve(failures));
+        });
     }
 
     /**
      * This method will be used when running JS app browser tests
      * @param config
-     * @param onFinish
      * @returns {Promise.<TResult>}
      */
-    runBrowserTests(config, onFinish) {
+    runBrowserTests(config) {
         const Webiny = require('webiny-cli/lib/webiny');
         const inquirer = require('inquirer');
         const chalk = require('chalk');
@@ -123,7 +143,7 @@ class RunTests extends Plugin {
                         });
                 });
             });
-        })).then(onFinish).catch(onFinish);
+        }));
     }
 }
 

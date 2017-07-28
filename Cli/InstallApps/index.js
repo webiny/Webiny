@@ -50,7 +50,7 @@ class InstallApps extends Plugin {
         return new Menu('Install apps');
     }
 
-    runTask(config, onFinish) {
+    runTask(config) {
         const Webiny = require('webiny-cli/lib/webiny');
         const fetch = require('node-fetch');
 
@@ -62,7 +62,7 @@ class InstallApps extends Plugin {
             });
         }).catch(() => {
             return this.renderWizard(fallback);
-        }).then(onFinish);
+        });
     }
 
     renderWizard(options) {

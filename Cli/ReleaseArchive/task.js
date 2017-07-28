@@ -24,7 +24,7 @@ class Release {
             '!vendor/**/*.git'
         ];
 
-        const parts = path.parse(config.release);
+        const parts = path.parse(config.target);
         if (!parts.dir.startsWith('/') && !parts.dir.startsWith('~/')) {
             parts.dir = Webiny.projectRoot(parts.dir);
         }
@@ -40,8 +40,8 @@ class Release {
                 .pipe(gulpZip(parts.name + '.zip'))
                 .pipe(gulp.dest(parts.dir))
                 .pipe(gulpPrint(() => {
-                    Webiny.success('Done! Archive saved to ' + chalk.magenta(config.release) + '\n');
-                })).on('end', () => resolve(config.release)).on('error', reject);
+                    Webiny.success('Done! Archive saved to ' + chalk.magenta(config.target) + '\n');
+                })).on('end', () => resolve(config.target)).on('error', reject);
         });
     }
 }

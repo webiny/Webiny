@@ -1,7 +1,7 @@
 const Plugin = require('webiny-cli/lib/plugin');
 const Webiny = require('webiny-cli/lib/webiny');
 
-function setupVirtualHost(answers, callback) {
+function setupVirtualHost(answers) {
     const chalk = require('chalk');
     const {magenta, white} = chalk;
 
@@ -16,11 +16,11 @@ function setupVirtualHost(answers, callback) {
         Webiny.writeFile(Webiny.projectRoot('vhost.conf'), hostFile);
         Webiny.success(white('Your nginx virtual host config was saved to ') + magenta('vhost.conf') + white(' file in your project root.'));
         Webiny.info('NOTE: you need to manually activate vhost config to finish the nginx setup.');
-
-        callback(answers);
     } catch (err) {
         Webiny.failure(err);
     }
+
+    return Promise.resolve(answers);
 }
 
 class Setup extends Plugin {
@@ -30,7 +30,7 @@ class Setup extends Plugin {
         this.selectApps = false;
     }
 
-    runWizard(config, onFinish) {
+    runWizard() {
         const inquirer = require('inquirer');
         const yaml = require('js-yaml');
         const _ = require('lodash');
@@ -147,7 +147,7 @@ class Setup extends Plugin {
             };
 
             const createHost = function () {
-                inquirer.prompt({
+                return inquirer.prompt({
                     type: 'confirm',
                     name: 'createHost',
                     message: 'Would you like us to create a new nginx virtual host for you?',
@@ -157,12 +157,12 @@ class Setup extends Plugin {
                         hostAnswers.createHost = true;
                         return errorLogFile();
                     }
-                    onFinish(answers);
+                    return answers;
                 });
             };
 
             const errorLogFile = function () {
-                inquirer.prompt({
+                return inquirer.prompt({
                     type: 'input',
                     name: 'errorLogFile',
                     message: 'Where do you want to place your error log file (including file name)?',
@@ -172,13 +172,13 @@ class Setup extends Plugin {
                     }
                 }).then(function (a) {
                     hostAnswers.errorLogFile = a.errorLogFile;
-                    setupVirtualHost(hostAnswers, onFinish);
+                    return setupVirtualHost(hostAnswers);
                 });
             };
 
             try {
                 Webiny.shellExecute('nginx -v', {stdio: 'pipe'});
-                createHost();
+                return createHost();
             } catch (err) {
                 // Skip host prompts
             }

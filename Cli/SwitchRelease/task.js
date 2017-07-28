@@ -8,7 +8,7 @@ const Webiny = require('webiny-cli/lib/webiny');
 class Revert {
     run(config) {
         let port = 22;
-        let host = config.host;
+        let host = config.server;
         let user = null;
         let domain = null;
 
@@ -54,7 +54,7 @@ class Revert {
                             'ln -s ~/www/releases/' + answers.release + ' ~/www/active/production'
                         ].join('&&');
                         ssh.command(activate, () => {
-                            Webiny.info('Clearing cache for ' + chalk.magenta(config.domain) + '...');
+                            Webiny.info('Clearing cache for ' + chalk.magenta(config.website) + '...');
                             ssh.command(this.flushCache(config), res => {
                                 const commandOut = res.stdout || '{}';
                                 if (res.exitCode !== 0 || _.get(JSON.parse(commandOut), 'flushed') !== true) {
@@ -81,7 +81,7 @@ class Revert {
             const credentials = config.basicAuth.split(':');
             basicAuth = ' --user ' + credentials[0] + ' --password ' + (credentials[1] || '');
         }
-        return 'wget ' + basicAuth + ' --no-check-certificate -qO- ' + config.domain + '/__clear-cache__';
+        return 'wget ' + basicAuth + ' --no-check-certificate -qO- ' + config.website + '/__clear-cache__';
     };
 }
 

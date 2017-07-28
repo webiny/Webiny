@@ -4,14 +4,14 @@
             "./Cli/Develop",
             "./Cli/Build",
             "./Cli/RunTests",
-            "./Cli/Release",
+            "./Cli/ReleaseArchive",
             "./Cli/Deploy",
-            "./Cli/Revert",
-            "./Cli/InstallApps",
+            "./Cli/SwitchRelease",
             "./Cli/ServerHelp",
+            "./Cli/Overrides",
             "./Cli/Setup",
-            "./Cli/Exit",
-            "./Cli/Overrides"
+            "./Cli/InstallApps",
+            "./Cli/Exit"
         ]
     }
 }

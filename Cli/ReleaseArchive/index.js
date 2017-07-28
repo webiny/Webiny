@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const moment = require('moment');
+const _ = require('lodash');
 const Plugin = require('webiny-cli/lib/plugin');
 const Menu = require('webiny-cli/lib/menu');
 const Webiny = require('webiny-cli/lib/webiny');
@@ -12,28 +13,38 @@ class Release extends Plugin {
         this.selectApps = false;
 
         program
-            .option('-h, --host [host]', 'Connection string for your target server.')
-            .option('-w --website [website]', 'Target server domain.') // https://github.com/tj/commander.js/issues/370
-            .option('-b, --basic-auth [basicAuth]', 'Basic Authentication string for your target server.')
+            .command('release-archive <target>')
+            .description('Create release archive ready for deployment to remote server.')
+            .action((target, cmd) => {
+                const config = _.assign({}, cmd.parent.opts(), cmd.opts(), {target});
+                Webiny.runTask('release-archive', config);
+            })
+            .on('--help', () => {
+                console.log();
+                console.log('  Examples:');
+                console.log();
+                console.log('    $ webiny-cli release-archive ./releases/my-release.zip');
+                console.log();
+            });
     }
 
     getMenu() {
         return new Menu('Create release archive').addLineBefore();
     }
 
-    runTask(config, onFinish) {
-        return this.processHook('before-release-archive', {config, onFinish}).then(() => {
+    runTask(config) {
+        return this.processHook('before-release-archive', {config}).then(() => {
             const task = new Task();
-            return task.run(config).then(releaseArchive => {
-                return this.processHook('after-release-archive', {config, onFinish, releaseArchive}).then(onFinish)
+            return task.run(config).then(archive => {
+                return this.processHook('after-release-archive', {config, archive});
             });
-        }).catch(onFinish);
+        });
     }
 
-    runWizard(config, onFinish, runTask) {
+    runWizard(config, runTask) {
         return inquirer.prompt([{
             type: 'input',
-            name: 'release',
+            name: 'target',
             message: 'Where do you want to store the release archive (including file name)?',
             validate: function (value) {
                 const writable = Webiny.validate.writable(value);
@@ -51,8 +62,9 @@ class Release extends Plugin {
                 return 'releases/' + zipName;
             }
         }]).then(answers => {
-            config.release = answers.release;
-            return this.runTask(config, onFinish, runTask).then(release => {
+            config.target = answers.target;
+
+            return this.runTask(config, runTask).then(() => {
                 return inquirer.prompt([{
                     type: 'confirm',
                     name: 'deploy',
@@ -60,15 +72,15 @@ class Release extends Plugin {
                     default: true
                 }]).then(answers => {
                     if (answers.deploy) {
+                        config.archive = config.target;
                         return runTask('deploy', config);
                     }
-                    onFinish();
                 });
             });
         });
     }
 }
 
-Release.task = 'create-release-archive';
+Release.task = 'release-archive';
 
 module.exports = Release;
