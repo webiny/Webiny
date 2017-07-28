@@ -153,7 +153,9 @@ class Auth {
      * @returns {Promise.<TResult>}
      */
     getUser() {
-        return this.getApiEndpoint().get('/me', {_fields: this.getUserFields()}).then(apiResponse => this.verifyUser(apiResponse));
+        return this.getApiEndpoint().get('/me', {_fields: this.getUserFields()}).then(apiResponse => {
+            return Promise.resolve(this.verifyUser(apiResponse)).then(() => apiResponse);
+        });
     }
 
     getCookieName() {
