@@ -52,7 +52,7 @@
         border-bottom: 1px solid #eee;
     }
 
-    .item{
+    .item {
         margin-bottom: 20px;
         width: 100%;
         padding: 20px;
@@ -77,7 +77,7 @@
     }
 
     @media (max-width: 768px) {
-        .box{
+        .box {
             margin-top: 0px;
             padding: 50px 25px 25px 25px;
         }
@@ -90,7 +90,7 @@
     </div>
     <h2>Welcome to your website!</h2>
     <div class="item">
-        To access the administration open <a href="/admin/login">this link.</a>
+        To access the administration open <a href="/admin">this link.</a>
     </div>
     <div class="item">
         Additional information, like <a href="https://www.webiny.com/the-hub/tutorials">Tutorials</a>,
