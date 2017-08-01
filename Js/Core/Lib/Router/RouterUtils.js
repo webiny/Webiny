@@ -62,35 +62,34 @@ class RouterUtils {
      * @param callbacks
      */
     routeWillChange(matchedRoute, callbacks) {
-        function createLink(callback) {
-            // Each chain link will receive a routerEvent instance from previous link
-            return function chainLink(routerEvent) {
-                if (!routerEvent.isStopped()) {
-                    return callback(routerEvent);
-                }
+        function chainLink(callback, routerEvent) {
+            if (!routerEvent.isStopped()) {
+                return callback(routerEvent);
+            }
 
-                if (routerEvent.goTo !== null) {
-                    Webiny.Router.goToRoute(routerEvent.goTo, routerEvent.goToParams);
-                }
+            if (routerEvent.goTo !== null) {
+                Webiny.Router.goToRoute(routerEvent.goTo, routerEvent.goToParams);
+            }
 
-                return routerEvent;
-            };
+            return routerEvent;
         }
 
         // Execute before change callbacks in a chain
         const routerEvent = new RouterEvent(matchedRoute);
         let routeWillChangeChain = Promise.resolve(routerEvent);
         callbacks.forEach(callback => {
-            routeWillChangeChain = routeWillChangeChain.then(createLink(callback), this.exceptionHandler);
+            routeWillChangeChain = routeWillChangeChain.then(() => {
+                return chainLink(callback, routerEvent);
+            }, this.exceptionHandler);
         });
 
         // In the end we need to check if routerEvent is stopped and redirect to another route if requested
-        return routeWillChangeChain.then(re => {
-            if (re.isStopped() && re.goTo !== null) {
-                Webiny.Router.goToRoute(re.goTo, re.goToParams);
+        return routeWillChangeChain.then(() => {
+            if (routerEvent.isStopped() && routerEvent.goTo !== null) {
+                Webiny.Router.goToRoute(routerEvent.goTo, routerEvent.goToParams);
             }
 
-            return re;
+            return routerEvent;
         });
     }
 

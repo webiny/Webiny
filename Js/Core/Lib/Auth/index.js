@@ -54,7 +54,6 @@ class Auth {
 
             return this.checkUser(routerEvent);
         });
-
         Webiny.Router.onRouteWillChange(this.checkUser.bind(this));
     }
 
@@ -79,19 +78,6 @@ class Auth {
 
         // Try fetching user data
         return this.getUser().then(() => this.checkRouteRole(routerEvent));
-    }
-
-    /**
-     * Use the given user data to check if the user is authorized to be in this app.
-     * This logic is completely specific to your application. Implement this as you see fit.
-     *
-     * This method is used by `verifyUser` and Login forms to check authorization of logged in user.
-     *
-     * @param user
-     * @returns {boolean}
-     */
-    isAuthorized(user) {
-        return !!_.find(user.roles, {slug: 'administrator'});
     }
 
     checkRouteRole(routerEvent) {
@@ -121,6 +107,42 @@ class Auth {
         return Promise.resolve(routerEvent);
     }
 
+    /**
+     * This method checks if current target route is already a login route and redirects (or not) properly.
+     *
+     * @param routerEvent
+     * @returns {*}
+     */
+    goToLogin(routerEvent) {
+        localStorage.loginRedirect = window.location.href;
+
+        const isLoginRoute = _.get(routerEvent.route, 'name') === this.loginRoute;
+
+        if (!isLoginRoute) {
+            routerEvent.stop();
+            routerEvent.goToRoute(this.loginRoute);
+        }
+
+        return routerEvent;
+    }
+
+    onNoToken(routerEvent) {
+        return this.goToLogin(routerEvent);
+    }
+
+    /**
+     * Use the given user data to check if the user is authorized to be in this app.
+     * This logic is completely specific to your application. Implement this as you see fit.
+     *
+     * This method is used by `verifyUser` and Login forms to check authorization of logged in user.
+     *
+     * @param user
+     * @returns {boolean}
+     */
+    isAuthorized(user) {
+        return !!_.find(user.roles, {slug: 'administrator'});
+    }
+
     getUserFields() {
         return '*,roles.slug,gravatar';
     }
@@ -132,7 +154,7 @@ class Auth {
      */
     getUser() {
         return this.getApiEndpoint().get('/me', {_fields: this.getUserFields()}).then(apiResponse => {
-            return this.verifyUser(apiResponse);
+            return Promise.resolve(this.verifyUser(apiResponse)).then(() => apiResponse);
         });
     }
 
@@ -183,33 +205,10 @@ class Auth {
     }
 
     /**
-     * This method checks if current target route is already a login route and redirects (or not) properly.
-     *
-     * @param routerEvent
-     * @returns {*}
-     */
-    goToLogin(routerEvent) {
-        localStorage.loginRedirect = window.location.href;
-
-        const isLoginRoute = _.get(routerEvent.route, 'name') === this.loginRoute;
-
-        if (!isLoginRoute) {
-            routerEvent.stop();
-            routerEvent.goToRoute(this.loginRoute);
-        }
-
-        return routerEvent;
-    }
-
-    /**
      * Triggered when user is not authenticated
      */
     onForbidden() {
         this.logout();
-    }
-
-    onNoToken(routerEvent) {
-        return this.goToLogin(routerEvent);
     }
 
     renderLogin() {

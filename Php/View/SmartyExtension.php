@@ -43,8 +43,6 @@ class SmartyExtension extends AbstractSmartyExtension
         $apiPath = $this->wConfig()->getConfig()->get('Application.ApiPath');
         $jsConfig = $this->wConfig()->getConfig()->get('Js', new ConfigObject())->toArray();
 
-        $appsHelper = new Apps();
-
         try {
             $meta = $this->getMeta('Webiny.Core');
         } catch (StorageException $e) {

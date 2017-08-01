@@ -90,9 +90,7 @@ class Router {
                 }
                 let chain = Promise.resolve(event);
                 this.routeChanged.forEach(callback => {
-                    chain = chain.then(() => {
-                        return callback(event);
-                    }).catch(Utils.exceptionHandler);
+                    chain = chain.then(() => callback(event)).catch(Utils.exceptionHandler);
                 });
                 return chain;
             });
@@ -113,17 +111,17 @@ class Router {
             }).catch(Utils.exceptionHandler);
         });
 
-        beforeStartChain = beforeStartChain.then(event => {
-            if (!event.isStopped() || event.goTo === null) {
+        beforeStartChain = beforeStartChain.then(() => {
+            if (!routerEvent.isStopped() || routerEvent.goTo === null) {
                 if (!matchedRoute) {
                     return Utils.handleRouteNotMatched(url, this.routeNotMatched);
                 }
-                Utils.renderRoute(event.route).then(route => {
+                Utils.renderRoute(routerEvent.route).then(route => {
                     Dispatcher.dispatch('RouteChanged', new RouterEvent(route, true));
                 });
             } else {
-                if (event.goTo !== null) {
-                    this.goToRoute(event.goTo, event.goToParams);
+                if (routerEvent.goTo !== null) {
+                    this.goToRoute(routerEvent.goTo, routerEvent.goToParams);
                 }
             }
         });

@@ -38,6 +38,7 @@
         "classnames": "^2.2.5",
         "clipboard": "^1.5.16",
         "codemirror": "^5.23.0",
+        "console-polyfill": "^0.3.0",
         "cropperjs": "^1.0.0-beta.1",
         "css-loader": "^0.28.0",
         "cssnano": "^3.10.0",
