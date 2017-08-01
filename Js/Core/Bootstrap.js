@@ -1,5 +1,6 @@
 (function (global) {
     // import Core vendors
+    require('console-polyfill');
     console.timeStamp('Bootstrap started');
     const Webiny = require('webiny').default;
     const jquery = require('jquery');

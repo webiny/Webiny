@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import $ from 'jquery';
 import 'babel-polyfill';
-import 'console-polyfill';
 import Page from './Lib/Core/Page';
 
 function formatAjaxResponse(jqXhr) {
