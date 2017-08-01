@@ -11,15 +11,10 @@ Field.defaultProps = {
     onClick: _.noop,
     width: null,
     renderer() {
-        let content = this.props.children;
-        if (_.isFunction(this.props.children)) {
-            content = this.props.children.call(this, this.props.data, this);
-        }
-
-        let className = _.union([], [this.props.className]).join(' ');
+        const className = this.classSet(this.props.className, 'expandable-list__row__fields__field flex-cell flex-width-' + this.props.width);
 
         return (
-            <div className={className + ' expandable-list__row__fields__field flex-cell flex-width-' + this.props.width} onClick={this.props.onClick}>{content}</div>
+            <div className={className} onClick={this.props.onClick}>{this.props.children}</div>
         );
     }
 };

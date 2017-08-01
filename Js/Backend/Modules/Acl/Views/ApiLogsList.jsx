@@ -8,7 +8,13 @@ class ApiLogsList extends Webiny.Ui.View {
         super(props);
 
         this.state = {
-            token: null
+            token: null,
+            tokens: []
+        };
+
+        this.systemToken = {
+            id: 'system',
+            description: 'System Token'
         };
     }
 
@@ -17,27 +23,90 @@ class ApiLogsList extends Webiny.Ui.View {
         const token = Webiny.Router.getParams('token');
         if (token === 'system') {
             return this.setState({
-                token: {
-                    id: 'system',
-                    description: 'System Token'
-                }
+                token: this.systemToken
             });
         }
 
-        new Webiny.Api.Endpoint('/entities/webiny/api-tokens').get(Webiny.Router.getParams('token')).then(apiResponse => {
-            this.setState({token: apiResponse.getData('entity')});
+        if (token !== 'system') {
+            new Webiny.Api.Endpoint('/entities/webiny/api-tokens').get(Webiny.Router.getParams('token')).then(apiResponse => {
+                this.setState({token: apiResponse.getData('entity')});
+            });
+        }
+
+        this.prepareTokenOptions();
+    }
+
+    prepareTokenOptions() {
+        const options = [];
+        return new Webiny.Api.Endpoint('/services/webiny/acl').get('token').then(apiResponse => {
+            if (!apiResponse.isError()) {
+                options.push(this.systemToken);
+            }
+
+            return new Webiny.Api.Endpoint('/entities/webiny/api-tokens').get('/', {_fields: 'id,owner,description'}).then(apiResponse => {
+                if (!apiResponse.isError()) {
+                    apiResponse.getData('list').map(token => options.push(token));
+                }
+                this.setState({tokens: options});
+            });
         });
+    }
+
+    renderUrlField(row) {
+        let {user, token} = row;
+        let userLabel = null;
+        let tokenLabel = null;
+
+        const {Ui} = this.props;
+
+        if (!_.isNil(user)) {
+            userLabel = (
+                <Ui.Label type="default" inline>
+                    {user.firstName} {user.lastName} ({user.email})
+                </Ui.Label>
+            );
+        }
+
+        if (!_.isNil(token)) {
+            if (token === 'system') {
+                tokenLabel = (
+                    <Ui.Label type="error" inline>System token</Ui.Label>
+                );
+            } else {
+                tokenLabel = (
+                    <Ui.Label type="success" inline>
+                        {token.description} ({token.owner})
+                    </Ui.Label>
+                );
+            }
+        }
+
+        return (
+            <field>
+                {row.request.url}<br/>
+                <Ui.Label type="info" inline>{row.method}</Ui.Label>
+                {userLabel}
+                {tokenLabel}
+            </field>
+        );
+    }
+
+    renderTokenOption(item) {
+        let option = item.data.description;
+        if (item.data.owner) {
+            option += ` (${item.data.owner})`;
+        }
+        return option;
     }
 }
 
 ApiLogsList.defaultProps = {
     renderer() {
-        const tokenId = _.get(this.state.token, 'id');
         const listProps = {
-            api: tokenId === 'system' ? '/services/webiny/acl/logs' : '/entities/webiny/api-logs',
+            api: '/entities/webiny/api-logs',
             fields: '*,createdOn,user[id,firstName,lastName,email],token[id,description,owner]',
             query: {
-                token: tokenId === 'system' ? null : Webiny.Router.getParams('token'),
+                token: Webiny.Router.getParams('token'),
                 _sort: '-createdOn'
             },
             searchFields: 'request.method,request.url',
@@ -46,6 +115,7 @@ ApiLogsList.defaultProps = {
         };
 
         const {Ui} = this.props;
+        const isSystemToken = this.state.token === 'system';
 
         return (
             <Ui.View.List>
@@ -75,17 +145,17 @@ ApiLogsList.defaultProps = {
                                                             allowClear={true}
                                                             onChange={apply()}/>
                                                     </Ui.Grid.Col>
-                                                    <Ui.Grid.Col all={3}>
+                                                    <Ui.Grid.Col all={3} renderIf={!isSystemToken}>
                                                         <Ui.Select
-                                                            api="/entities/webiny/api-tokens"
-                                                            optionRenderer={item => `${item.data.description} (${item.data.owner})`}
-                                                            selectedRenderer={item => `${item.data.description} (${item.data.owner})`}
+                                                            options={this.state.tokens}
+                                                            optionRenderer={this.renderTokenOption}
+                                                            selectedRenderer={this.renderTokenOption}
                                                             name="token"
                                                             placeholder="Filter by token"
                                                             allowClear={true}
                                                             onChange={apply()}/>
                                                     </Ui.Grid.Col>
-                                                    <Ui.Grid.Col all={3}>
+                                                    <Ui.Grid.Col all={3} renderIf={!isSystemToken}>
                                                         <Ui.Search
                                                             api="/entities/webiny/users"
                                                             fields="id,firstName,lastName,email"
@@ -105,19 +175,10 @@ ApiLogsList.defaultProps = {
                                         <Ui.List.Table.Empty renderIf={!data.length}/>
                                         <Ui.ExpandableList>
                                             {data.map(row => {
-                                                const user = row.user;
                                                 return (
                                                     <Ui.ExpandableList.Row key={row.id}>
-                                                        <Ui.ExpandableList.Field all={1} name="Method" className="text-center">
-                                                            <Ui.Label type="info" inline>{row.method}</Ui.Label>
-                                                        </Ui.ExpandableList.Field>
-                                                        <Ui.ExpandableList.Field all={8} name="URL" className="text-left">
-                                                            {row.request.url}<br/>
-                                                            <Ui.Logic.Show if={() => user}>
-                                                                <Ui.Label type="info" inline>
-                                                                    {user.firstName} {user.lastName} ({user.email})
-                                                                </Ui.Label>
-                                                            </Ui.Logic.Show>
+                                                        <Ui.ExpandableList.Field all={9} name="URL" className="text-left">
+                                                            {this.renderUrlField(row)}
                                                         </Ui.ExpandableList.Field>
                                                         <Ui.ExpandableList.Field all={3} name="Created On" className="text-center">
                                                             <span>{moment(row.createdOn).fromNow()}<br/>{row.createdOn}</span>

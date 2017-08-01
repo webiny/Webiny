@@ -81,17 +81,18 @@ Pagination.defaultProps = {
     totalPages: 0,
     currentPage: 0,
     perPage: 0,
+    perPageOptions: [10, 25, 50],
     count: 0,
     totalCount: 0,
     size: 'large', // large or small
     perPageRenderer() {
-        const {Dropdown} = this.props;
+        const {Dropdown, perPageOptions} = this.props;
         return (
             <Dropdown title={<span><strong>{this.props.perPage}</strong> per page</span>} type="balloon">
                 <Dropdown.Header title="Results per page"/>
-                <Dropdown.Link title="10" onClick={() => this.props.onPerPageChange(10)}/>
-                <Dropdown.Link title="25" onClick={() => this.props.onPerPageChange(25)}/>
-                <Dropdown.Link title="50" onClick={() => this.props.onPerPageChange(50)}/>
+                {perPageOptions.map(option => (
+                    <Dropdown.Link key={option} title={option} onClick={() => this.props.onPerPageChange(option)}/>
+                ))}
             </Dropdown>
         );
     },

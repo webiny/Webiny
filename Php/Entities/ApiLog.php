@@ -30,7 +30,12 @@ class ApiLog extends AbstractEntity
     {
         return [
             new Filter('*', function (EntityQuery $query) {
-                if (!$query->hasCondition('token')) {
+                $user = self::wAuth()->getUser();
+                if (!$user) {
+                    return $query->abort();
+                }
+
+                if (!$user->hasRole('webiny-acl-api-token-manager')) {
                     $query->setCondition('token', ['$ne' => 'system']);
                 }
             })
@@ -71,15 +76,6 @@ class ApiLog extends AbstractEntity
         $this->attr('method')->char()->setToArrayDefault();
 
         $this->attributes->removeKey('modifiedOn');
-
-        $this->api('GET', '/', function ($parent) {
-            $filters = $this->wRequest()->getFilters();
-            if (isset($filters['token']) && $filters['token'] === 'system') {
-                throw new AppException('You can not access system token logs using this entity!');
-            }
-
-            return $parent();
-        });
 
         $this->api('GET', '/methods', function () {
             return $this->wDatabase()->distinct(static::$entityCollection, 'request.method');
