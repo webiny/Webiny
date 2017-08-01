@@ -28,7 +28,7 @@
         padding: 50px 100px;
         max-width: 450px;
         max-height: 700px;
-        margin: 250px auto 0 auto;
+        margin: 100px auto 0 auto;
         text-align: center;
         margin-bottom: 25px;
     }
