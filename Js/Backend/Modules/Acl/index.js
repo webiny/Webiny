@@ -17,7 +17,10 @@ class Module extends Webiny.App.Module {
                     new Menu('Roles', 'UserRoles.List'),
                     new Menu('Permissions', 'UserPermissions.List')
                 ]).setRole(aclManageUsers),
-                new Menu('API Tokens', 'ApiTokens.List').setRole(aclApiTokens)
+                new Menu('API', [
+                    new Menu('Tokens', 'ApiTokens.List'),
+                    new Menu('Request Logs', 'ApiLogs.List')
+                ]).setRole(aclApiTokens)
             ], 'icon-users')
         );
 
@@ -32,7 +35,7 @@ class Module extends Webiny.App.Module {
             new Webiny.Route('UserPermissions.Edit', '/acl/permissions/:id', Views.UserPermissionsForm, 'ACL - Edit Permission').setRole(aclManageUsers),
             new Webiny.Route('UserPermissions.List', '/acl/permissions', Views.UserPermissionsList, 'ACL - Permissions').setRole(aclManageUsers),
             new Webiny.Route('ApiTokens.List', '/acl/api-tokens', Views.ApiTokensList, 'ACL - API Tokens').setRole(aclApiTokens),
-            new Webiny.Route('ApiTokens.Logs', '/acl/api-tokens/logs/:token', Views.ApiTokensLogs, 'ACL - API Tokens - Logs').setRole(aclApiTokens)
+            new Webiny.Route('ApiLogs.List', '/acl/api-logs', Views.ApiLogsList, 'ACL - API Logs').setRole(aclApiTokens)
         );
     }
 }

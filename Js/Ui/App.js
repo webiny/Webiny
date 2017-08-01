@@ -1,5 +1,5 @@
 import Webiny from 'webiny';
-import 'Assets/styles.scss';
+import 'Webiny/Ui/Assets/styles.scss';
 import registerComponents from './Components';
 import registerVendors from './Vendors';
 import registerLayoutModules from './Layout';

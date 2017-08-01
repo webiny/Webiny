@@ -26,7 +26,6 @@ class RunTests extends Plugin {
             console.log('    $ webiny-cli test -s Apps/Webiny/Tests/Api');
             console.log();
         });
-
     }
 
     getMenu() {

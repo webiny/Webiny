@@ -71,11 +71,14 @@
                     "crudUpdate": true,
                     "crudDelete": true
                 },
-                "Apps\\Webiny\\Php\\Entities\\ApiTokenLog": {
+                "Apps\\Webiny\\Php\\Entities\\ApiLog": {
                     "crudDelete": true,
                     "crudUpdate": true,
                     "crudRead": true,
-                    "crudCreate": true
+                    "crudCreate": true,
+                    "methods": {
+                        "get": true
+                    }
                 }
             },
             "services": {

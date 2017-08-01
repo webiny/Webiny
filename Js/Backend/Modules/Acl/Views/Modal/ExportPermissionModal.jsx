@@ -16,7 +16,7 @@ class ExportPermissionModal extends Webiny.Ui.ModalComponent {
         const _fields = 'name,slug,description,permissions';
         const api = new Webiny.Api.Endpoint('/entities/webiny/user-permissions');
         return api.get(this.props.permission.id, {_fields}).then(response => {
-            const data = response.getData();
+            const data = response.getData('entity');
             delete data.id;
 
             this.setState({

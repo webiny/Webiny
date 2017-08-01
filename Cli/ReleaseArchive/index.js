@@ -25,6 +25,11 @@ class Release extends Plugin {
                 console.log();
                 console.log('    $ webiny-cli release-archive ./releases/my-release.zip');
                 console.log();
+                console.log('  Hooks:');
+                console.log();
+                console.log('   - before-release-archive');
+                console.log('   - after-release-archive');
+                console.log();
             });
     }
 

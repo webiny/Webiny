@@ -24,8 +24,8 @@ List.defaultProps = {
             <View.List>
                 <View.Header
                     title="ACL - Users"
-                    description={<span>Once your system {permissions} and {roles}
-                        are defined, you can create your system users here.</span>}>
+                    description={<span>Once your system {permissions} and {roles}&nbsp;are defined,
+                        you can create your system users here.</span>}>
                     <Link type="primary" route="Users.Create" align="right">
                         <Icon icon="icon-plus-circled"/>
                         Create user

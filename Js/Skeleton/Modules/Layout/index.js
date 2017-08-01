@@ -14,7 +14,7 @@ class Layout extends Webiny.App.Module {
         this.registerDefaultComponents({Header});
 
         this.registerRoutes(
-            new Webiny.Route('Dashboard', '/dashboard', Dashboard, 'Dashboard')
+            new Webiny.Route('Dashboard', '/', Dashboard, 'Dashboard')
         );
 
         Webiny.Router.setDefaultRoute('Dashboard');

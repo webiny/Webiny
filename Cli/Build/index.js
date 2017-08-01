@@ -20,6 +20,11 @@ class Build extends Plugin {
             console.log('    $ webiny-cli build Production -a Webiny.Core -a Webiny.Ui -a Webiny.Skeleton');
             console.log('    $ webiny-cli build Production --all');
             console.log();
+            console.log('  Hooks:');
+            console.log();
+            console.log('   - before-build');
+            console.log('   - after-build');
+            console.log();
         });
     }
 

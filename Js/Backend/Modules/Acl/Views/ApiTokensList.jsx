@@ -96,8 +96,9 @@ ApiTokensList.defaultProps = {
                                                             sort="lastActivity"/>
                                                         <Table.Field name="requests" align="center" label="Total Requests" sort="requests">
                                                             {data => (
-                                                                <Ui.Link route="ApiTokens.Logs"
-                                                                         params={{token: data.id}}>{data.requests}</Ui.Link>
+                                                                <Ui.Link route="ApiLogs.List" params={{token: data.id}}>
+                                                                    {data.requests}
+                                                                </Ui.Link>
                                                             )}
                                                         </Table.Field>
                                                         <Table.TimeAgoField

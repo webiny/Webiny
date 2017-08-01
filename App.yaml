@@ -70,7 +70,7 @@ Events:
                 - {Handler: Php/RequestHandlers/Routes, Priority: 390}
         Api:
             Before:
-                - {Handler: Php/Dispatchers/ApiLog, Priority: 500}
+                - {Handler: Php/Dispatchers/ApiLogger, Priority: 500}
                 - {Handler: Php/Dispatchers/ApiCache::cacheRead}
             Request:
                 - {Handler: Php/Dispatchers/DiscoverDispatcher}

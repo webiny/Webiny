@@ -9,8 +9,9 @@ namespace Apps\Webiny\Php\Dispatchers;
 
 use Apps\Webiny\Php\DevTools\Authorization\SystemApiToken;
 use Apps\Webiny\Php\DevTools\Request;
+use Apps\Webiny\Php\Entities\ApiLog;
 use Apps\Webiny\Php\Entities\ApiToken;
-use Apps\Webiny\Php\Entities\ApiTokenLog;
+use Apps\Webiny\Php\Entities\User;
 use Apps\Webiny\Php\RequestHandlers\ApiEvent;
 
 /**
@@ -18,22 +19,36 @@ use Apps\Webiny\Php\RequestHandlers\ApiEvent;
  *
  * @package Apps\Webiny\Php\Dispatchers
  */
-class ApiLog extends AbstractApiDispatcher
+class ApiLogger extends AbstractApiDispatcher
 {
     public function handle(ApiEvent $event)
     {
-        $token = $this->wAuth()->getUser();
+        $user = $this->wAuth()->getUser();
         $request = $this->wRequest();
-        if ($token instanceof ApiToken) {
-            /* @var ApiToken $token */
-            $token->lastActivity = $this->datetime();
-            $token->requests += 1;
-            $token->save();
 
-            if ($token->logRequests) {
-                $this->saveTokenLog($request, $token);
+        if ($user instanceof User) {
+            if ($this->wConfig()->get('Application.Acl.LogUserRequests', false)) {
+                $this->saveTokenLog($request, $user);
+
             }
-        } elseif ($token instanceof SystemApiToken) {
+
+            return;
+        }
+
+        if ($user instanceof ApiToken) {
+            /* @var ApiToken $user */
+            $user->lastActivity = $this->datetime();
+            $user->requests += 1;
+            $user->save();
+
+            if ($user->logRequests) {
+                $this->saveTokenLog($request, $user);
+            }
+
+            return;
+        }
+
+        if ($user instanceof SystemApiToken) {
             if ($this->wConfig()->get('Application.Acl.LogSystemApiTokenRequests', false)) {
                 $this->saveTokenLog($request, 'system');
             }
@@ -42,8 +57,16 @@ class ApiLog extends AbstractApiDispatcher
 
     private function saveTokenLog(Request $req, $token)
     {
-        $apiTokenLog = new ApiTokenLog();
-        $apiTokenLog->token = is_string($token) ? $token : $token->id;
+        $apiTokenLog = new ApiLog();
+
+        if ($token instanceof ApiToken || is_string($token)) {
+            $apiTokenLog->token = is_string($token) ? $token : $token->id;
+        }
+
+        if ($this->isInstanceOf($token, $this->wAuth()->getUserClass())) {
+            $apiTokenLog->user = $token;
+        }
+
         $apiTokenLog->method = $req->getRequestMethod();
         $apiTokenLog->request = [
             'url'     => $req->getCurrentUrl(),

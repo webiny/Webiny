@@ -176,7 +176,7 @@ class Auth {
      */
     verifyUser(apiResponse) {
         const data = apiResponse.getData();
-        if (!this.isAuthorized(data)) {
+        if (apiResponse.isError() || !this.isAuthorized(data)) {
             return this.logout();
         }
         Webiny.Model.set('User', data);

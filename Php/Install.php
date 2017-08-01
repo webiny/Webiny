@@ -1,7 +1,7 @@
 <?php
 namespace Apps\Webiny\Php;
 
-use Apps\Webiny\Php\Entities\ApiTokenLog;
+use Apps\Webiny\Php\Entities\ApiLog;
 use Apps\Webiny\Php\PackageManager\App;
 use MongoDB\Driver\Exception\RuntimeException;
 
@@ -19,8 +19,8 @@ class Install extends \Apps\Webiny\Php\DevTools\LifeCycle\Install
         $roles = json_decode(file_get_contents(__DIR__ . '/Install/UserRoles.json'), true);
         $this->createUserRoles($roles);
 
-        // Create a capped collection for ApiTokenLogs
-        $entityCollection = ApiTokenLog::getEntityCollection();
+        // Create a capped collection for ApiLogs
+        $entityCollection = ApiLog::getEntityCollection();
         try {
             $this->wDatabase()->createCollection($entityCollection, [
                 'capped' => true,
