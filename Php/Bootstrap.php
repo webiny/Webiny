@@ -11,6 +11,7 @@ class Bootstrap extends \Apps\Webiny\Php\DevTools\LifeCycle\Bootstrap
     public function run(PackageManager\App $app)
     {
         parent::run($app);
+        $this->addAppRoute('/^\/welcome/', 'Webiny:Templates/Welcome.tpl', 400);
         $this->addAppRoute('/^\/' . $this->wConfig()->get('Application.Backend') . '/', 'Webiny:Templates/Backend.tpl', 380);
 
         Entity::appendConfig([
