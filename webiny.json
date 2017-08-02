@@ -10,6 +10,7 @@
             "./Cli/ServerHelp",
             "./Cli/Overrides",
             "./Cli/Setup",
+            "./Cli/CreateAdmin",
             "./Cli/InstallApps",
             "./Cli/Exit"
         ]
