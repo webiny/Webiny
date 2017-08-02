@@ -20,7 +20,7 @@ abstract class AbstractCli
 
     final public function __construct($domain = null)
     {
-        if (!$domain) {
+        if (!$domain || $domain === 'Local') {
             try {
                 $config = $this->wConfig()->parseConfig('Configs/Local/Application.yaml');
                 $domain = $config->get('Application.WebPath');

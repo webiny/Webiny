@@ -12,6 +12,7 @@ use Webiny\Component\Crypt\CryptTrait;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Mailer\Email;
 use Webiny\Component\Mailer\MailerTrait;
+use Webiny\Component\Mongo\Index\CompoundIndex;
 use Webiny\Component\Mongo\Index\SingleIndex;
 
 /**
@@ -40,7 +41,7 @@ class User extends AbstractEntity implements UserInterface
     {
         parent::__construct();
 
-        $this->index(new SingleIndex('email', 'email', false, true));
+        $this->index(new CompoundIndex('email', ['email', 'deletedOn'], false, true));
 
         $this->attr('email')->char()->setValidators('required,email,unique')->onSet(function ($email) {
             return trim(strtolower($email));
