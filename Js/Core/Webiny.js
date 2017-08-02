@@ -28,6 +28,7 @@ function request(config) {
 class Webiny {
     constructor() {
         this.Apps = {};
+        this.Config = {};
         this.EMPTY = '__webiny_empty__';
         this.Page = new Page();
 
@@ -52,8 +53,9 @@ class Webiny {
     }
 
     run(config) {
+        this.Config = config;
         console.timeStamp("Webiny Run");
-        const coreConfig = webinyMeta['Webiny.Core'];
+        const coreConfig = config.Meta['Webiny.Core'];
         return this.Page.loadScript(coreConfig.app).then(() => {
             // Configure Router
             if (config.router) {
@@ -69,7 +71,7 @@ class Webiny {
             let loader = Promise.resolve();
             config.apps.map(name => {
                 loader = loader.then(() => {
-                    return this.includeApp(name, webinyMeta[name] || null).then(app => app.run());
+                    return this.includeApp(name, this.Config.Meta[name] || null).then(app => app.run());
                 });
             });
             return loader;
@@ -131,7 +133,7 @@ class Webiny {
 
         if (!config) {
             const config = {
-                url: webinyWebPath + '/build/' + webinyEnvironment + '/' + name.replace('.', '_') + '/meta.json',
+                url: this.Config.WebPath + '/build/' + this.Config.Environment + '/' + name.replace('.', '_') + '/meta.json',
                 dataType: 'json',
                 contentType: 'application/json;charset=UTF-8',
                 processData: false
@@ -142,7 +144,7 @@ class Webiny {
 
         return loadConfig.then(config => {
             // Set config to meta to have chunks map ready for webpack
-            webinyMeta[name] = config;
+            this.Config.Meta[name] = config;
             return runApp(config);
         }).then(() => {
             return _.get(this.Apps, name);

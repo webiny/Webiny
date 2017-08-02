@@ -37,7 +37,7 @@ Downloader.defaultProps = {
 
         let action = this.state.url;
         if (!action.startsWith('http')) {
-            action = webinyApiPath + action;
+            action = Webiny.Config.ApiPath + action;
         }
 
         let params = null;

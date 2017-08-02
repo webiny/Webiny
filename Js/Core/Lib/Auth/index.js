@@ -86,7 +86,7 @@ class Auth {
     }
 
     checkRouteRole(routerEvent) {
-        if (webinyConfig.CheckUserRoles && _.has(routerEvent.route, 'role')) {
+        if (Webiny.Config.Js.CheckUserRoles && _.has(routerEvent.route, 'role')) {
             return new Promise((resolve) => {
                 const user = Webiny.Model.get('User');
 

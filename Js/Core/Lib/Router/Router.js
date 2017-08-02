@@ -348,9 +348,9 @@ class Router {
         }
 
         // Push state and let the Router process the rest
-        if (url.startsWith(webinyWebPath) || url.startsWith('file://')) {
+        if (url.startsWith(Webiny.Config.WebPath) || url.startsWith('file://')) {
             e.preventDefault();
-            url = url.replace(webinyWebPath, '').replace('file://', '');
+            url = url.replace(Webiny.Config.WebPath, '').replace('file://', '');
             this.history.push(url, {
                 title: a.getAttribute('data-document-title') || null,
                 prevTitle: window.document.title,

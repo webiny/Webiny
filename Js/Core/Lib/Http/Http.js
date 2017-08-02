@@ -1,3 +1,4 @@
+import Webiny from 'webiny';
 import _ from 'lodash';
 import HttpRequest from './Http/Request';
 import HttpResponse from './Http/Response';
@@ -14,7 +15,7 @@ function execute(http, options, aggregate = true) {
         timeout = setTimeout(() => {
             sendAggregatedRequest(); // eslint-disable-line
             timeout = null;
-        }, _.get(webinyConfig, 'Api.AggregationInterval', 100));
+        }, _.get(Webiny.Config.Js, 'Api.AggregationInterval', 100));
     }
     const headers = _.merge({}, defaultHeaders, options.headers || {});
     http.setHeaders(headers);
@@ -35,7 +36,7 @@ function execute(http, options, aggregate = true) {
     /* eslint-enable */
 
     if (!response) {
-        if (!aggregate || !_.get(webinyConfig, 'Api.AggregateRequests', true) || http.getMethod() !== 'get') {
+        if (!aggregate || !_.get(Webiny.Config.Js, 'Api.AggregateRequests', true) || http.getMethod() !== 'get') {
             response = http.send();
         } else {
             // If requests are being aggregated, push current http request into `pending` array for later resolving
@@ -46,7 +47,7 @@ function execute(http, options, aggregate = true) {
                 http.__resolve = resolve;
             });
 
-            if (pending.length >= _.get(webinyConfig, 'Api.MaxRequests', 30)) {
+            if (pending.length >= _.get(Webiny.Config.Js, 'Api.MaxRequests', 30)) {
                 clearTimeout(timeout);
                 timeout = null;
                 sendAggregatedRequest(); // eslint-disable-line
@@ -79,7 +80,7 @@ function sendAggregatedRequest() {
         };
     });
     const request = new HttpRequest();
-    request.setUrl(webinyApiPath);
+    request.setUrl(Webiny.Config.ApiPath);
     request.setMethod('POST');
     request.setBody({requests: body});
     execute(request, {headers: {'X-Webiny-Api-Aggregate': true}}, false).then(response => {

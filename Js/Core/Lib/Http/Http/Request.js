@@ -1,3 +1,4 @@
+import Webiny from 'webiny';
 import _ from 'lodash';
 import $ from 'jquery';
 import HttpResponse from './Response';
@@ -106,7 +107,7 @@ class HttpRequest {
 
     getRequestObject() {
         const headers = this.getHeaders();
-        const basicAuth = _.get(webinyConfig, 'Api.BasicAuth', null);
+        const basicAuth = _.get(Webiny.Config.Js, 'Api.BasicAuth', null);
         if (basicAuth) {
             headers['Authorization'] = 'Basic ' + btoa(basicAuth.Username + ':' + basicAuth.Password);
         }

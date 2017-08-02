@@ -21,7 +21,7 @@ class Backend extends Webiny.App {
                 let apps = Promise.resolve();
                 _.forIn(res.getData(), config => {
                     apps = apps.then(() => Webiny.includeApp(config.name, config).then(app => {
-                        if (config.name === window.Webiny.auth) {
+                        if (config.name === Webiny.Config.auth) {
                             Webiny.Auth = app.getAuth();
                         }
                         app.run();

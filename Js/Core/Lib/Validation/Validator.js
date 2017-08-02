@@ -223,13 +223,21 @@ formValidator.addValidator('email', (value) => {
 });
 
 formValidator.addValidator('password', (value) => {
-    if (!value || ['dev', 'admin'].indexOf(value) > -1) {
-        return true;
+    if (DEVELOPMENT) {
+        if (!value || ['dev', 'admin'].indexOf(value) > -1) {
+            return true;
+        }
     }
 
-    const test = value.match(/^.*(?=.{8,})(?=.*[a-zA-Z])(?=.*\d).*$/);
+    if (PRODUCTION) {
+        if (!value) {
+            return true;
+        }
+    }
+
+    const test = value.match(/^.{8,}$/);
     if (test === null) {
-        throw new ValidationError('Password must contain at least 8 characters, minimum one letter and one number');
+        throw new ValidationError('Password must contain at least 8 characters');
     }
     return true;
 });

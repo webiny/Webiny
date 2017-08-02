@@ -91,7 +91,7 @@ class Navigation extends Webiny.Ui.Component {
     }
 
     canAccess(menu) {
-        if (!webinyConfig.CheckUserRoles) {
+        if (!Webiny.Config.Js.CheckUserRoles) {
             return true;
         }
 

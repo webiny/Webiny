@@ -22,9 +22,9 @@
     }
 
     // Check if `Webiny` config exists in the global
-    if (!global.Webiny) {
-        console.error('You must define a "Webiny" config to bootstrap your app!');
+    if (!global.webinyConfig) {
+        console.error('You must define a "webinyConfig" to bootstrap your app!');
     } else {
-        Webiny.run(global.Webiny);
+        Webiny.run(global.webinyConfig);
     }
 })(window);

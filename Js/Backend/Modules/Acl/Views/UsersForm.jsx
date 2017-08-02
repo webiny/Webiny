@@ -50,7 +50,6 @@ Form.defaultProps = {
                                                     <Ui.Password
                                                         label="New password"
                                                         name="password"
-                                                        validate="minLength:8"
                                                         placeholder="Type a new password"/>
                                                     <Ui.Password
                                                         label="Confirm password"
