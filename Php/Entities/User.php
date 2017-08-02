@@ -13,7 +13,6 @@ use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Mailer\Email;
 use Webiny\Component\Mailer\MailerTrait;
 use Webiny\Component\Mongo\Index\CompoundIndex;
-use Webiny\Component\Mongo\Index\SingleIndex;
 
 /**
  * Class User
@@ -23,6 +22,8 @@ use Webiny\Component\Mongo\Index\SingleIndex;
  * @property string           $password
  * @property string           $firstName
  * @property string           $lastName
+ * @property string           $lastActive
+ * @property string           $lastLogin
  * @property string           $passwordRecoveryCode
  * @property EntityCollection $roles
  * @property bool             $enabled
