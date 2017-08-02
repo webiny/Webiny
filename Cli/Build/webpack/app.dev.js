@@ -22,6 +22,7 @@ module.exports = function (app) {
     const name = app.getName();
     const context = Webiny.projectRoot(app.getSourceDir());
     const outputPath = path.resolve(Webiny.projectRoot(), 'public_html/build/development', app.getPath());
+    const publicPath = url + '/build/development/' + app.getPath() + '/';
 
     const i18nPluginInstance = new i18nPlugin();
     const plugins = [
@@ -86,7 +87,7 @@ module.exports = function (app) {
             filename: '[name].js',
             chunkFilename: 'chunks/[name].js',
             jsonpFunction: 'webpackJsonp' + app.getName().replace('.', ''),
-            publicPath: url + '/build/development/' + app.getPath() + '/'
+            publicPath
         },
         plugins,
         externals: name === 'Webiny.Core' ? {} : require('./externals'),
@@ -163,7 +164,14 @@ module.exports = function (app) {
                     loader: 'file-loader',
                     options: {
                         context: path.resolve(Webiny.projectRoot(), app.getSourceDir(), 'Assets'),
-                        name: '[path][name].[ext]'
+                        name: '[path][name].[ext]',
+                        outputPath: (file) => {
+                            if (file.startsWith('_/')) {
+                                const parts = file.replace(/_\//g, '').split('/Assets/');
+                                file = path.join('external', parts[0], parts[1]);
+                            }
+                            return file;
+                        }
                     }
                 }
             ]

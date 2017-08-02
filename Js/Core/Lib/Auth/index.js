@@ -40,14 +40,19 @@ class Auth {
                     const target = document.querySelector('login-overlay');
 
                     const LoginView = this.renderLogin();
+
                     if (LoginView) {
-                        ReactDOM.render(
-                            <LoginView overlay={true} onSuccess={() => {
+                        const props = {
+                            overlay: true,
+                            onSuccess: () => {
                                 this.showLogin = false;
                                 ReactDOM.unmountComponentAtNode(target);
-                            }}/>,
-                            target
-                        );
+                            }
+                        };
+
+                        const {createElement, cloneElement, isValidElement} = React;
+                        const view = isValidElement(LoginView) ? cloneElement(LoginView, props) : createElement(LoginView, props);
+                        ReactDOM.render(view, target);
                     }
                 }
             });
