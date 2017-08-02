@@ -2,13 +2,22 @@
 const path = require('path');
 const webpack = require('webpack');
 const _ = require('lodash');
+const chalk = require('chalk');
 const fs = require('fs-extra');
-const browserSync = require('browser-sync');
+const browserSync = require('browser-sync').create();
 const devMiddleware = require('webpack-dev-middleware');
 const hotMiddleware = require('webpack-hot-middleware');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const Webiny = require('webiny-cli/lib/webiny');
 const Build = require('./../Build/task');
+
+// Override logger callbacks - we do not need this output
+const Logger = require('browser-sync/lib/logger');
+Logger.callbacks['service:running'] = (bs) => {
+    const urls = bs.options.get('urls').toJS();
+    Webiny.info(`Browsersync is listening on ${chalk.magenta(urls.local)}`);
+};
+Logger.callbacks['file:watching'] = _.noop;
 
 class Develop extends Build {
 
@@ -21,27 +30,40 @@ class Develop extends Build {
     run() {
         const vendorConfigs = this.getVendorConfigs();
 
-        Webiny.log('--------------------------------------------------------------------------');
-        Webiny.info('Please be patient, the initial webpack build may take a few moments...');
-        Webiny.log('--------------------------------------------------------------------------');
+        const msg = 'Please be patient, the initial webpack build may take a few moments...';
+        const line = new Array(msg.length + 3).join('-');
+        Webiny.log(line);
+        Webiny.info(msg);
+        Webiny.log(line);
 
         // Remove all files from build folder
         this.config.apps.map(app => {
-            fs.emptyDirSync(Webiny.projectRoot('public_html') + '/build/' + process.env.NODE_ENV + '/' + app.getPath());
+            fs.emptyDirSync(Webiny.projectRoot('public_html') + '/build/development/' + app.getPath());
         });
 
-        if (vendorConfigs) {
-            return this.buildConfigs(vendorConfigs).then(() => {
+        const statsConfig = {
+            all: false,
+            errors: true,
+            moduleTrace: true,
+            colors: true
+        };
+
+        if (vendorConfigs.length) {
+            Webiny.info('Building vendors...');
+            return this.buildConfigs(vendorConfigs, false).then(stats => {
+                stats.toJson().children.map(s => {
+                    Webiny.log(`webpack built ${s.name} vendors ${s.hash} in ${s.time} ms`);
+                });
                 const appConfigs = this.getAppConfigs();
-                return this.buildAndWatch(appConfigs);
+                return this.buildAndWatch(appConfigs, statsConfig);
             });
         }
 
         const appConfigs = this.getAppConfigs();
-        return this.buildAndWatch(appConfigs);
+        return this.buildAndWatch(appConfigs, statsConfig);
     }
 
-    buildAndWatch(configs) {
+    buildAndWatch(configs, statsConfig) {
         // Write webpack files to disk to trigger BrowserSync injection on CSS
         const wfp = {log: false, test: /^((?!hot-update).)*$/};
         configs.map(config => {
@@ -61,6 +83,8 @@ class Develop extends Build {
         const bsConfig = {
             ui: false,
             open: false,
+            logPrefix: 'Webiny',
+            online: false,
             port: this.port,
             socket: {
                 domain: this.domain + ':' + this.port
@@ -75,12 +99,7 @@ class Develop extends Build {
                     devMiddleware(compiler, {
                         publicPath,
                         noInfo: false,
-                        stats: {
-                            all: false,
-                            errors: true,
-                            moduleTrace: true,
-                            colors: true
-                        }
+                        stats: statsConfig
                     }),
                     hotMiddleware(compiler)
                 ]
@@ -97,7 +116,8 @@ class Develop extends Build {
 
         // Return a promise which never resolves. It will keep the task running until you abort the process.
         return new Promise(() => {
-            browserSync(bsConfig);
+            Webiny.info('Building apps...');
+            browserSync.init(bsConfig);
         });
     }
 }

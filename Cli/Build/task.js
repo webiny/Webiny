@@ -38,15 +38,14 @@ class Build {
         });
     }
 
-    buildConfigs(configs) {
+    buildConfigs(configs, statsConfig = {colors: true}) {
         return new Promise((resolve, reject) => {
             webpack(configs).run(function (err, stats) {
                 if (err) reject(err);
 
-                console.log(stats.toString({
-                    colors: true
-                }));
-
+                if (statsConfig) {
+                    console.log(stats.toString(statsConfig));
+                }
                 resolve(stats);
             });
         });
