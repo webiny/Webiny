@@ -82,11 +82,11 @@ class SmartyExtension extends AbstractSmartyExtension
 
         return <<<EOT
     <script type="text/javascript">
-        var webinyEnvironment = '{$env}';
-        var webinyWebPath = '{$webPath}';
-        var webinyApiPath = '{$apiPath}';
-        var webinyConfig = {$config};
-        var webinyMeta = {$appsMeta};
+        webinyConfig.Environment = '{$env}';
+        webinyConfig.WebPath = '{$webPath}';
+        webinyConfig.ApiPath = '{$apiPath}';
+        webinyConfig.Js = {$config};
+        webinyConfig.Meta = {$appsMeta};
     </script>
     <script src="{$meta['vendor']}" async></script> 
     {$browserSync}

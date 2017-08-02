@@ -2,8 +2,8 @@
 
 namespace Apps\Webiny\Php;
 
+use Apps\Webiny\Php\DevTools\Validators\Password;
 use Apps\Webiny\Php\Entities\User;
-use Webiny\Component\Entity\Entity;
 use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
 
 class Bootstrap extends \Apps\Webiny\Php\DevTools\LifeCycle\Bootstrap
@@ -13,12 +13,6 @@ class Bootstrap extends \Apps\Webiny\Php\DevTools\LifeCycle\Bootstrap
         parent::run($app);
         $this->addAppRoute('/^\/welcome/', 'Webiny:Templates/Welcome.tpl');
         $this->addAppRoute('/^\/' . $this->wConfig()->get('Application.Backend') . '/', 'Webiny:Templates/Backend.tpl', 380);
-
-        Entity::appendConfig([
-            'Attributes' => [
-                'many2many' => '\Apps\Webiny\Php\DevTools\Entity\Attributes\Many2ManyAttribute'
-            ]
-        ]);
 
         User::onActivity(function (User $user) {
             $user->lastActive = new DateTimeObject('now');
@@ -30,5 +24,10 @@ class Bootstrap extends \Apps\Webiny\Php\DevTools\LifeCycle\Bootstrap
             $user->lastLogin = $user->lastActive;
             $user->save();
         });
+
+        // Configure basic password validator
+        $regex = "/^.{8,}$/";
+        $message = "Password must contain at least 8 characters";
+        $this->wValidation()->addValidator(new Password($regex, $message));
     }
 }
