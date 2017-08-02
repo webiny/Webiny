@@ -20,7 +20,7 @@ module.exports = function (app, config) {
     const i18nPluginInstance = new i18nPlugin();
     const assetsPlugin = new AssetsPlugin({
         assetRules: config.assetRules,
-        manifestVariable: 'window["webinyMeta"]["' + name + '"].chunks'
+        manifestVariable: 'window["webinyConfig"]["Meta"]["' + name + '"].chunks'
     });
 
     let plugins = [

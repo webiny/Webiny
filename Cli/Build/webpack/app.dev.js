@@ -42,7 +42,7 @@ module.exports = function (app) {
         i18nPluginInstance,
         // Generate meta.json to use for app bootstrap based on generated assets
         new AssetsPlugin({
-            manifestVariable: 'window["webinyMeta"]["' + name + '"].chunks'
+            manifestVariable: 'window["webinyConfig"]["Meta"]["' + name + '"].chunks'
         }),
         new Visualizer({filename: 'stats.html'})
     ];
