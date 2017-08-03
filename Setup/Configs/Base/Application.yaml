@@ -4,6 +4,8 @@ Application:
     Acl:
         Token: ''
         CheckUserPermissions: true
+        LogSystemApiTokenRequests: true
+        LogUserRequests: true
     Logger:
         DisplayErrors: false
         Enabled: true
