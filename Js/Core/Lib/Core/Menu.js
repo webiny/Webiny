@@ -1,4 +1,46 @@
 import _ from 'lodash';
+import React from 'react';
+import Webiny from 'webiny';
+
+function findMenuIndex(findIn, menu) {
+    return _.findIndex(findIn, item => {
+        const id = item.props.id || item.props.label;
+        const menuId = menu.props.id || menu.props.label;
+        return id === menuId;
+    });
+}
+
+function mergeMenus(menu1, menu2) {
+    // If requested, overwrite existing menu and exit
+    if (menu2.props.overwriteExisting) {
+        return menu2;
+    }
+
+    const omit = ['renderer', 'children'];
+
+    // Create merged props object
+    const newProps = _.merge({}, _.omit(menu1.props, omit), _.omit(menu2.props, omit));
+    let newChildren = React.Children.toArray(menu1.props.children);
+    newProps.key = menu1.props.id || menu1.props.label;
+    React.Children.forEach(menu2.props.children, child => {
+        const existingMenu = findMenuIndex(newChildren, child);
+        if (existingMenu > -1) {
+            newChildren[existingMenu] = mergeMenus(newChildren[existingMenu], child);
+        } else {
+            newChildren.push(React.cloneElement(child, {key: child.props.id || child.props.label}));
+        }
+    });
+
+    return React.createElement(Webiny.Ui.Menu, newProps, newChildren);
+}
+
+function sortMenus(menus) {
+    menus = _.sortBy(menus, ['props.order', 'props.label']);
+    return menus.map(menu => {
+        return React.cloneElement(menu, menu.props, sortMenus(React.Children.toArray(menu.props.children)));
+    });
+}
+
 /**
  * Menu class holds the entire system menu structure.
  * Menu items are registered when app modules are initiated.
@@ -14,43 +56,18 @@ class Menu {
      */
     add(menu) {
         // If top-level menu already exists...
-        const menuIndex = _.findIndex(this.menu, {key: menu.key});
+        const menuIndex = findMenuIndex(this.menu, menu);
         if (menuIndex > -1) {
-            // Get existing top-level menu
-            const topLevelMenu = this.menu[menuIndex];
-            if (menu.order !== 100) {
-                topLevelMenu.setOrder(menu.order);
-            }
-            // Assign new sub-menu items to existing top-level menu
-            _.map(menu.route, subMenu => {
-                const subMenuIndex = _.findIndex(topLevelMenu.route, {key: subMenu.key});
-                if (subMenuIndex > -1) {
-                    _.map(subMenu.route, subMenuItem => {
-                        topLevelMenu.route[subMenuIndex].route.push(subMenuItem);
-                    });
-                } else {
-                    topLevelMenu.route.push(subMenu);
-                }
-            });
+            // Merge new menu with existing menu
+            const existingMenu = this.menu[menuIndex];
+            this.menu[menuIndex] = mergeMenus(existingMenu, menu);
         } else {
             // New top-level menu
             this.menu.push(menu);
         }
 
-        // Sort 1st-level menu by order
-        this.menu = _.sortBy(this.menu, ['order', 'label']);
-        // Sort 2nd-level menu
-        _.each(this.menu, sndMenu => {
-            if (_.isArray(sndMenu.route)) {
-                sndMenu.route = _.sortBy(sndMenu.route, ['label']);
-                // Sort 3rd-level menu
-                _.each(sndMenu.route, thrdMenu => {
-                    if (_.isArray(thrdMenu.route)) {
-                        thrdMenu.route = _.sortBy(thrdMenu.route, ['key']);
-                    }
-                });
-            }
-        });
+        // Sort menu by order, then by label (alphabetically)
+        this.menu = sortMenus(this.menu);
 
         return this;
     }

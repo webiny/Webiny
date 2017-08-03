@@ -45,7 +45,7 @@ class Navigation extends Webiny.Ui.Component {
         this.offRouteChanged();
     }
 
-    shouldComponentUpdate(nextProps, nextState){
+    shouldComponentUpdate(nextProps, nextState) {
         return !_.isEqual(this.state, nextState);
     }
 
@@ -67,9 +67,9 @@ class Navigation extends Webiny.Ui.Component {
     }
 
     mainMenuItemClick(menu) {
-        const submenu = _.isString(menu.route) || _.isNull(menu.route) ? null : menu.key;
-        this.openSubMenu(menu.key);
-        if (this.state.submenu === menu.key) {
+        const submenu = menu.children ? menu.id : null;
+        this.openSubMenu(menu.id);
+        if (this.state.submenu === menu.id) {
             return;
         }
         this.setState({submenu});
@@ -103,9 +103,10 @@ class Navigation extends Webiny.Ui.Component {
     }
 
     renderMainMenu(menu) {
+        menu.id = menu.id || menu.label;
         const menuIconClass = this.classSet('icon app-icon', {'fa': _.includes(menu.icon, 'fa-')}, menu.icon);
         const linkProps = {
-            key: menu.key,
+            key: menu.id,
             label: menu.label,
             children: [
                 <span key="icon" className={menuIconClass}/>,
@@ -115,7 +116,7 @@ class Navigation extends Webiny.Ui.Component {
         };
 
         if (_.isArray(menu.route)) {
-            linkProps['data-open-submenu'] = menu.key;
+            linkProps['data-open-submenu'] = menu.id;
         }
 
         const active = this.findRoute(menu, Webiny.Router.getActiveRoute().getName()) ? 'active' : '';
@@ -125,31 +126,30 @@ class Navigation extends Webiny.Ui.Component {
         };
 
         return (
-            <li className={active} key={menu.key} onClick={click}>
+            <li className={active} key={menu.id} onClick={click}>
                 {this.getLink(menu.route, linkProps)}
             </li>
         );
     }
 
     renderSubMenu(menu) {
-        let items = [];
-        if (_.isFunction(menu.route)) {
-            items = menu.route(menu);
-        } else if (_.isArray(menu.route)) {
-            items = menu.route;
-        }
+        menu.id = menu.id || menu.label;
+        let items = React.Children.toArray(menu.children);
 
         if (items.length === 0) {
             return null;
         }
 
         const menuProps = {
-            key: menu.key,
-            className: menu.key === this.state.submenu ? 'subnavigation open' : 'subnavigation',
-            'data-this-menu': menu.key
+            key: menu.id,
+            className: menu.id === this.state.submenu ? 'subnavigation open' : 'subnavigation',
+            'data-this-menu': menu.id
         };
 
-        const subMenuItems = _.without(items.map(this.renderSubMenuItem), null);
+        const subMenuItems = _.without(items.map((m, index) => {
+            const props = _.omit(m.props, ['renderer']);
+            return this.renderSubMenuItem(props, index);
+        }), null);
 
         if (!subMenuItems.length) {
             return null;
@@ -163,6 +163,7 @@ class Navigation extends Webiny.Ui.Component {
     }
 
     renderSubMenuItem(menu, index) {
+        menu.id = menu.id || menu.label;
         if (!this.canAccess(menu)) {
             return null;
         }
@@ -187,20 +188,22 @@ class Navigation extends Webiny.Ui.Component {
             secondaryAction = this.getLink(menu.action.route, linkProps);
         }
 
-        if (_.isArray(menu.route)) {
+        const children = React.Children.toArray(menu.children);
+        if (children.length > 0) {
             caret = <span className="icon icon-caret-down"/>;
-            onClick = () => {
-                this.openSubSubMenu(menu.key)
-            };
+            onClick = () => this.openSubSubMenu(menu.id);
             items = (
-                <ul data-this-submenu={menu.key}>
-                    {menu.route.map((i, key) => {
-                        if (!this.canAccess(i)) {
+                <ul data-this-submenu={menu.id}>
+                    {children.map((item, i) => {
+                        const props = _.omit(item.props, ['renderer']);
+                        props.id = props.id || props.label;
+
+                        if (!this.canAccess(props)) {
                             return null;
                         }
                         return (
-                            <li key={key}>
-                                <Link route={i.route} onClick={this.closeMobileMenu}>{i.label}</Link>
+                            <li key={i}>
+                                <Link route={props.route} onClick={this.closeMobileMenu}>{props.label}</Link>
                             </li>
                         );
                     })}
@@ -255,24 +258,23 @@ Navigation.defaultProps = {
     renderer() {
         const menus = Webiny.Menu.getMenu();
         const menu = [];
-        _.each(menus, m => {
-            if (this.canAccess(m)) {
-                menu.push(this.renderMainMenu(m));
-            }
-        });
-
         const submenu = [];
+
         _.each(menus, m => {
-            submenu.push(this.renderSubMenu(m));
+            const props = _.omit(m.props, ['renderer']);
+            if (this.canAccess(props)) {
+                menu.push(this.renderMainMenu(props));
+            }
+            submenu.push(this.renderSubMenu(props));
         });
 
         // In case the submenu is empty and it is supposed to have submenu items - remove the main menu item
         _.each(submenu, (s, index) => {
-            if (!s && !_.isString(menus[index].route)) {
+            if (!s && !_.isString(menus[index].props.route)) {
                 menu[index] = null;
             }
         });
-
+        
         return (
             <div className="master-navigation">
                 <Webiny.Ui.Placeholder name="Header"/>

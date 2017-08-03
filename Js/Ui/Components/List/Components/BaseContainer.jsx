@@ -192,7 +192,6 @@ class BaseContainer extends Webiny.Ui.Component {
     goToRoute(params) {
         const routeParams = _.merge({}, Webiny.Router.getParams(), params);
         if (this.props.connectToRouter && this.props.trackLastUsedParameters) {
-            console.log('store', routeParams);
             Webiny.LocalStorage.set('webiny.list.' + window.location.pathname, routeParams);
         }
         Webiny.Router.goToRoute('current', routeParams);

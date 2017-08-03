@@ -1,4 +1,5 @@
 import Webiny from 'webiny';
+import React from 'react';
 import Views from './Views/Views';
 
 class Module extends Webiny.App.Module {
@@ -11,17 +12,17 @@ class Module extends Webiny.App.Module {
         const aclApiTokens = 'webiny-acl-api-token-manager';
 
         this.registerMenus(
-            new Menu('ACL', [
-                new Menu('User Management', [
-                    new Menu('Users', 'Users.List'),
-                    new Menu('Roles', 'UserRoles.List'),
-                    new Menu('Permissions', 'UserPermissions.List')
-                ]).setRole(aclManageUsers),
-                new Menu('API', [
-                    new Menu('Tokens', 'ApiTokens.List'),
-                    new Menu('Request Logs', 'ApiLogs.List')
-                ]).setRole(aclApiTokens)
-            ], 'icon-users')
+            <Menu label="ACL" icon="icon-users">
+                <Menu label="User Management" role={aclManageUsers}>
+                    <Menu label="Users" route="Users.List"/>
+                    <Menu label="Roles" route="UserRoles.List"/>
+                    <Menu label="Permissions" route="UserPermissions.List"/>
+                </Menu>
+                <Menu label="API" role={aclApiTokens}>
+                    <Menu label="Request Logs" route="ApiLogs.List"/>
+                    <Menu label="Tokens" route="ApiTokens.List"/>
+                </Menu>
+            </Menu>
         );
 
         this.registerRoutes(

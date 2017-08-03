@@ -113,9 +113,9 @@ ApiLogsList.defaultProps = {
             api: '/entities/webiny/api-logs',
             fields: '*,createdOn,user[id,firstName,lastName,email],token[id,description,owner]',
             query: {
-                token: Webiny.Router.getParams('token'),
-                _sort: '-createdOn'
+                token: Webiny.Router.getParams('token')
             },
+            sort: '-createdOn',
             searchFields: 'request.method,request.url',
             layout: null,
             connectToRouter: true

@@ -1,41 +1,22 @@
-import _ from 'lodash';
+import React from 'react';
+import Component from './../Core/Component';
 
-class Menu {
+class Menu extends Component {
 
-    constructor(label, route = null, icon = '', key = '') {
-        Object.assign(this, {label, route, icon});
-        this.key = key ? key : label;
-        this.action = null;
-        this.role = null;
-        this.order = 100;
-        this.overrideExisting = false;
-    }
-
-    setAction(label, route, icon = '') {
-        this.action = {label, route, icon};
-        return this;
-    }
-
-    setOverrideExisting() {
-        this.overrideExisting = true;
-        return this;
-    }
-
-    setRole(role) {
-        if (_.isString(role)) {
-            role = role.split(',');
-        }
-        this.role = role;
-        return this;
-    }
-
-    setOrder(order) {
-        if (!_.isNumber(order) || (_.isNumber(order) && order < 0)) {
-            throw new Error('Menu order must be a number greater than 0');
-        }
-        this.order = order;
-        return this;
-    }
 }
+
+Menu.defaultProps = {
+    id: null,
+    label: null,
+    icon: null,
+    order: 100,
+    role: null,
+    route: null,
+    level: 0,
+    overwriteExisting: false,
+    renderer() {
+        return null;
+    }
+};
 
 export default Menu;

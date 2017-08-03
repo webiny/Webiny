@@ -1,3 +1,4 @@
+import React from 'react';
 import Webiny from 'webiny';
 import Views from './Views/Views';
 
@@ -8,9 +9,9 @@ class Logger extends Webiny.App.Module {
         const Menu = Webiny.Ui.Menu;
 
         this.registerMenus(
-            new Menu('System', [
-                new Menu('Error Logger', 'Logger.ListErrors')
-            ], 'icon-tools').setRole('webiny-logger-manager')
+            <Menu label="System" role="webiny-logger-manager" icon="icon-tools">
+                <Menu label="Error Logger" route="Logger.ListErrors"/>
+            </Menu>
         );
 
         this.registerRoutes(
