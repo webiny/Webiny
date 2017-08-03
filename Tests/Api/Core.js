@@ -5,7 +5,7 @@ const apiUrl = "http://thehub.app:8001/api";
 const testData = {
     login: {
         username: "pavel@webiny.com",
-        password: "dev"
+        password: "12345678"
     }
 };
 

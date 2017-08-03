@@ -1,7 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
-import localForage from 'localforage';
 import Filters from './Filters';
 import Table from './Table/Table';
 import MultiActions from './MultiActions';
@@ -57,11 +56,10 @@ class BaseContainer extends Webiny.Ui.Component {
         super.componentWillMount();
         if (this.props.connectToRouter && this.props.trackLastUsedParameters) {
             if (Object.keys(Webiny.Router.getQueryParams()).length === 0) {
-                localForage.getItem('webiny.list.' + window.location.pathname).then(value => {
-                    if (value) {
-                        Webiny.Router.goToRoute('current', value);
-                    }
-                });
+                const value = Webiny.LocalStorage.get('webiny.list.' + window.location.pathname);
+                if (value) {
+                    Webiny.Router.goToRoute('current', value);
+                }
             }
         }
     }
@@ -193,8 +191,9 @@ class BaseContainer extends Webiny.Ui.Component {
 
     goToRoute(params) {
         const routeParams = _.merge({}, Webiny.Router.getParams(), params);
-        if (this.props.connectToRouter) {
-            localForage.setItem('webiny.list.' + window.location.pathname, routeParams);
+        if (this.props.connectToRouter && this.props.trackLastUsedParameters) {
+            console.log('store', routeParams);
+            Webiny.LocalStorage.set('webiny.list.' + window.location.pathname, routeParams);
         }
         Webiny.Router.goToRoute('current', routeParams);
     }
