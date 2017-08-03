@@ -36,6 +36,13 @@ class ApiLogsList extends Webiny.Ui.View {
         this.prepareTokenOptions();
     }
 
+    componentWillReceiveProps(props) {
+        super.componentWillReceiveProps(props);
+        if (!Webiny.Router.getParams('token')) {
+            this.setState({token: null});
+        }
+    }
+
     prepareTokenOptions() {
         const options = [];
         return new Webiny.Api.Endpoint('/services/webiny/acl').get('token').then(apiResponse => {
