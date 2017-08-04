@@ -34,10 +34,10 @@ function mergeMenus(menu1, menu2) {
     return React.createElement(Webiny.Ui.Menu, newProps, newChildren);
 }
 
-function sortMenus(menus) {
+function sortMenus(menus, level = 0) {
     menus = _.sortBy(menus, ['props.order', 'props.label']);
     return menus.map(menu => {
-        return React.cloneElement(menu, menu.props, sortMenus(React.Children.toArray(menu.props.children)));
+        return React.cloneElement(menu, _.assign({}, menu.props, {level}), sortMenus(React.Children.toArray(menu.props.children), level + 1));
     });
 }
 

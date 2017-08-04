@@ -1,8 +1,11 @@
 import React from 'react';
+import _ from 'lodash';
 import Component from './../Core/Component';
+import createComponent from './../createComponent';
+import DesktopMenu from './Menu/Desktop';
+import MobileMenu from './Menu/Mobile';
 
 class Menu extends Component {
-
 }
 
 Menu.defaultProps = {
@@ -15,8 +18,14 @@ Menu.defaultProps = {
     level: 0,
     overwriteExisting: false,
     renderer() {
-        return null;
+        const props = _.omit(this.props, ['renderer']);
+
+        if (this.props.display === 'desktop') {
+            return <DesktopMenu {...props}/>;
+        }
+
+        return <MobileMenu {...props}/>;
     }
 };
 
-export default Menu;
+export default createComponent(Menu, {modules: ['Link']});

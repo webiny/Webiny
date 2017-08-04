@@ -15,6 +15,7 @@ Layout.defaultProps = {
 
         return (
             <div className="master minimized">
+                <Webiny.Ui.Placeholder name="Header"/>
                 <Navigation/>
                 <div className="master-content">
                     <div className="container-fluid">
@@ -27,4 +28,8 @@ Layout.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Layout, {modules: [{Navigation: 'Webiny/Layout/Navigation'}]});
+export default Webiny.createComponent(Layout, {
+    modules: [{
+        Navigation: 'Webiny/Layout/Navigation'
+    }]
+});
