@@ -74,7 +74,8 @@ const utils = {
         }
 
         const user = Webiny.Model.get('User');
-        if (!user || !_.find(user.roles, (r) => menu.role.indexOf(r.slug) > -1)) {
+        const roles = _.isArray(menu.role) ? menu.role : menu.role.split(',');
+        if (!user || !_.find(user.roles, r => roles.includes(r.slug))) {
             return false;
         }
         return true;
