@@ -19,6 +19,7 @@ class Mobile extends Webiny.Ui.Component {
             const props = _.clone(menu.props);
             props.id = props.id || props.label;
             const {level} = props;
+            const {Link} = this.props;
             const children = React.Children.toArray(props.children);
             const hasChildren = children.length > 0;
 
@@ -45,20 +46,22 @@ class Mobile extends Webiny.Ui.Component {
                 active: props.level === 0 ? utils.findRoute(props, Webiny.Router.getActiveRoute().getName()) : false
             });
 
+            let ul = (
+                <ul className={'level-' + (level + 1)}>
+                    <li className="main-menu--close back" onClick={e => this.onClick(props.id, e)}>Go Back</li>
+                    {children.map((child, i) => {
+                        return React.cloneElement(child, {
+                            key: i,
+                            renderer: props.renderer
+                        });
+                    })}
+                </ul>
+            );
+
             return (
                 <li className={className} key={props.id}>
-                    {utils.getLink(props.route, this.props.Link, linkProps)}
-                    {hasChildren && (
-                        <ul className={'level-' + (level + 1)}>
-                            <li className="main-menu--close back" onClick={e => this.onClick(props.id, e)}>Go Back</li>
-                            {children.map((child, i) => {
-                                return React.cloneElement(child, {
-                                    key: i,
-                                    renderer: props.renderer
-                                });
-                            })}
-                        </ul>
-                    )}
+                    {utils.getLink(props.route, Link, linkProps)}
+                    {hasChildren && ul}
                 </li>
             );
         };
