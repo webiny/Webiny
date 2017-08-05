@@ -10,6 +10,67 @@ class Desktop extends Webiny.Ui.Component {
         this.state = {};
 
         this.bindMethods('onClick');
+
+        /**
+         * Menu renderer passed to <Menu>.
+         * Note that `this` is still bound to `Desktop` class since we are passing an arrow function.
+         */
+        this.renderer = (menu) => {
+            const props = _.clone(menu.props);
+            if (!utils.canAccess(props)) {
+                return null;
+            }
+
+            props.id = props.id || props.label;
+            const children = React.Children.toArray(props.children);
+            const hasChildren = children.length > 0;
+            const {Link} = this.props;
+
+            const menuIconClass = this.classSet('icon app-icon', {'fa': _.includes(props.icon, 'fa-')}, props.icon);
+
+            const linkProps = {
+                key: props.id,
+                label: props.label,
+                children: [
+                    props.icon ? <span key="icon" className={menuIconClass}/> : null,
+                    props.level > 1 ? props.label : <span key="title" className="app-title">{props.label}</span>,
+                    hasChildren && props.level > 0 ? <span key="caret" className="icon icon-caret-down"/> : null
+                ]
+            };
+
+            const className = this.classSet({
+                open: this.state.open === props.id,
+                active: props.level === 0 ? utils.findRoute(props, Webiny.Router.getActiveRoute().getName()) : false
+            });
+
+            let childMenuItems = null;
+            if (hasChildren) {
+                // Build array of child items and check their access roles.
+                childMenuItems = children.map((child, i) => {
+                    if (!utils.canAccess(child.props)) {
+                        return null;
+                    }
+
+                    return React.cloneElement(child, {key: i, renderer: this.renderer});
+                });
+
+                // If no child items are there to render - hide parent menu as well.
+                if (!childMenuItems.filter(item => !_.isNil(item)).length) {
+                    return null;
+                }
+            }
+
+            return (
+                <li className={className} key={props.id} onClick={() => this.onClick(menu)}>
+                    {utils.getLink(props.route, Link, linkProps)}
+                    {hasChildren && (
+                        <ul className={'level-' + (props.level + 1)}>
+                            {childMenuItems}
+                        </ul>
+                    )}
+                </li>
+            );
+        }
     }
 
     componentDidMount() {
@@ -22,63 +83,9 @@ class Desktop extends Webiny.Ui.Component {
             this.setState({open: menu.props.id || menu.props.label});
         }
     }
-
-    /**
-     * Menu renderer passed to <Menu>.
-     * Note that `this` is bound to <Menu>.
-     */
-    renderMenu() {
-        const props = _.clone(this.props);
-        props.id = props.id || props.label;
-        const children = React.Children.toArray(props.children);
-        const hasChildren = children.length > 0;
-
-        const menuIconClass = this.classSet('icon app-icon', {'fa': _.includes(props.icon, 'fa-')}, props.icon);
-
-        const linkProps = {
-            key: props.id,
-            label: props.label,
-            children: [
-                props.icon ? <span key="icon" className={menuIconClass}/> : null,
-                props.level > 1 ? props.label : <span key="title" className="app-title">{props.label}</span>,
-                hasChildren && props.level > 0 ? <span key="caret" className="icon icon-caret-down"/> : null
-            ]
-        };
-
-        const className = this.classSet({
-            open: props.open === props.id,
-            active: props.level === 0 ? utils.findRoute(props, Webiny.Router.getActiveRoute().getName()) : false
-        });
-
-        return (
-            <li className={className} key={props.id} onClick={() => props.onClick(this)}>
-                {utils.getLink(props.route, props.Link, linkProps)}
-                {hasChildren && (
-                    <ul className={'level-' + (this.props.level + 1)}>
-                        {children.map((child, i) => {
-                            return React.cloneElement(child, {
-                                key: i,
-                                onClick: () => props.onClick(this),
-                                renderer: props.renderer,
-                                Link: props.Link
-                            });
-                        })}
-                    </ul>
-                )}
-            </li>
-        );
-    }
 }
 
 Desktop.defaultProps = {
-    id: null,
-    label: null,
-    icon: null,
-    order: 100,
-    role: null,
-    route: null,
-    level: 0,
-    overwriteExisting: false,
     renderer() {
         return (
             <div className="navigation">
@@ -87,12 +94,8 @@ Desktop.defaultProps = {
                     <ul className="menu-list level-0">
                         {Webiny.Menu.getMenu().map(menu => (
                             React.cloneElement(menu, {
-                                active: this.state.active,
-                                onClick: this.onClick,
                                 key: menu.props.id || menu.props.label,
-                                open: this.state.open,
-                                renderer: this.renderMenu,
-                                Link: this.props.Link
+                                renderer: this.renderer
                             })
                         ))}
                     </ul>

@@ -66,6 +66,18 @@ const utils = {
         }
 
         return <Link {...linkProps}/>;
+    },
+
+    canAccess(menu) {
+        if (!Webiny.Config.Js.CheckUserRoles || !menu.role || !menu.role.length) {
+            return true;
+        }
+
+        const user = Webiny.Model.get('User');
+        if (!user || !_.find(user.roles, (r) => menu.role.indexOf(r.slug) > -1)) {
+            return false;
+        }
+        return true;
     }
 };
 
