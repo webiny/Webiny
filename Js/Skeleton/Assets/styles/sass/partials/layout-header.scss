@@ -1,10 +1,8 @@
 .navbar {
-  margin-bottom: 0;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1900;
+  position: relative;
+  min-height: 50px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
 }
 
 .navbar-header {
@@ -260,6 +258,15 @@
 }
 
 @media (min-width: 768px) {
+  .navbar {
+    margin-bottom: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1900;
+  }
+
   .navbar-header a.profile span.icon {
     float: left;
     margin-right: 5px;

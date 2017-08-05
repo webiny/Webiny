@@ -5,7 +5,7 @@ import Webiny from 'webiny';
 class Header extends Webiny.Ui.Component {
 
     toggleMobile() {
-        $('body').toggleClass('opened-mobile-nav');
+        $('body').toggleClass('mobile-nav');
     }
 
     render() {
@@ -13,7 +13,7 @@ class Header extends Webiny.Ui.Component {
         return (
             <div className="navbar navbar-inverse" role="navigation">
                 <div className="navbar-header">
-                    <button type="button" className="nav" data-toggle="collapse" data-target=".navbar-collapse" onClick={this.toggleMobile}>
+                    <button type="button" className="nav" onClick={this.toggleMobile}>
                         <span/><span/><span/>
                     </button>
                     {logo && (React.isValidElement(logo) ? logo : React.createElement(logo))}
