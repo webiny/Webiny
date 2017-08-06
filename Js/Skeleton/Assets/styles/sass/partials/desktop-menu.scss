@@ -21,13 +21,14 @@
     .main-menu {
       width: 60px;
       float: left;
-      overflow: hidden;
+      overflow: auto;
       padding: 0;
       position: relative;
       -webkit-transition: width ease-in-out 0.28s;
       -moz-transition: width ease-in-out 0.28s;
       -o-transition: width ease-in-out 0.28s;
       transition: width ease-in-out 0.28s;
+      height: calc(100vh - 60px);
 
       .menu-list {
         float: none !important;
@@ -175,6 +176,8 @@
           opacity: 1;
           display: block;
           left: 200px;
+          height: calc(100vh - 60px);
+          overflow: auto;
         }
       }
 
