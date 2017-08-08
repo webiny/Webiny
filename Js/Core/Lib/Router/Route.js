@@ -138,18 +138,21 @@ class Route {
     async getComponents() {
         // Check if there are any components that are actually functions (they may possibly have dynamic imports)
         const dynamic = [];
+        const components = {};
         _.each(this.components, (component, placeholder) => {
             if (_.isFunction(component) && !(component.prototype instanceof Webiny.Ui.Component)) {
                 dynamic.push(
                     Promise.resolve(component()).then(module => {
-                        this.components[placeholder] = module;
+                        components[placeholder] = module;
                     })
                 );
+            } else {
+                components[placeholder] = component;
             }
         });
 
         await Promise.all(dynamic);
-        return this.components;
+        return components;
     }
 
     skipDefaultComponents(flag = null) {
