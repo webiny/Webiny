@@ -2,6 +2,7 @@
 namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
+use Webiny\Component\Mongo\Index\SingleIndex;
 
 
 /**
@@ -25,6 +26,9 @@ class LoggerEntry extends AbstractEntity
     public function __construct()
     {
         parent::__construct();
+
+        $this->index(new SingleIndex('errorGroup', 'errorGroup'));
+        $this->index(new SingleIndex('createdOn', 'createdOn', false, false, false, 5184000)); // expire after 60 days
 
         $this->attr('url')->char()->setToArrayDefault();
         $this->attr('date')->datetime()->setToArrayDefault();
