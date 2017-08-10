@@ -3,11 +3,11 @@ const Plugin = require('webiny-cli/lib/plugin');
 
 const fallback = [
     {
-        "name": "Demo",
-        "description": "This is a demo app showing how to create your own backend app. It showcases different types of views and components with lots of examples to get you started.",
+        "name": "BackupApp",
+        "description": "Easily set up your system backup to Amazon S3 with just a few clicks.",
         "version": "dev-master",
-        "repository": "https://github.com/Webiny/Demo.git",
-        "packagist": "webiny/demo"
+        "repository": "https://github.com/Webiny/BackupApp.git",
+        "packagist": "webiny/backup-app"
     },
     {
         "name": "CronManager",
@@ -17,6 +17,20 @@ const fallback = [
         "packagist": "webiny/cron-manager"
     },
     {
+        "name": "Demo",
+        "description": "This is a demo app showing how to create your own backend app. It showcases different types of views and components with lots of examples to get you started.",
+        "version": "dev-master",
+        "repository": "https://github.com/Webiny/Demo.git",
+        "packagist": "webiny/demo"
+    },
+    {
+        "name": "FAQ",
+        "description": "Easily create FAQ categories and articles.",
+        "version": "dev-master",
+        "repository": "https://github.com/Webiny/FAQ.git",
+        "packagist": "webiny/faq"
+    },
+    {
         "name": "NotificationManager",
         "description": "Manage your email notifications with ease using email and layout templates, delivery stats and more.",
         "version": "dev-master",
@@ -24,11 +38,11 @@ const fallback = [
         "packagist": "webiny/notification-manager"
     },
     {
-        "name": "BackupApp",
-        "description": "Easily set up your system backup to Amazon S3 with just a few clicks.",
+        "name": "StaticRender",
+        "description": "Static render is an app that does server side render of your Webiny React app and produces a static HTML snapshot.",
         "version": "dev-master",
-        "repository": "https://github.com/Webiny/BackupApp.git",
-        "packagist": "webiny/backup-app"
+        "repository": "https://github.com/Webiny/StaticRender.git",
+        "packagist": "webiny/static-render"
     },
     {
         "name": "SystemMonitor",
