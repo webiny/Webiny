@@ -80,13 +80,20 @@ class SmartyExtension extends AbstractSmartyExtension
             $browserSync = '<script src="' . $bsPath . '/browser-sync/browser-sync-client.js?v=2.18.6"></script>';
         }
 
+        $apps = '[' . join(',', array_map(function ($app) {
+                return "'" . $app . "'";
+            }, $apps)) . ']';
+
         return <<<EOT
     <script type="text/javascript">
-        webinyConfig.Environment = '{$env}';
-        webinyConfig.WebPath = '{$webPath}';
-        webinyConfig.ApiPath = '{$apiPath}';
-        webinyConfig.Js = {$config};
-        webinyConfig.Meta = {$appsMeta};
+        var webinyConfig = {
+            apps: {$apps},
+            Environment: '{$env}',
+            WebPath: '{$webPath}',
+            ApiPath: '{$apiPath}',
+            Js: {$config},
+            Meta: {$appsMeta},
+        };
     </script>
     <script src="{$meta['vendor']}" async></script> 
     {$browserSync}

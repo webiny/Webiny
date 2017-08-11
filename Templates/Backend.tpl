@@ -8,15 +8,6 @@
     <link rel="shortcut icon" href="{$Webiny->Assets('Webiny.Skeleton', 'images/public/favicon.ico')}"/>
     <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,300" rel="stylesheet" type="text/css">
     {webinyPreload apps="Webiny.Ui,Webiny.Skeleton,Webiny.Backend"}
-    {literal}
-        <script type="text/javascript">
-            var webinyConfig = {
-                apps: ['Webiny.Ui', 'Webiny.Skeleton', 'Webiny.Backend'],
-                router: {baseUrl: '/admin', title: '%s | Webiny'},
-                auth: 'Webiny.Skeleton'
-            };
-        </script>
-    {/literal}
 </head>
 <body>
 <style type="text/css">
