@@ -1,7 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
-import moment from 'moment';
 
 class DateField extends Webiny.Ui.Component {
 
@@ -11,8 +10,8 @@ DateField.defaultProps = {
     default: '-',
     format: 'YYYY-MM-DD',
     renderer() {
+        const {List, moment, format, ...props} = this.props;
         const date = moment(_.get(this.props.data, this.props.name));
-        const {List, format, ...props} = this.props;
 
         return (
             <List.Table.Field {..._.omit(props, ['renderer'])}>
@@ -22,4 +21,4 @@ DateField.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(DateField, {modules: ['List'], tableField: true});
+export default Webiny.createComponent(DateField, {modules: ['List', {moment: 'Webiny/Vendors/Moment'}], tableField: true});

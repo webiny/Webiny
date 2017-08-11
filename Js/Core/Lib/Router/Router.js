@@ -5,7 +5,7 @@ import RouterEvent from './RouterEvent';
 import Utils from './RouterUtils';
 import Dispatcher from './../Core/Dispatcher';
 import 'jquery-deparam';
-import {createBrowserHistory} from 'history';
+import createBrowserHistory from 'history/createBrowserHistory'
 import anchorClickHandler from './AnchorClickHandler';
 
 /**

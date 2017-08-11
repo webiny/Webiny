@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import $ from 'jquery';
 import Webiny from 'webiny';
-import moment from 'moment';
 
 class DateTime extends Webiny.Ui.FormComponent {
 
@@ -63,6 +62,7 @@ class DateTime extends Webiny.Ui.FormComponent {
 
     onChange(newValue) {
         if (newValue) {
+            const {moment} = this.props;
             newValue = moment(newValue, this.props.inputFormat).format(this.props.modelFormat);
         }
 
@@ -73,6 +73,7 @@ class DateTime extends Webiny.Ui.FormComponent {
 
     renderPreview() {
         if (!_.isEmpty(this.props.value)) {
+            const {moment} = this.props;
             const value = moment(this.props.value, this.props.modelFormat);
             return value.isValid() ? value.format(this.props.inputFormat) : '';
         }
@@ -104,5 +105,5 @@ DateTime.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
 });
 
 export default Webiny.createComponent(DateTime, {
-    modules: ['Icon', 'Input', 'Webiny/Vendors/DateTimePicker']
+    modules: ['Icon', 'Input', 'Webiny/Vendors/DateTimePicker', {moment: 'Webiny/Vendors/Moment'}]
 });

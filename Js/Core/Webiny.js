@@ -37,22 +37,12 @@ class Webiny {
         console.timeStamp("Webiny Run");
         const coreConfig = config.Meta['Webiny.Core'];
         return this.Page.loadScript(coreConfig.app).then(() => {
-            // Configure Router
-            if (config.router) {
-                this.Router.setBaseUrl(config.router.baseUrl || '/');
-                this.Router.setTitlePattern(config.router.title || '');
-                this.Router.setDefaultRoute(config.router.defaultRoute || null);
-                this.Router.setHistory(config.router.history);
-            }
-
             return this.loadBundle(coreConfig).then(() => this.Apps['Webiny.Core'].run());
         }).then(() => {
             // Load and run apps
             let loader = Promise.resolve();
             config.apps.map(name => {
-                loader = loader.then(() => {
-                    return this.includeApp(this.Config.Meta[name]).then(app => app.run());
-                });
+                loader = loader.then(() => this.includeApp(this.Config.Meta[name]).then(app => app.run()));
             });
             return loader;
         }).then(() => {

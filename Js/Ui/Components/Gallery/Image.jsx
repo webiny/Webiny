@@ -1,7 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
-import moment from 'moment';
 import filesize from 'filesize';
 import styles from './styles.css';
 
@@ -30,7 +29,7 @@ Image.defaultProps = {
         const title = image.title || image.name || '';
         let cacheBust = '';
         if (image.modifiedOn && image.src.indexOf('data:') === -1) {
-            cacheBust = '?ts=' + moment(image.modifiedOn).format('X');
+            cacheBust = '?ts=' + new Date(image.modifiedOn).getTime();
         }
 
         const draggable = {

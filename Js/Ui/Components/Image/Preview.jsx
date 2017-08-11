@@ -1,6 +1,5 @@
 import React from 'react';
 import Webiny from 'webiny';
-import moment from 'moment';
 import styles from './styles.css';
 
 class ImagePreview extends Webiny.Ui.Component {
@@ -27,7 +26,7 @@ ImagePreview.defaultProps = {
         const {image, Link, styles} = this.props;
         let cacheBust = '';
         if (image.modifiedOn && image.src.indexOf('data:') === -1) {
-            cacheBust = '?ts=' + moment(image.modifiedOn).format('X');
+            cacheBust = '?ts=' + new Date(image.modifiedOn).getTime();
         }
 
         return (

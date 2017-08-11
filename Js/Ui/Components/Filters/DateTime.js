@@ -1,6 +1,5 @@
 import React from 'react';
 import Webiny from 'webiny';
-import moment from 'moment';
 
 class DateTime extends Webiny.Ui.Component {
 
@@ -9,6 +8,7 @@ class DateTime extends Webiny.Ui.Component {
 DateTime.defaultProps = {
     format: 'YYYY-MM-DD HH:mm',
     renderer() {
+        const {moment} = this.props;
         const datetime = moment(this.props.value, moment.ISO_8601);
 
         return (
@@ -18,4 +18,4 @@ DateTime.defaultProps = {
 };
 
 
-export default DateTime;
+export default Webiny.createComponent(DateTime, {modules: [{moment: 'Webiny/Vendors/Moment'}]});

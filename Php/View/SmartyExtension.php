@@ -104,7 +104,6 @@ EOT;
     public function webinyPreload($params, $smarty)
     {
         $apps = array_filter(explode(',', $params['apps'] ?? ''));
-        array_unshift($apps, 'Webiny.Core');
 
         $preload = [];
         foreach ($apps as $jsApp) {

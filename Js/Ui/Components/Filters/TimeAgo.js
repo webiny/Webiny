@@ -1,6 +1,5 @@
 import React from 'react';
 import Webiny from 'webiny';
-import moment from 'moment';
 
 class TimeAgo extends Webiny.Ui.Component {
 
@@ -10,6 +9,7 @@ TimeAgo.defaultProps = {
     value: null,
     invalidMessage: 'invalid date format',
     renderer() {
+        const {moment} = this.props;
         const timeAgo = moment(this.props.value, moment.ISO_8601);
 
         return (
@@ -19,4 +19,4 @@ TimeAgo.defaultProps = {
 };
 
 
-export default TimeAgo;
+export default Webiny.createComponent(TimeAgo, {modules: [{moment: 'Webiny/Vendors/Moment'}]});

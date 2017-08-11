@@ -1,7 +1,6 @@
 import _ from 'lodash';
 import Webiny from 'webiny';
 import React from 'react';
-import moment from 'moment';
 import accounting from 'accounting';
 import I18N from './I18N';
 
@@ -103,14 +102,17 @@ class i18n {
     }
 
     date(value, format = 'DD/MMM/YY') {
+        // TODO: @adrian ovo trebamo smisliti bez momenta :)
         return moment(value).format(format);
     }
 
     time(value, format = 'HH:mm') {
+        // TODO: @adrian ovo trebamo smisliti bez momenta :)
         return moment(value).format(format);
     }
 
     datetime(value, format = 'DD/MMM/YY HH:mm') {
+        // TODO: @adrian ovo trebamo smisliti bez momenta :)
         return moment(value).format(format);
     }
 

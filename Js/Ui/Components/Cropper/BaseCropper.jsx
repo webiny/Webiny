@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import Webiny from 'webiny';
-import moment from 'moment';
 
 class BaseCropper extends Webiny.Ui.Component {
 
@@ -145,7 +144,7 @@ class BaseCropper extends Webiny.Ui.Component {
     getCacheBust() {
         let cacheBust = '';
         if (this.props.image && this.props.image.modifiedOn && this.props.image.src.indexOf('data:') === -1) {
-            cacheBust = '?ts=' + moment(this.props.image.modifiedOn).format('X');
+            cacheBust = '?ts=' + new Date(this.props.image.modifiedOn).getTime();
         }
         return cacheBust;
     }

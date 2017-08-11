@@ -1,7 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
-import moment from 'moment';
 
 class ApiLogsList extends Webiny.Ui.View {
     constructor(props) {
@@ -188,7 +187,7 @@ ApiLogsList.defaultProps = {
                                                             {this.renderUrlField(row)}
                                                         </Ui.ExpandableList.Field>
                                                         <Ui.ExpandableList.Field all={3} name="Created On" className="text-center">
-                                                            <span>{moment(row.createdOn).fromNow()}<br/>{row.createdOn}</span>
+                                                            <span>{Ui.moment(row.createdOn).fromNow()}<br/>{row.createdOn}</span>
                                                         </Ui.ExpandableList.Field>
                                                         <Ui.ExpandableList.RowDetailsList title={row.request.url}>
                                                             <Ui.CodeHighlight language="json">
@@ -215,5 +214,5 @@ ApiLogsList.defaultProps = {
 
 export default Webiny.createComponent(ApiLogsList, {
     modulesProp: 'Ui',
-    modules: ['View', 'Link', 'List', 'Grid', 'Input', 'ExpandableList', 'Label', 'CodeHighlight', 'Select', 'Search', 'Logic']
+    modules: ['View', 'Link', 'List', 'Grid', 'Input', 'ExpandableList', 'Label', 'CodeHighlight', 'Select', 'Search', 'Logic', {moment: 'Webiny/Vendors/Moment'}]
 });

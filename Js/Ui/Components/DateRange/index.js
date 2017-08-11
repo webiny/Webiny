@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import $ from 'jquery';
 import Webiny from 'webiny';
-import moment from 'moment';
 import 'bootstrap-daterangepicker';
 import './styles.scss';
 
@@ -19,6 +18,8 @@ class DateRange extends Webiny.Ui.FormComponent {
             },
             rangeType: _.get(this.props, 'rangeType', '')
         });
+
+        const {moment} = props;
 
         this.options = {
             autoApply: true,
@@ -99,6 +100,7 @@ class DateRange extends Webiny.Ui.FormComponent {
     }
 
     setInitialRange(start, end) {
+        const {moment} = this.props;
         const from = moment(start, this.options.locale.format, true);
         const to = moment(end, this.options.locale.format, true);
         if (from.isValid() && to.isValid()) {
@@ -164,6 +166,7 @@ class DateRange extends Webiny.Ui.FormComponent {
                 return this;
             }
 
+            const {moment} = this.props;
             const dates = this.getInput().value.split(' - ');
             const from = moment(dates[0], this.props.inputFormat, true);
             const to = moment(dates[1], this.props.inputFormat, true);
@@ -198,6 +201,7 @@ class DateRange extends Webiny.Ui.FormComponent {
             return null;
         }
 
+        const {moment} = this.props;
         const dates = this.state.date.range.split(this.props.rangeDelimiter);
         const from = moment(dates[0], this.props.modelFormat, true);
         const to = moment(dates[1], this.props.modelFormat, true);
@@ -227,4 +231,4 @@ DateRange.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     }
 });
 
-export default Webiny.createComponent(DateRange, {modules: ['Icon', 'Input']});
+export default Webiny.createComponent(DateRange, {modules: ['Icon', 'Input', {moment: 'Webiny/Vendors/Moment'}]});

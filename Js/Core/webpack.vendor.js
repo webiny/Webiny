@@ -17,7 +17,6 @@ module.exports = (config) => {
         'baobab',
         'js-cookie',
         'ismobilejs',
-        'moment',
         'history',
         'jquery-deparam',
         'platform',
