@@ -96,17 +96,19 @@ class BaseContainer extends Webiny.Ui.Component {
 
             if (props.connectToRouter) {
                 const params = Webiny.Router.getQueryParams();
-                const urlSort = params._sort || '';
-                urlSort.split(',').map(sorter => {
-                    if (sorter === '') {
-                        return;
-                    }
-                    if (_.startsWith(sorter, '-')) {
-                        state.sorters[_.trimStart(sorter, '-')] = -1;
-                    } else {
-                        state.sorters[sorter] = 1;
-                    }
-                });
+                const urlSort = params._sort || props.sort;
+                if (_.isString(urlSort)) {
+                    urlSort.split(',').map(sorter => {
+                        if (sorter === '') {
+                            return;
+                        }
+                        if (_.startsWith(sorter, '-')) {
+                            state.sorters[_.trimStart(sorter, '-')] = -1;
+                        } else {
+                            state.sorters[sorter] = 1;
+                        }
+                    });
+                }
 
                 // Get limit and page
                 state.page = parseInt(params._page || props.page || 1);
@@ -235,6 +237,7 @@ class BaseContainer extends Webiny.Ui.Component {
                 tableProps[name] = value;
             }
         });
+
         _.assign(tableProps, {
             data: _.clone(this.state.list),
             sorters: this.state.sorters,
