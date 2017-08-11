@@ -10,4 +10,4 @@ import 'codemirror/mode/yaml/yaml';
 import 'codemirror/mode/htmlmixed/htmlmixed';
 import 'codemirror/mode/shell/shell';
 
-module.exports = CodeMirror;
+export default CodeMirror;

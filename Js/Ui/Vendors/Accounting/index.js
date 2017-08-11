@@ -1,3 +1,2 @@
 import accounting from 'accounting';
-
-module.exports = accounting;
+export default accounting;

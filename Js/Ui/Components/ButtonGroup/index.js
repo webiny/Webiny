@@ -7,10 +7,11 @@ class ButtonGroup extends Webiny.Ui.Component {
 }
 
 ButtonGroup.defaultProps = {
+    className: null,
     renderer() {
-        const {styles} = this.props;
+        const {styles, className} = this.props;
         return (
-          <div className={styles.btnGroup}>
+          <div className={this.classSet(styles.btnGroup, className)}>
               {this.props.children}
           </div>
         );

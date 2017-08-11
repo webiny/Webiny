@@ -3,28 +3,23 @@ const Webiny = require('webiny-cli/lib/webiny');
 
 module.exports = (app) => {
     const aliases = {
-        'Webiny/Core': path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Core'),
-        'Webiny/Backend': path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Backend'),
-        'Webiny/Skeleton': path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Skeleton'),
-        'Webiny/Ui': path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Ui'),
         'webiny': path.resolve(Webiny.projectRoot(), 'Apps/Webiny/Js/Core/Webiny.js')
     };
 
-    // Add an alias for the app being built so we can easily point to the desired folders
-    const appName = app.getAppName();
-    if (appName !== 'webiny') {
-        aliases[appName] = path.resolve(Webiny.projectRoot(), 'Apps', appName, 'Js');
-    }
+    // Add all existing apps to aliases
+    Webiny.getApps().forEach(app => {
+        aliases[app.getName().replace('.', '/')] = path.resolve(Webiny.projectRoot(), app.getSourceDir());
+    });
 
     return {
         alias: aliases,
         extensions: ['.jsx', '.js', '.css', '.scss'],
         modules: [
             // We can resolve using app root (eg: Apps/YourApp/node_modules)
-            path.resolve(Webiny.projectRoot(), 'Apps', appName, 'node_modules'),
+            path.resolve(Webiny.projectRoot(), 'Apps', app.getAppName(), 'node_modules'),
             // We can resolve using JS app root (eg: Apps/YourApp/Js/Backend)
             path.resolve(Webiny.projectRoot(), app.getSourceDir()),
-            // We can resolve using Webiny.Core (which is the core of the system)
+            // We can resolve using Webiny root (which is the core of the system)
             path.resolve(Webiny.projectRoot(), 'Apps/Webiny/node_modules'),
             // We can resolve using our project root
             path.resolve(Webiny.projectRoot(), './node_modules')

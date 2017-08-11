@@ -89,16 +89,16 @@ ImageEditComponent.defaultProps = {
         };
 
         return (
-            <Webiny.Ui.LazyLoad modules={['Grid', 'Input']}>
+            <Webiny.Ui.LazyLoad modules={['Grid', 'Input', 'ButtonGroup']}>
                 {(Ui) => (
                     <div className="image-plugin-wrapper">
                         <Ui.Grid.Row>
                             <Ui.Grid.Col xs={12}>
-                                <div className="btn-group pull-right">
+                                <ButtonGroup className="pull-right">
                                     <button {...btnProps('left')}>Left</button>
                                     <button {...btnProps('center')}>Center</button>
                                     <button {...btnProps('right')}>Right</button>
-                                </div>
+                                </ButtonGroup>
                             </Ui.Grid.Col>
                         </Ui.Grid.Row>
 
