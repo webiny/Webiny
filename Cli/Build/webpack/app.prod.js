@@ -130,8 +130,7 @@ module.exports = function (app, config) {
                             loader: 'babel-loader',
                             options: {
                                 presets: [
-                                    require.resolve('babel-preset-es2016'),
-                                    require.resolve('babel-preset-es2015'),
+                                    [require.resolve('babel-preset-es2015'), {modules: false}],
                                     require.resolve('babel-preset-react')
                                 ],
                                 plugins: [
