@@ -1,25 +1,15 @@
 import _ from 'lodash';
 import React from 'react';
-import View from './../Core/View';
+import Component from './../Core/Component';
 import Router from './../Router/Router';
 import Dispatcher from './../Core/Dispatcher';
 import Placeholder from './Placeholder';
-import dynamics from 'dynamics.js';
 
-class RootElement extends View {
-
-    constructor() {
-        super();
-
-        this.state = {
-            loading: true
-        };
-
-        this.loader = document.querySelector('.preloader-wrap');
-
-        this.bindMethods('onDidUpdate,forceUpdate');
-    }
-
+/**
+ * This component serves as the main entry component which binds to Router.
+ * It re-renders itself when 'RenderView' event is triggered by the Router to render the new Placeholders content.
+ */
+class RootElement extends Component {
     componentDidMount() {
         console.timeStamp('RootElement DidMount');
         this.unsubscribe = Dispatcher.on('RenderView', () => {
@@ -28,44 +18,19 @@ class RootElement extends View {
             });
         });
 
-        Router.start().then(() => {
-            this.setState({loading: false});
-        });
+        Router.start();
     }
 
     componentWillUnmount() {
         super.componentWillUnmount();
         this.unsubscribe();
     }
-
-    hideLoader() {
-        if (this.loader) {
-            dynamics.animate(this.loader, {
-                opacity: 0
-            }, {
-                type: dynamics.easeOut,
-                duration: 500,
-                complete: () => {
-                    this.loader.style.display = 'none';
-                    this.loader = null;
-                }
-            });
-        }
-    }
-
-    onDidUpdate() {
-        this.hideLoader();
-        window.scrollTo(0, 0);
-    }
 }
 
-RootElement.defaultProps = _.merge({}, View.defaultProps, {
+RootElement.defaultProps = {
     renderer() {
-        if (!this.state.loading) {
-            return React.createElement('div', null, React.createElement(Placeholder, {onDidUpdate: this.onDidUpdate, name: 'Layout'}));
-        }
-        return null;
+        return React.createElement('div', null, React.createElement(Placeholder, {name: 'Layout'}));
     }
-});
+};
 
 export default RootElement;

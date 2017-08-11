@@ -5,26 +5,6 @@ import $ from 'jquery';
 import 'babel-polyfill';
 import Page from './Lib/Core/Page';
 
-function formatAjaxResponse(jqXhr) {
-    return {
-        data: jqXhr.responseJSON,
-        status: jqXhr.status,
-        statusText: jqXhr.statusText
-    };
-}
-
-function request(config) {
-    return new Promise(resolve => {
-        $.ajax(config)
-            .done((data, textStatus, jqXhr) => {
-                resolve(formatAjaxResponse(jqXhr));
-            })
-            .fail(jqXhr => {
-                resolve(formatAjaxResponse(jqXhr));
-            });
-    });
-}
-
 class Webiny {
     constructor() {
         this.Apps = {};
@@ -65,36 +45,28 @@ class Webiny {
                 this.Router.setHistory(config.router.history);
             }
 
-            return this.loadBundle(coreConfig).then(() => this.Apps.Webiny.Core.run());
+            return this.loadBundle(coreConfig).then(() => this.Apps['Webiny.Core'].run());
         }).then(() => {
             // Load and run apps
             let loader = Promise.resolve();
             config.apps.map(name => {
                 loader = loader.then(() => {
-                    return this.includeApp(name, this.Config.Meta[name] || null).then(app => app.run());
+                    return this.includeApp(this.Config.Meta[name]).then(app => app.run());
                 });
             });
             return loader;
         }).then(() => {
-            // Initialize Authentication (if registered by one of the apps)
-            config.apps.map(name => {
-                if (name === config.auth) {
-                    this.Auth = _.get(this.Apps, name).getAuth();
-                }
-            });
-
             if (this.Auth) {
                 this.Auth.init();
             }
 
             // Mount RootElement
-            const RootElement = this.RootElement;
-            this.app = ReactDOM.render(<RootElement/>, document.querySelector('webiny-app'));
+            this.app = ReactDOM.render(React.createElement(this.Ui.RootElement), document.querySelector('webiny-app'));
         });
     }
 
     registerApp(app) {
-        _.set(this.Apps, app.name, app);
+        this.Apps[app.name] = app;
         return this;
     }
 
@@ -107,47 +79,24 @@ class Webiny {
         this.ModuleLoader.setConfiguration(name, config);
     }
 
-    includeApp(name, config) {
-        const runApp = (appConfig) => {
-            let loader = Promise.resolve();
-            if (_.has(appConfig, 'vendor')) {
-                loader = loader.then(() => this.Page.loadScript(appConfig['vendor']));
-            }
-
-            if (_.has(appConfig, 'app')) {
-                loader = loader.then(() => this.Page.loadScript(appConfig['app']));
-            }
-
-            if (_.has(appConfig, 'css')) {
-                this.Page.loadStylesheet(appConfig['css']);
-            }
-
-            // Load extra bundle if route matches
-            loader = loader.then(() => this.loadBundle(appConfig));
-
-            return loader;
-        };
-
-        console.time(name);
+    includeApp(config) {
         let loadConfig = Promise.resolve(config);
 
-        if (!config) {
-            const config = {
-                url: this.Config.WebPath + '/build/' + this.Config.Environment + '/' + name.replace('.', '_') + '/meta.json',
+        if (_.isString(config)) {
+            const load = {
+                url: this.Config.WebPath + '/build/' + this.Config.Environment + '/' + config.replace('.', '_') + '/meta.json',
                 dataType: 'json',
                 contentType: 'application/json;charset=UTF-8',
                 processData: false
             };
 
-            loadConfig = request(config).then(res => res.data);
+            loadConfig = request(load).then(res => res.data);
         }
 
         return loadConfig.then(config => {
             // Set config to meta to have chunks map ready for webpack
-            this.Config.Meta[name] = config;
-            return runApp(config);
-        }).then(() => {
-            return _.get(this.Apps, name);
+            this.Config.Meta[config.name] = config;
+            return prepareApp.call(this, config).then(() => this.Apps[config.name]);
         });
     }
 
@@ -230,6 +179,44 @@ class Webiny {
     setModuleLoader(loader) {
         this.ModuleLoader = loader;
     }
+}
+
+function formatAjaxResponse(jqXhr) {
+    return {
+        data: jqXhr.responseJSON,
+        status: jqXhr.status,
+        statusText: jqXhr.statusText
+    };
+}
+
+function request(config) {
+    return new Promise(resolve => {
+        $.ajax(config)
+            .done((data, textStatus, jqXhr) => {
+                resolve(formatAjaxResponse(jqXhr));
+            })
+            .fail(jqXhr => {
+                resolve(formatAjaxResponse(jqXhr));
+            });
+    });
+}
+
+function prepareApp(appConfig) {
+    let loader = Promise.resolve();
+    if (_.has(appConfig, 'vendor')) {
+        loader = loader.then(() => this.Page.loadScript(appConfig['vendor']));
+    }
+
+    if (_.has(appConfig, 'app')) {
+        loader = loader.then(() => this.Page.loadScript(appConfig['app']));
+    }
+
+    if (_.has(appConfig, 'css')) {
+        this.Page.loadStylesheet(appConfig['css']);
+    }
+
+    // Load extra bundle if route matches
+    return loader.then(() => this.loadBundle(appConfig));
 }
 
 export default new Webiny();

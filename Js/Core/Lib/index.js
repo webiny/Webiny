@@ -60,21 +60,17 @@ export default (Webiny) => {
         ModuleLoader: new ModuleLoader(),
         Router,
         Route,
-        RootElement,
         Ui: {
+            RootElement,
             LazyLoad,
             Placeholder,
             Component,
-            Components: {
-                Filters: {}
-            },
             Dispatcher: UiDispatcher,
             FormComponent,
             ModalComponent,
             OptionComponent,
             Menu: UiMenu,
-            View,
-            Views: {}
+            View
         },
         Validator,
         ViewManager

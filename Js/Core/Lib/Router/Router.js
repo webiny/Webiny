@@ -6,6 +6,7 @@ import Utils from './RouterUtils';
 import Dispatcher from './../Core/Dispatcher';
 import 'jquery-deparam';
 import {createBrowserHistory} from 'history';
+import anchorClickHandler from './AnchorClickHandler';
 
 /**
  * ROUTER
@@ -16,7 +17,7 @@ class Router {
     constructor() {
         this.baseUrl = null;
         this.appUrl = '';
-        this.history = createBrowserHistory();
+        this.history = null;
         this.routes = [];
         this.defaultComponents = {};
         this.layouts = {};
@@ -42,6 +43,14 @@ class Router {
     }
 
     start() {
+        if (!this.history) {
+            this.setHistory(createBrowserHistory());
+        }
+
+        if (!this.anchorClickHandler) {
+            this.setAnchorClickHandler(anchorClickHandler);
+        }
+
         if (!this.baseUrl) {
             return Promise.resolve();
         }
@@ -50,7 +59,7 @@ class Router {
             this.started = true;
             const $this = this;
             $(document).on('click', 'a', function handleClick(e) {
-                $this.handleAnchorClick(this, e);
+                $this.anchorClickHandler($this, this, e);
             });
 
             this.history.listen(location => {
@@ -87,6 +96,8 @@ class Router {
             Dispatcher.on('RouteChanged', (event) => {
                 if (_.isNumber(_.get(this.history, 'location.state.scrollY'))) {
                     window.scrollTo(0, this.history.location.state.scrollY);
+                } else {
+                    window.scrollTo(0, 0);
                 }
                 let chain = Promise.resolve(event);
                 this.routeChanged.forEach(callback => {
@@ -309,6 +320,11 @@ class Router {
         return this.titlePattern;
     }
 
+    setAnchorClickHandler(fn) {
+        this.anchorClickHandler = fn;
+        return this;
+    }
+
     /**
      * Route name
      * @param route
@@ -325,38 +341,6 @@ class Router {
 
     getBaseUrl() {
         return this.baseUrl;
-    }
-
-    // TODO: make this function configurable (overridable)
-    handleAnchorClick(a, e) {
-        let url = a.href;
-
-        // _blank links should not be intercepted
-        if (a.target === '_blank') {
-            return;
-        }
-
-        // Prevent scrolling to top when clicking on '#' link
-        if (_.endsWith(url, '#')) {
-            e.preventDefault();
-            return;
-        }
-
-        // Check if it's an anchor link
-        if (url.indexOf('#') > -1) {
-            return;
-        }
-
-        // Push state and let the Router process the rest
-        if (url.startsWith(Webiny.Config.WebPath) || url.startsWith('file://')) {
-            e.preventDefault();
-            url = url.replace(Webiny.Config.WebPath, '').replace('file://', '');
-            this.history.push(url, {
-                title: a.getAttribute('data-document-title') || null,
-                prevTitle: window.document.title,
-                scrollY: a.getAttribute('data-prevent-scroll') === 'true' ? window.scrollY : false
-            });
-        }
     }
 
     sortersToString(sorters) {
