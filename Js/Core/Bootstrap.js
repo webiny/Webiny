@@ -15,6 +15,10 @@
         }
     });
 
+    global['webinyOnRender'] = (callback) => {
+        Webiny.onRenderCallbacks.push(callback);
+    };
+
     require('bootstrap-sass');
 
     if (DEVELOPMENT) {

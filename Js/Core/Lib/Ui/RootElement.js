@@ -28,8 +28,9 @@ class RootElement extends Component {
 }
 
 RootElement.defaultProps = {
+    onDidUpdate: _.noop,
     renderer() {
-        return React.createElement('div', null, React.createElement(Placeholder, {name: 'Layout'}));
+        return React.createElement('div', null, React.createElement(Placeholder, {name: 'Layout', onDidUpdate: this.props.onDidUpdate}));
     }
 };
 
