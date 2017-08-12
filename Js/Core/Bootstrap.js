@@ -19,6 +19,11 @@
         Webiny.onRenderCallbacks.push(callback);
     };
 
+    global['webinyFirstRenderDone'] = () => {
+        return Webiny.firstRenderDone;
+    };
+
+
     require('bootstrap-sass');
 
     if (DEVELOPMENT) {

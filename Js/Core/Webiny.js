@@ -12,6 +12,7 @@ class Webiny {
         this.EMPTY = '__webiny_empty__';
         this.Page = new Page();
         this.onRenderCallbacks = [];
+        this.firstRenderDone = false;
 
         if (DEVELOPMENT) {
             this.hotReloading = false;
@@ -53,6 +54,7 @@ class Webiny {
 
             // Mount RootElement
             const onDidUpdate = () => {
+                this.firstRenderDone = true;
                 this.onRenderCallbacks.map(cb => cb());
             };
             this.app = ReactDOM.render(React.createElement(this.Ui.RootElement, {onDidUpdate}), document.querySelector('webiny-app'));
