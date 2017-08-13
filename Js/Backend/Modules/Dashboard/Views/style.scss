@@ -472,14 +472,24 @@
 .slide__image {
   margin-bottom: 30px;
   margin-top: 10px;
+  text-align: center;
   img {
     width: auto !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .slide__image {
+    img{
+      margin: 0 auto;
+    }
   }
 }
 
 @media (min-width: 768px) {
   .slide__image {
     padding: 0 60px 0 35px;
+    text-align: left;
   }
 }
 
@@ -509,6 +519,12 @@
     margin-top: 10px;
     display: inline-block;
     text-transform: uppercase;
+  }
+}
+
+@media (max-width: 768px) {
+  .slide__button {
+    width: 100%;
   }
 }
 

@@ -134,7 +134,8 @@
 		width: 100%;
 		display: block;
 		margin: 10px 0;
-		padding: 15px 0;
+		/*padding: 15px 0; this causes problems with a longer word inside a button as it sticks to the edges */
+		padding: 15px;
 	}
 
 	.btnGroup, :global(.btn-group) {
