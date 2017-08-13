@@ -24,7 +24,8 @@
 }
 
 .footer {
-	border: 1px solid #e7e5e5;
+	/*border: 1px solid #e7e5e5; this looks weird when the form is outside the Tabs component, replaced with border-top*/
+	border-top: 1px solid #e7e5e5;
 	overflow: hidden;
 	margin-top: -1px; /*fixes when a top element has a border-bottom set*/
 }
