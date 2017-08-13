@@ -18,8 +18,10 @@ class Skeleton extends Webiny.App {
         ];
     }
 
-    getAuth() {
-        return new Auth();
+    run() {
+        return super.run().then(() => {
+            Webiny.Auth = new Auth();
+        });
     }
 }
 
