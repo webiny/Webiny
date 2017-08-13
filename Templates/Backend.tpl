@@ -6,7 +6,6 @@
     <title>Webiny</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
     <link rel="shortcut icon" href="{$Webiny->Assets('Webiny.Skeleton', 'images/public/favicon.ico')}"/>
-    <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,300" rel="stylesheet" type="text/css">
     {webinyPreload apps="Webiny.Ui,Webiny.Skeleton,Webiny.Backend"}
 </head>
 <body>
