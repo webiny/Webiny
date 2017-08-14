@@ -143,4 +143,4 @@ Row.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Row, {styles});
+export default Webiny.createComponent(Row, {styles, api: ['isDisabled']});
