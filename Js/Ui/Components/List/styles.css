@@ -206,7 +206,7 @@ table.table > tbody > tr.selected > td {
 .selectRow {
 	height: 19px; /* needs to match the checkbox height */
 	padding: 0;
-	margin: 0;
+	margin: 0 !important;
 }
 
 /* expand button / row details */

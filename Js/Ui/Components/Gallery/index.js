@@ -7,7 +7,7 @@ import Image from './Image';
 import styles from './styles.css';
 
 const placeholder = document.createElement('div');
-placeholder.className = 'tray-bin__file placeholder';
+placeholder.className = styles.placeholder;
 placeholder.textContent = 'Drop here';
 
 class Gallery extends Webiny.Ui.FormComponent {

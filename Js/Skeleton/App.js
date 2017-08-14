@@ -16,10 +16,9 @@ class Skeleton extends Webiny.App {
             new Layout(this),
             new UserAccount(this)
         ];
-    }
 
-    getAuth() {
-        return new Auth();
+        Webiny.Router.setDefaultRoute('Dashboard');
+        Webiny.Auth = new Auth();
     }
 }
 

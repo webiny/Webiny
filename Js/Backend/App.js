@@ -32,15 +32,9 @@ class Backend extends Webiny.App {
             return api.get('/backend').then(res => {
                 let apps = Promise.resolve();
                 _.forIn(res.getData(), config => {
-                    apps = apps.then(() => Webiny.includeApp(config).then(app => {
-                        app.run();
-                    }));
+                    apps = apps.then(() => Webiny.includeApp(config).then(app => app.run()));
                 });
                 return apps;
-            }).then(() => {
-                if (!Webiny.Auth) {
-                    Webiny.Auth = Webiny.Apps['Webiny.Skeleton'].getAuth();
-                }
             });
         });
     }
