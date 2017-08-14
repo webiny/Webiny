@@ -4,6 +4,7 @@ import _ from 'lodash';
 import $ from 'jquery';
 import 'babel-polyfill';
 import Page from './Lib/Core/Page';
+import isElementOfType from './Lib/isElementOfType';
 
 class Webiny {
     constructor() {
@@ -76,9 +77,20 @@ class Webiny {
     }
 
     includeApp(config) {
-        let loadConfig = Promise.resolve(config);
+        let loadConfig = null;
 
-        if (_.isString(config)) {
+        // Config object is immediately assigned to loadConfig as a promise
+        if (_.isPlainObject(config)) {
+            loadConfig = Promise.resolve(config);
+        }
+
+        // Check if requested app meta is already present
+        if (_.isString(config) && _.has(this.Config.Meta, config)) {
+            loadConfig = Promise.resolve(this.Config.Meta[config]);
+        }
+
+        // If we still do not have our config - load app meta from server
+        if (_.isString(config) && _.isNull(loadConfig)) {
             const load = {
                 url: this.Config.WebPath + '/build/' + this.Config.Environment + '/' + config.replace('.', '_') + '/meta.json',
                 dataType: 'json',
@@ -130,46 +142,7 @@ class Webiny {
     }
 
     isElementOfType(element, type) {
-        if (!element || !React.isValidElement(element) || _.isString(element.type)) {
-            return false;
-        }
-
-        // If a class to compare against has an "__originalComponent" property it means it's a ComponentWrapper
-        // Need to compare against originalComponent class
-        let targetType = type;
-        if (type.hasOwnProperty('__originalComponent')) {
-            targetType = type.__originalComponent;
-        }
-
-        // If the element type has an "__originalComponent" property it means it's a ComponentWrapper
-        // Need to compare against originalComponent class
-        let elementType = element.type;
-        if (elementType.hasOwnProperty('__originalComponent')) {
-            elementType = elementType.__originalComponent;
-        }
-
-        // Check if targetType can be found in the inheritance tree with possible ComponentWrapper being an intermediate class
-        const checkDeeper = (elementType) => {
-            if (!elementType) {
-                return false;
-            }
-
-            if (elementType === targetType || elementType.prototype instanceof targetType) {
-                return true;
-            }
-
-            return checkDeeper(Object.getPrototypeOf(elementType.prototype).constructor.__originalComponent);
-        };
-
-        if (elementType === targetType || elementType.prototype instanceof targetType) {
-            return true;
-        }
-
-        try {
-            return checkDeeper(Object.getPrototypeOf(elementType.prototype).constructor.__originalComponent);
-        } catch (e) {
-            return false;
-        }
+        return isElementOfType(element, type);
     }
 
     setModuleLoader(loader) {

@@ -17,8 +17,6 @@ class Layout extends Webiny.App.Module {
             new Webiny.Route('Dashboard', '/', Dashboard, 'Dashboard')
         );
 
-        Webiny.Router.setDefaultRoute('Dashboard');
-
         Webiny.registerModule(
             new Webiny.Module('Webiny/Skeleton/AccountPreferencesMenuItem', () => import('./Components/UserMenu').then(m => m.AccountPreferences)).setTags('user-menu-item'),
             new Webiny.Module('Webiny/Skeleton/LogoutMenuItem', () => import('./Components/UserMenu').then(m => m.Logout)).setTags('user-logout-menu-item')
