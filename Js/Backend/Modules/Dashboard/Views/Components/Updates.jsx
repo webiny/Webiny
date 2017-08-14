@@ -29,7 +29,7 @@ class Updates extends Webiny.Ui.View {
         }
 
         // refresh dashboard updates
-        return new Webiny.Api.Endpoint('/entities/the-hub/updates').get('/latest').then(apiResponse => {
+        return new Webiny.Api.Endpoint('/entities/webiny/dashboard-updates').get('/latest').then(apiResponse => {
             const updates = apiResponse.getData('list');
             if (updates && updates.length > 0) {
                 this.setState({updates: updates, loaded: true});
@@ -85,19 +85,22 @@ Updates.defaultProps = {
 
                                     <Carousel items={1} dots={true}>
                                         {_.get(this.state, 'updates') && this.state.updates.map(post => {
+                                            let link = "http://demo.app/r/"+post.refId;
                                             return (
                                                 <div className="slide slide--active" key={post.id}>
-                                                    <div className="slide__image">
-                                                        <img src={post.image.src} />
-                                                    </div>
+                                                    {post.image && (
+                                                        <div className="slide__image">
+                                                            <img src={post.image} />
+                                                        </div>
+                                                    )}
                                                     <div className="slide__content">
                                                         <div className="slide__title">
-                                                            <a href={post.link} target="_blank">{post.title}</a>
+                                                            {post.hasLink === true ? <a href={link} target="_blank">{post.title}</a> : post.title}
                                                         </div>
                                                         <div className="slide__excerpt">{post.content}</div>
                                                     </div>
                                                     <div className="slide__button">
-                                                        <Link type="primary" url={post.link} newTab={true}>Learn more</Link>
+                                                        {post.hasLink && (<Link type="primary" url={link} newTab={true}>Learn more</Link>)}
                                                         <br/>
                                                         <Link className="dismiss">Dismiss</Link>
                                                     </div>
