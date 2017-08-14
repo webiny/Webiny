@@ -3,6 +3,7 @@ import Webiny from 'webiny';
 import _ from 'lodash';
 import './style.scss'
 import imgInfinify from 'Assets/images/infinity.png';
+import Updates from './Components/Updates';
 
 class Dashboard extends Webiny.Ui.View {
     constructor(props) {
@@ -60,6 +61,9 @@ Dashboard.defaultProps = {
                 </div>
 
                 <div className="dashboard-content dashboard-content--lite">
+
+                    <Updates/>
+
                     <div className="row">
                         <div className="col-md-4">
                             <div className="block">
@@ -141,16 +145,16 @@ Dashboard.defaultProps = {
                                                 <div className="block-list__item-image">
                                                     <span className="icon icon-github icon-3x"></span>
                                                 </div>
-                                                <a href="https://www.webiny.com/docs/current/components/must-know" className="block-list__item-text" target="_blank">
-                                                    <strong>https://github.com/Webiny</strong>
+                                                <a href="https://github.com/Webiny" className="block-list__item-text" target="_blank">
+                                                    <Icon icon="fa-github"/> GitHub
                                                 </a>
                                             </li>
                                             <li className="block-list__item">
                                                 <div className="block-list__item-image">
                                                     <span className="icon icon-twitter icon-3x"></span>
                                                 </div>
-                                                <a href="https://www.webiny.com/docs/current/components/must-know" className="block-list__item-text" target="_blank">
-                                                    <strong>@WebinyPlatform</strong>
+                                                <a href="" className="block-list__item-text" target="_blank">
+                                                    <Icon icon="fa-twitter"/> Twitter
                                                 </a>
                                             </li>
                                             <li className="block-list__item">
@@ -158,7 +162,7 @@ Dashboard.defaultProps = {
                                                     <span className="icon icon-medium icon-3x"></span>
                                                 </div>
                                                 <a href="https://www.webiny.com/docs/current/components/must-know" className="block-list__item-text" target="_blank">
-                                                    <strong>https://blog.webiny.com</strong>
+                                                    <Icon icon="fa-medium"/> Blog
                                                 </a>
                                             </li>
 
@@ -167,7 +171,7 @@ Dashboard.defaultProps = {
                                                     <span className="icon icon-youtube icon-3x"></span>
                                                 </div>
                                                 <a href="https://www.webiny.com/docs/current/components/must-know" className="block-list__item-text" target="_blank">
-                                                    <strong>https://youtube.com</strong>
+                                                    <Icon icon="fa-youtube"/> YouTube
                                                 </a>
                                             </li>
 
@@ -176,9 +180,6 @@ Dashboard.defaultProps = {
                                 </div>
                             </div>
                         </div>
-
-
-
                     </div>
                 </div>
 
