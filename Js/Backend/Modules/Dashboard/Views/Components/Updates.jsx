@@ -12,7 +12,7 @@ class Updates extends Webiny.Ui.View {
         };
     }
 
-    componentDidMount(){
+    componentDidMount() {
         super.componentDidMount();
         this.getUpdates();
     }
@@ -20,9 +20,9 @@ class Updates extends Webiny.Ui.View {
     getUpdates() {
         // check local storage
         let updates = Webiny.LocalStorage.get('dashboardUpdates');
-        if(updates){
+        if (updates) {
             let lastUpdate = new Date() - new Date(Webiny.LocalStorage.get('dashboardLastUpdate'));
-            if(lastUpdate < 86400000){ // 24h
+            if (lastUpdate < 86400000) { // 24h
                 this.setState({updates: updates, loaded: true});
                 return;
             }
@@ -38,8 +38,19 @@ class Updates extends Webiny.Ui.View {
             }
 
             // store dashboard updates and the last update time
-            Webiny.LocalStorage.set('dashboardUpdates', updates);
-            Webiny.LocalStorage.set('dashboardLastUpdate', new Date());
+            //Webiny.LocalStorage.set('dashboardUpdates', updates);
+            //Webiny.LocalStorage.set('dashboardLastUpdate', new Date());
+        });
+    }
+
+    dismissUpdate(id) {
+        return new Webiny.Api.Endpoint('/entities/webiny/dashboard-updates').get('/' + id + '/dismiss').then(apiResponse => {
+            // remove local storage entries
+            //Webiny.LocalStorage.remove('dashboardUpdates');
+            //Webiny.LocalStorage.remove('dashboardLastUpdate');
+
+            // call the getUpdates function to refresh the dashboard list
+            this.getUpdates();
         });
     }
 }
@@ -49,17 +60,17 @@ Updates.defaultProps = {
 
         const {Grid, Loader, Carousel, Link, Icon} = this.props;
 
-        if(!this.state.loaded){
+        if (!this.state.loaded) {
             return (
-              <Grid.Row>
-                  <Grid.Col all={12}>
-                      <Loader className="fixed"/>
-                  </Grid.Col>
-              </Grid.Row>
+                <Grid.Row>
+                    <Grid.Col all={12}>
+                        <Loader className="fixed"/>
+                    </Grid.Col>
+                </Grid.Row>
             );
         }
 
-        if(this.state.updates.length < 1){
+        if (this.state.updates.length < 1) {
             return (
                 <Grid.Row>
                     <Grid.Col all={12}>
@@ -85,24 +96,27 @@ Updates.defaultProps = {
 
                                     <Carousel items={1} dots={true}>
                                         {_.get(this.state, 'updates') && this.state.updates.map(post => {
-                                            let link = "http://demo.app/r/"+post.refId;
+                                            let link = "http://demo.app/r/" + post.refId;
                                             return (
                                                 <div className="slide slide--active" key={post.id}>
                                                     {post.image && (
                                                         <div className="slide__image">
-                                                            <img src={post.image} />
+                                                            <img src={post.image}/>
                                                         </div>
                                                     )}
                                                     <div className="slide__content">
                                                         <div className="slide__title">
-                                                            {post.hasLink === true ? <a href={link} target="_blank">{post.title}</a> : post.title}
+                                                            {post.hasLink === true ?
+                                                                <a href={link} target="_blank">{post.title}</a> : post.title}
                                                         </div>
                                                         <div className="slide__excerpt">{post.content}</div>
                                                     </div>
                                                     <div className="slide__button">
                                                         {post.hasLink && (<Link type="primary" url={link} newTab={true}>Learn more</Link>)}
                                                         <br/>
-                                                        <Link className="dismiss">Dismiss</Link>
+                                                        <Link className="dismiss" onClick={() => {
+                                                            this.dismissUpdate(post.id)
+                                                        }}>Dismiss</Link>
                                                     </div>
                                                 </div>
                                             );

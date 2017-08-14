@@ -32,7 +32,7 @@ class DashboardUpdates extends AbstractEntity
         $this->attr('title')->char()->setToArrayDefault(true);
         $this->attr('content')->char()->setToArrayDefault(true);
         $this->attr('hasLink')->boolean()->setDefaultValue(false)->setToArrayDefault(true);
-        $this->attr('dismissed')->object()->setDefaultValue(false); // this will contain the id of user which dismissed the update
+        $this->attr('dismissed')->boolean()->setDefaultValue(false); // this will contain the id of user which dismissed the update
         $this->attr('order')->integer()->setDefaultValue(0);
         $this->attr('image')->char()->setToArrayDefault(true);
 
@@ -57,16 +57,19 @@ class DashboardUpdates extends AbstractEntity
 
         // @todo: every admin user needs to have this access
         // @todo: dismiss
-        $this->api('GET', '{id}/dismiss', function () {
-
+        $this->api('GET', '{dashboardUpdate}/dismiss', function (DashboardUpdates $dashboardUpdate) {
+            $dashboardUpdate->dismissed = true;
+            $dashboardUpdate->save();
         });
     }
 
     // @todo: make this more bullet proof so in case of problems we fail gracefully
     private function populateUpdates(User $user)
     {
-        // request the latest updates from webiny hub
-        $updates = file_get_contents('http://demo.app/api/entities/the-hub/updates/latest');
+        // request the latest updates from webiny hub$ctx = stream_context_create(array('http'=>
+        // suppress errors and set timeout to 3s
+        $context = stream_context_create(['http'=> ['timeout' => 3]]);
+        $updates = @file_get_contents('http://demo.app/api/entities/the-hub/updates/latest', false, $context);
         if (!$updates) {
             return;
         }
@@ -82,22 +85,25 @@ class DashboardUpdates extends AbstractEntity
         }
 
         foreach ($updates['data']['list'] as $u) {
-            if (!self::findOne(['refId' => $u['id'], 'userId' => $user->id])) {
-                // create new update for this user
+            $update = self::findOne(['refId' => $u['id'], 'userId' => $user->id]);
+
+            // create new update for this user if it doesn't exist, otherwise, just update the existing update
+            if (!$update) {
                 $update = new self;
-                $update->refId = $u['id'];
-                $update->title = $u['title'];
-                $update->content = $u['content'];
-                $update->order = $u['order'];
-                if(isset($u['image']['src'])){
-                    $update->image = $u['image']['src'];
-                }
-                if(empty($u['hasLink'])){
-                    $update->hasLink = $u['hasLink'];
-                }
-                $update->userId = $user->id;
-                $update->save();
             }
+
+            $update->refId = $u['id'];
+            $update->title = $u['title'];
+            $update->content = $u['content'];
+            $update->order = $u['order'];
+            if(isset($u['image']['src'])){
+                $update->image = $u['image']['src'];
+            }
+            if(empty($u['hasLink'])){
+                $update->hasLink = $u['hasLink'];
+            }
+            $update->userId = $user->id;
+            $update->save();
         }
 
         return;
