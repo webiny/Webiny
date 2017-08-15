@@ -50,7 +50,7 @@ class GoogleMap extends Webiny.Ui.Component {
         const lng = _.get(this.props, 'value.lng', this.props.center.lng);
 
         this.map = new google.maps.Map(ReactDOM.findDOMNode(this).querySelector('[data-role="map"]'), {
-            center: new google.maps.LatLng(lat, lng),
+            center: new google.maps.LatLng(parseFloat(lat), parseFloat(lng)),
             zoom: this.props.zoom,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         });

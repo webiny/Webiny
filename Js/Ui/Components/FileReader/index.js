@@ -81,6 +81,7 @@ FileReader.defaultProps = {
     multiple: false,
     sizeLimit: 2097152, // 10485760
     readAs: 'data', // data || binary
+    onChange: _.noop,
     renderer() {
         return (
             <input

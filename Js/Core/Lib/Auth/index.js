@@ -20,46 +20,50 @@ class Auth {
             });
 
             // Watch if we got a forbidden request - then log out
-            Webiny.Http.addResponseInterceptor(response => {
-                if (response.status === 403) {
-                    this.onForbidden(routerEvent, response);
-                }
-
-                if (response.status === 401 && response.data.code === 'WBY-AUTH-TOKEN-EXPIRED') {
-                    if (this.showLogin) {
-                        return;
-                    }
-
-                    this.showLogin = true;
-                    response.data.message = 'Unfortunately we could not perform your latest action. You can retry as soon as you log in again.';
-
-                    if (!document.querySelector('login-overlay')) {
-                        document.body.appendChild(document.createElement('login-overlay'));
-                    }
-
-                    const target = document.querySelector('login-overlay');
-
-                    const LoginView = this.renderLogin();
-
-                    if (LoginView) {
-                        const props = {
-                            overlay: true,
-                            onSuccess: () => {
-                                this.showLogin = false;
-                                ReactDOM.unmountComponentAtNode(target);
-                            }
-                        };
-
-                        const {createElement, cloneElement, isValidElement} = React;
-                        const view = isValidElement(LoginView) ? cloneElement(LoginView, props) : createElement(LoginView, props);
-                        ReactDOM.render(view, target);
-                    }
-                }
-            });
+            Webiny.Http.addResponseInterceptor(this.getResponseInterceptor());
 
             return this.checkUser(routerEvent);
         });
         Webiny.Router.onRouteWillChange(this.checkUser.bind(this));
+    }
+
+    getResponseInterceptor() {
+        return response => {
+            if (response.getStatus() === 403) {
+                this.onForbidden(response);
+            }
+
+            if (response.getStatus() === 401 && response.getData('code') === 'WBY-AUTH-TOKEN-EXPIRED') {
+                if (this.showLogin) {
+                    return;
+                }
+
+                this.showLogin = true;
+                response.data.message = 'Unfortunately we could not perform your latest action. You can retry as soon as you log in again.';
+
+                if (!document.querySelector('login-overlay')) {
+                    document.body.appendChild(document.createElement('login-overlay'));
+                }
+
+                const target = document.querySelector('login-overlay');
+
+                const LoginView = this.renderLogin();
+
+                if (LoginView) {
+                    const props = {
+                        overlay: true,
+                        onSuccess: () => {
+                            this.showLogin = false;
+                            ReactDOM.unmountComponentAtNode(target);
+                        }
+                    };
+
+                    const {createElement, cloneElement, isValidElement} = React;
+                    const view = isValidElement(LoginView) ? cloneElement(LoginView, props) : createElement(LoginView, props);
+                    ReactDOM.render(view, target);
+                }
+            }
+        };
     }
 
     /**
@@ -210,10 +214,10 @@ class Auth {
     }
 
     /**
-     * Triggered when user is not authenticated
+     * Triggered when user is not authorized to perform the HTTP request.
      */
-    onForbidden() {
-        this.logout();
+    onForbidden(httpResponse) {
+        // Implement whatever logic you see fit
     }
 
     renderLogin() {
