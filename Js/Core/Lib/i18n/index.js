@@ -3,6 +3,7 @@ import Webiny from 'webiny';
 import React from 'react';
 import accounting from 'accounting';
 import I18N from './I18N';
+import dateFnsFormat from 'date-fns/format';
 
 /**
  * This is responsible for replacing given text with given values
@@ -102,18 +103,15 @@ class i18n {
     }
 
     date(value, format = 'DD/MMM/YY') {
-        // TODO: @adrian ovo trebamo smisliti bez momenta :)
-        return moment(value).format(format);
+        return dateFnsFormat(value, format);
     }
 
     time(value, format = 'HH:mm') {
-        // TODO: @adrian ovo trebamo smisliti bez momenta :)
-        return moment(value).format(format);
+        return dateFnsFormat(value, format);
     }
 
     datetime(value, format = 'DD/MMM/YY HH:mm') {
-        // TODO: @adrian ovo trebamo smisliti bez momenta :)
-        return moment(value).format(format);
+        return dateFnsFormat(value, format);
     }
 
     getTranslation(key) {
