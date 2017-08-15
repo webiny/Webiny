@@ -161,8 +161,6 @@ class TableEditComponent extends Webiny.Ui.Component {
             blockData.headers = headers;
             blockData.numberOfColumns = numberOfColumns;
             this.props.updateBlockData(blockData);
-            const editorState = this.props.editor.getEditorState();
-            this.props.editor.setEditorState(this.Draft.EditorState.push(editorState, editorState.getCurrentContent(), `insert-column`));
         });
     }
 
