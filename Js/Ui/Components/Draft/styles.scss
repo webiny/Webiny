@@ -112,6 +112,10 @@
         /*color: #393939;*/
         color: inherit;
         line-height: 150%;
+        /* fix word wrapping on tables and other elements */
+        word-break: keep-all;
+        word-wrap: normal;
+        white-space: normal;
       }
 
       ul, ol {
