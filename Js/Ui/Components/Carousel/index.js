@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
+import _ from 'lodash';
 import Webiny from 'webiny';
 
 class Carousel extends Webiny.Ui.Component {
@@ -14,16 +15,29 @@ class Carousel extends Webiny.Ui.Component {
 
     componentDidMount() {
         super.componentDidMount();
-
-        this.carousel = $(this.getCarouselWrapper()).owlCarousel(this.props);
+        this.initCarousel();
     }
 
-    shouldComponentUpdate() {
-        return false;
+    shouldComponentUpdate(nextProps) {
+        return !_.isEqual(this.props.children, nextProps.children);
+    }
+
+    componentWillUpdate(props, state){
+        super.componentWillUpdate(props, state);
+        this.carousel.trigger('destroy.owl.carousel');
+    }
+
+    componentDidUpdate() {
+        super.componentDidUpdate();
+        this.initCarousel();
     }
 
     getCarouselWrapper() {
         return ReactDOM.findDOMNode(this);
+    }
+
+    initCarousel() {
+        this.carousel = $(this.getCarouselWrapper()).owlCarousel(this.props);
     }
 }
 
