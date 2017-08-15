@@ -46,7 +46,7 @@ class Release extends Plugin {
         });
     }
 
-    runWizard(config, runTask) {
+    runWizard(config) {
         return inquirer.prompt([{
             type: 'input',
             name: 'target',
@@ -69,7 +69,7 @@ class Release extends Plugin {
         }]).then(answers => {
             config.target = answers.target;
 
-            return this.runTask(config, runTask).then(() => {
+            return this.runTask(config).then(() => {
                 return inquirer.prompt([{
                     type: 'confirm',
                     name: 'deploy',
@@ -78,7 +78,7 @@ class Release extends Plugin {
                 }]).then(answers => {
                     if (answers.deploy) {
                         config.archive = config.target;
-                        return runTask('deploy', config);
+                        return Webiny.getPlugins()['deploy'].runWizard(config);
                     }
                 });
             });
