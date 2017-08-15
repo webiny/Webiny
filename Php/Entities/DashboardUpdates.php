@@ -45,7 +45,7 @@ class DashboardUpdates extends AbstractEntity
             // first we populate the updates for that user
             $user = $this->wAuth()->getUser();
             if (!$user) {
-                return $this->apiFormatList([], '*');
+                return false;
             }
             $this->populateUpdates($user);
 

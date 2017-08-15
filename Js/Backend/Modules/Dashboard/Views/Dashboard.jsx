@@ -72,7 +72,7 @@ Dashboard.defaultProps = {
                                     <div className="header-options">
                                     </div>
                                 </div>
-                                <div className="block-content block-content--dynamic-height">
+                                <div className="block-content">
                                     <div>
                                         <ul className="block-list">
                                             <li className="block-list__item">
@@ -107,13 +107,12 @@ Dashboard.defaultProps = {
                         </div>
 
                         <div className="col-md-4">
-                            <div className="block">
+                            <div className="block block--the-hub">
                                 <div className="block-header block-header-outer">
-                                    <h4 className="block-title">THE HUB</h4>
                                     <div className="header-options">
                                     </div>
                                 </div>
-                                <div className="block-content block--the-hub text-center">
+                                <div className="block-content text-center">
 
                                     <div className="title-icon">
                                         <img src={imgInfinify} alt="Webiny Infinity"/>
