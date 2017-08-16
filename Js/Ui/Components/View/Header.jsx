@@ -12,7 +12,7 @@ Header.defaultProps = {
         const {styles} = this.props;
 
         // extract the app name
-        const appName = Webiny.Router.getActiveRoute().module.app.name.split('.')[0];
+        const appName = _.get(Webiny.Router.getActiveRoute(), 'module.app.name', '').split('.')[0];
 
         return (
             <div className={styles.viewHeader}>

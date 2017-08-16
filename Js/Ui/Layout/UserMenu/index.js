@@ -27,23 +27,23 @@ class UserMenu extends Webiny.Ui.Component {
         return _.get(user, 'firstName', '') + ' ' + _.get(user, 'lastName', '');
     }
 
-    logout() {
-        Webiny.Auth.logout();
-    }
-
     renderLogoutMenuItem() {
         const item = this.props.logoutMenuItem;
         if (!item) {
             return null;
         }
 
-        const logout = {logout: this.logout};
+        const logout = {logout: () => Webiny.Auth.logout()};
         return React.isValidElement(item) ? React.cloneElement(item, logout) : React.createElement(item, logout);
     }
 }
 
 UserMenu.defaultProps = {
     renderer() {
+        if (!this.state.user) {
+            return null;
+        }
+
         return (
             <div className="dropdown profile-holder">
                 <a href="#" className="profile" id="dropdownMenu4" data-toggle="dropdown">
