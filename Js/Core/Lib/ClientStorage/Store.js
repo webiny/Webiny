@@ -1,8 +1,13 @@
 import store from 'store';
 
 class Store {
+    constructor() {
+        this.instance = store;
+    }
+
     set(key, value) {
-        return store.set(key, value);
+        store.set(key, value);
+        return this;
     }
 
     get(key) {
@@ -10,11 +15,13 @@ class Store {
     }
 
     remove(key) {
-        return store.remove(key);
+        store.remove(key);
+        return this;
     }
 
     clear() {
-        return store.clearAll();
+        store.clearAll();
+        return this;
     }
 }
 

@@ -1,8 +1,13 @@
 import localforage from 'localforage';
 
 class LocalForage {
+    constructor() {
+        this.instance = localforage;
+    }
+
     set(key, value) {
-        return localforage.setItem(key, value);
+        localforage.setItem(key, value);
+        return this;
     }
 
     get(key) {
@@ -10,11 +15,13 @@ class LocalForage {
     }
 
     remove(key) {
-        return localforage.removeItem(key);
+        localforage.removeItem(key);
+        return this;
     }
 
     clear() {
-        return localforage.clear();
+        localforage.clear();
+        return this;
     }
 }
 

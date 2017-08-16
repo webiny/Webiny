@@ -9,7 +9,8 @@ class ClientStorage {
     }
 
     set(key, value) {
-        return this.storage.set(key, value);
+        this.storage.set(key, value);
+        return this;
     }
 
     get(key) {
