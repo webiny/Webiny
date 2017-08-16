@@ -79,7 +79,7 @@ class Endpoint extends Base {
     }
 
     setQuery(query) {
-        this.tmpQuery = _.pickBy(query, (v, k) => !_.isUndefined(v) || !_.has(this.query, k));
+        this.tmpQuery = _.pickBy(query, (v, k) => !(_.isNull(v) || _.isUndefined(v)) || !_.has(this.query, k));
         return this;
     }
 
@@ -90,11 +90,7 @@ class Endpoint extends Base {
 
     getQuery(query = null) {
         const mergedQuery = normalizeParams(this.query);
-        // Create new query object by merging current query parameters with new query parameters.
-        // New query parameters can be set by `setQuery` (assigned to this.tmpQuery) or passed directly as query parameter to this method.
-        const newQuery = _.merge({}, mergedQuery, query || this.tmpQuery);
-        // Remove all null and undefined values
-        return _.omitBy(newQuery, v => _.isNil(v));
+        return _.merge({}, mergedQuery, _.omitBy(query || this.tmpQuery, value => _.isNull(value) || _.isUndefined(value)));
     }
 
     getBody(body = null) {
