@@ -1,6 +1,10 @@
 import store from 'store';
 
 class Store {
+    constructor() {
+        this.instance = store;
+    }
+
     set(key, value) {
         store.set(key, value);
         return this;

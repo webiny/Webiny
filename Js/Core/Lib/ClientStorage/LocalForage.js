@@ -1,6 +1,10 @@
 import localforage from 'localforage';
 
 class LocalForage {
+    constructor() {
+        this.instance = localforage;
+    }
+
     set(key, value) {
         localforage.setItem(key, value);
         return this;
