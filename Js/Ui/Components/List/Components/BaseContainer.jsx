@@ -16,6 +16,7 @@ class BaseContainer extends Webiny.Ui.Component {
             loading: false,
             list: [],
             meta: {},
+            initialSorters: this.getInitialSorters(props),
             sorters: {},
             filters: {},
             page: props.page,
@@ -68,6 +69,28 @@ class BaseContainer extends Webiny.Ui.Component {
         super.componentWillReceiveProps(props);
     }
 
+    getInitialSorters(props) {
+        const sorters = {};
+        const sortValues = [
+            _.get(props, 'sort', ''),
+            _.get(props.query, '_sort', '')
+        ];
+
+        sortValues.join(',').split(',').map(sorter => {
+            if (sorter === '') {
+                return;
+            }
+            if (_.startsWith(sorter, '-')) {
+                sorters[_.trimStart(sorter, '-')] = -1;
+            } else {
+                sorters[sorter] = 1;
+            }
+        });
+
+        console.log('Initial sorters', sorters);
+        return Webiny.Router.sortersToString(sorters);
+    }
+
     /**
      * LOADING METHODS
      */
@@ -89,50 +112,55 @@ class BaseContainer extends Webiny.Ui.Component {
 
     prepare(props) {
         return new Promise(resolve => {
-            const state = {
-                sorters: {},
-                filters: {}
-            };
+            const state = props.connectToRouter ? this.prepareUsingRouter(props) : this.prepareNotUsingRouter(props);
 
-            if (props.connectToRouter) {
-                const params = Webiny.Router.getQueryParams();
-                const urlSort = params._sort || props.sort;
-                if (_.isString(urlSort)) {
-                    urlSort.split(',').map(sorter => {
-                        if (sorter === '') {
-                            return;
-                        }
-                        if (_.startsWith(sorter, '-')) {
-                            state.sorters[_.trimStart(sorter, '-')] = -1;
-                        } else {
-                            state.sorters[sorter] = 1;
-                        }
-                    });
-                }
-
-                // Get limit and page
-                state.page = parseInt(params._page || props.page || 1);
-                state.perPage = params._perPage || props.perPage || 10;
-                state.searchQuery = params._searchQuery || null;
-
-                // Get filters
-                _.each(params, (value, name) => {
-                    if (!_.startsWith(name, '_')) {
-                        state.filters[name] = value;
-                    }
-                });
-
-                // Add _searchQuery to filters even though it starts with '_' - it's a special system parameter and is in fact a filter
-                state.filters._searchQuery = state.searchQuery;
-            } else {
-                state.sorters = props.sorters || {};
-                state.filters = props.filters || {};
-                state.page = props.page || 1;
-                state.perPage = props.perPage || 10;
-            }
+            console.log('Prepare', state.sorters);
 
             this.setState(state, resolve);
         });
+    }
+
+    prepareUsingRouter(props) {
+        const state = {
+            sorters: {},
+            filters: {}
+        };
+        const params = Webiny.Router.getQueryParams();
+        const urlSort = params._sort || '';
+        urlSort.split(',').map(sorter => {
+            if (sorter === '') {
+                return;
+            }
+            if (_.startsWith(sorter, '-')) {
+                state.sorters[_.trimStart(sorter, '-')] = -1;
+            } else {
+                state.sorters[sorter] = 1;
+            }
+        });
+
+        // Get limit and page
+        state.page = parseInt(params._page || props.page || 1);
+        state.perPage = params._perPage || props.perPage || 10;
+        state.searchQuery = params._searchQuery || null;
+
+        // Get filters
+        _.each(params, (value, name) => {
+            if (!_.startsWith(name, '_')) {
+                state.filters[name] = value;
+            }
+        });
+
+        // Add _searchQuery to filters even though it starts with '_' - it's a special system parameter and is in fact a filter
+        state.filters._searchQuery = state.searchQuery;
+
+        return state;
+    }
+
+    prepareNotUsingRouter(props) {
+        return {
+            sorters: {},
+            filters: {},
+        };
     }
 
     setSorters(sorters) {

@@ -23,7 +23,7 @@ class ApiContainer extends BaseContainer {
                     if (!this.isMounted()) {
                         return;
                     }
-                    this.setState('initiallyLoaded', true);
+                    this.setState({initiallyLoaded: true});
                     this.props.onInitialLoad(_.get(data, 'list'), _.get(data, 'meta'));
                 });
             }
@@ -85,7 +85,7 @@ class ApiContainer extends BaseContainer {
         }
         this.setState({selectedRows: []});
         const query = _.assign({}, props.query, {
-            _sort: Webiny.Router.sortersToString(this.state.sorters),
+            _sort: Object.keys(this.state.sorters).length ? Webiny.Router.sortersToString(this.state.sorters) : this.state.initialSorters,
             _perPage: this.state.perPage,
             _page: this.state.page,
             _searchQuery: this.state.searchQuery,
@@ -96,6 +96,8 @@ class ApiContainer extends BaseContainer {
         if (showLoading) {
             this.showLoading();
         }
+
+        console.log('Load with sorters', query._sort);
 
         this.request = this.api.setQuery(query).execute().then(apiResponse => {
             const data = apiResponse.getData();

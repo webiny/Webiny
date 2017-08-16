@@ -27,7 +27,8 @@ class StaticContainer extends BaseContainer {
         let data = _.isEmpty(this.state.filters) ? propsData : _.filter(propsData, this.state.filters);
         const fields = [];
         const order = [];
-        _.each(this.state.sorters, (sort, field) => {
+        const sorters = Object.keys(this.state.sorters).length ? this.state.sorters : this.state.initialSorters;
+        _.each(sorters, (sort, field) => {
             fields.push(field);
             order.push(sort === 1 ? 'asc' : 'desc');
         });
