@@ -87,7 +87,6 @@ class BaseContainer extends Webiny.Ui.Component {
             }
         });
 
-        console.log('Initial sorters', sorters);
         return Webiny.Router.sortersToString(sorters);
     }
 
@@ -113,8 +112,6 @@ class BaseContainer extends Webiny.Ui.Component {
     prepare(props) {
         return new Promise(resolve => {
             const state = props.connectToRouter ? this.prepareUsingRouter(props) : this.prepareNotUsingRouter(props);
-
-            console.log('Prepare', state.sorters);
 
             this.setState(state, resolve);
         });

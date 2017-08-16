@@ -97,8 +97,6 @@ class ApiContainer extends BaseContainer {
             this.showLoading();
         }
 
-        console.log('Load with sorters', query._sort);
-
         this.request = this.api.setQuery(query).execute().then(apiResponse => {
             const data = apiResponse.getData();
             if (!apiResponse.isError() && !apiResponse.isAborted()) {
