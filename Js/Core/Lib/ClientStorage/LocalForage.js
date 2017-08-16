@@ -2,8 +2,7 @@ import localforage from 'localforage';
 
 class LocalForage {
     set(key, value) {
-        localforage.setItem(key, value);
-        return this;
+        return localforage.setItem(key, value);
     }
 
     get(key) {
@@ -11,13 +10,11 @@ class LocalForage {
     }
 
     remove(key) {
-        localforage.removeItem(key);
-        return this;
+        return localforage.removeItem(key);
     }
 
     clear() {
-        localforage.clear();
-        return this;
+        return localforage.clear();
     }
 }
 

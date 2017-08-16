@@ -2,8 +2,7 @@ import store from 'store';
 
 class Store {
     set(key, value) {
-        store.set(key, value);
-        return this;
+        return store.set(key, value);
     }
 
     get(key) {
@@ -11,13 +10,11 @@ class Store {
     }
 
     remove(key) {
-        store.remove(key);
-        return this;
+        return store.remove(key);
     }
 
     clear() {
-        store.clearAll();
-        return this;
+        return store.clearAll();
     }
 }
 
