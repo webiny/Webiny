@@ -177,8 +177,6 @@ trait ApiExpositionTrait
             $apiInstance = new ApiMethod($httpMethod, $pattern, $this);
             $this->apiMethods[$httpMethod][$pattern] = $apiInstance;
             $this->apiMethods[$httpMethod][$pattern]->addCallback($callable, $this->processingEvent);
-
-            return $this->apiMethods[$httpMethod][$pattern];
         }
 
         return $this->apiMethods[$httpMethod][$pattern];
