@@ -164,20 +164,23 @@ trait ApiExpositionTrait
             $this->apiMethods = new ArrayObject();
         }
 
-        if ($this->str($pattern)->contains('.')) {
-            throw new ApiException('Use of "." character in URL pattern is not allowed!');
-        }
+        /*
+         * TODO: check this tomorrow, also performance hit, maybe disable in production ?
+         * if ($this->str($pattern)->contains('.')) {
+         *      throw new ApiException('Use of "." character in URL pattern is not allowed!');
+         *  }
+         */
 
         $pattern = $pattern != '/' ? trim($pattern, '/') : '/';
         $httpMethod = strtolower($httpMethod);
         if ($callable) {
             $apiInstance = new ApiMethod($httpMethod, $pattern, $this);
-            $apiMethod = $this->apiMethods->keyNested($httpMethod . '.' . $pattern, $apiInstance, true);
-            $apiMethod->addCallback($callable, $this->processingEvent);
-        } else {
-            $apiMethod = $this->apiMethods->keyNested($httpMethod . '.' . $pattern);
+            $this->apiMethods[$httpMethod][$pattern] = $apiInstance;
+            $this->apiMethods[$httpMethod][$pattern]->addCallback($callable, $this->processingEvent);
+
+            return $this->apiMethods[$httpMethod][$pattern];
         }
 
-        return $apiMethod;
+        return $this->apiMethods[$httpMethod][$pattern];
     }
 }
