@@ -470,7 +470,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         $attributes = $entity->getAttributes()->val();
         foreach ($query->getConditions() as $fName => $fValue) {
             // Construct an $in statement only if filter value is index-based
-            if (!self::str($fName)->startsWith('$') && is_array($fValue) && !count(array_filter(array_keys($fValue), 'is_string')) > 0) {
+            if (!(substr($fName, 0, 1) === "$") && is_array($fValue) && !count(array_filter(array_keys($fValue), 'is_string')) > 0) {
                 $fValue = [
                     '$in' => $fValue
                 ];
@@ -479,9 +479,9 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             $dateAttr = isset($attributes[$fName]) && ($attributes[$fName] instanceof DateAttribute || $attributes[$fName] instanceof DateTimeAttribute);
             if (array_key_exists($fName, $attributes) && $dateAttr && is_string($fValue)) {
                 $from = $to = $fValue;
-                if (self::str($fValue)->contains(':-:')) {
+                if (strpos($fValue, ':-:') !== false) {
                     list($from, $to) = explode(':-:', $fValue);
-                } elseif (self::str($fValue)->contains(':')) {
+                } elseif (strpos($fValue, ':') !== false) {
                     list($from, $to) = explode(':', $fValue);
                 }
 

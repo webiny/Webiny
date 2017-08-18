@@ -34,6 +34,12 @@ class Authorization
     private $user;
 
     /**
+     * Tells us if user was checked (used later to decide if complete check is needed or not).
+     * @var
+     */
+    private $initialized = false;
+
+    /**
      * @var string
      */
     private $userClass = 'Apps\Webiny\Php\Entities\User';
@@ -66,6 +72,7 @@ class Authorization
     public function reset()
     {
         $this->user = null;
+        $this->initialized = false;
         Security::deleteInstance();
         $this->security = Security::getInstance();
         $this->login = new LoginApp($this->security, $this->wConfig()->get('Login'));
@@ -108,7 +115,8 @@ class Authorization
      */
     public function getUser()
     {
-        if (!$this->user) {
+        if (!$this->user && !$this->initialized) {
+            $this->initialized = true;
             $requestToken = $this->wRequest()->header('X-Webiny-Authorization');
             if (!$requestToken) {
                 $requestToken = $this->wRequest()->getRequestData()['X-Webiny-Authorization'] ?? null;
