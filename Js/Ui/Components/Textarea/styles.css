@@ -23,6 +23,10 @@
 	-webkit-appearance: none; /* fixes the inner shadow on Safari (iphone) */
 }
 
+:global(.inputGroup).textarea{
+	display: inline-block;
+}
+
 .textarea:focus{
 	background: #fff;
 	border-color: #333;
