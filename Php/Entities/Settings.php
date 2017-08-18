@@ -1,4 +1,5 @@
 <?php
+
 namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\DevTools\Exceptions\AppException;
@@ -34,7 +35,10 @@ class Settings extends AbstractEntity
         $this->attr('key')->char()->setValidators('required,unique')->setToArrayDefault();
         $this->attr('settings')->object()->setToArrayDefault();
 
-        $this->getApiMethods()->removeKey(['get', 'patch', 'post', 'delete']);
+        array_map(function ($method) {
+            unset($this->apiMethods[$method]);
+        }, ['get', 'patch', 'post', 'delete']);
+
         /**
          * @api.name        Get settings
          * @api.description Gets all Webiny settings.

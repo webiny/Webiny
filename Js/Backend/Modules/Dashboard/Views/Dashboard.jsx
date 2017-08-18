@@ -48,7 +48,7 @@ Dashboard.defaultProps = {
                             <div className="user-welcome__avatar">
                                 <div className="avatar avatar--inline avatar--small">
                                     <span className="avatar-placeholder avatar-placeholder--no-border">
-                                        <Gravatar className="avatar img-responsive" hash={this.state.user.gravatar} size="50" />
+                                        <Gravatar className="avatar img-responsive" hash={this.state.user.gravatar} size="50"/>
                                     </span>
                                 </div>
                             </div>
@@ -56,7 +56,7 @@ Dashboard.defaultProps = {
                         </div>
                     </div>
                     <div className="master-content__right">
-                        <Button onClick={()=>Webiny.Router.goToRoute('Users.Account')}>Manage Account</Button>
+                        <Button onClick={() => Webiny.Router.goToRoute('Users.Account')}>Manage Account</Button>
                     </div>
                 </div>
 
@@ -79,7 +79,8 @@ Dashboard.defaultProps = {
                                                 <div className="block-list__item-image">
                                                     <Icon icon="icon-keys" size="2x"/>
                                                 </div>
-                                                <a href="https://www.webiny.com/docs/current/components/must-know" className="block-list__item-text" target="_blank">
+                                                <a href="https://www.webiny.com/docs/current/components/must-know"
+                                                   className="block-list__item-text" target="_blank">
                                                     <strong>React Components</strong> - Learn what they do and how to implement them.
 
                                                 </a>
@@ -88,7 +89,8 @@ Dashboard.defaultProps = {
                                                 <div className="block-list__item-image">
                                                     <Icon icon="fa-book " size="2x"/>
                                                 </div>
-                                                <a href="https://www.webiny.com/the-hub/tutorials" className="block-list__item-text" target="_blank">
+                                                <a href="https://www.webiny.com/the-hub/tutorials" className="block-list__item-text"
+                                                   target="_blank">
                                                     <strong>Tutorials</strong> - How to setup Webiny and other applications.
                                                 </a>
                                             </li>
@@ -96,8 +98,10 @@ Dashboard.defaultProps = {
                                                 <div className="block-list__item-image">
                                                     <Icon icon="fa-graduation-cap" size="2x"/>
                                                 </div>
-                                                <a href="https://www.webiny.com/docs/current/reference-manual/environments" className="block-list__item-text" target="_blank">
-                                                    <strong>Reference Manual</strong> - The nitty-gritty details of how the internal components work.
+                                                <a href="https://www.webiny.com/docs/current/reference-manual/environments"
+                                                   className="block-list__item-text" target="_blank">
+                                                    <strong>Reference Manual</strong> - The nitty-gritty details of how the internal
+                                                    components work.
                                                 </a>
                                             </li>
                                         </ul>
@@ -123,9 +127,9 @@ Dashboard.defaultProps = {
                                         Ask questions, present your work, start or join a discussion, view or contribute a tutorial.
                                     </div>
                                     <br/>
-                                        <div className="text-center">
-                                            <Link url="https://www.webiny.com/the-hub" newTab={true} type="primary">JOIN</Link>
-                                        </div>
+                                    <div className="text-center">
+                                        <Link url="https://www.webiny.com/the-hub" newTab={true} type="primary">JOIN</Link>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -160,7 +164,8 @@ Dashboard.defaultProps = {
                                                 <div className="block-list__item-image">
                                                     <span className="icon icon-medium icon-3x"></span>
                                                 </div>
-                                                <a href="https://www.webiny.com/docs/current/components/must-know" className="block-list__item-text" target="_blank">
+                                                <a href="https://www.webiny.com/docs/current/components/must-know"
+                                                   className="block-list__item-text" target="_blank">
                                                     <Icon icon="fa-medium"/> Blog
                                                 </a>
                                             </li>
@@ -169,7 +174,8 @@ Dashboard.defaultProps = {
                                                 <div className="block-list__item-image">
                                                     <span className="icon icon-youtube icon-3x"></span>
                                                 </div>
-                                                <a href="https://www.webiny.com/docs/current/components/must-know" className="block-list__item-text" target="_blank">
+                                                <a href="https://www.webiny.com/docs/current/components/must-know"
+                                                   className="block-list__item-text" target="_blank">
                                                     <Icon icon="fa-youtube"/> YouTube
                                                 </a>
                                             </li>

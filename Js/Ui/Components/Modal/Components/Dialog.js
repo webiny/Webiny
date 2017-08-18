@@ -225,7 +225,7 @@ class Dialog extends Webiny.Ui.Component {
 
         if (_.find([Header, Body, Footer], c => Webiny.isElementOfType(child, c))) {
             const props = {dialog: this};
-            if (Webiny.isElementOfType(child, Header)) {
+            if (Webiny.isElementOfType(child, Header) && child.props.onClose === _.noop) {
                 props['onClose'] = this.hide;
             }
             return React.cloneElement(child, props);

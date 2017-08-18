@@ -238,7 +238,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     public function __construct()
     {
         parent::__construct();
-        $this->apiMethods = $this->arr();
+        $this->apiMethods = [];
 
         /**
          * Add the following built-in system attributes:

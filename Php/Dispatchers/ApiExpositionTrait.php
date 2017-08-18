@@ -13,7 +13,6 @@ use Apps\Webiny\Php\DevTools\Response\ListResponse;
 use Apps\Webiny\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Router\Route\Route;
-use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
 /**
  * Trait ApiExpositionTrait
@@ -27,9 +26,9 @@ trait ApiExpositionTrait
     protected $processingEvent = null;
 
     /**
-     * @var ArrayObject
+     * @var array
      */
-    private $apiMethods;
+    protected $apiMethods = [];
 
     /**
      * Format given EntityCollection using $fields into a standard list response
@@ -87,12 +86,8 @@ trait ApiExpositionTrait
      */
     public function getApiMethod($httpMethod, $url)
     {
-        if (!$this->apiMethods) {
-            $this->apiMethods = new ArrayObject();
-        }
-
         $httpMethod = strtolower($httpMethod);
-        $methods = $this->apiMethods->key($httpMethod) ?? [];
+        $methods = $this->apiMethods[$httpMethod] ?? [];
 
         uksort($methods, function ($a, $b) {
             if ($a[0] === '{' && $b[0] !== '{') {
@@ -141,10 +136,6 @@ trait ApiExpositionTrait
 
     public function getApiMethods()
     {
-        if (!$this->apiMethods) {
-            $this->apiMethods = new ArrayObject();
-        }
-
         return $this->apiMethods;
     }
 
@@ -160,23 +151,17 @@ trait ApiExpositionTrait
      */
     public function api($httpMethod, $pattern, $callable = null)
     {
-        if (!$this->apiMethods) {
-            $this->apiMethods = new ArrayObject();
-        }
-
-        /*
-         * TODO: check this tomorrow, also performance hit, maybe disable in production ?
-         * if ($this->str($pattern)->contains('.')) {
-         *      throw new ApiException('Use of "." character in URL pattern is not allowed!');
-         *  }
-         */
-
         $pattern = $pattern != '/' ? trim($pattern, '/') : '/';
         $httpMethod = strtolower($httpMethod);
         if ($callable) {
-            $apiInstance = new ApiMethod($httpMethod, $pattern, $this);
+            if (isset($this->apiMethods[$httpMethod][$pattern])) {
+                $apiInstance = $this->apiMethods[$httpMethod][$pattern];
+            } else {
+                $apiInstance = new ApiMethod($httpMethod, $pattern, $this);
+            }
+
+            $apiInstance->addCallback($callable, $this->processingEvent);
             $this->apiMethods[$httpMethod][$pattern] = $apiInstance;
-            $this->apiMethods[$httpMethod][$pattern]->addCallback($callable, $this->processingEvent);
         }
 
         return $this->apiMethods[$httpMethod][$pattern];
