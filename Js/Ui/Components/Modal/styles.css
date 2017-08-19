@@ -83,7 +83,31 @@
 }
 
 .wide .dialog {
-	width: 90%;
+	width: 100%;
+	height: 100vh;
+	transform: none !important;
+	top: 0px !important;
+	margin: 0;
+}
+.wide .dialog .content {
+	height: auto;
+	min-height: 100%;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+	align-items: stretch;
+	align-content: stretch;
+}
+
+.wide .dialog .content .body {
+	overflow: scroll;
+	padding: 25px;
+	flex-grow: 1;
+	flex-shrink: 1;
+	flex-basis: auto;
+	align-self: auto;
+	background-color: #fff;
 }
 
 .content h4 {
