@@ -7,7 +7,11 @@ class SimpleFile extends Webiny.Ui.FormComponent {
 
     constructor(props) {
         super(props);
-        this.bindMethods('fileChanged,removeFile,getFiles');
+        this.bindMethods('fileChanged,filesChanged,getFiles,clearFiles');
+    }
+
+    clearFiles() {
+        this.props.onChange(null);
     }
 
     fileChanged(file, error) {
@@ -17,45 +21,94 @@ class SimpleFile extends Webiny.Ui.FormComponent {
         }
 
         if (_.has(file, 'src')) {
-            file.id = _.get(this.props.value, 'id', this.lastId);
             this.props.onChange(file).then(this.validate);
         }
     }
 
-    // TODO: add UI element (button or something) to be able to remove selected file
-    removeFile(e) {
-        e.stopPropagation();
-        this.lastId = this.props.value && this.props.value.id || null;
-        this.props.onChange(null);
+    filesChanged(files, errors) {
+        if (errors.length > 0) {
+            this.setState({errors});
+        }
+
+        if (files.length > 0) {
+            this.props.onChange(files).then(this.validate);
+        }
     }
 
     getFiles(e) {
-        this.setState({error: null});
+        this.setState({error: null, errors: null});
         e.stopPropagation();
-        this.refs.reader.getFiles();
+        this.reader.getFiles();
+    }
+
+    renderValue() {
+        if (this.props.multiple) {
+            return this.props.value ? _.get(this.props.value, 'length', 0) + ' file(s) selected' : '';
+        }
+
+        return _.get(this.props.value, 'name', '');
     }
 }
 
 SimpleFile.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     accept: [],
+    multiple: false,
     sizeLimit: 2485760,
     readAs: 'data', // or binary
+    renderError() {
+        const {Alert} = this.props;
+        return (
+            <Alert title="A file could not be selected" type="error" close>
+                <ul>
+                    <li><strong>{this.state.error.name}</strong>: {this.state.error.message}</li>
+                </ul>
+            </Alert>
+        );
+    },
+    renderErrors() {
+        const {Alert} = this.props;
+        const data = [];
+        _.each(this.state.errors, (err, key) => {
+            data.push(<li key={key}><strong>{err.name}</strong>: {err.message}</li>);
+        });
+
+        return (
+            <Alert title="Some files could not be selected" type="error" close>
+                {data && <ul>{data}</ul>}
+            </Alert>
+        );
+    },
     renderer() {
-        const {Animate, FileReader, FormGroup, styles} = this.props;
+        const {FileReader, FormGroup, styles} = this.props;
 
         const fileReaderProps = {
             accept: this.props.accept,
-            ref: 'reader',
-            onChange: this.fileChanged,
+            ref: ref => this.reader = ref,
+            onChange: this.props.multiple ? this.filesChanged : this.fileChanged,
+            multiple: this.props.multiple,
             readAs: this.props.readAs,
             sizeLimit: this.props.sizeLimit
         };
         const fileReader = <FileReader {...fileReaderProps}/>;
 
+        let clearBtn = null;
+        if (this.props.value) {
+            clearBtn = (
+                <div className={[styles.fileBtn, styles.clearBtn, styles.clearBtnIcon].join(' ')} onClick={this.clearFiles}>
+                    <span>Clear</span>
+                </div>
+            );
+        }
+
+        let error = null;
+        if (this.state.error || this.state.errors) {
+            error = this.props.multiple ? this.props.renderErrors.call(this) : this.props.renderError.call(this);
+        }
+
         return (
             <FormGroup valid={this.state.isValid} className={this.props.className}>
                 {this.renderLabel()}
-
+                <div>{error}</div>
                 <div className={styles.wrapper}>
                     <input
                         type="text"
@@ -63,11 +116,12 @@ SimpleFile.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                         readOnly={true}
                         onClick={this.getFiles}
                         className={styles.input}
-                        value={_.get(this.props.value, 'name', '')}
+                        value={this.renderValue()}
                         onChange={_.noop}/>
 
-                    <div className={styles.uploadBtn} onClick={this.getFiles}>
-                        <span>Upload</span>
+                    {clearBtn}
+                    <div className={styles.fileBtn + ' ' + styles.uploadBtn} onClick={this.getFiles}>
+                        <span>Select</span>
                         {fileReader}
                     </div>
                     {this.renderDescription()}
@@ -78,4 +132,4 @@ SimpleFile.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     }
 });
 
-export default Webiny.createComponent(SimpleFile, {modules: ['Animate', 'FileReader', 'FormGroup'], styles});
+export default Webiny.createComponent(SimpleFile, {modules: ['FileReader', 'FormGroup', 'Alert'], styles});

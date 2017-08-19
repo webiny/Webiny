@@ -17,7 +17,7 @@
 	opacity: 1;
 }
 
-.uploadBtn {
+.fileBtn {
 	height: 38px;
 	position: absolute;
 	z-index: 1;
@@ -28,17 +28,17 @@
 	padding: 12px 15px;
 	color: #393939;
 	font-size: 12px;
-	font-weight: 600;
 	border-radius: 0;
 	background: none;
 	display: inline-block;
 	margin-right: 8px;
 	text-align: center;
 	vertical-align: top;
-	line-height: 1;
 	text-transform: uppercase;
 	will-change: opacity;
 	transition: all 0.2s;
+	font-weight: 600;
+	font-style: normal;
 }
 
 .uploadBtn:before {
@@ -46,7 +46,19 @@
 	margin-right: 5px;
 	color: #fa541d;
 	font-family: 'fontello';
-	font-style: normal;
+	font-weight: normal;
+	line-height: 1em;
+}
+
+.clearBtn {
+	right: 65px;
+}
+
+.clearBtnIcon:before {
+	content: "\e82b";
+	margin-right: 5px;
+	color: #fa541d;
+	font-family: 'fontello';
 	font-weight: normal;
 	line-height: 1em;
 }
