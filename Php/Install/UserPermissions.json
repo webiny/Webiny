@@ -207,5 +207,27 @@
                 }
             }
         }
+    },
+    {
+        "name": "Dashboard",
+        "slug": "webiny-dashboard",
+        "description": "Access to Webiny dashboard module",
+        "permissions": {
+            "entities": {
+                "Apps\\Webiny\\Php\\Entities\\DashboardUpdates": {
+                    "{dashboardUpdate}/dismiss": {
+                        "get": true
+                    },
+                    "latest": {
+                        "get": true
+                    },
+                    "crudCreate": true,
+                    "crudRead": true,
+                    "crudUpdate": true,
+                    "crudDelete": true
+                }
+            },
+            "services": []
+        }
     }
 ]

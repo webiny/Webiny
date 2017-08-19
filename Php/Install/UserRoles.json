@@ -27,5 +27,13 @@
         "slug": "webiny-logger-manager",
         "description": "This roles allows user to manage system error logger.",
         "permissions": ["webiny-logger-manage-logs"]
+    },
+    {
+        "name": "Dashboard",
+        "slug": "webiny-dashboard",
+        "description": "This role allows access to the dashboard module.",
+        "permissions": [
+            "webiny-dashboard"
+        ]
     }
 ]
