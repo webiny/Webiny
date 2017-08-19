@@ -153,6 +153,11 @@ trait ApiExpositionTrait
     {
         $pattern = $pattern != '/' ? trim($pattern, '/') : '/';
         $httpMethod = strtolower($httpMethod);
+
+        if ($callable && !isset($this->apiMethods[$httpMethod])) {
+            $this->apiMethods[$httpMethod] = [];
+        }
+        
         if ($callable) {
             if (isset($this->apiMethods[$httpMethod][$pattern])) {
                 $apiInstance = $this->apiMethods[$httpMethod][$pattern];
@@ -162,8 +167,10 @@ trait ApiExpositionTrait
 
             $apiInstance->addCallback($callable, $this->processingEvent);
             $this->apiMethods[$httpMethod][$pattern] = $apiInstance;
+        } else {
+            $apiInstance = $this->apiMethods[$httpMethod][$pattern] ?? null;
         }
 
-        return $this->apiMethods[$httpMethod][$pattern];
+        return $apiInstance;
     }
 }
