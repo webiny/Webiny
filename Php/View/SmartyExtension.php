@@ -97,7 +97,7 @@ class SmartyExtension extends AbstractSmartyExtension
     </script>
     <script src="{$meta['vendor']}" async></script> 
     {$browserSync}
-    <webiny-app/>
+    <webiny-app></webiny-app>
 EOT;
     }
 
