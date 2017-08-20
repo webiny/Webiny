@@ -7,6 +7,8 @@ const Webiny = require('webiny-cli/lib/webiny');
 
 class Revert {
     run(config) {
+        const folder = 'production';
+        const rootFolder = _.trimEnd(config.rootFolder, '/');
         let port = 22;
         let host = config.server;
         let user = null;
@@ -34,14 +36,21 @@ class Revert {
 
         const ssh = new SshClient.SSH(sshConfig);
 
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             try {
-                ssh.command('ls -1d ~/www/releases/*/', res => {
+                ssh.command(`ls -1d ${rootFolder}/releases/*/`, res => {
                     const list = res.stdout;
-                    const choices = [];
+                    let choices = [];
                     _.trimEnd(list, '\n').split('\n').map(function (line) {
                         choices.push(_.trimEnd(line, '/').split('/').pop());
                     });
+
+                    choices = choices.filter(c => c !== '');
+
+                    if (choices.length === 0) {
+                        reject('We could not find any releases in the given project folder.');
+                        return;
+                    }
 
                     inquirer.prompt({
                         type: 'list',
@@ -50,11 +59,11 @@ class Revert {
                         message: 'Select a release to activate:'
                     }).then(answers => {
                         const activate = [
-                            'rm -f ~/www/active/production',
-                            'ln -s ~/www/releases/' + answers.release + ' ~/www/active/production'
+                            `rm -f ${rootFolder}/active/${folder}`,
+                            `ln -s ${rootFolder}/releases/${answers.release} ${rootFolder}/active/${folder}`
                         ].join('&&');
                         ssh.command(activate, () => {
-                            Webiny.info('Clearing cache for ' + chalk.magenta(config.website) + '...');
+                            Webiny.info(`Clearing cache for ${chalk.magenta(config.website)}...`);
                             ssh.command(this.flushCache(config), res => {
                                 const commandOut = res.stdout || '{}';
                                 if (res.exitCode !== 0 || _.get(JSON.parse(commandOut), 'flushed') !== true) {
