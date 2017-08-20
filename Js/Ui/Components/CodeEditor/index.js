@@ -36,6 +36,10 @@ class CodeEditor extends Webiny.Ui.FormComponent {
             this.props.onFocus();
         });
 
+        if (this.props.height != null) {
+            this.codeMirror.setSize(null, this.props.height);
+        }
+
         this.setValue(this.props);
     }
 
@@ -59,6 +63,9 @@ class CodeEditor extends Webiny.Ui.FormComponent {
         if (this.codeMirror.getValue() !== props.value && !_.isNull(props.value)) {
             // the "+ ''" sort a strange with splitLines method within CodeMirror
             this.codeMirror.setValue(props.value + '');
+            if (this.props.autoFormat) {
+                this.autoFormat();
+            }
         }
     }
 
@@ -68,6 +75,11 @@ class CodeEditor extends Webiny.Ui.FormComponent {
 
     focus() {
         this.codeMirror.focus();
+    }
+
+    autoFormat() {
+        let totalLines = this.codeMirror.lineCount();
+        this.codeMirror.autoFormatRange({line: 0, ch: 0}, {line: totalLines});
     }
 }
 
@@ -79,6 +91,8 @@ CodeEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     onFocus: _.noop,
     value: null,
     onChange: _.noop,
+    height: null,
+    autoFormat: false,
     renderer() {
         const props = _.pick(this.props, ['value', 'onChange', 'onFocus', 'theme', 'mode', 'readOnly']);
 

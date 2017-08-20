@@ -270,7 +270,7 @@
     .code-block {
       &--preview {
         pre {
-          background-color: #23241f;
+          /*background-color: #23241f; sven: this prevents text selection from showing correctly */
         }
       }
     }

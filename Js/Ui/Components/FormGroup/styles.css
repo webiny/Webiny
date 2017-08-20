@@ -1,7 +1,7 @@
 .wrapper {
 	margin-bottom: 15px;
 	position: relative;
-	text-align: left;
+	/*text-align: left; sven: causes problems with alignment inside a list*/
 	overflow: visible;
 }
 

@@ -55,8 +55,6 @@ class DashboardUpdates extends AbstractEntity
             return $this->apiFormatList($result, '*');
         });
 
-        // @todo: every admin user needs to have this access
-        // @todo: dismiss
         $this->api('GET', '{dashboardUpdate}/dismiss', function (DashboardUpdates $dashboardUpdate) {
             $dashboardUpdate->dismissed = true;
             $dashboardUpdate->save();
@@ -69,7 +67,7 @@ class DashboardUpdates extends AbstractEntity
         // request the latest updates from webiny hub$ctx = stream_context_create(array('http'=>
         // suppress errors and set timeout to 3s
         $context = stream_context_create(['http'=> ['timeout' => 3]]);
-        $updates = @file_get_contents('http://demo.app/api/entities/the-hub/updates/latest', false, $context);
+        $updates = @file_get_contents('https://api.webiny.com/entities/the-hub/updates/latest', false, $context);
         if (!$updates) {
             return;
         }

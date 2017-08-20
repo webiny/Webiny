@@ -58,7 +58,7 @@
 }
 .tile .header .ico {
 	float: left;
-	padding: 5px;
+	padding: 9px 5px 5px;
 }
 .tile .content {
 	padding: 10px;
