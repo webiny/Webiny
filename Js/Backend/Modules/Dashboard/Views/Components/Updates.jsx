@@ -96,7 +96,7 @@ Updates.defaultProps = {
 
                             <Carousel items={1} dots={true}>
                                 {_.get(this.state, 'updates') && this.state.updates.map(post => {
-                                    let link = "http://demo.app/r/" + post.refId;
+                                    let link = "https://www.webiny.com/r/" + post.refId;
                                     return (
                                         <div className="slide slide--active" key={post.id}>
                                             {post.image && (
