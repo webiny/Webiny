@@ -42,7 +42,7 @@ UserRoles.defaultProps = {
         return (
             <List.Table data={this.state.roles}>
                 <List.Table.Row>
-                    <List.Table.Field style={{width: 140}}>
+                    <List.Table.Field style={{width: 140}} align="center">
                         {(role) => {
                             const checkedIndex = _.findIndex(this.props.value, {id: role.id});
                             return (

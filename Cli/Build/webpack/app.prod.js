@@ -121,12 +121,6 @@ module.exports = function (app, config) {
                     include: Webiny.projectRoot(),
                     use: [
                         {
-                            loader: 'cache-loader',
-                            options: {
-                                cacheDirectory: path.resolve(Webiny.projectRoot('public_html/build/cache'), app.getPath())
-                            }
-                        },
-                        {
                             loader: 'babel-loader',
                             options: {
                                 presets: [

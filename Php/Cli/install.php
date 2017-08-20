@@ -22,6 +22,6 @@ class Install extends \Apps\Webiny\Php\DevTools\AbstractCli
     }
 }
 
-$release = new Install();
-$release->run($argv[1]);
+$release = new Install($argv[1]);
+$release->run($argv[2]);
 
