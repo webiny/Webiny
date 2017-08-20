@@ -12,6 +12,7 @@ class Deploy extends Plugin {
         program
             .command('deploy <archive>')
             .description('Deploy release archive to remote server.')
+            .option('-f, --rootFolder [rootFolder]', 'Root folder for your project on the server. Default: ~/www')
             .option('-s, --server [server]', 'SSH connection string to the target server.')
             .option('-w --website [website]', 'Website URL.') // https://github.com/tj/commander.js/issues/370
             .option('-b, --basic-auth [basicAuth]', 'Basic Authentication string for your target server.')
@@ -46,28 +47,37 @@ class Deploy extends Plugin {
         const _ = require('lodash');
 
         const lastRun = Webiny.getConfig().lastRun;
-        let steps = [{
-            type: 'input',
-            name: 'server',
-            message: 'Enter SSH connection string (e.g. username@server.com:port):',
-            default: lastRun.server || null,
-            validate: (value) => {
-                if (value.length < 1) {
-                    return 'Please enter an SSH connection string';
+        let steps = [
+            {
+                type: 'input',
+                name: 'server',
+                message: 'Enter SSH connection string (e.g. username@server.com:port):',
+                default: lastRun.server || null,
+                validate: (value) => {
+                    if (value.length < 1) {
+                        return 'Please enter an SSH connection string';
+                    }
+                    return true;
                 }
-                return true;
+            },
+            {
+                type: 'input',
+                name: 'rootFolder',
+                message: 'Enter the root folder of your project on the server:',
+                default: lastRun.rootFolder || '~/www'
+            },
+            {
+                type: 'input',
+                name: 'website',
+                message: 'Enter the domain of the website you are deploying:',
+                validate: Webiny.validate.url,
+                default: lastRun.website || null
+            }, {
+                type: 'input',
+                name: 'basicAuth',
+                message: 'Enter Basic Authentication credentials to access your website (leave blank if not required):'
             }
-        }, {
-            type: 'input',
-            name: 'website',
-            message: 'Enter the domain of the website you are deploying:',
-            validate: Webiny.validate.url,
-            default: lastRun.website || null
-        }, {
-            type: 'input',
-            name: 'basicAuth',
-            message: 'Enter Basic Authentication credentials to access your website (leave blank if not required):'
-        }];
+        ];
 
         if (!config.archive) {
             // Prepend a new step with release archives selection
@@ -92,6 +102,7 @@ class Deploy extends Plugin {
             _.merge(config, answers);
             lastRun.server = answers.server;
             lastRun.website = answers.website;
+            lastRun.rootFolder = answers.rootFolder;
 
             Webiny.saveConfig(_.assign(Webiny.getConfig(), {lastRun}));
             return this.runTask(config);
