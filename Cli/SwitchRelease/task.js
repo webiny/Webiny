@@ -8,7 +8,10 @@ const Webiny = require('webiny-cli/lib/webiny');
 class Revert {
     run(config) {
         const folder = 'production';
-        const rootFolder = _.trimEnd(config.rootFolder, '/');
+        let rootFolder = _.trimEnd(config.rootFolder, '/');
+        if (rootFolder === '') {
+            rootFolder = '~/www';
+        }
         let port = 22;
         let host = config.server;
         let user = null;
