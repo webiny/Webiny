@@ -1,5 +1,6 @@
 import './styles.scss';
 import CodeMirror from 'codemirror';
+import 'codemirror-formatting';
 import 'codemirror/mode/xml/xml';
 import 'codemirror/mode/css/css';
 import 'codemirror/mode/javascript/javascript';
