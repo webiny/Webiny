@@ -9,6 +9,7 @@ class Header extends Webiny.Ui.Component {
 
 Header.defaultProps = {
     title: null,
+    description: null,
     renderer() {
         const {styles} = this.props;
 

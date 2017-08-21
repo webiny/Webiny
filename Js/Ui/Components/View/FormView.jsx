@@ -15,6 +15,11 @@ class FormView extends Webiny.Ui.Component {
     }
 
     parseLayout(children) {
+        if (!this.props.form) {
+            console.error('<View.Form> must be a child of a Form element!');
+            return;
+        }
+
         this.headerComponent = null;
         this.bodyComponent = null;
         this.footerComponent = null;
@@ -45,14 +50,12 @@ class FormView extends Webiny.Ui.Component {
                     // We have our body element
                     this.bodyComponent = child;
                 } else {
-                    try {
-                        // We need to create form loader ourselves
-                        const bodyChildren = React.Children.toArray(child.props.children);
-                        bodyChildren.push(<Form.Loader key="loader" show={this.props.form.isLoading()}/>);
-                        this.bodyComponent = React.cloneElement(child, child.props, bodyChildren);
-                    } catch (e) {
-                        console.log(e)
-                    }
+                    // We need to create form loader ourselves
+                    const bodyChildren = React.Children.toArray(child.props.children);
+                    bodyChildren.push(
+                        <Form.Loader key="loader" show={this.props.form.isLoading()}/>
+                    );
+                    this.bodyComponent = React.cloneElement(child, child.props, bodyChildren);
                 }
                 return;
             }
@@ -68,11 +71,7 @@ class FormView extends Webiny.Ui.Component {
         });
 
         if (!this.errorComponent) {
-            try {
-                this.errorComponent = <Form.Error error={this.props.form.getError()}/>;
-            } catch (e) {
-                console.log(e);
-            }
+            this.errorComponent = <Form.Error error={this.props.form.getError()}/>;
         }
     }
 
