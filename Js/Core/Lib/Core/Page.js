@@ -19,9 +19,13 @@ class Page {
     loadStylesheet(url) {
         return new Promise(resolve => {
             // Is it already inserted, possibly with server-side rendering?
-            if (document.querySelectorAll(`link[href="${url}"]`).length) {
-                return;
+            // Is it already inserted, possibly with server-side rendering?
+            for (let i = 0, max = document.styleSheets.length; i < max; i++) {
+                if (document.styleSheets[i].href === url) {
+                    return;
+                }
             }
+
             const s = document.createElement('link');
             s.rel = 'stylesheet';
             s.href = url;
