@@ -1,6 +1,8 @@
 <?php
+
 namespace Apps\Webiny\Php\Services;
 
+use Apps\Webiny\Php\DevTools\Api\ApiContainer;
 use Apps\Webiny\Php\DevTools\Exceptions\AppException;
 use Apps\Webiny\Php\DevTools\Services\AbstractService;
 use Apps\Webiny\Php\PackageManager\App;
@@ -15,32 +17,34 @@ class Apps extends AbstractService
     function __construct()
     {
         parent::__construct();
-        /**
-         * @api.name Get all active apps meta
-         * @api.description This method returns a list of meta data for each active app
-         */
-        $this->api('get', '/', function () {
-            return $this->getAppsMeta();
-        });
+        $this->api(function (ApiContainer $api) {
+            /**
+             * @api.name Get all active apps meta
+             * @api.description This method returns a list of meta data for each active app
+             */
+            $api->get('/', function () {
+                return $this->getAppsMeta();
+            });
 
-        /**
-         * @api.name Get single app/spa meta
-         * @api.description This method returns a set of meta data for given app name or all backend apps (if {appName} == "backend")
-         */
-        $this->api('get', '{appName}', function ($appName = null) {
-            if ($appName === 'backend') {
-                // Get Backend apps
-                $apps = [];
-                foreach ($this->getAppsMeta() as $meta) {
-                    if ($this->str($meta['name'])->endsWith('.Backend') && $meta['name'] != 'Webiny.Backend') {
-                        $apps[] = $meta;
+            /**
+             * @api.name Get single app/spa meta
+             * @api.description This method returns a set of meta data for given app name or all backend apps (if {appName} == "backend")
+             */
+            $api->get('{appName}', function ($appName = null) {
+                if ($appName === 'backend') {
+                    // Get Backend apps
+                    $apps = [];
+                    foreach ($this->getAppsMeta() as $meta) {
+                        if ($this->str($meta['name'])->endsWith('.Backend') && $meta['name'] != 'Webiny.Backend') {
+                            $apps[] = $meta;
+                        }
                     }
+
+                    return $apps;
                 }
 
-                return $apps;
-            }
-
-            return $this->getAppsMeta($appName);
+                return $this->getAppsMeta($appName);
+            });
         });
     }
 

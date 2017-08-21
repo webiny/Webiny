@@ -2,6 +2,7 @@
 
 namespace Apps\Webiny\Php\Entities;
 
+use Apps\Webiny\Php\DevTools\Api\ApiContainer;
 use Apps\Webiny\Php\DevTools\Exceptions\AppException;
 use Apps\Webiny\Php\DevTools\WebinyTrait;
 use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
@@ -39,41 +40,44 @@ class Settings extends AbstractEntity
             unset($this->apiMethods[$method]);
         }, ['get', 'patch', 'post', 'delete']);
 
-        /**
-         * @api.name        Get settings
-         * @api.description Gets all Webiny settings.
-         */
-        $this->api('GET', '/', function () {
-            if (!static::$key) {
-                throw new AppException('You must specify a settings key for ' . get_called_class());
-            }
 
-            $record = $this->findOne(['key' => static::$key]);
-            if (!$record) {
-                $record = new self;
-                $record->key = static::$key;
-            }
+        $this->api(function(ApiContainer $api) {
+            /**
+             * @api.name        Get settings
+             * @api.description Gets all Webiny settings.
+             */
+            $api->get('/', function () {
+                if (!static::$key) {
+                    throw new AppException('You must specify a settings key for ' . get_called_class());
+                }
 
-            return $record->settings->val();
-        });
+                $record = $this->findOne(['key' => static::$key]);
+                if (!$record) {
+                    $record = new self;
+                    $record->key = static::$key;
+                }
 
-        /**
-         * @api.name        Update settings
-         * @api.description Updates Webiny settings.
-         */
-        $this->api('PATCH', '/', function () {
-            if (!static::$key) {
-                throw new AppException('You must specify a settings key for ' . get_called_class());
-            }
-            $record = $this->findOne(['key' => static::$key]);
-            if (empty($record)) {
-                $record = new self();
-                $record->key = static::$key;
-            }
-            $record->settings = $this->wRequest()->getRequestData();
-            $record->save();
+                return $record->settings->val();
+            });
 
-            return $record->settings->val();
+            /**
+             * @api.name        Update settings
+             * @api.description Updates Webiny settings.
+             */
+            $api->patch('/', function () {
+                if (!static::$key) {
+                    throw new AppException('You must specify a settings key for ' . get_called_class());
+                }
+                $record = $this->findOne(['key' => static::$key]);
+                if (empty($record)) {
+                    $record = new self();
+                    $record->key = static::$key;
+                }
+                $record->settings = $this->wRequest()->getRequestData();
+                $record->save();
+
+                return $record->settings->val();
+            });
         });
     }
 

@@ -2,6 +2,7 @@
 
 namespace Apps\Webiny\Php\Entities;
 
+use Apps\Webiny\Php\DevTools\Api\ApiContainer;
 use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
 use Apps\Webiny\Php\DevTools\Entity\EntityQuery\EntityQuery;
 use Apps\Webiny\Php\DevTools\Entity\EntityQuery\Filter;
@@ -77,8 +78,10 @@ class ApiLog extends AbstractEntity
 
         $this->attributes->removeKey('modifiedOn');
 
-        $this->api('GET', '/methods', function () {
-            return $this->wDatabase()->distinct(static::$entityCollection, 'request.method');
+        $this->api(function(ApiContainer $api) {
+            $api->get('/methods', function () {
+                return $this->wDatabase()->distinct(static::$entityCollection, 'request.method');
+            });
         });
     }
 }

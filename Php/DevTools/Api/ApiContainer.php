@@ -5,86 +5,71 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Webiny\Php\Dispatchers;
+namespace Apps\Webiny\Php\DevTools\Api;
 
 use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
-use Apps\Webiny\Php\DevTools\Response\EntityResponse;
-use Apps\Webiny\Php\DevTools\Response\ListResponse;
-use Apps\Webiny\Php\RequestHandlers\ApiException;
-use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Router\Route\Route;
+use Webiny\Component\StdLib\StdLibTrait;
 
 /**
- * Trait ApiExpositionTrait
+ * Class ApiContainer
  *
- * This class is used when we want to expose entity or service methods to the API
+ * This class is a container of all entity API methods that is reused among entity instances
  *
- * @package Apps\Webiny\Php\Dispatchers
+ * @package Apps\Webiny\Php\DevTools\Api
  */
-trait ApiExpositionTrait
+class ApiContainer
 {
-    protected $processingEvent = null;
+    use StdLibTrait;
 
     /**
-     * @var array
+     * @var \Closure
      */
-    protected $apiMethods = [];
+    public $initializers = [];
+    public $instance;
+    private $apiMethods = [];
+    private $initialized = false;
+    private $processingEvent = false;
 
-    /**
-     * Format given EntityCollection using $fields into a standard list response
-     *
-     * @param EntityCollection $collection
-     * @param string           $fields
-     *
-     * @return ListResponse
-     */
-    public static function apiFormatList(EntityCollection $collection, $fields)
+    public function __construct($instance)
     {
-        $perPage = $collection->getLimit();
-        $offset = $collection->getOffset();
-        $page = 1;
-        if ($offset > 0) {
-            $page = ($offset / $perPage) + 1;
-        }
+        $this->instance = $instance;
+    }
 
-        return new ListResponse([
-            'meta' => [
-                'totalCount'  => $collection->totalCount(),
-                'totalPages'  => $perPage > 0 ? ceil($collection->totalCount() / $perPage) : 1,
-                'perPage'     => $perPage,
-                'currentPage' => $page,
-                'fields'      => $fields
-            ],
-            'list' => $collection->toArray($fields)
-        ]);
+    public function addInitializer(\Closure $initializer)
+    {
+        $this->initializers[] = $initializer;
+    }
+
+    public function get($pattern, $function)
+    {
+        return $this->api('get', $pattern, $function);
+    }
+
+    public function post($pattern, $function)
+    {
+        return $this->api('post', $pattern, $function);
+    }
+
+    public function patch($pattern, $function)
+    {
+        return $this->api('patch', $pattern, $function);
+    }
+
+    public function delete($pattern, $function)
+    {
+        return $this->api('delete', $pattern, $function);
     }
 
     /**
-     * Format given Entity using $fields into a standard entity response
-     *
-     * @param AbstractEntity $entity
-     * @param string         $fields
-     *
-     * @return EntityResponse
+     * @return array
      */
-    public static function apiFormatEntity(AbstractEntity $entity, $fields)
+    public function getMethods()
     {
-        return new EntityResponse([
-            'meta'   => [
-                'fields' => $fields
-            ],
-            'entity' => $entity->toArray($fields)
-        ]);
+        return $this->apiMethods;
     }
 
-    /**
-     *
-     * @param string $httpMethod
-     * @param string $url
-     *
-     * @return MatchedApiMethod
-     */
-    public function getApiMethod($httpMethod, $url)
+    public function getMethod($httpMethod, $url)
     {
         $httpMethod = strtolower($httpMethod);
         $methods = $this->apiMethods[$httpMethod] ?? [];
@@ -134,22 +119,26 @@ trait ApiExpositionTrait
         return null;
     }
 
-    public function getApiMethods()
+    public function isInitialized()
     {
-        return $this->apiMethods;
+        return $this->initialized;
     }
 
-    /**
-     * Expose new API method or get instance of existing method
-     *
-     * @param string   $httpMethod
-     * @param string   $pattern
-     * @param callable $callable
-     *
-     * @return ApiMethod
-     * @throws ApiException
-     */
-    public function api($httpMethod, $pattern, $callable = null)
+    public function initialize()
+    {
+        $this->initialized = true;
+        foreach ($this->initializers as $initializer) {
+            call_user_func_array($initializer, [$this]);
+        }
+
+        if ($this->instance instanceof AbstractEntity) {
+            $this->processingEvent = true;
+            $this->instance->trigger('onExtendApi', $this);
+            $this->processingEvent = false;
+        }
+    }
+
+    private function api($httpMethod, $pattern, $callable = null)
     {
         $pattern = $pattern != '/' ? trim($pattern, '/') : '/';
         $httpMethod = strtolower($httpMethod);
@@ -157,7 +146,7 @@ trait ApiExpositionTrait
         if ($callable && !isset($this->apiMethods[$httpMethod])) {
             $this->apiMethods[$httpMethod] = [];
         }
-        
+
         if ($callable) {
             if (isset($this->apiMethods[$httpMethod][$pattern])) {
                 $apiInstance = $this->apiMethods[$httpMethod][$pattern];

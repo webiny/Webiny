@@ -2,6 +2,7 @@
 
 namespace Apps\Webiny\Php\Entities;
 
+use Apps\Webiny\Php\DevTools\Api\ApiContainer;
 use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\Entity\EntityCollection;
 
@@ -41,16 +42,17 @@ class LoggerErrorGroup extends AbstractEntity
         $this->attr('lastEntry')->datetime()->setToArrayDefault();
         $this->attr('errorCount')->integer()->setToArrayDefault()->setDefaultValue(0);
 
-
-        /**
-         * @api.name        Save report
-         * @api.description Saves an error report.
-         */
-        $this->api('POST', '/save-report', function () {
-            $clientData = $this->wRequest()->payload('client');
-            $errors = $this->wRequest()->payload('errors');
-            $this->saveReport($errors, $clientData);
-        })->setPublic();
+        $this->api(function(ApiContainer $api) {
+            /**
+             * @api.name        Save report
+             * @api.description Saves an error report.
+             */
+            $api->post('/save-report', function () {
+                $clientData = $this->wRequest()->payload('client');
+                $errors = $this->wRequest()->payload('errors');
+                $this->saveReport($errors, $clientData);
+            })->setPublic();
+        });
     }
 
 

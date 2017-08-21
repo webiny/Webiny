@@ -7,12 +7,13 @@
 
 namespace Apps\Webiny\Php\DevTools\Entity;
 
+use Apps\Webiny\Php\DevTools\Api\ApiContainer;
+use Apps\Webiny\Php\DevTools\Api\ApiExpositionTrait;
 use Apps\Webiny\Php\DevTools\Entity\EntityQuery\EntityQuery;
 use Apps\Webiny\Php\DevTools\Entity\EntityQuery\EntityQueryManipulator;
 use Apps\Webiny\Php\DevTools\Entity\EntityQuery\Filter;
 use Apps\Webiny\Php\DevTools\Entity\EntityQuery\Sorter;
 use Apps\Webiny\Php\DevTools\Exceptions\AppException;
-use Apps\Webiny\Php\Dispatchers\ApiExpositionTrait;
 use Apps\Webiny\Php\Entities\User;
 use Apps\Webiny\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\Attribute\AttributeType;
@@ -42,6 +43,7 @@ use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
  * @property User           $deletedBy
  * @method void on (string $eventName, \Closure $callback)
  * @method static void onExtend (\Closure $callback)
+ * @method static void onExtendApi (\Closure $callback)
  * @method static void onBeforeCreate (\Closure $callback)
  * @method static void onAfterCreate (\Closure $callback)
  * @method static void onBeforeUpdate (\Closure $callback)
@@ -61,6 +63,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     protected static $classCallbacks = [];
     const EVENT_NAMES = [
         'onExtend',
+        'onExtendApi',
         'onBeforeCreate',
         'onAfterCreate',
         'onBeforeUpdate',
@@ -238,7 +241,6 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     public function __construct()
     {
         parent::__construct();
-        $this->apiMethods = [];
 
         /**
          * Add the following built-in system attributes:
@@ -281,84 +283,86 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             new SingleIndex('deletedOn', 'deletedOn')
         ]);
 
-        /**
-         * @api.name List records
-         */
-        $this->api('GET', '/', function () {
-            $filters = $this->wRequest()->getFilters();
-            $sorter = $this->wRequest()->getSortFields();
+        $this->api(function(ApiContainer $api) {
+            /**
+             * @api.name List records
+             */
+            $api->get('/', function () {
+                $filters = $this->wRequest()->getFilters();
+                $sorter = $this->wRequest()->getSortFields();
 
-            $entities = $this->find($filters, $sorter, $this->wRequest()->getPerPage(), $this->wRequest()->getPage());
+                $entities = $this->find($filters, $sorter, $this->wRequest()->getPerPage(), $this->wRequest()->getPage());
 
-            return $this->apiFormatList($entities, $this->wRequest()->getFields());
-        });
+                return $this->apiFormatList($entities, $this->wRequest()->getFields());
+            });
 
-        /**
-         * @api.name Get a record by ID
-         */
-        $this->api('GET', '{id}', function () {
-            return $this->apiFormatEntity($this, $this->wRequest()->getFields());
-        });
+            /**
+             * @api.name Get a record by ID
+             */
+            $api->get('{id}', function () {
+                return $this->apiFormatEntity($this, $this->wRequest()->getFields());
+            });
 
-        /**
-         * @api.name Create a new record
-         */
-        $this->api('POST', '/', function () {
-            try {
-                $data = $this->wRequest()->getRequestData();
+            /**
+             * @api.name Create a new record
+             */
+            $api->post('/', function () {
+                try {
+                    $data = $this->wRequest()->getRequestData();
 
-                if (!$this->isArray($data) && !$this->isArrayObject($data)) {
-                    throw new ApiException('Invalid data provided', 'WBY-ED-CRUD_CREATE_FLOW-1', 400);
+                    if (!$this->isArray($data) && !$this->isArrayObject($data)) {
+                        throw new ApiException('Invalid data provided', 'WBY-ED-CRUD_CREATE_FLOW-1', 400);
+                    }
+                    $this->populate($data)->save();
+                } catch (EntityException $e) {
+                    if ($e->getCode() == EntityException::VALIDATION_FAILED) {
+                        throw new ApiException($e->getMessage(), 'WBY-ED-CRUD_CREATE_FLOW-2', 422, $e->getInvalidAttributes());
+                    }
+
+                    $code = $e->getCode();
+                    if (!$code) {
+                        $code = 'WBY-ED-CRUD_CREATE_FLOW-2';
+                    }
+                    throw new ApiException($e->getMessage(), $code, 422);
                 }
-                $this->populate($data)->save();
-            } catch (EntityException $e) {
-                if ($e->getCode() == EntityException::VALIDATION_FAILED) {
-                    throw new ApiException($e->getMessage(), 'WBY-ED-CRUD_CREATE_FLOW-2', 422, $e->getInvalidAttributes());
-                }
-
-                $code = $e->getCode();
-                if (!$code) {
-                    $code = 'WBY-ED-CRUD_CREATE_FLOW-2';
-                }
-                throw new ApiException($e->getMessage(), $code, 422);
-            }
-
-            return $this->apiFormatEntity($this, $this->wRequest()->getFields());
-        });
-
-        /**
-         * @api.name Update a record by ID
-         */
-        $this->api('PATCH', '{id}', function () {
-            try {
-                $data = $this->wRequest()->getRequestData();
-                $this->populate($data)->save();
 
                 return $this->apiFormatEntity($this, $this->wRequest()->getFields());
-            } catch (EntityException $e) {
-                if ($e->getCode() == EntityException::VALIDATION_FAILED) {
-                    throw new ApiException($e->getMessage(), 'WBY-ED-CRUD_UPDATE-1', 422, $e->getInvalidAttributes());
+            });
+
+            /**
+             * @api.name Update a record by ID
+             */
+            $api->patch('{id}', function () {
+                try {
+                    $data = $this->wRequest()->getRequestData();
+                    $this->populate($data)->save();
+
+                    return $this->apiFormatEntity($this, $this->wRequest()->getFields());
+                } catch (EntityException $e) {
+                    if ($e->getCode() == EntityException::VALIDATION_FAILED) {
+                        throw new ApiException($e->getMessage(), 'WBY-ED-CRUD_UPDATE-1', 422, $e->getInvalidAttributes());
+                    }
+
+                    $code = $e->getCode();
+                    if (!$code) {
+                        $code = 'WBY-ED-CRUD_UPDATE_FLOW-1';
+                    }
+                    throw new ApiException($e->getMessage(), $code, 422);
                 }
+            });
 
-                $code = $e->getCode();
-                if (!$code) {
-                    $code = 'WBY-ED-CRUD_UPDATE_FLOW-1';
+            /**
+             * @api.name Delete a record by ID
+             */
+            $api->delete('{id}', function () {
+                try {
+                    $this->delete();
+
+                    return true;
+                } catch (EntityException $e) {
+                    throw new ApiException('Failed to delete entity! ' . $e->getMessage(), $e->getCode(), 400);
                 }
-                throw new ApiException($e->getMessage(), $code, 422);
-            }
-        });
-
-        /**
-         * @api.name Delete a record by ID
-         */
-        $this->api('DELETE', '{id}', function () {
-            try {
-                $this->delete();
-
-                return true;
-            } catch (EntityException $e) {
-                throw new ApiException('Failed to delete entity! ' . $e->getMessage(), $e->getCode(), 400);
-            }
+            });
         });
 
         /**

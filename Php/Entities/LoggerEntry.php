@@ -1,6 +1,7 @@
 <?php
 namespace Apps\Webiny\Php\Entities;
 
+use Apps\Webiny\Php\DevTools\Api\ApiContainer;
 use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\Mongo\Index\SingleIndex;
 
@@ -38,25 +39,27 @@ class LoggerEntry extends AbstractEntity
 
         $this->attr('errorGroup')->many2one()->setEntity('Apps\Webiny\Php\Entities\LoggerErrorGroup');
 
-        /**
-         * @api.name        Resolve logger entry
-         * @api.description Resolves given logger entry.
-         */
-        $this->api('POST', '{id}/resolve', function () {
-            // re-calculate the number of errors inside the same group
-            $this->errorGroup->errorCount--;
+        $this->api(function(ApiContainer $api) {
+            /**
+             * @api.name        Resolve logger entry
+             * @api.description Resolves given logger entry.
+             */
+            $api->post('{id}/resolve', function () {
+                // re-calculate the number of errors inside the same group
+                $this->errorGroup->errorCount--;
 
-            if ($this->errorGroup->errorCount < 1) {
-                $this->errorGroup->delete();
-            }else{
-                $this->errorGroup->save();
-                $this->delete();
-            }
+                if ($this->errorGroup->errorCount < 1) {
+                    $this->errorGroup->delete();
+                }else{
+                    $this->errorGroup->save();
+                    $this->delete();
+                }
 
-            return [
-                'errorCount' => $this->errorGroup->errorCount,
-                'errorGroup' => $this->errorGroup->id,
-            ];
+                return [
+                    'errorCount' => $this->errorGroup->errorCount,
+                    'errorGroup' => $this->errorGroup->id,
+                ];
+            });
         });
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Apps\Webiny\Php\Entities;
 
+use Apps\Webiny\Php\DevTools\Api\ApiContainer;
 use Apps\Webiny\Php\DevTools\Interfaces\UserInterface;
 use Apps\Webiny\Php\DevTools\WebinyTrait;
 use Apps\Webiny\Php\DevTools\Entity\Attributes\FileAttribute;
@@ -87,112 +88,114 @@ class User extends AbstractEntity implements UserInterface
         $this->attr('lastActive')->datetime();
         $this->attr('lastLogin')->datetime();
 
-        /**
-         * @api.name        User login
-         * @api.description Logs in user with his username and password.
-         * @api.body.username   string  Username
-         * @api.body.password   string  Password
-         * @api.body.rememberme boolean Remember Me
-         */
-        $this->api('POST', 'login', function () {
-            $data = $this->wRequest()->getRequestData();
-            $login = $this->wAuth()->processLogin($data['username']);
+        $this->api(function(ApiContainer $api) {
+            /**
+             * @api.name        User login
+             * @api.description Logs in user with his username and password.
+             * @api.body.username   string  Username
+             * @api.body.password   string  Password
+             * @api.body.rememberme boolean Remember Me
+             */
+            $api->post('login', function () {
+                $data = $this->wRequest()->getRequestData();
+                $login = $this->wAuth()->processLogin($data['username']);
 
-            /* @var User $user */
-            $user = $this->wAuth()->getUser();
+                /* @var User $user */
+                $user = $this->wAuth()->getUser();
 
-            if (!$user->enabled) {
-                throw new AppException('User account is disabled!');
-            }
+                if (!$user->enabled) {
+                    throw new AppException('User account is disabled!');
+                }
 
-            return [
-                'authToken' => $login['authToken'],
-                'user'      => $user->toArray($this->wRequest()->getFields('*,!password'))
-            ];
-        })->setBodyValidators(['username' => 'required,email', 'password' => 'required']);
+                return [
+                    'authToken' => $login['authToken'],
+                    'user'      => $user->toArray($this->wRequest()->getFields('*,!password'))
+                ];
+            })->setBodyValidators(['username' => 'required,email', 'password' => 'required']);
 
-        /**
-         * @api.name        My profile
-         * @api.description Returns currently logged in user's data.
-         * @api.headers.X-Webiny-Authorization  string  Authorization token
-         */
-        $this->api('GET', 'me', function () {
-            $user = $this->wAuth()->getUser();
-            if (!$user) {
-                throw new ApiException('Invalid token', 'WBY-INVALID-TOKEN');
-            }
+            /**
+             * @api.name        My profile
+             * @api.description Returns currently logged in user's data.
+             * @api.headers.X-Webiny-Authorization  string  Authorization token
+             */
+            $api->get('me', function () {
+                $user = $this->wAuth()->getUser();
+                if (!$user) {
+                    throw new ApiException('Invalid token', 'WBY-INVALID-TOKEN');
+                }
 
-            return $user->toArray($this->wRequest()->getFields('*,!password'));
-        });
+                return $user->toArray($this->wRequest()->getFields('*,!password'));
+            });
 
-        /**
-         * @api.name        Update my profile
-         * @api.description Updates currently logged in user's profile.
-         * @api.headers.X-Webiny-Authorization  string  Authorization token
-         */
-        $this->api('PATCH', 'me', function () {
-            $data = $this->wRequest()->getRequestData();
-            $user = $this->wAuth()->getUser();
+            /**
+             * @api.name        Update my profile
+             * @api.description Updates currently logged in user's profile.
+             * @api.headers.X-Webiny-Authorization  string  Authorization token
+             */
+            $api->patch('me', function () {
+                $data = $this->wRequest()->getRequestData();
+                $user = $this->wAuth()->getUser();
 
-            $user->populate($data)->save();
+                $user->populate($data)->save();
 
-            if (!$user) {
-                throw new ApiException('Invalid token', 'WBY-INVALID-TOKEN');
-            }
+                if (!$user) {
+                    throw new ApiException('Invalid token', 'WBY-INVALID-TOKEN');
+                }
 
-            return $user->toArray($this->wRequest()->getFields('*,!password'));
-        });
+                return $user->toArray($this->wRequest()->getFields('*,!password'));
+            });
 
-        /**
-         * @api.name        Reset password
-         * @api.description Starts password reset process - sends a password reset code to the received e-mail address.
-         * @api.body.email  string  User's email address
-         */
-        $this->api('POST', 'reset-password', function () {
-            $data = $this->wRequest()->getRequestData();
-            $user = self::findOne(['email' => $data['email']]);
-            if (!$user) {
-                throw new AppException('We could not find a user using this e-mail address!');
-            }
+            /**
+             * @api.name        Reset password
+             * @api.description Starts password reset process - sends a password reset code to the received e-mail address.
+             * @api.body.email  string  User's email address
+             */
+            $api->post('reset-password', function () {
+                $data = $this->wRequest()->getRequestData();
+                $user = self::findOne(['email' => $data['email']]);
+                if (!$user) {
+                    throw new AppException('We could not find a user using this e-mail address!');
+                }
 
-            $user->passwordRecoveryCode = $this->crypt()->generateRandomString(6, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
-            $user->save();
+                $user->passwordRecoveryCode = $this->crypt()->generateRandomString(6, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
+                $user->save();
 
-            $mailer = $this->mailer();
-            $message = $mailer->getMessage();
+                $mailer = $this->mailer();
+                $message = $mailer->getMessage();
 
-            $html = $this->wTemplateEngine()->fetch('Webiny:Templates/Emails/ResetPassword.tpl', ['code' => $user->passwordRecoveryCode]);
-            $message->setBody($html);
-            $message->setSubject('Your password reset code!');
-            $message->setTo(new Email($user->email));
+                $html = $this->wTemplateEngine()->fetch('Webiny:Templates/Emails/ResetPassword.tpl', ['code' => $user->passwordRecoveryCode]);
+                $message->setBody($html);
+                $message->setSubject('Your password reset code!');
+                $message->setTo(new Email($user->email));
 
-            if ($mailer->send($message)) {
+                if ($mailer->send($message)) {
+                    return true;
+                }
+
+                throw new AppException('Failed to send password recovery code!');
+            })->setBodyValidators(['email' => 'email']);
+
+            /**
+             * @api.name        Set new password
+             * @api.description Proceeds with password reset process by receiving a valid reset code. If valid, new password will be set.
+             * @api.body.code       string  Password reset code (received via email)
+             * @api.body.password   string  New password to set
+             */
+            $api->post('/set-password', function () {
+                $data = $this->wRequest()->getRequestData();
+
+                $user = self::findOne(['passwordRecoveryCode' => $data['code']]);
+                if (!$user) {
+                    throw new AppException('Invalid password reset code!');
+                }
+
+                $user->passwordRecoveryCode = '';
+                $user->password = $data['password'];
+                $user->save();
+
                 return true;
-            }
-
-            throw new AppException('Failed to send password recovery code!');
-        })->setBodyValidators(['email' => 'email']);
-
-        /**
-         * @api.name        Set new password
-         * @api.description Proceeds with password reset process by receiving a valid reset code. If valid, new password will be set.
-         * @api.body.code       string  Password reset code (received via email)
-         * @api.body.password   string  New password to set
-         */
-        $this->api('POST', '/set-password', function () {
-            $data = $this->wRequest()->getRequestData();
-
-            $user = self::findOne(['passwordRecoveryCode' => $data['code']]);
-            if (!$user) {
-                throw new AppException('Invalid password reset code!');
-            }
-
-            $user->passwordRecoveryCode = '';
-            $user->password = $data['password'];
-            $user->save();
-
-            return true;
-        })->setBodyValidators(['code' => 'required', 'password' => 'required']);
+            })->setBodyValidators(['code' => 'required', 'password' => 'required']);
+        });
     }
 
     public function save()

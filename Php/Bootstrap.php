@@ -2,6 +2,7 @@
 
 namespace Apps\Webiny\Php;
 
+use Apps\Webiny\Php\DevTools\Api\ApiContainer;
 use Apps\Webiny\Php\DevTools\Validators\Password;
 use Apps\Webiny\Php\Entities\User;
 use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
@@ -29,5 +30,13 @@ class Bootstrap extends \Apps\Webiny\Php\DevTools\LifeCycle\Bootstrap
         $regex = "/^.{8,}$/";
         $message = "Password must contain at least 8 characters";
         $this->wValidation()->addValidator(new Password($regex, $message));
+
+
+        // Test API extension
+        User::onExtendApi(function (User $user, ApiContainer $api) {
+            $api->get('pavel', function () {
+                return ['pavel' => true];
+            })->setPublic();
+        });
     }
 }

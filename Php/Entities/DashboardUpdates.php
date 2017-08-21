@@ -2,6 +2,7 @@
 
 namespace Apps\Webiny\Php\Entities;
 
+use Apps\Webiny\Php\DevTools\Api\ApiContainer;
 use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
 use Apps\Webiny\Php\DevTools\WebinyTrait;
 use Webiny\Component\Mongo\Index\CompoundIndex;
@@ -36,28 +37,29 @@ class DashboardUpdates extends AbstractEntity
         $this->attr('order')->integer()->setDefaultValue(0);
         $this->attr('image')->char()->setToArrayDefault(true);
 
+        $this->api(function (ApiContainer $api) {
+            /**
+             * @api.name        Get the latest dashboard updates
+             * @api.description Retrieves the latest dashboard updates for the current user.
+             */
+            $api->get('latest', function () {
+                // first we populate the updates for that user
+                $user = $this->wAuth()->getUser();
+                if (!$user) {
+                    return false;
+                }
+                $this->populateUpdates($user);
 
-        /**
-         * @api.name        Get the latest dashboard updates
-         * @api.description Retrieves the latest dashboard updates for the current user.
-         */
-        $this->api('GET', 'latest', function () {
-            // first we populate the updates for that user
-            $user = $this->wAuth()->getUser();
-            if (!$user) {
-                return false;
-            }
-            $this->populateUpdates($user);
+                // once populated, filter and display the results
+                $result = self::find(['dismissed' => false], ['-order'], 10);
 
-            // once populated, filter and display the results
-            $result = self::find(['dismissed' => false], ['-order'], 10);
+                return $this->apiFormatList($result, '*');
+            });
 
-            return $this->apiFormatList($result, '*');
-        });
-
-        $this->api('GET', '{dashboardUpdate}/dismiss', function (DashboardUpdates $dashboardUpdate) {
-            $dashboardUpdate->dismissed = true;
-            $dashboardUpdate->save();
+            $api->get('{dashboardUpdate}/dismiss', function (DashboardUpdates $dashboardUpdate) {
+                $dashboardUpdate->dismissed = true;
+                $dashboardUpdate->save();
+            });
         });
     }
 
@@ -66,7 +68,7 @@ class DashboardUpdates extends AbstractEntity
     {
         // request the latest updates from webiny hub$ctx = stream_context_create(array('http'=>
         // suppress errors and set timeout to 3s
-        $context = stream_context_create(['http'=> ['timeout' => 3]]);
+        $context = stream_context_create(['http' => ['timeout' => 3]]);
         $updates = @file_get_contents('https://api.webiny.com/entities/the-hub/updates/latest', false, $context);
         if (!$updates) {
             return;
@@ -94,10 +96,10 @@ class DashboardUpdates extends AbstractEntity
             $update->title = $u['title'];
             $update->content = $u['content'];
             $update->order = $u['order'];
-            if(isset($u['image']['src'])){
+            if (isset($u['image']['src'])) {
                 $update->image = $u['image']['src'];
             }
-            if(empty($u['hasLink'])){
+            if (empty($u['hasLink'])) {
                 $update->hasLink = $u['hasLink'];
             }
             $update->userId = $user->id;

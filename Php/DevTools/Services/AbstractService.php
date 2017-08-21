@@ -7,8 +7,9 @@
 
 namespace Apps\Webiny\Php\DevTools\Services;
 
+use Apps\Webiny\Php\DevTools\Api\ApiExpositionTrait;
+use Apps\Webiny\Php\DevTools\Api\ApiMethod;
 use Apps\Webiny\Php\DevTools\WebinyTrait;
-use Apps\Webiny\Php\Dispatchers\ApiExpositionTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 
 /**
@@ -32,8 +33,8 @@ abstract class AbstractService
             'class' => get_class($service)
         ];
 
-        foreach ($service->getApiMethods() as $httpMethod => $methods) {
-            /* @var $method \Apps\Webiny\Php\Dispatchers\ApiMethod */
+        foreach ($service->getApiContainer()->getMethods() as $httpMethod => $methods) {
+            /* @var $method ApiMethod */
             foreach ($methods as $pattern => $method) {
                 $data['methods'][] = [
                     'key'        => $pattern . '.' . $httpMethod,

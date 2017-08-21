@@ -7,7 +7,10 @@
 
 namespace Apps\Webiny\Php\Bootstrap;
 
+use Apps\Webiny\Php\DevTools\Api\ApiExpositionTrait;
+use Apps\Webiny\Php\DevTools\Api\ApiMethod;
 use Apps\Webiny\Php\DevTools\Authorization\Authorization;
+use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
 use Apps\Webiny\Php\DevTools\Request;
 use Apps\Webiny\Php\DevTools\Response\ApiResponse;
 use Apps\Webiny\Php\DevTools\Response\HtmlResponse;
@@ -214,6 +217,8 @@ class Bootstrap
      */
     private function processResponse(AbstractResponse $webinyResponse, $return = false)
     {
+        die("Total methods: " . ApiMethod::$count);
+
         $event = new ResponseEvent($webinyResponse);
         $this->wEvents()->fire('Webiny.Bootstrap.Response', $event);
 
