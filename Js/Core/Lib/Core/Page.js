@@ -3,6 +3,10 @@ import _ from 'lodash';
 class Page {
     loadScript(url) {
         return new Promise(resolve => {
+            // Is it already inserted, possibly with server-side rendering?
+            if (document.querySelectorAll(`script[src="${url}"]`).length) {
+                return;
+            }
             const s = document.createElement('script');
             s.type = 'text/javascript';
             s.src = url;
@@ -14,6 +18,10 @@ class Page {
 
     loadStylesheet(url) {
         return new Promise(resolve => {
+            // Is it already inserted, possibly with server-side rendering?
+            if (document.querySelectorAll(`link[href="${url}"]`).length) {
+                return;
+            }
             const s = document.createElement('link');
             s.rel = 'stylesheet';
             s.href = url;
