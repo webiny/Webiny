@@ -47,8 +47,8 @@ List.defaultProps = {
                                 <Table.Field name="firstName" label="First Name" sort="firstName" route="Users.Edit">
                                     {data => (
                                         <span>
-                                                <strong>{data.firstName} {data.lastName}</strong><br/>{data.id}
-                                            </span>
+                                            <strong>{data.firstName} {data.lastName}</strong><br/>{data.id}
+                                        </span>
                                     )}
                                 </Table.Field>
                                 <Table.Field name="email" sort="email" label="Email"/>
