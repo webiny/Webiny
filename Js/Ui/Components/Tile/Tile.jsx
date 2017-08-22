@@ -8,9 +8,21 @@ class Tile extends Webiny.Ui.Component {
 
 Tile.defaultProps = {
     className: null,
+    type: 'default',
     renderer() {
         const {styles} = this.props;
-        const classes = this.classSet(styles.tile, this.props.className);
+
+        const typeClasses = {
+            default: styles.default,
+            primary: styles.primary,
+            success: styles.success
+        };
+
+        const classes = this.classSet(
+            styles.tile,
+            this.props.className,
+            typeClasses[this.props.type]
+        );
 
         return <div className={classes}>{this.props.children}</div>;
     }
