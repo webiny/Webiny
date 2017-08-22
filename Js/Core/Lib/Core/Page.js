@@ -4,7 +4,7 @@ class Page {
     loadScript(url) {
         return new Promise(resolve => {
             // Is it already inserted, possibly with server-side rendering?
-            if (document.querySelectorAll(`script[src="${url}"]`).length) {
+            if (document.querySelectorAll(`script[src="${url}"]`).length > 0) {
                 return;
             }
             const s = document.createElement('script');
@@ -19,11 +19,8 @@ class Page {
     loadStylesheet(url) {
         return new Promise(resolve => {
             // Is it already inserted, possibly with server-side rendering?
-            // Is it already inserted, possibly with server-side rendering?
-            for (let i = 0, max = document.styleSheets.length; i < max; i++) {
-                if (document.styleSheets[i].href === url) {
-                    return;
-                }
+            if (document.querySelectorAll(`link[rel="stylesheet"][href="${url}"]`).length > 0) {
+                return;
             }
 
             const s = document.createElement('link');
