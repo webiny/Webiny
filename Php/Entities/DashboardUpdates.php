@@ -4,6 +4,7 @@ namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\DevTools\Api\ApiContainer;
 use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
+use Apps\Webiny\Php\DevTools\Entity\Indexes\IndexContainer;
 use Apps\Webiny\Php\DevTools\WebinyTrait;
 use Webiny\Component\Mongo\Index\CompoundIndex;
 use Webiny\Component\Mongo\Index\SingleIndex;
@@ -24,10 +25,6 @@ class DashboardUpdates extends AbstractEntity
     {
         parent::__construct();
 
-        $this->index(new CompoundIndex('refIdUserId', ['refId', 'userId']));
-        $this->index(new SingleIndex('dismissed', 'dismissed'));
-        $this->index(new SingleIndex('order', 'order'));
-
         $this->attr('refId')->char()->setToArrayDefault(true);
         $this->attr('userId')->char()->setToArrayDefault(true);
         $this->attr('title')->char()->setToArrayDefault(true);
@@ -36,32 +33,46 @@ class DashboardUpdates extends AbstractEntity
         $this->attr('dismissed')->boolean()->setDefaultValue(false); // this will contain the id of user which dismissed the update
         $this->attr('order')->integer()->setDefaultValue(0);
         $this->attr('image')->char()->setToArrayDefault(true);
+    }
 
-        $this->api(function (ApiContainer $api) {
-            /**
-             * @api.name        Get the latest dashboard updates
-             * @api.description Retrieves the latest dashboard updates for the current user.
-             */
-            $api->get('latest', function () {
-                // first we populate the updates for that user
-                $user = $this->wAuth()->getUser();
-                if (!$user) {
-                    return false;
-                }
-                $this->populateUpdates($user);
+    protected static function entityIndexes(IndexContainer $indexes)
+    {
+        parent::entityIndexes($indexes);
 
-                // once populated, filter and display the results
-                $result = self::find(['dismissed' => false], ['-order'], 10);
+        $indexes->add(new CompoundIndex('refIdUserId', ['refId', 'userId']));
+        $indexes->add(new SingleIndex('dismissed', 'dismissed'));
+        $indexes->add(new SingleIndex('order', 'order'));
+    }
 
-                return $this->apiFormatList($result, '*');
-            });
 
-            $api->get('{dashboardUpdate}/dismiss', function (DashboardUpdates $dashboardUpdate) {
-                $dashboardUpdate->dismissed = true;
-                $dashboardUpdate->save();
-            });
+    protected function entityApi(ApiContainer $api)
+    {
+        parent::entityApi($api);
+
+        /**
+         * @api.name        Get the latest dashboard updates
+         * @api.description Retrieves the latest dashboard updates for the current user.
+         */
+        $api->get('latest', function () {
+            // first we populate the updates for that user
+            $user = $this->wAuth()->getUser();
+            if (!$user) {
+                return false;
+            }
+            $this->populateUpdates($user);
+
+            // once populated, filter and display the results
+            $result = self::find(['dismissed' => false], ['-order'], 10);
+
+            return $this->apiFormatList($result, '*');
+        });
+
+        $api->get('{dashboardUpdate}/dismiss', function (DashboardUpdates $dashboardUpdate) {
+            $dashboardUpdate->dismissed = true;
+            $dashboardUpdate->save();
         });
     }
+
 
     // @todo: make this more bullet proof so in case of problems we fail gracefully
     private function populateUpdates(User $user)

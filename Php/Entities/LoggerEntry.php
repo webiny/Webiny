@@ -1,8 +1,10 @@
 <?php
+
 namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\DevTools\Api\ApiContainer;
 use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
+use Apps\Webiny\Php\DevTools\Entity\Indexes\IndexContainer;
 use Webiny\Component\Mongo\Index\SingleIndex;
 
 
@@ -28,9 +30,6 @@ class LoggerEntry extends AbstractEntity
     {
         parent::__construct();
 
-        $this->index(new SingleIndex('errorGroup', 'errorGroup'));
-        $this->index(new SingleIndex('createdOn', 'createdOn', false, false, false, 5184000)); // expire after 60 days
-
         $this->attr('url')->char()->setToArrayDefault();
         $this->attr('date')->datetime()->setToArrayDefault();
 
@@ -38,28 +37,38 @@ class LoggerEntry extends AbstractEntity
         $this->attr('clientData')->object();
 
         $this->attr('errorGroup')->many2one()->setEntity('Apps\Webiny\Php\Entities\LoggerErrorGroup');
+    }
 
-        $this->api(function(ApiContainer $api) {
-            /**
-             * @api.name        Resolve logger entry
-             * @api.description Resolves given logger entry.
-             */
-            $api->post('{id}/resolve', function () {
-                // re-calculate the number of errors inside the same group
-                $this->errorGroup->errorCount--;
+    protected function entityApi(ApiContainer $api)
+    {
+        parent::entityApi($api);
 
-                if ($this->errorGroup->errorCount < 1) {
-                    $this->errorGroup->delete();
-                }else{
-                    $this->errorGroup->save();
-                    $this->delete();
-                }
+        /**
+         * @api.name        Resolve logger entry
+         * @api.description Resolves given logger entry.
+         */
+        $api->post('{id}/resolve', function () {
+            // re-calculate the number of errors inside the same group
+            $this->errorGroup->errorCount--;
 
-                return [
-                    'errorCount' => $this->errorGroup->errorCount,
-                    'errorGroup' => $this->errorGroup->id,
-                ];
-            });
+            if ($this->errorGroup->errorCount < 1) {
+                $this->errorGroup->delete();
+            } else {
+                $this->errorGroup->save();
+                $this->delete();
+            }
+
+            return [
+                'errorCount' => $this->errorGroup->errorCount,
+                'errorGroup' => $this->errorGroup->id,
+            ];
         });
+    }
+
+    protected static function entityIndexes(IndexContainer $indexes)
+    {
+        parent::entityIndexes($indexes);
+        $indexes->add(new SingleIndex('errorGroup', 'errorGroup'));
+        $indexes->add(new SingleIndex('createdOn', 'createdOn', false, false, false, 5184000)); // expire after 60 days
     }
 }

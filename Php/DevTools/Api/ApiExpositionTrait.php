@@ -10,25 +10,31 @@ namespace Apps\Webiny\Php\DevTools\Api;
 use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
 use Apps\Webiny\Php\DevTools\Response\EntityResponse;
 use Apps\Webiny\Php\DevTools\Response\ListResponse;
-use Apps\Webiny\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\EntityCollection;
 
 /**
  * Trait ApiExpositionTrait
  *
- * This class is used when we want to expose entity or service methods to the API
+ * This class is used when we want to expose entity or service methods as an API
  *
  * @package Apps\Webiny\Php\Dispatchers
  */
 trait ApiExpositionTrait
 {
-    protected static $entityApis = [];
-    protected $processingEvent = null;
+    protected static $apiContainers = [];
 
     /**
      * @var array
      */
     protected $apiMethods;
+
+    /**
+     * Initialize the given ApiContainer
+     * @param ApiContainer $api
+     *
+     * @return mixed
+     */
+    abstract protected function initializeApi(ApiContainer $api);
 
     /**
      * Format given EntityCollection using $fields into a standard list response
@@ -77,38 +83,20 @@ trait ApiExpositionTrait
         ]);
     }
 
-    /**
-     * Expose entity API
-     *
-     * @param callable $callable
-     *
-     * @return ApiContainer
-     * @throws ApiException
-     */
-    public function api($callable)
-    {
-        $class = get_called_class();
-        if (!isset(static::$entityApis[$class])) {
-            static::$entityApis[$class] = new ApiContainer($this, $callable);
-            static::$entityApis[$class]->addInitializer($callable);
-        } else {
-            $apiContainer = static::$entityApis[$class];
-            if(spl_object_hash($this) == spl_object_hash($apiContainer->instance)) {
-                $apiContainer->addInitializer($callable);
-            }
-        }
-    }
 
     /**
+     * Get ApiContainer for current object (AbstractEntity or AbstractService)
      * @return ApiContainer
      */
-    public function getApiContainer()
+    public function getApi()
     {
         $class = get_called_class();
         /* @var $apiContainer ApiContainer */
-        $apiContainer = static::$entityApis[$class];
-        if (!$apiContainer->isInitialized()) {
-            $apiContainer->initialize();
+        $apiContainer = static::$apiContainers[$class] ?? null;
+        if (!$apiContainer) {
+            $apiContainer = new ApiContainer($this);
+            static::$apiContainers[$class] = $apiContainer;
+            $this->initializeApi($apiContainer);
         }
 
         return $apiContainer;

@@ -211,14 +211,13 @@ class Bootstrap
     }
 
     /**
-     * @param AbstractResponse $webinyResponse
+     * @param AbstractResponse $webinyResponse Response object to process
+     * @param bool             $return Return response data
      *
      * @return mixed
      */
     private function processResponse(AbstractResponse $webinyResponse, $return = false)
     {
-        die("Total methods: " . ApiMethod::$count);
-
         $event = new ResponseEvent($webinyResponse);
         $this->wEvents()->fire('Webiny.Bootstrap.Response', $event);
 

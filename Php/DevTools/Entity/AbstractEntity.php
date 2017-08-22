@@ -12,7 +12,9 @@ use Apps\Webiny\Php\DevTools\Api\ApiExpositionTrait;
 use Apps\Webiny\Php\DevTools\Entity\EntityQuery\EntityQuery;
 use Apps\Webiny\Php\DevTools\Entity\EntityQuery\EntityQueryManipulator;
 use Apps\Webiny\Php\DevTools\Entity\EntityQuery\Filter;
+use Apps\Webiny\Php\DevTools\Entity\EntityQuery\QueryContainer;
 use Apps\Webiny\Php\DevTools\Entity\EntityQuery\Sorter;
+use Apps\Webiny\Php\DevTools\Entity\Indexes\IndexContainer;
 use Apps\Webiny\Php\DevTools\Exceptions\AppException;
 use Apps\Webiny\Php\Entities\User;
 use Apps\Webiny\Php\RequestHandlers\ApiException;
@@ -25,7 +27,6 @@ use Webiny\Component\Entity\Attribute\Many2OneAttribute;
 use Webiny\Component\Entity\Attribute\One2ManyAttribute;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Entity\EntityException;
-use Webiny\Component\Mongo\Index\AbstractIndex;
 use Webiny\Component\Mongo\Index\SingleIndex;
 use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
 
@@ -42,8 +43,11 @@ use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
  * @property DateTimeObject $deletedOn
  * @property User           $deletedBy
  * @method void on (string $eventName, \Closure $callback)
+ * @method void trigger (string $eventName, ...$params)
  * @method static void onExtend (\Closure $callback)
  * @method static void onExtendApi (\Closure $callback)
+ * @method static void onExtendQuery (\Closure $callback)
+ * @method static void onExtendIndexes (\Closure $callback)
  * @method static void onBeforeCreate (\Closure $callback)
  * @method static void onAfterCreate (\Closure $callback)
  * @method static void onBeforeUpdate (\Closure $callback)
@@ -58,20 +62,24 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 {
     use WebinyTrait, ApiExpositionTrait;
 
+    protected static $classCallbacks = [];
+    protected static $queryContainers = [];
     protected $indexes = [];
     protected $instanceCallbacks = [];
-    protected static $classCallbacks = [];
+
     const EVENT_NAMES = [
-        'onExtend',
-        'onExtendApi',
-        'onBeforeCreate',
-        'onAfterCreate',
-        'onBeforeUpdate',
-        'onAfterUpdate',
-        'onBeforeSave',
-        'onAfterSave',
-        'onBeforeDelete',
-        'onAfterDelete'
+        'onExtend'        => ['static' => false],
+        'onExtendApi'     => ['static' => false],
+        'onExtendIndexes' => ['static' => true],
+        'onExtendQuery'   => ['static' => true],
+        'onBeforeCreate'  => ['static' => false],
+        'onAfterCreate'   => ['static' => false],
+        'onBeforeUpdate'  => ['static' => false],
+        'onAfterUpdate'   => ['static' => false],
+        'onBeforeSave'    => ['static' => false],
+        'onAfterSave'     => ['static' => false],
+        'onBeforeDelete'  => ['static' => false],
+        'onAfterDelete'   => ['static' => false]
     ];
 
     /**
@@ -103,6 +111,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 
         $instance = static::entity()->get(get_called_class(), $id);
         if ($instance) {
+            /* @var $instance AbstractEntity */
             return $instance;
         }
         $mongo = static::entity()->getDatabase();
@@ -204,38 +213,17 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     }
 
     /**
-     * Add index
+     * Get entity indexes
      *
-     * @param AbstractIndex|array $index
-     *
-     * @return $this
-     * @throws EntityException
+     * @return IndexContainer
      */
-    public function index($index)
+    public static function getIndexes()
     {
-        if ($index instanceof AbstractIndex) {
-            $index = [$index];
-        }
+        $indexContainer = new IndexContainer();
+        static::entityIndexes($indexContainer);
+        static::processStaticCallbacks('onExtendIndexes', $indexContainer);
 
-        if (!is_array($index)) {
-            throw new EntityException(EntityException::MSG_INVALID_ARG, ['$index', 'array or AbstractIndex']);
-        }
-
-        /* @var AbstractIndex $i */
-        foreach ($index as $i) {
-            $this->indexes[$i->getName()] = $i;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Get all indexes
-     * @return array
-     */
-    public function getIndexes()
-    {
-        return $this->indexes;
+        return $indexContainer;
     }
 
     public function __construct()
@@ -275,95 +263,6 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         });
         $this->attr('deletedOn')->datetime();
         $this->attr('deletedBy')->many2one()->setEntity($userClass);
-
-        $this->index([
-            new SingleIndex('id', 'id', false, true),
-            new SingleIndex('createdOn', 'createdOn'),
-            new SingleIndex('createdBy', 'createdBy'),
-            new SingleIndex('deletedOn', 'deletedOn')
-        ]);
-
-        $this->api(function(ApiContainer $api) {
-            /**
-             * @api.name List records
-             */
-            $api->get('/', function () {
-                $filters = $this->wRequest()->getFilters();
-                $sorter = $this->wRequest()->getSortFields();
-
-                $entities = $this->find($filters, $sorter, $this->wRequest()->getPerPage(), $this->wRequest()->getPage());
-
-                return $this->apiFormatList($entities, $this->wRequest()->getFields());
-            });
-
-            /**
-             * @api.name Get a record by ID
-             */
-            $api->get('{id}', function () {
-                return $this->apiFormatEntity($this, $this->wRequest()->getFields());
-            });
-
-            /**
-             * @api.name Create a new record
-             */
-            $api->post('/', function () {
-                try {
-                    $data = $this->wRequest()->getRequestData();
-
-                    if (!$this->isArray($data) && !$this->isArrayObject($data)) {
-                        throw new ApiException('Invalid data provided', 'WBY-ED-CRUD_CREATE_FLOW-1', 400);
-                    }
-                    $this->populate($data)->save();
-                } catch (EntityException $e) {
-                    if ($e->getCode() == EntityException::VALIDATION_FAILED) {
-                        throw new ApiException($e->getMessage(), 'WBY-ED-CRUD_CREATE_FLOW-2', 422, $e->getInvalidAttributes());
-                    }
-
-                    $code = $e->getCode();
-                    if (!$code) {
-                        $code = 'WBY-ED-CRUD_CREATE_FLOW-2';
-                    }
-                    throw new ApiException($e->getMessage(), $code, 422);
-                }
-
-                return $this->apiFormatEntity($this, $this->wRequest()->getFields());
-            });
-
-            /**
-             * @api.name Update a record by ID
-             */
-            $api->patch('{id}', function () {
-                try {
-                    $data = $this->wRequest()->getRequestData();
-                    $this->populate($data)->save();
-
-                    return $this->apiFormatEntity($this, $this->wRequest()->getFields());
-                } catch (EntityException $e) {
-                    if ($e->getCode() == EntityException::VALIDATION_FAILED) {
-                        throw new ApiException($e->getMessage(), 'WBY-ED-CRUD_UPDATE-1', 422, $e->getInvalidAttributes());
-                    }
-
-                    $code = $e->getCode();
-                    if (!$code) {
-                        $code = 'WBY-ED-CRUD_UPDATE_FLOW-1';
-                    }
-                    throw new ApiException($e->getMessage(), $code, 422);
-                }
-            });
-
-            /**
-             * @api.name Delete a record by ID
-             */
-            $api->delete('{id}', function () {
-                try {
-                    $this->delete();
-
-                    return true;
-                } catch (EntityException $e) {
-                    throw new ApiException('Failed to delete entity! ' . $e->getMessage(), $e->getCode(), 400);
-                }
-            });
-        });
 
         /**
          * Fire event for registering extra attributes
@@ -432,11 +331,130 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         return $save;
     }
 
-    public function trigger($eventName, ...$params)
+    /**
+     * Get array of entity indexes filter and sorter manipulators
+     *
+     * @param IndexContainer $indexes
+     *
+     * @return array
+     */
+    protected static function entityIndexes(IndexContainer $indexes)
     {
-        $this->processingEvent = $eventName;
-        $this->processCallbacks($eventName, ...$params);
-        $this->processingEvent = null;
+        $indexes->add(new SingleIndex('id', 'id', false, true));
+        $indexes->add(new SingleIndex('createdOn', 'createdOn'));
+        $indexes->add(new SingleIndex('createdBy', 'createdBy'));
+        $indexes->add(new SingleIndex('deletedOn', 'deletedOn'));
+    }
+
+    /**
+     * Get array of entity query filter and sorter manipulators
+     *
+     * @param QueryContainer $query
+     *
+     * @return array
+     */
+    protected static function entityQuery(QueryContainer $query)
+    {
+        // No base filters are applied to the query
+    }
+
+    /**
+     * Define entity API
+     *
+     * @param ApiContainer $api An object used to defined the API
+     */
+    protected function entityApi(ApiContainer $api)
+    {
+        /**
+         * @api.name List records
+         */
+        $api->get('/', function () {
+            $filters = $this->wRequest()->getFilters();
+            $sorter = $this->wRequest()->getSortFields();
+
+            $entities = $this->find($filters, $sorter, $this->wRequest()->getPerPage(), $this->wRequest()->getPage());
+
+            return $this->apiFormatList($entities, $this->wRequest()->getFields());
+        });
+
+        /**
+         * @api.name Get a record by ID
+         */
+        $api->get('{id}', function () {
+            return $this->apiFormatEntity($this, $this->wRequest()->getFields());
+        });
+
+        /**
+         * @api.name Create a new record
+         */
+        $api->post('/', function () {
+            try {
+                $data = $this->wRequest()->getRequestData();
+
+                if (!$this->isArray($data) && !$this->isArrayObject($data)) {
+                    throw new ApiException('Invalid data provided', 'WBY-ED-CRUD_CREATE_FLOW-1', 400);
+                }
+                $this->populate($data)->save();
+            } catch (EntityException $e) {
+                if ($e->getCode() == EntityException::VALIDATION_FAILED) {
+                    throw new ApiException($e->getMessage(), 'WBY-ED-CRUD_CREATE_FLOW-2', 422, $e->getInvalidAttributes());
+                }
+
+                $code = $e->getCode();
+                if (!$code) {
+                    $code = 'WBY-ED-CRUD_CREATE_FLOW-2';
+                }
+                throw new ApiException($e->getMessage(), $code, 422);
+            }
+
+            return $this->apiFormatEntity($this, $this->wRequest()->getFields());
+        });
+
+        /**
+         * @api.name Update a record by ID
+         */
+        $api->patch('{id}', function () {
+            try {
+                $data = $this->wRequest()->getRequestData();
+                $this->populate($data)->save();
+
+                return $this->apiFormatEntity($this, $this->wRequest()->getFields());
+            } catch (EntityException $e) {
+                if ($e->getCode() == EntityException::VALIDATION_FAILED) {
+                    throw new ApiException($e->getMessage(), 'WBY-ED-CRUD_UPDATE-1', 422, $e->getInvalidAttributes());
+                }
+
+                $code = $e->getCode();
+                if (!$code) {
+                    $code = 'WBY-ED-CRUD_UPDATE_FLOW-1';
+                }
+                throw new ApiException($e->getMessage(), $code, 422);
+            }
+        });
+
+        /**
+         * @api.name Delete a record by ID
+         */
+        $api->delete('{id}', function () {
+            try {
+                $this->delete();
+
+                return true;
+            } catch (EntityException $e) {
+                throw new ApiException('Failed to delete entity! ' . $e->getMessage(), $e->getCode(), 400);
+            }
+        });
+    }
+
+    /**
+     * Initialize given ApiContainer
+     *
+     * @param ApiContainer $api
+     */
+    protected function initializeApi(ApiContainer $api)
+    {
+        $this->entityApi($api);
+        $this->processCallbacks('onExtendApi', $api);
     }
 
     /**
@@ -512,16 +530,6 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     }
 
     /**
-     * Get array of entity query filter and sorter manipulators
-     *
-     * @return array
-     */
-    protected static function entityQuery()
-    {
-        return [];
-    }
-
-    /**
      * Sets custom filters that can be sent to find and findOne methods
      *
      * @param EntityQuery|array $query
@@ -530,12 +538,20 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
      */
     protected static function processEntityQueryManipulators(EntityQuery $query)
     {
-        $entityQueryManipulators = static::entityQuery();
+        // Check if QueryContainer already exists for this entity
+        $class = get_called_class();
+        $queryContainer = static::$queryContainers[$class] ?? null;
+        if (!$queryContainer) {
+            $queryContainer = new QueryContainer();
+            static::$queryContainers[$class] = $queryContainer;
+            static::entityQuery($queryContainer);
+            static::processStaticCallbacks('onExtendQuery', $queryContainer);
+        }
 
         $staticManipulators = [];
 
         /* @var EntityQueryManipulator $manipulator */
-        foreach ($entityQueryManipulators as $manipulator) {
+        foreach ($queryContainer as $manipulator) {
             if (!($manipulator instanceof EntityQueryManipulator)) {
                 continue;
             }
@@ -596,6 +612,10 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             return null;
         }
 
+        if ($name == 'trigger') {
+            return $this->processCallbacks(...$arguments);
+        }
+
         return parent::__call($name, $arguments);
     }
 
@@ -617,13 +637,26 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             return null;
         }
 
-        if (in_array($name, self::EVENT_NAMES)) {
+        if (array_key_exists($name, self::EVENT_NAMES)) {
             static::$classCallbacks[$className][$name][] = $arguments[0];
 
             return null;
         }
+
+        if ($name == 'trigger') {
+            return static::processStaticCallbacks(...$arguments);
+        }
     }
 
+    /**
+     * Process entity instance callbacks.
+     * Here we process both class and instance callbacks for `$this` entity instance
+     *
+     * @param string $eventName
+     * @param array  $params
+     *
+     * @return array
+     */
     protected function processCallbacks($eventName, ...$params)
     {
         $className = get_called_class();
@@ -631,9 +664,16 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         foreach ($classes as $class) {
             $callbacks = static::$classCallbacks[$class][$eventName] ?? [];
             foreach ($callbacks as $callback) {
-                // Static callbacks require an instance of entity that triggered the event as first parameter
                 if (is_callable($callback)) {
-                    $callback($this, ...$params);
+                    $staticParams = $params;
+                    // Check if callback requires an instance of entity that triggered the event
+                    $rf = new \ReflectionFunction($callback);
+                    $firstParameter = $rf->getParameters()[0] ?? null;
+                    if ($firstParameter && $firstParameter->getClass()->getName() === $className) {
+                        array_unshift($staticParams, $this);
+                    }
+                    // Execute callback
+                    $callback(...$staticParams);
                 }
             }
 
@@ -645,7 +685,35 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                     }
                 }
 
-                return;
+                break;
+            }
+        }
+    }
+
+    /**
+     * Process callbacks marked as 'static' which means they can only be executed from a static context
+     *
+     * @param string $eventName
+     * @param array  $params
+     *
+     * @return array
+     */
+    protected static function processStaticCallbacks($eventName, ...$params)
+    {
+        // Only events marked with `static` can be executed in static context
+        if (!static::EVENT_NAMES[$eventName]['static'] ?? false) {
+            return [];
+        }
+
+        // We need to get the entire inheritance tree and process callbacks for each class in the tree
+        $className = get_called_class();
+        $classes = array_values([$className] + class_parents($className));
+        foreach ($classes as $class) {
+            $callbacks = static::$classCallbacks[$class][$eventName] ?? [];
+            foreach ($callbacks as $callback) {
+                if (is_callable($callback)) {
+                    $callback(...$params);
+                }
             }
         }
     }

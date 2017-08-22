@@ -127,6 +127,10 @@ class Install implements LifeCycleInterface
             $collection = $entity->getEntityCollection();
             $indexes = $entity->getIndexes();
 
+            if($e['class'] === 'Apps\Webiny\Php\Entities\User') {
+                die(print_r($indexes));
+            }
+
             /* @var $index \Webiny\Component\Mongo\Index\AbstractIndex */
             foreach ($indexes as $index) {
                 try {

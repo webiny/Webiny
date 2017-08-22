@@ -38,12 +38,12 @@ class ServiceDispatcher extends AbstractApiDispatcher
 
         /* @var $service AbstractService */
         $service = new $serviceClass;
-        if (!method_exists($service, 'getApiContainer')) {
+        if (!method_exists($service, 'getApi')) {
             throw new ApiException('Services must use `ApiExpositionTrait` to expose public API!', 'WBY-SD-INVALID_SERVICE');
         }
 
         /* @var $matchedServiceMethod MatchedApiMethod */
-        $matchedServiceMethod = $service->getApiContainer()->getMethod($httpMethod, $url);
+        $matchedServiceMethod = $service->getApi()->getMethod($httpMethod, $url);
 
         if (!$matchedServiceMethod) {
             $message = 'No applicable methods are exposed in ' . $serviceClass;

@@ -28,7 +28,6 @@ class LoggerErrorGroup extends AbstractEntity
     public function __construct()
     {
         parent::__construct();
-
         /*
          * Api url or error message
          */
@@ -41,18 +40,6 @@ class LoggerErrorGroup extends AbstractEntity
 
         $this->attr('lastEntry')->datetime()->setToArrayDefault();
         $this->attr('errorCount')->integer()->setToArrayDefault()->setDefaultValue(0);
-
-        $this->api(function(ApiContainer $api) {
-            /**
-             * @api.name        Save report
-             * @api.description Saves an error report.
-             */
-            $api->post('/save-report', function () {
-                $clientData = $this->wRequest()->payload('client');
-                $errors = $this->wRequest()->payload('errors');
-                $this->saveReport($errors, $clientData);
-            })->setPublic();
-        });
     }
 
 
@@ -102,5 +89,20 @@ class LoggerErrorGroup extends AbstractEntity
         // errors today
         // errors in the last 7 days
         // total errors
+    }
+
+    protected function entityApi(ApiContainer $api)
+    {
+        parent::entityApi($api);
+
+        /**
+         * @api.name        Save report
+         * @api.description Saves an error report.
+         */
+        $api->post('/save-report', function () {
+            $clientData = $this->wRequest()->payload('client');
+            $errors = $this->wRequest()->payload('errors');
+            $this->saveReport($errors, $clientData);
+        })->setPublic();
     }
 }

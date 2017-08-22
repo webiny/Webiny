@@ -14,39 +14,37 @@ use Apps\Webiny\Php\PackageManager\App;
  */
 class Apps extends AbstractService
 {
-    function __construct()
+    protected function serviceApi(ApiContainer $api)
     {
-        parent::__construct();
-        $this->api(function (ApiContainer $api) {
-            /**
-             * @api.name Get all active apps meta
-             * @api.description This method returns a list of meta data for each active app
-             */
-            $api->get('/', function () {
-                return $this->getAppsMeta();
-            });
+        /**
+         * @api.name Get all active apps meta
+         * @api.description This method returns a list of meta data for each active app
+         */
+        $api->get('/', function () {
+            return $this->getAppsMeta();
+        });
 
-            /**
-             * @api.name Get single app/spa meta
-             * @api.description This method returns a set of meta data for given app name or all backend apps (if {appName} == "backend")
-             */
-            $api->get('{appName}', function ($appName = null) {
-                if ($appName === 'backend') {
-                    // Get Backend apps
-                    $apps = [];
-                    foreach ($this->getAppsMeta() as $meta) {
-                        if ($this->str($meta['name'])->endsWith('.Backend') && $meta['name'] != 'Webiny.Backend') {
-                            $apps[] = $meta;
-                        }
+        /**
+         * @api.name Get single app/spa meta
+         * @api.description This method returns a set of meta data for given app name or all backend apps (if {appName} == "backend")
+         */
+        $api->get('{appName}', function ($appName = null) {
+            if ($appName === 'backend') {
+                // Get Backend apps
+                $apps = [];
+                foreach ($this->getAppsMeta() as $meta) {
+                    if ($this->str($meta['name'])->endsWith('.Backend') && $meta['name'] != 'Webiny.Backend') {
+                        $apps[] = $meta;
                     }
-
-                    return $apps;
                 }
 
-                return $this->getAppsMeta($appName);
-            });
+                return $apps;
+            }
+
+            return $this->getAppsMeta($appName);
         });
     }
+
 
     /**
      * Get apps meta

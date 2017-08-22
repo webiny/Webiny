@@ -2,6 +2,7 @@
 
 namespace Apps\Webiny\Php\Entities;
 
+use Apps\Webiny\Php\DevTools\Entity\Indexes\IndexContainer;
 use Apps\Webiny\Php\DevTools\Interfaces\UserInterface;
 use Apps\Webiny\Php\DevTools\WebinyTrait;
 use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
@@ -33,7 +34,6 @@ class ApiToken extends AbstractEntity implements UserInterface
     public function __construct()
     {
         parent::__construct();
-        $this->index(new SingleIndex('token', 'token'));
         $this->attr('token')->char()->setSkipOnPopulate()->onToDb(function ($value) {
             if (!$value) {
                 $value = $this->crypt()->generateUserReadableString(40);
@@ -82,5 +82,11 @@ class ApiToken extends AbstractEntity implements UserInterface
         }
 
         return false;
+    }
+
+    protected static function entityIndexes(IndexContainer $indexes)
+    {
+        parent::entityIndexes($indexes);
+        $indexes->add(new SingleIndex('token', 'token'));
     }
 }

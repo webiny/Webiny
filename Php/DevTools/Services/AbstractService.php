@@ -7,6 +7,7 @@
 
 namespace Apps\Webiny\Php\DevTools\Services;
 
+use Apps\Webiny\Php\DevTools\Api\ApiContainer;
 use Apps\Webiny\Php\DevTools\Api\ApiExpositionTrait;
 use Apps\Webiny\Php\DevTools\Api\ApiMethod;
 use Apps\Webiny\Php\DevTools\WebinyTrait;
@@ -19,11 +20,14 @@ abstract class AbstractService
 {
     use WebinyTrait, ApiExpositionTrait, StdLibTrait;
 
-    function __construct()
+    protected static $classCallbacks = [];
+
+    abstract protected function serviceApi(ApiContainer $api);
+
+    public function __construct()
     {
         // Does nothing yet, but is here for possible future upgrades
     }
-
 
     public static function meta()
     {
@@ -33,7 +37,7 @@ abstract class AbstractService
             'class' => get_class($service)
         ];
 
-        foreach ($service->getApiContainer()->getMethods() as $httpMethod => $methods) {
+        foreach ($service->getApi()->getMethods() as $httpMethod => $methods) {
             /* @var $method ApiMethod */
             foreach ($methods as $pattern => $method) {
                 $data['methods'][] = [
@@ -46,5 +50,27 @@ abstract class AbstractService
         }
 
         return $data;
+    }
+
+    public static function onExtendApi($callback)
+    {
+        static::$classCallbacks[get_called_class()][] = $callback;
+    }
+
+    protected function initializeApi(ApiContainer $api)
+    {
+        $this->serviceApi($api);
+
+        // Process onExtendApi callbacks
+        $className = get_called_class();
+        $classes = array_values([$className] + class_parents($className));
+        foreach ($classes as $class) {
+            $callbacks = static::$classCallbacks[$class] ?? [];
+            foreach ($callbacks as $callback) {
+                if (is_callable($callback)) {
+                    $callback($api);
+                }
+            }
+        }
     }
 }
