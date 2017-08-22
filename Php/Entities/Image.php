@@ -1,4 +1,5 @@
 <?php
+
 namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\DevTools\Exceptions\AppException;
@@ -111,7 +112,12 @@ class Image extends File
                 } catch (ImageException $e) {
                     // Ignore format error - continue as is
                 }
-                $this->src = $parts->first() . ',' . base64_encode($image->getBinary());
+
+                if ($this->type == 'image/gif') {
+                    $this->src = $parts->first() . ',' . $parts->last()->val();
+                } else {
+                    $this->src = $parts->first() . ',' . base64_encode($image->getBinary());
+                }
             }
         }
 
