@@ -33,10 +33,6 @@ class Settings extends AbstractEntity
 
         $this->attr('key')->char()->setValidators('required,unique')->setToArrayDefault();
         $this->attr('settings')->object()->setToArrayDefault();
-
-        array_map(function ($method) {
-            unset($this->apiMethods[$method]);
-        }, ['get', 'patch', 'post', 'delete']);
     }
 
     /**
@@ -76,7 +72,7 @@ class Settings extends AbstractEntity
 
     protected function entityApi(ApiContainer $api)
     {
-        parent::entityApi($api);
+        // Not calling `parent` here because we do not want to expose CRUD methods for this entity
 
         /**
          * @api.name        Get settings
@@ -105,7 +101,7 @@ class Settings extends AbstractEntity
                 throw new AppException('You must specify a settings key for ' . get_called_class());
             }
             $record = $this->findOne(['key' => static::$key]);
-            if (empty($record)) {
+            if (!$record) {
                 $record = new self();
                 $record->key = static::$key;
             }

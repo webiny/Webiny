@@ -62,6 +62,7 @@ abstract class AbstractService
         $this->serviceApi($api);
 
         // Process onExtendApi callbacks
+        $api->setEvent('onExtendApi');
         $className = get_called_class();
         $classes = array_values([$className] + class_parents($className));
         foreach ($classes as $class) {
@@ -72,5 +73,6 @@ abstract class AbstractService
                 }
             }
         }
+        $api->setEvent(null);
     }
 }

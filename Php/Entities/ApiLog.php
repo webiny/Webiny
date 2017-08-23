@@ -62,6 +62,10 @@ class ApiLog extends AbstractEntity
     {
         parent::entityApi($api);
 
+        /**
+         * @api.name Get distinct HTTP methods of all api logs
+         * @api.description Returns a list of unique HTTP methods that are present in the database
+         */
         $api->get('/methods', function () {
             return $this->wDatabase()->distinct(static::$entityCollection, 'request.method');
         });

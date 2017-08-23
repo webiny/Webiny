@@ -454,7 +454,9 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     protected function initializeApi(ApiContainer $api)
     {
         $this->entityApi($api);
+        $api->setEvent('onExtendApi');
         $this->processCallbacks('onExtendApi', $api);
+        $api->setEvent(null);
     }
 
     /**

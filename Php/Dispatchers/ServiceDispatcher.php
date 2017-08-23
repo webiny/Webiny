@@ -43,7 +43,7 @@ class ServiceDispatcher extends AbstractApiDispatcher
         }
 
         /* @var $matchedServiceMethod MatchedApiMethod */
-        $matchedServiceMethod = $service->getApi()->getMethod($httpMethod, $url);
+        $matchedServiceMethod = $service->getApi()->matchMethod($httpMethod, $url);
 
         if (!$matchedServiceMethod) {
             $message = 'No applicable methods are exposed in ' . $serviceClass;

@@ -12,8 +12,9 @@ use Webiny\Component\Mongo\Index\SingleIndex;
 /**
  * Class Updates controls the updates that will be delivered to Webiny Dashboard
  *
- * @package Apps\Webiny\Php\Entities
+ * @property boolean $dismissed
  *
+ * @package Apps\Webiny\Php\Entities
  */
 class DashboardUpdates extends AbstractEntity
 {
@@ -54,7 +55,7 @@ class DashboardUpdates extends AbstractEntity
          * @api.description Retrieves the latest dashboard updates for the current user.
          */
         $api->get('latest', function () {
-            // first we populate the updates for that user
+            /* @var $user User */
             $user = $this->wAuth()->getUser();
             if (!$user) {
                 return false;
@@ -67,9 +68,15 @@ class DashboardUpdates extends AbstractEntity
             return $this->apiFormatList($result, '*');
         });
 
-        $api->get('{dashboardUpdate}/dismiss', function (DashboardUpdates $dashboardUpdate) {
-            $dashboardUpdate->dismissed = true;
-            $dashboardUpdate->save();
+        /**
+         * @api.name Dismiss an update
+         * @api.description This will mark update as read
+         */
+        $api->get('{id}/dismiss', function () {
+            $this->dismissed = true;
+            $this->save();
+
+            return true;
         });
     }
 

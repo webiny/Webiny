@@ -7,7 +7,6 @@
 
 namespace Apps\Webiny\Php\DevTools\Api;
 
-use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
 use Webiny\Component\Router\Route\Route;
 use Webiny\Component\StdLib\StdLibTrait;
 
@@ -22,43 +21,85 @@ class ApiContainer
 {
     use StdLibTrait;
 
-    /**
-     * @var \Closure
-     */
-    public $initializers = [];
-    public $instance;
+    private $context;
     private $apiMethods = [];
-    private $initialized = false;
     private $processingEvent = false;
 
-    public function __construct($instance)
+    public function __construct($context)
     {
-        $this->instance = $instance;
+        $this->context = $context;
     }
 
-    public function addInitializer(\Closure $initializer)
+    public function setEvent($event)
     {
-        $this->initializers[] = $initializer;
+        $this->processingEvent = $event;
     }
 
+    /**
+     * Create a GET method
+     *
+     * @param string   $pattern URL pattern
+     * @param \Closure $function Callback to execute when method is matched
+     *
+     * @return ApiMethod|null
+     */
     public function get($pattern, $function)
     {
         return $this->api('get', $pattern, $function);
     }
 
+    /**
+     * Create a POST method
+     *
+     * @param string   $pattern URL pattern
+     * @param \Closure $function Callback to execute when method is matched
+     *
+     * @return ApiMethod|null
+     */
     public function post($pattern, $function)
     {
         return $this->api('post', $pattern, $function);
     }
 
+    /**
+     * Create a PATCH method
+     *
+     * @param string   $pattern URL pattern
+     * @param \Closure $function Callback to execute when method is matched
+     *
+     * @return ApiMethod|null
+     */
     public function patch($pattern, $function)
     {
         return $this->api('patch', $pattern, $function);
     }
 
+    /**
+     * Create a DELETE method
+     *
+     * @param string   $pattern URL pattern
+     * @param \Closure $function Callback to execute when method is matched
+     *
+     * @return ApiMethod|null
+     */
     public function delete($pattern, $function)
     {
         return $this->api('delete', $pattern, $function);
+    }
+
+    /**
+     * Remove method from API container
+     *
+     * @param string $http HTTP method
+     * @param string $pattern Pattern
+     *
+     * @return $this
+     */
+    public function removeMethod($http, $pattern)
+    {
+        unset($this->apiMethods[$http][$pattern]);
+
+        return $this;
     }
 
     /**
@@ -69,7 +110,20 @@ class ApiContainer
         return $this->apiMethods;
     }
 
-    public function getMethod($httpMethod, $url)
+    public function getMethod($httpMethod, $pattern)
+    {
+        return $this->apiMethods[$httpMethod][$pattern] ?? null;
+    }
+
+    /**
+     * Get method that matches given $httpMethod and $url
+     *
+     * @param string $httpMethod
+     * @param string $url
+     *
+     * @return MatchedApiMethod|null
+     */
+    public function matchMethod($httpMethod, $url)
     {
         $httpMethod = strtolower($httpMethod);
         $methods = $this->apiMethods[$httpMethod] ?? [];
@@ -119,25 +173,6 @@ class ApiContainer
         return null;
     }
 
-    public function isInitialized()
-    {
-        return $this->initialized;
-    }
-
-    public function initialize()
-    {
-        $this->initialized = true;
-        foreach ($this->initializers as $initializer) {
-            call_user_func_array($initializer, [$this]);
-        }
-
-        if ($this->instance instanceof AbstractEntity) {
-            $this->processingEvent = true;
-            $this->instance->trigger('onExtendApi', $this);
-            $this->processingEvent = false;
-        }
-    }
-
     private function api($httpMethod, $pattern, $callable = null)
     {
         $pattern = $pattern != '/' ? trim($pattern, '/') : '/';
@@ -151,7 +186,7 @@ class ApiContainer
             if (isset($this->apiMethods[$httpMethod][$pattern])) {
                 $apiInstance = $this->apiMethods[$httpMethod][$pattern];
             } else {
-                $apiInstance = new ApiMethod($httpMethod, $pattern, $this);
+                $apiInstance = new ApiMethod($httpMethod, $pattern, $this->context);
             }
 
             $apiInstance->addCallback($callable, $this->processingEvent);

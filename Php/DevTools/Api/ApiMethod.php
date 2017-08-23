@@ -118,7 +118,7 @@ class ApiMethod
 
     public function addCallback($callable, $processingEvent = null)
     {
-        if ($processingEvent === 'onExtend') {
+        if ($processingEvent === 'onExtendApi') {
             array_unshift($this->eventCallbacks, $callable);
         } else {
             array_unshift($this->entityCallbacks, $callable);

@@ -51,20 +51,18 @@ class Release implements LifeCycleInterface
             }
 
             // Check if any indexes need to be created
-            if (count($indexes)) {
-                /* @var $index \Webiny\Component\Mongo\Index\AbstractIndex */
-                foreach ($indexes as $index) {
-                    $installed = in_array($index->getName(), $installedIndexes);
-                    if (!$installed) {
-                        echo "Creating '" . $index->getName() . "' index in '" . $collection . "' collection...\n";
-                        try {
-                            $this->wDatabase()->createIndex($collection, $index);
-                        } catch (RuntimeException $e) {
-                            if ($e->getCode() === 85) {
-                                echo "WARNING: another index with same fields already exists. Skipping creation of '" . $index->getName() . "' index.\n";
-                            } else {
-                                echo $e->getMessage() . "\n";
-                            }
+            /* @var $index \Webiny\Component\Mongo\Index\AbstractIndex */
+            foreach ($indexes as $index) {
+                $installed = in_array($index->getName(), $installedIndexes);
+                if (!$installed) {
+                    echo "Creating '" . $index->getName() . "' index in '" . $collection . "' collection...\n";
+                    try {
+                        $this->wDatabase()->createIndex($collection, $index);
+                    } catch (RuntimeException $e) {
+                        if ($e->getCode() === 85) {
+                            echo "WARNING: another index with same fields already exists. Skipping creation of '" . $index->getName() . "' index.\n";
+                        } else {
+                            echo $e->getMessage() . "\n";
                         }
                     }
                 }
@@ -79,18 +77,19 @@ class Release implements LifeCycleInterface
                 }
             }
         }
-    }
+}
 
-    /**
-     * Install production JS dependencies
-     * Default: `npm install --production` is executed in the root of the app
-     *
-     * @param App $app
-     */
-    protected function installJsDependencies($app)
-    {
-        if (file_exists($app->getPath() . '/package.json')) {
-            exec('cd ' . $app->getPath() . ' && yarn install --production');
-        }
+/**
+ * Install production JS dependencies
+ * Default: `npm install --production` is executed in the root of the app
+ *
+ * @param App $app
+ */
+protected
+function installJsDependencies($app)
+{
+    if (file_exists($app->getPath() . '/package.json')) {
+        exec('cd ' . $app->getPath() . ' && yarn install --production');
     }
+}
 }
