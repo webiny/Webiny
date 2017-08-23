@@ -20,11 +20,11 @@
 	align-items: stretch;
 }
 
-.navigation {
+.body .navigation {
 	padding: 0;
 	border: none;
 	background-color: #F3F3F3;
-	margin-bottom: 0;
+	margin: 0;
 }
 
 .navigation.stacked {

@@ -10,6 +10,7 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
 
         this.editor = null;
         this.delay = null;
+        this.index = 0;
         this.api = new Webiny.Api.Endpoint(props.imageApi);
         this.uploader = new Webiny.Api.Uploader(this.api);
 
@@ -80,6 +81,9 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
     }
 
     fileChanged(file, error) {
+        // mark current index
+        this.index = this.editor.getSelection(true).index;
+
         if (error) {
             this.setState({error});
             return;
@@ -98,8 +102,10 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
         this.uploader.upload(data, (percentage) => {
             this.setState({uploadPercentage: percentage});
         }, file => {
-            this.editor.insertEmbed(this.editor.getSelection(true).index, 'image', file.src);
+            this.editor.insertEmbed(this.index, 'image', file.entity.src);
+            // reposition index to previous position
             this.setState({uploadPercentage: null});
+            this.editor.setSelection({index: this.index, length: 0});
         });
     }
 
