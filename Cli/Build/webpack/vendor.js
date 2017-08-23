@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const Visualizer = require('webpack-visualizer-plugin');
 const Webiny = require('webiny-cli/lib/webiny');
+const ModuleIdsPlugin = require('./plugins/ModuleIds');
 
 module.exports = function (app) {
     const sharedResolve = require('./resolve')(app);
@@ -11,6 +12,7 @@ module.exports = function (app) {
     const outputPath = path.resolve(Webiny.projectRoot(), 'public_html/build/' + process.env.NODE_ENV, app.getPath());
 
     const plugins = [
+        new ModuleIdsPlugin(),
         new webpack.DefinePlugin({
             'DEVELOPMENT': process.env.NODE_ENV === 'development',
             'PRODUCTION': process.env.NODE_ENV === 'production',

@@ -9,6 +9,7 @@ const Visualizer = require('webpack-visualizer-plugin');
 const _ = require('lodash');
 const AssetsPlugin = require('./plugins/Assets');
 const i18nPlugin = require('./plugins/i18n');
+const ModuleIdsPlugin = require('./plugins/ModuleIds');
 const ChunkIdsPlugin = require('./plugins/ChunkIds');
 const Webiny = require('webiny-cli/lib/webiny');
 
@@ -26,7 +27,8 @@ module.exports = function (app) {
 
     const i18nPluginInstance = new i18nPlugin();
     const plugins = [
-        // Generate custom chunk ids and names
+        new webpack.NamedModulesPlugin(),
+        new ModuleIdsPlugin(),
         new ChunkIdsPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.DefinePlugin({

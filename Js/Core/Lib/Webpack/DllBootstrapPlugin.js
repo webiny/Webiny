@@ -9,7 +9,7 @@ class DllBootstrapPlugin {
                 const bootstrapEntry = this.options.module;
                 const module = chunk.mapModules(m => m).find(m => m.rawRequest === bootstrapEntry);
                 if (module) {
-                    source = `__webpack_require__(${module.id});\n${source}`;
+                    source = `__webpack_require__("${module.id}");\n${source}`;
                 }
 
                 return source;

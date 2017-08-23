@@ -8,6 +8,7 @@ const Visualizer = require('webpack-visualizer-plugin');
 // Custom libs
 const AssetsPlugin = require('./plugins/Assets');
 const i18nPlugin = require('./plugins/i18n');
+const ModuleIdsPlugin = require('./plugins/ModuleIds');
 const ChunkIdsPlugin = require('./plugins/ChunkIds');
 const Webiny = require('webiny-cli/lib/webiny');
 
@@ -24,7 +25,7 @@ module.exports = function (app, config) {
     });
 
     let plugins = [
-        // Generate custom chunk ids and names
+        new ModuleIdsPlugin(),
         new ChunkIdsPlugin(),
         // Define environment and other constants
         new webpack.DefinePlugin({
@@ -52,7 +53,6 @@ module.exports = function (app, config) {
                 reduceInitial: {disable: true}
             }
         }),
-        new webpack.optimize.OccurrenceOrderPlugin(),
         new Visualizer({filename: 'stats.html'})
     ];
 
