@@ -43,7 +43,7 @@ class View extends Webiny.Ui.Component {
 
     hide() {
         if (this.props.modal && this.state.show) {
-            return this.refs.view.hide();
+            return this.view.hide();
         }
 
         if (this.state.show) {
@@ -55,12 +55,13 @@ class View extends Webiny.Ui.Component {
 }
 
 View.defaultProps = {
+    view: null,
     defaultView: false,
     modal: false,
     renderer() {
         if (this.state.show) {
             const view = this.props.children(this.props.container.showView, ...this.state.params);
-            const props = {ref: 'view'};
+            const props = {ref: ref => this.view = ref};
             if (this.props.modal) {
                 // onComponentDidMount is a special callback that will be executed once the actual component is mounted
                 // We need access to the actual mounted instance of component and not the proxy ComponentWrapper
@@ -77,4 +78,4 @@ View.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(View);
+export default Webiny.createComponent(View, {api: ['show', 'hide', 'isShown']});

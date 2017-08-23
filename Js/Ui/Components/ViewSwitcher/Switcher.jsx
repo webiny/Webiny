@@ -31,7 +31,7 @@ class Switcher extends Webiny.Ui.Component {
 
     showView(name) {
         return (...params) => {
-            if (params.length && _.isFunction(params[0].persist)) {
+            if (params.length > 0 && params[0] !== undefined && _.isFunction(params[0].persist)) {
                 params = [];
             }
 
