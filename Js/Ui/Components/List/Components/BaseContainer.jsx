@@ -80,7 +80,7 @@ class BaseContainer extends Webiny.Ui.Component {
             if (sorter === '') {
                 return;
             }
-            if (_.startsWith(sorter, '-')) {
+            if (sorter.startsWith('-')) {
                 sorters[_.trimStart(sorter, '-')] = -1;
             } else {
                 sorters[sorter] = 1;
@@ -128,7 +128,7 @@ class BaseContainer extends Webiny.Ui.Component {
             if (sorter === '') {
                 return;
             }
-            if (_.startsWith(sorter, '-')) {
+            if (sorter.startsWith('-')) {
                 state.sorters[_.trimStart(sorter, '-')] = -1;
             } else {
                 state.sorters[sorter] = 1;
@@ -142,7 +142,7 @@ class BaseContainer extends Webiny.Ui.Component {
 
         // Get filters
         _.each(params, (value, name) => {
-            if (!_.startsWith(name, '_')) {
+            if (!name.startsWith('_')) {
                 state.filters[name] = value;
             }
         });
@@ -258,7 +258,7 @@ class BaseContainer extends Webiny.Ui.Component {
     tableProps(tableProps) {
         // Pass relevant props from BaseContainer to Table
         _.each(this.props, (value, name) => {
-            if (_.startsWith(name, 'field') && name !== 'fields' || _.startsWith(name, 'action')) {
+            if (name.startsWith('field') && name !== 'fields' || name.startsWith('action')) {
                 tableProps[name] = value;
             }
         });

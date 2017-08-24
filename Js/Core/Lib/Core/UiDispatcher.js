@@ -47,7 +47,7 @@ class UiDispatcher {
             // TODO: see if this is necessary at all!!!!
             const signalParams = [];
             _.each(params, p => {
-                if (_.startsWith(p, '@')) {
+                if (p.startsWith('@')) {
                     // Extract parameter definition
                     const param = _.trimStart(p, '@');
                     if (p.indexOf(':') < 0) {

@@ -31,14 +31,14 @@ function replaceVariables(text, values) {
     if (stringOutput) {
         let output = '';
         parts.forEach(part => {
-            output += _.startsWith(part, '{') ? values[_.trim(part, '{}')] : part;
+            output += part.startsWith('{') ? values[_.trim(part, '{}')] : part;
         });
         return output;
     }
 
     // Let's create a JSX output
     return parts.map((part, index) => {
-        if (_.startsWith(part, '{')) {
+        if (part.startsWith('{')) {
             return <webiny-i18n-part key={index}>{values[_.trim(part, '{}')]}</webiny-i18n-part>;
         }
         return <webiny-i18n-part key={index}>{part}</webiny-i18n-part>;
