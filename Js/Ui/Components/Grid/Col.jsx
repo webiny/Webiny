@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'lodash';
 import Webiny from 'webiny';
 
 const propsMap = {
@@ -25,7 +24,7 @@ function getCssClass(key, val) {
     if (key === 'all') {
         return `${getCssClass('md', val)}`;
     }
-    return _.has(propsMap, key) ? `col-${propsMap[key]}-${val}` : false;
+    return propsMap[key] ? `col-${propsMap[key]}-${val}` : false;
 }
 
 class Col extends Webiny.Ui.Component {
@@ -36,23 +35,24 @@ Col.defaultProps = {
     className: null,
     style: null,
     renderer() {
-        let props = _.clone(this.props);
+        let props = Object.assign({}, this.props);
         let cssClasses = [];
 
-        const cls = _.trim(props.className);
+        const cls = typeof props.className === 'string'  ? props.className.trim() : '';
         if (cls !== '') {
             cssClasses = cls.split(' ');
         }
         delete props['className'];
 
-        _.forEach(props, (cssClass, key) => {
-            const newClass = getCssClass(key, cssClass);
+        Object.keys(props).forEach(key => {
+            const newClass = getCssClass(key, props[key]);
             if (newClass) {
                 cssClasses.push(newClass);
             }
         });
 
-        props = _.omit(props, ['children', 'renderer', 'className', 'all', 'renderIf'].concat(Object.keys(propsMap)));
+
+        ['children', 'renderer', 'className', 'all', 'renderIf'].concat(Object.keys(propsMap)).forEach(key => delete props[key]);
 
         return (
             <div className={this.classSet(cssClasses)} {...props}>

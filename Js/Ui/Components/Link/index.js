@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'lodash';
 import Webiny from 'webiny';
 import styles from './styles.css';
 
@@ -12,7 +11,7 @@ class Link extends Webiny.Ui.Component {
     }
 
     getLinkProps() {
-        const props = _.clone(this.props);
+        const props = Object.assign({}, this.props);
         const {styles} = this.props;
 
         props.href = 'javascript:void(0)';
@@ -28,7 +27,7 @@ class Link extends Webiny.Ui.Component {
                 props.href = props.url;
             } else if (props.route) {
                 let route = props.route;
-                if (_.isString(route)) {
+                if (typeof route === 'string') {
                     route = route === 'current' ? Webiny.Router.getActiveRoute() : Webiny.Router.getRoute(route);
                 }
 
@@ -94,13 +93,11 @@ class Link extends Webiny.Ui.Component {
         }
 
         const finalProps = [];
-        _.each(props, (value, prop) => {
-            if (_.includes(this.allowedProps, prop) || _.startsWith(prop, 'data-')) {
-                finalProps[prop] = value;
+        Object.keys(props).forEach(prop => {
+            if (this.allowedProps.includes(prop) || (prop + '').startsWith('data-')) {
+                finalProps[prop] = props[prop];
             }
         });
-
-
 
         return finalProps;
     }
