@@ -55,7 +55,9 @@ class Develop extends Build {
                     Webiny.log(`webpack built ${s.name} vendors ${s.hash} in ${s.time} ms`);
                 });
                 const appConfigs = this.getAppConfigs();
-                return this.buildAndWatch(appConfigs, statsConfig);
+                return Webiny.processHook('before-webpack', {configs: appConfigs}).then(() => {
+                    return this.buildAndWatch(appConfigs, statsConfig);
+                });
             });
         }
 
