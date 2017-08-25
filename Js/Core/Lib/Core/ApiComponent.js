@@ -39,6 +39,9 @@ class ApiComponent {
                 context.api = new ApiEndpoint(context.props.api, config);
             } else {
                 context.api = context.props.api;
+                if (context.props.url) {
+                    context.api.setUrl(context.props.url);
+                }
                 const apiQuery = context.api.getQuery();
                 _.merge(apiQuery, normalizeParams(_.pick(context.props, apiProps)));
                 context.api.setQuery(apiQuery);
