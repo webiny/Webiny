@@ -7,11 +7,9 @@
 
 namespace Apps\Webiny\Php\PackageManager;
 
-use Apps\Webiny\Php\DevTools\Exceptions\AppException;
 use Apps\Webiny\Php\DevTools\LifeCycle\LifeCycleInterface;
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\Storage\Directory\Directory;
-use Webiny\Component\Storage\File\File;
 
 /**
  * Class that holds information about an application.
@@ -48,6 +46,35 @@ class App extends AbstractPackage
         $this->parseRoutes($info);
     }
 
+    /**
+     * Get a single JsApp or an array of all JS apps from current Webiny app
+     *
+     * @param null $jsApp
+     *
+     * @return JsApp|array
+     */
+    public function getJsApps($jsApp = null)
+    {
+        $storage = $this->wStorage('Apps');
+        $directory = new Directory($this->getName() . '/Js', $storage, 0);
+        $jsApps = [];
+        /* @var $dir Directory */
+        foreach ($directory as $dir) {
+            if ($dir instanceof Directory) {
+                $jsAppInstance = new JsApp($this, $dir);
+                if ($jsApp) {
+                    if ($jsAppInstance->getName() == $jsApp) {
+                        return $jsAppInstance;
+                    }
+                } else {
+                    $jsApps[] = $jsAppInstance;
+                }
+            }
+        }
+
+        return $jsApps;
+    }
+
     public function getVersion()
     {
         return $this->version;
@@ -75,38 +102,18 @@ class App extends AbstractPackage
         return 'Apps/' . $this->name . $version;
     }
 
-    public function getBuildPath()
-    {
-        $env = $this->wIsProduction() ? 'production' : 'development';
-
-        return '/build/' . $env . '/' . $this->name . $this->getVersionPath();
-    }
-
     public function getBuildMeta($jsApp = null)
     {
-        if ($this->wIsProduction()) {
-            $storage = $this->wStorage('ProductionBuild');
-        } else {
-            $storage = $this->wStorage('DevBuild');
-        }
-
-        $filter = $jsApp ? $this->name . '_' . $jsApp . '\/meta\.json' : $this->name . '_\S+\/meta\.json';
-        $files = new Directory('', $storage, 1, '/' . $filter . '/');
-        $jsAppsMeta = [];
-        /* @var $file File */
-        foreach ($files as $file) {
-            $data = json_decode($file->getContents(), true);
-            if ($jsApp && $this->getName() . '.' . $jsApp === $data['name']) {
-                return $data;
+        $meta = [];
+        foreach ($this->getJsApps() as $app) {
+            if ($jsApp && $app->getName() == $jsApp) {
+                return $app->getBuildMeta();
             }
-            $jsAppsMeta[] = $data;
+
+            $meta[] = $app->getBuildMeta();
         }
 
-        if ($jsApp) {
-            throw new AppException('App "' . $this->getName() . '.' . $jsApp . '" was not found!', 'WBY-APP_NOT_FOUND');
-        }
-
-        return $jsAppsMeta;
+        return $meta;
     }
 
     public function getEntities()

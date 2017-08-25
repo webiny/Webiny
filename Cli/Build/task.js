@@ -32,9 +32,12 @@ class Build {
 
         return this.buildConfigs(vendorConfigs).then(() => {
             const appConfigs = this.getAppConfigs();
-            return this.buildConfigs(appConfigs).then(stats => {
-                return new Bundler(stats, {assetRules: this.config.assetRules}).bundle().then(() => stats);
+            return Webiny.processHook('before-webpack', {configs: appConfigs}).then(() => {
+                return this.buildConfigs(appConfigs).then(stats => {
+                    return new Bundler(stats, {assetRules: this.config.assetRules}).bundle().then(() => stats);
+                });
             });
+
         });
     }
 

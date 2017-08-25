@@ -8,6 +8,7 @@
 namespace Apps\Webiny\Php\DevTools;
 
 use Apps\Webiny\Php\DevTools\Exceptions\AppException;
+use Apps\Webiny\Php\PackageManager\App;
 use Webiny\Component\StdLib\SingletonTrait;
 
 /**
@@ -22,6 +23,14 @@ class Apps implements \IteratorAggregate
 
     private $apps = [];
 
+    /**
+     * Get App instance
+     *
+     * @param $name
+     *
+     * @return App
+     * @throws AppException
+     */
     public function getApp($name)
     {
         if (!isset($this->apps['Apps/' . $name])) {

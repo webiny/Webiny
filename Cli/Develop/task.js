@@ -60,7 +60,10 @@ class Develop extends Build {
         }
 
         const appConfigs = this.getAppConfigs();
-        return this.buildAndWatch(appConfigs, statsConfig);
+        return Webiny.processHook('before-webpack', {configs: appConfigs}).then(() => {
+            return this.buildAndWatch(appConfigs, statsConfig);
+        });
+
     }
 
     buildAndWatch(configs, statsConfig) {

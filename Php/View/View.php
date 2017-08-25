@@ -7,9 +7,9 @@
 
 namespace Apps\Webiny\Php\View;
 
+use Apps\Webiny\Php\DevTools\Config;
 use Apps\Webiny\Php\DevTools\Request;
 use Apps\Webiny\Php\DevTools\WebinyTrait;
-use Webiny\Component\Config\Config;
 use Webiny\Component\StdLib\StdLibTrait;
 
 
@@ -24,7 +24,7 @@ class View
      */
     public static function wConfig()
     {
-        return \Apps\Webiny\Php\DevTools\Config::getInstance();
+        return Config::getInstance();
     }
 
     /**
@@ -47,6 +47,6 @@ class View
         $parts = $this->str($app)->explode('.');
         $app = $this->wApps($parts[0]);
 
-        return $this->wConfig()->get('Application.WebPath') . $app->getBuildPath() . '_' . $parts[1] . '/' . ltrim($path, '/');
+        return $this->wConfig()->get('Application.WebPath') . $app->getJsApps($parts[1])->getPublicAssetPath($path);
     }
 }

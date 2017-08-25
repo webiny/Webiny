@@ -26,10 +26,6 @@ class i18nPlugin {
         });
     }
 
-    getTarget() {
-        return this.i18n;
-    }
-
     getLoader() {
         return {
             loader: 'i18n-loader',
