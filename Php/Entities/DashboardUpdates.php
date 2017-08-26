@@ -97,9 +97,7 @@ class DashboardUpdates extends AbstractEntity
             if (isset($u['image']['src'])) {
                 $update->image = $u['image']['src'];
             }
-            if (empty($u['hasLink'])) {
-                $update->hasLink = $u['hasLink'];
-            }
+            $update->hasLink = $u['hasLink'];
             $update->userId = $user->id;
             $update->save();
         }
