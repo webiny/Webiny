@@ -41,7 +41,7 @@ class Revert {
 
         return new Promise((resolve, reject) => {
             try {
-                ssh.command(`ls -1d ${rootFolder}/releases/*/`, res => {
+                ssh.command(`ls -1dt ${rootFolder}/releases/*/`, res => {
                     const list = res.stdout;
                     let choices = [];
                     _.trimEnd(list, '\n').split('\n').map(function (line) {
