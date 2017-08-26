@@ -50,7 +50,7 @@ class DashboardUpdates extends AbstractEntity
             $this->populateUpdates($user);
 
             // once populated, filter and display the results
-            $result = self::find(['dismissed' => false], ['-order'], 10);
+            $result = self::find(['dismissed' => false, 'userId' => $user->id], ['-order'], 10);
 
             return $this->apiFormatList($result, '*');
         });
@@ -66,7 +66,7 @@ class DashboardUpdates extends AbstractEntity
     {
         // request the latest updates from webiny hub$ctx = stream_context_create(array('http'=>
         // suppress errors and set timeout to 3s
-        $context = stream_context_create(['http'=> ['timeout' => 3]]);
+        $context = stream_context_create(['http' => ['timeout' => 3]]);
         $updates = @file_get_contents('https://api.webiny.com/entities/the-hub/updates/latest', false, $context);
         if (!$updates) {
             return;
@@ -94,10 +94,10 @@ class DashboardUpdates extends AbstractEntity
             $update->title = $u['title'];
             $update->content = $u['content'];
             $update->order = $u['order'];
-            if(isset($u['image']['src'])){
+            if (isset($u['image']['src'])) {
                 $update->image = $u['image']['src'];
             }
-            if(empty($u['hasLink'])){
+            if (empty($u['hasLink'])) {
                 $update->hasLink = $u['hasLink'];
             }
             $update->userId = $user->id;
