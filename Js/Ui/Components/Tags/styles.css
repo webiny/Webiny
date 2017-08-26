@@ -35,6 +35,7 @@
 	background-color: #FBFBFB;
 	border: none;
 	outline: none;
+	font-size: 14px;
 }
 .container .removeKeyword {
 	position: absolute;
