@@ -46,6 +46,7 @@
   z-index: 5000 !important;
   opacity: 0;
 
+  white-space: normal;
   animation: fadeIn 225ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
 
   ul {
