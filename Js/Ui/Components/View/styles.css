@@ -67,15 +67,17 @@
 
 .chartBlock, .infoBlock {
 	width: 100%;
-	margin-top: 30px;
+	margin-top: 0;
 }
 
 .chartBlock .header, .infoBlock .header {
+	display: flex;
+	width: 100%;
 	position: relative;
-	background-color: white;
-	min-height: 75px;
-	padding: 30px 30px 0 30px;
-	z-index: 10;
+	padding: 15px 0 15px 5px;
+	background-color: transparent;
+	margin: 0;
+	flex-direction: column;
 }
 
 .chartBlock .header:after, .infoBlock .header:after {
@@ -86,30 +88,87 @@
 }
 
 .chartBlock .title, .infoBlock .title {
-	margin: 0 20px 0 0;
-	font-weight: 600;
-	font-size: 22px;
+	margin: 10px 0 0;
+	font-size: 21px;
+	color: #393939;
+	font-weight: 400;
+	text-transform: uppercase;
 	display: inline-block;
 	vertical-align: middle;
-	float: left;
-	max-width: 75%;
+	width: 100%;
 }
 
 .chartBlock .titleLight, .infoBlock .titleLight {
 	margin: 5px 0 0 0;
 	display: inline-block;
 	font-size: 13px;
-	vertical-align: middle;
-	float: right;
 	text-transform: uppercase;
 }
 
 .chartBlock .container, .infoBlock .container {
-	padding: 5px 20px 30px 20px;
+	padding: 15px 25px;
 	background-color: white;
-	min-height: 295px;
+	min-height: 310px;
 	overflow: hidden;
 	z-index: 20;
+}
+
+.chartBlock .container ul, .infoBlock .container ul {
+	margin-bottom: 25px;
+	color: #393939;
+	font-size: 1.2em;
+	list-style: none;
+}
+
+.chartBlock .container ul li, .infoBlock .container ul li {
+	list-style-type: none;
+	padding: 0;
+	display: flex;
+	margin: 25px 0;
+	font-size: 1em;
+	line-height: 150%;
+}
+
+/* dashboard view */
+.dashboard {
+	background-color: #f2f2f2;
+	padding: 0;
+}
+
+.dashboard .content {
+	padding: 50px 50px;
+	background-color: #f2f2f2;
+	display: flex;
+	flex-direction: column;
+}
+
+.dashboard .viewHeader {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	background-color: #fff;
+	padding: 15px 50px;
+	width: 100%;
+}
+
+.dashboard .viewHeader a, .dashboard .viewHeader button {
+	top: 0;
+}
+
+.dashboard .dashboardHeaderLeft {
+	display: inline-block;
+	margin-bottom: 0;
+}
+
+.dashboard .dashboardHeaderCenter, .dashboard .dashboardHeaderRight {
+	position: relative;
+	top: auto;
+	left: auto;
+	right: auto;
+	transform: none;
+	float: none;
+	margin-bottom: 0;
 }
 
 /* make some bits nicer for mobile */
@@ -139,11 +198,34 @@
 		font-size: 1.25em;
 	}
 
+	.dashboard .content {
+		padding: 20px 20px;
+	}
+
+	.dashboard .viewHeader {
+		flex-direction: column;
+	}
+
+	.dashboard .dashboardHeaderLeft {
+		margin-top: 20px;
+		margin-bottom: 10px;
+	}
+
+	.dashboard .dashboardHeaderCenter, .dashboard .dashboardHeaderRight {
+		margin-bottom: 10px;
+	}
+
 	.viewContent {
 		padding: 10px;
 	}
 
 	.viewContent .panel .panelBody {
 		padding: 20px;
+	}
+
+	.chartBlock .title, .infoBlock .title {
+		text-align: center;
+		width: 100%;
+		max-width: 100%;
 	}
 }

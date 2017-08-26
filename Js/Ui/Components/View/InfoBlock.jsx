@@ -9,9 +9,10 @@ class InfoBlock extends Webiny.Ui.Component {
 InfoBlock.defaultProps = {
     title: '',
     description: '',
+    className: '',
     renderer() {
         return (
-            <div className={styles.infoBlock}>
+            <div className={this.classSet(styles.infoBlock, this.props.className)}>
                 <div className={styles.header}>
                     <h4 className={styles.title}>{this.props.title}</h4>
                     <div className={styles.titleLight}>{this.props.description}</div>

@@ -7,11 +7,13 @@ import InfoBlock from './InfoBlock';
 import Body from './Body';
 import Header from './Header';
 import Footer from './Footer';
+import HeaderCenter from './DashboardComponents/HeaderCenter';
 
 View.Form = FormView;
 View.List = ListView;
 View.Dashboard = DashboardView;
 View.Header = Header;
+View.Header.Center = HeaderCenter;
 View.Body = Body;
 View.Footer = Footer;
 

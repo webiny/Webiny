@@ -1,7 +1,11 @@
 import React from 'react';
 import Webiny from 'webiny';
 import Header from './Header';
+import HeaderLeft from './DashboardComponents/HeaderLeft';
+import HeaderCenter from './DashboardComponents/HeaderCenter';
+import HeaderRight from './DashboardComponents/HeaderRight';
 import Body from './Body';
+import styles from './styles.css';
 
 class DashboardView extends Webiny.Ui.Component {
 
@@ -12,7 +16,9 @@ class DashboardView extends Webiny.Ui.Component {
     }
 
     parseLayout(children) {
-        this.headerComponent = null;
+        this.headerLeft = null;
+        this.headerCenter = null;
+        this.headerRight = [];
         this.bodyComponent = null;
         this.footerComponent = null;
 
@@ -22,15 +28,30 @@ class DashboardView extends Webiny.Ui.Component {
 
         React.Children.map(children, child => {
             if (Webiny.isElementOfType(child, Header)) {
-                this.headerComponent = child;
+                this.headerLeft = <HeaderLeft title={child.props.title} description={child.props.description}/>;
+
+                React.Children.map(child.props.children, subChild => {
+                    if (Webiny.isElementOfType(subChild, HeaderCenter)) {
+                        this.headerCenter = <HeaderCenter {...subChild.props}/>;
+                    } else {
+                        this.headerRight.push(subChild);
+                    }
+                });
+
                 return;
             }
 
             if (Webiny.isElementOfType(child, Body)) {
-                this.bodyComponent = React.createElement('div', {className: ''}, child.props.children);
+                this.bodyComponent = child.props.children;
                 return;
             }
         });
+
+        if (this.headerRight.length > 0) {
+            this.headerRight = <HeaderRight children={this.headerRight}/>
+        } else {
+            this.headerRight = null;
+        }
     }
 
     componentWillMount() {
@@ -46,10 +67,18 @@ class DashboardView extends Webiny.Ui.Component {
 
 DashboardView.defaultProps = {
     renderer() {
+
+        const {styles} = this.props;
+
         return (
-            <view>
-                {this.headerComponent}
-                <div className="dashboard-content">
+            <view className={styles.dashboard}>
+                <div className={styles.viewHeader}>
+                    {this.headerLeft}
+                    {this.headerCenter}
+                    {this.headerRight}
+                </div>
+
+                <div className={styles.content}>
                     {this.bodyComponent}
                 </div>
             </view>
@@ -57,4 +86,4 @@ DashboardView.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(DashboardView);
+export default Webiny.createComponent(DashboardView, {styles});
