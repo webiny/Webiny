@@ -3,6 +3,7 @@ const fs = require('fs-extra');
 const os = require('os');
 const chalk = require('chalk');
 const gulp = require('gulp');
+const merge = require('merge-stream');
 const gulpZip = require('gulp-zip');
 const gulpPrint = require('gulp-print');
 const Webiny = require('webiny-cli/lib/webiny');
@@ -24,6 +25,10 @@ class Release {
             '!vendor/**/*.git'
         ];
 
+        const appPaths = [
+            'Apps/**/Js/*/App.js'
+        ];
+
         const parts = path.parse(config.target);
         if (!parts.dir.startsWith('/') && !parts.dir.startsWith('~/')) {
             parts.dir = Webiny.projectRoot(parts.dir);
@@ -36,7 +41,7 @@ class Release {
         parts.dir = path.resolve(parts.dir);
 
         return new Promise((resolve, reject) => {
-            gulp.src(paths, {base: '.'})
+            merge(gulp.src(paths, {base: '.'}), gulp.src(appPaths, {base: '.'}))
                 .pipe(gulpZip(parts.name + '.zip'))
                 .pipe(gulp.dest(parts.dir))
                 .pipe(gulpPrint(() => {
