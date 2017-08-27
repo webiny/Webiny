@@ -114,13 +114,13 @@
 }
 
 .btnLarge .icon {
-	font-size: 32px;
+	font-size: 21px;
 	height: 20px;
 	margin: 0px -8px 1px 0px;
 }
 
 .btnLarge .iconRight {
-	margin: -2px -8px 1px 0px; /* sven: top margin was originally 0, I set it to -2px to match the icon on login page */
+	margin: 3px -8px 1px 2px; /* sven: top margin was originally 0, I set it to -2px to match the icon on login page */
 	float: right;
 }
 
@@ -144,5 +144,6 @@
 
 	.btn .iconRight {
 		margin: -2px 5px 0px 0px;
+		font-size: 32px;
 	}
 }
