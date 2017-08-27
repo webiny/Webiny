@@ -12,3 +12,8 @@
 .ql-snow .ql-out-bottom, .ql-snow .ql-out-top {
   visibility: visible;
 }
+
+// firefox fix
+.ql-snow .ql-formats::after, .ql-snow.ql-toolbar::after, .ql-snow .ql-toolbar::after {
+  display: none;
+}

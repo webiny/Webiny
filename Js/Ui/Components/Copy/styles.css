@@ -1,7 +1,8 @@
 .input {
 	color: #393939;
 	background-color: #f5f5f5;
-	padding: 21px 95px 21px 15px;
+	padding: 10px 15px;
+	height: 45px;
 	border: 1px solid #cdcdcd;
 	width: 100%;
 	line-height: 135%;
@@ -13,7 +14,6 @@
 	z-index: 2;
 	float: left;
 	margin-bottom: 0;
-	height: 34px;
 	font-size: 14px;
 	font-family: "Source Sans Pro";
 }

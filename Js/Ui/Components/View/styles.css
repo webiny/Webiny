@@ -80,13 +80,6 @@
 	flex-direction: column;
 }
 
-.chartBlock .header:after, .infoBlock .header:after {
-	content: "";
-	display: block;
-	clear: both;
-	float: none;
-}
-
 .chartBlock .title, .infoBlock .title {
 	margin: 10px 0 0;
 	font-size: 21px;
