@@ -124,11 +124,11 @@ VideoEditComponent.defaultProps = {
                     <div className="video-plugin-wrapper">
                         <Ui.Grid.Row>
                             <Ui.Grid.Col xs={12}>
-                                <ButtonGroup className="pull-right">
+                                <Ui.ButtonGroup className="pull-right">
                                     <button {...btnProps('left')}>Left</button>
                                     <button {...btnProps('center')}>Center</button>
                                     <button {...btnProps('right')}>Right</button>
-                                </ButtonGroup>
+                                </Ui.ButtonGroup>
                             </Ui.Grid.Col>
                         </Ui.Grid.Row>
 
