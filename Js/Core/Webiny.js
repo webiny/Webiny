@@ -11,7 +11,6 @@ class Webiny {
         this.Apps = {};
         this.Config = {};
         this.EMPTY = '__webiny_empty__';
-        this.NOOP = function(){};
         this.Page = new Page();
         this.onRenderCallbacks = [];
         this.firstRenderDone = false;
