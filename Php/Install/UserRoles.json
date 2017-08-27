@@ -35,5 +35,11 @@
         "permissions": [
             "webiny-dashboard"
         ]
+    },
+    {
+        "name": "Webiny API Discoverer",
+        "slug": "webiny-api-discoverer",
+        "description": "This role allows user to discover API using Postman",
+        "permissions": []
     }
 ]
