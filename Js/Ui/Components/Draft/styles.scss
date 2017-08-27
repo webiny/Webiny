@@ -277,6 +277,9 @@
 
     .plugin-block-wrapper {
       position: relative;
+      img{
+        max-width: 100%;
+      }
     }
   }
 
