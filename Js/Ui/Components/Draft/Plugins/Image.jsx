@@ -94,11 +94,11 @@ ImageEditComponent.defaultProps = {
                     <div className="image-plugin-wrapper">
                         <Ui.Grid.Row>
                             <Ui.Grid.Col xs={12}>
-                                <ButtonGroup className="pull-right">
+                                <Ui.ButtonGroup className="pull-right">
                                     <button {...btnProps('left')}>Left</button>
                                     <button {...btnProps('center')}>Center</button>
                                     <button {...btnProps('right')}>Right</button>
-                                </ButtonGroup>
+                                </Ui.ButtonGroup>
                             </Ui.Grid.Col>
                         </Ui.Grid.Row>
 
@@ -155,7 +155,7 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
             this.api.post('/', model.image).then(apiResponse => {
                 form.hideLoading();
                 delete model.image;
-                const file = apiResponse.getData();
+                const file = apiResponse.getData('entity');
                 model.url = file.src;
                 model.id = file.id;
                 model.fromFile = true;

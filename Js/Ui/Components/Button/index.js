@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import Webiny from 'webiny';
 import styles from './styles.css';
 
@@ -29,11 +30,11 @@ Button.defaultProps = {
     className: null,
     style: null,
     label: null,
-    onClick: Webiny.NOOP,
+    onClick: _.noop,
     tooltip: null,
     disabled: false,
     renderer() {
-        const props = Object.assign({},this.props);
+        const props = _.clone(this.props);
         const {Tooltip, Icon, styles} = props;
 
         if (props.disabled || !this.state.enabled) {
@@ -71,14 +72,11 @@ Button.defaultProps = {
             content = <span>{content}</span>;
         }
 
-        const buttonProps = {
-            style: props.style,
-            onClick: props.onClick,
-            disabled: props.disabled,
+        const buttonProps = _.pick(props, ['style', 'onClick', 'disabled']);
+        _.assign(buttonProps, {
             type: 'button',
-            className: classes
-        };
-
+            className: classes,
+        });
         let button = <button {...buttonProps}>{icon} {content}</button>;
 
         if (this.props.tooltip) {

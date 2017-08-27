@@ -10,6 +10,8 @@ namespace Apps\Webiny\Php\Dispatchers;
 use Apps\Webiny\Php\DevTools\Response\ApiRawResponse;
 use Apps\Webiny\Php\Discover\Postman;
 use Apps\Webiny\Php\RequestHandlers\ApiEvent;
+use Apps\Webiny\Php\RequestHandlers\ApiException;
+use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
 
 class DiscoverDispatcher extends AbstractApiDispatcher
 {
@@ -17,16 +19,24 @@ class DiscoverDispatcher extends AbstractApiDispatcher
     {
         $apiUrl = $event->getUrl();
         if ($apiUrl->startsWith('/discover')) {
-            // TODO: create an API Discoverer role to be inserted during system installation
-            /*$user = $this->wAuth()->getUser();
-            if (!$user->hasRole('api-discoverer')) {
-                $message = 'You are not authorized to discover API';
-                throw new ApiException($message, 'WBY-AUTHORIZATION', 401);
-            }*/
-            $app = $apiUrl->replace('/discover/', '')->pascalCase()->val();
-            $docs = new Postman();
 
-            return new ApiRawResponse($docs->generate($app));
+            if (!$this->wConfig()->get('Application.Acl.CheckUserPermissions', true)) {
+                return $this->generatePostmanCollections($apiUrl);
+            }
+
+            $user = $this->wAuth()->getUser();
+            if (!$user || !$user->hasRole('webiny-api-discoverer')) {
+                $message = 'You are not authorized to discover the API';
+                throw new ApiException($message, 'WBY-AUTHORIZATION', 401);
+            }
         }
+    }
+
+    private function generatePostmanCollections(StringObject $apiUrl)
+    {
+        $app = $apiUrl->replace('/discover/', '')->pascalCase()->val();
+        $docs = new Postman();
+
+        return new ApiRawResponse($docs->generate($app));
     }
 }

@@ -41,7 +41,7 @@ class Settings extends AbstractEntity
 
         /**
          * @api.name        Get settings
-         * @api.description Gets all Webiny settings.
+         * @api.description Gets settings data of this Settings entity.
          */
         $this->api('GET', '/', function () {
             if (!static::$key) {
@@ -59,7 +59,7 @@ class Settings extends AbstractEntity
 
         /**
          * @api.name        Update settings
-         * @api.description Updates Webiny settings.
+         * @api.description Updates settings for this Settings entity.
          */
         $this->api('PATCH', '/', function () {
             if (!static::$key) {

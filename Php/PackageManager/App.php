@@ -156,14 +156,13 @@ class App extends AbstractPackage
             if (!$cls->isAbstract()) {
                 $interfaces = class_implements($serviceClass);
                 $public = in_array('Apps\Webiny\Php\DevTools\Interfaces\PublicApiInterface', $interfaces);
-                $authorization = !in_array('Apps\Webiny\Php\DevTools\Interfaces\NoAuthorizationInterface', $interfaces);
 
                 $services[$serviceName] = [
                     'app'           => $this->getName(),
                     'name'          => $serviceName,
                     'class'         => $serviceClass,
                     'public'        => $public,
-                    'authorization' => $public ? false : $authorization
+                    'authorization' => !$public
                 ];
             }
         }

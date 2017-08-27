@@ -6,19 +6,9 @@ import Router from './Router';
 
 class Route {
     constructor(name, pattern, components, title = '') {
-        // Normalize components
-        const nComponents = {};
-        if (!_.isPlainObject(components) || React.isValidElement(components)) {
-            nComponents['Content'] = components;
-        } else {
-            _.forIn(components, (cmp, placeholder) => {
-                nComponents[placeholder] = cmp;
-            });
-        }
-
         this.name = name;
         this.pattern = pattern;
-        this.components = nComponents;
+        this.components = Route.normalizeComponents(components);
         this.title = title;
         this.paramNames = [];
         this.paramValues = {};
@@ -138,21 +128,27 @@ class Route {
     async getComponents() {
         // Check if there are any components that are actually functions (they may possibly have dynamic imports)
         const dynamic = [];
-        const components = {};
-        _.each(this.components, (component, placeholder) => {
+        const output = {};
+
+        let components = this.components;
+        if (_.isFunction(components)) {
+            components = await components();
+        }
+
+        _.each(components, (component, placeholder) => {
             if (_.isFunction(component) && !(component.prototype instanceof Webiny.Ui.Component)) {
                 dynamic.push(
                     Promise.resolve(component()).then(module => {
-                        components[placeholder] = module;
+                        output[placeholder] = module;
                     })
                 );
             } else {
-                components[placeholder] = component;
+                output[placeholder] = component;
             }
         });
 
         await Promise.all(dynamic);
-        return components;
+        return output;
     }
 
     skipDefaultComponents(flag = null) {
@@ -184,6 +180,23 @@ class Route {
     setLayout(name) {
         this.layout = name;
         return this;
+    }
+
+    /**
+     * When passing components, they can be passed as:
+     * - a function - where placeholder names and React components are about to be returned when it's resolved (called and again normalized upon route match)
+     * - a single React component - which will be assigned to 'Content' placeholder automatically
+     * - a JSON object - which contains several placeholder names as keys and React components or (a)sync functions as values
+     */
+    static normalizeComponents(components) {
+        if (!components || _.isPlainObject(components)) {
+            return components;
+        }
+
+        if (components.prototype instanceof Webiny.Ui.Component) {
+            return {Content: components};
+        }
+        return components;
     }
 }
 

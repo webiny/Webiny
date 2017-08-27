@@ -24,11 +24,11 @@ class Dispatcher {
         return callbacksChain;
     }
 
-    on(event, listener, meta = false) {
+    on(event, listener) {
         if (!this.listeners.hasOwnProperty(event)) {
             this.listeners[event] = [];
         }
-        const itemIndex = this.listeners[event].push({listener, meta}) - 1;
+        const itemIndex = this.listeners[event].push({listener}) - 1;
         const _this = this;
 
         return function off() {
