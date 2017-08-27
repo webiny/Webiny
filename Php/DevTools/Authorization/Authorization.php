@@ -239,7 +239,7 @@ class Authorization
         }
 
         $isService = in_array('Apps\Webiny\Php\DevTools\Services\AbstractService', class_parents($class));
-        if ($isService && in_array('Apps\Webiny\Php\DevTools\Interfaces\NoAuthorizationInterface', class_implements($class))) {
+        if ($isService && in_array('Apps\Webiny\Php\DevTools\Interfaces\PublicApiInterface', class_implements($class))) {
             return true;
         }
 
