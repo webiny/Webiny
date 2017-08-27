@@ -17,7 +17,7 @@ class Component extends React.Component {
         this.__listeners = [];
         this.__cursors = [];
         this.__mounted = true;
-        this.bindMethods('bindTo,isRendered,i18n');
+        this.bindMethods('bindTo', 'isRendered', 'i18n');
 
 
         /**
@@ -149,8 +149,8 @@ class Component extends React.Component {
         return Dispatcher.dispatch(action, data);
     }
 
-    on(event, callback, meta) {
-        const stopListening = Dispatcher.on(event, callback, meta);
+    on(event, callback) {
+        const stopListening = Dispatcher.on(event, callback);
         this.__listeners.push(stopListening);
         return stopListening;
     }
