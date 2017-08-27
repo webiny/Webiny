@@ -5,7 +5,6 @@ class ServiceParser extends AbstractParser
 {
     protected $baseClass = 'Apps\Webiny\Php\DevTools\Services\AbstractService';
     protected $publicApiInterface;
-    protected $noAuthorizationInterface;
 
     function __construct($class)
     {
@@ -14,7 +13,6 @@ class ServiceParser extends AbstractParser
 
         $interfaces = class_implements($class);
         $this->publicApiInterface = in_array('Apps\Webiny\Php\DevTools\Interfaces\PublicApiInterface', $interfaces);
-        $this->noAuthorizationInterface = in_array('Apps\Webiny\Php\DevTools\Interfaces\NoAuthorizationInterface', $interfaces);
     }
 
     public function getApiMethods()
@@ -43,10 +41,6 @@ class ServiceParser extends AbstractParser
                     $definition['authorization'] = false;
                 }
 
-                if ($this->noAuthorizationInterface) {
-                    $definition['authorization'] = false;
-                }
-
                 // There may be a case when a developer uses a trait with extra api methods and parser registers those methods
                 // but if those methods are not initialized, this following check may fail with an error.
                 // To avoid it - we check if method is initialized before doing anything else.
@@ -55,7 +49,7 @@ class ServiceParser extends AbstractParser
                     $definition['public'] = $serviceMethod->getPublic();
                 }
 
-                if ($serviceMethod && !$this->publicApiInterface && !$this->noAuthorizationInterface) {
+                if ($serviceMethod && !$this->publicApiInterface) {
                     $definition['authorization'] = !$definition['public'];
                 }
 

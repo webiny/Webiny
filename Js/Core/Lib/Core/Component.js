@@ -17,7 +17,7 @@ class Component extends React.Component {
         this.__listeners = [];
         this.__cursors = [];
         this.__mounted = true;
-        this.bindMethods('bindTo,isRendered,i18n');
+        this.bindMethods('bindTo', 'isRendered', 'i18n');
 
 
         /**
@@ -52,6 +52,7 @@ class Component extends React.Component {
     }
 
     componentWillMount() {
+        // This is deprecated and will be removed in the next release
         if (this.props.ui) {
             UiDispatcher.register(this.props.ui, this);
         }
@@ -66,6 +67,7 @@ class Component extends React.Component {
 
     /* eslint-disable */
     componentWillReceiveProps(nextProps) {
+        // This is deprecated and will be removed in the next release
         if (nextProps.ui !== this.props.ui) {
             UiDispatcher.unregister(this.props.ui);
             UiDispatcher.register(nextProps.ui, this);
@@ -147,8 +149,8 @@ class Component extends React.Component {
         return Dispatcher.dispatch(action, data);
     }
 
-    on(event, callback, meta) {
-        const stopListening = Dispatcher.on(event, callback, meta);
+    on(event, callback) {
+        const stopListening = Dispatcher.on(event, callback);
         this.__listeners.push(stopListening);
         return stopListening;
     }
@@ -215,28 +217,6 @@ class Component extends React.Component {
         // Execute callback with initial data
         func(cursor.get());
         return cursor;
-    }
-
-    apiParams(params) {
-        // TODO: Things like `apiParams` will be constructed using a form in UI builder
-        // TODO: values like '@activeLocation' will be dynamic, and are accessed through injector
-        // TODO: Modules responsible for these values should make these values available to injector on module initialization
-        const injected = {};
-        _.each(params, (v, k) => {
-            if (_.isPlainObject(v)) {
-                injected[k] = this.apiParams(v);
-                return;
-            }
-
-            if (_.isString(v) && v.startsWith('@')) {
-                const parts = v.split(':');
-                if (parts[0] === '@router') {
-                    v = Webiny.Router.getParams(parts[1]);
-                }
-            }
-            injected[k] = v;
-        });
-        return injected;
     }
 
     render() {
