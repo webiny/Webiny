@@ -155,7 +155,7 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
             this.api.post('/', model.image).then(apiResponse => {
                 form.hideLoading();
                 delete model.image;
-                const file = apiResponse.getData();
+                const file = apiResponse.getData('entity');
                 model.url = file.src;
                 model.id = file.id;
                 model.fromFile = true;
