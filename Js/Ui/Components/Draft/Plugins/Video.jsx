@@ -11,7 +11,7 @@ class VideoEditComponent extends Webiny.Ui.Component {
             resizing: false
         };
 
-        this.bindMethods('resize', 'resizeStart', 'resizeEnd', 'getSize', 'renderVideo');
+        this.bindMethods('resize', 'resizeStart', 'resizeEnd', 'getSize', 'renderVideo', 'btnProps');
     }
 
     alignVideo(align) {
@@ -91,19 +91,19 @@ class VideoEditComponent extends Webiny.Ui.Component {
 
         return <iframe {...props}/>;
     }
+
+    btnProps(align) {
+        return {
+            icon: 'fa-align-' + align,
+            type: this.props.data.align === align ? 'primary' : 'default',
+            onClick: this.alignVideo.bind(this, align)
+        };
+    }
 }
 
 VideoEditComponent.defaultProps = {
     renderer() {
-        const captionChange = caption => this.props.updateBlockData({caption});
-
-        const btnProps = (align) => {
-            return {
-                type: 'button',
-                className: this.classSet('btn btn-default', {active: this.props.data.align === align}),
-                onClick: this.alignVideo.bind(this, align)
-            };
-        };
+        const captionChange = e => this.props.updateBlockData({caption: e.target.value});
 
         const draggable = {
             draggable: true,
@@ -119,15 +119,15 @@ VideoEditComponent.defaultProps = {
         };
 
         return (
-            <Webiny.Ui.LazyLoad modules={['Grid', 'Input', 'ButtonGroup']}>
+            <Webiny.Ui.LazyLoad modules={['Grid', 'Input', 'ButtonGroup', 'Button']}>
                 {(Ui) => (
                     <div className="video-plugin-wrapper">
                         <Ui.Grid.Row>
-                            <Ui.Grid.Col xs={12}>
-                                <Ui.ButtonGroup className="pull-right">
-                                    <button {...btnProps('left')}>Left</button>
-                                    <button {...btnProps('center')}>Center</button>
-                                    <button {...btnProps('right')}>Right</button>
+                            <Ui.Grid.Col xs={12} className="text-center">
+                                <Ui.ButtonGroup>
+                                    <Ui.Button {...this.btnProps('left')} label="Left"/>
+                                    <Ui.Button {...this.btnProps('center')} label="Center"/>
+                                    <Ui.Button {...this.btnProps('right')} label="Right"/>
                                 </Ui.ButtonGroup>
                             </Ui.Grid.Col>
                         </Ui.Grid.Row>
@@ -139,7 +139,15 @@ VideoEditComponent.defaultProps = {
                                 <span className="resize-handle br" {...draggable}/>
                             </div>
                         </div>
-                        <Ui.Input value={this.props.data.caption} onChange={captionChange} placeholder="Enter a caption for this video"/>
+                        <Ui.Grid.Row>
+                            <Ui.Grid.Col xs={12} className="text-center">
+                                <input
+                                    className="caption"
+                                    value={this.props.data.caption || ''}
+                                    onChange={captionChange}
+                                    placeholder="Enter a caption for this video"/>
+                            </Ui.Grid.Col>
+                        </Ui.Grid.Row>
                     </div>
                 )}
             </Webiny.Ui.LazyLoad>
