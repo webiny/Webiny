@@ -13,6 +13,11 @@ ChartBlock.defaultProps = {
     renderer() {
         const {styles} = this.props;
 
+        let showHeader = false;
+        if (this.props.title !== '' || this.props.description !== '') {
+            showHeader = true;
+        }
+
         return (
             <div className={this.classSet(styles.infoBlock, this.props.className)}>
                 <div className={styles.header}>
