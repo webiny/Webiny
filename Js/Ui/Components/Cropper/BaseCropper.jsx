@@ -157,11 +157,16 @@ class BaseCropper extends Webiny.Ui.Component {
         const model = _.clone(this.props.image);
         let options = {};
 
-        if (this.props.config.width && this.props.config.height) {
-            options = {
-                width: this.props.config.width,
-                height: this.props.config.height
-            };
+        if (this.props.config.getCroppedCanvas) {
+            options = this.props.config.getCroppedCanvas({cropper: this.cropper, props: this.props});
+        } else {
+            if (this.props.config.width) {
+                options.width = this.props.config.width;
+            }
+
+            if (this.props.config.height) {
+                options.height = this.props.config.height;
+            }
         }
 
         model.src = this.cropper.getCroppedCanvas(options).toDataURL(model.type);
