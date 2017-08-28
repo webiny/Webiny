@@ -11,7 +11,7 @@ class ImageEditComponent extends Webiny.Ui.Component {
             size: props.data.size
         };
 
-        this.bindMethods('resize', 'resizeStart', 'resizeEnd', 'getSize');
+        this.bindMethods('resize', 'resizeStart', 'resizeEnd', 'getSize', 'btnProps');
     }
 
     alignImage(align) {
@@ -67,19 +67,19 @@ class ImageEditComponent extends Webiny.Ui.Component {
             height: _.hasIn(this.state, 'size.height') ? this.state.size.height - offset : 'auto'
         };
     }
+
+    btnProps(align) {
+        return {
+            icon: 'fa-align-' + align,
+            type: this.props.data.align === align ? 'primary' : 'default',
+            onClick: this.alignImage.bind(this, align)
+        };
+    }
 }
 
 ImageEditComponent.defaultProps = {
     renderer() {
-        const captionChange = caption => this.props.updateBlockData({caption});
-
-        const btnProps = (align) => {
-            return {
-                type: 'button',
-                className: this.classSet('btn btn-default', {active: this.props.data.align === align}),
-                onClick: this.alignImage.bind(this, align)
-            };
-        };
+        const captionChange = e => this.props.updateBlockData({caption: e.target.value});
 
         const draggable = {
             draggable: true,
@@ -89,16 +89,16 @@ ImageEditComponent.defaultProps = {
         };
 
         return (
-            <Webiny.Ui.LazyLoad modules={['Grid', 'Input', 'ButtonGroup']}>
+            <Webiny.Ui.LazyLoad modules={['Grid', 'Input', 'ButtonGroup', 'Button']}>
                 {(Ui) => (
                     <div className="image-plugin-wrapper">
                         <Ui.Grid.Row>
-                            <Ui.Grid.Col xs={12}>
-                                <ButtonGroup className="pull-right">
-                                    <button {...btnProps('left')}>Left</button>
-                                    <button {...btnProps('center')}>Center</button>
-                                    <button {...btnProps('right')}>Right</button>
-                                </ButtonGroup>
+                            <Ui.Grid.Col xs={12} className="text-center">
+                                <Ui.ButtonGroup>
+                                    <Ui.Button {...this.btnProps('left')} label="Left"/>
+                                    <Ui.Button {...this.btnProps('center')} label="Center"/>
+                                    <Ui.Button {...this.btnProps('right')} label="Right"/>
+                                </Ui.ButtonGroup>
                             </Ui.Grid.Col>
                         </Ui.Grid.Row>
 
@@ -108,7 +108,15 @@ ImageEditComponent.defaultProps = {
                                 <span className="resize-handle br" {...draggable}/>
                             </div>
                         </div>
-                        <Ui.Input value={this.props.data.caption} onChange={captionChange} placeholder="Enter a caption for this image"/>
+                        <Ui.Grid.Row>
+                            <Ui.Grid.Col xs={12} className="text-center">
+                                <input
+                                    className="caption"
+                                    value={this.props.data.caption || ''}
+                                    onChange={captionChange}
+                                    placeholder="Enter a caption for this image"/>
+                            </Ui.Grid.Col>
+                        </Ui.Grid.Row>
                     </div>
                 )}
             </Webiny.Ui.LazyLoad>
@@ -131,7 +139,7 @@ ImageComponent.defaultProps = {
             <div className="image-plugin-wrapper">
                 <div className={'image-wrapper'} style={{textAlign: this.props.data.align}}>
                     <img src={this.props.data.url} {...this.getSize.call(this)}/>
-                    <div>{this.props.data.caption}</div>
+                    {this.props.data.caption ? <div>{this.props.data.caption}</div> : null}
                 </div>
             </div>
         );
@@ -144,8 +152,25 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
         this.validate = _.get(config, 'validate', 'required');
         this.name = 'image';
         this.api = null;
+        this.cropper = {
+            inline: true,
+            title: 'Crop your image',
+            action: 'Upload image',
+            config: {
+                closeOnClick: false,
+                autoCropArea: 0.7
+            }
+        };
+
         if (config.api) {
             this.api = new Webiny.Api.Endpoint(config.api);
+            if (config.query) {
+                this.api.setQuery(config.query);
+            }
+        }
+
+        if (config.cropper) {
+            _.assign(this.cropper, config.cropper);
         }
     }
 
@@ -155,7 +180,7 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
             this.api.post('/', model.image).then(apiResponse => {
                 form.hideLoading();
                 delete model.image;
-                const file = apiResponse.getData();
+                const file = apiResponse.getData('entity');
                 model.url = file.src;
                 model.id = file.id;
                 model.fromFile = true;
@@ -199,24 +224,14 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
                                         if (this.api) {
                                             uploadTab = (
                                                 <Ui.Tabs.Tab label="Upload" icon="fa-upload">
-                                                    <Ui.Image
-                                                        name="image"
-                                                        cropper={{
-                                                            inline: true,
-                                                            title: 'Crop your image',
-                                                            action: 'Upload image',
-                                                            config: {
-                                                                closeOnClick: false,
-                                                                autoCropArea: 0.7
-                                                            }
-                                                        }}/>
+                                                    <Ui.Image name="image" cropper={this.cropper}/>
                                                 </Ui.Tabs.Tab>
                                             );
                                         }
                                         return (
                                             <Ui.Modal.Content>
                                                 <Ui.Form.Loader/>
-                                                <Ui.Modal.Header title="Insert image"/>
+                                                <Ui.Modal.Header title="Insert image" onClose={dialog.hide}/>
                                                 <Ui.Modal.Body noPadding>
                                                     <Ui.Tabs>
                                                         <Ui.Tabs.Tab label="URL" icon="fa-link">
