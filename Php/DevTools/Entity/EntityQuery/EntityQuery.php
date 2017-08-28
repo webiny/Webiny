@@ -53,7 +53,16 @@ class EntityQuery
      */
     public function getConditions()
     {
-        return $this->conditions;
+        // TODO @analyze
+        $conditions = [];
+        foreach ($this->conditions as $key => $value) {
+            if (strpos($key, '_') > 0) {
+                $conditions[str_replace('_', '.', $key)] = $value;
+                continue;
+            }
+            $conditions[$key] = $value;
+        }
+        return $conditions;
     }
 
     /**
@@ -276,6 +285,11 @@ class EntityQuery
     public function getPage()
     {
         return $this->page;
+    }
+
+    public function getOffset()
+    {
+        return $this->getLimit() * ($this->getPage() > 0 ? $this->getPage() - 1 : 0);
     }
 
     public function getInitialParameters()
