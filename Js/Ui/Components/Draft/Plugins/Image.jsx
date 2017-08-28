@@ -144,8 +144,25 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
         this.validate = _.get(config, 'validate', 'required');
         this.name = 'image';
         this.api = null;
+        this.cropper = {
+            inline: true,
+            title: 'Crop your image',
+            action: 'Upload image',
+            config: {
+                closeOnClick: false,
+                autoCropArea: 0.7
+            }
+        };
+
         if (config.api) {
             this.api = new Webiny.Api.Endpoint(config.api);
+            if (config.query) {
+                this.api.setQuery(config.query);
+            }
+        }
+
+        if (config.cropper) {
+            _.assign(this.cropper, config.cropper);
         }
     }
 
@@ -199,24 +216,14 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
                                         if (this.api) {
                                             uploadTab = (
                                                 <Ui.Tabs.Tab label="Upload" icon="fa-upload">
-                                                    <Ui.Image
-                                                        name="image"
-                                                        cropper={{
-                                                            inline: true,
-                                                            title: 'Crop your image',
-                                                            action: 'Upload image',
-                                                            config: {
-                                                                closeOnClick: false,
-                                                                autoCropArea: 0.7
-                                                            }
-                                                        }}/>
+                                                    <Ui.Image name="image" cropper={this.cropper}/>
                                                 </Ui.Tabs.Tab>
                                             );
                                         }
                                         return (
                                             <Ui.Modal.Content>
                                                 <Ui.Form.Loader/>
-                                                <Ui.Modal.Header title="Insert image"/>
+                                                <Ui.Modal.Header title="Insert image" onClose={dialog.hide}/>
                                                 <Ui.Modal.Body noPadding>
                                                     <Ui.Tabs>
                                                         <Ui.Tabs.Tab label="URL" icon="fa-link">

@@ -69,7 +69,19 @@ trait ParsersTrait
      */
     private function parseStorages(ConfigObject $info)
     {
+        // Set global storage config
         Storage::setConfig($info->get('Storage', new ConfigObject()));
+
+        // Check if there is a per-environment storage defined and append it to the existing config
+        $key = 'Development';
+        if ($this->wIsProduction()) {
+            $key = 'Production';
+        }
+
+        $envStorage = $info->get($key . '.Storage');
+        if ($envStorage) {
+            Storage::appendConfig($envStorage);
+        }
     }
 
     private function addListener($eventName, $callback)
@@ -106,7 +118,7 @@ trait ParsersTrait
 
                 if (is_string($route['Callback'])) {
                     $route['Callback'] = new ConfigObject([
-                        'Class' => $route['Callback'],
+                        'Class'  => $route['Callback'],
                         'Method' => 'handle'
                     ]);
                 }
@@ -127,8 +139,19 @@ trait ParsersTrait
      */
     private function parseServices(ConfigObject $info)
     {
-        $services = $info->get('Services', []);
-        foreach ($services as $sName => $sConfig) {
+        // Register global services
+        $globalServices = $info->get('Services', []);
+        foreach ($globalServices as $sName => $sConfig) {
+            $this->wService()->registerService($sName, $sConfig);
+        }
+
+        // Check if there are some per-environment services and register those aswell 
+        $key = 'Development';
+        if ($this->wIsProduction()) {
+            $key = 'Production';
+        }
+        $environmentServices = $info->get($key . '.Services', []);
+        foreach ($environmentServices as $sName => $sConfig) {
             $this->wService()->registerService($sName, $sConfig);
         }
     }
