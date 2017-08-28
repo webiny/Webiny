@@ -76,7 +76,7 @@
           vertical-align: top;
 
           actions {
-            display: table;
+            display: flex; /* otherwise the alignment buttons break on mobile */
             > span {
               display: table-cell;
             }
@@ -94,8 +94,12 @@
             padding: 7px;
             border-radius: 0;
             margin: 0px;
+            font-size: 12px;
+            .icon{
+              font-size: 12px;
+            }
           }
-          .btn:hover {
+          button:hover {
             box-shadow: 0px 0px 0px 1px #cdcdcd;
           }
         }
@@ -219,6 +223,16 @@
           width: 100%;
         }
       }
+    }
+
+    code{
+      font-family: "Source Sans Pro";
+      background: #e7e7e7;
+      color: #FA5723;
+      padding: 2px 5px;
+      font-size: 90%;
+      border-radius: 0;
+      margin: 0 2px;
     }
 
     .image-plugin-wrapper {
