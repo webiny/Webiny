@@ -50,7 +50,7 @@ Carousel.defaultProps = {
     autoWidth: false,
     URLhashListener: false,
     navRewind: false,
-    navText: ['&#x27;next&#x27;', '&#x27;prev&#x27;'],
+    navText: ['prev', 'next'],
     dots: true,
     lazyLoad: false,
     autoplay: false,

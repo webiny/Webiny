@@ -11,12 +11,18 @@ InfoBlock.defaultProps = {
     description: '',
     className: '',
     renderer() {
+
+        let showHeader = false;
+        if (this.props.title !== '' || this.props.description !== '') {
+            showHeader = true;
+        }
+
         return (
             <div className={this.classSet(styles.infoBlock, this.props.className)}>
-                <div className={styles.header}>
+                {showHeader && (<div className={styles.header}>
                     <h4 className={styles.title}>{this.props.title}</h4>
                     <div className={styles.titleLight}>{this.props.description}</div>
-                </div>
+                </div>)}
                 <div className={styles.container}>
                     {this.props.children}
                 </div>

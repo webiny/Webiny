@@ -129,7 +129,7 @@
 }
 
 .dashboard .content {
-	padding: 50px 50px;
+	padding: 50px 60px 50px 50px;
 	background-color: #f2f2f2;
 	display: flex;
 	flex-direction: column;
@@ -164,6 +164,17 @@
 	float: none;
 	margin-bottom: 0;
 }
+
+.dashboard .dashboardHeaderCenter, .dashboard .dashboardHeaderRight button,
+.dashboard .dashboardHeaderCenter, .dashboard .dashboardHeaderRight a{
+	margin-right: 5px;
+}
+
+.dashboard .dashboardHeaderCenter, .dashboard .dashboardHeaderRight button:last-child,
+.dashboard .dashboardHeaderCenter, .dashboard .dashboardHeaderRight a:last-child{
+	margin-right: 0;
+}
+
 
 /* make some bits nicer for mobile */
 @media (max-width: 768px) {
