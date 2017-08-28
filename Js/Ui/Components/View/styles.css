@@ -129,7 +129,7 @@
 }
 
 .dashboard .content {
-	padding: 50px 60px 50px 50px;
+	padding: 50px;
 	background-color: #f2f2f2;
 	display: flex;
 	flex-direction: column;
