@@ -596,7 +596,6 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             // If manipulator is Filter, then we check if we received a condition which it handles.
             if ($manipulator instanceof Filter) {
                 if ($query->hasCondition($manipulator->getName())) {
-                    // We clone just so developer doesn't change the original query accidentally.
                     $manipulator($query);
                 }
             }
@@ -604,7 +603,6 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             // If manipulator is Sorter, then we check if we received a sorter which it handles.
             if ($manipulator instanceof Sorter) {
                 if ($query->hasSorter($manipulator->getName())) {
-                    // We clone just so developer doesn't change the original query accidentally.
                     $manipulator($query);
                 }
             }
