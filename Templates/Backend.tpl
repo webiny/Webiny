@@ -29,12 +29,10 @@
         width: 150px;
         height: 80px;
         top: 49%;
-        left: 49%;
+        left: 50%;
+        transform: translateX(-22px);
         background-size: 45px 45px;
-        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
         filter: alpha(opacity=50);
-        -moz-opacity: 0.5;
-        -khtml-opacity: 0.5;
         opacity: 0.5;
     }
 
@@ -42,7 +40,8 @@
         content: "";
         position: absolute;
         top: 49%;
-        left: 49%;
+        left: 50%;
+        transform: translateX(-22px);
         width: 150px;
         height: 80px;
         z-index: 0;
