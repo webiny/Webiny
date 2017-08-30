@@ -208,7 +208,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 
         $pipeline = $basePipeline;
         if (count($parameters['order'])) {
-            $pipeline[] = ['$sort' => ['brand.owner.fullName' => 1, 'brand.name' => -1]];
+            $pipeline[] = ['$sort' => $parameters['order']];
         }
 
         $pipeline[] = ['$skip' => $parameters['offset']];
@@ -222,7 +222,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 
         $collection->setTotalCountCalculation(function () use ($basePipeline) {
             $basePipeline[] = ['$group' => ['_id' => null, 'total' => ['$sum' => 1], 'results' => ['$push' => '$$ROOT']]];
-            $basePipeline[] = ['$project' => ['_id' => 0, 'results' => 0]];
+            $basePipeline[] = ['$project' => ['_id' => 0, 'total' => 1]];
             $count = self::entity()->getDatabase()->aggregate(static::$entityCollection, $basePipeline)->toArray();
 
             return $count[0]['total'] ?? 0;
