@@ -75,7 +75,7 @@ class ApiLog extends AbstractEntity
         $this->attr('request')->object()->setToArrayDefault();
         $this->attr('method')->char()->setToArrayDefault();
 
-        $this->attributes->removeKey('modifiedOn');
+        unset($this->attributes['modifiedOn']);
 
         $this->api('GET', '/methods', function () {
             return $this->wDatabase()->distinct(static::$entityCollection, 'request.method');

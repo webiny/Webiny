@@ -519,7 +519,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     protected static function processEntityBaseFilters(EntityQuery $query)
     {
         $entity = new static;
-        $attributes = $entity->getAttributes()->val();
+        $attributes = $entity->getAttributes();
         foreach ($query->getConditions() as $fName => $fValue) {
             // Construct an $in statement only if filter value is index-based
             if (!(substr($fName, 0, 1) === "$") && is_array($fValue) && !count(array_filter(array_keys($fValue), 'is_string')) > 0) {
