@@ -190,7 +190,6 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         // If we don't have joins to execute, just use the simple find() method.
         if (empty($joins)) {
             $find = array_values($parameters);
-            $find[] = ['projection' => ['_id' => 0, 'id' => 1]];
             $data = self::entity()->getDatabase()->find(static::$entityCollection, ...$find);
 
             return new EntityCollection(get_called_class(), $data, $parameters);
@@ -219,6 +218,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         $data = self::entity()->getDatabase()->aggregate(static::$entityCollection, $pipeline);
 
         $collection = new EntityCollection(get_called_class(), $data, $parameters);
+
 
         $collection->setTotalCountCalculation(function () use ($basePipeline) {
             $basePipeline[] = ['$group' => ['_id' => null, 'total' => ['$sum' => 1], 'results' => ['$push' => '$$ROOT']]];
@@ -636,7 +636,12 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         if (count($parts) > 1) {
             $attrName = array_shift($parts);
 
-            $attr = $entity->getAttribute($attrName);
+            try {
+                $attr = $entity->getAttribute($attrName);
+            } catch (\Exception $e) {
+                $attr = null;
+            }
+
             if ($attr instanceof WebinyMany2OneAttribute) {
                 $class = $attr->getEntity();
                 $attrName = $pathPrefix ? $pathPrefix . '.' . $attrName : $attrName;
