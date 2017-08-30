@@ -52,27 +52,6 @@
         background-size: 45px 45px;
     }
 
-    @-webkit-keyframes loader3 {
-        0% {
-            width: 0;
-        }
-
-        70% {
-            width: 150px;
-            opacity: 1;
-        }
-
-        90% {
-            opacity: 0;
-            width: 150px;
-        }
-
-        100% {
-            opacity: 0;
-            width: 0;
-        }
-    }
-
     @keyframes loader3 {
         0% {
             width: 0;
