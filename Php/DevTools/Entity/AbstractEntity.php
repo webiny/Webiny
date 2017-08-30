@@ -21,6 +21,7 @@ use Apps\Webiny\Php\DevTools\WebinyTrait;
 use Webiny\Component\Entity\Attribute\DateTimeAttribute;
 use Webiny\Component\Entity\Attribute\Many2ManyAttribute;
 use Webiny\Component\Entity\Attribute\Many2OneAttribute;
+use Webiny\Component\Entity\Attribute\Many2OneAttribute as WebinyMany2OneAttribute;
 use Webiny\Component\Entity\Attribute\One2ManyAttribute;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Entity\EntityException;
@@ -153,30 +154,81 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         return parent::findOne($query->getConditions());
     }
 
-    /**
-     * Find entities
-     *
-     * @param mixed $conditions
-     *
-     * @param array $sort Example: ['-name', '+title']
-     * @param int   $limit
-     * @param int   $page
-     * @param array $options
-     *
-     * @return EntityCollection
-     */
+
     public static function find(array $conditions = [], array $sort = [], $limit = 0, $page = 0, $options = [])
     {
+        $sort = self::parseOrderParameters($sort);
+
         $query = new EntityQuery($conditions, $sort, $limit, $page);
 
-        // Query manipulation with entityFilters (also entitySorters)
         static::processEntityQuery($query, $options);
 
         if ($query->isAborted()) {
             return new EntityCollection(get_called_class());
         }
 
-        return parent::find($query->getConditions(), $query->getSorters(), $query->getLimit(), $query->getPage());
+        $parameters = [
+            'conditions' => $query->getConditions(),
+            'order'      => $query->getSorters(),
+            'limit'      => $query->getLimit(),
+            'offset'     => $query->getOffset()
+        ];
+
+        // Here we detect if we received keys in conditions and sorters that are from entities stored in another collections. If true,
+        // we will automatically do joins (Mongo $lookup) on needed collections and immediately make querying easier.
+        $instance = new static;
+        $joins = [];
+
+        foreach ($parameters['conditions'] as $path => $value) {
+            self::processEntityQueryJoins($joins, $path, null, $instance);
+        }
+
+        foreach ($parameters['order'] as $path => $value) {
+            self::processEntityQueryJoins($joins, $path, null, $instance);
+        }
+
+        // If we don't have joins to execute, just use the simple find() method.
+        if (empty($joins)) {
+            $find = array_values($parameters);
+            $data = self::entity()->getDatabase()->find(static::$entityCollection, ...$find);
+
+            return new EntityCollection(get_called_class(), $data, $parameters);
+
+        }
+
+        // Otherwise, let's prepare the aggregation pipeline and execute.
+        $basePipeline = [];
+        foreach ($joins as $join) {
+            $basePipeline[] = ['$lookup' => $join];
+        }
+
+        if (count($parameters['conditions'])) {
+            $basePipeline[] = ['$match' => $parameters['conditions']];
+        }
+
+        $pipeline = $basePipeline;
+        if (count($parameters['order'])) {
+            $pipeline[] = ['$sort' => $parameters['order']];
+        }
+
+        $pipeline[] = ['$skip' => $parameters['offset']];
+        $pipeline[] = ['$limit' => $parameters['limit']];
+        $pipeline[] = ['$project' => ['_id' => 0, 'id' => 1]];
+
+        $data = self::entity()->getDatabase()->aggregate(static::$entityCollection, $pipeline);
+
+        $collection = new EntityCollection(get_called_class(), $data, $parameters);
+
+
+        $collection->setTotalCountCalculation(function () use ($basePipeline) {
+            $basePipeline[] = ['$group' => ['_id' => null, 'total' => ['$sum' => 1], 'results' => ['$push' => '$$ROOT']]];
+            $basePipeline[] = ['$project' => ['_id' => 0, 'total' => 1]];
+            $count = self::entity()->getDatabase()->aggregate(static::$entityCollection, $basePipeline)->toArray();
+
+            return $count[0]['total'] ?? 0;
+        });
+
+        return $collection;
     }
 
     /**
@@ -291,7 +343,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             $entities = $this->find($filters, $sorter, $this->wRequest()->getPerPage(), $this->wRequest()->getPage());
 
             return $this->apiFormatList($entities, $this->wRequest()->getFields());
-        });
+        })->setPublic();
 
         /**
          * @api.name Get a record by ID
@@ -449,7 +501,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 
         static::processEntityBaseFilters($query);
         if ($options['entityFilters']) {
-            static::processEntityQueryManipulators($query);
+            static::processEntityQueryFiltersSorters($query);
         }
 
         if (!$options['includeDeleted']) {
@@ -524,7 +576,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
      *
      * @throws AppException
      */
-    protected static function processEntityQueryManipulators(EntityQuery $query)
+    protected static function processEntityQueryFiltersSorters(EntityQuery $query)
     {
         $entityQueryManipulators = static::entityQuery();
 
@@ -544,7 +596,6 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             // If manipulator is Filter, then we check if we received a condition which it handles.
             if ($manipulator instanceof Filter) {
                 if ($query->hasCondition($manipulator->getName())) {
-                    // We clone just so developer doesn't change the original query accidentally.
                     $manipulator($query);
                 }
             }
@@ -552,7 +603,6 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             // If manipulator is Sorter, then we check if we received a sorter which it handles.
             if ($manipulator instanceof Sorter) {
                 if ($query->hasSorter($manipulator->getName())) {
-                    // We clone just so developer doesn't change the original query accidentally.
                     $manipulator($query);
                 }
             }
@@ -567,6 +617,50 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         foreach ($staticManipulators as $staticManipulator) {
             $staticManipulator($query);
         }
+    }
+
+    /**
+     * Returns $lookup statements for given key - used for doing Mongo joins for better sorting / query-ing abilities.
+     *
+     * @param                $neededJoins
+     * @param                $path
+     * @param string         $pathPrefix
+     * @param AbstractEntity $entity
+     */
+    private static function processEntityQueryJoins(&$neededJoins, $path, $pathPrefix = '', AbstractEntity $entity)
+    {
+        $parts = explode('.', $path, 2);
+
+        // To do a join, we must have a specific path. We don't want to do a join if we have received just 'brand' path.
+        // On the other side, we will take into consideration fields like 'entity.xyz'.
+        if (count($parts) > 1) {
+            $attrName = array_shift($parts);
+
+            try {
+                $attr = $entity->getAttribute($attrName);
+            } catch (\Exception $e) {
+                $attr = null;
+            }
+
+            if ($attr instanceof WebinyMany2OneAttribute) {
+                $class = $attr->getEntity();
+                $attrName = $pathPrefix ? $pathPrefix . '.' . $attrName : $attrName;
+                if (!isset($neededJoins[$attrName])) {
+                    $neededJoins[$attrName] = [
+                        'from'         => $class::getEntityCollection(),
+                        'localField'   => $attrName,
+                        'as'           => $attrName,
+                        'foreignField' => 'id'
+                    ];
+                }
+
+                if (count($parts)) {
+                    $pathPrefix = $pathPrefix ? '.' . $attrName : $attrName;
+                    self::processEntityQueryJoins($neededJoins, $parts[0], $pathPrefix, new $class);
+                }
+            }
+        }
+
     }
 
     /**
