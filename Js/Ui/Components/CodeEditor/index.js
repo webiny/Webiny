@@ -36,7 +36,7 @@ class CodeEditor extends Webiny.Ui.FormComponent {
             this.props.onFocus();
         });
 
-        if (this.props.height != null) {
+        if (this.props.height !== null) {
             this.codeMirror.setSize(null, this.props.height);
         }
 
@@ -55,8 +55,8 @@ class CodeEditor extends Webiny.Ui.FormComponent {
         });
     }
 
-    shouldComponentUpdate() {
-        return false;
+    shouldComponentUpdate(props, state) {
+        return !_.isEqual(state, this.state);
     }
 
     setValue(props) {
@@ -109,8 +109,10 @@ CodeEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             <FormGroup valid={this.state.isValid} className={this.props.className}>
                 {this.renderLabel()}
                 <textarea/>
-                {this.renderDescription()}
-                {this.renderValidationMessage()}
+                <div>
+                    {this.renderDescription()}
+                    {this.renderValidationMessage()}
+                </div>
             </FormGroup>
         );
     }

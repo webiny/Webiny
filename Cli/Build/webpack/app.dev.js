@@ -70,6 +70,10 @@ module.exports = function (app) {
     }
 
     const fileExtensionRegex = /\.(png|jpg|gif|jpeg|mp4|mp3|woff2?|ttf|otf|eot|svg|ico)$/;
+    const extractCss = ExtractTextPlugin.extract({
+        fallback: 'style-loader',
+        use: ['css-loader', 'resolve-url-loader', 'sass-loader?sourceMap']
+    });
 
     return {
         name: name,
@@ -114,7 +118,10 @@ module.exports = function (app) {
                                     [require.resolve('babel-plugin-lodash')],
                                     [require.resolve('babel-plugin-transform-builtin-extend'), {
                                         globals: ['Error']
-                                    }]
+                                    }],
+                                    [require.resolve('babel-plugin-transform-rename-import'), {
+                                        original: '^(.*?\.s?css)$', replacement: '$1',
+                                    }],
                                 ]
                             }
                         },
@@ -128,21 +135,50 @@ module.exports = function (app) {
                     use: [i18nPluginInstance.getLoader()]
                 },
                 {
-                    test: /\.scss$/,
-                    use: ExtractTextPlugin.extract({
-                        fallback: 'style-loader',
-                        use: ['css-loader', 'resolve-url-loader', 'sass-loader?sourceMap']
-                    })
-                },
-                {
-                    test: /\.css$/,
-                    use: ['style-loader', {
-                        loader: 'css-loader',
-                        options: {
-                            modules: true,
-                            localIdentName: app.getPath() + '_[folder]_[local]'
+                    test: /\.s?css$/,
+                    oneOf: [
+                        // 1. Convert all styles not located in Assets folder to CSS modules.
+                        {
+                            exclude: /Assets/,
+                            resourceQuery: query => {
+                                return !query.includes('extract');
+                            },
+                            issuer: /\.jsx?$/,
+                            use: [
+                                'style-loader',
+                                {
+                                    loader: 'css-loader',
+                                    options: {
+                                        modules: true,
+                                        importLoaders: 3,
+                                        localIdentName: app.getPath() + '_[folder]_[local]'
+                                    }
+                                },
+                                'resolve-url-loader',
+                                'sass-loader?sourceMap',
+                                {loader: 'log-loader', options: {msg: 'SCSS - 1'}}
+                            ]
+                        },
+                        // 2. Extract styles from Assets folder into external CSS file
+                        {
+                            issuer: /\.jsx?$/,
+                            include: /Assets/,
+                            use: extractCss.concat({loader: 'log-loader', options: {msg: 'SCSS - 2'}})
+                        },
+                        // 3. Files with '?extract' query will also be extracted into external CSS file
+                        {
+                            issuer: /\.jsx?$/,
+                            resourceQuery: /extract/,
+                            use: extractCss.concat({loader: 'log-loader', options: {msg: 'SCSS - 3'}})
+                        },
+                        // 4. Fallback rule for files imported from other SCSS files (these just need to be loaded as is)
+                        {
+                            use: ['css-loader', 'resolve-url-loader', 'sass-loader?sourceMap', {
+                                loader: 'log-loader',
+                                options: {msg: 'SCSS - 4'}
+                            }]
                         }
-                    }]
+                    ]
                 },
                 {
                     test: /node_modules/,

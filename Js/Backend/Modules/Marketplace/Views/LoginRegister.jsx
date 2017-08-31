@@ -5,7 +5,6 @@ import LoginModal from './../Components/LoginModal'
 import RegisterModal from './../Components/RegisterModal'
 import ForgotPasswordModal from './../Components/ForgotPasswordModal'
 
-
 class LoginRegister extends Webiny.Ui.View {
     constructor(props) {
         super(props);
@@ -27,24 +26,20 @@ class LoginRegister extends Webiny.Ui.View {
 }
 
 LoginRegister.defaultProps = {
-
     renderer() {
-
         const {styles, Button, Icon} = this.props;
 
         const childProps = {
             showLogin: this.showLogin,
             showRegister: this.showRegister,
-            showForgotPassword: this.showForgotPassword
+            showForgotPassword: this.showForgotPassword,
+            onUser: this.props.onUser
         };
 
         return (
             <div className={styles.loginRegister}>
                 <div className={styles.message}>
-                    <h2>
-                        <Icon icon="icon-basket_n"/>
-                        Webiny Marketplace
-                    </h2>
+                    <h2><Icon icon="icon-basket_n"/> Webiny Marketplace</h2>
                     <h3>Find and Install Apps for Webiny</h3>
                     <p>Access to the markeplace requires a Webiny.com profile. <br/>If you already have a profile, use the sign-in option,
                         otherwise please register.</p>

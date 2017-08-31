@@ -2,59 +2,66 @@ import React from 'react';
 import Webiny from 'webiny';
 import styles from './../Views/styles.css';
 
-
 class ForgotPasswordModal extends Webiny.Ui.ModalComponent {
     constructor(props) {
         super(props);
 
         this.state = {
-            success: true
+            success: false
         };
     }
 
     renderDialog() {
-        const {Modal, Form, Button, Input, Password, Link, Grid, Alert} = this.props;
+        const {Modal, Form, Button, Input, Link, Grid, Alert} = this.props;
 
+        const formProps = {
+            api: '/services/webiny/marketplace',
+            url: 'reset-password',
+            onSuccessMessage: null,
+            onSubmitSuccess: () => this.setState({success: true})
+        };
 
         return (
-            <Modal.Dialog>
-                <Form>
+            <Modal.Dialog onHidden={() => this.setState({success: false})}>
+                <Form {...formProps}>
                     {(model, form) => (
                         <Modal.Content>
                             <Form.Loader/>
-
                             <Modal.Header onClose={this.hide} title="Forgot Password"/>
-
                             <Modal.Body>
-
-                                <Grid.Row>
-                                    <Form.Error/>
-
-                                    <Grid.Col all={12}>
-                                        {this.state.success && (
-                                            <Alert type="success" title="Instructions sent">Please check your inbox for the reset
-                                                password link.</Alert>)}
-                                    </Grid.Col>
-
-                                    <Grid.Col all={12}>
-                                        <Input
-                                            placeholder="Email"
-                                            label="Email"
-                                            name="username"
-                                            validate="required, email"
-                                            onEnter={form.submit}/>
-                                    </Grid.Col>
-
-                                    <Grid.Col all={12} className={styles.modalAction}>
-                                        <Button
-                                            type="primary"
-                                            onClick={form.submit}
-                                            size="large"
-                                            icon="icon-next"
-                                            label="Submit"/>
-                                    </Grid.Col>
-                                </Grid.Row>
-
+                                {this.state.success && (
+                                    <Grid.Row>
+                                        <Grid.Col all={12}>
+                                            <Alert type="success" title="Instructions sent">
+                                                Please check your inbox for the reset password link.
+                                            </Alert>
+                                        </Grid.Col>
+                                    </Grid.Row>
+                                )}
+                                {!this.state.success && (
+                                    <Grid.Row>
+                                        <Grid.Col all={12}>
+                                            <p className="text-center">
+                                                Enter an email address you used to register at webiny.com.
+                                            </p>
+                                            <Form.Error/>
+                                            <Input
+                                                placeholder="Email"
+                                                label="Email"
+                                                name="email"
+                                                validate="required, email"
+                                                onEnter={form.submit}/>
+                                        </Grid.Col>
+                                        <Grid.Col all={12} className={styles.modalAction}>
+                                            <Button
+                                                type="primary"
+                                                onClick={form.submit}
+                                                size="large"
+                                                icon="icon-next"
+                                                label="Send me a reset link"/>
+                                        </Grid.Col>
+                                    </Grid.Row>
+                                )}
                             </Modal.Body>
                             <Modal.Footer>
                                 <div className="text-center">
@@ -73,5 +80,5 @@ class ForgotPasswordModal extends Webiny.Ui.ModalComponent {
 
 export default Webiny.createComponent(ForgotPasswordModal, {
     styles,
-    modules: ['Modal', 'Form', 'Button', 'Input', 'Password', 'Link', 'Grid', 'Alert']
+    modules: ['Modal', 'Form', 'Button', 'Input', 'Link', 'Grid', 'Alert']
 });

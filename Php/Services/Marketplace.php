@@ -51,6 +51,13 @@ class Marketplace extends AbstractService
 
             return new ApiRawResponse($response);
         });
+
+        $this->api('POST', 'reset-password', function () {
+            $data = $this->wRequest()->getRequestData();
+            $response = $this->server('/entities/webiny/users/reset-password', 'POST', $data);
+
+            return new ApiRawResponse($response);
+        });
     }
 
     /**
@@ -76,12 +83,7 @@ class Marketplace extends AbstractService
                     break;
             }
 
-            if ($curl->error) {
-                throw new AppException($curl->errorCode . ":" . $curl->errorMessage);
-            } else {
-                return $curl->rawResponse;
-            }
-
+            return $curl->rawResponse;
         } catch (\Exception $e) {
             throw new AppException($e->getMessage());
         }

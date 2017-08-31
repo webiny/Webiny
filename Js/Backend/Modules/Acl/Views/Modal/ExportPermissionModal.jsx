@@ -26,11 +26,11 @@ class ExportPermissionModal extends Webiny.Ui.ModalComponent {
     }
 
     renderDialog() {
-        const {Modal, Data, Copy, CodeHighlight} = this.props;
+        const {Modal, Copy, CodeHighlight} = this.props;
         return (
-            <Modal.Dialog wide>
+            <Modal.Dialog>
                 <Modal.Content>
-                    <Modal.Header title="Export Role"/>
+                    <Modal.Header title="Export Permission"/>
                     <Modal.Body>
                         <CodeHighlight language="json">{this.state.content}</CodeHighlight>
                     </Modal.Body>
@@ -43,4 +43,4 @@ class ExportPermissionModal extends Webiny.Ui.ModalComponent {
     }
 }
 
-export default Webiny.createComponent(ExportPermissionModal, {modules: ['Modal', 'Data', 'Copy', 'CodeHighlight']});
+export default Webiny.createComponent(ExportPermissionModal, {modules: ['Modal', 'Copy', 'CodeHighlight']});

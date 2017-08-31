@@ -249,6 +249,20 @@ formValidator.addValidator('phone', (value) => {
     throw new ValidationError('Please enter a valid phone number');
 });
 
+formValidator.addValidator('json', (value) => {
+    if (!value) {
+        return true;
+    }
+
+    try {
+        JSON.parse(value);
+    } catch (e) {
+        throw new ValidationError('Please enter a valid JSON string');
+    }
+
+    return true;
+});
+
 
 formValidator.addValidator('url', (value) => {
     const regex = new RegExp(/^(https?:\/\/)?((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|((\d{1,3}\.){3}\d{1,3}))(\:\d+)?(\/[-a-z\d%_.~+]*)*(\?[;&a-z\d%_.~+=-]*)?(\#[-a-z\d_]*)?$/i);

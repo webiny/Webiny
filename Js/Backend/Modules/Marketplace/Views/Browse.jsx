@@ -1,8 +1,9 @@
 import React from 'react';
 import Webiny from 'webiny';
-import _ from 'lodash';
 import styles from './styles.css';
 import AppBox from './../Components/AppBox';
+import LoginRegister from './LoginRegister';
+import User from './../Components/User';
 
 
 class Browse extends Webiny.Ui.View {
@@ -10,52 +11,53 @@ class Browse extends Webiny.Ui.View {
         super(props);
 
         this.state = {
-            user: {}
+            user: null,
+            loadingUser: false
         };
+
+        this.bindMethods('onUser');
     }
 
-    componentDidMount() {
-        super.componentDidMount();
-        this.watch('User', user => {
-            this.setState({user});
+    componentWillMount() {
+        super.componentWillMount();
+        this.setState({loadingUser: true});
+        new Webiny.Api.Endpoint('/services/webiny/marketplace').get('/me').then(apiResponse => {
+            if (!apiResponse.isError()) {
+                this.setState({user: apiResponse.getData('user')}); // restore correct key
+            }
+            this.setState({loadingUser: false});
         });
     }
 
-    getUserName() {
-        const user = this.state.user;
-        if (_.get(user, 'firstName', '') === '') {
-            return _.get(user, 'email', '');
+    onUser(user) {
+        this.setState({user});
+    }
+
+    renderBody() {
+        const {styles, Grid, Loader} = this.props;
+        if (this.state.loadingUser) {
+            return <Loader/>;
         }
 
-        return _.get(user, 'firstName', '');
-    }
-}
+        if(!this.state.user) {
+            return (
+                <LoginRegister onUser={this.onUser}/>
+            );
+        }
 
-Browse.defaultProps = {
-
-    renderer() {
-
-        const {styles, Link, View, Gravatar, Icon, Grid} = this.props;
+        const {Link, View, Icon} = this.props;
 
         return (
             <div className={styles.browse}>
                 <View.Dashboard>
-                    <View.Header title="Browse">
+                    <View.Header title="Marketplace">
                         <View.Header.Center>
-                            <div className="user-welcome">
-                                <div className="user-welcome__avatar">
-                                    <div className="avatar avatar--inline avatar--small">
-                                    <span className="avatar-placeholder avatar-placeholder--no-border">
-                                        <Gravatar className="avatar img-responsive" hash={this.state.user.gravatar} size="50"/>
-                                    </span>
-                                    </div>
-                                </div>
-                                <h3 className="user-welcome__message">Hi {this.getUserName()}</h3>
-                            </div>
+                            <User user={this.state.user}/>
                         </View.Header.Center>
-                        <Link type="default" url="https://www.webiny.com/my-profile" newTab={true}><Icon icon="fa-cog"/> Manage Account</Link>
+                        <Link type="default" url="https://www.webiny.com/my-profile" newTab={true} renderIf={this.state.user}>
+                            <Icon icon="fa-cog"/> Manage Account
+                        </Link>
                     </View.Header>
-
                     <View.Body>
                         <Grid.Row className={styles.appList}>
                             <Grid.Col all={6}>
@@ -67,6 +69,12 @@ Browse.defaultProps = {
             </div>
         );
     }
+}
+
+Browse.defaultProps = {
+    renderer() {
+        return this.renderBody();
+    }
 };
 
-export default Webiny.createComponent(Browse, {styles, modules: ['View', 'Link', 'Gravatar', 'Icon', 'Grid']});
+export default Webiny.createComponent(Browse, {styles, modules: ['View', 'Link', 'Icon', 'Grid', 'Loader']});
