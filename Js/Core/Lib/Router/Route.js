@@ -133,6 +133,7 @@ class Route {
         let components = this.components;
         if (_.isFunction(components)) {
             components = await components();
+            components = Route.normalizeComponents(components);
         }
 
         _.each(components, (component, placeholder) => {
@@ -148,6 +149,7 @@ class Route {
         });
 
         await Promise.all(dynamic);
+
         return output;
     }
 
@@ -189,13 +191,14 @@ class Route {
      * - a JSON object - which contains several placeholder names as keys and React components or (a)sync functions as values
      */
     static normalizeComponents(components) {
-        if (!components || _.isPlainObject(components)) {
+        if (!components) {
             return components;
         }
 
-        if (components.prototype instanceof Webiny.Ui.Component) {
+        if (components.prototype instanceof Webiny.Ui.Component || React.isValidElement(components)) {
             return {Content: components};
         }
+
         return components;
     }
 }
