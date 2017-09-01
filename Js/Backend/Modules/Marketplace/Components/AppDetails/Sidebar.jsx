@@ -9,8 +9,7 @@ class Sidebar extends Webiny.Ui.View {
 Sidebar.defaultProps = {
 
     renderer() {
-
-        const {styles, Link, Icon, Section} = this.props;
+        const {styles, Link, Icon, Section, app} = this.props;
 
         return (
             <div className={styles.sidebar}>
@@ -19,41 +18,34 @@ Sidebar.defaultProps = {
                 <ul className={styles.detailsList}>
                     <li>
                         Version:
-                        <span>1.0.1</span>
+                        <span>{app.version}</span>
                     </li>
 
                     <li>
                         Installations:
-                        <span>1.023</span>
+                        <span>{app.installations}</span>
                     </li>
 
                     <li>
                         Required Webiny version:
-                        <span>1.0.0</span>
+                        <span>{app.webinyVersion}</span>
                     </li>
 
                     <li>
                         Repository:
-                        <span><Link url="https://github.com/Webiny/NotificationManager" newTab={true}>Visit GitHub</Link></span>
+                        <span><Link url={app.repository} newTab>Visit GitHub</Link></span>
                     </li>
 
                     <li>
                         Tags:
                         <div className={styles.tags}>
-                            <span>#php</span>
-                            <span>#cron</span>
-                            <span>#tag-3</span>
-                            <span>#tag-4</span>
-                            <span>#php</span>
-                            <span>#cron</span>
-                            <span>#tag-3</span>
-                            <span>#tag-4</span>
+                            {app.tags.map(tag => <span key={tag}>#{tag}</span>)}
                         </div>
                     </li>
                 </ul>
 
                 <div className={styles.reportIssue}>
-                    <Link type="default" url="https://github.com/Webiny/NotificationManager/issues" newTab={true}><Icon icon="fa-bug"/>Report an Issue</Link>
+                    <Link type="default" url={`${app.repository}/issues`} newTab><Icon icon="fa-bug"/>Report an Issue</Link>
                 </div>
 
             </div>

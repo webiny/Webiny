@@ -5,7 +5,6 @@ import AppBox from './../Components/AppBox';
 import LoginRegister from './LoginRegister';
 import User from './../Components/User';
 
-
 class Browse extends Webiny.Ui.View {
     constructor(props) {
         super(props);
@@ -47,7 +46,7 @@ class Browse extends Webiny.Ui.View {
             return <Loader/>;
         }
 
-        if(!this.state.user) {
+        if (!this.state.user) {
             return (
                 <LoginRegister onUser={this.onUser}/>
             );
@@ -62,18 +61,23 @@ class Browse extends Webiny.Ui.View {
                         <View.Header.Center>
                             <User user={this.state.user}/>
                         </View.Header.Center>
-                        <Link type="default" url="https://www.webiny.com/my-profile" newTab={true} renderIf={this.state.user}>
-                            <Icon icon="fa-cog"/> Manage Account
-                        </Link>
+                        {this.props.appDetails ?
+                            <Link type="default" route="Marketplace.Browse">Go Back</Link> :
+                            <Link type="default" url="https://www.webiny.com/my-profile" newTab={true} renderIf={this.state.user}>
+                                <Icon icon="fa-cog"/> Manage Account
+                            </Link>
+                        }
                     </View.Header>
                     <View.Body>
-                        <Grid.Row className={styles.appList}>
-                            {this.state.apps && this.state.apps.map(app => (
-                                <Grid.Col all={6} key={app.id}>
-                                    <AppBox app={app}/>
-                                </Grid.Col>
-                            ))}
-                        </Grid.Row>
+                        <Webiny.Ui.Placeholder name="Apps">
+                            <Grid.Row className={styles.appList}>
+                                {this.state.apps && this.state.apps.map(app => (
+                                    <Grid.Col all={6} key={app.id}>
+                                        <AppBox app={app}/>
+                                    </Grid.Col>
+                                ))}
+                            </Grid.Row>
+                        </Webiny.Ui.Placeholder>
                     </View.Body>
                 </View.Dashboard>
             </div>
