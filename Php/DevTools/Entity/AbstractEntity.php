@@ -343,7 +343,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             $entities = $this->find($filters, $sorter, $this->wRequest()->getPerPage(), $this->wRequest()->getPage());
 
             return $this->apiFormatList($entities, $this->wRequest()->getFields());
-        })->setPublic();
+        });
 
         /**
          * @api.name Get a record by ID
