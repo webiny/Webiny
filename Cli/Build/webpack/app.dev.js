@@ -19,7 +19,6 @@ module.exports = function (app) {
     const domain = _.get(Webiny.getConfig(), 'browserSync.domain', 'http://localhost');
     const url = domain + ':' + port;
 
-    const sharedResolve = require('./resolve')(app);
     const name = app.getName();
     const context = Webiny.projectRoot(app.getSourceDir());
     const outputPath = path.resolve(Webiny.projectRoot(), 'public_html/build/development', app.getPath());
@@ -70,13 +69,9 @@ module.exports = function (app) {
     }
 
     const fileExtensionRegex = /\.(png|jpg|gif|jpeg|mp4|mp3|woff2?|ttf|otf|eot|svg|ico)$/;
-    const extractCss = ExtractTextPlugin.extract({
-        fallback: 'style-loader',
-        use: ['css-loader', 'resolve-url-loader', 'sass-loader?sourceMap']
-    });
 
     return {
-        name: name,
+        name,
         cache: true,
         watch: false,
         context,
@@ -116,12 +111,11 @@ module.exports = function (app) {
                                     [require.resolve('babel-plugin-transform-object-rest-spread'), {'useBuiltIns': true}],
                                     [require.resolve('babel-plugin-syntax-dynamic-import')],
                                     [require.resolve('babel-plugin-lodash')],
-                                    [require.resolve('babel-plugin-transform-builtin-extend'), {
-                                        globals: ['Error']
-                                    }],
+                                    [require.resolve('babel-plugin-transform-builtin-extend'), {globals: ['Error']}],
+                                    // This plugin is required to force all css/scss imports to have a resourceQuery
                                     [require.resolve('babel-plugin-transform-rename-import'), {
-                                        original: '^(.*?\.s?css)$', replacement: '$1',
-                                    }],
+                                        original: '^(.*?\.s?css)$', replacement: '$1?',
+                                    }]
                                 ]
                             }
                         },
@@ -134,52 +128,7 @@ module.exports = function (app) {
                     include: Webiny.projectRoot(),
                     use: [i18nPluginInstance.getLoader()]
                 },
-                {
-                    test: /\.s?css$/,
-                    oneOf: [
-                        // 1. Convert all styles not located in Assets folder to CSS modules.
-                        {
-                            exclude: /Assets/,
-                            resourceQuery: query => {
-                                return !query.includes('extract');
-                            },
-                            issuer: /\.jsx?$/,
-                            use: [
-                                'style-loader',
-                                {
-                                    loader: 'css-loader',
-                                    options: {
-                                        modules: true,
-                                        importLoaders: 3,
-                                        localIdentName: app.getPath() + '_[folder]_[local]'
-                                    }
-                                },
-                                'resolve-url-loader',
-                                'sass-loader?sourceMap',
-                                {loader: 'log-loader', options: {msg: 'SCSS - 1'}}
-                            ]
-                        },
-                        // 2. Extract styles from Assets folder into external CSS file
-                        {
-                            issuer: /\.jsx?$/,
-                            include: /Assets/,
-                            use: extractCss.concat({loader: 'log-loader', options: {msg: 'SCSS - 2'}})
-                        },
-                        // 3. Files with '?extract' query will also be extracted into external CSS file
-                        {
-                            issuer: /\.jsx?$/,
-                            resourceQuery: /extract/,
-                            use: extractCss.concat({loader: 'log-loader', options: {msg: 'SCSS - 3'}})
-                        },
-                        // 4. Fallback rule for files imported from other SCSS files (these just need to be loaded as is)
-                        {
-                            use: ['css-loader', 'resolve-url-loader', 'sass-loader?sourceMap', {
-                                loader: 'log-loader',
-                                options: {msg: 'SCSS - 4'}
-                            }]
-                        }
-                    ]
-                },
+                require('./styles')(app),
                 {
                     test: /node_modules/,
                     include: fileExtensionRegex,
@@ -207,7 +156,7 @@ module.exports = function (app) {
                 }
             ]
         },
-        resolve: sharedResolve,
+        resolve: require('./resolve')(app),
         resolveLoader: {
             modules: [
                 __dirname + '/loaders', 'node_modules',
