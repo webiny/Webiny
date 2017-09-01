@@ -22,8 +22,9 @@ AppDetails.defaultProps = {
         const {loading, app} = this.state;
         const {styles, Link, View, Grid, Button, Tabs, Loader} = this.props;
 
+        return <Loader><span>Loading app details...</span></Loader>;
         if (loading) {
-            return <Loader/>;
+            return <Loader><span>Loading app details...</span></Loader>;
         }
 
         return (
