@@ -8,7 +8,8 @@ class ExportRoleModal extends Webiny.Ui.ModalComponent {
         super(props);
 
         this.state = {
-            content: ''
+            content: '',
+            loading: true
         };
     }
 
@@ -22,6 +23,7 @@ class ExportRoleModal extends Webiny.Ui.ModalComponent {
             delete role.id;
 
             this.setState({
+                loading: false,
                 content: JSON.stringify(role, null, 4)
             });
         });
@@ -30,11 +32,11 @@ class ExportRoleModal extends Webiny.Ui.ModalComponent {
     renderDialog() {
         const {Modal, Button, Copy, CodeHighlight, Loader} = this.props;
         return (
-            <Modal.Dialog wide>
+            <Modal.Dialog>
                 <Modal.Content>
                     <Modal.Header title="Export Role"/>
-                    <Modal.Body>
-                        <CodeHighlight language="json">{this.state.content}</CodeHighlight>
+                    <Modal.Body style={this.state.loading ? {height: 200} : {}} noPadding>
+                        {this.state.loading ? <Loader/> : <CodeHighlight language="json">{this.state.content}</CodeHighlight>}
                     </Modal.Body>
                     <Modal.Footer>
                         <Copy.Button label="Copy" type="primary" value={this.state.content} renderIf={this.state.content}/>

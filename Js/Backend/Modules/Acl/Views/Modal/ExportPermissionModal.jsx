@@ -7,7 +7,8 @@ class ExportPermissionModal extends Webiny.Ui.ModalComponent {
         super(props);
 
         this.state = {
-            content: ''
+            content: '',
+            loading: true
         };
     }
 
@@ -20,19 +21,20 @@ class ExportPermissionModal extends Webiny.Ui.ModalComponent {
             delete data.id;
 
             this.setState({
+                loading: false,
                 content: JSON.stringify(data, null, 4)
             });
         });
     }
 
     renderDialog() {
-        const {Modal, Copy, CodeHighlight} = this.props;
+        const {Modal, Copy, CodeHighlight, Loader} = this.props;
         return (
             <Modal.Dialog>
                 <Modal.Content>
                     <Modal.Header title="Export Permission"/>
-                    <Modal.Body>
-                        <CodeHighlight language="json">{this.state.content}</CodeHighlight>
+                    <Modal.Body style={this.state.loading ? {height: 200} : {}}>
+                        {this.state.loading ? <Loader/> : <CodeHighlight language="json">{this.state.content}</CodeHighlight>}
                     </Modal.Body>
                     <Modal.Footer>
                         <Copy.Button label="Copy" type="primary" value={this.state.content} renderIf={this.state.content}/>
@@ -43,4 +45,4 @@ class ExportPermissionModal extends Webiny.Ui.ModalComponent {
     }
 }
 
-export default Webiny.createComponent(ExportPermissionModal, {modules: ['Modal', 'Copy', 'CodeHighlight']});
+export default Webiny.createComponent(ExportPermissionModal, {modules: ['Modal', 'Copy', 'CodeHighlight', 'Loader']});

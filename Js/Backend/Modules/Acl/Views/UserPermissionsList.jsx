@@ -40,7 +40,7 @@ List.defaultProps = {
                                     <Ui.Button
                                         type="secondary"
                                         onClick={showView('importModal')}
-                                        icon="icon-plus-circled"
+                                        icon="fa-upload"
                                         label="Import"/>
                                 </Ui.ButtonGroup>
                             </Ui.View.Header>

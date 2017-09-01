@@ -1,6 +1,7 @@
 import React from 'react';
 import Webiny from 'webiny';
 import ExportRoleModal from './Modal/ExportRoleModal';
+import ImportRoleModal from './Modal/ImportRoleModal';
 
 class List extends Webiny.Ui.View {
 }
@@ -8,6 +9,7 @@ class List extends Webiny.Ui.View {
 List.defaultProps = {
     renderer() {
         const listProps = {
+            ref: ref => this.list = ref,
             api: '/entities/webiny/user-roles',
             fields: 'id,name,slug,description,createdOn',
             connectToRouter: true,
@@ -32,10 +34,17 @@ List.defaultProps = {
                                     <span>Roles are a simple way to control what permissions certain users have. Create a role with a set
                                         of {permissions} and then assign roles to {users}.</span>
                                 )}>
-                                    <Ui.Link type="primary" route="UserRoles.Create" align="right">
+                                <Ui.ButtonGroup>
+                                    <Ui.Link type="primary" route="UserRoles.Create">
                                         <Ui.Icon icon="icon-plus-circled"/>
-                                        Create role
+                                        Create
                                     </Ui.Link>
+                                    <Ui.Button
+                                        type="secondary"
+                                        onClick={showView('importModal')}
+                                        icon="fa-upload"
+                                        label="Import"/>
+                                </Ui.ButtonGroup>
                             </Ui.View.Header>
                             <Ui.View.Body>
                                 <Ui.List {...listProps}>
@@ -85,6 +94,10 @@ List.defaultProps = {
                 <Ui.ViewSwitcher.View view="exportModal" modal>
                     {(showView, data) => <ExportRoleModal role={data} />}
                 </Ui.ViewSwitcher.View>
+
+                <Ui.ViewSwitcher.View view="importModal" modal>
+                    {(showView) => <ImportRoleModal onImported={() => this.list.loadData()}/>}
+                </Ui.ViewSwitcher.View>
             </Ui.ViewSwitcher>
         );
     }
@@ -92,5 +105,5 @@ List.defaultProps = {
 
 export default Webiny.createComponent(List, {
     modulesProp: 'Ui',
-    modules: ['ViewSwitcher', 'View', 'Link', 'Icon', 'Grid', 'Input', 'List']
+    modules: ['ViewSwitcher', 'View', 'Link', 'Icon', 'Grid', 'Input', 'List', 'Button', 'ButtonGroup']
 });

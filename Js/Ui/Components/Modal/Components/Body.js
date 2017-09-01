@@ -8,10 +8,11 @@ class Body extends Webiny.Ui.Component {
 
 Body.defaultProps = {
     noPadding: false,
+    style: null,
     renderer() {
-        const {styles} = this.props;
+        const {styles, style} = this.props;
         return (
-            <div className={this.classSet(styles.body, (this.props.noPadding && styles.noPadding), this.props.className)}>
+            <div style={style} className={this.classSet(styles.body, (this.props.noPadding && styles.noPadding), this.props.className)}>
                 {this.props.children}
             </div>
         );
