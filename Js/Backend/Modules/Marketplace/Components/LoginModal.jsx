@@ -48,7 +48,7 @@ class LoginModal extends Webiny.Ui.ModalComponent {
                                             name="password"
                                             validate="required"
                                             onEnter={form.submit}
-                                            description={<Link className="small" onClick={() => {
+                                            description={<Link className="small pull-right" onClick={() => {
                                                 this.hide().then(() => this.props.showForgotPassword())
                                             }}>I CAN'T REMEMBER</Link>}
                                         />

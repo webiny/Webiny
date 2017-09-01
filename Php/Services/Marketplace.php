@@ -24,13 +24,13 @@ class Marketplace extends AbstractService
         });
 
         $this->api('GET', 'apps', function () {
-            $response = $this->server('/services/marketplace-manager/apps');
+            $response = $this->server('/services/marketplace-manager/marketplace/apps');
 
             return new ApiRawResponse($response);
         });
 
         $this->api('GET', 'apps/{id}', function ($id) {
-            $response = $this->server('/services/marketplace-manager/apps/' . $id);
+            $response = $this->server('/services/marketplace-manager/marketplace/apps/' . $id);
 
             return new ApiRawResponse($response);
         });

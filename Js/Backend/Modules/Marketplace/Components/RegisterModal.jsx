@@ -7,7 +7,7 @@ class ModalForm extends Webiny.Ui.ModalComponent {
         super(props);
 
         this.state = {
-            status: true
+            success: false
         };
 
         this.bindMethods('login');
@@ -17,11 +17,16 @@ class ModalForm extends Webiny.Ui.ModalComponent {
         this.hide().then(() => this.props.showLogin());
     }
 
+    show() {
+        this.setState({success: false});
+        return super.show();
+    }
+
     renderRegisterForm() {
         const containerProps = {
             api: Webiny.Auth.getApiEndpoint().setUrl('/register'),
             fields: 'id,firstName,lastName,email',
-            onSubmitSuccess: () => this.setState({status: true}),
+            onSubmitSuccess: () => this.setState({success: true}),
             onCancel: this.hide,
             onSuccessMessage: null
         };
@@ -32,8 +37,9 @@ class ModalForm extends Webiny.Ui.ModalComponent {
             <Form {...containerProps}>
                 {(model, form) => (
                     <Grid.Row>
-                        <Form.Error/>
-
+                        <Grid.Col all={12}>
+                            <Form.Error/>
+                        </Grid.Col>
                         <Grid.Col all={6}>
                             <Input
                                 placeholder="First Name"
@@ -56,7 +62,7 @@ class ModalForm extends Webiny.Ui.ModalComponent {
                             <Input
                                 placeholder="Email"
                                 label="Email"
-                                name="username"
+                                name="email"
                                 validate="required, email"
                                 onEnter={form.submit}/>
                         </Grid.Col>
@@ -106,13 +112,13 @@ class ModalForm extends Webiny.Ui.ModalComponent {
     renderDialog() {
         const {Modal, Link} = this.props;
         return (
-            <Modal.Dialog className="modal--theHub">
+            <Modal.Dialog>
                 <Modal.Content>
-                    <Modal.Header title="Register"/>
+                    {!this.state.success ? <Modal.Header title="Register"/> : null}
                     <Modal.Body>
-                        {this.state.status ? this.renderSuccess() : this.renderRegisterForm()}
+                        {this.state.success ? this.renderSuccess() : this.renderRegisterForm()}
                     </Modal.Body>
-                    {!this.state.status && (
+                    {!this.state.success && (
                         <Modal.Footer>
                             <div className="text-center">
                                 Already a member? <br/><Link className="text-link" onClick={this.login}>Login here</Link>

@@ -15,8 +15,8 @@ class Project extends Webiny.App.Module {
 
         this.registerRoutes(
             new Webiny.Route('Marketplace.LoginRegister', '/marketplace/login-register', LoginRegister, 'Marketplace'),
+            new Webiny.Route('Marketplace.AppDetails', '/marketplace/:id', AppDetails, 'Marketplace'),
             new Webiny.Route('Marketplace.Browse', '/marketplace', Browse, 'Marketplace'),
-            new Webiny.Route('Marketplace.AppDetails', '/marketplace/details', AppDetails, 'Marketplace'),
         );
     }
 }

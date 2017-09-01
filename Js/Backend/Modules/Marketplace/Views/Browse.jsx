@@ -11,6 +11,7 @@ class Browse extends Webiny.Ui.View {
         super(props);
 
         this.state = {
+            apps: [],
             user: null,
             loadingUser: false
         };
@@ -23,9 +24,16 @@ class Browse extends Webiny.Ui.View {
         this.setState({loadingUser: true});
         new Webiny.Api.Endpoint('/services/webiny/marketplace').get('/me').then(apiResponse => {
             if (!apiResponse.isError()) {
-                this.setState({user: apiResponse.getData('user')}); // restore correct key
+                this.setState({user: apiResponse.getData()});
+                this.loadApps();
             }
             this.setState({loadingUser: false});
+        });
+    }
+
+    loadApps() {
+        new Webiny.Api.Endpoint('/services/webiny/marketplace').get('/apps').then(apiResponse => {
+            this.setState({apps: apiResponse.getData('list')});
         });
     }
 
@@ -60,9 +68,11 @@ class Browse extends Webiny.Ui.View {
                     </View.Header>
                     <View.Body>
                         <Grid.Row className={styles.appList}>
-                            <Grid.Col all={6}>
-                                <AppBox/>
-                            </Grid.Col>
+                            {this.state.apps && this.state.apps.map(app => (
+                                <Grid.Col all={6} key={app.id}>
+                                    <AppBox app={app}/>
+                                </Grid.Col>
+                            ))}
                         </Grid.Row>
                     </View.Body>
                 </View.Dashboard>
