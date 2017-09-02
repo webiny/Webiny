@@ -60,16 +60,10 @@ class Updates extends Webiny.Ui.View {
 Updates.defaultProps = {
     renderer() {
 
-        const {Grid, Loader, Carousel, Link, Icon} = this.props;
+        const {Grid, Loader, Carousel, Link, Icon, View} = this.props;
 
         if (!this.state.loaded) {
-            return (
-                <Grid.Row>
-                    <Grid.Col all={12}>
-                        <Loader className="fixed"/>
-                    </Grid.Col>
-                </Grid.Row>
-            );
+            return (<Loader><span>Loading your updates...</span></Loader>);
         }
 
         if (this.state.updates.length < 1) {
@@ -92,7 +86,7 @@ Updates.defaultProps = {
                 <div className="block-content block-content--dynamic-height">
                     <div className="slider">
                         <div className="slides">
-                            {this.state.dismissing && <Loader className="fixed"/>}
+                            {this.state.dismissing && <Loader><span>Loading your updates...</span></Loader>}
 
                             <Carousel items={1} dots={true}>
                                 {_.get(this.state, 'updates') && this.state.updates.map(post => {
