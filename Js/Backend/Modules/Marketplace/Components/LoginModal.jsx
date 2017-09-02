@@ -9,7 +9,7 @@ class LoginModal extends Webiny.Ui.ModalComponent {
     }
 
     onSuccess(apiResponse) {
-        this.hide().then(() => this.props.onUser(apiResponse.getData('user')));
+        this.hide().then(() => this.props.onUser(apiResponse.getData()));
     }
 
     renderDialog() {

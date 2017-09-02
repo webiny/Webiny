@@ -17,7 +17,7 @@
 	text-align: center;
 }
 
-.iconWrapper span{
+.iconWrapper > * {
 	display: block;
 	font-size: 10px;
 	text-transform: uppercase;

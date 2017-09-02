@@ -8,7 +8,13 @@ AuthorLink: http://www.webiny.com
 AuthorEmail: info@webiny.com
 
 Marketplace:
+    Web: __Application.WebPath__
     Api: __Application.ApiPath__
+
+Routes:
+    THeHubRedirect:
+        Path: /marketplace/my-profile
+        Callback: Php/Marketplace/MyProfile
 
 Storage:
     Services:

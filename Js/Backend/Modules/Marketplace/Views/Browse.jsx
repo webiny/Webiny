@@ -23,27 +23,34 @@ class Browse extends Webiny.Ui.View {
         this.setState({loadingUser: true});
         new Webiny.Api.Endpoint('/services/webiny/marketplace').get('/me').then(apiResponse => {
             if (!apiResponse.isError()) {
-                this.setState({user: apiResponse.getData()});
-                this.loadApps();
+                this.onUser(apiResponse.getData());
             }
             this.setState({loadingUser: false});
         });
     }
 
     loadApps() {
+        this.setState({loadingApps: true});
         new Webiny.Api.Endpoint('/services/webiny/marketplace').get('/apps').then(apiResponse => {
-            this.setState({apps: apiResponse.getData('list')});
+            this.setState({apps: apiResponse.getData('list'), loadingApps: false});
         });
     }
 
-    onUser(user) {
-        this.setState({user});
+    onUser({authToken, user}) {
+        this.setState({authToken, user});
+        if (user) {
+            this.loadApps();
+        }
     }
 
     renderBody() {
-        const {styles, Grid, Loader} = this.props;
+        const {Loader} = this.props;
         if (this.state.loadingUser) {
-            return <Loader/>;
+            return <Loader>Logging in...</Loader>;
+        }
+
+        if (this.state.loadingApps) {
+            return <Loader>Fetching Webiny apps...</Loader>;
         }
 
         if (!this.state.user) {
@@ -52,7 +59,7 @@ class Browse extends Webiny.Ui.View {
             );
         }
 
-        const {Link, View, Icon} = this.props;
+        const {styles, Link, View, Icon, Grid} = this.props;
 
         return (
             <div className={styles.browse}>
@@ -63,7 +70,10 @@ class Browse extends Webiny.Ui.View {
                         </View.Header.Center>
                         {this.props.appDetails ?
                             <Link type="default" route="Marketplace.Browse">Go Back</Link> :
-                            <Link type="default" url="https://www.webiny.com/my-profile" newTab={true} renderIf={this.state.user}>
+                            <Link
+                                newTab
+                                type="default"
+                                url={`http://thehub.app:8001/my-profile?token=${this.state.authToken}`}>
                                 <Icon icon="fa-cog"/> Manage Account
                             </Link>
                         }

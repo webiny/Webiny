@@ -8,7 +8,7 @@ Form.defaultProps = {
     renderer() {
         const formProps = {
             api: Webiny.Auth.getApiEndpoint(),
-            fields: 'id,firstName,lastName,email,roles,enabled',
+            fields: 'id,firstName,lastName,email,roles,enabled,meta.theHub.token',
             connectToRouter: true,
             onSubmitSuccess: 'Users.List',
             onCancel: 'Users.List',
@@ -64,6 +64,7 @@ Form.defaultProps = {
                                     </Ui.Grid.Row>
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={12}>
+                                            <Ui.Input label="TheHub Token" name="meta.theHub.token"/>
                                             <Ui.Switch label="Enabled" name="enabled"/>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>

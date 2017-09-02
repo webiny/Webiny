@@ -4,6 +4,7 @@ namespace Apps\Webiny\Php\Services;
 
 use Apps\Webiny\Php\DevTools\Exceptions\AppException;
 use Apps\Webiny\Php\DevTools\Response\ApiRawResponse;
+use Apps\Webiny\Php\DevTools\Response\ApiResponse;
 use Apps\Webiny\Php\DevTools\Services\AbstractService;
 use Apps\Webiny\Php\Entities\User;
 
@@ -19,8 +20,20 @@ class Marketplace extends AbstractService
 
         $this->api('GET', 'me', function () {
             $response = $this->server('/entities/webiny/users/me');
+            $resData = json_decode($response, true);
 
-            return new ApiRawResponse($response);
+            if (array_key_exists('code', $resData)) {
+                return new ApiRawResponse($response);
+            }
+
+            /* @var $user User */
+            $user = $this->wAuth()->getUser();
+            $data = [
+                'authToken' => $user->meta['theHub']['token'],
+                'user'      => $resData['data']
+            ];
+
+            return new ApiResponse($data);
         });
 
         $this->api('GET', 'apps', function () {
