@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import Webiny from 'webiny';
+import styles from './styles.css';
 
 class CodeEditor extends Webiny.Ui.FormComponent {
     constructor(props) {
@@ -103,12 +104,14 @@ CodeEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             placeholder: this.getPlaceholder()
         });
 
-        const {FormGroup} = this.props;
+        const {styles, FormGroup} = this.props;
 
         return (
-            <FormGroup valid={this.state.isValid} className={this.props.className}>
+            <FormGroup valid={this.state.isValid} className={this.classSet(this.props.className)}>
                 {this.renderLabel()}
-                <textarea/>
+                <div className={styles.wrapper}>
+                    <textarea/>
+                </div>
                 <div>
                     {this.renderDescription()}
                     {this.renderValidationMessage()}
@@ -119,6 +122,7 @@ CodeEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
 });
 
 export default Webiny.createComponent(CodeEditor, {
+    styles,
     modules: ['FormGroup', {CodeMirror: 'Webiny/Vendors/CodeMirror'}],
     api: ['focus']
 });
