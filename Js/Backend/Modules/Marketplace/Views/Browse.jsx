@@ -73,7 +73,7 @@ class Browse extends Webiny.Ui.View {
                             <Link
                                 newTab
                                 type="default"
-                                url={`http://thehub.app:8001/my-profile?token=${this.state.authToken}`}>
+                                url={`/token/${this.state.authToken}`}>
                                 <Icon icon="fa-cog"/> Manage Account
                             </Link>
                         }
