@@ -8,7 +8,8 @@
         "webiny/analytics-db": "dev-master",
         "mikehaertl/phpwkhtmltopdf": "^2.0@dev",
         "league/csv": "^7.1@dev",
-        "phpzip/phpzip": "dev-master"
+        "phpzip/phpzip": "dev-master",
+        "php-curl-class/php-curl-class": "dev-master"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
