@@ -48,6 +48,40 @@ class Marketplace extends AbstractService
             return new ApiRawResponse($response);
         });
 
+        $this->api('GET', 'apps/{id}/install', function ($id) {
+            header('X-Accel-Buffering: no');
+            ob_end_flush();
+
+            $commands = [
+                'mkdir -p /var/www/Marketplace',
+                'cd /var/www/Marketplace',
+                'echo "Installing Webiny app..."',
+                // Composer is writing info messages to stderr so we redirect it to have all info in stdout pipe
+                'composer require webiny/static-render 2>&1',
+                'php ./Apps/Webiny/Php/Cli/install.php Local StaticRender',
+            ];
+            $pipes = [];
+            $descriptor = [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']];
+            $proc = proc_open($this->generateCommand($commands), $descriptor, $pipes);
+            fclose($pipes[0]);
+            if (is_resource($proc)) {
+                echo '<pre>';
+                while ($f = fgets($pipes[1])) {
+                    echo $f;
+                    flush();
+                }
+                fclose($pipes[1]);
+
+                while ($f = fgets($pipes[2])) {
+                    echo $f;
+                    flush();
+                };
+                proc_close($proc);
+                echo '</pre>';
+            }
+            die();
+        })->setPublic();
+
         $this->api('POST', 'login', function () {
             $data = $this->wRequest()->getRequestData();
             $data['rememberme'] = true;
@@ -140,5 +174,12 @@ class Marketplace extends AbstractService
         }
 
         return $api . $path;
+    }
+
+    private function generateCommand($commands)
+    {
+        $connection = 'ssh -i ' . __DIR__ . '/file.rsa -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no vagrant@localhost';
+
+        return $connection . ' "' . join(' && ', $commands) . '"';
     }
 }

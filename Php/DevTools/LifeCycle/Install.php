@@ -149,7 +149,7 @@ class Install implements LifeCycleInterface
     protected function installJsDependencies($app)
     {
         if (file_exists($app->getPath() . '/package.json')) {
-            exec('cd ' . $app->getPath() . ' && yarn install');
+            passthru('cd ' . $app->getPath() . ' && yarn install');
         }
     }
 
