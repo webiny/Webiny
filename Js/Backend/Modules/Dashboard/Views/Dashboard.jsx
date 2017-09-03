@@ -122,7 +122,7 @@ Dashboard.defaultProps = {
                                             <div className="block-list__item-image">
                                                 <span className="icon icon-github icon-3x"></span>
                                             </div>
-                                            <a href="https://github.com/Webiny" className="block-list__item-text" target="_blank">
+                                            <a href="https://github.com/Webiny/Webiny" className="block-list__item-text" target="_blank">
                                                 <Icon icon="fa-github"/> GitHub
                                             </a>
                                         </li>
