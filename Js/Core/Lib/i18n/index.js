@@ -155,24 +155,30 @@ class i18n {
         return this;
     }
 
-    initialize(language) {
+
+    async initialize(language) {
         this.language = language;
         // TODO: Set moment / accounting language settings here
 
+        const cache = await Webiny.IndexedDB.get('Webiny.i18n');
+
         // If we have the same cache key, that means we have latest translations - we can safely read from local storage.
-        if (this.cacheKey === parseInt(localStorage[`Webiny.i18n.cacheKey`])) {
-            this.translations = JSON.parse(localStorage[`Webiny.i18n.translations`]);
-            return Promise.resolve();
+        if (this.cacheKey === _.get(cache, 'cacheKey')) {
+            this.translations = cache.translations;
+            return;
         }
 
         // If we have a different cache key (or no cache key at all), we must fetch translations from server
-        return this.api.setQuery({language: this.language}).execute().then(apiResponse => {
-            localStorage[`Webiny.i18n.language`] = this.language;
-            localStorage[`Webiny.i18n.cacheKey`] = apiResponse.getData('cacheKey', null);
-            localStorage[`Webiny.i18n.translations`] = JSON.stringify(apiResponse.getData('translations'));
-            this.translations = _.assign(this.translations, apiResponse.getData('translations'));
-            return apiResponse;
+        const response = await this.api.setQuery({language: this.language}).execute();
+
+        await Webiny.IndexedDB.set('Webiny.i18n', {
+            language: this.language,
+            cacheKey: response.getData('cacheKey', null),
+            translations: response.getData('translations')
         });
+
+        this.translations = _.assign(this.translations, response.getData('translations'));
+        return response;
     }
 
     toText(element) {
