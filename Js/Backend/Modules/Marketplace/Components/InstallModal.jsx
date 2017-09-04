@@ -1,5 +1,6 @@
 import React from 'react';
 import Webiny from 'webiny';
+import _ from 'lodash';
 import styles from './../Views/styles.css';
 
 
@@ -8,8 +9,66 @@ class InstallModal extends Webiny.Ui.ModalComponent {
         super(props);
 
         this.state = {
-            step: 1
+            started: false,
+            progress: 0,
+            messages: []
         };
+
+        this.bindMethods('startInstallation');
+    }
+
+    startInstallation() {
+        this.setState({started: true});
+        const api = new Webiny.Api.Endpoint('/services/webiny/marketplace');
+        let currentResponseLength = false;
+        api.setConfig({
+            downloadProgress: e => {
+                let response = e.currentTarget.response || '';
+                if (currentResponseLength === false) {
+                    currentResponseLength = response.length;
+                }
+                else {
+                    const newLength = response.length;
+                    response = response.substring(currentResponseLength);
+                    currentResponseLength = newLength;
+                }
+
+                const messages = this.state.messages;
+                response.split("_-_").filter(l => l.length).map(line => {
+                    try {
+                        const res = JSON.parse(line);
+                        if (res.message) {
+                            messages.push(res);
+                            this.setState({messages, count: messages.length});
+                        }
+
+                        if (res.progress) {
+                            this.setState({progress: parseInt(res.progress), finished: res.progress === 100});
+                        }
+                    } catch (e) {
+
+                    }
+                });
+            }
+        });
+
+        return api.get('apps/123/install').then(apiResponse => {
+            if (this.state.finished) {
+
+            }
+        });
+    }
+
+    componentDidUpdate() {
+        super.componentDidUpdate();
+        if (this.logger) {
+            this.logger.scrollTop = 10000;
+        }
+    }
+
+    show() {
+        this.setState({messages: [], started: false, progress: 0, finished: false});
+        return super.show();
     }
 
     renderDialog() {
@@ -18,66 +77,35 @@ class InstallModal extends Webiny.Ui.ModalComponent {
         return (
             <Modal.Dialog>
                 <Modal.Content>
-
                     <Modal.Header onClose={this.hide} title="Install"/>
-
                     <Modal.Body>
-
-                        <Logic.Show if={(this.state.step === 1)}>
+                        <Logic.Hide if={this.state.started}>
                             <Alert type="warning" title="Notice">
-                                Make sure you are in the development mode and that your watch process is running before starting the install
-                                process.
+                                Make sure your watch process is running before installing the app.
                             </Alert>
                             <div className="text-center">
-                                <Button type="primary" label="Start Installation" onClick={() => {
-                                    this.setState({step: 2})
-                                }}/>
+                                <Button type="primary" label="Begin Installation" onClick={this.startInstallation}/>
                             </div>
-                        </Logic.Show>
-
-                        <Logic.Show if={(this.state.step === 2)}>
-                            <Alert type="info">
-                                Downloading app bundle, please wait...
-                            </Alert>
-                            <Progress value={50}/>
-
-                            <div className="text-center">
-                                <Link onClick={() => {
-                                    this.setState({step: 3})
-                                }}>Proceed to step 3</Link>
-                            </div>
-                        </Logic.Show>
-
-                        <Logic.Show if={(this.state.step === 3)}>
-                            <Alert type="info">
-                                Bundle downloaded, running the install process.
-                            </Alert>
-                            <Progress value={75}/>
-
-                            <div className="text-center">
-                                <Link onClick={() => {
-                                    this.setState({step: 4})
-                                }}>Proceed to step 4</Link>
-                            </div>
-                        </Logic.Show>
-
-                        <Logic.Show if={(this.state.step === 4)}>
+                        </Logic.Hide>
+                        <Logic.Hide if={!this.state.started || this.state.finished}>
+                            <Progress value={this.state.progress}/>
+                            <pre style={{height: 300, overflow: 'scroll', fontSize: 12}} ref={ref => this.logger = ref}>
+                            {this.state.messages.map((m, i) => (
+                                <div key={i}>{m.message}</div>
+                            ))}
+                            </pre>
+                        </Logic.Hide>
+                        <Logic.Show if={this.state.finished}>
                             <Alert type="success" title="Done">
-                                Installation complete. Refresh your browser to load the new app.
+                                Your app is installed and ready to use!
                             </Alert>
-                            <Progress value={100}/>
-                            <br/>
-                            <div className="text-center">
-                                <Button type="primary" label="Refresh" onClick={() => {
-                                    location.reload();
-                                }}/>
-                            </div>
                         </Logic.Show>
-
                     </Modal.Body>
-                    <Modal.Footer>
-
-                    </Modal.Footer>
+                    {this.state.finished && (
+                        <Modal.Footer>
+                            <Button align="right" label="Close" onClick={this.hide}/>
+                        </Modal.Footer>
+                    )}
                 </Modal.Content>
             </Modal.Dialog>
         );

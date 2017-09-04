@@ -17,8 +17,11 @@ class Backend extends Webiny.App {
             new Layout(this),
             new Logger(this),
             new Dashboard(this),
-            new Marketplace(this)
         ];
+
+        if (DEVELOPMENT) {
+            this.modules.push(new Marketplace(this));
+        }
     }
 
     run() {

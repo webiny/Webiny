@@ -21,6 +21,10 @@ function execute(http, options, aggregate = true) {
     http.setHeaders(headers);
     http.setResponseType(options.responseType || 'json');
 
+    if (options.downloadProgress) {
+        http.setDownloadProgressHandler(options.downloadProgress);
+    }
+
     if (options.progress) {
         http.setProgressHandler(options.progress);
     }

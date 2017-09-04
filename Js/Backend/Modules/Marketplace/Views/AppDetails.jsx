@@ -38,7 +38,7 @@ AppDetails.defaultProps = {
                     </div>
                     <div className={styles.action}>
                         <Button type="secondary" icon="fa-download" label="Install" onClick={() => this.installModal.show()}/>
-                        <InstallModal ref={ref => this.installModal = ref}/>
+                        <InstallModal ref={ref => this.installModal = ref} app={app}/>
                     </div>
                 </div>
                 <Tabs>

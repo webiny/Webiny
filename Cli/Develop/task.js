@@ -160,7 +160,7 @@ class Develop extends Build {
                     return Webiny.runTask('develop', {
                         apps: Webiny.getApps().filter(app => apps.includes(app.getName())),
                         webpackCallback: () => {
-                            res.write('done');
+                            // At the moment, we are not sending anything back. Just end the request to signal success.
                             res.end();
                         }
                     });
