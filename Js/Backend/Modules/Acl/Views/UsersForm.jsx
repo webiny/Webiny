@@ -10,7 +10,10 @@ Form.defaultProps = {
             api: Webiny.Auth.getApiEndpoint(),
             fields: 'id,firstName,lastName,email,roles,enabled,meta.theHub.token',
             connectToRouter: true,
-            onSubmitSuccess: 'Users.List',
+            onSubmitSuccess: () => {
+                Webiny.Auth.refresh();
+                Webiny.Router.goToRoute('Users.List');
+            },
             onCancel: 'Users.List',
             onSuccessMessage: (record) => {
                 return <span>User <strong>{record.firstName}</strong> was saved successfully!</span>;
