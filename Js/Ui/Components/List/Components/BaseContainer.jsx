@@ -23,7 +23,7 @@ class BaseContainer extends Webiny.Ui.Component {
             perPage: props.perPage,
             searchQuery: null,
             searchOperator: props.searchOperator || 'or',
-            searchFields: props.searchFields.replace(/\s/g, '') || null,
+            searchFields: props.searchFields ? props.searchFields.replace(/\s/g, '') : null,
             selectedRows: []
         };
 
