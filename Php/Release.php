@@ -2,9 +2,9 @@
 
 namespace Apps\Webiny\Php;
 
-use Apps\Webiny\Php\AppManager\App;
+use Apps\Webiny\Php\Lib\Apps\App;
 
-class Release extends \Apps\Webiny\Php\DevTools\LifeCycle\Release
+class Release extends \Apps\Webiny\Php\Lib\LifeCycle\Release
 {
     public function run(App $app)
     {

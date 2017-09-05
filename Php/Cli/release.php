@@ -11,9 +11,9 @@
 $autoloader = require_once getcwd() . '/vendor/autoload.php';
 $autoloader->addPsr4('Apps\\Webiny\\', getcwd() . '/Apps/Webiny');
 
-use Apps\Webiny\Php\AppManager\App;
+use Apps\Webiny\Php\Lib\Apps\App;
 
-class Release extends \Apps\Webiny\Php\DevTools\AbstractCli
+class Release extends \Apps\Webiny\Php\Lib\AbstractCli
 {
     public function run()
     {

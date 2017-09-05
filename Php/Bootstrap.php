@@ -2,13 +2,13 @@
 
 namespace Apps\Webiny\Php;
 
-use Apps\Webiny\Php\DevTools\Validators\Password;
+use Apps\Webiny\Php\Lib\Validators\Password;
 use Apps\Webiny\Php\Entities\User;
 use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
 
-class Bootstrap extends \Apps\Webiny\Php\DevTools\LifeCycle\Bootstrap
+class Bootstrap extends \Apps\Webiny\Php\Lib\LifeCycle\Bootstrap
 {
-    public function run(AppManager\App $app)
+    public function run(Lib\Apps\App $app)
     {
         parent::run($app);
         $this->addAppRoute('/^\/welcome/', 'Webiny:Templates/Welcome.tpl');

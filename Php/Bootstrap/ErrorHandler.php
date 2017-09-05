@@ -1,9 +1,9 @@
 <?php
 namespace Apps\Webiny\Php\Bootstrap;
 
-use Apps\Webiny\Php\DevTools\Response\ApiErrorResponse;
-use Apps\Webiny\Php\DevTools\Response\CliResponse;
-use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\Lib\Response\ApiErrorResponse;
+use Apps\Webiny\Php\Lib\Response\CliResponse;
+use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Entities\LoggerErrorGroup;
 use Webiny\Component\Http\Response;
 

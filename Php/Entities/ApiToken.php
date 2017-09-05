@@ -2,9 +2,9 @@
 
 namespace Apps\Webiny\Php\Entities;
 
-use Apps\Webiny\Php\DevTools\Interfaces\UserInterface;
-use Apps\Webiny\Php\DevTools\WebinyTrait;
-use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
+use Apps\Webiny\Php\Lib\Interfaces\UserInterface;
+use Apps\Webiny\Php\Lib\WebinyTrait;
+use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Webiny\Component\Crypt\CryptTrait;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Mongo\Index\SingleIndex;

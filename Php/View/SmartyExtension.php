@@ -2,7 +2,7 @@
 
 namespace Apps\Webiny\Php\View;
 
-use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Services\Apps;
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\StdLib\StdLibTrait;

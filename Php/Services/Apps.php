@@ -2,9 +2,9 @@
 
 namespace Apps\Webiny\Php\Services;
 
-use Apps\Webiny\Php\DevTools\Exceptions\AppException;
-use Apps\Webiny\Php\DevTools\Services\AbstractService;
-use Apps\Webiny\Php\AppManager\App;
+use Apps\Webiny\Php\Lib\Exceptions\AppException;
+use Apps\Webiny\Php\Lib\Services\AbstractService;
+use Apps\Webiny\Php\Lib\Apps\App;
 
 /**
  * Class Apps

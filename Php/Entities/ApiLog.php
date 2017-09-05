@@ -2,10 +2,10 @@
 
 namespace Apps\Webiny\Php\Entities;
 
-use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
-use Apps\Webiny\Php\DevTools\Entity\EntityQuery\EntityQuery;
-use Apps\Webiny\Php\DevTools\Entity\EntityQuery\Filter;
-use Apps\Webiny\Php\DevTools\Exceptions\AppException;
+use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
+use Apps\Webiny\Php\Lib\Entity\EntityQuery\EntityQuery;
+use Apps\Webiny\Php\Lib\Entity\EntityQuery\Filter;
+use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Webiny\Component\Mongo\Index\CompoundIndex;
 use Webiny\Component\Mongo\Index\SingleIndex;
 

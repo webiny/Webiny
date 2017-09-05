@@ -7,14 +7,13 @@
 
 namespace Apps\Webiny\Php\Bootstrap;
 
-use Apps\Webiny\Php\DevTools\Authorization\Authorization;
-use Apps\Webiny\Php\DevTools\Request;
-use Apps\Webiny\Php\DevTools\Response\ApiResponse;
-use Apps\Webiny\Php\DevTools\Response\HtmlResponse;
-use Apps\Webiny\Php\DevTools\Response\AbstractResponse;
-use Apps\Webiny\Php\DevTools\Response\ResponseEvent;
-use Apps\Webiny\Php\AppManager\App;
-use Apps\Webiny\Php\AppManager\AppLoader;
+use Apps\Webiny\Php\Lib\Authorization\Authorization;
+use Apps\Webiny\Php\Lib\Request;
+use Apps\Webiny\Php\Lib\Response\ApiResponse;
+use Apps\Webiny\Php\Lib\Response\HtmlResponse;
+use Apps\Webiny\Php\Lib\Response\AbstractResponse;
+use Apps\Webiny\Php\Lib\Response\ResponseEvent;
+use Apps\Webiny\Php\Lib\Apps\App;
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\Entity\Entity;
 use Webiny\Component\Http\Http;
@@ -24,7 +23,7 @@ use Webiny\Component\Security\Security;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\UrlObject\UrlObjectException;
 use Webiny\Component\StdLib\SingletonTrait;
-use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\Storage\Storage;
 
 /**
@@ -71,7 +70,7 @@ class Bootstrap
         Http::setConfig($this->wConfig()->get('Http', $emptyConfig));
 
         // scan all components to register routes and event handlers
-        AppLoader::getInstance()->loadApps();
+        $this->wApps()->loadApps();
 
         /* @var $app App */
         foreach ($this->wApps() as $app) {
@@ -87,7 +86,7 @@ class Bootstrap
             return $this->processMultipleRequests();
         }
 
-        $responseClass = '\Apps\Webiny\Php\DevTools\Response\AbstractResponse';
+        $responseClass = '\Apps\Webiny\Php\Lib\Response\AbstractResponse';
         /* @var $response AbstractResponse */
         $response = $this->wEvents()->fire('Webiny.Bootstrap.Request', new BootstrapEvent(), $responseClass, 1);
         if ($response) {
@@ -113,7 +112,7 @@ class Bootstrap
     {
         $requests = $this->wRequest()->getRequestData()['requests'];
         $responses = [];
-        $responseClass = '\Apps\Webiny\Php\DevTools\Response\AbstractResponse';
+        $responseClass = '\Apps\Webiny\Php\Lib\Response\AbstractResponse';
         $headers = [];
         foreach ($requests as $req) {
             if (count($headers)) {

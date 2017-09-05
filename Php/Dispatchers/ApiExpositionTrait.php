@@ -7,9 +7,9 @@
 
 namespace Apps\Webiny\Php\Dispatchers;
 
-use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
-use Apps\Webiny\Php\DevTools\Response\EntityResponse;
-use Apps\Webiny\Php\DevTools\Response\ListResponse;
+use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
+use Apps\Webiny\Php\Lib\Response\EntityResponse;
+use Apps\Webiny\Php\Lib\Response\ListResponse;
 use Apps\Webiny\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Router\Route\Route;

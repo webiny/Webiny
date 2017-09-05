@@ -2,10 +2,10 @@
 
 namespace Apps\Webiny\Php\Services;
 
-use Apps\Webiny\Php\DevTools\Exceptions\AppException;
-use Apps\Webiny\Php\DevTools\Response\ApiRawResponse;
-use Apps\Webiny\Php\DevTools\Response\ApiResponse;
-use Apps\Webiny\Php\DevTools\Services\AbstractService;
+use Apps\Webiny\Php\Lib\Exceptions\AppException;
+use Apps\Webiny\Php\Lib\Response\ApiRawResponse;
+use Apps\Webiny\Php\Lib\Response\ApiResponse;
+use Apps\Webiny\Php\Lib\Services\AbstractService;
 use Apps\Webiny\Php\Entities\User;
 use Apps\Webiny\Php\Services\Lib\AppInstaller;
 

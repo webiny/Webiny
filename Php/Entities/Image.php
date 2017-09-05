@@ -2,7 +2,7 @@
 
 namespace Apps\Webiny\Php\Entities;
 
-use Apps\Webiny\Php\DevTools\Exceptions\AppException;
+use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Image\Bridge\ImageException;
 use Webiny\Component\Image\ImageLoader;

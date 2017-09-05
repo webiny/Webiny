@@ -7,7 +7,7 @@
 
 namespace Apps\Webiny\Php\Dispatchers;
 
-use Apps\Webiny\Php\DevTools\Response\ApiCacheResponse;
+use Apps\Webiny\Php\Lib\Response\ApiCacheResponse;
 use Apps\Webiny\Php\RequestHandlers\ApiEvent;
 
 

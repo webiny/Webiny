@@ -7,7 +7,7 @@
 
 namespace Apps\Webiny\Php\RequestHandlers;
 
-use Apps\Webiny\Php\DevTools\Exceptions\AppException;
+use Apps\Webiny\Php\Lib\Exceptions\AppException;
 
 /**
  * ApiExceptions are thrown by the API methods.

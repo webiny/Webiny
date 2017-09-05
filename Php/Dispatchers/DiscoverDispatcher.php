@@ -7,7 +7,7 @@
 
 namespace Apps\Webiny\Php\Dispatchers;
 
-use Apps\Webiny\Php\DevTools\Response\ApiRawResponse;
+use Apps\Webiny\Php\Lib\Response\ApiRawResponse;
 use Apps\Webiny\Php\Discover\Postman;
 use Apps\Webiny\Php\RequestHandlers\ApiEvent;
 use Apps\Webiny\Php\RequestHandlers\ApiException;

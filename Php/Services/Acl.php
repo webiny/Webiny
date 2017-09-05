@@ -2,8 +2,8 @@
 
 namespace Apps\Webiny\Php\Services;
 
-use Apps\Webiny\Php\DevTools\WebinyTrait;
-use Apps\Webiny\Php\DevTools\Services\AbstractService;
+use Apps\Webiny\Php\Lib\WebinyTrait;
+use Apps\Webiny\Php\Lib\Services\AbstractService;
 use Webiny\Component\StdLib\StdLibTrait;
 
 /**

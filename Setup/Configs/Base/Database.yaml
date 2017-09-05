@@ -10,4 +10,4 @@ Mongo:
 Entity:
     Database: Webiny
     Attributes:
-        many2many: \Apps\Webiny\Php\DevTools\Entity\Attributes\Many2ManyAttribute
+        many2many: \Apps\Webiny\Php\Lib\Entity\Attributes\Many2ManyAttribute

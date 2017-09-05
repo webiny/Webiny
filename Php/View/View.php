@@ -7,9 +7,9 @@
 
 namespace Apps\Webiny\Php\View;
 
-use Apps\Webiny\Php\DevTools\Config;
-use Apps\Webiny\Php\DevTools\Request;
-use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\Lib\Config;
+use Apps\Webiny\Php\Lib\Request;
+use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 
 

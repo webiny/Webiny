@@ -7,8 +7,8 @@
 
 namespace Apps\Webiny\Php\Dispatchers;
 
-use Apps\Webiny\Php\DevTools\WebinyTrait;
-use Apps\Webiny\Php\DevTools\Response\ApiErrorResponse;
+use Apps\Webiny\Php\Lib\WebinyTrait;
+use Apps\Webiny\Php\Lib\Response\ApiErrorResponse;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
 

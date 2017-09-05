@@ -2,9 +2,8 @@
 
 namespace Apps\Webiny\Php\Services\Lib;
 
-use Apps\Webiny\Php\AppManager\AppLoader;
-use Apps\Webiny\Php\AppManager\JsApp;
-use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\Apps\JsApp;
+use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 
 class AppInstaller
@@ -25,11 +24,11 @@ class AppInstaller
         $appName = str_replace(' ', '', $appData['name']);
         $commands = [
             'cd ' . $this->wConfig()->get('Application.AbsolutePath'),
-            'echo "Installing ' . $appData['name'] . ' app..."',
+            'echo "Installing ' . $appData['name'] . '..."',
             'echo "__progress:10"',
             // Composer is writing info messages to stderr so we redirect it to have all info in stdout pipe
             'composer require ' . $appData['packagist'] . ' 2>&1',
-            'echo "__progress:35"',
+            'echo "__progress:45"',
             'php ./Apps/Webiny/Php/Cli/install.php Local ' . $appName,
             'echo "__progress:65"'
         ];
@@ -54,25 +53,20 @@ class AppInstaller
             proc_close($proc);
         }
 
-        $appsYaml = 'Configs/Base/Apps.yaml';
-        $appsConfig = $this->wConfig()->parseConfig($appsYaml);
-        $appsConfig->set('Apps.' . $appName, true);
-        $this->wStorage('Root')->setContents($appsYaml, $appsConfig->getAsYaml());
-
-        return true;
-
         // Installation finished - rebuild the app
         $this->echo(['message' => 'Adding new app to the development build...', 'progress' => 90]);
         $this->echo(['message' => 'Rebuilding apps, please wait...']);
 
         // Get list of JS apps in the newly installed app
-        $apps = [];
-        $newApp = AppLoader::getInstance()->loadApp($appName);
+        $this->wApps()->enableApp($appName);
+        $newApp = $this->wApps()->loadApp($appName);
+
+        $jsApps = [];
         /* @var $jsApp JsApp */
         foreach ($newApp->getJsApps() as $jsApp) {
-            $apps[] = $jsApp->getFullName();
+            $jsApps[] = $jsApp->getFullName();
         }
-        $this->rebuildApps($apps);
+        $this->rebuildApps($jsApps);
 
         $this->echo(['progress' => 100]);
 

@@ -7,8 +7,8 @@
 
 namespace Apps\Webiny\Php\RequestHandlers;
 
-use Apps\Webiny\Php\DevTools\Response\ApiResponse;
-use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\Lib\Response\ApiResponse;
+use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\EventManager\Event;
 use Webiny\Component\Http\Request;
 use Webiny\Component\StdLib\StdObject\StringObject\StringObject;

@@ -15,7 +15,7 @@ use Webiny\Component\StdLib\Exception\AbstractException;
 $autoloader = require_once getcwd() . '/vendor/autoload.php';
 $autoloader->addPsr4('Apps\\Webiny\\', getcwd() . '/Apps/Webiny');
 
-class Admin extends \Apps\Webiny\Php\DevTools\AbstractCli
+class Admin extends \Apps\Webiny\Php\Lib\AbstractCli
 {
     public function run($email, $password)
     {

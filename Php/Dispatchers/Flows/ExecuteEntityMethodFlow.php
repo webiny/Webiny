@@ -7,9 +7,9 @@
 
 namespace Apps\Webiny\Php\Dispatchers\Flows;
 
-use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
-use Apps\Webiny\Php\DevTools\Exceptions\AppException;
-use Apps\Webiny\Php\DevTools\Reports\ReportInterface;
+use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
+use Apps\Webiny\Php\Lib\Exceptions\AppException;
+use Apps\Webiny\Php\Lib\Reports\ReportInterface;
 use Apps\Webiny\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\Attribute\Validation\ValidationException;
 use Webiny\Component\Entity\EntityException;

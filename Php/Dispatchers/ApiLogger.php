@@ -7,8 +7,8 @@
 
 namespace Apps\Webiny\Php\Dispatchers;
 
-use Apps\Webiny\Php\DevTools\Authorization\SystemApiToken;
-use Apps\Webiny\Php\DevTools\Request;
+use Apps\Webiny\Php\Lib\Authorization\SystemApiToken;
+use Apps\Webiny\Php\Lib\Request;
 use Apps\Webiny\Php\Entities\ApiLog;
 use Apps\Webiny\Php\Entities\ApiToken;
 use Apps\Webiny\Php\Entities\User;

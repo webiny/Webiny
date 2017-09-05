@@ -7,8 +7,8 @@
 
 namespace Apps\Webiny\Php\RequestHandlers;
 
-use Apps\Webiny\Php\DevTools\WebinyTrait;
-use Apps\Webiny\Php\DevTools\Response\HtmlResponse;
+use Apps\Webiny\Php\Lib\WebinyTrait;
+use Apps\Webiny\Php\Lib\Response\HtmlResponse;
 
 class Routes
 {

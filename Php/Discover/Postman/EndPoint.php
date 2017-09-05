@@ -1,8 +1,8 @@
 <?php
 namespace Apps\Webiny\Php\Discover\Postman;
 
-use Apps\Webiny\Php\DevTools\WebinyTrait;
-use Apps\Webiny\Php\AppManager\App;
+use Apps\Webiny\Php\Lib\WebinyTrait;
+use Apps\Webiny\Php\Lib\Apps\App;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
 

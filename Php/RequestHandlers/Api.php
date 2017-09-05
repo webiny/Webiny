@@ -7,17 +7,17 @@
 
 namespace Apps\Webiny\Php\RequestHandlers;
 
-use Apps\Webiny\Php\DevTools\Response\ApiResponse;
-use Apps\Webiny\Php\DevTools\WebinyTrait;
-use Apps\Webiny\Php\DevTools\Exceptions\AppException;
-use Apps\Webiny\Php\DevTools\Response\ApiErrorResponse;
+use Apps\Webiny\Php\Lib\Response\ApiResponse;
+use Apps\Webiny\Php\Lib\WebinyTrait;
+use Apps\Webiny\Php\Lib\Exceptions\AppException;
+use Apps\Webiny\Php\Lib\Response\ApiErrorResponse;
 use Webiny\Component\StdLib\StdLibTrait;
 
 class Api
 {
     use WebinyTrait, StdLibTrait;
 
-    private $apiResponse = '\Apps\Webiny\Php\DevTools\Response\ApiResponse';
+    private $apiResponse = '\Apps\Webiny\Php\Lib\Response\ApiResponse';
     private $apiEvent;
 
     public function handle()

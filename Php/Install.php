@@ -2,10 +2,10 @@
 namespace Apps\Webiny\Php;
 
 use Apps\Webiny\Php\Entities\ApiLog;
-use Apps\Webiny\Php\AppManager\App;
+use Apps\Webiny\Php\Lib\Apps\App;
 use MongoDB\Driver\Exception\RuntimeException;
 
-class Install extends \Apps\Webiny\Php\DevTools\LifeCycle\Install
+class Install extends \Apps\Webiny\Php\Lib\LifeCycle\Install
 {
     public function run(App $app)
     {
