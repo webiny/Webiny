@@ -124,6 +124,7 @@ Row.defaultProps = {
     className: null,
     onClick: _.noop,
     disabled: false,
+    actionsClass: 'text-center',
     renderer() {
         if (this.props.onSelect && !this.selectRowElement) {
             this.fields.splice(0, 0, <SelectRowField/>);
@@ -137,7 +138,7 @@ Row.defaultProps = {
         return (
             <tr className={this.classSet(classes, (this.props.selected && styles.selected))} onClick={this.onClick}>
                 {this.fields.map(this.renderField)}
-                {this.actionsElement ? <td className="text-center">{this.actionsElement}</td> : null}
+                {this.actionsElement ? <td className={this.props.actionsClass}>{this.actionsElement}</td> : null}
             </tr>
         );
     }
