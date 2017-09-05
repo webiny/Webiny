@@ -5,7 +5,7 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Webiny\Php\PackageManager;
+namespace Apps\Webiny\Php\AppManager;
 
 use Apps\Webiny\Php\DevTools\WebinyTrait;
 use Webiny\Component\Storage\Directory\Directory;
@@ -36,6 +36,16 @@ class JsApp
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Get full JS app name
+     *
+     * @return string Ex: 'Webiny.Backend'
+     */
+    public function getFullName()
+    {
+        return $this->app->getName() . '.' . $this->name;
     }
 
     /**

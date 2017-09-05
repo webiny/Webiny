@@ -2,8 +2,8 @@
 namespace Apps\Webiny\Php\Discover;
 
 use Apps\Webiny\Php\DevTools\WebinyTrait;
-use Apps\Webiny\Php\PackageManager\Parser\EntityParser;
-use Apps\Webiny\Php\PackageManager\Parser\ServiceParser;
+use Apps\Webiny\Php\AppManager\Parser\EntityParser;
+use Apps\Webiny\Php\AppManager\Parser\ServiceParser;
 use Apps\Webiny\Php\Discover\Postman\EndPoint;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\StringObject\StringObject;

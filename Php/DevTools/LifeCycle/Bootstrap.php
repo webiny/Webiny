@@ -9,7 +9,7 @@ namespace Apps\Webiny\Php\DevTools\LifeCycle;
 
 use Apps\Webiny\Php\DevTools\Response\HtmlResponse;
 use Apps\Webiny\Php\DevTools\WebinyTrait;
-use Apps\Webiny\Php\PackageManager\App;
+use Apps\Webiny\Php\AppManager\App;
 
 /**
  * Class Bootstrap
@@ -23,7 +23,7 @@ class Bootstrap implements LifeCycleInterface
     /**
      * Run the app
      *
-     * @param App $app Instance of PackageManager\App being run
+     * @param App $app Instance of AppManager\App being run
      */
     public function run(App $app)
     {

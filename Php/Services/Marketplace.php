@@ -50,11 +50,20 @@ class Marketplace extends AbstractService
         });
 
         $this->api('GET', 'apps/{id}/install', function ($id) {
+            // Get app data from Webiny Marketplace
+            $response = $this->server('/services/marketplace-manager/marketplace/apps/' . $id);
+            $app = $this->arr(json_decode($response, true));
+
+            if (!$app->keyExistsNested('data.entity.id')) {
+                throw new AppException('Requested app was not found');
+            }
+
+            // Begin installation
             header("X-Accel-Buffering: no");
             ob_end_flush();
             $appInstaller = new AppInstaller();
             $appInstaller->setPrivateKey(__DIR__ . '/file.rsa');
-            $appInstaller->install();
+            $appInstaller->install($app->keyNested('data.entity'));
             die(json_encode(['message' => 'Finished!']));
         })->setPublic();
 

@@ -5,7 +5,7 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Webiny\Php\PackageManager;
+namespace Apps\Webiny\Php\AppManager;
 
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\StdLib\StdLibTrait;

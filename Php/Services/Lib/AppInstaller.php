@@ -2,6 +2,8 @@
 
 namespace Apps\Webiny\Php\Services\Lib;
 
+use Apps\Webiny\Php\AppManager\AppLoader;
+use Apps\Webiny\Php\AppManager\JsApp;
 use Apps\Webiny\Php\DevTools\WebinyTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 
@@ -18,18 +20,18 @@ class AppInstaller
         return $this;
     }
 
-    public function install()
+    public function install($appData)
     {
+        $appName = str_replace(' ', '', $appData['name']);
         $commands = [
-            'mkdir -p /var/www/Marketplace',
-            'cd /var/www/Marketplace',
-            'echo "Installing Webiny app..."',
+            'cd ' . $this->wConfig()->get('Application.AbsolutePath'),
+            'echo "Installing ' . $appData['name'] . ' app..."',
             'echo "__progress:10"',
             // Composer is writing info messages to stderr so we redirect it to have all info in stdout pipe
-            'composer require webiny/static-render 2>&1',
+            'composer require ' . $appData['packagist'] . ' 2>&1',
             'echo "__progress:35"',
-            'php ./Apps/Webiny/Php/Cli/install.php Local StaticRender',
-            'echo "__progress:65"',
+            'php ./Apps/Webiny/Php/Cli/install.php Local ' . $appName,
+            'echo "__progress:65"'
         ];
         $pipes = [];
         $descriptor = [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']];
@@ -52,19 +54,41 @@ class AppInstaller
             proc_close($proc);
         }
 
+        $appsYaml = 'Configs/Base/Apps.yaml';
+        $appsConfig = $this->wConfig()->parseConfig($appsYaml);
+        $appsConfig->set('Apps.' . $appName, true);
+        $this->wStorage('Root')->setContents($appsYaml, $appsConfig->getAsYaml());
+
+        return true;
+
         // Installation finished - rebuild the app
         $this->echo(['message' => 'Adding new app to the development build...', 'progress' => 90]);
         $this->echo(['message' => 'Rebuilding apps, please wait...']);
 
-        $this->rebuildApps();
+        // Get list of JS apps in the newly installed app
+        $apps = [];
+        $newApp = AppLoader::getInstance()->loadApp($appName);
+        /* @var $jsApp JsApp */
+        foreach ($newApp->getJsApps() as $jsApp) {
+            $apps[] = $jsApp->getFullName();
+        }
+        $this->rebuildApps($apps);
 
         $this->echo(['progress' => 100]);
 
         return true;
     }
 
-    private function rebuildApps()
+    private function rebuildApps($apps = [])
     {
+        if (count($apps) < 1) {
+            return;
+        }
+
+        $apps = array_map(function ($app) {
+            return 'app=' . $app;
+        }, $apps);
+
         $bsConfig = file_get_contents($this->wStorage('Root')->getAbsolutePath('webiny.json'));
         $bsConfig = $this->arr(json_decode($bsConfig, true));
         $webPath = $this->wConfig()->get('Application.WebPath');
@@ -74,7 +98,7 @@ class AppInstaller
 
         $curl = new \Curl\Curl();
         $curl->setTimeout(0);
-        $curl->get($bsPath . '/?action=rebuild&app=Webiny.Skeleton');
+        $curl->get($bsPath . '/?action=rebuild&' . join('&', $apps));
     }
 
     private function generateCommand($commands)

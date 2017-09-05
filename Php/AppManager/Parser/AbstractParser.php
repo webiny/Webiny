@@ -1,6 +1,6 @@
 <?php
 
-namespace Apps\Webiny\Php\PackageManager\Parser;
+namespace Apps\Webiny\Php\AppManager\Parser;
 
 use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
 use Apps\Webiny\Php\DevTools\WebinyTrait;

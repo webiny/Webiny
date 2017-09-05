@@ -1,5 +1,5 @@
 <?php
-namespace Apps\Webiny\Php\PackageManager\Parser;
+namespace Apps\Webiny\Php\AppManager\Parser;
 
 class ServiceParser extends AbstractParser
 {

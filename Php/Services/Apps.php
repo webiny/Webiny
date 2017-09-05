@@ -1,9 +1,10 @@
 <?php
+
 namespace Apps\Webiny\Php\Services;
 
 use Apps\Webiny\Php\DevTools\Exceptions\AppException;
 use Apps\Webiny\Php\DevTools\Services\AbstractService;
-use Apps\Webiny\Php\PackageManager\App;
+use Apps\Webiny\Php\AppManager\App;
 
 /**
  * Class Apps
@@ -33,6 +34,9 @@ class Apps extends AbstractService
                 $apps = [];
                 foreach ($this->getAppsMeta() as $meta) {
                     if ($this->str($meta['name'])->endsWith('.Backend') && $meta['name'] != 'Webiny.Backend') {
+                        if ($meta['name'] === 'Faq.Backend') {
+                            continue;
+                        }
                         $apps[] = $meta;
                     }
                 }

@@ -5,7 +5,7 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Webiny\Php\PackageManager;
+namespace Apps\Webiny\Php\AppManager;
 
 use Apps\Webiny\Php\DevTools\LifeCycle\LifeCycleInterface;
 use Webiny\Component\Config\ConfigObject;
@@ -14,23 +14,19 @@ use Webiny\Component\Storage\Directory\Directory;
 /**
  * Class that holds information about an application.
  */
-class App extends AbstractPackage
+class App extends AbstractApp
 {
-    use ParsersTrait;
-
     /**
      * Application base constructor.
      *
      * @param ConfigObject $info Application information object.
      * @param string       $path Absolute path to the application.
-     * @param string       $type
      *
      * @throws \Exception
      */
-    public function __construct(ConfigObject $info, $path, $type = 'app')
+    public function __construct(ConfigObject $info, $path)
     {
-        parent::__construct($info, $path, $type);
-
+        parent::__construct($info, $path);
         $this->name = $info->get('Name', '');
         $this->version = $info->get('Version', '');
 

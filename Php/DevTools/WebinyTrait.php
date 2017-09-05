@@ -8,7 +8,7 @@
 namespace Apps\Webiny\Php\DevTools;
 
 use Apps\Webiny\Php\DevTools\Authorization\Authorization;
-use Apps\Webiny\Php\PackageManager\App;
+use Apps\Webiny\Php\AppManager\App;
 use Webiny\AnalyticsDb\AnalyticsDb;
 use Webiny\Component\Cache\CacheStorage;
 use Webiny\Component\Mongo\Mongo;

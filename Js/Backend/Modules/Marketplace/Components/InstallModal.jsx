@@ -34,6 +34,7 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                 }
 
                 const messages = this.state.messages;
+                // We may receive multiple messages in a single line so we need to handle them using a delimiter
                 response.split("_-_").filter(l => l.length).map(line => {
                     try {
                         const res = JSON.parse(line);
@@ -52,9 +53,12 @@ class InstallModal extends Webiny.Ui.ModalComponent {
             }
         });
 
-        return api.get('apps/123/install').then(apiResponse => {
+        return api.get(`apps/${this.props.app.id}/install`).then(() => {
             if (this.state.finished) {
-
+                Webiny.includeApp('Faq.Backend').then(app => app.run()).then(() => {
+                    Webiny.Router.start();
+                    this.hide();
+                });
             }
         });
     }
