@@ -44,7 +44,11 @@ class Apps implements \IteratorAggregate
                 continue;
             }
 
-            $this->loadApp($app);
+            try {
+                $this->loadApp($app);
+            } catch (\Exception $e) {
+                continue;
+            }
         }
 
         // Register routes in Webiny/Router component

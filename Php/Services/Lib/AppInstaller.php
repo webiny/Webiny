@@ -2,7 +2,7 @@
 
 namespace Apps\Webiny\Php\Services\Lib;
 
-use Apps\Webiny\Php\Apps\JsApp;
+use Apps\Webiny\Php\Lib\Apps\JsApp;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 
@@ -21,7 +21,7 @@ class AppInstaller
 
     public function install($appData)
     {
-        $appName = str_replace(' ', '', $appData['name']);
+        $localName = $appData['localName'];
         $commands = [
             'cd ' . $this->wConfig()->get('Application.AbsolutePath'),
             'echo "Installing ' . $appData['name'] . '..."',
@@ -29,7 +29,7 @@ class AppInstaller
             // Composer is writing info messages to stderr so we redirect it to have all info in stdout pipe
             'composer require ' . $appData['packagist'] . ' 2>&1',
             'echo "__progress:45"',
-            'php ./Apps/Webiny/Php/Cli/install.php Local ' . $appName,
+            'php ./Apps/Webiny/Php/Cli/install.php Local ' . $localName,
             'echo "__progress:65"'
         ];
         $pipes = [];
@@ -58,8 +58,8 @@ class AppInstaller
         $this->echo(['message' => 'Rebuilding apps, please wait...']);
 
         // Get list of JS apps in the newly installed app
-        $this->wApps()->enableApp($appName);
-        $newApp = $this->wApps()->loadApp($appName);
+        $this->wApps()->enableApp($localName);
+        $newApp = $this->wApps()->loadApp($localName);
 
         $jsApps = [];
         /* @var $jsApp JsApp */

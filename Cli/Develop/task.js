@@ -151,12 +151,11 @@ class Develop extends Build {
                 }
 
                 if (url.query.action === 'rebuild') {
-                    Webiny.info('Received a rebuild command. Aborting active watch process.');
+                    Webiny.info('Restarting development build...');
                     browserSync.exit();
-                    Webiny.info('Reloading list of apps...');
                     Webiny.getApps(true);
-                    const apps = Webiny.getConfig().lastRun.apps || [];
-                    apps.push(url.query.app);
+                    const apps = (Webiny.getConfig().lastRun.apps || []).concat(url.query.app);
+                    console.log('Rebuild with apps', apps);
                     return Webiny.runTask('develop', {
                         apps: Webiny.getApps().filter(app => apps.includes(app.getName())),
                         webpackCallback: () => {

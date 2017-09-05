@@ -55,7 +55,7 @@ class InstallModal extends Webiny.Ui.ModalComponent {
 
         return api.get(`apps/${this.props.app.id}/install`).then(() => {
             if (this.state.finished) {
-                Webiny.includeApp('Faq.Backend').then(app => app.run()).then(() => {
+                Webiny.includeApp(this.props.app.localName + '.Backend').then(app => app.run()).then(() => {
                     Webiny.Router.start();
                     this.hide();
                 });
