@@ -27,6 +27,7 @@ use Webiny\Component\Mongo\Index\CompoundIndex;
  * @property string           $passwordRecoveryCode
  * @property EntityCollection $roles
  * @property bool             $enabled
+ * @property array            $meta
  *
  * @package Apps\Webiny\Php\Entities
  *
@@ -86,6 +87,7 @@ class User extends AbstractEntity implements UserInterface
         });
         $this->attr('lastActive')->datetime();
         $this->attr('lastLogin')->datetime();
+        $this->attr('meta')->object();
 
         /**
          * @api.name        User login

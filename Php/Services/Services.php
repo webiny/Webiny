@@ -4,8 +4,8 @@ namespace Apps\Webiny\Php\Services;
 
 use Apps\Webiny\Php\DevTools\WebinyTrait;
 use Apps\Webiny\Php\DevTools\Services\AbstractService;
-use Apps\Webiny\Php\PackageManager\Parser\ServiceParser;
-use Apps\Webiny\Php\PackageManager\App;
+use Apps\Webiny\Php\AppManager\Parser\ServiceParser;
+use Apps\Webiny\Php\AppManager\App;
 use Webiny\Component\StdLib\StdLibTrait;
 
 /**

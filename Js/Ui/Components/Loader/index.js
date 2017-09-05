@@ -15,6 +15,7 @@ Loader.defaultProps = {
             <div className={this.classSet(styles.overlay, this.props.className)} style={this.props.style}>
                 <div className={styles.iconWrapper}>
                     <div className={styles.icon}/>
+                    {this.props.children ? <loader-content>{this.props.children}</loader-content> : null}
                 </div>
             </div>
         );

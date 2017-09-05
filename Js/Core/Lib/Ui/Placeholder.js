@@ -27,7 +27,7 @@ Placeholder.defaultProps = {
         let item = ViewManager.getContent(this.props.name);
         const componentProps = _.omit(this.props, ['renderer', 'name', 'children']);
         if (!item) {
-            return null;
+            return <webiny-placeholder>{this.props.children}</webiny-placeholder>;
         }
         let component = null;
         if (React.isValidElement(item)) {

@@ -153,6 +153,7 @@
 .dashboard .dashboardHeaderLeft {
 	display: inline-block;
 	margin-bottom: 0;
+	width: 50%;
 }
 
 .dashboard .dashboardHeaderCenter, .dashboard .dashboardHeaderRight {
@@ -163,18 +164,25 @@
 	transform: none;
 	float: none;
 	margin-bottom: 0;
+	width: 25%;
+}
+.dashboard .dashboardHeaderCenter{
+	text-align: left;
+}
+
+.dashboard .dashboardHeaderRight {
+	text-align: right;
 }
 
 .dashboard .dashboardHeaderCenter, .dashboard .dashboardHeaderRight button,
-.dashboard .dashboardHeaderCenter, .dashboard .dashboardHeaderRight a{
+.dashboard .dashboardHeaderCenter, .dashboard .dashboardHeaderRight a {
 	margin-right: 5px;
 }
 
 .dashboard .dashboardHeaderCenter, .dashboard .dashboardHeaderRight button:last-child,
-.dashboard .dashboardHeaderCenter, .dashboard .dashboardHeaderRight a:last-child{
+.dashboard .dashboardHeaderCenter, .dashboard .dashboardHeaderRight a:last-child {
 	margin-right: 0;
 }
-
 
 /* make some bits nicer for mobile */
 @media (max-width: 768px) {

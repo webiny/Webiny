@@ -265,7 +265,7 @@ TableEditComponent.defaultProps = {
                                             }
 
                                             return (
-                                                <td key={row.columns[colI].key} onMouseDown={() => this.setFocus('body', rowI, colI)} data-th={headers[colI].data}>
+                                                <td key={row.columns[colI].key} onMouseDown={() => this.setFocus('body', rowI, colI)} data-th={headers[colI].data.blocks[0].text}>
                                                     <Editor
                                                         stripPastedStyles={true}
                                                         ref={row.columns[colI].key}

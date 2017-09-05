@@ -3,9 +3,9 @@
 namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
-use Apps\Webiny\Php\PackageManager\App;
-use Apps\Webiny\Php\PackageManager\Parser\EntityParser;
-use Apps\Webiny\Php\PackageManager\Parser\ServiceParser;
+use Apps\Webiny\Php\AppManager\App;
+use Apps\Webiny\Php\AppManager\Parser\EntityParser;
+use Apps\Webiny\Php\AppManager\Parser\ServiceParser;
 use Webiny\Component\Mongo\Index\SingleIndex;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 

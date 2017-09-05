@@ -54,6 +54,7 @@
 .validationMessage {
 	transition: all 250ms;
 	position: absolute;
+	z-index: 0;
 }
 
 .validationMessageHolder {

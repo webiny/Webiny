@@ -7,7 +7,7 @@
 
 namespace Apps\Webiny\Php\DevTools\LifeCycle;
 
-use Apps\Webiny\Php\PackageManager\App;
+use Apps\Webiny\Php\AppManager\App;
 
 interface LifeCycleInterface
 {

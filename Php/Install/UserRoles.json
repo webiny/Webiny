@@ -2,7 +2,8 @@
     {
         "name": "Administrator",
         "slug": "administrator",
-        "description": "This is the main administrative role which serves for identifying a user as an administrator. It carries no permissions."
+        "description": "This is the main administrative role which serves for identifying a user as an administrator. It carries no permissions.",
+        "permissions": ["webiny-marketplace"]
     },
     {
         "name": "Public",

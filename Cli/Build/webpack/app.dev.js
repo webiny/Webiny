@@ -19,7 +19,6 @@ module.exports = function (app) {
     const domain = _.get(Webiny.getConfig(), 'browserSync.domain', 'http://localhost');
     const url = domain + ':' + port;
 
-    const sharedResolve = require('./resolve')(app);
     const name = app.getName();
     const context = Webiny.projectRoot(app.getSourceDir());
     const outputPath = path.resolve(Webiny.projectRoot(), 'public_html/build/development', app.getPath());
@@ -72,7 +71,7 @@ module.exports = function (app) {
     const fileExtensionRegex = /\.(png|jpg|gif|jpeg|mp4|mp3|woff2?|ttf|otf|eot|svg|ico)$/;
 
     return {
-        name: name,
+        name,
         cache: true,
         watch: false,
         context,
@@ -112,8 +111,10 @@ module.exports = function (app) {
                                     [require.resolve('babel-plugin-transform-object-rest-spread'), {'useBuiltIns': true}],
                                     [require.resolve('babel-plugin-syntax-dynamic-import')],
                                     [require.resolve('babel-plugin-lodash')],
-                                    [require.resolve('babel-plugin-transform-builtin-extend'), {
-                                        globals: ['Error']
+                                    [require.resolve('babel-plugin-transform-builtin-extend'), {globals: ['Error']}],
+                                    // This plugin is required to force all css/scss imports to have a resourceQuery
+                                    [require.resolve('babel-plugin-transform-rename-import'), {
+                                        original: '^(.*?\.s?css)$', replacement: '$1?',
                                     }]
                                 ]
                             }
@@ -127,23 +128,7 @@ module.exports = function (app) {
                     include: Webiny.projectRoot(),
                     use: [i18nPluginInstance.getLoader()]
                 },
-                {
-                    test: /\.scss$/,
-                    use: ExtractTextPlugin.extract({
-                        fallback: 'style-loader',
-                        use: ['css-loader', 'resolve-url-loader', 'sass-loader?sourceMap']
-                    })
-                },
-                {
-                    test: /\.css$/,
-                    use: ['style-loader', {
-                        loader: 'css-loader',
-                        options: {
-                            modules: true,
-                            localIdentName: app.getPath() + '_[folder]_[local]'
-                        }
-                    }]
-                },
+                require('./styles')(app),
                 {
                     test: /node_modules/,
                     include: fileExtensionRegex,
@@ -171,7 +156,7 @@ module.exports = function (app) {
                 }
             ]
         },
-        resolve: sharedResolve,
+        resolve: require('./resolve')(app),
         resolveLoader: {
             modules: [
                 __dirname + '/loaders', 'node_modules',

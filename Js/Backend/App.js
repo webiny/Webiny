@@ -6,6 +6,7 @@ import Acl from './Modules/Acl';
 import Layout from './Modules/Layout';
 import Logger from './Modules/Logger';
 import Dashboard from './Modules/Dashboard';
+import Marketplace from './Modules/Marketplace';
 import './Components';
 
 class Backend extends Webiny.App {
@@ -15,8 +16,12 @@ class Backend extends Webiny.App {
             new Acl(this),
             new Layout(this),
             new Logger(this),
-            new Dashboard(this)
+            new Dashboard(this),
         ];
+
+        if (DEVELOPMENT) {
+            this.modules.push(new Marketplace(this));
+        }
     }
 
     run() {

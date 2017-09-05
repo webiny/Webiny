@@ -56,6 +56,8 @@ module.exports = function (app, config) {
         new Visualizer({filename: 'stats.html'})
     ];
 
+    const stylesRule = require('./styles')(app);
+
     // Check if app has vendor DLL defined
     const dllPath = path.resolve(Webiny.projectRoot(), 'public_html/build/production', app.getPath(), 'vendor.manifest.json');
     if (Webiny.fileExists(dllPath)) {
@@ -76,8 +78,6 @@ module.exports = function (app, config) {
         );
     }
 
-    const fileExtensionRegex = /\.(png|jpg|gif|jpeg|mp4|mp3|woff2?|ttf|otf|eot|svg|ico)$/;
-
     function fileLoaderOptions(name) {
         return {
             name,
@@ -94,6 +94,8 @@ module.exports = function (app, config) {
             }
         }
     }
+
+    const fileExtensionRegex = /\.(png|jpg|gif|jpeg|mp4|mp3|woff2?|ttf|otf|eot|svg|ico)$/;
 
     return {
         name: name,
@@ -132,8 +134,10 @@ module.exports = function (app, config) {
                                     [require.resolve('babel-plugin-transform-object-rest-spread'), {'useBuiltIns': true}],
                                     [require.resolve('babel-plugin-syntax-dynamic-import')],
                                     [require.resolve('babel-plugin-lodash')],
-                                    [require.resolve('babel-plugin-transform-builtin-extend'), {
-                                        globals: ['Error']
+                                    [require.resolve('babel-plugin-transform-builtin-extend'), {globals: ['Error']}],
+                                    // This plugin is required to force all css/scss imports to have a resourceQuery
+                                    [require.resolve('babel-plugin-transform-rename-import'), {
+                                        original: '^(.*?\.s?css)$', replacement: '$1?',
                                     }]
                                 ]
                             }
@@ -146,23 +150,7 @@ module.exports = function (app, config) {
                     include: Webiny.projectRoot(),
                     use: [i18nPluginInstance.getLoader()]
                 },
-                {
-                    test: /\.scss$/,
-                    use: ExtractTextPlugin.extract({
-                        fallback: 'style-loader',
-                        use: ['css-loader', 'resolve-url-loader', 'sass-loader?sourceMap']
-                    })
-                },
-                {
-                    test: /\.css$/,
-                    use: ['style-loader', {
-                        loader: 'css-loader',
-                        options: {
-                            modules: true,
-                            localIdentName: app.getPath() + '_[folder]_[local]'
-                        }
-                    }]
-                },
+                stylesRule,
                 {
                     test: /node_modules/,
                     include: fileExtensionRegex,

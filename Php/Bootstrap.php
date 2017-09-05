@@ -8,7 +8,7 @@ use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
 
 class Bootstrap extends \Apps\Webiny\Php\DevTools\LifeCycle\Bootstrap
 {
-    public function run(PackageManager\App $app)
+    public function run(AppManager\App $app)
     {
         parent::run($app);
         $this->addAppRoute('/^\/welcome/', 'Webiny:Templates/Welcome.tpl');

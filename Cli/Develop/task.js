@@ -19,12 +19,15 @@ Logger.callbacks['service:running'] = (bs) => {
 };
 Logger.callbacks['file:watching'] = _.noop;
 
+let httpServer = null;
+
 class Develop extends Build {
 
     constructor(config) {
         super(config);
         this.port = _.get(Webiny.getConfig(), 'browserSync.port', 3000);
         this.domain = _.get(Webiny.getConfig(), 'browserSync.domain', 'http://localhost');
+        this.webpackCallback = config.webpackCallback || null;
     }
 
     run() {
@@ -84,6 +87,17 @@ class Develop extends Build {
         if (configs.length === 1) {
             publicPath = this.domain + '/build/development/' + configs[0].name.replace('.', '_') + '/';
         }
+
+        const devMiddlewareInstance = devMiddleware(compiler, {
+            publicPath,
+            noInfo: false,
+            stats: statsConfig
+        });
+
+        if (this.webpackCallback) {
+            devMiddlewareInstance.waitUntilValid(this.webpackCallback);
+        }
+
         // Run browser-sync server
         const bsConfig = {
             ui: false,
@@ -101,11 +115,7 @@ class Develop extends Build {
                         res.setHeader('Access-Control-Allow-Origin', '*');
                         next();
                     },
-                    devMiddleware(compiler, {
-                        publicPath,
-                        noInfo: false,
-                        stats: statsConfig
-                    }),
+                    devMiddlewareInstance,
                     hotMiddleware(compiler)
                 ]
             },
@@ -119,11 +129,47 @@ class Develop extends Build {
             })
         };
 
+        // Start a hidden listener to allow http interaction with build process
+        this.initHttpServer();
+
         // Return a promise which never resolves. It will keep the task running until you abort the process.
         return new Promise(() => {
             Webiny.info('Building apps...');
             browserSync.init(bsConfig);
         });
+    }
+
+    initHttpServer() {
+        if (!httpServer) {
+            const http = require('http');
+            const httpUrl = require('url');
+            httpServer = http.createServer((req, res) => {
+                const url = httpUrl.parse(req.url, true);
+                if (!url.query.action) {
+                    res.end();
+                    return;
+                }
+
+                if (url.query.action === 'rebuild') {
+                    Webiny.info('Received a rebuild command. Aborting active watch process.');
+                    browserSync.exit();
+                    Webiny.info('Reloading list of apps...');
+                    Webiny.getApps(true);
+                    const apps = Webiny.getConfig().lastRun.apps || [];
+                    apps.push(url.query.app);
+                    return Webiny.runTask('develop', {
+                        apps: Webiny.getApps().filter(app => apps.includes(app.getName())),
+                        webpackCallback: () => {
+                            // At the moment, we are not sending anything back. Just end the request to signal success.
+                            res.end();
+                        }
+                    });
+                }
+                res.end();
+            });
+            httpServer.on("error", err => Webiny.failure(err));
+            httpServer.listen(this.port + 1);
+        }
     }
 }
 

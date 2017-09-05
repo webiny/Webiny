@@ -1,4 +1,5 @@
 <?php
+
 namespace Apps\Webiny\Php\DevTools\Response;
 
 /**
@@ -12,7 +13,7 @@ class ApiResponse extends AbstractResponse implements \ArrayAccess
     protected $phpTrace;
 
     /**
-     * @param array  $data Response data
+     * @param mixed  $data Response data
      * @param string $msg Response message
      * @param int    $httpStatus HTTP Status Code
      */
@@ -40,7 +41,7 @@ class ApiResponse extends AbstractResponse implements \ArrayAccess
         $data = $this->formatResponse();
         header("Content-type: application/json");
 
-        return json_encode($data, $jsonOptions);
+        return is_string($data) ? $data : json_encode($data, $jsonOptions);
     }
 
     public function setErrors(array $errors)

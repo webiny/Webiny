@@ -84,6 +84,11 @@ class HttpRequest {
         return this;
     }
 
+    setDownloadProgressHandler(handler) {
+        this.downloadProgress = handler;
+        return this;
+    }
+
     setProgressHandler(handler) {
         this.progress = handler;
         return this;
@@ -100,7 +105,13 @@ class HttpRequest {
 
     getXhr() {
         const xhr = new window.XMLHttpRequest();
-        xhr.upload.addEventListener('progress', this.progress, false);
+        if (this.progress) {
+            xhr.upload.addEventListener('progress', this.progress, false);
+        }
+
+        if (this.downloadProgress) {
+            xhr.addEventListener('progress', this.downloadProgress, false);
+        }
 
         return xhr;
     }

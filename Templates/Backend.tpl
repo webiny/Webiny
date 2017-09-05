@@ -19,11 +19,9 @@
         width: 100%;
         height: 100%;
     }
-
     .loader {
         background: url('{$Webiny->Assets('Webiny.Skeleton', 'images/public/preloader_2.png')}') no-repeat top left;
     }
-
     .loader3 {
         position: relative;
         width: 150px;
@@ -32,10 +30,12 @@
         left: 50%;
         transform: translateX(-22px);
         background-size: 45px 45px;
+        -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
         filter: alpha(opacity=50);
+        -moz-opacity: 0.5;
+        -khtml-opacity: 0.5;
         opacity: 0.5;
     }
-
     .loader4 {
         content: "";
         position: absolute;
@@ -50,22 +50,18 @@
         animation: loader3 10s ease-in-out infinite;
         background-size: 45px 45px;
     }
-
     @keyframes loader3 {
         0% {
             width: 0;
         }
-
         70% {
             width: 150px;
             opacity: 1;
         }
-
         90% {
             opacity: 0;
             width: 150px;
         }
-
         100% {
             opacity: 0;
             width: 0;

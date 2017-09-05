@@ -122,7 +122,7 @@ Dashboard.defaultProps = {
                                             <div className="block-list__item-image">
                                                 <span className="icon icon-github icon-3x"></span>
                                             </div>
-                                            <a href="https://github.com/Webiny" className="block-list__item-text" target="_blank">
+                                            <a href="https://github.com/Webiny/Webiny" className="block-list__item-text" target="_blank">
                                                 <Icon icon="fa-github"/> GitHub
                                             </a>
                                         </li>
@@ -130,7 +130,7 @@ Dashboard.defaultProps = {
                                             <div className="block-list__item-image">
                                                 <span className="icon icon-twitter icon-3x"></span>
                                             </div>
-                                            <a href="" className="block-list__item-text" target="_blank">
+                                            <a href="https://twitter.com/WebinyPlatform" className="block-list__item-text" target="_blank">
                                                 <Icon icon="fa-twitter"/> Twitter
                                             </a>
                                         </li>
@@ -138,7 +138,7 @@ Dashboard.defaultProps = {
                                             <div className="block-list__item-image">
                                                 <span className="icon icon-medium icon-3x"></span>
                                             </div>
-                                            <a href="https://www.webiny.com/docs/current/components/must-know"
+                                            <a href="https://blog.webiny.com"
                                                className="block-list__item-text" target="_blank">
                                                 <Icon icon="fa-medium"/> Blog
                                             </a>
@@ -148,9 +148,19 @@ Dashboard.defaultProps = {
                                             <div className="block-list__item-image">
                                                 <span className="icon icon-youtube icon-3x"></span>
                                             </div>
-                                            <a href="https://www.webiny.com/docs/current/components/must-know"
+                                            <a href="https://video.webiny.com"
                                                className="block-list__item-text" target="_blank">
                                                 <Icon icon="fa-youtube"/> YouTube
+                                            </a>
+                                        </li>
+
+                                        <li>
+                                            <div className="block-list__item-image">
+                                                <span className="icon icon-youtube icon-3x"></span>
+                                            </div>
+                                            <a href="https://chat.webiny.com"
+                                               className="block-list__item-text" target="_blank">
+                                                <Icon icon="fa-commenting-o"/> Chat
                                             </a>
                                         </li>
 

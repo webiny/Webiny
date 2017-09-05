@@ -8,7 +8,7 @@
 namespace Apps\Webiny\Php\DevTools\LifeCycle;
 
 use Apps\Webiny\Php\DevTools\WebinyTrait;
-use Apps\Webiny\Php\PackageManager\App;
+use Apps\Webiny\Php\AppManager\App;
 use MongoDB\Driver\Exception\RuntimeException;
 
 /**
@@ -23,7 +23,7 @@ class Release implements LifeCycleInterface
     /**
      * Run release
      *
-     * @param App $app Instance of PackageManager\App being run
+     * @param App $app Instance of AppManager\App being run
      */
     public function run(App $app)
     {

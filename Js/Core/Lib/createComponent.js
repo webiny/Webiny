@@ -15,7 +15,7 @@ import ModalComponent from './Core/ModalComponent';
  * @returns {component}
  */
 export default (Component, options = {}) => {
-    // In case this is a dynamic component...
+    // In case this is a dynamic component (meaning there is no fixed class and the getComponent() method returns the class to render)
     if (_.isPlainObject(Component)) {
         options = Component;
     }
@@ -24,7 +24,7 @@ export default (Component, options = {}) => {
 
     // Automatically expose modal dialog methods
     if (Component.prototype instanceof ModalComponent) {
-        _.assign(options, {api: ['show', 'hide', 'isAnimating', 'isShown', 'getDialog']});
+        _.merge(options, {api: ['show', 'hide', 'isAnimating', 'isShown', 'getDialog']});
     }
 
     class ComponentWrapper extends WebinyComponent {

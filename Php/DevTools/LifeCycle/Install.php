@@ -11,7 +11,7 @@ use Apps\Webiny\Php\DevTools\Response\ApiErrorResponse;
 use Apps\Webiny\Php\DevTools\WebinyTrait;
 use Apps\Webiny\Php\Entities\UserPermission;
 use Apps\Webiny\Php\Entities\UserRole;
-use Apps\Webiny\Php\PackageManager\App;
+use Apps\Webiny\Php\AppManager\App;
 use Closure;
 use MongoDB\Driver\Exception\RuntimeException;
 use Webiny\Component\Entity\EntityException;
@@ -28,7 +28,7 @@ class Install implements LifeCycleInterface
     /**
      * Run the installation
      *
-     * @param App $app Instance of PackageManager\App being run
+     * @param App $app Instance of AppManager\App being run
      */
     public function run(App $app)
     {
@@ -149,7 +149,7 @@ class Install implements LifeCycleInterface
     protected function installJsDependencies($app)
     {
         if (file_exists($app->getPath() . '/package.json')) {
-            exec('cd ' . $app->getPath() . ' && yarn install');
+            passthru('cd ' . $app->getPath() . ' && yarn install');
         }
     }
 

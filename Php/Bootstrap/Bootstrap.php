@@ -13,8 +13,8 @@ use Apps\Webiny\Php\DevTools\Response\ApiResponse;
 use Apps\Webiny\Php\DevTools\Response\HtmlResponse;
 use Apps\Webiny\Php\DevTools\Response\AbstractResponse;
 use Apps\Webiny\Php\DevTools\Response\ResponseEvent;
-use Apps\Webiny\Php\PackageManager\App;
-use Apps\Webiny\Php\PackageManager\AppScanner;
+use Apps\Webiny\Php\AppManager\App;
+use Apps\Webiny\Php\AppManager\AppLoader;
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\Entity\Entity;
 use Webiny\Component\Http\Http;
@@ -71,7 +71,7 @@ class Bootstrap
         Http::setConfig($this->wConfig()->get('Http', $emptyConfig));
 
         // scan all components to register routes and event handlers
-        AppScanner::getInstance();
+        AppLoader::getInstance()->loadApps();
 
         /* @var $app App */
         foreach ($this->wApps() as $app) {

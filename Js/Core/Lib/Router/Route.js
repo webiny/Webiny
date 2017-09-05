@@ -136,6 +136,10 @@ class Route {
             components = Route.normalizeComponents(components);
         }
 
+        if (_.isFunction(components)) {
+            output['Content'] = components;
+        }
+
         _.each(components, (component, placeholder) => {
             if (_.isFunction(component) && !(component.prototype instanceof Webiny.Ui.Component)) {
                 dynamic.push(

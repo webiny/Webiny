@@ -12,6 +12,7 @@ class Navigation extends Webiny.Ui.Component {
         super(props);
 
         this.state = {
+            user: null,
             display: window.outerWidth > 768 ? 'desktop' : 'mobile'
         };
 
@@ -21,6 +22,11 @@ class Navigation extends Webiny.Ui.Component {
 
     componentDidMount() {
         super.componentDidMount();
+
+        // Navigation is rendered based on user roles so we need to watch for changes
+        this.watch('User', user => {
+            this.setState({user});
+        });
 
         this.offRouteChanged = Webiny.Router.onRouteChanged(event => {
             this.setState({route: event.route.name});

@@ -7,6 +7,9 @@ AuthorName: Webiny LTD
 AuthorLink: http://www.webiny.com
 AuthorEmail: info@webiny.com
 
+Marketplace:
+    Api: __Application.ApiPath__
+
 Storage:
     Services:
         Root:

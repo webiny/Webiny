@@ -229,5 +229,32 @@
             },
             "services": []
         }
+    },
+    {
+        "name": "Marketplace",
+        "slug": "webiny-marketplace",
+        "description": "Access to marketplace",
+        "permissions": {
+            "entities": [],
+            "services": {
+                "Apps\\Webiny\\Php\\Services\\Marketplace": {
+                    "me": {
+                        "get": true
+                    },
+                    "apps": {
+                        "get": true
+                    },
+                    "apps/{id}": {
+                        "get": true
+                    },
+                    "login": {
+                        "post": true
+                    },
+                    "reset-password": {
+                        "post": true
+                    }
+                }
+            }
+        }
     }
 ]

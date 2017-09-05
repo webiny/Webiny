@@ -1,2 +1,2 @@
-import './styles.scss';
+import './styles.scss?extract';
 import 'select2';

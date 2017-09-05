@@ -577,7 +577,7 @@ class Form extends Webiny.Ui.Component {
     }
 
     validateInput(component) {
-        if (this.props.validateOnFirstSubmit && !this.state.wasSubmitted) {
+        if ((this.props.validateOnFirstSubmit && !this.state.wasSubmitted) || !this.inputs[component.props.name]) {
             return Promise.resolve(null);
         }
         const validators = this.inputs[component.props.name].validators;

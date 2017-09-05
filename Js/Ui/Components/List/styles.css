@@ -271,12 +271,6 @@ table.table td:before {
 	text-align: center;
 }
 
-@media (min-width: 768px) {
-	table.table td:before {
-		display: none;
-	}
-}
-
 @media (max-width: 768px) {
 	table.table thead {
 		display: none;
@@ -309,6 +303,10 @@ table.table td:before {
 }
 
 @media (min-width: 768px) {
+	table.table td:before {
+		display: none;
+	}
+
 	table.table td, table.table th {
 		display: table-cell;
 	}

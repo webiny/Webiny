@@ -1,4 +1,4 @@
-import './styles.scss';
+import './styles.scss?extract';
 import CodeMirror from 'codemirror';
 import 'codemirror-formatting';
 import 'codemirror/mode/xml/xml';

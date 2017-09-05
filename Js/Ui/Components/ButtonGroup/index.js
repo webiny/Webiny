@@ -1,6 +1,6 @@
 import React from 'react';
 import Webiny from 'webiny';
-import styles from './styles.css';
+import styles from './styles.scss';
 
 class ButtonGroup extends Webiny.Ui.Component {
 
