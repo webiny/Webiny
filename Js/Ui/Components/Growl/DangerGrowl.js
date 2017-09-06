@@ -3,9 +3,9 @@ import _ from 'lodash';
 import Webiny from 'webiny';
 import Growl from './Growl';
 
-`class DangerGrowl extends Webiny.Ui.Component {
+class DangerGrowl extends Webiny.Ui.Component {
 
-}`
+}
 
 DangerGrowl.defaultProps = {
     title: null,

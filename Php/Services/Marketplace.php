@@ -62,9 +62,9 @@ class Marketplace extends AbstractService
             header("X-Accel-Buffering: no");
             ob_end_flush();
             $appInstaller = new AppInstaller();
-            $appInstaller->setPrivateKey(__DIR__ . '/file.rsa');
+            $appInstaller->setPrivateKey($this->wStorage('Root')->getAbsolutePath('Keys/id_rsa'));
             $appInstaller->install($app->keyNested('data.entity'));
-            die(json_encode(['message' => 'Finished!']));
+            die();
         })->setPublic();
 
         $this->api('POST', 'login', function () {

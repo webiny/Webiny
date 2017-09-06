@@ -1,6 +1,5 @@
 import React from 'react';
 import Webiny from 'webiny';
-import _ from 'lodash';
 import styles from './../Views/styles.css';
 
 
@@ -18,6 +17,7 @@ class InstallModal extends Webiny.Ui.ModalComponent {
     }
 
     startInstallation() {
+        const {Progress} = this.props;
         this.setState({started: true});
         const api = new Webiny.Api.Endpoint('/services/webiny/marketplace');
         let currentResponseLength = false;
@@ -40,11 +40,18 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                         const res = JSON.parse(line);
                         if (res.message) {
                             messages.push(res);
-                            this.setState({messages, count: messages.length});
+                            this.setState({messages, time: new Date().getTime()});
                         }
 
                         if (res.progress) {
                             this.setState({progress: parseInt(res.progress), finished: res.progress === 100});
+                        }
+
+                        if (res.cli) {
+                            const lastMessage = messages.length - 1;
+                            // TODO: store previous value to keep progress consistent without jumps
+                            messages[lastMessage].message = <Progress value={parseInt(res.cli)}/>;
+                            this.setState({messages, time: new Date().getTime()});
                         }
                     } catch (e) {
 
@@ -59,7 +66,7 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                 Webiny.includeApp(appName).then(app => app.run()).then(() => {
                     Webiny.Model.set(['Navigation', 'highlight'], appName);
                     Webiny.Router.start();
-                    this.hide();
+                    //this.hide();
                 });
             }
         });
@@ -93,19 +100,18 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                                 <Button type="primary" label="Begin Installation" onClick={this.startInstallation}/>
                             </div>
                         </Logic.Hide>
-                        <Logic.Hide if={!this.state.started || this.state.finished}>
-                            <Progress value={this.state.progress}/>
+                        <Logic.Hide if={!this.state.started}>
+                            <Logic.Show if={this.state.finished}>
+                                <Alert type="success" title="Done">
+                                    Your app is installed and ready to use!
+                                </Alert>
+                            </Logic.Show>
                             <pre style={{height: 300, overflow: 'scroll', fontSize: 12}} ref={ref => this.logger = ref}>
                             {this.state.messages.map((m, i) => (
                                 <div key={i}>{m.message}</div>
                             ))}
                             </pre>
                         </Logic.Hide>
-                        <Logic.Show if={this.state.finished}>
-                            <Alert type="success" title="Done">
-                                Your app is installed and ready to use!
-                            </Alert>
-                        </Logic.Show>
                     </Modal.Body>
                     {this.state.finished && (
                         <Modal.Footer>

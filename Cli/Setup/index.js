@@ -77,6 +77,7 @@ class Setup extends Plugin {
             answers.domain = _.trimEnd(answers.domain, '/');
 
             const configs = {
+                keys: Webiny.projectRoot('Keys'),
                 configSets: Webiny.projectRoot('Configs/ConfigSets.yaml'),
                 base: {
                     application: Webiny.projectRoot('Configs/Base/Application.yaml'),
@@ -107,6 +108,7 @@ class Setup extends Plugin {
                 // Populate Base/Security.yaml
                 config = yaml.safeLoad(Webiny.readFile(configs.base.security));
                 config.Security.Tokens.Webiny.SecurityKey = generatePassword(30, false, /[\dA-Za-z#_\$:\?#]/);
+                config.Security.TwoFactorAuth.Key = generatePassword(30, false, /[\dA-Za-z#_\$:\?#]/);
                 Webiny.writeFile(configs.base.security, yaml.safeDump(config, {indent: 4, flowLevel: 5}));
 
                 // Populate Local/Application.yaml
@@ -120,6 +122,10 @@ class Setup extends Plugin {
                 console.log(err);
                 return;
             }
+
+            // Generate SSH keys to allow proper SSH from development machine onto itself
+            Webiny.shellExecute(`ssh-keygen -f ${configs.keys}/id_rsa -t rsa -N ''`);
+            Webiny.shellExecute(`cat ${configs.keys}/id_rsa.pub >> ~/.ssh/authorized_keys`);
 
             // Run Webiny installation procedure
             Webiny.info('Running Webiny app installation...');

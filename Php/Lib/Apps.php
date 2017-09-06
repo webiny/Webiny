@@ -18,7 +18,7 @@ use Webiny\Component\StdLib\SingletonTrait;
  */
 class Apps implements \IteratorAggregate
 {
-    use SingletonTrait;
+    use WebinyTrait, SingletonTrait;
 
     private $apps = [];
 
@@ -44,11 +44,7 @@ class Apps implements \IteratorAggregate
                 continue;
             }
 
-            try {
-                $this->loadApp($app);
-            } catch (\Exception $e) {
-                continue;
-            }
+            $this->loadApp($app);
         }
 
         // Register routes in Webiny/Router component
@@ -72,7 +68,10 @@ class Apps implements \IteratorAggregate
         }
 
         $configPath = 'Apps/' . $app . '/App.yaml';
-        $config = Config::getInstance()->parseConfig($configPath);
+        if (!file_exists($this->wConfig()->get('Application.AbsolutePath') . '/' . $configPath)) {
+            return null;
+        }
+        $config = $this->wConfig()->parseConfig($configPath);
         $newApp = new App($config, 'Apps/' . $app);
         $this->apps[] = $newApp;
 

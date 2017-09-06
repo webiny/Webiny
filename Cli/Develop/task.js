@@ -11,7 +11,7 @@ const WriteFilePlugin = require('write-file-webpack-plugin');
 const Webiny = require('webiny-cli/lib/webiny');
 const Build = require('./../Build/task');
 
-// Override logger callbacks - we do not need this output
+// Override logger callbacks - we do not need the default output
 const Logger = require('browser-sync/lib/logger');
 Logger.callbacks['service:running'] = (bs) => {
     const urls = bs.options.get('urls').toJS();
@@ -20,6 +20,7 @@ Logger.callbacks['service:running'] = (bs) => {
 Logger.callbacks['file:watching'] = _.noop;
 
 let httpServer = null;
+let devMiddlewareInstance = null;
 
 class Develop extends Build {
 
@@ -28,6 +29,7 @@ class Develop extends Build {
         this.port = _.get(Webiny.getConfig(), 'browserSync.port', 3000);
         this.domain = _.get(Webiny.getConfig(), 'browserSync.domain', 'http://localhost');
         this.webpackCallback = config.webpackCallback || null;
+        this.progressCallback = config.progressCallback || null;
     }
 
     run() {
@@ -83,12 +85,22 @@ class Develop extends Build {
         // If we are only building one app we MUST NOT pass an array!!
         // An array causes webpack to treat it as MultiCompiler and it resolves hot update file paths incorrectly thus breaking hot reload
         const compiler = webpack(configs);
+
+        if (this.progressCallback) {
+            compiler.apply(new webpack.ProgressPlugin(this.progressCallback));
+        }
+
         let publicPath = this.domain + '/build/development/';
         if (configs.length === 1) {
             publicPath = this.domain + '/build/development/' + configs[0].name.replace('.', '_') + '/';
         }
 
-        const devMiddlewareInstance = devMiddleware(compiler, {
+        // If there is an existing instance of dev-middleware running, we need to stop it.
+        if (devMiddlewareInstance) {
+            devMiddlewareInstance.close();
+        }
+
+        devMiddlewareInstance = devMiddleware(compiler, {
             publicPath,
             noInfo: false,
             stats: statsConfig
@@ -144,6 +156,11 @@ class Develop extends Build {
             const http = require('http');
             const httpUrl = require('url');
             httpServer = http.createServer((req, res) => {
+                res.writeHead(200, {
+                    'Connection': 'Transfer-Encoding',
+                    'Transfer-Encoding': 'chunked'
+                });
+
                 const url = httpUrl.parse(req.url, true);
                 if (!url.query.action) {
                     res.end();
@@ -153,20 +170,22 @@ class Develop extends Build {
                 if (url.query.action === 'rebuild') {
                     Webiny.info('Restarting development build...');
                     browserSync.exit();
-                    Webiny.getApps(true);
+                    Webiny.loadApps();
                     const apps = (Webiny.getConfig().lastRun.apps || []).concat(url.query.app);
-                    console.log('Rebuild with apps', apps);
                     return Webiny.runTask('develop', {
                         apps: Webiny.getApps().filter(app => apps.includes(app.getName())),
+                        progressCallback: progress => {
+                            !res.finished && res.write('' + (Math.round(progress * 100) * 100 / 100));
+                        },
                         webpackCallback: () => {
                             // At the moment, we are not sending anything back. Just end the request to signal success.
-                            res.end();
+                            !res.finished && res.end();
                         }
                     });
                 }
                 res.end();
             });
-            httpServer.on("error", err => Webiny.failure(err));
+            httpServer.on('error', err => Webiny.failure(err));
             httpServer.listen(this.port + 1);
         }
     }
