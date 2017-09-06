@@ -3,14 +3,14 @@ import _ from 'lodash';
 import Webiny from 'webiny';
 import Growl from './Growl';
 
-class DangerGrowl extends Growl {
+`class DangerGrowl extends Webiny.Ui.Component {
 
-}
+}`
 
 DangerGrowl.defaultProps = {
     title: null,
     ttl: 3000,
-    sticky: false,
+    sticky: true,
     message: null,
     type: 'danger',
     renderer() {

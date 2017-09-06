@@ -3,7 +3,7 @@ import _ from 'lodash';
 import Webiny from 'webiny';
 import Growl from './Growl';
 
-class WarningGrowl extends Growl {
+class WarningGrowl extends Webiny.Ui.Component {
 
 }
 
