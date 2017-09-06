@@ -13,11 +13,13 @@ class Navigation extends Webiny.Ui.Component {
 
         this.state = {
             user: null,
+            highlight: null,
             display: window.outerWidth > 768 ? 'desktop' : 'mobile'
         };
 
         this.checkDisplayInterval = null;
         this.offRouteChanged = _.noop;
+        this.bindMethods('onClick');
     }
 
     componentDidMount() {
@@ -26,6 +28,10 @@ class Navigation extends Webiny.Ui.Component {
         // Navigation is rendered based on user roles so we need to watch for changes
         this.watch('User', user => {
             this.setState({user});
+        });
+
+        this.watch('Navigation', nav => {
+            this.setState({highlight: _.get(nav, 'highlight')});
         });
 
         this.offRouteChanged = Webiny.Router.onRouteChanged(event => {
@@ -46,16 +52,27 @@ class Navigation extends Webiny.Ui.Component {
     shouldComponentUpdate(nextProps, nextState) {
         return !_.isEqual(this.state, nextState);
     }
+
+    onClick(menu) {
+        if (menu.props.apps.includes(this.state.highlight)) {
+            Webiny.Model.set(['Navigation', 'highlight'], null);
+        }
+    }
 }
 
 Navigation.defaultProps = {
     renderer() {
         const {Desktop, Mobile} = this.props;
+        const props = {
+            onClick: this.onClick,
+            highlight: this.state.highlight
+        };
+
         if (this.state.display === 'mobile') {
-            return <Mobile/>
+            return <Mobile {...props}/>
         }
 
-        return <Desktop/>
+        return <Desktop {...props}/>
     }
 };
 

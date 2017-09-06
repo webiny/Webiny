@@ -1,3 +1,4 @@
+import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
 import Menu from './Menu';
@@ -10,7 +11,6 @@ class Module {
      */
     constructor(app) {
         this.app = app;
-        this.menus = [];
         this.settings = [];
     }
 
@@ -51,7 +51,7 @@ class Module {
     }
 
     registerMenus(...menus) {
-        _.each(menus, menu => Menu.add(menu));
+        _.each(menus, menu => Menu.add(React.cloneElement(menu, {apps: [this.app.name]})));
         return this;
     }
 

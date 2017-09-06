@@ -2,6 +2,7 @@ import React from 'react';
 import Webiny from 'webiny';
 import _ from 'lodash';
 import utils from './utils';
+import styles from './styles.scss';
 
 class Mobile extends Webiny.Ui.Component {
     constructor(props) {
@@ -21,7 +22,6 @@ class Mobile extends Webiny.Ui.Component {
                 return null;
             }
 
-            props.id = props.id || props.label;
             const {level} = props;
             const {Link} = this.props;
             const children = React.Children.toArray(props.children);
@@ -33,6 +33,7 @@ class Mobile extends Webiny.Ui.Component {
                 key: props.id,
                 label: props.label,
                 onClick: this.closeMobileMenu,
+                className: props.level === 0 && props.apps.includes(this.props.highlight) ? styles.animateFlicker : null,
                 children: [
                     props.icon ? <span key="icon" className={menuIconClass}/> : null,
                     level > 1 ? props.label : <span key="title" className="app-title">{props.label}</span>,
@@ -55,7 +56,7 @@ class Mobile extends Webiny.Ui.Component {
                 if (!childMenuItems.filter(item => !_.isNil(item)).length) {
                     return null;
                 }
-                linkProps.onClick = e => this.onClick(props.id, e);
+                linkProps.onClick = e => this.onClick(menu, e);
             }
 
             const className = this.classSet({
@@ -68,7 +69,7 @@ class Mobile extends Webiny.Ui.Component {
                     {utils.getLink(props.route, Link, linkProps)}
                     {hasChildren && (
                         <ul className={'level-' + (level + 1)}>
-                            <li className="main-menu--close back" onClick={e => this.onClick(props.id, e)}>Go Back</li>
+                            <li className="main-menu--close back" onClick={e => this.onClick(menu, e)}>Go Back</li>
                             {childMenuItems}
                         </ul>
                     )}
@@ -77,11 +78,12 @@ class Mobile extends Webiny.Ui.Component {
         };
     }
 
-    onClick(id, e) {
+    onClick(menu, e) {
         e.stopPropagation();
         const state = this.state;
-        state[id] = !_.get(state, id, false);
+        state[menu.props.id] = !_.get(state, menu.props.id, false);
         this.setState(state);
+        this.props.onClick(menu);
     }
 
     closeMobileMenu() {
@@ -99,7 +101,7 @@ Mobile.defaultProps = {
                         <li className="main-menu--close" onClick={this.closeMobileMenu}>Close</li>
                         {Webiny.Menu.getMenu().map(menu => (
                             React.cloneElement(menu, {
-                                key: menu.props.id || menu.props.label,
+                                key: menu.props.id,
                                 renderer: this.renderer
                             })
                         ))}

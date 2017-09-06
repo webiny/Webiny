@@ -2,6 +2,7 @@ import React from 'react';
 import Webiny from 'webiny';
 import _ from 'lodash';
 import utils from './utils';
+import styles from './styles.scss';
 
 class Desktop extends Webiny.Ui.Component {
     constructor(props) {
@@ -21,7 +22,6 @@ class Desktop extends Webiny.Ui.Component {
                 return null;
             }
 
-            props.id = props.id || props.label;
             const children = React.Children.toArray(props.children);
             const hasChildren = children.length > 0;
             const {Link} = this.props;
@@ -31,6 +31,7 @@ class Desktop extends Webiny.Ui.Component {
             const linkProps = {
                 key: props.id,
                 label: props.label,
+                className: props.level === 0 && props.apps.includes(this.props.highlight) ? styles.animateFlicker : null,
                 children: [
                     props.icon ? <span key="icon" className={menuIconClass}/> : null,
                     props.level > 1 ? props.label : <span key="title" className="app-title">{props.label}</span>,
@@ -80,7 +81,8 @@ class Desktop extends Webiny.Ui.Component {
 
     onClick(menu) {
         if (menu.props.level === 0) {
-            this.setState({open: menu.props.id || menu.props.label});
+            this.setState({open: menu.props.id});
+            this.props.onClick(menu);
         }
     }
 }
@@ -94,7 +96,7 @@ Desktop.defaultProps = {
                     <ul className="menu-list level-0">
                         {Webiny.Menu.getMenu().map(menu => (
                             React.cloneElement(menu, {
-                                key: menu.props.id || menu.props.label,
+                                key: menu.props.id,
                                 renderer: this.renderer
                             })
                         ))}
@@ -105,4 +107,4 @@ Desktop.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Desktop, {modules: ['Link']});
+export default Webiny.createComponent(Desktop, {styles, modules: ['Link']});

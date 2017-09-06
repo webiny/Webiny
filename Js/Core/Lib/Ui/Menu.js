@@ -12,7 +12,8 @@ Menu.defaultProps = {
     role: null,
     route: null,
     level: 0,
-    overwriteExisting: false
+    overwriteExisting: false,
+    apps: []
 };
 
 export default Menu;

@@ -16,10 +16,12 @@ function mergeMenus(menu1, menu2) {
         return menu2;
     }
 
-    const omit = ['renderer', 'children'];
+    const omit = ['renderer', 'children', 'apps'];
 
     // Create merged props object
     const newProps = _.merge({}, _.omit(menu1.props, omit), _.omit(menu2.props, omit));
+    // Combine apps from 2 menus so we know what apps are related to this menu
+    newProps.apps = _.uniq(menu1.props.apps.concat(menu2.props.apps));
     let newChildren = React.Children.toArray(menu1.props.children);
     newProps.key = menu1.props.id || menu1.props.label;
     React.Children.forEach(menu2.props.children, child => {
@@ -55,6 +57,9 @@ class Menu {
      * @param menu
      */
     add(menu) {
+        // Make sure we have a menu ID
+        menu = React.cloneElement(menu, {id: menu.props.id || menu.props.label});
+
         // If top-level menu already exists...
         const menuIndex = findMenuIndex(this.menu, menu);
         if (menuIndex > -1) {
