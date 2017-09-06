@@ -3,13 +3,14 @@
     "type": "webiny-app",
     "require": {
         "webiny/app-installer": "dev-master",
-        "webiny/framework": "dev-master",
+        "webiny/framework": "dev-pre-release",
         "webiny/login": "dev-master",
         "webiny/analytics-db": "dev-master",
         "mikehaertl/phpwkhtmltopdf": "^2.0@dev",
         "league/csv": "^7.1@dev",
         "phpzip/phpzip": "dev-master",
-        "php-curl-class/php-curl-class": "dev-master"
+        "php-curl-class/php-curl-class": "^7",
+        "robthree/twofactorauth": "^1"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
