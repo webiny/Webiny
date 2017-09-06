@@ -17,6 +17,15 @@
                     "me": {
                         "get": true,
                         "patch": true
+                    },
+                    "2factor-qr": {
+                        "get": true
+                    },
+                    "2factor-verify": {
+                        "post": true
+                    },
+                    "2factor-recovery-codes": {
+                        "get": true
                     }
                 }
             }
@@ -171,11 +180,11 @@
                     "crudRead": true,
                     "crudUpdate": true,
                     "crudDelete": true,
-                    "entity" : {
-                        "get" : true
+                    "entity": {
+                        "get": true
                     },
-                    "service" : {
-                        "get" : true
+                    "service": {
+                        "get": true
                     }
                 }
             }

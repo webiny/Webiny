@@ -2,6 +2,7 @@
 
 namespace Apps\Webiny\Php\Entities;
 
+use Apps\Webiny\Php\Lib\Authorization\TwoFactorAuth;
 use Apps\Webiny\Php\Lib\Interfaces\UserInterface;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Lib\Entity\Attributes\FileAttribute;
@@ -89,6 +90,21 @@ class User extends AbstractEntity implements UserInterface
         $this->attr('lastLogin')->datetime();
         $this->attr('meta')->object();
 
+        // 2 factor auth
+        $defaultValue = [
+            'status'        => false,
+            'secret'        => '',
+            'recoveryCodes' => []
+        ];
+
+        $this->attr('twoFactorAuth')->object()->setDefaultValue($defaultValue)->onSet(function ($value) {
+            return [
+                'status'        => isset($value['status']) ? $value['status'] : $this->twoFactorAuth['status'],
+                'secret'        => isset($value['secret']) ? $value['secret'] : $this->twoFactorAuth['secret'],
+                'recoveryCodes' => isset($value['recoveryCodes']) ? $value['recoveryCodes'] : $this->twoFactorAuth['recoveryCodes']
+            ];
+        });
+
         /**
          * @api.name        User login
          * @api.description Logs in user with his username and password.
@@ -98,20 +114,65 @@ class User extends AbstractEntity implements UserInterface
          */
         $this->api('POST', 'login', function () {
             $data = $this->wRequest()->getRequestData();
-            $login = $this->wAuth()->processLogin($data['username']);
 
-            /* @var User $user */
-            $user = $this->wAuth()->getUser();
+            // check if login request
+            if (isset($data['username']) && isset($data['password'])) { // username + password form submit
+                $login = $this->wAuth()->processLogin($data['username']);
 
-            if (!$user->enabled) {
-                throw new AppException('User account is disabled!');
+                /* @var User $user */
+                $user = $this->wAuth()->getUser();
+
+                if (!$user->enabled) {
+                    throw new AppException('User account is disabled!');
+                }
+
+                // if 2 auth is turned on, we return the verification token instead of auth token
+                if ($login['authToken'] && $user->twoFactorAuth['status']) {
+                    $tfa = new TwoFactorAuth($user);
+
+                    // instead of returning the authToken, we return twoFactorAuth:true and the verificationToken
+                    return [
+                        'twoFactorAuth'     => true,
+                        'verificationToken' => $tfa->getVerificationToken($login['authToken'])
+                    ];
+                }
+
+                // standard login
+                return [
+                    'authToken' => $login['authToken'],
+                    'user'      => $user->toArray($this->wRequest()->getFields('*,!password'))
+                ];
+
+            } elseif (isset($data['verificationToken']) && isset($data['twoFactorAuthCode'])) { // two factor auth form submit
+                // load user via username
+                $user = self::findOne(['email' => $data['username']]);
+                if (!$user) {
+                    throw new AppException('Verification code is incorrect.');
+                }
+
+                // get auth token for the given verification token
+                $tfa = new TwoFactorAuth($user);
+                $authToken = $tfa->getAuthToken($data['verificationToken']);
+                if (!$authToken) {
+                    throw new AppException('Verification code is incorrect.');
+                }
+
+                // validate the 2 factor auth code
+                $result = $tfa->verifyCode($data['twoFactorAuthCode']);
+                if (!$result) {
+                    throw new AppException('Verification code is incorrect.');
+                }
+
+                // if everything is valid, we return the auth token and the user data
+                return [
+                    'authToken' => $authToken,
+                    'user'      => $user->toArray($this->wRequest()->getFields('*,!password'))
+                ];
+            } else {
+                throw new AppException('Unable to process login request. Data is not correctly formatted.');
             }
 
-            return [
-                'authToken' => $login['authToken'],
-                'user'      => $user->toArray($this->wRequest()->getFields('*,!password'))
-            ];
-        })->setBodyValidators(['username' => 'required,email', 'password' => 'required']);
+        });//->setBodyValidators(['username' => 'required,email', 'password' => 'required']);
 
         /**
          * @api.name        My profile
@@ -195,6 +256,53 @@ class User extends AbstractEntity implements UserInterface
 
             return true;
         })->setBodyValidators(['code' => 'required', 'password' => 'required']);
+
+        /**
+         * @api.name        Get the user 2 factor auth QR code
+         * @api.description Returns the data/base64  qr code for the authenticator application.
+         */
+        $this->api('GET', '/2factor-qr', function () {
+            $user = $this->wAuth()->getUser();
+            $tfa = new TwoFactorAuth($user);
+
+            return [
+                'qrCode' => $tfa->getQrCode()
+            ];
+        });
+
+        /**
+         * @api.name        Verifies if the given verification code is valid.
+         * @api.description Processes the given verification code with the authenticator app and returns the result if the code is valid.
+         * @api.body.verification       string  Password reset code (received via email)
+         */
+        $this->api('POST', '/2factor-verify', function () {
+            $data = $this->wRequest()->getRequestData();
+            $user = $this->wAuth()->getUser();
+            $tfa = new TwoFactorAuth($user);
+
+            $result = $tfa->verifyCode($data['verification']);
+
+            if ($result) {
+                $tfa->populateRecoveryCodes();
+            }
+
+            return [
+                'result' => $result
+            ];
+        })->setBodyValidators(['verification' => 'required']);
+
+        /**
+         * @api.name        Get the user 2 factor auth QR code
+         * @api.description Returns the data/base64  qr code for the authenticator application.
+         */
+        $this->api('GET', '/2factor-recovery-codes', function () {
+            $user = $this->wAuth()->getUser();
+            $tfa = new TwoFactorAuth($user);
+
+            return [
+                'recoveryCodes' => implode("\n", $tfa->getRecoveryCodes())
+            ];
+        });
     }
 
     public function save()

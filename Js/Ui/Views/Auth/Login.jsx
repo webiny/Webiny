@@ -4,10 +4,25 @@ import logoOrange from 'Webiny/Ui/Assets/images/logo_orange.png';
 import styles from './styles/Login.css';
 
 class Login extends Webiny.Ui.View {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            twoFactorAuth: false,
+            verificationToken: null
+        };
+
+    }
 
     onSubmit(model, form) {
         form.setState({error: null});
         form.showLoading();
+
+        if(this.state.twoFactorAuth){
+            delete model.password;
+            model.verificationToken = this.state.verificationToken;
+        }
+
         return Webiny.Auth.getApiEndpoint().post('login', model, {_fields: Webiny.Auth.getUserFields()}).then(apiResponse => {
             form.hideLoading();
             if (apiResponse.isError()) {
@@ -15,6 +30,13 @@ class Login extends Webiny.Ui.View {
             }
 
             const data = apiResponse.getData();
+            if (data.twoFactorAuth) {
+                // activate two factor auth
+                this.setState({twoFactorAuth: true, verificationToken: data.verificationToken});
+                return;
+            }
+
+
             if (!Webiny.Auth.isAuthorized(data.user)) {
                 return form.setState({error: 'Some of your input isn\'t quite right.'});
             }
@@ -54,20 +76,32 @@ Login.defaultProps = {
                                     <Form.Error/>
 
                                     <div className="clear"/>
-                                    <Input
-                                        name="username"
-                                        placeholder="Enter email"
-                                        label="Email address"
-                                        validate="required,email"
-                                        onEnter={form.submit}
-                                        autoFocus={true}/>
 
-                                    <Password
-                                        name="password"
-                                        placeholder="Password"
-                                        label="Password"
+                                    {this.state.twoFactorAuth && ( <Input
+                                        name="twoFactorAuthCode"
+                                        placeholder="Enter your verification code"
+                                        label="Verification code"
                                         validate="required"
-                                        onEnter={form.submit}/>
+                                        onEnter={form.submit}
+                                        autoFocus={true}/>)}
+
+
+                                    {!this.state.twoFactorAuth && (<div>
+                                        <Input
+                                            name="username"
+                                            placeholder="Enter email"
+                                            label="Email address"
+                                            validate="required,email"
+                                            onEnter={form.submit}
+                                            autoFocus={true}/>
+
+                                        <Password
+                                            name="password"
+                                            placeholder="Password"
+                                            label="Password"
+                                            validate="required"
+                                            onEnter={form.submit}/>
+                                    </div>)}
 
                                     <div className="form-footer">
                                         <Button
