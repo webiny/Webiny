@@ -3,7 +3,7 @@
     "type": "webiny-app",
     "require": {
         "webiny/app-installer": "dev-master",
-        "webiny/framework": "dev-pre-release",
+        "webiny/framework": "dev-master",
         "webiny/login": "dev-master",
         "webiny/analytics-db": "dev-master",
         "mikehaertl/phpwkhtmltopdf": "^2.0@dev",
