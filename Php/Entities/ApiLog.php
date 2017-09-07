@@ -2,10 +2,12 @@
 
 namespace Apps\Webiny\Php\Entities;
 
+use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\EntityQuery;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\Filter;
-use Apps\Webiny\Php\Lib\Exceptions\AppException;
+use Apps\Webiny\Php\Lib\Entity\EntityQuery\QueryContainer;
+use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
 use Webiny\Component\Mongo\Index\CompoundIndex;
 use Webiny\Component\Mongo\Index\SingleIndex;
 
@@ -26,31 +28,9 @@ class ApiLog extends AbstractEntity
     protected static $entityCollection = 'ApiLogs';
     protected static $entityMask = '{id}';
 
-    protected static function entityQuery()
-    {
-        return [
-            new Filter('*', function (EntityQuery $query) {
-                $user = self::wAuth()->getUser();
-                if (!$user) {
-                    return $query->abort();
-                }
-
-                if (!$user->hasRole('webiny-acl-api-token-manager')) {
-                    $query->setCondition('token', ['$ne' => 'system']);
-                }
-            })
-        ];
-    }
-
     public function __construct()
     {
         parent::__construct();
-
-        $this->index(new SingleIndex('token', 'token'));
-        $this->index(new SingleIndex('user', 'user'));
-        $this->index(new SingleIndex('method', 'method'));
-        $this->index(new SingleIndex('createdOn', 'createdOn', false, false, false, 604800)); // expire after 7 days
-        $this->index(new CompoundIndex('methodUrl', ['request.url', 'request.method']));
 
         $this->attr('token')->char()->onSet(function ($value) {
             if ($value instanceof AbstractEntity) {
@@ -75,10 +55,43 @@ class ApiLog extends AbstractEntity
         $this->attr('request')->object()->setToArrayDefault();
         $this->attr('method')->char()->setToArrayDefault();
 
-        unset($this->attributes['modifiedOn']);
+        $this->attributes->remove('modifiedOn');
+    }
 
-        $this->api('GET', '/methods', function () {
+    protected function entityApi(ApiContainer $api)
+    {
+        parent::entityApi($api);
+
+        $api->get('/methods', function () {
             return $this->wDatabase()->distinct(static::$entityCollection, 'request.method');
         });
+    }
+
+
+    protected static function entityQuery(QueryContainer $query)
+    {
+        $query->add(
+            new Filter('*', function (EntityQuery $query) {
+                $user = self::wAuth()->getUser();
+                if (!$user) {
+                    return $query->abort();
+                }
+
+                if (!$user->hasRole('webiny-acl-api-token-manager')) {
+                    $query->setCondition('token', ['$ne' => 'system']);
+                }
+            })
+        );
+    }
+
+    protected static function entityIndexes(IndexContainer $indexes)
+    {
+        parent::entityIndexes($indexes);
+
+        $indexes->add(new SingleIndex('token', 'token'));
+        $indexes->add(new SingleIndex('user', 'user'));
+        $indexes->add(new SingleIndex('method', 'method'));
+        $indexes->add(new SingleIndex('createdOn', 'createdOn', false, false, false, 604800)); // expire after 7 days
+        $indexes->add(new CompoundIndex('methodUrl', ['request.url', 'request.method']));
     }
 }

@@ -389,7 +389,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
      *
      * @param IndexContainer $indexes
      *
-     * @return array
+     * @return void
      */
     protected static function entityIndexes(IndexContainer $indexes)
     {
@@ -404,7 +404,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
      *
      * @param QueryContainer $query
      *
-     * @return array
+     * @return void
      */
     protected static function entityQuery(QueryContainer $query)
     {
@@ -415,6 +415,8 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
      * Define entity API
      *
      * @param ApiContainer $api An object used to defined the API
+     *
+     * @return void
      */
     protected function entityApi(ApiContainer $api)
     {
@@ -703,7 +705,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             return null;
         }
 
-        if (in_array($name, self::EVENT_NAMES)) {
+        if (array_key_exists($name, static::EVENT_NAMES)) {
             $this->instanceCallbacks[$name][] = $arguments[0];
 
             return null;

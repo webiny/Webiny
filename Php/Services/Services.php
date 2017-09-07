@@ -2,11 +2,10 @@
 
 namespace Apps\Webiny\Php\Services;
 
-use Apps\Webiny\Php\Lib\WebinyTrait;
+use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Services\AbstractService;
 use Apps\Webiny\Php\Lib\Apps\Parser\ServiceParser;
 use Apps\Webiny\Php\Lib\Apps\App;
-use Webiny\Component\StdLib\StdLibTrait;
 
 /**
  * Class Services
@@ -14,16 +13,13 @@ use Webiny\Component\StdLib\StdLibTrait;
  */
 class Services extends AbstractService
 {
-    use WebinyTrait, StdLibTrait;
-
-    function __construct()
+    protected function serviceApi(ApiContainer $api)
     {
-        parent::__construct();
         /**
          * @api.name Get system services
          * @api.description This method returns an overview of all active services
          */
-        $this->api('get', '/', function () {
+        $api->get('/', function () {
 
             // Services listed here will not be returned in the final response.
             $excludeServices = $this->wRequest()->query('exclude', []);
@@ -69,4 +65,5 @@ class Services extends AbstractService
             return $services;
         });
     }
+
 }

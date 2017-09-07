@@ -2,7 +2,9 @@
 
 namespace Apps\Webiny\Php\Entities;
 
+use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
+use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\Mongo\Index\CompoundIndex;
 use Webiny\Component\Mongo\Index\SingleIndex;
@@ -24,10 +26,6 @@ class DashboardUpdates extends AbstractEntity
     {
         parent::__construct();
 
-        $this->index(new CompoundIndex('refIdUserId', ['refId', 'userId']));
-        $this->index(new SingleIndex('dismissed', 'dismissed'));
-        $this->index(new SingleIndex('order', 'order'));
-
         $this->attr('refId')->char()->setToArrayDefault(true);
         $this->attr('userId')->char()->setToArrayDefault(true);
         $this->attr('title')->char()->setToArrayDefault(true);
@@ -36,13 +34,17 @@ class DashboardUpdates extends AbstractEntity
         $this->attr('dismissed')->boolean()->setDefaultValue(false); // this will contain the id of user which dismissed the update
         $this->attr('order')->integer()->setDefaultValue(0);
         $this->attr('image')->char()->setToArrayDefault(true);
+    }
 
+    protected function entityApi(ApiContainer $api)
+    {
+        parent::entityApi($api);
 
         /**
          * @api.name        Get the latest dashboard updates
          * @api.description Retrieves the latest dashboard updates for the current user.
          */
-        $this->api('GET', 'latest', function () {
+        $api->get('latest', function () {
             // first we populate the updates for that user
             $user = $this->wAuth()->getUser();
             if (!$user) {
@@ -56,11 +58,22 @@ class DashboardUpdates extends AbstractEntity
             return $this->apiFormatList($result, '*');
         });
 
-        $this->api('GET', '{dashboardUpdate}/dismiss', function (DashboardUpdates $dashboardUpdate) {
+        $api->get('{dashboardUpdate}/dismiss', function (DashboardUpdates $dashboardUpdate) {
             $dashboardUpdate->dismissed = true;
             $dashboardUpdate->save();
         });
     }
+
+
+    protected static function entityIndexes(IndexContainer $indexes)
+    {
+        parent::entityIndexes($indexes);
+
+        $indexes->add(new CompoundIndex('refIdUserId', ['refId', 'userId']));
+        $indexes->add(new SingleIndex('dismissed', 'dismissed'));
+        $indexes->add(new SingleIndex('order', 'order'));
+    }
+
 
     // @todo: make this more bullet proof so in case of problems we fail gracefully
     private function populateUpdates(User $user)

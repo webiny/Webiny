@@ -43,7 +43,7 @@ class ApiContainer
      *
      * @return ApiMethod|null
      */
-    public function get($pattern, $function)
+    public function get($pattern, $function = null)
     {
         return $this->api('get', $pattern, $function);
     }
@@ -56,7 +56,7 @@ class ApiContainer
      *
      * @return ApiMethod|null
      */
-    public function post($pattern, $function)
+    public function post($pattern, $function = null)
     {
         return $this->api('post', $pattern, $function);
     }
@@ -69,7 +69,7 @@ class ApiContainer
      *
      * @return ApiMethod|null
      */
-    public function patch($pattern, $function)
+    public function patch($pattern, $function = null)
     {
         return $this->api('patch', $pattern, $function);
     }
@@ -82,7 +82,7 @@ class ApiContainer
      *
      * @return ApiMethod|null
      */
-    public function delete($pattern, $function)
+    public function delete($pattern, $function = null)
     {
         return $this->api('delete', $pattern, $function);
     }

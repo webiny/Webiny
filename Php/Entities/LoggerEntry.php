@@ -1,7 +1,9 @@
 <?php
 namespace Apps\Webiny\Php\Entities;
 
+use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
+use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
 use Webiny\Component\Mongo\Index\SingleIndex;
 
 
@@ -27,22 +29,22 @@ class LoggerEntry extends AbstractEntity
     {
         parent::__construct();
 
-        $this->index(new SingleIndex('errorGroup', 'errorGroup'));
-        $this->index(new SingleIndex('createdOn', 'createdOn', false, false, false, 5184000)); // expire after 60 days
-
         $this->attr('url')->char()->setToArrayDefault();
         $this->attr('date')->datetime()->setToArrayDefault();
-
         $this->attr('stack')->char();
         $this->attr('clientData')->object();
-
         $this->attr('errorGroup')->many2one()->setEntity('Apps\Webiny\Php\Entities\LoggerErrorGroup');
+    }
+
+    protected function entityApi(ApiContainer $api)
+    {
+        parent::entityApi($api);
 
         /**
          * @api.name        Resolve logger entry
          * @api.description Resolves given logger entry.
          */
-        $this->api('POST', '{id}/resolve', function () {
+        $api->post('{id}/resolve', function () {
             // re-calculate the number of errors inside the same group
             $this->errorGroup->errorCount--;
 
@@ -58,5 +60,14 @@ class LoggerEntry extends AbstractEntity
                 'errorGroup' => $this->errorGroup->id,
             ];
         });
+    }
+
+
+    protected static function entityIndexes(IndexContainer $indexes)
+    {
+        parent::entityIndexes($indexes);
+
+        $indexes->add(new SingleIndex('errorGroup', 'errorGroup'));
+        $indexes->add(new SingleIndex('createdOn', 'createdOn', false, false, false, 5184000)); // expire after 60 days
     }
 }

@@ -2,11 +2,10 @@
 
 namespace Apps\Webiny\Php\Services;
 
-use Apps\Webiny\Php\Lib\WebinyTrait;
+use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Services\AbstractService;
 use Apps\Webiny\Php\Lib\Apps\Parser\EntityParser;
 use Apps\Webiny\Php\Lib\Apps\App;
-use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\StdObjectWrapper;
 
 /**
@@ -15,17 +14,14 @@ use Webiny\Component\StdLib\StdObject\StdObjectWrapper;
  */
 class Entities extends AbstractService
 {
-    use WebinyTrait, StdLibTrait;
-
-    function __construct()
+    protected function serviceApi(ApiContainer $api)
     {
-        parent::__construct();
         /**
          * @api.name List all entities registered in the system
          * @api.description This method returns a list of all system entities
          * @api.query.withDetails boolean Return full details (default: false)
          */
-        $this->api('get', '/', function () {
+        $api->get('/', function () {
 
             // Entities listed here will not be returned in the final response.
             $excludeEntities = $this->wRequest()->query('exclude', []);
@@ -86,7 +82,7 @@ class Entities extends AbstractService
          * @api.description This method returns a list of attributes for given entity class name
          * @api.query.entity string Entity class for which to get attributes
          */
-        $this->api('get', 'attributes', function () {
+        $api->get('attributes', function () {
             $entityClass = $this->wRequest()->query('entity');
             $entity = new EntityParser($entityClass);
 
@@ -98,7 +94,7 @@ class Entities extends AbstractService
          * @api.description This method returns a list of methods for given entity class name
          * @api.query.entity string Entity class for which to get methods
          */
-        $this->api('get', 'methods', function () {
+        $api->get('methods', function () {
             $entityClass = $this->wRequest()->query('entity');
             $entity = new EntityParser($entityClass);
 
