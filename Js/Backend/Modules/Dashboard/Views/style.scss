@@ -1,4 +1,4 @@
-:global{
+:global {
   .avatar {
     display: inline-block;
     vertical-align: top;
@@ -104,7 +104,7 @@
     min-height: 50px;
   }
 
-  .dashboard--block--the-hub{
+  .dashboard--block--the-hub {
     padding-top: 10px;
   }
 
@@ -173,6 +173,7 @@
     text-align: center;
     img {
       width: auto !important;
+      height: 100px;
     }
   }
 
@@ -180,6 +181,7 @@
     .slide__image {
       img {
         margin: 0 auto;
+        height: auto;
       }
     }
   }
@@ -224,6 +226,7 @@
   @media (max-width: 768px) {
     .slide__button {
       width: 100%;
+      margin: 0;
     }
   }
 
