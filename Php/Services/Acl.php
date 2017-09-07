@@ -2,9 +2,8 @@
 
 namespace Apps\Webiny\Php\Services;
 
-use Apps\Webiny\Php\Lib\WebinyTrait;
-use Apps\Webiny\Php\Lib\Services\AbstractService;
-use Webiny\Component\StdLib\StdLibTrait;
+use Apps\Webiny\Php\DevTools\Api\ApiContainer;
+use Apps\Webiny\Php\DevTools\Services\AbstractService;
 
 /**
  * Class Acl
@@ -12,16 +11,13 @@ use Webiny\Component\StdLib\StdLibTrait;
  */
 class Acl extends AbstractService
 {
-    use WebinyTrait, StdLibTrait;
-
-    function __construct()
+    protected function serviceApi(ApiContainer $api)
     {
-        parent::__construct();
         /**
          * @api.name Get system API token
          * @api.description Returns a system API token for use with 3rd party requests
          */
-        $this->api('GET', '/token', function () {
+        $api->get('/token', function () {
             return ['token' => $this->wConfig()->get('Application.Acl.Token')];
         });
     }

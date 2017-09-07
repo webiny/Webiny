@@ -5,86 +5,125 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Webiny\Php\Dispatchers;
+namespace Apps\Webiny\Php\DevTools\Api;
 
-use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
-use Apps\Webiny\Php\Lib\Response\EntityResponse;
-use Apps\Webiny\Php\Lib\Response\ListResponse;
-use Apps\Webiny\Php\RequestHandlers\ApiException;
-use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Router\Route\Route;
+use Webiny\Component\StdLib\StdLibTrait;
 
 /**
- * Trait ApiExpositionTrait
+ * Class ApiContainer
  *
- * This class is used when we want to expose entity or service methods to the API
+ * This class is a container of all entity API methods that is reused among entity instances
  *
- * @package Apps\Webiny\Php\Dispatchers
+ * @package Apps\Webiny\Php\DevTools\Api
  */
-trait ApiExpositionTrait
+class ApiContainer
 {
-    protected $processingEvent = null;
+    use StdLibTrait;
 
-    /**
-     * @var array
-     */
-    protected $apiMethods = [];
+    private $context;
+    private $apiMethods = [];
+    private $processingEvent = false;
 
-    /**
-     * Format given EntityCollection using $fields into a standard list response
-     *
-     * @param EntityCollection $collection
-     * @param string           $fields
-     *
-     * @return ListResponse
-     */
-    public static function apiFormatList(EntityCollection $collection, $fields)
+    public function __construct($context)
     {
-        $perPage = $collection->getLimit();
-        $offset = $collection->getOffset();
-        $page = 1;
-        if ($offset > 0) {
-            $page = ($offset / $perPage) + 1;
-        }
+        $this->context = $context;
+    }
 
-        return new ListResponse([
-            'meta' => [
-                'totalCount'  => $collection->totalCount(),
-                'totalPages'  => $perPage > 0 ? ceil($collection->totalCount() / $perPage) : 1,
-                'perPage'     => $perPage,
-                'currentPage' => $page,
-                'fields'      => $fields
-            ],
-            'list' => $collection->toArray($fields)
-        ]);
+    public function setEvent($event)
+    {
+        $this->processingEvent = $event;
     }
 
     /**
-     * Format given Entity using $fields into a standard entity response
+     * Create a GET method
      *
-     * @param AbstractEntity $entity
-     * @param string         $fields
+     * @param string   $pattern URL pattern
+     * @param \Closure $function Callback to execute when method is matched
      *
-     * @return EntityResponse
+     * @return ApiMethod|null
      */
-    public static function apiFormatEntity(AbstractEntity $entity, $fields)
+    public function get($pattern, $function)
     {
-        return new EntityResponse([
-            'meta'   => [
-                'fields' => $fields
-            ],
-            'entity' => $entity->toArray($fields)
-        ]);
+        return $this->api('get', $pattern, $function);
     }
 
     /**
+     * Create a POST method
+     *
+     * @param string   $pattern URL pattern
+     * @param \Closure $function Callback to execute when method is matched
+     *
+     * @return ApiMethod|null
+     */
+    public function post($pattern, $function)
+    {
+        return $this->api('post', $pattern, $function);
+    }
+
+    /**
+     * Create a PATCH method
+     *
+     * @param string   $pattern URL pattern
+     * @param \Closure $function Callback to execute when method is matched
+     *
+     * @return ApiMethod|null
+     */
+    public function patch($pattern, $function)
+    {
+        return $this->api('patch', $pattern, $function);
+    }
+
+    /**
+     * Create a DELETE method
+     *
+     * @param string   $pattern URL pattern
+     * @param \Closure $function Callback to execute when method is matched
+     *
+     * @return ApiMethod|null
+     */
+    public function delete($pattern, $function)
+    {
+        return $this->api('delete', $pattern, $function);
+    }
+
+    /**
+     * Remove method from API container
+     *
+     * @param string $http HTTP method
+     * @param string $pattern Pattern
+     *
+     * @return $this
+     */
+    public function removeMethod($http, $pattern)
+    {
+        unset($this->apiMethods[$http][$pattern]);
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMethods()
+    {
+        return $this->apiMethods;
+    }
+
+    public function getMethod($httpMethod, $pattern)
+    {
+        return $this->apiMethods[$httpMethod][$pattern] ?? null;
+    }
+
+    /**
+     * Get method that matches given $httpMethod and $url
      *
      * @param string $httpMethod
      * @param string $url
      *
-     * @return MatchedApiMethod
+     * @return MatchedApiMethod|null
      */
-    public function getApiMethod($httpMethod, $url)
+    public function matchMethod($httpMethod, $url)
     {
         $httpMethod = strtolower($httpMethod);
         $methods = $this->apiMethods[$httpMethod] ?? [];
@@ -134,22 +173,7 @@ trait ApiExpositionTrait
         return null;
     }
 
-    public function getApiMethods()
-    {
-        return $this->apiMethods;
-    }
-
-    /**
-     * Expose new API method or get instance of existing method
-     *
-     * @param string   $httpMethod
-     * @param string   $pattern
-     * @param callable $callable
-     *
-     * @return ApiMethod
-     * @throws ApiException
-     */
-    public function api($httpMethod, $pattern, $callable = null)
+    private function api($httpMethod, $pattern, $callable = null)
     {
         $pattern = $pattern != '/' ? trim($pattern, '/') : '/';
         $httpMethod = strtolower($httpMethod);
@@ -157,12 +181,12 @@ trait ApiExpositionTrait
         if ($callable && !isset($this->apiMethods[$httpMethod])) {
             $this->apiMethods[$httpMethod] = [];
         }
-        
+
         if ($callable) {
             if (isset($this->apiMethods[$httpMethod][$pattern])) {
                 $apiInstance = $this->apiMethods[$httpMethod][$pattern];
             } else {
-                $apiInstance = new ApiMethod($httpMethod, $pattern, $this);
+                $apiInstance = new ApiMethod($httpMethod, $pattern, $this->context);
             }
 
             $apiInstance->addCallback($callable, $this->processingEvent);

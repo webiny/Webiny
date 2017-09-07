@@ -10,8 +10,9 @@ use Webiny\Component\Mongo\Index\SingleIndex;
 /**
  * Class Updates controls the updates that will be delivered to Webiny Dashboard
  *
- * @package Apps\Webiny\Php\Entities
+ * @property boolean $dismissed
  *
+ * @package Apps\Webiny\Php\Entities
  */
 class DashboardUpdates extends AbstractEntity
 {

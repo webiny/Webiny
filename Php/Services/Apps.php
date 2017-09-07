@@ -1,10 +1,10 @@
 <?php
-
 namespace Apps\Webiny\Php\Services;
 
-use Apps\Webiny\Php\Lib\Exceptions\AppException;
-use Apps\Webiny\Php\Lib\Services\AbstractService;
-use Apps\Webiny\Php\Lib\Apps\App;
+use Apps\Webiny\Php\DevTools\Api\ApiContainer;
+use Apps\Webiny\Php\DevTools\Exceptions\AppException;
+use Apps\Webiny\Php\DevTools\Services\AbstractService;
+use Apps\Webiny\Php\PackageManager\App;
 
 /**
  * Class Apps
@@ -13,14 +13,13 @@ use Apps\Webiny\Php\Lib\Apps\App;
  */
 class Apps extends AbstractService
 {
-    function __construct()
+    protected function serviceApi(ApiContainer $api)
     {
-        parent::__construct();
         /**
          * @api.name Get all active apps meta
          * @api.description This method returns a list of meta data for each active app
          */
-        $this->api('get', '/', function () {
+        $api->get('/', function () {
             return $this->getAppsMeta();
         });
 
@@ -28,15 +27,12 @@ class Apps extends AbstractService
          * @api.name Get single app/spa meta
          * @api.description This method returns a set of meta data for given app name or all backend apps (if {appName} == "backend")
          */
-        $this->api('get', '{appName}', function ($appName = null) {
+        $api->get('{appName}', function ($appName = null) {
             if ($appName === 'backend') {
                 // Get Backend apps
                 $apps = [];
                 foreach ($this->getAppsMeta() as $meta) {
                     if ($this->str($meta['name'])->endsWith('.Backend') && $meta['name'] != 'Webiny.Backend') {
-                        if ($meta['name'] === 'Faq.Backend') {
-                            continue;
-                        }
                         $apps[] = $meta;
                     }
                 }
@@ -47,6 +43,7 @@ class Apps extends AbstractService
             return $this->getAppsMeta($appName);
         });
     }
+
 
     /**
      * Get apps meta

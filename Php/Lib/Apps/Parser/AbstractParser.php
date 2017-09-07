@@ -134,7 +134,7 @@ abstract class AbstractParser
         $descriptionStarted = false;
         foreach ($classLines as $line => $code) {
             $code = $this->str($code)->trim();
-            $newApiLine = $code->containsAny(['@api', '->api(']);
+            $newApiLine = $code->containsAny(['@api', '->get(', '->post(', '->delete(', '->patch(']);
             if (!$newApiLine && !$descriptionStarted) {
                 continue;
             } elseif (!$newApiLine && $descriptionStarted && $code->val() !== '*/' && !$code->startsWith('* @')) {
@@ -149,11 +149,12 @@ abstract class AbstractParser
                 continue;
             }
 
-            if ($code->contains('->api(')) {
-                $match = $code->match('\'(\w+)\',\s?\'([\w+-{}/]+)\'');
+            if ($code->match('->(get|post|patch|delete)\(', false)) {
+                $match = $code->match('/\$\w+->([a-z]+)\(\'([\w+-\{\}\/]+)\',\s+function/');
                 if (!$match) {
                     continue;
                 }
+                // TODO: finish this
                 $httpMethod = strtolower($match->keyNested('1.0'));
                 $methodName = $match->keyNested('2.0');
                 $methodName = $methodName != '/' ? trim($methodName, '/') : '/';

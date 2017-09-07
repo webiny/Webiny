@@ -1,6 +1,8 @@
 <?php
 namespace Apps\Webiny\Php\Lib\Apps\Parser;
 
+use Apps\Webiny\Php\DevTools\Services\AbstractService;
+
 class ServiceParser extends AbstractParser
 {
     protected $baseClass = 'Apps\Webiny\Php\Lib\Services\AbstractService';
@@ -19,6 +21,7 @@ class ServiceParser extends AbstractParser
     {
         $apiDocs = $this->parseApi($this->class);
         $methods = [];
+        /* @var $serviceInstance AbstractService */
         $serviceInstance = new $this->class;
         foreach ($apiDocs as $name => $httpMethods) {
             foreach ($httpMethods as $httpMethod => $config) {
@@ -44,7 +47,7 @@ class ServiceParser extends AbstractParser
                 // There may be a case when a developer uses a trait with extra api methods and parser registers those methods
                 // but if those methods are not initialized, this following check may fail with an error.
                 // To avoid it - we check if method is initialized before doing anything else.
-                $serviceMethod = $serviceInstance->api($httpMethod, $name);
+                $serviceMethod = $serviceInstance->getApi()->getMethod($httpMethod, $name);
                 if ($serviceMethod && !$this->publicApiInterface) {
                     $definition['public'] = $serviceMethod->getPublic();
                 }
