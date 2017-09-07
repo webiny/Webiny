@@ -1,7 +1,7 @@
 <?php
 namespace Apps\Webiny\Php\Lib\Apps\Parser;
 
-use Apps\Webiny\Php\DevTools\Services\AbstractService;
+use Apps\Webiny\Php\Lib\Services\AbstractService;
 
 class ServiceParser extends AbstractParser
 {

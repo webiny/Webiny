@@ -5,7 +5,7 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Webiny\Php\DevTools\Entity\Indexes;
+namespace Apps\Webiny\Php\Lib\Entity\Indexes;
 
 use Traversable;
 use Webiny\Component\Mongo\Index\AbstractIndex;
@@ -56,6 +56,25 @@ class IndexContainer implements \IteratorAggregate
         }
 
         return $this;
+    }
+
+    /**
+     * Check if given index exists
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function exists($name)
+    {
+        /* @var $index AbstractIndex */
+        foreach ($this->indexes as $i => $index) {
+            if ($index->getName() == $name) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

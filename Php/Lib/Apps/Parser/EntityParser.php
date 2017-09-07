@@ -34,9 +34,10 @@ class EntityParser extends AbstractParser
 
     public function getAttributes()
     {
-        /* @var $attr AbstractAttribute */
+        /* @var $entity AbstractEntity */
         $entity = new $this->class;
         $attributes = [];
+        /* @var $attr AbstractAttribute */
         foreach ($entity->getAttributes() as $attrName => $attr) {
             $attrData = [
                 'name'         => $attrName,
@@ -76,9 +77,10 @@ class EntityParser extends AbstractParser
             return self::str(get_class($attr))->explode('\\')->last()->replace('Attribute', '')->caseLower()->val();
         };
 
-        /* @var $attr AbstractAttribute */
+        /* @var $entity AbstractEntity */
         $entity = new $this->class;
         $relations = [];
+        /* @var $attr AbstractAttribute */
         foreach ($entity->getAttributes() as $attrName => $attr) {
             if ($attr instanceof Many2OneAttribute || $attr instanceof One2ManyAttribute) {
                 $relations[] = [

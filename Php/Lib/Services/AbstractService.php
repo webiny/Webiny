@@ -5,12 +5,12 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Webiny\Php\DevTools\Services;
+namespace Apps\Webiny\Php\Lib\Services;
 
-use Apps\Webiny\Php\DevTools\Api\ApiContainer;
-use Apps\Webiny\Php\DevTools\Api\ApiExpositionTrait;
-use Apps\Webiny\Php\DevTools\Api\ApiMethod;
-use Apps\Webiny\Php\DevTools\WebinyTrait;
+use Apps\Webiny\Php\Lib\Api\ApiContainer;
+use Apps\Webiny\Php\Lib\Api\ApiExpositionTrait;
+use Apps\Webiny\Php\Lib\Api\ApiMethod;
+use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 
 /**

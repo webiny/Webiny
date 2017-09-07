@@ -5,7 +5,7 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Webiny\Php\DevTools\Api;
+namespace Apps\Webiny\Php\Lib\Api;
 
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
@@ -20,7 +20,7 @@ use Webiny\Component\Validation\ValidationException;
  *
  * This class is used when we want to expose class or service method to the API
  *
- * @package Apps\Webiny\Php\DevTools\Api
+ * @package Apps\Webiny\Php\Lib\Api
  */
 class ApiMethod
 {

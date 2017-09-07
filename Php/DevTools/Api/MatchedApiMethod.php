@@ -5,7 +5,7 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Webiny\Php\DevTools\Api;
+namespace Apps\Webiny\Php\Lib\Api;
 
 /**
  * Class MatchedApiMethod

@@ -5,11 +5,11 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Webiny\Php\DevTools\Api;
+namespace Apps\Webiny\Php\Lib\Api;
 
-use Apps\Webiny\Php\DevTools\Entity\AbstractEntity;
-use Apps\Webiny\Php\DevTools\Response\EntityResponse;
-use Apps\Webiny\Php\DevTools\Response\ListResponse;
+use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
+use Apps\Webiny\Php\Lib\Response\EntityResponse;
+use Apps\Webiny\Php\Lib\Response\ListResponse;
 use Webiny\Component\Entity\EntityCollection;
 
 /**

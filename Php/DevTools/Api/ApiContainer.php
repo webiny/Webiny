@@ -5,7 +5,7 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Webiny\Php\DevTools\Api;
+namespace Apps\Webiny\Php\Lib\Api;
 
 use Webiny\Component\Router\Route\Route;
 use Webiny\Component\StdLib\StdLibTrait;
@@ -15,7 +15,7 @@ use Webiny\Component\StdLib\StdLibTrait;
  *
  * This class is a container of all entity API methods that is reused among entity instances
  *
- * @package Apps\Webiny\Php\DevTools\Api
+ * @package Apps\Webiny\Php\Lib\Api
  */
 class ApiContainer
 {
@@ -110,6 +110,14 @@ class ApiContainer
         return $this->apiMethods;
     }
 
+    /**
+     * Get ApiMethod for given http method and url pattern
+     *
+     * @param $httpMethod
+     * @param $pattern
+     *
+     * @return ApiMethod|null
+     */
     public function getMethod($httpMethod, $pattern)
     {
         return $this->apiMethods[$httpMethod][$pattern] ?? null;

@@ -7,12 +7,15 @@
 
 namespace Apps\Webiny\Php\Lib\Entity;
 
+use Apps\Webiny\Php\Lib\Api\ApiContainer;
+use Apps\Webiny\Php\Lib\Api\ApiExpositionTrait;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\EntityQuery;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\EntityQueryManipulator;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\Filter;
+use Apps\Webiny\Php\Lib\Entity\EntityQuery\QueryContainer;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\Sorter;
+use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
-use Apps\Webiny\Php\Dispatchers\ApiExpositionTrait;
 use Apps\Webiny\Php\Entities\User;
 use Apps\Webiny\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\Attribute\AttributeType;
@@ -25,7 +28,6 @@ use Webiny\Component\Entity\Attribute\Many2OneAttribute as WebinyMany2OneAttribu
 use Webiny\Component\Entity\Attribute\One2ManyAttribute;
 use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Entity\EntityException;
-use Webiny\Component\Mongo\Index\AbstractIndex;
 use Webiny\Component\Mongo\Index\SingleIndex;
 use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
 
@@ -148,6 +150,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         $id = $conditions['id'] ?? null;
 
         if ($id && static::entity()->getDatabase()->isId($id)) {
+            /* @var $instance AbstractEntity */
             $instance = static::entity()->get(get_called_class(), $id);
             if ($instance) {
                 return $instance;

@@ -7,9 +7,11 @@
 
 namespace Apps\Webiny\Php\Dispatchers;
 
+use Apps\Webiny\Php\Lib\Api\MatchedApiMethod;
 use Apps\Webiny\Php\Lib\Interfaces\PublicApiInterface;
 use Apps\Webiny\Php\Lib\Response\ApiErrorResponse;
 use Apps\Webiny\Php\Lib\Response\ApiResponse;
+use Apps\Webiny\Php\Lib\Services\AbstractService;
 use Apps\Webiny\Php\RequestHandlers\ApiEvent;
 use Apps\Webiny\Php\RequestHandlers\ApiException;
 

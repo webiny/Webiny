@@ -5,7 +5,7 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Webiny\Php\DevTools\Entity\EntityQuery;
+namespace Apps\Webiny\Php\Lib\Entity\EntityQuery;
 
 class QueryContainer implements \IteratorAggregate
 {

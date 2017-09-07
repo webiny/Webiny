@@ -2,8 +2,8 @@
 
 namespace Apps\Webiny\Php\Services;
 
-use Apps\Webiny\Php\DevTools\Api\ApiContainer;
-use Apps\Webiny\Php\DevTools\Services\AbstractService;
+use Apps\Webiny\Php\Lib\Api\ApiContainer;
+use Apps\Webiny\Php\Lib\Services\AbstractService;
 
 /**
  * Class Acl

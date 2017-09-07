@@ -70,26 +70,25 @@ class Release implements LifeCycleInterface
 
             // Check of any indexes need to be dropped
             foreach ($installedIndexes as $index) {
-                $removed = !array_key_exists($index, $indexes);
+                $removed = !$indexes->exists($index);
                 if ($removed && $index !== '_id_') {
                     echo "Dropping '" . $index . "' index from '" . $collection . "' collection...\n";
                     $this->wDatabase()->dropIndex($collection, $index);
                 }
             }
         }
-}
-
-/**
- * Install production JS dependencies
- * Default: `npm install --production` is executed in the root of the app
- *
- * @param App $app
- */
-protected
-function installJsDependencies($app)
-{
-    if (file_exists($app->getPath() . '/package.json')) {
-        exec('cd ' . $app->getPath() . ' && yarn install --production');
     }
-}
+
+    /**
+     * Install production JS dependencies
+     * Default: `npm install --production` is executed in the root of the app
+     *
+     * @param App $app
+     */
+    protected function installJsDependencies($app)
+    {
+        if (file_exists($app->getPath() . '/package.json')) {
+            exec('cd ' . $app->getPath() . ' && yarn install --production');
+        }
+    }
 }
