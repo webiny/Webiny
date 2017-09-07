@@ -2,10 +2,10 @@
 
 namespace Apps\Webiny\Php\Entities;
 
+use Apps\Webiny\Php\Lib\Apps\Parser\EntityParser;
+use Apps\Webiny\Php\Lib\Apps\Parser\ServiceParser;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Apps\Webiny\Php\Lib\Apps\App;
-use Apps\Webiny\Php\Apps\Parser\EntityParser;
-use Apps\Webiny\Php\Apps\Parser\ServiceParser;
 use Webiny\Component\Mongo\Index\SingleIndex;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 

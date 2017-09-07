@@ -1,8 +1,7 @@
 <?php
 
-namespace Apps\Webiny\Php\Apps\Parser;
+namespace Apps\Webiny\Php\Lib\Apps\Parser;
 
-use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Webiny\Component\Mongo\MongoTrait;
