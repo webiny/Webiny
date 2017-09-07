@@ -29,7 +29,7 @@ class Backend extends Webiny.App {
         return super.run().then(() => {
             this.off = Webiny.Router.onRouteChanged(() => this.hideLoader());
             // Configure Router
-            Webiny.Router.setBaseUrl('/' + Webiny.Config.Js.Backend);
+            Webiny.Router.setBaseUrl(Webiny.Config.Js.Backend);
             Webiny.Router.setTitlePattern('%s | Webiny');
 
             // Load other backend apps
