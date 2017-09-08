@@ -125,7 +125,7 @@ class Setup extends Plugin {
                 Webiny.writeFile(configs.local.marketplace, yaml.safeDump(config, {indent: 4}));
 
                 // Generate SSH keys to allow proper SSH from development machine onto itself
-                Webiny.shellExecute(`ssh-keygen -f ${configs.local.keys}/id_rsa -t rsa -N ''`);
+                Webiny.shellExecute(`mkdir -p ${configs.local.keys} && ssh-keygen -f ${configs.local.keys}/id_rsa -t rsa -N ''`);
                 Webiny.shellExecute(`cat ${configs.local.keys}/id_rsa.pub >> ~/.ssh/authorized_keys`);
 
                 Webiny.success('Configuration files written successfully!');
