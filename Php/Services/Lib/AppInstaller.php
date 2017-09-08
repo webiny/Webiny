@@ -25,8 +25,7 @@ class AppInstaller
             'cd ' . $this->wConfig()->get('Application.AbsolutePath'),
             'echo "Installing ' . $appData['name'] . '..."',
             // Composer is writing info messages to stderr so we redirect it to have all info in stdout pipe
-            'composer require ' . $appData['packagist'] . ' 2>&1',
-            'php ./Apps/Webiny/Php/Cli/install.php Local ' . $localName
+            'composer require ' . $appData['packagist'] . ' 2>&1'
         ];
 
         $this->run($this->sshCommand($commands), function (StringObject $line) {
@@ -52,6 +51,7 @@ class AppInstaller
         // Get list of JS apps in the newly installed app
         $this->wApps()->enableApp($localName);
         $newApp = $this->wApps()->loadApp($localName);
+        $newApp->getLifeCycleObject('Install')->run($newApp);
 
         $jsApps = [];
         /* @var $jsApp JsApp */
