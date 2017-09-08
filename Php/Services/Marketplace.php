@@ -18,6 +18,11 @@ class Marketplace extends AbstractService
 {
     protected function serviceApi(ApiContainer $api)
     {
+        // This service is only accessible in development
+        if ($this->wIsProduction()) {
+            return;
+        }
+
         $api->get('me', function () {
             $response = $this->server('/entities/webiny/users/me');
             $resData = json_decode($response, true);
