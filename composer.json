@@ -9,7 +9,7 @@
 
         "mikehaertl/phpwkhtmltopdf": "^2.0@dev",
         "league/csv": "^7.1@dev",
-        "phpzip/phpzip": "dev-master"
+        "phpzip/phpzip": "2.1.0"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
