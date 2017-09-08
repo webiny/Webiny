@@ -17,6 +17,7 @@ class Release {
             '!Apps/**/Js/**/*',
             '!Apps/**/*.git',
             'Configs/**/*.yaml',
+            '!Configs/Local/**',
             'public_html/build/production/**/*',
             'public_html/*.{php,html}',
             'public_html/robots.txt',
