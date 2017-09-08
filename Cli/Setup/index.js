@@ -125,7 +125,7 @@ class Setup extends Plugin {
                 Webiny.writeFile(configs.local.marketplace, yaml.safeDump(config, {indent: 4}));
 
                 // Generate SSH keys to allow proper SSH from development machine onto itself
-                Webiny.shellExecute(`mkdir -p ${configs.local.keys} && ssh-keygen -f ${configs.local.keys}/id_rsa -t rsa -N ''`);
+                Webiny.shellExecute(`mkdir -p ${configs.local.keys} && ssh-keygen -q -f ${configs.local.keys}/id_rsa -t rsa -N ''`);
                 Webiny.shellExecute(`cat ${configs.local.keys}/id_rsa.pub >> ~/.ssh/authorized_keys`);
 
                 Webiny.success('Configuration files written successfully!');
@@ -136,12 +136,12 @@ class Setup extends Plugin {
 
             // Run Webiny installation procedure
             Webiny.info('Running Webiny app installation...');
-            Webiny.shellExecute('php Apps/Webiny/Php/Cli/install.php Webiny');
+            Webiny.shellExecute('php Apps/Webiny/Php/Cli/install.php Local Webiny');
 
             // Create admin user
-            const params = [answers.domain, answers.user, answers.password].join(' ');
+            const params = [answers.user, answers.password].join(' ');
             try {
-                let output = Webiny.shellExecute('php Apps/Webiny/Php/Cli/admin.php ' + params, {stdio: 'pipe'});
+                let output = Webiny.shellExecute('php Apps/Webiny/Php/Cli/admin.php Local ' + params, {stdio: 'pipe'});
                 output = JSON.parse(output);
                 if (output.status === 'created') {
                     Webiny.success('Admin user created successfully!');
