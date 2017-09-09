@@ -56,7 +56,7 @@ class Login extends Webiny.Ui.View {
 Login.defaultProps = {
     overlay: false,
     renderer() {
-        const {Form, Input, Password, Button} = this.props;
+        const {Form, Input, Password, Button, Email} = this.props;
 
         return (
             <sign-in-form class={this.classSet('sign-in', (this.props.overlay && 'overlay'))}>
@@ -87,11 +87,11 @@ Login.defaultProps = {
 
 
                                     {!this.state.twoFactorAuth && (<div>
-                                        <Input
+                                        <Email
                                             name="username"
                                             placeholder="Enter email"
                                             label="Email address"
-                                            validate="required,email"
+                                            validate="required"
                                             onEnter={form.submit}
                                             autoFocus={true}/>
 
@@ -127,4 +127,4 @@ Login.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Login, {modules: ['Form', 'Input', 'Password', 'Button']});
+export default Webiny.createComponent(Login, {modules: ['Form', 'Input', 'Password', 'Button', 'Email']});
