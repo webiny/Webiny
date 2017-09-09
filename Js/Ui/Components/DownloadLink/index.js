@@ -3,7 +3,6 @@ import _ from 'lodash';
 import Webiny from 'webiny';
 
 class DownloadLink extends Webiny.Ui.Component {
-
     constructor(props) {
         super(props);
 
@@ -23,7 +22,7 @@ class DownloadLink extends Webiny.Ui.Component {
     }
 
     getDialog() {
-        const result = this.props.download(this.downloader.download, this.props.data || null);
+        const result = this.props.download(this.downloader.download, this.props.params || null);
         // TODO: add check if the returned result is actually a Dialog component
         // At this point we do not want to import Modal component to perform the check so we assume it is a Dialog if it is not null
         if (result) {
@@ -35,13 +34,13 @@ class DownloadLink extends Webiny.Ui.Component {
 DownloadLink.defaultProps = {
     download: null,
     method: 'GET',
-    data: null,
+    params: null,
     renderer() {
         const {Downloader, Link, ...props} = this.props;
         const downloader = <Downloader ref={downloader => this.downloader = downloader}/>;
         props.onClick = () => {
             if (_.isString(this.props.download)) {
-                this.downloader.download(this.props.method, this.props.download, this.props.data);
+                this.downloader.download(this.props.method, this.props.download, this.props.params);
             } else {
                 this.getDialog();
                 this.setState({showDialog: true});
