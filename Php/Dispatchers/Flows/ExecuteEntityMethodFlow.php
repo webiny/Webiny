@@ -24,7 +24,7 @@ class ExecuteEntityMethodFlow extends AbstractFlow
     public function handle(AbstractEntity $entity, $params)
     {
         $httpMethod = strtolower($this->wRequest()->getRequestMethod());
-        $matchedMethod = $entity->getApiMethod($httpMethod, join('/', $params));
+        $matchedMethod = $entity->getApi()->matchMethod($httpMethod, join('/', $params));
 
         if (!$matchedMethod) {
             $message = 'No method matched the requested URL in ' . get_class($entity);

@@ -33,23 +33,36 @@ class Bootstrap implements LifeCycleInterface
     /**
      * Add an app route and a template that will be rendered for that route.<br/>
      *
-     * @param string         $regex
-     * @param string         $template
-     * @param int            $priority
-     * @param array|callable $dataSource
+     * @param string|\Closure $regex
+     * @param string          $template
+     * @param int             $priority
+     * @param array|callable  $dataSource
      */
     protected function addAppRoute($regex, $template, $priority = 400, $dataSource = [])
     {
         $this->wEvents()->listen('Webiny.Bootstrap.Request', function () use ($regex, $template, $dataSource) {
-            if ($this->wRequest()->getCurrentUrl(true)->getPath(true)->match($regex)) {
-                $data = $dataSource;
-                if (is_callable($dataSource)) {
-                    $data = $dataSource();
-                }
-                $html = $this->wTemplateEngine()->fetch($template, $data);
+            $path = $this->wRequest()->getCurrentUrl(true)->getPath(true);
 
-                return new HtmlResponse($html);
+            if (is_callable($regex) && !$regex($path)) {
+                return null;
             }
+
+            if (is_string($regex) && !$path->match($regex)) {
+                return null;
+            }
+
+            return $this->renderApp($template, $dataSource);
         }, $priority);
+    }
+
+    private function renderApp($template, $dataSource)
+    {
+        $data = $dataSource;
+        if (is_callable($dataSource)) {
+            $data = $dataSource();
+        }
+        $html = $this->wTemplateEngine()->fetch($template, $data);
+
+        return new HtmlResponse($html);
     }
 }

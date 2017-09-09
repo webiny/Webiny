@@ -3,6 +3,7 @@
 namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
+use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
 use Webiny\Component\Mongo\Index\SingleIndex;
 use Webiny\Component\Storage\Storage;
 use Webiny\Component\Storage\StorageTrait;
@@ -48,9 +49,6 @@ class File extends AbstractEntity
     {
         parent::__construct();
         $this->storage = $this->wStorage(self::DEFAULT_STORAGE);
-        $this->index(new SingleIndex('ref', 'ref'));
-        $this->index(new SingleIndex('tags', 'tags'));
-        $this->index(new SingleIndex('order', 'order'));
         $this->getAttribute('modifiedOn')->setToArrayDefault();
         $this->attr('name')->char()->setRequired()->setToArrayDefault();
         $this->attr('title')->char()->setToArrayDefault();
@@ -62,6 +60,15 @@ class File extends AbstractEntity
         $this->attr('ref')->char()->setToArrayDefault();
         $this->attr('order')->integer()->setDefaultValue(0)->setToArrayDefault();
     }
+
+    protected static function entityIndexes(IndexContainer $indexes)
+    {
+        parent::entityIndexes($indexes);
+        $indexes->add(new SingleIndex('ref', 'ref'));
+        $indexes->add(new SingleIndex('tags', 'tags'));
+        $indexes->add(new SingleIndex('order', 'order'));
+    }
+
 
     /**
      * @inheritDoc

@@ -1,6 +1,6 @@
 Application:
     AbsolutePath: __DIR__/../../
-    Backend: admin
+    Backend: /admin
     Acl:
         Token: ''
         CheckUserPermissions: true

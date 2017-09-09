@@ -99,7 +99,7 @@ UserAccount.defaultProps = {
             api: Webiny.Auth.getApiEndpoint(),
             loadModel: (form) => {
                 form.showLoading();
-                return form.api.get('/me', {_fields: 'id,firstName,lastName,email,gravatar,twoFactorAuth'}).then(res => {
+                return form.api.get('/me', {_fields: 'id,firstName,lastName,email,gravatar,twoFactorAuth.status'}).then(res => {
                     form.hideLoading();
                     return res.getData();
                 });
