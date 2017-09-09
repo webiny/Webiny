@@ -26,7 +26,7 @@ Action.defaultProps = {
 
         if (this.props.download) {
             return (
-                <DownloadLink download={this.props.download} data={this.props.data}>{icon} {this.props.label}</DownloadLink>
+                <DownloadLink download={this.props.download} params={this.props.data}>{icon} {this.props.label}</DownloadLink>
             );
         }
 
