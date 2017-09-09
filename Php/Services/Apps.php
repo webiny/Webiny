@@ -25,6 +25,23 @@ class Apps extends AbstractService
         });
 
         /**
+         * @api.name List installed apps
+         * @api.description Lists all installed apps
+         */
+        $this->api('get', '/installed', function () {
+            $list = [];
+            foreach ($this->wApps() as $appObj) {
+                /* @var App $appObj */
+                $list[] = [
+                    'version' => $appObj->getVersion(),
+                    'name'    => $appObj->getName(),
+                ];
+            }
+
+            return $list;
+        })->setPublic();
+
+        /**
          * @api.name Get single app/spa meta
          * @api.description This method returns a set of meta data for given app name or all backend apps (if {appName} == "backend")
          */

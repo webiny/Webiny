@@ -35,12 +35,13 @@ class DownloadLink extends Webiny.Ui.Component {
 DownloadLink.defaultProps = {
     download: null,
     method: 'GET',
+    data: null,
     renderer() {
         const {Downloader, Link, ...props} = this.props;
         const downloader = <Downloader ref={downloader => this.downloader = downloader}/>;
         props.onClick = () => {
             if (_.isString(this.props.download)) {
-                this.downloader.download(this.props.method, this.props.download);
+                this.downloader.download(this.props.method, this.props.download, this.props.data);
             } else {
                 this.getDialog();
                 this.setState({showDialog: true});

@@ -6,8 +6,11 @@ use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\EntityQuery;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\Filter;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
+use Apps\Webiny\Php\Lib\I18N\I18NParser;
 use Apps\Webiny\Php\Lib\WebinyTrait;
+use PHPZip\Zip\Stream\ZipStream;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
+use ZipArchive;
 
 /**
  * Class User
@@ -110,10 +113,7 @@ class I18NText extends AbstractEntity
          * @api.name        Updates translation by key for given language
          * @api.description Gets a translation by a given key and updates it with received data
          *
-         * @api.path.key            string  Translation key
-         * @api.body.language       string  Language
-         * @api.body.translation    string  Translation
-         * @api.body.placeholder    string  Default placeholder text for this translation (default text if no translation for selected language is present).
+         * @api.body.apps   array  List of apps for which the translations are needed.
          */
         $this->api('PATCH', 'keys/{$key}', function ($key) {
             $data = $this->wRequest()->getRequestData();
@@ -139,13 +139,60 @@ class I18NText extends AbstractEntity
         ]);
 
         /**
+         * @api.name        Scan texts and import
+         * @api.description Completely scans i18n texts in given apps and imports them to local database.
+         *
+         * @api.body.apps       array  Apps to be scanned for i18n texts
+         */
+        $this->api('POST', 'scan/import', function () {
+            $apps = $this->getApps($this->wRequest()->getRequestData()['apps'] ?? []);
+
+            $parsed = [];
+            foreach ($apps as $app) {
+                $parsed[] = I18NParser::parseApp($app);
+            }
+
+        })->setPublic();
+
+        /**
+         * @api.name        Scan texts and download
+         * @api.description Completely scans i18n texts in given apps and exports them as a ZIP file which can later be imported on a
+         *                  different environment. Optionally, import to local database can also be made.
+         *
+         * @api.body.apps   array  Apps to be scanned for i18n texts
+         * @api.body.import array  Imports scanned texts into database (optional)
+         */
+        $this->api('POST', 'scan/download', function () {
+            $data = $this->wRequest()->getRequestData();
+            die(print_r($data));
+            $apps = $this->getApps($this->wRequest()->getRequestData()['apps'] ?? []);
+            $import = $this->wRequest()->getRequestData()['import'] ?? false;
+
+            $parsed = [];
+            foreach ($apps as $app) {
+                $parsed[] = I18NParser::parseApp($app);
+            }
+
+            if ($import) {
+                // Import into DB
+            }
+
+            $zip = new ZipStream('i18n_export.zip', 'application/zip', null, true);
+            foreach ($parsed as $app => $modules) {
+                $zip->addFile(json_encode($parsed), 'bajo.json');
+            }
+
+            return $zip->finalize();
+        })->setPublic();
+
+        /**
          * TODO
          * @api.name        Fetch translations
          * @api.description Fetches all translations for given language
          *
          * @api.body.language   string  Language for which the translations will be returned
          */
-        $this->api('GET', '/edited', function () {
+        $this->api('GET', 'edited', function () {
 
             $settings = TranslationSettings::load();
             $return = [
@@ -201,5 +248,19 @@ class I18NText extends AbstractEntity
     public function hasText($locale)
     {
         return $this->translations->key($locale);
+    }
+
+    private function getApps($list = [])
+    {
+        $apps = [];
+        if (empty($list)) {
+            $apps = $this->wApps();
+        } else {
+            $apps = array_map(function ($name) {
+                return $this->wApps($name);
+            }, $list);
+        }
+
+        return $apps;
     }
 }

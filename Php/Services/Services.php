@@ -2,9 +2,9 @@
 
 namespace Apps\Webiny\Php\Services;
 
+use Apps\Webiny\Php\Lib\Apps\Parser\ServiceParser;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Lib\Services\AbstractService;
-use Apps\Webiny\Php\Apps\Parser\ServiceParser;
 use Apps\Webiny\Php\Lib\Apps\App;
 use Webiny\Component\StdLib\StdLibTrait;
 
@@ -22,6 +22,7 @@ class Services extends AbstractService
         /**
          * @api.name Get system services
          * @api.description This method returns an overview of all active services
+         * @api.query.details boolean Return full details (default: false)
          */
         $this->api('get', '/', function () {
 

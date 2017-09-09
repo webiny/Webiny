@@ -2,9 +2,9 @@
 
 namespace Apps\Webiny\Php\Services;
 
+use Apps\Webiny\Php\Lib\Apps\Parser\EntityParser;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Lib\Services\AbstractService;
-use Apps\Webiny\Php\Apps\Parser\EntityParser;
 use Apps\Webiny\Php\Lib\Apps\App;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\StdObjectWrapper;
@@ -23,7 +23,7 @@ class Entities extends AbstractService
         /**
          * @api.name List all entities registered in the system
          * @api.description This method returns a list of all system entities
-         * @api.query.withDetails boolean Return full details (default: false)
+         * @api.query.details boolean Return full details (default: false)
          */
         $this->api('get', '/', function () {
 

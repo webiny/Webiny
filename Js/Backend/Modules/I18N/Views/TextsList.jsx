@@ -1,6 +1,7 @@
 import React from 'react';
 import Webiny from 'webiny';
 import TranslationsModal from './TextsList/TextsModal';
+import ScanTexts from './TextsList/ScanTexts';
 
 import _ from 'lodash';
 import moment from 'moment';
@@ -23,15 +24,9 @@ TextsList.defaultProps = {
                                         <Ui.Button
                                             type="primary"
                                             align="right"
-                                            onClick={showView('tokenModalView')}
+                                            onClick={showView('scanTextsModal')}
                                             icon="icon-cloud-download"
-                                            label="Export"/>
-                                        <Ui.Button
-                                            type="primary"
-                                            align="right"
-                                            onClick={showView('tokenModalView')}
-                                            icon="icon-cloud-download"
-                                            label="Import"/>
+                                            label="Scan Texts"/>
                                     </Ui.View.Header>
                                     <Ui.View.Body>
                                         <Ui.List
@@ -74,9 +69,12 @@ TextsList.defaultProps = {
                         </Ui.ViewSwitcher.View>
                         <Ui.ViewSwitcher.View view="translationModal" modal>
                             {(showView, data) => (
-                                <TranslationsModal
-                                    {...{showView, data}}
-                                    refreshTokens={() => this.apiTokensList.loadData()}/>
+                                <TranslationsModal {...{showView, data}}/>
+                            )}
+                        </Ui.ViewSwitcher.View>
+                        <Ui.ViewSwitcher.View view="scanTextsModal" modal>
+                            {(showView, data) => (
+                                <ScanTexts {...{showView, data}}/>
                             )}
                         </Ui.ViewSwitcher.View>
                     </Ui.ViewSwitcher>
