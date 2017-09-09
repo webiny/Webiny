@@ -34,9 +34,10 @@ class EntityParser extends AbstractParser
 
     public function getAttributes()
     {
-        /* @var $attr AbstractAttribute */
+        /* @var $entity AbstractEntity */
         $entity = new $this->class;
         $attributes = [];
+        /* @var $attr AbstractAttribute */
         foreach ($entity->getAttributes() as $attrName => $attr) {
             $attrData = [
                 'name'         => $attrName,
@@ -76,9 +77,10 @@ class EntityParser extends AbstractParser
             return self::str(get_class($attr))->explode('\\')->last()->replace('Attribute', '')->caseLower()->val();
         };
 
-        /* @var $attr AbstractAttribute */
+        /* @var $entity AbstractEntity */
         $entity = new $this->class;
         $relations = [];
+        /* @var $attr AbstractAttribute */
         foreach ($entity->getAttributes() as $attrName => $attr) {
             if ($attr instanceof Many2OneAttribute || $attr instanceof One2ManyAttribute) {
                 $relations[] = [
@@ -120,19 +122,20 @@ class EntityParser extends AbstractParser
         ];
         $apiDocs = $this->parseApi($this->class);
 
-        // Parse dynamic methods (appended via onExtend callback)
+        // Parse dynamic methods (appended via onExtendApi callback)
         /* @var $instance AbstractEntity */
         $instance = new $this->class;
         $callbacks = $instance->getClassCallbacks();
         foreach ($callbacks as $class => $events) {
-            if (isset($events['onExtend'])) {
-                foreach ($events['onExtend'] as $cb) {
+            if (isset($events['onExtendApi'])) {
+                foreach ($events['onExtendApi'] as $cb) {
                     $apiDocs->mergeSmart($this->readExtendedApi($cb));
                 }
             }
         }
 
         $methods = [];
+        /* @var $entityInstance AbstractEntity */
         $entityInstance = new $this->class;
         foreach ($apiDocs as $name => $httpMethods) {
             foreach ($httpMethods as $httpMethod => $config) {
@@ -142,7 +145,7 @@ class EntityParser extends AbstractParser
                 // There may be a case when a developer uses a trait with extra api methods and parser registers those methods
                 // but if those methods are not initialized, this following check may fail with an error.
                 // To avoid that and similar situations - we check if method is initialized before doing anything else.
-                $entityMethod = $entityInstance->api($httpMethod, $name);
+                $entityMethod = $entityInstance->getApi()->getMethod($httpMethod, $name);
                 if (!$entityMethod) {
                     continue;
                 }

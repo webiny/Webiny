@@ -5,7 +5,7 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Webiny\Php\Dispatchers;
+namespace Apps\Webiny\Php\Lib\Api;
 
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
@@ -20,7 +20,7 @@ use Webiny\Component\Validation\ValidationException;
  *
  * This class is used when we want to expose class or service method to the API
  *
- * @package Apps\Webiny\Php\Dispatchers
+ * @package Apps\Webiny\Php\Lib\Api
  */
 class ApiMethod
 {
@@ -37,6 +37,7 @@ class ApiMethod
     private $eventCallbacks = [];
     private $bodyValidators;
     private $public = false;
+    public static $count = 0;
 
     function __construct($httpMethod, $methodName, $context, $callable = null)
     {
@@ -46,6 +47,7 @@ class ApiMethod
         if ($callable) {
             $this->callbacks = [$callable];
         }
+        static::$count++;
     }
 
     public function getPattern()
@@ -116,7 +118,7 @@ class ApiMethod
 
     public function addCallback($callable, $processingEvent = null)
     {
-        if ($processingEvent === 'onExtend') {
+        if ($processingEvent === 'onExtendApi') {
             array_unshift($this->eventCallbacks, $callable);
         } else {
             array_unshift($this->entityCallbacks, $callable);

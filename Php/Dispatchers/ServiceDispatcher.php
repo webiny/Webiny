@@ -7,9 +7,11 @@
 
 namespace Apps\Webiny\Php\Dispatchers;
 
+use Apps\Webiny\Php\Lib\Api\MatchedApiMethod;
 use Apps\Webiny\Php\Lib\Interfaces\PublicApiInterface;
 use Apps\Webiny\Php\Lib\Response\ApiErrorResponse;
 use Apps\Webiny\Php\Lib\Response\ApiResponse;
+use Apps\Webiny\Php\Lib\Services\AbstractService;
 use Apps\Webiny\Php\RequestHandlers\ApiEvent;
 use Apps\Webiny\Php\RequestHandlers\ApiException;
 
@@ -34,13 +36,14 @@ class ServiceDispatcher extends AbstractApiDispatcher
             return new ApiErrorResponse([], 'Service class ' . $serviceClass . ' does not exist!', 'WBY-CLASS_NOT_FOUND');
         }
 
+        /* @var $service AbstractService */
         $service = new $serviceClass;
-        if (!method_exists($service, 'getApiMethod')) {
+        if (!method_exists($service, 'getApi')) {
             throw new ApiException('Services must use `ApiExpositionTrait` to expose public API!', 'WBY-SD-INVALID_SERVICE');
         }
 
         /* @var $matchedServiceMethod MatchedApiMethod */
-        $matchedServiceMethod = $service->getApiMethod($httpMethod, $url);
+        $matchedServiceMethod = $service->getApi()->matchMethod($httpMethod, $url);
 
         if (!$matchedServiceMethod) {
             $message = 'No applicable methods are exposed in ' . $serviceClass;

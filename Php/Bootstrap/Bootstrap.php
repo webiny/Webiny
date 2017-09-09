@@ -207,7 +207,8 @@ class Bootstrap
     }
 
     /**
-     * @param AbstractResponse $webinyResponse
+     * @param AbstractResponse $webinyResponse Response object to process
+     * @param bool             $return Return response data
      *
      * @return mixed
      */

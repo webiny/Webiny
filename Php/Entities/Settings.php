@@ -2,6 +2,8 @@
 
 namespace Apps\Webiny\Php\Entities;
 
+use Apps\Webiny\Php\Lib\Api\ApiContainer;
+use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
@@ -30,51 +32,8 @@ class Settings extends AbstractEntity
     {
         parent::__construct();
 
-        $this->index(new SingleIndex('key', 'key', false, true));
-
         $this->attr('key')->char()->setValidators('required,unique')->setToArrayDefault();
         $this->attr('settings')->object()->setToArrayDefault();
-
-        array_map(function ($method) {
-            unset($this->apiMethods[$method]);
-        }, ['get', 'patch', 'post', 'delete']);
-
-        /**
-         * @api.name        Get settings
-         * @api.description Gets settings data of this Settings entity.
-         */
-        $this->api('GET', '/', function () {
-            if (!static::$key) {
-                throw new AppException('You must specify a settings key for ' . get_called_class());
-            }
-
-            $record = $this->findOne(['key' => static::$key]);
-            if (!$record) {
-                $record = new self;
-                $record->key = static::$key;
-            }
-
-            return $record->settings->val();
-        });
-
-        /**
-         * @api.name        Update settings
-         * @api.description Updates settings for this Settings entity.
-         */
-        $this->api('PATCH', '/', function () {
-            if (!static::$key) {
-                throw new AppException('You must specify a settings key for ' . get_called_class());
-            }
-            $record = $this->findOne(['key' => static::$key]);
-            if (empty($record)) {
-                $record = new self();
-                $record->key = static::$key;
-            }
-            $record->settings = $this->wRequest()->getRequestData();
-            $record->save();
-
-            return $record->settings->val();
-        });
     }
 
     /**
@@ -110,5 +69,51 @@ class Settings extends AbstractEntity
             $entity->settings = $settings;
             $entity->save();
         }
+    }
+
+    protected static function entityIndexes(IndexContainer $indexes)
+    {
+        parent::entityIndexes($indexes);
+        $indexes->add(new SingleIndex('key', 'key', false, true));
+    }
+
+    protected function entityApi(ApiContainer $api)
+    {
+        /**
+         * @api.name        Get settings
+         * @api.description Gets settings data of this Settings entity.
+         */
+        $api->get('/', function () {
+            if (!static::$key) {
+                throw new AppException('You must specify a settings key for ' . get_called_class());
+            }
+
+            $record = $this->findOne(['key' => static::$key]);
+            if (!$record) {
+                $record = new self;
+                $record->key = static::$key;
+            }
+
+            return $record->settings->val();
+        });
+
+        /**
+         * @api.name        Update settings
+         * @api.description Updates settings for this Settings entity.
+         */
+        $api->patch('/', function () {
+            if (!static::$key) {
+                throw new AppException('You must specify a settings key for ' . get_called_class());
+            }
+            $record = $this->findOne(['key' => static::$key]);
+            if (empty($record)) {
+                $record = new self();
+                $record->key = static::$key;
+            }
+            $record->settings = $this->wRequest()->getRequestData();
+            $record->save();
+
+            return $record->settings->val();
+        });
     }
 }

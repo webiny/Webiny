@@ -13,25 +13,24 @@ class AppInstaller
 
     private $privateKey = '';
 
-    public function setPrivateKey($path)
+    public function __construct()
     {
-        $this->privateKey = $path;
-
-        return $this;
+        $this->privateKey = $this->wConfig()->get('Marketplace.Keys.Private');
     }
 
     public function install($appData)
     {
         $localName = $appData['localName'];
+        $root = $this->wConfig()->get('Application.AbsolutePath');
+
         $commands = [
-            'cd ' . $this->wConfig()->get('Application.AbsolutePath'),
+            'cd ' . $root,
             'echo "Installing ' . $appData['name'] . '..."',
             // Composer is writing info messages to stderr so we redirect it to have all info in stdout pipe
-            'composer require ' . $appData['packagist'] . ' 2>&1',
-            'php ./Apps/Webiny/Php/Cli/install.php Local ' . $localName
+            'sudo -u vagrant /usr/local/bin/composer --no-plugins --no-scripts require ' . $appData['packagist'] . ' 2>&1'
         ];
 
-        $this->run($this->sshCommand($commands), function (StringObject $line) {
+        $this->run(join(' && ', $commands), function (StringObject $line) {
             if ($line->contains('Warning')) {
                 return;
             }
@@ -54,6 +53,7 @@ class AppInstaller
         // Get list of JS apps in the newly installed app
         $this->wApps()->enableApp($localName);
         $newApp = $this->wApps()->loadApp($localName);
+        $newApp->getLifeCycleObject('Install')->run($newApp);
 
         $jsApps = [];
         /* @var $jsApp JsApp */
@@ -126,6 +126,14 @@ class AppInstaller
                 $f = $this->str($f)->trim("\n");
                 $onLine($f);
             };
+
+            $status = proc_get_status($proc);
+            if (!$status['running'] && $status['exitcode'] !== 0) {
+                $this->echo(['message' => '----------']);
+                $this->echo(['message' => 'Installation aborted.']);
+                proc_close($proc);
+                die();
+            }
             proc_close($proc);
         }
     }

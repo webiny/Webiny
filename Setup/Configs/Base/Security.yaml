@@ -1,4 +1,6 @@
 Security:
+    TwoFactorAuth:
+        Key: ''
     UserProviders:
         UserProvider:
             Driver: \Webiny\Component\Security\User\Providers\Entity\Entity

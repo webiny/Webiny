@@ -2,6 +2,7 @@
 
 namespace Apps\Webiny\Php\Services;
 
+use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\Response\ApiRawResponse;
 use Apps\Webiny\Php\Lib\Response\ApiResponse;
@@ -15,11 +16,14 @@ use Apps\Webiny\Php\Services\Lib\AppInstaller;
  */
 class Marketplace extends AbstractService
 {
-    function __construct()
+    protected function serviceApi(ApiContainer $api)
     {
-        parent::__construct();
+        // This service is only accessible in development
+        if ($this->wIsProduction()) {
+            return;
+        }
 
-        $this->api('GET', 'me', function () {
+        $api->get('me', function () {
             $response = $this->server('/entities/webiny/users/me');
             $resData = json_decode($response, true);
 
@@ -37,19 +41,19 @@ class Marketplace extends AbstractService
             return new ApiResponse($data);
         });
 
-        $this->api('GET', 'apps', function () {
+        $api->get('apps', function () {
             $response = $this->server('/services/marketplace-manager/marketplace/apps');
 
             return new ApiRawResponse($response);
         });
 
-        $this->api('GET', 'apps/{id}', function ($id) {
+        $api->get('apps/{id}', function ($id) {
             $response = $this->server('/services/marketplace-manager/marketplace/apps/' . $id);
 
             return new ApiRawResponse($response);
         });
 
-        $this->api('GET', 'apps/{id}/install', function ($id) {
+        $api->get('apps/{id}/install', function ($id) {
             // Get app data from Webiny Marketplace
             $response = $this->server('/services/marketplace-manager/marketplace/apps/' . $id);
             $app = $this->arr(json_decode($response, true));
@@ -62,12 +66,11 @@ class Marketplace extends AbstractService
             header("X-Accel-Buffering: no");
             ob_end_flush();
             $appInstaller = new AppInstaller();
-            $appInstaller->setPrivateKey($this->wStorage('Root')->getAbsolutePath('Keys/id_rsa'));
             $appInstaller->install($app->keyNested('data.entity'));
             die();
         })->setPublic();
 
-        $this->api('POST', 'login', function () {
+        $api->post('login', function () {
             $data = $this->wRequest()->getRequestData();
             $data['rememberme'] = true;
 
@@ -84,13 +87,14 @@ class Marketplace extends AbstractService
             return new ApiRawResponse($response);
         });
 
-        $this->api('POST', 'reset-password', function () {
+        $api->post('reset-password', function () {
             $data = $this->wRequest()->getRequestData();
             $response = $this->server('/entities/webiny/users/reset-password', 'POST', $data);
 
             return new ApiRawResponse($response);
         });
     }
+
 
     /**
      * Creates a request to the Issue Tracker Server and returns the response.
