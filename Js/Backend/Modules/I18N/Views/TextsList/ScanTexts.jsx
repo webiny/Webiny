@@ -45,7 +45,7 @@ class ScanTexts extends Webiny.Ui.ModalComponent {
                                     <Ui.DownloadLink
                                         separate
                                         method="POST"
-                                        data={{bajo: 'asd'}}
+                                        params={{test: 'asd'}}
                                         type="primary"
                                         download={Webiny.Config.ApiPath + '/entities/webiny/i18n-texts/scan/download'}>
                                         {this.i18n(`Scan`)}
