@@ -31,103 +31,101 @@ class ModalForm extends Webiny.Ui.ModalComponent {
             onSuccessMessage: null
         };
 
-        const {Form, Input, Password, Button, Grid, Link} = this.props;
+        const {Modal, Form, Input, Password, Button, Grid, Link} = this.props;
 
         return (
-            <Form {...containerProps}>
-                {(model, form) => (
-                    <Grid.Row>
-                        <Grid.Col all={12}>
-                            <Form.Error/>
-                        </Grid.Col>
-                        <Grid.Col all={6}>
-                            <Input
-                                placeholder="First Name"
-                                label="First Name"
-                                name="firstName"
-                                validate="required"
-                                onEnter={form.submit}/>
-                        </Grid.Col>
+            <Modal.Dialog>
+                <Form {...containerProps}>
+                    {(model, form) => (
+                        <Modal.Content>
+                            <Modal.Header title="Register" onClose={this.hide}/>
+                            <Modal.Body>
 
-                        <Grid.Col all={6}>
-                            <Input
-                                placeholder="Last Name"
-                                label="Last Name"
-                                name="lastName"
-                                validate="required"
-                                onEnter={form.submit}/>
-                        </Grid.Col>
+                                <Grid.Row>
+                                    <Grid.Col all={12}>
+                                        <Form.Error/>
+                                    </Grid.Col>
+                                    <Grid.Col all={6}>
+                                        <Input
+                                            placeholder="First Name"
+                                            label="First Name"
+                                            name="firstName"
+                                            validate="required"
+                                            onEnter={form.submit}/>
+                                    </Grid.Col>
 
-                        <Grid.Col all={12}>
-                            <Input
-                                placeholder="Email"
-                                label="Email"
-                                name="email"
-                                validate="required, email"
-                                onEnter={form.submit}/>
-                        </Grid.Col>
-                        <Grid.Col all={12}>
-                            <Password
-                                label="Password"
-                                placeholder="Password"
-                                name="password"
-                                validate="required"
-                                onEnter={form.submit}
-                                description={<Link className="small pull-right" onClick={() => {
-                                    this.hide().then(() => this.props.showForgotPassword())
-                                }}>I CAN'T REMEMBER</Link>}
-                            />
-                        </Grid.Col>
+                                    <Grid.Col all={6}>
+                                        <Input
+                                            placeholder="Last Name"
+                                            label="Last Name"
+                                            name="lastName"
+                                            validate="required"
+                                            onEnter={form.submit}/>
+                                    </Grid.Col>
 
-                        <Grid.Col all={12} className={styles.modalAction}>
-                            <Button
-                                type="secondary"
-                                onClick={form.submit}
-                                size="large"
-                                icon="icon-next"
-                                label="Register"/>
-                        </Grid.Col>
-                    </Grid.Row>
-                )}
-            </Form>
+                                    <Grid.Col all={12}>
+                                        <Input
+                                            placeholder="Email"
+                                            label="Email"
+                                            name="email"
+                                            validate="required, email"
+                                            onEnter={form.submit}/>
+                                    </Grid.Col>
+                                    <Grid.Col all={12}>
+                                        <Password
+                                            label="Password"
+                                            placeholder="Password"
+                                            name="password"
+                                            validate="required"
+                                            onEnter={form.submit}
+                                        />
+                                    </Grid.Col>
+
+                                </Grid.Row>
+
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button
+                                    type="secondary"
+                                    onClick={form.submit}
+                                    size="large"
+                                    icon="icon-next"
+                                    label="Register"/>
+                            </Modal.Footer>
+                        </Modal.Content>
+                    )}
+                </Form>
+            </Modal.Dialog>
+
         );
     }
 
     renderSuccess() {
-        const {Icon, Link} = this.props;
+        const {Modal, Icon, Link} = this.props;
 
         return (
-            <div className="text-center">
-                <br/>
-                <Icon type="success" size="4x" icon="fa-check-circle" element="div"/><br/>
-                <h4>Done</h4>
+            <Modal.Dialog>
+                <Modal.Content>
+                    <Modal.Body>
+                        <div className="text-center">
+                            <br/>
+                            <Icon type="success" size="4x" icon="fa-check-circle" element="div"/><br/>
+                            <h4>Done</h4>
 
-                <p>Thanks for registering!</p>
-                <p>Your profile is ready, <Link className="text-link" onClick={this.login}>click here to login.</Link></p>
+                            <p>Thanks for registering!</p>
+                            <p>Your profile is ready, <Link className="text-link" onClick={this.close}>back to login page.</Link></p>
 
-            </div>
+                        </div>
+                    </Modal.Body>
+                </Modal.Content>
+            </Modal.Dialog>
+
         );
     }
 
     renderDialog() {
         const {Modal, Link} = this.props;
-        return (
-            <Modal.Dialog>
-                <Modal.Content>
-                    {!this.state.success ? <Modal.Header title="Register"/> : null}
-                    <Modal.Body>
-                        {this.state.success ? this.renderSuccess() : this.renderRegisterForm()}
-                    </Modal.Body>
-                    {!this.state.success && (
-                        <Modal.Footer>
-                            <div className="text-center">
-                                Already a member? <br/><Link className="text-link" onClick={this.login}>Login here</Link>
-                            </div>
-                        </Modal.Footer>
-                    )}
-                </Modal.Content>
-            </Modal.Dialog>
-        );
+        return (this.state.success ? this.renderSuccess() : this.renderRegisterForm());
     }
 }
 
