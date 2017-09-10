@@ -85,9 +85,7 @@ class Setup extends Plugin {
                     security: Webiny.projectRoot('Configs/Base/Security.yaml')
                 },
                 local: {
-                    application: Webiny.projectRoot('Configs/Local/Application.yaml'),
-                    marketplace: Webiny.projectRoot('Configs/Local/Marketplace.yaml'),
-                    keys: Webiny.projectRoot('Configs/Local/Keys')
+                    application: Webiny.projectRoot('Configs/Local/Application.yaml')
                 }
             };
 
@@ -118,15 +116,6 @@ class Setup extends Plugin {
                 config.Application.WebPath = answers.domain;
                 config.Application.ApiPath = answers.domain + '/api';
                 Webiny.writeFile(configs.local.application, yaml.safeDump(config, {indent: 4}));
-
-                // Populate Local/Marketplace.yaml
-                config = yaml.safeLoad(Webiny.readFile(configs.local.marketplace));
-                config.Marketplace.Username = username.sync();
-                Webiny.writeFile(configs.local.marketplace, yaml.safeDump(config, {indent: 4}));
-
-                // Generate SSH keys to allow proper SSH from development machine onto itself
-                Webiny.shellExecute(`mkdir -p ${configs.local.keys} && ssh-keygen -q -f ${configs.local.keys}/id_rsa -t rsa -N ''`);
-                Webiny.shellExecute(`cat ${configs.local.keys}/id_rsa.pub >> ~/.ssh/authorized_keys`);
 
                 Webiny.success('Configuration files written successfully!');
             } catch (err) {

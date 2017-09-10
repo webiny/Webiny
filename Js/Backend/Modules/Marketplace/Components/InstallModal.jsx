@@ -38,19 +38,14 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                 response.split("_-_").filter(l => l.length).map(line => {
                     try {
                         const res = JSON.parse(line);
+                        if (res.progress) {
+                            const lastMessage = messages.length - 1;
+                            messages[lastMessage].message = <Progress value={parseInt(res.progress)}/>;
+                            this.setState({messages, progress: parseInt(res.progress), finished: res.progress === 100});
+                        }
+
                         if (res.message) {
                             messages.push(res);
-                            this.setState({messages, time: new Date().getTime()});
-                        }
-
-                        if (res.progress) {
-                            this.setState({progress: parseInt(res.progress), finished: res.progress === 100});
-                        }
-
-                        if (res.cli) {
-                            const lastMessage = messages.length - 1;
-                            // TODO: store previous value to keep progress consistent without jumps
-                            messages[lastMessage].message = <Progress value={parseInt(res.cli)}/>;
                             this.setState({messages, time: new Date().getTime()});
                         }
                     } catch (e) {
@@ -85,7 +80,7 @@ class InstallModal extends Webiny.Ui.ModalComponent {
     }
 
     renderDialog() {
-        const {Modal, Button, Link, Grid, Logic, Alert, Progress} = this.props;
+        const {Modal, Button, Link, Grid, Logic, Alert} = this.props;
 
         return (
             <Modal.Dialog>
@@ -106,7 +101,7 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                                     Your app is installed and ready to use!
                                 </Alert>
                             </Logic.Show>
-                            <pre style={{height: 300, overflow: 'scroll', fontSize: 12}} ref={ref => this.logger = ref}>
+                            <pre style={{height: 500, overflow: 'scroll', fontSize: 12}} ref={ref => this.logger = ref}>
                             {this.state.messages.map((m, i) => (
                                 <div key={i}>{m.message}</div>
                             ))}
