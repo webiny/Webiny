@@ -25,6 +25,7 @@ class HttpServer {
                     const post = qs.parse(body);
                     return this.installApp(req, res, url, post);
                 }
+                res.end();
             });
         });
         httpServer.on('error', err => Webiny.failure(err));
