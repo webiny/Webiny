@@ -2,6 +2,7 @@ import React from 'react';
 import Webiny from 'webiny';
 import TranslationsModal from './TextsList/TextsModal';
 import ScanTexts from './TextsList/ScanTexts';
+import ImportTexts from './TextsList/ImportTexts';
 
 import _ from 'lodash';
 import moment from 'moment';
@@ -9,6 +10,10 @@ import accounting from 'accounting';
 import I18N from './../../I18N';
 
 class TextsList extends Webiny.Ui.View {
+    constructor() {
+        super();
+        this.i18n.key = 'Webiny.Backend.I18N.TextsList';
+    }
 }
 
 TextsList.defaultProps = {
@@ -26,7 +31,13 @@ TextsList.defaultProps = {
                                             align="right"
                                             onClick={showView('scanTextsModal')}
                                             icon="icon-cloud-download"
-                                            label="Scan Texts"/>
+                                            label="Scan"/>
+                                        <Ui.Button
+                                            type="primary"
+                                            align="right"
+                                            onClick={showView('importTextsModal')}
+                                            icon="icon-cloud-download"
+                                            label="Import Texts"/>
                                     </Ui.View.Header>
                                     <Ui.View.Body>
                                         <Ui.List
@@ -75,6 +86,11 @@ TextsList.defaultProps = {
                         <Ui.ViewSwitcher.View view="scanTextsModal" modal>
                             {(showView, data) => (
                                 <ScanTexts {...{showView, data}}/>
+                            )}
+                        </Ui.ViewSwitcher.View>
+                        <Ui.ViewSwitcher.View view="importTextsModal" modal>
+                            {(showView, data) => (
+                                <ImportTexts {...{showView, data}}/>
                             )}
                         </Ui.ViewSwitcher.View>
                     </Ui.ViewSwitcher>

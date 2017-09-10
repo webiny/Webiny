@@ -6,7 +6,6 @@ import ServiceBox from './AccessBox/ServiceBox';
 import AddServiceModal from './AddServiceModal';
 
 class ServicePermissions extends Webiny.Ui.Component {
-
     constructor() {
         super();
         this.state = {
@@ -15,6 +14,7 @@ class ServicePermissions extends Webiny.Ui.Component {
         };
 
         this.api = new Webiny.Api.Endpoint('/entities/webiny/user-permissions');
+        this.i18n.key = 'Webiny.Backend.Acl.ServicePermissions';
     }
 
     componentWillMount() {

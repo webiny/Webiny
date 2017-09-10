@@ -2,13 +2,15 @@
 
 namespace Apps\Webiny\Php\Lib\I18N;
 
+use Apps\Webiny\Php\Entities\I18NText;
 use Apps\Webiny\Php\Lib\Apps\App;
 use Apps\Webiny\Php\Lib\Apps\JsApp;
-use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
+use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
+use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
 /**
@@ -20,9 +22,9 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  * @property string      $placeholder
  * @property ArrayObject $translations
  */
-class I18NParser extends AbstractEntity
+class I18N
 {
-    use WebinyTrait;
+    use StdLibTrait, WebinyTrait;
 
     // With a simple regex, we first find all this.i18n usages in given source.
     const REGEX = [
@@ -35,6 +37,68 @@ class I18NParser extends AbstractEntity
             ]
         ]
     ];
+
+    /**
+     * @param mixed $data
+     *
+     * @return array|I18NAppTexts
+     */
+    public static function import($data)
+    {
+        if (!is_array($data)) {
+            $data = [$data];
+        }
+
+        $stats = ['skipped' => 0, 'added' => 0];
+
+        foreach ($data as $appTexts) {
+            /* @var I18NAppTexts $appTexts */
+            foreach ($appTexts->getTexts() as $key => $texts) {
+                foreach ($texts as $text) {
+                    $textKey = $key . '.' . md5($text);
+                    if (I18NText::count(['key' => $textKey])) {
+                        $stats['skipped']++;
+                        continue;
+                    }
+
+                    $i18nText = new I18NText();
+                    $i18nText->key = $textKey;
+                    $i18nText->app = $appTexts->getApp()->getName();
+                    $i18nText->placeholder = $text;
+                    $i18nText->save();
+
+                    $stats['added']++;
+                }
+            }
+        }
+
+        return $stats;
+    }
+
+    /**
+     * Parses given apps
+     *
+     * @param array $list
+     *
+     * @return array
+     */
+    public static function parseApps(array $list)
+    {
+        $return = [];
+
+        // Normalize list of apps.
+        $list = array_map(function ($app) {
+            return is_string($app) ? self::wApps($app) : $app;
+        }, $list);
+
+        // Parse one-by-one.
+        foreach ($list as $app) {
+            /* @var App $app */
+            $return[] = I18N::parseApp($app);
+        }
+
+        return $return;
+    }
 
     /**
      * When matching code for usage of i18n, it's possible to have three types (ordered by most used):
@@ -54,53 +118,57 @@ class I18NParser extends AbstractEntity
      *
      * @param App $app
      *
-     * @return array
+     * @return I18NAppTexts
+     * @throws AppException
      */
     public static function parseApp(App $app)
     {
-        $return = [];
+        $texts = [];
         // TODO: recursive search using Webiny Directory object?
         foreach ($app->getJsApps() as $jsApp) {
             /* @var JsApp $jsApp */
-
-            $return[$jsApp->getName()] = [];
 
             $di = new RecursiveDirectoryIterator($jsApp->getDirectory()->getAbsolutePath(), RecursiveDirectoryIterator::SKIP_DOTS);
             $it = new RecursiveIteratorIterator($di);
             foreach ($it as $file) {
                 /* @var SplFileInfo $file */
-                if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['jsx'])) {
+                if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['js', 'jsx'])) {
                     $content = file_get_contents($file->getPathname());
                     $content = trim(preg_replace('/\s+/', ' ', $content));
 
-                    $texts = self::parseTexts($content);
-
-                    if (empty($texts)) {
+                    $parsed = ['key' => self::parseKey($content), 'texts' => self::parseTexts($content)];
+                    if (empty($parsed['texts'])) {
                         continue;
                     }
 
-                    $return[$jsApp->getName()][] = [
-                        'file' => $file->getPathname(),
-                        'key' => self::parseKey($content),
-                        'text' => $texts
-                    ];
+                    // If we don't have a global i18n key, we must ensure each text has it's own key in the file.
+                    foreach ($parsed['texts'] as $text) {
+                        $key = $text['key'] ?? $parsed['key'];
+                        if (!$key) {
+                            throw new AppException('Missing text key for placeholder "' . $text['placeholder'] . '", in ' . $file->getPathname());
+                        }
+
+                        if (!isset($texts[$key])) {
+                            $texts[$key] = [];
+                        }
+
+                        // We don't need to have duplicate texts in the array.
+                        if (!in_array($text['placeholder'], $texts[$key])) {
+                            $texts[$key][] = $text['placeholder'];
+                        }
+                    }
                 }
             }
         }
 
-        return $return;
+        return new I18NAppTexts($app, $texts);
     }
 
     private static function parseKey($content)
     {
         preg_match_all(self::REGEX['key'], $content, $key);
 
-        $key = null;
-        if (!isset($key[1])) {
-            return null;
-        }
-
-        return is_string($key[1]) ? $key[1] : null;
+        return self::arr($key)->keyNested('1.0');
     }
 
     private static function parseTexts($content)

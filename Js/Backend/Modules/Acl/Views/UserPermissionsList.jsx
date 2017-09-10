@@ -3,11 +3,11 @@ import Webiny from 'webiny';
 import ExportPermissionModal from './Modal/ExportPermissionModal';
 import ImportPermissionModal from './Modal/ImportPermissionModal';
 
-class List extends Webiny.Ui.View {
+class UserPermissionsList extends Webiny.Ui.View {
 
 }
 
-List.defaultProps = {
+UserPermissionsList.defaultProps = {
     renderer() {
         const {Ui} = this.props;
         const Table = Ui.List.Table;
@@ -101,7 +101,7 @@ List.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(List, {
+export default Webiny.createComponent(UserPermissionsList, {
     modulesProp: 'Ui',
     modules: ['ViewSwitcher', 'Link', 'View', 'List', 'Icon', 'Grid', 'Input', 'Button', 'ButtonGroup']
 });

@@ -10,6 +10,7 @@ class ServiceBox extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
         this.state = {serviceFilter: ''};
+        this.i18n.key = 'Webiny.Backend.Acl.EntityBox';
     }
 
     /**

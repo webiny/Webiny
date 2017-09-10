@@ -6,11 +6,11 @@ use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\EntityQuery;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\Filter;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
-use Apps\Webiny\Php\Lib\I18N\I18NParser;
+use Apps\Webiny\Php\Lib\I18N\I18N;
+use Apps\Webiny\Php\Lib\I18N\I18NAppTexts;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use PHPZip\Zip\Stream\ZipStream;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
-use ZipArchive;
 
 /**
  * Class User
@@ -18,6 +18,7 @@ use ZipArchive;
  * @package Apps\Selecto\Php\Entities
  *
  * @property string      $key
+ * @property string      $app
  * @property string      $placeholder
  * @property ArrayObject $translations
  */
@@ -139,47 +140,44 @@ class I18NText extends AbstractEntity
         ]);
 
         /**
-         * @api.name        Scan texts and import
-         * @api.description Completely scans i18n texts in given apps and imports them to local database.
+         * @api.name        Import texts
+         * @api.description Finds i18n texts in given apps and imports them to local database.
          *
-         * @api.body.apps       array  Apps to be scanned for i18n texts
+         * @api.body.apps   array  Apps to be exported
          */
         $this->api('POST', 'scan/import', function () {
+            throw new AppException('basddaadsdas');
             $apps = $this->getApps($this->wRequest()->getRequestData()['apps'] ?? []);
+            $results = I18N::parseApps($apps);
 
-            $parsed = [];
-            foreach ($apps as $app) {
-                $parsed[] = I18NParser::parseApp($app);
-            }
-
+            return I18N::import($results);
         })->setPublic();
 
         /**
-         * @api.name        Scan texts and download
-         * @api.description Completely scans i18n texts in given apps and exports them as a ZIP file which can later be imported on a
+         * @api.name        Export texts and download
+         * @api.description Finds i18n texts in given apps and exports them as a ZIP file which can then be imported on a
          *                  different environment. Optionally, import to local database can also be made.
          *
-         * @api.body.apps   array  Apps to be scanned for i18n texts
-         * @api.body.import array  Imports scanned texts into database (optional)
+         * @api.body.apps   array   Apps to be exported
+         * @api.body.import boolean Imports texts into database (optional)
          */
-        $this->api('POST', 'scan/download', function () {
-            $data = $this->wRequest()->getRequestData();
-            die(print_r($data));
-            $apps = $this->getApps($this->wRequest()->getRequestData()['apps'] ?? []);
-            $import = $this->wRequest()->getRequestData()['import'] ?? false;
-
-            $parsed = [];
-            foreach ($apps as $app) {
-                $parsed[] = I18NParser::parseApp($app);
+        $this->api('POST', 'scan/export', function () {
+            $apps = $this->wRequest()->getRequestData()['apps'] ?? [];
+            if (empty($apps)) {
+                die('Please pass at least one app for text scanning.');
             }
+
+            $import = filter_var($this->wRequest()->getRequestData()['import'] ?? false, FILTER_VALIDATE_BOOLEAN);
+            $results = I18N::parseApps($apps);
 
             if ($import) {
-                // Import into DB
+                I18N::import($results);
             }
 
-            $zip = new ZipStream('i18n_export.zip', 'application/zip', null, true);
-            foreach ($parsed as $app => $modules) {
-                $zip->addFile(json_encode($parsed), 'bajo.json');
+            $zip = new ZipStream('i18n_' . time() . '.zip', 'application/zip', null, true);
+            foreach ($results as $appTexts) {
+                /* @var I18NAppTexts $appTexts */
+                $zip->addFile($appTexts->toJson(), $appTexts->getApp()->getName());
             }
 
             return $zip->finalize();
@@ -252,15 +250,12 @@ class I18NText extends AbstractEntity
 
     private function getApps($list = [])
     {
-        $apps = [];
         if (empty($list)) {
-            $apps = $this->wApps();
-        } else {
-            $apps = array_map(function ($name) {
-                return $this->wApps($name);
-            }, $list);
+            return $this->wApps();
         }
 
-        return $apps;
+        return array_map(function ($name) {
+            return $this->wApps($name);
+        }, $list);
     }
 }

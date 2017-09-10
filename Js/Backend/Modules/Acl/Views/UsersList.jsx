@@ -1,11 +1,14 @@
 import React from 'react';
 import Webiny from 'webiny';
 
-class List extends Webiny.Ui.View {
-
+class UsersList extends Webiny.Ui.View {
+    constructor() {
+        super();
+        this.i18n.key = 'Webiny.Backend.Acl.UsersList';
+    }
 }
 
-List.defaultProps = {
+UsersList.defaultProps = {
     renderer() {
         const listProps = {
             api: '/entities/webiny/users',
@@ -76,6 +79,6 @@ List.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(List, {
+export default Webiny.createComponent(UsersList, {
     modules: ['View', 'List', 'Link', 'Icon', 'Input']
 });

@@ -4,6 +4,10 @@ import Webiny from 'webiny';
 import styles from './styles.css';
 
 class MethodTooltip extends Webiny.Ui.Component {
+    constructor() {
+        super();
+        this.i18n.key = 'Webiny.Backend.Acl.MethodTooltip';
+    }
 }
 
 MethodTooltip.defaultProps = {

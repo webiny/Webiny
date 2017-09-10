@@ -3,6 +3,11 @@ import _ from 'lodash';
 import Webiny from 'webiny';
 
 class AddLocaleModal extends Webiny.Ui.ModalComponent {
+    constructor() {
+        super();
+        this.i18n.key = 'Webiny.Backend.I18N.TextsList';
+    }
+
     renderDialog() {
         const {Button, Modal, Link, Grid, Form, Select} = this.props;
 

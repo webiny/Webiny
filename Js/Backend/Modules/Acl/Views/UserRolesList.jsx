@@ -3,10 +3,10 @@ import Webiny from 'webiny';
 import ExportRoleModal from './Modal/ExportRoleModal';
 import ImportRoleModal from './Modal/ImportRoleModal';
 
-class List extends Webiny.Ui.View {
+class UserRolesList extends Webiny.Ui.View {
 }
 
-List.defaultProps = {
+UserRolesList.defaultProps = {
     renderer() {
         const listProps = {
             ref: ref => this.list = ref,
@@ -103,7 +103,7 @@ List.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(List, {
+export default Webiny.createComponent(UserRolesList, {
     modulesProp: 'Ui',
     modules: ['ViewSwitcher', 'View', 'Link', 'Icon', 'Grid', 'Input', 'List', 'Button', 'ButtonGroup']
 });

@@ -1,11 +1,11 @@
 import React from 'react';
 import Webiny from 'webiny';
 
-class Form extends Webiny.Ui.View {
+class UserRolesForm extends Webiny.Ui.View {
 
 }
 
-Form.defaultProps = {
+UserRolesForm.defaultProps = {
     renderer() {
         const formProps = {
             api: '/entities/webiny/user-roles',
@@ -63,4 +63,4 @@ Form.defaultProps = {
     }
 };
 
-export default Form;
+export default UserRolesForm;

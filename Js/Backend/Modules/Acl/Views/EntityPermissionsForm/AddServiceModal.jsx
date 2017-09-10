@@ -3,10 +3,10 @@ import _ from 'lodash';
 import Webiny from 'webiny';
 
 class AddServiceModal extends Webiny.Ui.ModalComponent {
-
     constructor() {
         super();
         this.api = new Webiny.Api.Endpoint('/services/webiny/services');
+        this.i18n.key = 'Webiny.Backend.Acl.AddServiceModal';
     }
 
     renderDialog() {

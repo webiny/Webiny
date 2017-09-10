@@ -6,7 +6,6 @@ import EntityBox from './AccessBox/EntityBox';
 import AddEntityModal from './AddEntityModal';
 
 class EntityPermissions extends Webiny.Ui.Component {
-
     constructor() {
         super();
         this.state = {
@@ -15,6 +14,7 @@ class EntityPermissions extends Webiny.Ui.Component {
         };
 
         this.api = new Webiny.Api.Endpoint('/entities/webiny/user-permissions');
+        this.i18n.key = 'Webiny.Backend.Acl.EntityPermissions';
     }
 
     componentWillMount() {

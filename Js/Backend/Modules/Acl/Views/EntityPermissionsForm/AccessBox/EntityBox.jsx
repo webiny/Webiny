@@ -10,6 +10,8 @@ class EntityBox extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
         this.state = {entityFilter: ''};
+        this.i18n.key = 'Webiny.Backend.Acl.EntityBox';
+
         this.crud = {
             create: '/.post',
             read: '{id}.get',
