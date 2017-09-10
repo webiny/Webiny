@@ -62,7 +62,7 @@ Growl.defaultProps = {
 
         return (
             <div className={classes} style={{display: 'block'}}>
-                <div className={styles.close} onClick={this.close}>x</div>
+                <div className={styles.close} onClick={this.close}>×</div>
                 {title}
                 {messages.map((msg, i) => {
                     return <div key={i} className={styles.message}>{msg}</div>;

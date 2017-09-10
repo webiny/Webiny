@@ -13,6 +13,7 @@
 	background-color: #fff;
 	padding: 50px;
 	text-align: center;
+	border: 1px solid #cdcdcd;
 }
 
 .loginRegister .message h2 {
@@ -30,7 +31,7 @@
 }
 
 .loginRegister .message h3 {
-	margin-bottom: 50px;
+	margin-bottom: 30px;
 	margin-top: 10px;
 	font-size: 14px;
 	color: #333;
@@ -38,14 +39,27 @@
 }
 
 .loginRegister .actions {
-	margin-top: 50px;
-	display: flex;
-	justify-content: space-around;
+	background: #F0F0F0;
+	padding: 15px 20px 20px;
+	border: none;
+	text-align: right;
+	overflow: hidden;
+	margin: 25px -50px -50px;
 }
 
 .modalAction {
 	margin-top: 25px;
 	text-align: right;
+}
+
+.loginForm{
+	text-align: left;
+}
+
+.cantRemember{
+	position: absolute;
+	right: 0px;
+	z-index: 10;
 }
 
 @media (max-width: 768px) {
@@ -63,18 +77,21 @@
 /** browse: start **/
 .browse .appList {
 	margin-top: 50px;
+	display: flex;
+	justify-content: center;
 }
 
 .browse .appBox {
 	padding: 50px;
-	margin: 0 10px 90px 10px;
+	/*margin: 0 10px 90px 10px;*/
+	height: 100%;
 	position: relative;
 	background-color: #fff;
 	text-align: center;
 	width: auto;
 }
 
-.browse .appBox .logo img {
+.browse .appBox .logo img, .browse .appBox.empty .logo {
 	border-radius: 50%;
 	box-sizing: border-box;
 	position: absolute;
@@ -85,16 +102,34 @@
 	height: 100px;
 }
 
+.browse .appBox.empty .logo {
+	background-color: #fff;
+	border: 3px dashed #676767;
+}
+
+.browse .appBox.empty .logo :global(.icon) {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 32px;
+}
+
 .browse .appBox h3 {
 	margin-top: 25px;
 }
 
 @media (max-width: 768px) {
+	.browse .appList {
+		flex-direction: column;
+	}
+
 	.browse .appBox {
 		padding: 50px 25px;
 		margin: 0 0 75px 0;
 	}
 }
+
 /** browse: end **/
 
 /** appDetails: start **/
@@ -115,6 +150,9 @@
 .appDetails .header .titleBlock {
 	float: left;
 	margin-left: 15px;
+}
+
+.appDetails .header .title {
 	width: 85%;
 }
 
@@ -170,9 +208,9 @@
 	max-width: 900px;
 }
 
-.appDetails .carousel :global(.owl-carousel .owl-item){
+.appDetails .carousel :global(.owl-carousel .owl-item) {
 	height: 500px;
-	width:100%;
+	width: 100%;
 	vertical-align: middle;
 }
 
@@ -185,6 +223,7 @@
 	.appDetails .header .logo, .appDetails .header .titleBlock {
 		float: none;
 	}
+
 	.appDetails .header .action {
 		width: 100%;
 		text-align: center;
@@ -193,7 +232,7 @@
 	}
 
 	.appDetails .header .action button,
-	.appDetails .header .action button> :global(span.icon){
+	.appDetails .header .action button > :global(span.icon) {
 		font-size: 16px !important;
 	}
 
@@ -201,8 +240,9 @@
 		padding-left: 0;
 	}
 
-	.appDetails .carousel :global(.owl-carousel .owl-item){
+	.appDetails .carousel :global(.owl-carousel .owl-item) {
 		height: auto;
 	}
 }
+
 /** appDetails: end **/
