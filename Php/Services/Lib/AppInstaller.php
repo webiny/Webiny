@@ -2,20 +2,12 @@
 
 namespace Apps\Webiny\Php\Services\Lib;
 
-use Apps\Webiny\Php\Lib\Apps\JsApp;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 
 class AppInstaller
 {
     use WebinyTrait, StdLibTrait;
-
-    private $privateKey = '';
-
-    public function __construct()
-    {
-        $this->privateKey = $this->wConfig()->get('Marketplace.Keys.Private');
-    }
 
     public function install($appData)
     {
