@@ -7,7 +7,6 @@
 
 namespace Apps\Webiny\Php\Lib;
 
-use Webiny\Component\Config\ConfigException;
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\StdLib\SingletonTrait;
 
