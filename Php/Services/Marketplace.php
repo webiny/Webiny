@@ -64,6 +64,8 @@ class Marketplace extends AbstractService
 
             // Begin installation
             header("X-Accel-Buffering: no");
+            header("Content-Type: text/event-stream");
+            header("Cache-Control: no-cache");
             ob_end_flush();
             $appInstaller = new AppInstaller();
             $appInstaller->install($app->keyNested('data.entity'));
