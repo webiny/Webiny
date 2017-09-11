@@ -7,7 +7,7 @@ class LocalesList extends Webiny.Ui.View {
         super();
         this.addLocaleModal = null;
         this.localesList = null;
-        this.i18n.key = 'Webiny.Backend.I18N.LocalesList';
+        this.i18n.namespace = 'Webiny.Backend.I18N.LocalesList';
     }
 }
 

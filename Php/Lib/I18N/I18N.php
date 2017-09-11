@@ -2,14 +2,11 @@
 
 namespace Apps\Webiny\Php\Lib\I18N;
 
+use Apps\Webiny\Php\Entities\I18NLocale;
 use Apps\Webiny\Php\Entities\I18NText;
 use Apps\Webiny\Php\Lib\Apps\App;
-use Apps\Webiny\Php\Lib\Apps\JsApp;
-use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\WebinyTrait;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use SplFileInfo;
+use Webiny\Component\StdLib\SingletonTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
@@ -24,26 +21,77 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  */
 class I18N
 {
-    use StdLibTrait, WebinyTrait;
+    private $locale;
 
-    // With a simple regex, we first find all this.i18n usages in given source.
-    const REGEX = [
-        'key'     => '/this\.i18n\.key\s{0,}=\s{0,}[\'|"|`]([a-zA-Z0-9\.-_:]+)[\'|"|`]/',
-        'basic'   => '/this\.i18n\([\'\`\"]/mi',
-        'options' => [
-            'basic'  => '/,.*?,[ ]*(\{.*?\})\)/',
-            'params' => [
-                'key' => '/key:([ `\'"a-zA-Z0-9.]*)/' // Custom keys can only have letters, numbers and a dot.
-            ]
-        ]
-    ];
+    use StdLibTrait, WebinyTrait, SingletonTrait;
+
+    public function isEnabled()
+    {
+        return true;
+    }
+
+    public function translate($placeholder, $key, $variables = [])
+    {
+        $language = 'en_GB';
+
+        $text = $placeholder;
+        if ($translation = I18NText::findByKey($key)) {
+            /* @var I18NText $translation */
+            if ($translation->hasText($language)) {
+                $text = $translation->getText($language);
+            }
+        }
+
+        // Match variables
+        preg_match_all('/\{(.*?)\}/', $text, $matches);
+        $matches = $matches[1] ?? [];
+        foreach ($matches as $match) {
+            $variableName = '{' . $match . '}';
+            if (isset($variables[$match]) && strpos($variableName, $text) >= 0) {
+                $text = str_replace($variableName, $variables[$match], $text);
+            }
+        }
+
+        return $text;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLanguage()
+    {
+        return $this->locale;
+    }
+
+    /**
+     * @param string $language
+     *
+     * @return $this
+     */
+    public function setLocale($language)
+    {
+        $this->locale = $language;
+
+        return $this;
+    }
+
+    public function getLocale()
+    {
+        if ($this->locale) {
+            return $this->locale;
+        }
+
+        $this->locale = I18NLocale::findByKey($this->locale);
+
+        return $this->locale;
+    }
 
     /**
      * @param mixed $data
      *
      * @return array|I18NAppTexts
      */
-    public static function import($data)
+    public function importText($data)
     {
         if (!is_array($data)) {
             $data = [$data];
@@ -75,188 +123,5 @@ class I18N
         return $stats;
     }
 
-    /**
-     * Parses given apps
-     *
-     * @param array $list
-     *
-     * @return array
-     */
-    public static function parseApps(array $list)
-    {
-        $return = [];
-
-        // Normalize list of apps.
-        $list = array_map(function ($app) {
-            return is_string($app) ? self::wApps($app) : $app;
-        }, $list);
-
-        // Parse one-by-one.
-        foreach ($list as $app) {
-            /* @var App $app */
-            $return[] = I18N::parseApp($app);
-        }
-
-        return $return;
-    }
-
-    /**
-     * When matching code for usage of i18n, it's possible to have three types (ordered by most used):
-     * 1) this.i18n('Some text')
-     * 2) this.i18n('Some text and a {variable}', {variable: 'Variable Value'})
-     * 3) this.i18n('Some text and a {variable}', {variable: 'Variable Value'}, {key: 'App.CustomKey', xyz: 'asd'})
-     * 4) same as above, except instead of this.i18n, we have Webiny.i18n, which has a 'key' as a first parameter, so total of 4 parameters here.
-     *
-     * So these are the method definitions:
-     *
-     * this.i18n(placeholder, variables, options)
-     * Webiny.i18n(key, placeholder, variables, options)
-     *
-     * Parsing is hard because user can type anything as a placeholder, delimiters could be ', ` or ", and inside the text developer
-     * could've used an escaped version of the same character too. We could also have a combination of strings, like 'string1' + `string2`,
-     * which adds another level of complexity to the whole feature.
-     *
-     * @param App $app
-     *
-     * @return I18NAppTexts
-     * @throws AppException
-     */
-    public static function parseApp(App $app)
-    {
-        $texts = [];
-        // TODO: recursive search using Webiny Directory object?
-        foreach ($app->getJsApps() as $jsApp) {
-            /* @var JsApp $jsApp */
-
-            $di = new RecursiveDirectoryIterator($jsApp->getDirectory()->getAbsolutePath(), RecursiveDirectoryIterator::SKIP_DOTS);
-            $it = new RecursiveIteratorIterator($di);
-            foreach ($it as $file) {
-                /* @var SplFileInfo $file */
-                if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['js', 'jsx'])) {
-                    $content = file_get_contents($file->getPathname());
-                    $content = trim(preg_replace('/\s+/', ' ', $content));
-
-                    $parsed = ['key' => self::parseKey($content), 'texts' => self::parseTexts($content)];
-                    if (empty($parsed['texts'])) {
-                        continue;
-                    }
-
-                    // If we don't have a global i18n key, we must ensure each text has it's own key in the file.
-                    foreach ($parsed['texts'] as $text) {
-                        $key = $text['key'] ?? $parsed['key'];
-                        if (!$key) {
-                            throw new AppException('Missing text key for placeholder "' . $text['placeholder'] . '", in ' . $file->getPathname());
-                        }
-
-                        if (!isset($texts[$key])) {
-                            $texts[$key] = [];
-                        }
-
-                        // We don't need to have duplicate texts in the array.
-                        if (!in_array($text['placeholder'], $texts[$key])) {
-                            $texts[$key][] = $text['placeholder'];
-                        }
-                    }
-                }
-            }
-        }
-
-        return new I18NAppTexts($app, $texts);
-    }
-
-    private static function parseKey($content)
-    {
-        preg_match_all(self::REGEX['key'], $content, $key);
-
-        return self::arr($key)->keyNested('1.0');
-    }
-
-    private static function parseTexts($content)
-    {
-        preg_match_all(self::REGEX['basic'], $content, $positions, PREG_OFFSET_CAPTURE);
-        if (empty($positions)) {
-            return [];
-        }
-
-        $positions = array_map(function ($item) {
-            return $item[1];
-        }, $positions[0]);
-
-
-        $contentLength = strlen($content);
-
-        // Parsing this.i18n usages is hard. We must analyze each use thoroughly, one by one.
-        return array_map(function ($index) use ($content, $contentLength) {
-            // Now let's get the full string, we must look forward until we reach the closing ')'.
-            $placeholder = ['part' => null, 'parts' => []];
-
-
-            for ($i = $index + 10; $i < $contentLength; $i++) {
-                if (!$placeholder['part']) {
-                    // We don't have a part that we are working on.
-                    // Did we then reach the end of placeholder ? If the next non-whitespace character is ',' or ')', we are done with matching
-                    // the placeholder, otherwise we continue matching the rest. We only care about the rest if third parameter was set, as
-                    // it may be an object that has 'key' field in it, which forces a custom key for the text.
-                    $firstCharacterAfterLastlyProcessedPlaceholderPart = ltrim(substr($content, $i, 1));
-
-                    if (in_array($firstCharacterAfterLastlyProcessedPlaceholderPart, [',', ')'])) {
-                        $output = ['placeholder' => implode('', $placeholder['parts'])];
-
-                        if ($firstCharacterAfterLastlyProcessedPlaceholderPart === ')') {
-                            // This means no additional parameters were sent. We can immediately return the placeholder.
-                            return $output;
-                        }
-
-
-                        // This means we have additional parameters set. Let's see if we have custom key defined.
-                        // We try to match the last JSON with all possible options.
-                        preg_match(self::REGEX['options']['basic'], substr($content, $i), $options);
-
-                        if (isset($options[1])) {
-                            // OK, we received an object as the third parameter. We are doing parsing of the last JSON here.
-                            // Currently we only check if 'key' was set and assign it to the output. If more relevant options emerge,
-                            // this is the place to add parsing of them. Also, if this becomes complicated, extract this part into
-                            // a separate function for better readability.
-
-                            // List of matched options
-                            $matched = ['key' => null];
-                            // key: regex.options.params.key.exec(options[1])
-
-                            // Some day more options could be here.
-                            preg_match(self::REGEX['options']['params']['key'], $options[1], $matched['key']);
-
-                            if ($matched['key']) {
-                                $output['key'] = $matched['key'][1];
-                            }
-                        }
-
-                        return $output;
-                    }
-
-                    // If we have a delimiter, then let's assign a new part and process it fully with the following iterations.
-                    if (in_array($content[$i], ['`', '\'', '"'])) {
-                        $placeholder['part'] = ['delimiter' => $content[$i], 'start' => $i];
-                    }
-                    continue;
-                }
-
-
-                // We must recognize the last closing ', " or `. The following examines three things:
-                // 1) Is current character a delimiter
-                // 2) Is it not-escaped - we just check the previous character, it must not be '\'
-                if ($content[$i] !== $placeholder['part']['delimiter']) {
-                    continue;
-                }
-
-                if ($content[$i - 1] === '\\') {
-                    continue;
-                }
-
-                // Okay, now we are at the end of the part, so let's add it to the parts.
-                $placeholder['parts'][] = substr($content, $placeholder['part']['start'] + 1, $i - $placeholder['part']['start'] - 1);
-                $placeholder['part'] = null;
-            }
-
-        }, $positions);
-    }
+    public function importTranslations() {}
 }

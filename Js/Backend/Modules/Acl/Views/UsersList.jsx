@@ -4,7 +4,7 @@ import Webiny from 'webiny';
 class UsersList extends Webiny.Ui.View {
     constructor() {
         super();
-        this.i18n.key = 'Webiny.Backend.Acl.UsersList';
+        this.i18n.namespace = 'Webiny.Backend.Acl.UsersList';
     }
 }
 

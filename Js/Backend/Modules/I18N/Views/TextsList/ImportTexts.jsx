@@ -4,7 +4,7 @@ import Webiny from 'webiny';
 class ImportTexts extends Webiny.Ui.ModalComponent {
     constructor() {
         super();
-        this.i18n.key = 'Webiny.Backend.I18N.ImportTexts';
+        this.i18n.namespace = 'Webiny.Backend.I18N.ImportTexts';
     }
 
     renderDialog() {

@@ -41,6 +41,9 @@ class I18NAppTexts
 
     public function toJson()
     {
-        return json_encode($this->texts);
+        return json_encode([
+            'app'   => $this->app->getName(),
+            'texts' => $this->texts
+        ]);
     }
 }

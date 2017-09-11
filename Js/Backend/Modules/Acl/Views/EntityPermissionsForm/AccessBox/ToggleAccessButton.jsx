@@ -14,7 +14,7 @@ const crudLabels = {
 class ToggleAccessButton extends Webiny.Ui.Component {
     constructor() {
         super();
-        this.i18n.key = 'Webiny.Backend.Acl.ToggleAccessButton';
+        this.i18n.namespace = 'Webiny.Backend.Acl.ToggleAccessButton';
     }
     renderLabel() {
         if (this.props.label) {

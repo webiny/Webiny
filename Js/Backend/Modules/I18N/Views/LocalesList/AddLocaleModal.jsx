@@ -5,7 +5,7 @@ import Webiny from 'webiny';
 class AddLocaleModal extends Webiny.Ui.ModalComponent {
     constructor() {
         super();
-        this.i18n.key = 'Webiny.Backend.I18N.TextsList';
+        this.i18n.namespace = 'Webiny.Backend.I18N.TextsList';
     }
 
     renderDialog() {

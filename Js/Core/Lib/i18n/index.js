@@ -21,8 +21,9 @@ function replaceVariables(text, values) {
     // Let's first check if we need to return pure string or JSX
     let stringOutput = true;
     _.each(values, (value) => {
-        if (!_.isString(value)) {
+        if (!_.isString(value) && !_.isNumber(value)) {
             stringOutput = false;
+            return false;
         }
     });
 

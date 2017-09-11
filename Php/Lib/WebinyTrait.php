@@ -9,6 +9,7 @@ namespace Apps\Webiny\Php\Lib;
 
 use Apps\Webiny\Php\Lib\Authorization\Authorization;
 use Apps\Webiny\Php\Lib\Apps\App;
+use Apps\Webiny\Php\Lib\I18N\I18N;
 use Webiny\AnalyticsDb\AnalyticsDb;
 use Webiny\Component\Cache\CacheStorage;
 use Webiny\Component\Mongo\Mongo;
@@ -183,6 +184,19 @@ trait WebinyTrait
     {
         return Authorization::getInstance();
     }
+
+    /**
+     * @param       $placeholder
+     * @param array $variables
+     * @param array $options
+     *
+     * @return string
+     */
+    static protected function wI18n($placeholder, $variables = [], $options = [])
+    {
+        return I18N::getInstance()->translate($placeholder, $variables, $options);
+    }
+
 
     /**
      * Get Apps container or App instance

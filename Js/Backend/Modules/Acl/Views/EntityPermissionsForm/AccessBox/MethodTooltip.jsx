@@ -6,7 +6,7 @@ import styles from './styles.css';
 class MethodTooltip extends Webiny.Ui.Component {
     constructor() {
         super();
-        this.i18n.key = 'Webiny.Backend.Acl.MethodTooltip';
+        this.i18n.namespace = 'Webiny.Backend.Acl.MethodTooltip';
     }
 }
 

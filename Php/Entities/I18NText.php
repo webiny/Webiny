@@ -8,6 +8,7 @@ use Apps\Webiny\Php\Lib\Entity\EntityQuery\Filter;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\I18N\I18N;
 use Apps\Webiny\Php\Lib\I18N\I18NAppTexts;
+use Apps\Webiny\Php\Lib\I18N\I18NParser;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use PHPZip\Zip\Stream\ZipStream;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
@@ -26,7 +27,8 @@ class I18NText extends AbstractEntity
 {
     use WebinyTrait;
 
-    protected static $entityCollection = 'I18NTranslations';
+    protected static $entityCollection = 'I18NTexts';
+    protected static $i18nNamespace = 'Webiny.I18NText';
 
     protected static function entityQuery()
     {
@@ -85,7 +87,7 @@ class I18NText extends AbstractEntity
                 return $this->apiFormatEntity($translation, $this->wRequest()->getFields());
             }
 
-            throw new AppException($this->i18n('Translation not found.'));
+            throw new AppException($this->wI18n('Translation not found.'));
         });
 
         /**
@@ -114,7 +116,7 @@ class I18NText extends AbstractEntity
          * @api.name        Updates translation by key for given language
          * @api.description Gets a translation by a given key and updates it with received data
          *
-         * @api.body.apps   array  List of apps for which the translations are needed.
+         * @api.body.apps   array   Apps to be scanned (min. 1 required)
          */
         $this->api('PATCH', 'keys/{$key}', function ($key) {
             $data = $this->wRequest()->getRequestData();
@@ -146,19 +148,19 @@ class I18NText extends AbstractEntity
          * @api.body.apps   array  Apps to be exported
          */
         $this->api('POST', 'scan/import', function () {
-            throw new AppException('basddaadsdas');
-            $apps = $this->getApps($this->wRequest()->getRequestData()['apps'] ?? []);
-            $results = I18N::parseApps($apps);
+            // throw new AppException($this->wI18n('Sorry matey, {translations} skipped.', ['translations' => 123]));
+            $apps = $this->wRequest()->getRequestData()['apps'] ?? [];
+            $results = I18NParser::getInstance()->parseApps($apps);
 
-            return I18N::import($results);
-        })->setPublic();
+            return I18N::getInstance()->importText($results);
+        })->setBodyValidators(['apps' => 'required,minLength:1'])->setPublic();
 
         /**
          * @api.name        Export texts and download
          * @api.description Finds i18n texts in given apps and exports them as a ZIP file which can then be imported on a
          *                  different environment. Optionally, import to local database can also be made.
          *
-         * @api.body.apps   array   Apps to be exported
+         * @api.body.apps   array   Apps to be scanned (min. 1 required)
          * @api.body.import boolean Imports texts into database (optional)
          */
         $this->api('POST', 'scan/export', function () {
@@ -168,10 +170,10 @@ class I18NText extends AbstractEntity
             }
 
             $import = filter_var($this->wRequest()->getRequestData()['import'] ?? false, FILTER_VALIDATE_BOOLEAN);
-            $results = I18N::parseApps($apps);
+            $results = I18NParser::getInstance()->parseApps($apps);
 
             if ($import) {
-                I18N::import($results);
+                I18N::getInstance()->importText($results);
             }
 
             $zip = new ZipStream('i18n_' . time() . '.zip', 'application/zip', null, true);
@@ -181,7 +183,7 @@ class I18NText extends AbstractEntity
             }
 
             return $zip->finalize();
-        })->setPublic();
+        })->setBodyValidators(['apps' => 'required,minLength:1'])->setPublic();
 
         /**
          * TODO
@@ -246,16 +248,5 @@ class I18NText extends AbstractEntity
     public function hasText($locale)
     {
         return $this->translations->key($locale);
-    }
-
-    private function getApps($list = [])
-    {
-        if (empty($list)) {
-            return $this->wApps();
-        }
-
-        return array_map(function ($name) {
-            return $this->wApps($name);
-        }, $list);
     }
 }

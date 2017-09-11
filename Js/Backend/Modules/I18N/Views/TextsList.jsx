@@ -12,7 +12,7 @@ import I18N from './../../I18N';
 class TextsList extends Webiny.Ui.View {
     constructor() {
         super();
-        this.i18n.key = 'Webiny.Backend.I18N.TextsList';
+        this.i18n.namespace = 'Webiny.Backend.I18N.TextsList';
     }
 }
 
@@ -336,7 +336,6 @@ class i18n {
     }
 
     /**
-     * TODO: rename in dayjob
      * Registers a new parser, which will be called on each translation.
      * @param callback
      * @returns {i18n}

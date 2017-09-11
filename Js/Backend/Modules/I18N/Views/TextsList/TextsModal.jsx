@@ -5,7 +5,7 @@ import Webiny from 'webiny';
 class TranslationModal extends Webiny.Ui.ModalComponent {
     constructor() {
         super();
-        this.i18n.key = 'Webiny.Backend.I18N.TranslationModal';
+        this.i18n.namespace = 'Webiny.Backend.I18N.TranslationModal';
     }
 
     renderDialog() {

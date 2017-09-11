@@ -10,7 +10,7 @@ class EntityBox extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
         this.state = {entityFilter: ''};
-        this.i18n.key = 'Webiny.Backend.Acl.EntityBox';
+        this.i18n.namespace = 'Webiny.Backend.Acl.EntityBox';
 
         this.crud = {
             create: '/.post',
@@ -70,7 +70,7 @@ class EntityBox extends Webiny.Ui.Component {
         });
 
         let header = <h2 className={styles.customMethodsTitle}>{this.i18n(`Custom methods`)}</h2>;
-        let content = <div className={styles.noCustomMethods}>{this.i18n(`No custom methods.`)}</div>
+        let content = <div className={styles.noCustomMethods}>{this.i18n(`No custom methods.`)}</div>;
 
         if (_.isEmpty(customMethods)) {
             return (

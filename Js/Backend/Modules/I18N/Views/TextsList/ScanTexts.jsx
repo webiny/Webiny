@@ -1,14 +1,19 @@
 import React from 'react';
 import Webiny from 'webiny';
+import _ from 'lodash';
 
 class ScanTexts extends Webiny.Ui.ModalComponent {
     constructor() {
         super();
-        this.i18n.key = 'Webiny.Backend.I18N.ScanTexts';
+        this.i18n.namespace = 'Webiny.Backend.I18N.ScanTexts';
     }
 
     canSubmit(model) {
-        return model.apps.length > 0 && (model.download || model.import);
+        if (_.isEmpty(model)) {
+            return;
+        }
+
+        return _.size(model.apps) && (model.download || model.import);
     }
 
     renderDialog() {
@@ -17,13 +22,23 @@ class ScanTexts extends Webiny.Ui.ModalComponent {
         return (
             <Ui.Modal.Dialog>
                 <Ui.Form
-                    defaultModel={{apps: ['Webiny'], download: false, import: true}}
+                    defaultModel={{apps: [], download: false, import: false}}
                     api="/entities/webiny/i18n-texts"
-                    url="/scan/import">
+                    url="/scan/import"
+                    onSuccessMessage={model => (
+                        this.i18n(`Added {added|plural:1:translation:default:translations} ({skipped} skipped).`, {
+                            added: model.added,
+                            skipped: model.skipped
+                        })
+                    )}
+                    onSubmitSuccess={async () => {
+                        await this.hide();
+                        this.props.onTextsScanned();
+                    }}>
                     {(model, form) => (
                         <Ui.Modal.Content>
                             <Ui.Form.Loader/>
-                            <Ui.Modal.Header title="Scan Texts" onClose={this.hide}/>
+                            <Ui.Modal.Header title={this.i18n(`Scan Texts`, {ns}, 'Bajoman.SDsd')} onClose={this.hide}/>
                             <Ui.Modal.Body>
                                 <Ui.Form.Error/>
 
@@ -77,6 +92,10 @@ class ScanTexts extends Webiny.Ui.ModalComponent {
         );
     }
 }
+
+ScanTexts.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps, {
+    onTextsScanned: _.noop
+});
 
 export default Webiny.createComponent(ScanTexts, {
     modulesProp: 'Ui',

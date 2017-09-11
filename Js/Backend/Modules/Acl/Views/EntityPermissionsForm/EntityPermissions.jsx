@@ -14,7 +14,7 @@ class EntityPermissions extends Webiny.Ui.Component {
         };
 
         this.api = new Webiny.Api.Endpoint('/entities/webiny/user-permissions');
-        this.i18n.key = 'Webiny.Backend.Acl.EntityPermissions';
+        this.i18n.namespace = 'Webiny.Backend.Acl.EntityPermissions';
     }
 
     componentWillMount() {
