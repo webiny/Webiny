@@ -64,7 +64,6 @@ DownloadLink.defaultProps = {
             });
         }
 
-        console.log('idu propsi', props)
         return (
             <Link {..._.omit(props, ['renderer'])}>
                 {this.props.children}

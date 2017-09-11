@@ -10,6 +10,7 @@ use Apps\Webiny\Php\Lib\I18N\I18N;
 use Apps\Webiny\Php\Lib\I18N\I18NAppTexts;
 use Apps\Webiny\Php\Lib\I18N\I18NParser;
 use Apps\Webiny\Php\Lib\WebinyTrait;
+use PHPZip\Zip\File\Zip;
 use PHPZip\Zip\Stream\ZipStream;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
@@ -147,12 +148,23 @@ class I18NText extends AbstractEntity
          *
          * @api.body.apps   array  Apps to be exported
          */
+        $this->api('POST', 'import', function () {
+            $src = $this->wRequest()->getRequestData()['file']['src'] ?? null;
+
+            return I18N::getInstance()->importTextsFromZip($src);
+        })->setBodyValidators(['file' => 'required'])->setPublic();
+
+        /**
+         * @api.name        Import texts
+         * @api.description Finds i18n texts in given apps and imports them to local database.
+         *
+         * @api.body.apps   array  Apps to be exported
+         */
         $this->api('POST', 'scan/import', function () {
-            // throw new AppException($this->wI18n('Sorry matey, {translations} skipped.', ['translations' => 123]));
             $apps = $this->wRequest()->getRequestData()['apps'] ?? [];
             $results = I18NParser::getInstance()->parseApps($apps);
 
-            return I18N::getInstance()->importText($results);
+            return I18N::getInstance()->importTexts($results);
         })->setBodyValidators(['apps' => 'required,minLength:1'])->setPublic();
 
         /**

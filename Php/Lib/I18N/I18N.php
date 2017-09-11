@@ -5,6 +5,7 @@ namespace Apps\Webiny\Php\Lib\I18N;
 use Apps\Webiny\Php\Entities\I18NLocale;
 use Apps\Webiny\Php\Entities\I18NText;
 use Apps\Webiny\Php\Lib\Apps\App;
+use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\StdLib\SingletonTrait;
 use Webiny\Component\StdLib\StdLibTrait;
@@ -91,13 +92,13 @@ class I18N
      *
      * @return array|I18NAppTexts
      */
-    public function importText($data)
+    public function importTexts($data)
     {
         if (!is_array($data)) {
             $data = [$data];
         }
 
-        $stats = ['skipped' => 0, 'added' => 0];
+        $stats = ['ignored' => 0, 'inserted' => 0];
 
         foreach ($data as $appTexts) {
             /* @var I18NAppTexts $appTexts */
@@ -105,7 +106,7 @@ class I18N
                 foreach ($texts as $text) {
                     $textKey = $key . '.' . md5($text);
                     if (I18NText::count(['key' => $textKey])) {
-                        $stats['skipped']++;
+                        $stats['ignored']++;
                         continue;
                     }
 
@@ -115,7 +116,7 @@ class I18N
                     $i18nText->placeholder = $text;
                     $i18nText->save();
 
-                    $stats['added']++;
+                    $stats['inserted']++;
                 }
             }
         }
@@ -123,5 +124,49 @@ class I18N
         return $stats;
     }
 
-    public function importTranslations() {}
+    public function importTextsFromZip($base64EncodedZipContent)
+    {
+        if (!$base64EncodedZipContent) {
+            throw new AppException($this->wI18n('Failed to import texts from ZIP archive - empty.'));
+        }
+
+        // Let's decode ZIP content first.
+        $content = base64_decode(str_replace('data:application/zip;base64,', '', $base64EncodedZipContent));
+        if (!$content) {
+            throw new AppException($this->wI18n('Failed to decode received base64 encoded ZIP archive.'));
+        }
+
+        // To unzip, we must first store the file in temporary folder.
+        $storage = $this->wStorage('Temp');
+        $temp = ['folder' => uniqid(), 'file' => uniqid() . '.zip'];
+        $storage->setContents($temp['file'], $content);
+
+        // Let's extract it and import file by file.
+        $zip = new \ZipArchive;
+        $opened = $zip->open($storage->getAbsolutePath($temp['file']));
+        if ($opened === true) {
+            $zip->extractTo($storage->getAbsolutePath($temp['folder']));
+            $zip->close();
+
+            $stats = ['ignored' => 0, 'inserted' => 0];
+            foreach ($storage->getKeys($temp['folder']) as $file) {
+                $texts = json_decode($storage->getContents($file), true);
+                $importStats = I18N::getInstance()->importTexts(new I18NAppTexts($texts));
+                $stats['ignored'] += $importStats['ignored'];
+                $stats['inserted'] += $importStats['inserted'];
+            }
+        } else {
+            throw new AppException($this->wI18n('Failed to open received ZIP archive.'));
+        }
+
+        return $stats;
+    }
+
+    public function importTranslations()
+    {
+    }
+
+    public function importTranslationsFromZip()
+    {
+    }
 }

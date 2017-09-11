@@ -38,7 +38,7 @@ class ScanTexts extends Webiny.Ui.ModalComponent {
                     {(model, form) => (
                         <Ui.Modal.Content>
                             <Ui.Form.Loader/>
-                            <Ui.Modal.Header title={this.i18n(`Scan Texts`, {ns}, 'Bajoman.SDsd')} onClose={this.hide}/>
+                            <Ui.Modal.Header title={this.i18n(`Scan Texts`)} onClose={this.hide}/>
                             <Ui.Modal.Body>
                                 <Ui.Form.Error/>
 
@@ -77,6 +77,7 @@ class ScanTexts extends Webiny.Ui.ModalComponent {
                                     renderIf={model.download}
                                     separate
                                     disabled={!this.canSubmit(model)}
+                                    onClick={() => { console.log('saddas')}}
                                     method="POST"
                                     params={{import: model.import, apps: model.apps}}
                                     type="primary"

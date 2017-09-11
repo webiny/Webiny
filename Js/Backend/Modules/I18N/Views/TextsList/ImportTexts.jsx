@@ -12,22 +12,26 @@ class ImportTexts extends Webiny.Ui.ModalComponent {
 
         return (
             <Ui.Modal.Dialog>
-                <Ui.Form api="/entities/webiny/i18n-texts">
+                <Ui.Form api="/entities/webiny/i18n-texts" url="/import">
                     {(model, form) => (
                         <Ui.Modal.Content>
                             <Ui.Form.Loader/>
-                            <Ui.Modal.Header title="Scan Texts" onClose={this.hide}/>
+                            <Ui.Modal.Header title={this.i18n(`Import Texts`)} onClose={this.hide}/>
                             <Ui.Modal.Body>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
+                                        <Ui.File
+                                            validate="required"
+                                            placeholder={this.i18n('ZIP or JSON file')}
+                                            label={this.i18n('Choose File')}
+                                            name="file"
+                                            accept={['application/zip']}/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                             </Ui.Modal.Body>
                             <Ui.Modal.Footer >
                                 <Ui.Button label={this.i18n(`Cancel`)} onClick={this.hide}/>
                                 <Ui.Button
-                                    renderIf={!model.download}
-                                    disabled={!this.canSubmit(model)}
                                     type="primary"
                                     label={this.i18n(`Import`)}
                                     onClick={form.submit}/>
@@ -43,6 +47,6 @@ class ImportTexts extends Webiny.Ui.ModalComponent {
 export default Webiny.createComponent(ImportTexts, {
     modulesProp: 'Ui',
     modules: [
-        'Modal', 'Form', 'Grid', 'CheckboxGroup', 'Checkbox', 'Button', 'Section', 'DownloadLink'
+        'Modal', 'Form', 'Grid', 'CheckboxGroup', 'Checkbox', 'Button', 'File'
     ]
 });

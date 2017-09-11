@@ -23,7 +23,7 @@ class I18NAppTexts
 
     private $texts = [];
 
-    public function __construct(App $app, $texts = [])
+    public function __construct(App $app = null, $texts = [])
     {
         $this->app = $app;
         $this->texts = $texts;
