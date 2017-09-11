@@ -109,7 +109,7 @@ class HttpServer {
             });
         }).catch(err => {
             httpWrite(' ');
-            httpWrite(err.message);
+            httpWrite({error: err.message});
             return res.end();
         });
     }

@@ -12,7 +12,6 @@ use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Entities\UserPermission;
 use Apps\Webiny\Php\Entities\UserRole;
 use Apps\Webiny\Php\Lib\Apps\App;
-use Closure;
 use MongoDB\Driver\Exception\RuntimeException;
 use Webiny\Component\Entity\EntityException;
 
@@ -33,83 +32,83 @@ class Install implements LifeCycleInterface
     public function run(App $app)
     {
         $this->installJsDependencies($app);
+        $this->createUserPermissions();
+        $this->createUserRoles();
         $this->createIndexes($app);
     }
 
     /**
-     * Create user permissions
+     * Return an array of app permissions
      *
-     * @param array        $permissions
-     * @param null|Closure $exceptionHandler Takes an exception and permission being inserted as parameters
+     * @return array
      */
-    protected function createUserPermissions($permissions, Closure $exceptionHandler = null)
+    public function getUserPermissions()
     {
-        foreach ($permissions as $perm) {
+        return [];
+    }
+
+    /**
+     * Return an array of app roles
+     *
+     * @return array
+     */
+    public function getUserRoles()
+    {
+        return [];
+    }
+
+    /**
+     * Create user permissions
+     */
+    protected function createUserPermissions()
+    {
+        foreach ($this->getUserPermissions() as $perm) {
             $p = new UserPermission();
             try {
                 $p->populate($perm)->save();
             } catch (EntityException $e) {
-                if (is_callable($exceptionHandler)) {
-                    $exceptionHandler($e, $p);
-                } else {
-                    $invalidAttributes = $e->getInvalidAttributes();
-                    if (array_key_exists('slug', $invalidAttributes)) {
-                        $p = UserPermission::findOne(['slug' => $perm['slug']]);
-                        if ($p) {
-                            try {
-                                $p->populate($perm)->save();
-                            } catch (EntityException $e) {
-                                echo("\n\nError occurred while updating UserPermission with the following data:\n\n");
-                                print_r($p);
-                                $this->printException($e);
-                            }
-
-                            continue;
+                $invalidAttributes = $e->getInvalidAttributes();
+                if (array_key_exists('slug', $invalidAttributes)) {
+                    $p = UserPermission::findOne(['slug' => $perm['slug']]);
+                    if ($p) {
+                        try {
+                            $p->populate($perm)->save();
+                        } catch (EntityException $e) {
+                            $this->printException($e);
                         }
+
+                        continue;
                     }
-                    echo("\n\nError occurred while installing UserPermission with the following data:\n\n");
-                    print_r($perm);
-                    $this->printException($e);
                 }
+                $this->printException($e);
             }
         }
     }
 
     /**
      * Create user roles
-     *
-     * @param array        $roles
-     * @param null|Closure $exceptionHandler Takes an exception and role being inserted as parameters
      */
-    protected function createUserRoles($roles, Closure $exceptionHandler = null)
+    protected function createUserRoles()
     {
-        foreach ($roles as $role) {
+        foreach ($this->getUserRoles() as $role) {
             $r = new UserRole();
             try {
                 $r->populate($role)->save();
             } catch (EntityException $e) {
-                if (is_callable($exceptionHandler)) {
-                    $exceptionHandler($e, $r);
-                } else {
-                    $invalidAttributes = $e->getInvalidAttributes();
-                    if (array_key_exists('slug', $invalidAttributes)) {
-                        $r = UserRole::findOne(['slug' => $role['slug']]);
-                        if ($r) {
-                            try {
-                                $r->populate($role)->save();
-                            } catch (EntityException $e) {
-                                echo("\n\nError occurred while updating UserRole with the following data:\n\n");
-                                print_r($role);
-                                $this->printException($e);
-                            }
-
-                            continue;
+                $invalidAttributes = $e->getInvalidAttributes();
+                if (array_key_exists('slug', $invalidAttributes)) {
+                    $r = UserRole::findOne(['slug' => $role['slug']]);
+                    if ($r) {
+                        try {
+                            $r->populate($role)->save();
+                        } catch (EntityException $e) {
+                            $this->printException($e);
                         }
+
+                        continue;
                     }
-                    echo("\n\nError occurred while installing UserRole with the following data:\n\n");
-                    print_r($role);
-                    $this->printException($e);
                 }
+                $this->printException($e);
             }
         }
     }
@@ -133,7 +132,7 @@ class Install implements LifeCycleInterface
                     $this->wDatabase()->createIndex($collection, $index);
                 } catch (RuntimeException $e) {
                     if ($e->getCode() === 85) {
-                        echo "WARNING: another index with same fields already exists. Skipping creation of '" . $index->getName() . "' index.\n";
+                        echo "WARNING: Skipping creation of '" . $index->getName() . "' index (index with the same fields already exist).\n";
                     }
                 }
             }

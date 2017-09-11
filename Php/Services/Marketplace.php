@@ -67,8 +67,13 @@ class Marketplace extends AbstractService
             header("Content-Type: text/event-stream");
             header("Cache-Control: no-cache");
             ob_end_flush();
-            $appInstaller = new AppInstaller();
-            $appInstaller->install($app->keyNested('data.entity'));
+            try {
+                $appInstaller = new AppInstaller();
+                $appInstaller->install($app->keyNested('data.entity'));
+            } catch (AppException $e) {
+                // Don't do anything, the message was already sent to browser.
+            }
+
             die();
         })->setPublic();
 

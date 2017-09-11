@@ -2,6 +2,8 @@
 
 namespace Apps\Webiny\Php\Services\Lib;
 
+use Apps\Webiny\Php\Entities\User;
+use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 
@@ -21,7 +23,12 @@ class AppInstaller
         $curl = new \Curl\Curl();
         $curl->setTimeout(0);
         $curl->setOpt(CURLOPT_WRITEFUNCTION, function ($curl, $data) {
-            $this->echo(json_decode($data, true));
+            $res = json_decode($data, true);
+            $this->echo($res);
+            if (isset($res['error'])) {
+                // Throw to abort installation
+                throw new AppException($res['error']);
+            }
 
             return strlen($data);
         });
@@ -34,6 +41,24 @@ class AppInstaller
         }
 
         $curl->post($bsPath . '/?action=install', $cliData);
+
+        // If we got this far it means everything is ok and now we need to assign admin roles
+        $app = $this->wApps()->loadApp($appData['localName']);
+
+        /* @var $user User */
+        $user = $this->wAuth()->getUser();
+        /* @var $install \Apps\Webiny\Php\Lib\LifeCycle\Install */
+        $install = $app->getLifeCycleObject('Install');
+        foreach ($install->getUserRoles() as $role) {
+            if ($role['isAdminRole'] ?? false) {
+                $user->roles[] = $role['slug'];
+            }
+        }
+
+        // Save user and send new user roles to the client
+        if ($user->save()) {
+            $this->echo($user->toArray('roles.slug'));
+        }
 
         return true;
     }

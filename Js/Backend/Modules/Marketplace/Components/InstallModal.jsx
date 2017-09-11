@@ -38,6 +38,10 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                 response.split("_-_").filter(l => l.length).map(line => {
                     try {
                         const res = JSON.parse(line);
+                        if (res.roles) {
+                            Webiny.Model.set(['User', 'roles'], res.roles);
+                        }
+
                         if (res.progress) {
                             const lastMessage = messages.length - 1;
                             messages[lastMessage].message = <Progress value={parseInt(res.progress)}/>;
