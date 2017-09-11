@@ -12,6 +12,7 @@ use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Entities\UserPermission;
 use Apps\Webiny\Php\Entities\UserRole;
 use Apps\Webiny\Php\Lib\Apps\App;
+use MongoDB\Driver\Exception\BulkWriteException;
 use MongoDB\Driver\Exception\RuntimeException;
 use Webiny\Component\Entity\EntityException;
 
@@ -66,6 +67,8 @@ class Install implements LifeCycleInterface
             $p = new UserPermission();
             try {
                 $p->populate($perm)->save();
+            } catch (BulkWriteException $e) {
+                $this->printException($e->getMessage());
             } catch (EntityException $e) {
                 $invalidAttributes = $e->getInvalidAttributes();
                 if (array_key_exists('slug', $invalidAttributes)) {
@@ -94,6 +97,8 @@ class Install implements LifeCycleInterface
             $r = new UserRole();
             try {
                 $r->populate($role)->save();
+            } catch (BulkWriteException $e) {
+                $this->printException($e->getMessage());
             } catch (EntityException $e) {
                 $invalidAttributes = $e->getInvalidAttributes();
                 if (array_key_exists('slug', $invalidAttributes)) {
@@ -152,9 +157,14 @@ class Install implements LifeCycleInterface
         }
     }
 
-    private function printException(EntityException $e)
+    private function printException($e)
     {
-        $response = new ApiErrorResponse($e->getInvalidAttributes(), $e->getMessage(), $e->getCode());
-        print_r($response->getData(true));
+        $message = $e instanceof \Exception ? $e->getMessage() : $e;
+        if ($e instanceof EntityException) {
+            $response = new ApiErrorResponse($e->getInvalidAttributes(), $e->getMessage(), $e->getCode());
+            $message = $response->getData(true);
+        }
+
+        print_r($message);
     }
 }

@@ -29,9 +29,7 @@ class HttpServer {
             });
         });
         httpServer.on('error', err => Webiny.failure(err));
-        httpServer.listen(this.port + 1, () => {
-            Webiny.success('Http server listening on ' + (this.port + 1));
-        });
+        httpServer.listen(this.port + 1);
         return httpServer;
     }
 

@@ -3,6 +3,7 @@
 namespace Apps\Webiny\Php\Services\Lib;
 
 use Apps\Webiny\Php\Entities\User;
+use Apps\Webiny\Php\Entities\UserRole;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\StdLib\StdLibTrait;
@@ -51,7 +52,7 @@ class AppInstaller
         $install = $app->getLifeCycleObject('Install');
         foreach ($install->getUserRoles() as $role) {
             if ($role['isAdminRole'] ?? false) {
-                $user->roles[] = $role['slug'];
+                $user->roles[] = UserRole::findOne(['slug' => $role['slug']]);
             }
         }
 

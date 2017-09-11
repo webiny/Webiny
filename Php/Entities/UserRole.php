@@ -2,7 +2,9 @@
 namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
+use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
 use Webiny\Component\Entity\EntityCollection;
+use Webiny\Component\Mongo\Index\CompoundIndex;
 
 /**
  * Class UserRole
@@ -66,6 +68,13 @@ class UserRole extends AbstractEntity
 
                  return $permissions;
              });
+    }
+
+    protected static function entityIndexes(IndexContainer $indexes)
+    {
+        parent::entityIndexes($indexes);
+
+        $indexes->add(new CompoundIndex('unique', ['slug', 'deletedOn'], false, true));
     }
 
     /**
