@@ -26,9 +26,9 @@ class ScanTexts extends Webiny.Ui.ModalComponent {
                     api="/entities/webiny/i18n-texts"
                     url="/scan/import"
                     onSuccessMessage={model => (
-                        this.i18n(`Added {added|plural:1:translation:default:translations} ({skipped} skipped).`, {
-                            added: model.added,
-                            skipped: model.skipped
+                        this.i18n(`Inserted {inserted|plural:1:translation:default:translations} ({ignored} ignored).`, {
+                            inserted: model.inserted,
+                            ignored: model.ignored
                         })
                     )}
                     onSubmitSuccess={async () => {
@@ -41,7 +41,6 @@ class ScanTexts extends Webiny.Ui.ModalComponent {
                             <Ui.Modal.Header title={this.i18n(`Scan Texts`)} onClose={this.hide}/>
                             <Ui.Modal.Body>
                                 <Ui.Form.Error/>
-
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
                                         <Ui.CheckboxGroup

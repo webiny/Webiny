@@ -194,9 +194,9 @@ trait WebinyTrait
      */
     static protected function wI18n($placeholder, $variables = [], $options = [])
     {
+        $options['namespace'] = $options['namespace'] ?? static::$i18nNamespace ?? null;
         return I18N::getInstance()->translate($placeholder, $variables, $options);
     }
-
 
     /**
      * Get Apps container or App instance

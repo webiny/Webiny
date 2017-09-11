@@ -252,13 +252,13 @@ class I18NText extends AbstractEntity
         return I18NText::findOne(['key' => $key]);
     }
 
-    public function getText($locale)
+    public function getText(I18NLocale $locale)
     {
-        return $this->translations->key($locale);
+        return $this->translations->key($locale->key);
     }
 
-    public function hasText($locale)
+    public function hasText(I18NLocale $locale)
     {
-        return $this->translations->key($locale);
+        return $this->translations->key($locale->key);
     }
 }

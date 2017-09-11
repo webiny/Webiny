@@ -12,12 +12,24 @@ class ImportTexts extends Webiny.Ui.ModalComponent {
 
         return (
             <Ui.Modal.Dialog>
-                <Ui.Form api="/entities/webiny/i18n-texts" url="/import">
+                <Ui.Form 
+                    api="/entities/webiny/i18n-texts" url="/import"
+                    onSuccessMessage={model => (
+                        this.i18n(`Inserted {inserted|plural:1:translation:default:translations} ({ignored} ignored).`, {
+                            inserted: model.inserted,
+                            ignored: model.ignored
+                        })
+                    )}
+                    onSubmitSuccess={async () => {
+                        await this.hide();
+                        this.props.onTextsScanned();
+                    }}>
                     {(model, form) => (
                         <Ui.Modal.Content>
                             <Ui.Form.Loader/>
                             <Ui.Modal.Header title={this.i18n(`Import Texts`)} onClose={this.hide}/>
                             <Ui.Modal.Body>
+                                <Ui.Form.Error/>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
                                         <Ui.File

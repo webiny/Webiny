@@ -4,7 +4,6 @@ namespace Apps\Webiny\Php\Lib\I18N;
 
 use Apps\Webiny\Php\Entities\I18NLocale;
 use Apps\Webiny\Php\Entities\I18NText;
-use Apps\Webiny\Php\Lib\Apps\App;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\StdLib\SingletonTrait;
@@ -31,37 +30,33 @@ class I18N
         return true;
     }
 
-    public function translate($placeholder, $key, $variables = [])
+    public function translate($placeholder, $variables = [], $options = [])
     {
-        $language = 'en_GB';
+        $output = $placeholder;
+        $namespace = $options['namespace'] ?? null;
+        if (!$namespace) {
+            throw new AppException('Cannot translate - text namespace missing.');
+        }
 
-        $text = $placeholder;
-        if ($translation = I18NText::findByKey($key)) {
-            /* @var I18NText $translation */
-            if ($translation->hasText($language)) {
-                $text = $translation->getText($language);
+        if ($text = I18NText::findByKey($namespace . '.' . md5($placeholder))) {
+            $locale = $this->getLocale();
+            /* @var I18NText $text */
+            if ($text->hasText($locale)) {
+                $output = $text->getText($locale);
             }
         }
 
         // Match variables
-        preg_match_all('/\{(.*?)\}/', $text, $matches);
+        preg_match_all('/\{(.*?)\}/', $output, $matches);
         $matches = $matches[1] ?? [];
         foreach ($matches as $match) {
             $variableName = '{' . $match . '}';
-            if (isset($variables[$match]) && strpos($variableName, $text) >= 0) {
-                $text = str_replace($variableName, $variables[$match], $text);
+            if (isset($variables[$match]) && strpos($output, $variableName) !== -1) {
+                $output = str_replace($variableName, $variables[$match], $output);
             }
         }
 
-        return $text;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLanguage()
-    {
-        return $this->locale;
+        return $output;
     }
 
     /**
@@ -150,8 +145,8 @@ class I18N
 
             $stats = ['ignored' => 0, 'inserted' => 0];
             foreach ($storage->getKeys($temp['folder']) as $file) {
-                $texts = json_decode($storage->getContents($file), true);
-                $importStats = I18N::getInstance()->importTexts(new I18NAppTexts($texts));
+                $texts = new I18NAppTexts();
+                $importStats = I18N::getInstance()->importTexts($texts->fromJson($storage->getContents($file)));
                 $stats['ignored'] += $importStats['ignored'];
                 $stats['inserted'] += $importStats['inserted'];
             }
