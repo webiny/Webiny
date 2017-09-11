@@ -3,7 +3,7 @@
     "type": "webiny-app",
     "require": {
         "webiny/app-installer": "0.1.x-dev",
-        "webiny/framework": "1.5.x-dev",
+        "webiny/framework": "1.5",
         "webiny/login": "0.2.x-dev",
         "webiny/analytics-db": "0.2.x-dev",
 
