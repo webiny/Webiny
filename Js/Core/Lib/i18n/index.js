@@ -73,8 +73,8 @@ class i18n {
         this.translations = {};
         this.component = I18N;
 
-        const translate = (key, text, variables) => {
-            return this.translate(key, text, variables);
+        const translate = (text, variables = {}, key = null) => {
+            return this.translate(text, variables, key);
         };
 
         Object.getOwnPropertyNames(i18n.prototype).map(method => {
@@ -148,7 +148,7 @@ class i18n {
         return parts.map((part, index) => <webiny-i18n-part key={index}>{this.processTextPart(part, values)}</webiny-i18n-part>);
     }
 
-    translate(key, text, variables) {
+    translate(text, variables = {}, key = null) {
         let output = this.getTranslation(key) || text;
         output = this.replaceVariables(output, variables);
         this.parsers.forEach(parser => {
@@ -163,14 +163,13 @@ class i18n {
 
     /**
      * Used for rendering text in DOM
-     * @param key
-     * @param label
+     * @param translationKey
+     * @param text
      * @param variables
-     * @param options
      * @returns {XML}
      */
-    render(key, label, variables, options) {
-        return React.createElement(this.component, {placeholder: label, translationKey: key, variables, options});
+    render(translationKey, text, variables) {
+        return React.createElement(this.component, {translationKey, text, variables});
     }
 
     // Following methods are plain-simple for now - let's make them smarter in the near future

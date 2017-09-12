@@ -27,9 +27,9 @@ class PhpParser
 
     // With a simple regex, we first find all this.i18n usages in given source.
     const REGEX = [
-        'namespace'         => '/i18nNamespace\s{0,}=\s{0,}[\' | "|`]([a-zA-Z0-9\.-_:]+)[\'|" | `]/',
-        'basic'       => '/wI18n\([\'\`\"]/mi',
-        'customNamespace' => '/wI18n\([\'"]{1}.*?[\'"]{1},.*?, ?\[.*?[\'"]namespace[\'"] ?=> ?[\'"]{1}([A-Za-z\.]*?)[\'"]{1}.*?\]\)/'
+        'namespace'         => '/i18nNamespace\s{0,}=\s{0,}[\'|"]([a-zA-Z0-9\.-_:]+)[\'|"|`]/',
+        'basic'       => '/wI18n\([\'|"]/mi',
+        'customNamespace' => '/wI18n\([\'|"]{1}.*?[\'|"]{1},.*?, ?\[.*?[\'|"]namespace[\'|"] ?=> ?[\'|"]{1}([A-Za-z\.]*?)[\'|"]{1}.*?\]\)/'
     ];
 
     /**

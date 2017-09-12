@@ -8,7 +8,6 @@ import LinkState from './LinkState';
 import Dispatcher from './Dispatcher';
 import UiDispatcher from './UiDispatcher';
 
-
 class Component extends React.Component {
     constructor(props) {
         super(props);
@@ -21,27 +20,28 @@ class Component extends React.Component {
     /**
      * Method for a more convenient use of i18n module - this will automatically generate a complete namespace for the label
      * If this method is called without parameters, it will return Webiny.i18n module, from which you can use other functions as well
-     * @param label
+     * @param text
      * @param variables
      * @param options
      * @returns {*}
      */
-    i18n(label, variables, options = {}) {
-        if (!label) {
+    i18n(text, variables, options = {}) {
+        if (!text) {
             return Webiny.i18n;
         }
 
-        console.log(this);
+        const namespace = options.namespace || _.get(this.props, 'i18nNamespace');
 
-        let key = options.key || _.get(this.props, 'i18nKey', this.i18n.key);
-        if (!key) {
-            const app = _.get(Webiny.Router.getActiveRoute(), 'module.app.name');
-            const module = _.get(Webiny.Router.getActiveRoute(), 'module.name');
-            key = `${app}.${module}.${this.getClassName()}`;
+        if (!namespace) {
+            throw new Error('Using i18n but namespace is undefined.');
         }
 
-        key = _.trimEnd(key, '.') + '.' + md5(label);
-        return Webiny.i18n.render(key, label, variables, options);
+        if (!/^[a-zA-Z0-9\.]+$/.test(namespace)) {
+            throw new Error('Namespace "' + namespace + '" contains invalid characters, only letters, numbers and dots (".") are allowed.');
+        }
+
+        const key = _.trimEnd(namespace, '.') + '.' + md5(text);
+        return Webiny.i18n.render(key, text, variables);
     }
 
     componentWillMount() {

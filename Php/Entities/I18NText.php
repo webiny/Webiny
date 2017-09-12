@@ -10,7 +10,6 @@ use Apps\Webiny\Php\Lib\I18N\I18N;
 use Apps\Webiny\Php\Lib\I18N\I18NAppTexts;
 use Apps\Webiny\Php\Lib\I18N\I18NParser;
 use Apps\Webiny\Php\Lib\WebinyTrait;
-use PHPZip\Zip\File\Zip;
 use PHPZip\Zip\Stream\ZipStream;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
@@ -29,7 +28,7 @@ class I18NText extends AbstractEntity
     use WebinyTrait;
 
     protected static $entityCollection = 'I18NTexts';
-    protected static $i18nNamespace = 'Webiny.I18NText';
+    protected static $i18nNamespace = 'Webiny.Entities.I18NText';
 
     protected static function entityQuery()
     {

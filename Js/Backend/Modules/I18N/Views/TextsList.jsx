@@ -1,8 +1,8 @@
 import React from 'react';
 import Webiny from 'webiny';
 import TranslationsModal from './TextsList/TextsModal';
-import ScanTexts from './TextsList/ScanTexts';
-import ImportTexts from './TextsList/ImportTexts';
+import ScanTextsModal from './TextsList/ScanTextsModal';
+import ImportTextsModal from './TextsList/ImportTextsModal';
 
 class TextsList extends Webiny.Ui.View {
 }
@@ -77,12 +77,12 @@ TextsList.defaultProps = {
                         </Ui.ViewSwitcher.View>
                         <Ui.ViewSwitcher.View view="scanTextsModal" modal>
                             {(showView, data) => (
-                                <ScanTexts {...{showView, data}}/>
+                                <ScanTextsModal {...{showView, data}}/>
                             )}
                         </Ui.ViewSwitcher.View>
                         <Ui.ViewSwitcher.View view="importTextsModal" modal>
                             {(showView, data) => (
-                                <ImportTexts {...{showView, data}}/>
+                                <ImportTextsModal {...{showView, data}}/>
                             )}
                         </Ui.ViewSwitcher.View>
                     </Ui.ViewSwitcher>

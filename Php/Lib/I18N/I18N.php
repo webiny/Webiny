@@ -21,6 +21,8 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  */
 class I18N
 {
+    protected static $i18nNamespace = 'Webiny.Lib.I18N';
+
     private $locale;
 
     use StdLibTrait, WebinyTrait, SingletonTrait;

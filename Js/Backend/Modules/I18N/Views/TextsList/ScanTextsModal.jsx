@@ -2,7 +2,7 @@ import React from 'react';
 import Webiny from 'webiny';
 import _ from 'lodash';
 
-class ScanTexts extends Webiny.Ui.ModalComponent {
+class ScanTextsModal extends Webiny.Ui.ModalComponent {
     canSubmit(model) {
         if (_.isEmpty(model)) {
             return;
@@ -20,13 +20,13 @@ class ScanTexts extends Webiny.Ui.ModalComponent {
                     defaultModel={{apps: [], download: false, import: false}}
                     api="/entities/webiny/i18n-texts"
                     url="/scan/import"
-                    onSuccessMessage={model => (
-                        this.i18n(`Inserted {inserted|plural:1:translation:default:translations} ({ignored} ignored).`, {
-                            inserted: model.inserted,
-                            ignored: model.ignored
-                        })
-                    )}
-                    onSubmitSuccess={async () => {
+                    onSuccessMessage={null}
+                    onSubmitSuccess={async response => {
+                        Webiny.Growl.success(this.i18n(`Inserted {inserted|plural:1:translation:default:translations} ({ignored} ignored).`, {
+                            inserted: [<strong>{response.getData('ignored')}</strong>, response.getData('ignored')],
+                            ignored: <strong>{response.getData('ignored')}</strong>
+                        }));
+
                         await this.hide();
                         this.props.onTextsScanned();
                     }}>
@@ -71,7 +71,9 @@ class ScanTexts extends Webiny.Ui.ModalComponent {
                                     renderIf={model.download}
                                     separate
                                     disabled={!this.canSubmit(model)}
-                                    onClick={() => { console.log('saddas')}}
+                                    onClick={() => {
+                                        console.log('saddas')
+                                    }}
                                     method="POST"
                                     params={{import: model.import, apps: model.apps}}
                                     type="primary"
@@ -88,12 +90,12 @@ class ScanTexts extends Webiny.Ui.ModalComponent {
     }
 }
 
-ScanTexts.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps, {
+ScanTextsModal.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps, {
     onTextsScanned: _.noop,
-    i18nNamespace : 'Webiny.Backend.I18N.ScanTexts'
+    i18nNamespace: 'Webiny.Backend.I18N.ScanTexts'
 });
 
-export default Webiny.createComponent(ScanTexts, {
+export default Webiny.createComponent(ScanTextsModal, {
     modulesProp: 'Ui',
     modules: [
         'Modal', 'Form', 'Grid', 'CheckboxGroup', 'Checkbox', 'Button', 'Section', 'DownloadLink'

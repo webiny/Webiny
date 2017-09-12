@@ -1,7 +1,8 @@
 import React from 'react';
 import Webiny from 'webiny';
+import _ from 'lodash';
 
-class ImportTexts extends Webiny.Ui.ModalComponent {
+class ImportTextsModal extends Webiny.Ui.ModalComponent {
     renderDialog() {
         const {Ui} = this.props;
 
@@ -51,11 +52,11 @@ class ImportTexts extends Webiny.Ui.ModalComponent {
     }
 }
 
-ImportTexts.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps, {
+ImportTextsModal.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps, {
     i18nNamespace : 'Webiny.Backend.I18N.ImportTexts'
 });
 
-export default Webiny.createComponent(ImportTexts, {
+export default Webiny.createComponent(ImportTextsModal, {
     modulesProp: 'Ui',
     modules: [
         'Modal', 'Form', 'Grid', 'CheckboxGroup', 'Checkbox', 'Button', 'File'
