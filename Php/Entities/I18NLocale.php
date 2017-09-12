@@ -2,6 +2,7 @@
 
 namespace Apps\Webiny\Php\Entities;
 
+use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\Entity\Attribute\Validation\ValidationException;
@@ -38,12 +39,17 @@ class I18NLocale extends AbstractEntity
         });
 
         $this->attr('cacheKey')->char()->setSkipOnPopulate()->setToArrayDefault();
+    }
+
+    protected function entityApi(ApiContainer $api)
+    {
+        parent::entityApi($api);
 
         /**
          * @api.name        List locales
          * @api.description Lists all available locales.
          */
-        $this->api('GET', 'locales', function () {
+        $api->get('locales', function () {
             return I18NLanguageLocale::getLocales();
         });
 
@@ -51,7 +57,7 @@ class I18NLocale extends AbstractEntity
          * @api.name        List available locales
          * @api.description Lists locales that were not already added.
          */
-        $this->api('GET', '/available', function () {
+        $api->get('/available', function () {
             $params = ['I18NLanguages', ['deletedOn' => null], [], 0, 0, ['projection' => ['_id' => 0, 'locale' => 1]]];
             $exclude = $this->wDatabase()->find(...$params);
             $exclude = array_map(function ($item) {
@@ -62,7 +68,7 @@ class I18NLocale extends AbstractEntity
         });
     }
 
-    /**
+        /**
      * @param $locale
      *
      * @return I18NLocale|null
