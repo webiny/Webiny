@@ -11,6 +11,7 @@ class LocalesList extends Webiny.Ui.View {
 }
 
 LocalesList.defaultProps = {
+    i18nNamespace : 'Webiny.Backend.I18N.LocalesList',
     renderer: function render() {
         return (
             <Webiny.Ui.LazyLoad modules={['View', 'List', 'Icon', 'Button']}>
@@ -60,7 +61,5 @@ LocalesList.defaultProps = {
         );
     }
 };
-
-LocalesList.i18nNamespace = 'Webiny.Backend.I18N.LocalesList';
 
 export default LocalesList;

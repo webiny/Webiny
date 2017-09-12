@@ -46,10 +46,9 @@ class AddLocaleModal extends Webiny.Ui.ModalComponent {
 
 AddLocaleModal.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps, {
     onSubmitSuccess: _.noop,
-    onSuccessMessage: _.noop
+    onSuccessMessage: _.noop,
+    i18nNamespace : 'Webiny.Backend.I18N.TextsList'
 });
-
-AddLocaleModal.i18nNamespace = 'Webiny.Backend.I18N.TextsList';
 
 export default Webiny.createComponent(AddLocaleModal, {
     modules: ['Button', 'Modal', 'Link', 'Grid', 'Form', 'Select']

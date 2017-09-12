@@ -5,6 +5,7 @@ class UsersList extends Webiny.Ui.View {
 }
 
 UsersList.defaultProps = {
+    i18nNamespace : 'Webiny.Backend.Acl.UsersList',
     renderer() {
         const listProps = {
             api: '/entities/webiny/users',
@@ -74,8 +75,6 @@ UsersList.defaultProps = {
         );
     }
 };
-
-UsersList.i18nNamespace = 'Webiny.Backend.Acl.UsersList';
 
 export default Webiny.createComponent(UsersList, {
     modules: ['View', 'List', 'Link', 'Icon', 'Input']

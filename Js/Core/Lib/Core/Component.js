@@ -10,21 +10,12 @@ import UiDispatcher from './UiDispatcher';
 
 
 class Component extends React.Component {
-
     constructor(props) {
         super(props);
-
         this.__listeners = [];
         this.__cursors = [];
         this.__mounted = true;
         this.bindMethods('bindTo', 'isRendered', 'i18n');
-
-
-        /**
-         * If set, it will be used in the component instead of dynamically created key
-         * @type {null}
-         */
-        this.i18n.key = null;
     }
 
     /**
@@ -39,6 +30,8 @@ class Component extends React.Component {
         if (!label) {
             return Webiny.i18n;
         }
+
+        console.log(this);
 
         let key = options.key || _.get(this.props, 'i18nKey', this.i18n.key);
         if (!key) {

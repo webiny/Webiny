@@ -93,6 +93,7 @@ ServiceBox.defaultProps = {
     permissions: {},
     onTogglePermission: _.noop,
     onRemoveService: _.noop,
+    i18nNamespace : 'Webiny.Backend.Acl.EntityBox',
     renderer() {
         const {ClickConfirm} = this.props;
 
@@ -115,8 +116,6 @@ ServiceBox.defaultProps = {
         );
     }
 };
-
-ServiceBox.i18nNamespace = 'Webiny.Backend.Acl.EntityBox';
 
 export default Webiny.createComponent(ServiceBox, {
     modules: ['Input', 'ClickConfirm', 'Tooltip']

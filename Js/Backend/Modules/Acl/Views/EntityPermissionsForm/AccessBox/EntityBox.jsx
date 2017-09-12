@@ -136,6 +136,7 @@ EntityBox.defaultProps = {
     permissions: {},
     onTogglePermission: _.noop,
     onRemoveEntity: _.noop,
+    i18nNamespace : 'Webiny.Backend.Acl.EntityBox',
     renderer() {
         const {ClickConfirm} = this.props;
 
@@ -159,8 +160,6 @@ EntityBox.defaultProps = {
         );
     }
 };
-
-EntityBox.i18nNamespace = 'Webiny.Backend.Acl.EntityBox';
 
 export default Webiny.createComponent(EntityBox, {
     modules: ['Input', 'ClickConfirm', 'Tooltip']

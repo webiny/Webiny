@@ -90,10 +90,9 @@ class TranslationModal extends Webiny.Ui.ModalComponent {
 }
 
 TranslationModal.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
-    onSubmit: _.noop
+    onSubmit: _.noop,
+    i18nNamespace : 'Webiny.Backend.I18N.TranslationModal'
 });
-
-TranslationModal.i18nNamespace = 'Webiny.Backend.I18N.TranslationModal';
 
 export default Webiny.createComponent(TranslationModal, {
     modulesProp: 'Ui',

@@ -34,6 +34,7 @@ ServicePermissions.defaultProps = {
     onTogglePermission: _.noop,
     onAddService: _.noop,
     onRemoveService: _.noop,
+    i18nNamespace : 'Webiny.Backend.Acl.ServicePermissions',
     renderer() {
         const {Loader, Button, ViewSwitcher, Grid, Icon, permissions} = this.props;
 
@@ -103,8 +104,6 @@ ServicePermissions.defaultProps = {
         );
     }
 };
-
-ServicePermissions.i18nNamespace = 'Webiny.Backend.Acl.ServicePermissions';
 
 export default Webiny.createComponent(ServicePermissions, {
     modules: [

@@ -65,10 +65,9 @@ class AddServiceModal extends Webiny.Ui.ModalComponent {
 
 AddServiceModal.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps, {
     onSubmit: _.noop,
-    exclude: []
+    exclude: [],
+    i18nNamespace : 'Webiny.Backend.Acl.AddServiceModal'
 });
-
-AddServiceModal.i18nNamespace = 'Webiny.Backend.Acl.AddServiceModal';
 
 export default Webiny.createComponent(AddServiceModal, {
     modules: ['Modal', 'Form', 'Grid', 'Select', 'Button']

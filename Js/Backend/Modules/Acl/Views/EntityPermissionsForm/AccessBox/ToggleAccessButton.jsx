@@ -27,6 +27,7 @@ ToggleAccessButton.defaultProps = {
     method: null,
     value: false,
     onClick: _.noop,
+    i18nNamespace : 'Webiny.Backend.Acl.ToggleAccessButton',
     renderer() {
         const {Button, method, onClick, value} = this.props;
         return (
@@ -50,8 +51,6 @@ ToggleAccessButton.defaultProps = {
         );
     }
 };
-
-ToggleAccessButton.i18nNamespace = 'Webiny.Backend.Acl.ToggleAccessButton';
 
 export default Webiny.createComponent(ToggleAccessButton, {
     modules: ['Button']

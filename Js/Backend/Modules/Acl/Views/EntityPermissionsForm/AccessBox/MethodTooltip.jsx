@@ -8,6 +8,7 @@ class MethodTooltip extends Webiny.Ui.Component {
 
 MethodTooltip.defaultProps = {
     method: null,
+    i18nNamespace : 'Webiny.Backend.Acl.MethodTooltip',
     renderer() {
         const {Link, method, currentlyEditingPermission} = this.props;
         return (
@@ -85,8 +86,6 @@ MethodTooltip.defaultProps = {
         );
     }
 };
-
-MethodTooltip.i18nNamespace = 'Webiny.Backend.Acl.MethodTooltip';
 
 export default Webiny.createComponent(MethodTooltip, {
     modules: ['Link']

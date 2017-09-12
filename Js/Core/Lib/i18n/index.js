@@ -3,55 +3,73 @@ import Webiny from 'webiny';
 import React from 'react';
 import accounting from 'accounting';
 import I18N from './I18N';
-import dateFnsFormat from 'date-fns/format';
-
-/**
- * This is responsible for replacing given text with given values
- * It will automatically detect if it needs to return a string or JSX based on given variables
- * (if all variables are strings, then final output will also be returned as string)
- * @param text
- * @param values
- * @returns {*}
- */
-function replaceVariables(text, values) {
-    if (_.isEmpty(values)) {
-        return text;
-    }
-
-    // Let's first check if we need to return pure string or JSX
-    let stringOutput = true;
-    _.each(values, (value) => {
-        if (!_.isString(value) && !_.isNumber(value)) {
-            stringOutput = false;
-            return false;
-        }
-    });
-
-    const parts = text.split(/(\{.*?\})/);
-
-    if (stringOutput) {
-        let output = '';
-        parts.forEach(part => {
-            output += part.startsWith('{') ? values[_.trim(part, '{}')] : part;
-        });
-        return output;
-    }
-
-    // Let's create a JSX output
-    return parts.map((part, index) => {
-        if (part.startsWith('{')) {
-            return <webiny-i18n-part key={index}>{values[_.trim(part, '{}')]}</webiny-i18n-part>;
-        }
-        return <webiny-i18n-part key={index}>{part}</webiny-i18n-part>;
-    });
-}
 
 class i18n {
     constructor() {
-        this.language = '';
+        this.locale = '';
         this.api = null;
         this.cacheKey = null;
-        this.parsers = [];
+
+        /**
+         * All registered modifiers. We already have built-in modifiers 'count', 'case' and 'if'.
+         * @type {Array}
+         */
+        this.modifiers = {
+            if: (value, parameters) => {
+                // This is intentionally "==", because received parameters are all strings.
+                return value == parameters[0] ? parameters[1] : parameters[2] || '';
+            },
+            gender: (value, parameters) => {
+                return value === 'male' ? parameters[0] : parameters[1];
+            },
+            plural: (value, parameters) => {
+                // Numbers can be single number or ranges.
+                for (let i = 0; i < parameters.length; i = i + 2) {
+                    const current = parameters[i];
+                    if (current === 'default') {
+                        return value + ' ' + parameters[i + 1];
+                    }
+
+                    const numbers = current.split('-');
+
+                    // If we are dealing with a numbers range, then let's check if we are in it.
+                    if (numbers.length === 2) {
+                        if (value >= numbers[0] && value <= numbers[1]) {
+                            return value + ' ' + parameters[i + 1];
+                        }
+                        continue;
+                    }
+
+                    // This is intentionally "==", because received parameters are all strings.
+                    if (value == numbers[0]) {
+                        return value + ' ' + parameters[i + 1];
+                    }
+                }
+
+                // If we didn't match any condition, let's just remove the received value.
+                return value;
+            },
+
+
+            // TODO: finish these one Locale settings are done.
+            date: value => {
+                return 'DATE: ' + value;
+            },
+            time: value => {
+                return 'TIME: ' + value;
+            },
+            datetime: value => {
+                return 'DATETIME: ' + value;
+            }
+        };
+
+        // Initial parser for parsing modifiers is already built-in.
+        this.parsers = [
+            (output, key, placeholder) => {
+                return output;
+            }
+        ];
+
         this.translations = {};
         this.component = I18N;
 
@@ -68,9 +86,71 @@ class i18n {
         return translate;
     }
 
+    /**
+     * Internal methods below.
+     * @param text
+     */
+    getTextParts(text) {
+        return text.split(/(\{.*?\})/);
+    }
+
+    processTextPart(text, values) {
+        // If not a variable, but an ordinary text, just return it, we don't need to do any extra processing with it.
+        if (!_.startsWith(text, '{')) {
+            return text;
+        }
+
+        text = _.trim(text, '{}');
+
+        const modifiers = text.split('|');
+        const variable = modifiers.shift();
+        text = values[variable];
+
+        modifiers.forEach(modifier => {
+            const parameters = modifier.split(':');
+            modifier = parameters.shift();
+            if (this.modifiers[modifier]) {
+                text = this.modifiers[modifier](text, parameters);
+            }
+        });
+        return text;
+    }
+
+    /**
+     * This is responsible for replacing given text with given values
+     * It will automatically detect if it needs to return a string or JSX based on given variables
+     * (if all variables are strings, then final output will also be returned as string)
+     * @param text
+     * @param values
+     * @returns {*}
+     */
+    replaceVariables(text, values) {
+        if (_.isEmpty(values)) {
+            return text;
+        }
+
+        // Let's first check if we need to return pure string or JSX
+        let stringOutput = true;
+        _.each(values, value => {
+            if (!_.isString(value) && !_.isNumber(value)) {
+                stringOutput = false;
+                return false;
+            }
+        });
+
+        const parts = this.getTextParts(text);
+
+        if (stringOutput) {
+            return parts.reduce((carry, part) => carry + this.processTextPart(part, values), '');
+        }
+
+        // Let's create a JSX output
+        return parts.map((part, index) => <webiny-i18n-part key={index}>{this.processTextPart(part, values)}</webiny-i18n-part>);
+    }
+
     translate(key, text, variables) {
         let output = this.getTranslation(key) || text;
-        output = replaceVariables(output, variables);
+        output = this.replaceVariables(output, variables);
         this.parsers.forEach(parser => {
             output = parser(output, key, text, variables);
         });
@@ -104,15 +184,15 @@ class i18n {
     }
 
     date(value, format = 'DD/MMM/YY') {
-        return dateFnsFormat(value, format);
+        return moment(value).format(format);
     }
 
     time(value, format = 'HH:mm') {
-        return dateFnsFormat(value, format);
+        return moment(value).format(format);
     }
 
     datetime(value, format = 'DD/MMM/YY HH:mm') {
-        return dateFnsFormat(value, format);
+        return moment(value).format(format);
     }
 
     getTranslation(key) {
@@ -124,29 +204,55 @@ class i18n {
         return this;
     }
 
+    /**
+     * Returns all fetched translations.
+     * @returns {*|{}}
+     */
     getTranslations() {
         return this.translations;
     }
 
+    /**
+     * Returns true if given key has a translation for currently selected locale.
+     * @param key
+     */
     hasTranslation(key) {
         return _.get(this.translations, key);
     }
 
+    /**
+     * Sets the API endpoint for fetching translations.
+     * @param api
+     * @returns {i18n}
+     */
     setApiEndpoint(api) {
         this.api = api;
         return this;
     }
 
-    getLanguage() {
-        return this.language;
+    /**
+     * Returns currently set locale.
+     * @returns {string|string|*}
+     */
+    getLocale() {
+        return this.locale;
     }
 
-    addParser(callback) {
+    /**
+     * Registers a new parser, which will be called on each translation.
+     * @param callback
+     * @returns {i18n}
+     */
+    registerParser(callback) {
         this.parsers.push(callback);
         return this;
     }
 
-    removeParsers() {
+    /**
+     * Un-registers all parsers.
+     * @returns {i18n}
+     */
+    unregisterParsers() {
         this.parsers = [];
         return this;
     }
@@ -156,30 +262,24 @@ class i18n {
         return this;
     }
 
-
-    async initialize(language) {
-        this.language = language;
-        // TODO: Set moment / accounting language settings here
-
-        const cache = await Webiny.IndexedDB.get('Webiny.i18n');
+    initialize(locale = 'en_GB') {
+        this.locale = locale;
+        // TODO: Set moment / accounting locale settings here
 
         // If we have the same cache key, that means we have latest translations - we can safely read from local storage.
-        if (this.cacheKey === _.get(cache, 'cacheKey')) {
-            this.translations = cache.translations;
-            return;
+        if (this.cacheKey === parseInt(Webiny.LocalStorage.get('Webiny.i18n.cacheKey'))) {
+            this.translations = JSON.parse(Webiny.LocalStorage.get('Webiny.i18n.translations'));
+            return Promise.resolve();
         }
 
         // If we have a different cache key (or no cache key at all), we must fetch translations from server
-        const response = await this.api.setQuery({language: this.language}).execute();
-
-        await Webiny.IndexedDB.set('Webiny.i18n', {
-            language: this.language,
-            cacheKey: response.getData('cacheKey', null),
-            translations: response.getData('translations')
+        return this.api.setQuery({key: this.locale}).execute().then(apiResponse => {
+            Webiny.LocalStorage.set('Webiny.i18n.locale', this.locale);
+            Webiny.LocalStorage.set('Webiny.i18n.cacheKey', apiResponse.getData('cacheKey', null));
+            Webiny.LocalStorage.set('Webiny.i18n.translations', JSON.stringify(apiResponse.getData('translations')));
+            this.translations = _.assign(this.translations, apiResponse.getData('translations'));
+            return apiResponse;
         });
-
-        this.translations = _.assign(this.translations, response.getData('translations'));
-        return response;
     }
 
     toText(element) {
@@ -196,4 +296,5 @@ class i18n {
     }
 }
 
-export default new i18n;
+
+export default new i18n();

@@ -89,10 +89,9 @@ class ScanTexts extends Webiny.Ui.ModalComponent {
 }
 
 ScanTexts.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps, {
-    onTextsScanned: _.noop
+    onTextsScanned: _.noop,
+    i18nNamespace : 'Webiny.Backend.I18N.ScanTexts'
 });
-
-ScanTexts.i18nNamespace = 'Webiny.Backend.I18N.ScanTexts';
 
 export default Webiny.createComponent(ScanTexts, {
     modulesProp: 'Ui',

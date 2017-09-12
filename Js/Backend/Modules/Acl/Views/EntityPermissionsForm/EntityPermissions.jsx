@@ -34,6 +34,7 @@ EntityPermissions.defaultProps = {
     onTogglePermission: _.noop,
     onAddEntity: _.noop,
     onRemoveEntity: _.noop,
+    i18nNamespace : 'Webiny.Backend.Acl.EntityPermissions',
     renderer() {
         const {Loader, Button, ViewSwitcher, Grid, Icon, permissions} = this.props;
 
@@ -103,8 +104,6 @@ EntityPermissions.defaultProps = {
         );
     }
 };
-
-EntityPermissions.i18nNamespace = 'Webiny.Backend.Acl.EntityPermissions';
 
 export default Webiny.createComponent(EntityPermissions, {
     modules: [
