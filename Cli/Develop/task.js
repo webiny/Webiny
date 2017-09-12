@@ -10,6 +10,7 @@ const hotMiddleware = require('webpack-hot-middleware');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const Webiny = require('webiny-cli/lib/webiny');
 const Build = require('./../Build/task');
+const HttpServer = require('./HttpServer');
 
 // Override logger callbacks - we do not need the default output
 const Logger = require('browser-sync/lib/logger');
@@ -70,7 +71,6 @@ class Develop extends Build {
         return Webiny.processHook('before-webpack', {configs: appConfigs}).then(() => {
             return this.buildAndWatch(appConfigs, statsConfig);
         });
-
     }
 
     buildAndWatch(configs, statsConfig) {
@@ -153,40 +153,7 @@ class Develop extends Build {
 
     initHttpServer() {
         if (!httpServer) {
-            const http = require('http');
-            const httpUrl = require('url');
-            httpServer = http.createServer((req, res) => {
-                res.writeHead(200, {
-                    'Connection': 'Transfer-Encoding',
-                    'Transfer-Encoding': 'chunked'
-                });
-
-                const url = httpUrl.parse(req.url, true);
-                if (!url.query.action) {
-                    res.end();
-                    return;
-                }
-
-                if (url.query.action === 'rebuild') {
-                    Webiny.info('Restarting development build...');
-                    browserSync.exit();
-                    Webiny.loadApps();
-                    const apps = (Webiny.getConfig().lastRun.apps || []).concat(url.query.app);
-                    return Webiny.runTask('develop', {
-                        apps: Webiny.getApps().filter(app => apps.includes(app.getName())),
-                        progressCallback: progress => {
-                            !res.finished && res.write('' + (Math.round(progress * 100) * 100 / 100));
-                        },
-                        webpackCallback: () => {
-                            // At the moment, we are not sending anything back. Just end the request to signal success.
-                            !res.finished && res.end();
-                        }
-                    });
-                }
-                res.end();
-            });
-            httpServer.on('error', err => Webiny.failure(err));
-            httpServer.listen(this.port + 1);
+            httpServer = new HttpServer(browserSync, this.port).run();
         }
     }
 }

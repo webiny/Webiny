@@ -35,7 +35,6 @@ DownloadLink.defaultProps = {
     download: null,
     method: 'GET',
     params: null,
-    disabled: false,
     renderer() {
         const {Downloader, Link, ...props} = this.props;
         const downloader = <Downloader ref={downloader => this.downloader = downloader}/>;

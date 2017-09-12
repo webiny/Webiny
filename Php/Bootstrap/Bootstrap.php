@@ -14,6 +14,7 @@ use Apps\Webiny\Php\Lib\Response\HtmlResponse;
 use Apps\Webiny\Php\Lib\Response\AbstractResponse;
 use Apps\Webiny\Php\Lib\Response\ResponseEvent;
 use Apps\Webiny\Php\Lib\Apps\App;
+use Webiny\Component\Config\ConfigException;
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\Entity\Entity;
 use Webiny\Component\Http\Http;
@@ -165,7 +166,11 @@ class Bootstrap
                     $this->jsConfigs[] = $key->val();
                     continue;
                 }
-                $this->wConfig()->appendConfig($key->val());
+                try {
+                    $this->wConfig()->appendConfig($key->val());
+                } catch (ConfigException $e) {
+                    continue;
+                }
             }
 
             // append config sets
@@ -207,7 +212,8 @@ class Bootstrap
     }
 
     /**
-     * @param AbstractResponse $webinyResponse
+     * @param AbstractResponse $webinyResponse Response object to process
+     * @param bool             $return Return response data
      *
      * @return mixed
      */

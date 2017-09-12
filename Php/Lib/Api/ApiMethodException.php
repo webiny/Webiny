@@ -5,14 +5,14 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Webiny\Php\Dispatchers;
+namespace Apps\Webiny\Php\Lib\Api;
 
 use Apps\Webiny\Php\RequestHandlers\ApiException;
 
 /**
  * Class ApiMethodApiMethodExceptionw
  *
- * @package Apps\Webiny\Php\Dispatchers
+ * @package Apps\Webiny\Php\Lib\Api
  */
 class ApiMethodException extends ApiException
 {

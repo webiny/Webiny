@@ -1,15 +1,17 @@
 import React from 'react';
 import Webiny from 'webiny';
 
-class UserRolesForm extends Webiny.Ui.View {
+class Form extends Webiny.Ui.View {
 
 }
 
-UserRolesForm.defaultProps = {
+Form.i18nKey = '...';
+
+Form.defaultProps = {
     renderer() {
         const formProps = {
             api: '/entities/webiny/user-roles',
-            fields: '*,permissions',
+            fields: '*,permissions,isAdminRole',
             connectToRouter: true,
             onSubmitSuccess: 'UserRoles.List',
             onCancel: 'UserRoles.List',
@@ -45,6 +47,9 @@ UserRolesForm.defaultProps = {
                                                 <Ui.Grid.Col all={12}>
                                                     <Ui.Input label="Description" name="description" validate="required"/>
                                                 </Ui.Grid.Col>
+                                                <Ui.Grid.Col all={12}>
+                                                    <Ui.Switch label="Is admin role?" name="isAdminRole" description="If enabled, this role will be assigned to the admin user who is installing the corresponding app"/>
+                                                </Ui.Grid.Col>
                                             </Ui.Grid.Row>
                                             <Ui.UserPermissions name="permissions"/>
                                         </Ui.Tabs.Tab>
@@ -63,4 +68,4 @@ UserRolesForm.defaultProps = {
     }
 };
 
-export default UserRolesForm;
+export default Form;

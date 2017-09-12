@@ -2,7 +2,9 @@
 
 namespace Apps\Webiny\Php\Entities;
 
+use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Authorization\TwoFactorAuth;
+use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
 use Apps\Webiny\Php\Lib\Interfaces\UserInterface;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Lib\Entity\Attributes\FileAttribute;
@@ -43,8 +45,6 @@ class User extends AbstractEntity implements UserInterface
     public function __construct()
     {
         parent::__construct();
-
-        $this->index(new CompoundIndex('email', ['email', 'deletedOn'], false, true));
 
         $this->attr('email')->char()->setValidators('required,email,unique')->onSet(function ($email) {
             return trim(strtolower($email));
@@ -99,11 +99,24 @@ class User extends AbstractEntity implements UserInterface
 
         $this->attr('twoFactorAuth')->object()->setDefaultValue($defaultValue)->onSet(function ($value) {
             return [
-                'status'        => isset($value['status']) ? $value['status'] : $this->twoFactorAuth['status'],
-                'secret'        => isset($value['secret']) ? $value['secret'] : $this->twoFactorAuth['secret'],
-                'recoveryCodes' => isset($value['recoveryCodes']) ? $value['recoveryCodes'] : $this->twoFactorAuth['recoveryCodes']
+                'status'        => $value['status'] ?? $this->twoFactorAuth['status'],
+                'secret'        => $value['secret'] ?? $this->twoFactorAuth['secret'],
+                'recoveryCodes' => $value['recoveryCodes'] ?? $this->twoFactorAuth['recoveryCodes']
             ];
         });
+    }
+
+    protected static function entityIndexes(IndexContainer $indexes)
+    {
+        parent::entityIndexes($indexes);
+
+        $indexes->add(new CompoundIndex('email', ['email', 'deletedOn'], false, true));
+    }
+
+
+    protected function entityApi(ApiContainer $api)
+    {
+        parent::entityApi($api);
 
         /**
          * @api.name        User login
@@ -112,7 +125,7 @@ class User extends AbstractEntity implements UserInterface
          * @api.body.password   string  Password
          * @api.body.rememberme boolean Remember Me
          */
-        $this->api('POST', 'login', function () {
+        $api->post('login', function () {
             $data = $this->wRequest()->getRequestData();
 
             // check if login request
@@ -172,14 +185,14 @@ class User extends AbstractEntity implements UserInterface
                 throw new AppException('Unable to process login request. Data is not correctly formatted.');
             }
 
-        });//->setBodyValidators(['username' => 'required,email', 'password' => 'required']);
+        });
 
         /**
          * @api.name        My profile
          * @api.description Returns currently logged in user's data.
          * @api.headers.X-Webiny-Authorization  string  Authorization token
          */
-        $this->api('GET', 'me', function () {
+        $api->get('me', function () {
             $user = $this->wAuth()->getUser();
             if (!$user) {
                 throw new ApiException('Invalid token', 'WBY-INVALID-TOKEN');
@@ -193,7 +206,7 @@ class User extends AbstractEntity implements UserInterface
          * @api.description Updates currently logged in user's profile.
          * @api.headers.X-Webiny-Authorization  string  Authorization token
          */
-        $this->api('PATCH', 'me', function () {
+        $api->patch('me', function () {
             $data = $this->wRequest()->getRequestData();
             $user = $this->wAuth()->getUser();
 
@@ -211,7 +224,7 @@ class User extends AbstractEntity implements UserInterface
          * @api.description Starts password reset process - sends a password reset code to the received e-mail address.
          * @api.body.email  string  User's email address
          */
-        $this->api('POST', 'reset-password', function () {
+        $api->post('reset-password', function () {
             $data = $this->wRequest()->getRequestData();
             $user = self::findOne(['email' => $data['email']]);
             if (!$user) {
@@ -242,7 +255,7 @@ class User extends AbstractEntity implements UserInterface
          * @api.body.code       string  Password reset code (received via email)
          * @api.body.password   string  New password to set
          */
-        $this->api('POST', '/set-password', function () {
+        $api->post('/set-password', function () {
             $data = $this->wRequest()->getRequestData();
 
             $user = self::findOne(['passwordRecoveryCode' => $data['code']]);
@@ -261,7 +274,7 @@ class User extends AbstractEntity implements UserInterface
          * @api.name        Get the user 2 factor auth QR code
          * @api.description Returns the data/base64  qr code for the authenticator application.
          */
-        $this->api('GET', '/2factor-qr', function () {
+        $api->get('/2factor-qr', function () {
             $user = $this->wAuth()->getUser();
             $tfa = new TwoFactorAuth($user);
 
@@ -275,7 +288,7 @@ class User extends AbstractEntity implements UserInterface
          * @api.description Processes the given verification code with the authenticator app and returns the result if the code is valid.
          * @api.body.verification       string  Password reset code (received via email)
          */
-        $this->api('POST', '/2factor-verify', function () {
+        $api->post('/2factor-verify', function () {
             $data = $this->wRequest()->getRequestData();
             $user = $this->wAuth()->getUser();
             $tfa = new TwoFactorAuth($user);
@@ -295,7 +308,7 @@ class User extends AbstractEntity implements UserInterface
          * @api.name        Get the user 2 factor auth QR code
          * @api.description Returns the data/base64  qr code for the authenticator application.
          */
-        $this->api('GET', '/2factor-recovery-codes', function () {
+        $api->get('/2factor-recovery-codes', function () {
             $user = $this->wAuth()->getUser();
             $tfa = new TwoFactorAuth($user);
 
@@ -304,6 +317,7 @@ class User extends AbstractEntity implements UserInterface
             ];
         });
     }
+
 
     public function save()
     {

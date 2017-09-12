@@ -52,24 +52,19 @@ class ForgotPasswordModal extends Webiny.Ui.ModalComponent {
                                                 validate="required, email"
                                                 onEnter={form.submit}/>
                                         </Grid.Col>
-                                        <Grid.Col all={12} className={styles.modalAction}>
-                                            <Button
-                                                type="primary"
-                                                onClick={form.submit}
-                                                size="large"
-                                                icon="icon-next"
-                                                label="Send me a reset link"/>
-                                        </Grid.Col>
                                     </Grid.Row>
                                 )}
                             </Modal.Body>
-                            <Modal.Footer>
-                                <div className="text-center">
-                                    Not a member? <Link onClick={() => this.hide().then(this.props.showRegister)}><br/>
-                                    Sign up here
-                                </Link>
-                                </div>
-                            </Modal.Footer>
+                            {!this.state.success && (
+                                <Modal.Footer>
+                                    <Button
+                                        type="primary"
+                                        onClick={form.submit}
+                                        size="large"
+                                        icon="icon-next"
+                                        label="Send me a reset link"/>
+                                </Modal.Footer>
+                            )}
                         </Modal.Content>
                     )}
                 </Form>

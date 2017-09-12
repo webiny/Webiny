@@ -19,7 +19,7 @@ class ConfigLoader
 {
     use SingletonTrait, WebinyTrait;
 
-    public function yaml($path, $flushCache = false)
+    public function yaml($path)
     {
         $config = file_get_contents($path);
         preg_match_all('/(__[\w+\.]+__)/', $config, $matches);
@@ -35,15 +35,15 @@ class ConfigLoader
                     $config = str_replace('__DIR__', dirname($path), $config);
                 }
             }
-            return ConfigComponent::getInstance()->yaml($config, $flushCache);
+            return ConfigComponent::getInstance()->yaml($config);
         }
 
-        return ConfigComponent::getInstance()->yaml($path, $flushCache);
+        return ConfigComponent::getInstance()->yaml($path);
     }
 
-    public function php($array, $flushCache = false)
+    public function php($array)
     {
-        return ConfigComponent::getInstance()->php($array, $flushCache);
+        return ConfigComponent::getInstance()->php($array);
     }
 
 }

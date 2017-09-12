@@ -2,11 +2,13 @@
 
 namespace Apps\Webiny\Php\Entities;
 
+use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Apps\Parser\EntityParser;
 use Apps\Webiny\Php\Lib\Apps\Parser\ServiceParser;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Apps\Webiny\Php\Lib\Apps\App;
-use Webiny\Component\Mongo\Index\SingleIndex;
+use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
+use Webiny\Component\Mongo\Index\CompoundIndex;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
 /**
@@ -29,7 +31,6 @@ class UserPermission extends AbstractEntity
     {
         parent::__construct();
 
-        $this->index(new SingleIndex('slug', 'slug', false, true));
         $this->attr('name')->char()->setValidators('required')->setToArrayDefault()->onSet(function ($name) {
             if (!$this->slug && !$this->exists()) {
                 $this->slug = $this->str($name)->slug()->val();
@@ -49,7 +50,11 @@ class UserPermission extends AbstractEntity
         $this->attr('description')->char()->setToArrayDefault();
         $this->attr('roles')->many2many('UserRole2UserPermission')->setEntity('\Apps\Webiny\Php\Entities\UserRole');
         $this->attr('permissions')->object();
+    }
 
+    protected function entityApi(ApiContainer $api)
+    {
+        parent::entityApi($api);
 
         /**
          * @api.name                    List entity API methods
@@ -58,7 +63,7 @@ class UserPermission extends AbstractEntity
          * @api.query.entities  array   Array of entities that must be included in the response
          * @api.query.entity    string  Single entity for which the information is needed
          */
-        $this->api('GET', '/entity', function () {
+        $api->get('/entity', function () {
             // Entities listed here will not be returned in the final response.
             $excludeEntities = $this->wRequest()->query('exclude', []);
 
@@ -117,7 +122,7 @@ class UserPermission extends AbstractEntity
          * @api.query.services  array   Array of services that must be included in the response
          * @api.query.service    string Single service for which the information is needed
          */
-        $this->api('get', '/service', function () {
+        $api->get('/service', function () {
 
             // Services listed here will not be returned in the final response.
             $excludeServices = $this->wRequest()->query('exclude', []);
@@ -169,6 +174,15 @@ class UserPermission extends AbstractEntity
             return $services;
         });
     }
+
+
+    protected static function entityIndexes(IndexContainer $indexes)
+    {
+        parent::entityIndexes($indexes);
+
+        $indexes->add(new CompoundIndex('unique', ['slug', 'deletedOn'], false, true));
+    }
+
 
     public function checkPermission($item, $permission)
     {

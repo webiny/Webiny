@@ -1,3 +1,4 @@
+const username = require('username');
 const Plugin = require('webiny-cli/lib/plugin');
 const Webiny = require('webiny-cli/lib/webiny');
 
@@ -77,7 +78,6 @@ class Setup extends Plugin {
             answers.domain = _.trimEnd(answers.domain, '/');
 
             const configs = {
-                keys: Webiny.projectRoot('Keys'),
                 configSets: Webiny.projectRoot('Configs/ConfigSets.yaml'),
                 base: {
                     application: Webiny.projectRoot('Configs/Base/Application.yaml'),
@@ -123,18 +123,14 @@ class Setup extends Plugin {
                 return;
             }
 
-            // Generate SSH keys to allow proper SSH from development machine onto itself
-            Webiny.shellExecute(`ssh-keygen -f ${configs.keys}/id_rsa -t rsa -N ''`);
-            Webiny.shellExecute(`cat ${configs.keys}/id_rsa.pub >> ~/.ssh/authorized_keys`);
-
             // Run Webiny installation procedure
             Webiny.info('Running Webiny app installation...');
-            Webiny.shellExecute('php Apps/Webiny/Php/Cli/install.php Webiny');
+            Webiny.shellExecute('php Apps/Webiny/Php/Cli/install.php Local Webiny');
 
             // Create admin user
-            const params = [answers.domain, answers.user, answers.password].join(' ');
+            const params = [answers.user, answers.password].join(' ');
             try {
-                let output = Webiny.shellExecute('php Apps/Webiny/Php/Cli/admin.php ' + params, {stdio: 'pipe'});
+                let output = Webiny.shellExecute('php Apps/Webiny/Php/Cli/admin.php Local ' + params, {stdio: 'pipe'});
                 output = JSON.parse(output);
                 if (output.status === 'created') {
                     Webiny.success('Admin user created successfully!');

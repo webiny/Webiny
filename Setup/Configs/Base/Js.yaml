@@ -1,6 +1,7 @@
 Js:
+    Backend: __Application.Backend__
     LogErrors: true
     CheckUserRoles: __Application.Acl.CheckUserPermissions__
     Api:
         AggregateRequests: false
-        MaxRequests: 5
+        MaxRequests: 30

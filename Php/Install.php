@@ -11,14 +11,6 @@ class Install extends \Apps\Webiny\Php\Lib\LifeCycle\Install
     {
         parent::run($app);
 
-        // Insert permissions
-        $permissions = json_decode(file_get_contents(__DIR__ . '/Install/UserPermissions.json'), true);
-        $this->createUserPermissions($permissions);
-
-        // Insert roles
-        $roles = json_decode(file_get_contents(__DIR__ . '/Install/UserRoles.json'), true);
-        $this->createUserRoles($roles);
-
         // Create a capped collection for ApiLogs
         $entityCollection = ApiLog::getEntityCollection();
         try {
@@ -34,5 +26,13 @@ class Install extends \Apps\Webiny\Php\Lib\LifeCycle\Install
                 'max'             => 2000
             ]);
         }
+    }
+
+    public function getUserPermissions() {
+        return json_decode(file_get_contents(__DIR__ . '/Install/UserPermissions.json'), true);
+    }
+
+    public function getUserRoles() {
+        return json_decode(file_get_contents(__DIR__ . '/Install/UserRoles.json'), true);
     }
 }

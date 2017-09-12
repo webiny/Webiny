@@ -15,7 +15,7 @@ class ExportRoleModal extends Webiny.Ui.ModalComponent {
 
     componentWillMount() {
         super.componentWillMount();
-        const _fields = 'name,slug,description,permissions[slug]';
+        const _fields = 'name,slug,isAdminRole,description,permissions[slug]';
         const api = new Webiny.Api.Endpoint('/entities/webiny/user-roles');
         return api.get(this.props.role.id, {_fields}).then(response => {
             const role = response.getData('entity');

@@ -1,7 +1,6 @@
 import React from 'react';
 import Webiny from 'webiny';
 import styles from './styles.css';
-import LoginModal from './../Components/LoginModal'
 import RegisterModal from './../Components/RegisterModal'
 import ForgotPasswordModal from './../Components/ForgotPasswordModal'
 
@@ -27,7 +26,7 @@ class LoginRegister extends Webiny.Ui.View {
 
 LoginRegister.defaultProps = {
     renderer() {
-        const {styles, Button, Icon} = this.props;
+        const {styles, Button, Icon, Form, Input, Grid, Password, Link} = this.props;
 
         const childProps = {
             showLogin: this.showLogin,
@@ -36,19 +35,68 @@ LoginRegister.defaultProps = {
             onUser: this.props.onUser
         };
 
+        const formProps = {
+            api: '/services/webiny/marketplace',
+            url: 'login',
+            onSubmit: this.submit,
+            onSubmitSuccess: this.onSuccess,
+            onSuccessMessage: null
+        };
+
         return (
             <div className={styles.loginRegister}>
                 <div className={styles.message}>
                     <h2><Icon icon="icon-basket_n"/> Webiny Marketplace</h2>
                     <h3>Find and Install Apps for Webiny</h3>
-                    <p>Access to the markeplace requires a Webiny.com profile. <br/>If you already have a profile, use the sign-in option,
+                    <p>Access to the markeplace requires a Webiny.com profile. <br/>If you already have a profile, please sign-in,
                         otherwise please register.</p>
+
+                    <div className={styles.loginForm}>
+                        <Form {...formProps}>
+                            {(model, form) => (
+
+                                <Grid.Row>
+                                    <Grid.Col all={12}>
+                                        <Form.Error/>
+                                        <Input
+                                            placeholder="Email"
+                                            label="Email"
+                                            name="username"
+                                            validate="required, email"
+                                            onEnter={form.submit}/>
+                                    </Grid.Col>
+                                    <Grid.Col all={12}>
+                                        <Password
+                                            label="Password"
+                                            placeholder="Password"
+                                            name="password"
+                                            validate="required"
+                                            onEnter={form.submit}
+                                            description={<Link className={this.classSet(styles.cantRemember, 'small')} onClick={this.showForgotPassword}>I CAN'T
+                                                REMEMBER</Link>}
+                                        />
+                                    </Grid.Col>
+                                    <Grid.Col all={12} className={styles.modalAction}>
+                                        <Button
+                                            type="primary"
+                                            onClick={form.submit}
+                                            size="large"
+                                            icon="icon-next"
+                                            label="Sign In"/>
+                                    </Grid.Col>
+                                </Grid.Row>
+                            )}
+                        </Form>
+                    </div>
+
                     <div className={styles.actions}>
-                        <Button type="primary" label="Sign In" icon="fa-lock" size="large" onClick={() => this.showLogin()}/>
-                        <Button type="secondary" label="Register" icon="fa-user" size="large" onClick={() => this.showRegister()}/>
+                        <div className="text-center">
+                            Not a member? <Link onClick={this.showRegister}><br/>
+                            Sign up here
+                        </Link>
+                        </div>
                     </div>
                 </div>
-                <LoginModal {...childProps} ref={ref => this.loginModal = ref}/>
                 <RegisterModal {...childProps} ref={ref => this.registerModal = ref}/>
                 <ForgotPasswordModal {...childProps} ref={ref => this.forgotPasswordModal = ref}/>
             </div>
@@ -56,4 +104,4 @@ LoginRegister.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(LoginRegister, {styles, modules: ['Button', 'Icon']});
+export default Webiny.createComponent(LoginRegister, {styles, modules: ['Button', 'Icon', 'Form', 'Input', 'Grid', 'Password', 'Link']});

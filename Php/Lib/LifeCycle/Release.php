@@ -51,20 +51,18 @@ class Release implements LifeCycleInterface
             }
 
             // Check if any indexes need to be created
-            if (count($indexes)) {
-                /* @var $index \Webiny\Component\Mongo\Index\AbstractIndex */
-                foreach ($indexes as $index) {
-                    $installed = in_array($index->getName(), $installedIndexes);
-                    if (!$installed) {
-                        echo "Creating '" . $index->getName() . "' index in '" . $collection . "' collection...\n";
-                        try {
-                            $this->wDatabase()->createIndex($collection, $index);
-                        } catch (RuntimeException $e) {
-                            if ($e->getCode() === 85) {
-                                echo "WARNING: another index with same fields already exists. Skipping creation of '" . $index->getName() . "' index.\n";
-                            } else {
-                                echo $e->getMessage() . "\n";
-                            }
+            /* @var $index \Webiny\Component\Mongo\Index\AbstractIndex */
+            foreach ($indexes as $index) {
+                $installed = in_array($index->getName(), $installedIndexes);
+                if (!$installed) {
+                    echo "Creating '" . $index->getName() . "' index in '" . $collection . "' collection...\n";
+                    try {
+                        $this->wDatabase()->createIndex($collection, $index);
+                    } catch (RuntimeException $e) {
+                        if ($e->getCode() === 85) {
+                            echo "WARNING: another index with same fields already exists. Skipping creation of '" . $index->getName() . "' index.\n";
+                        } else {
+                            echo $e->getMessage() . "\n";
                         }
                     }
                 }
@@ -72,7 +70,7 @@ class Release implements LifeCycleInterface
 
             // Check of any indexes need to be dropped
             foreach ($installedIndexes as $index) {
-                $removed = !array_key_exists($index, $indexes);
+                $removed = !$indexes->exists($index);
                 if ($removed && $index !== '_id_') {
                     echo "Dropping '" . $index . "' index from '" . $collection . "' collection...\n";
                     $this->wDatabase()->dropIndex($collection, $index);

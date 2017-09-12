@@ -2,7 +2,9 @@
 namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
+use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
 use Webiny\Component\Entity\EntityCollection;
+use Webiny\Component\Mongo\Index\CompoundIndex;
 
 /**
  * Class UserRole
@@ -42,6 +44,7 @@ class UserRole extends AbstractEntity
         })->setToArrayDefault();
 
         $this->attr('description')->char()->setValidators('required')->setToArrayDefault();
+        $this->attr('isAdminRole')->boolean()->setDefaultValue(false);
         $this->attr('users')->many2many('User2UserRole')->setEntity('\Apps\Webiny\Php\Entities\User');
         $this->attr('apiTokens')->many2many('ApiToken2UserRole')->setEntity('\Apps\Webiny\Php\Entities\ApiToken');
         $this->attr('permissions')
@@ -65,6 +68,13 @@ class UserRole extends AbstractEntity
 
                  return $permissions;
              });
+    }
+
+    protected static function entityIndexes(IndexContainer $indexes)
+    {
+        parent::entityIndexes($indexes);
+
+        $indexes->add(new CompoundIndex('unique', ['slug', 'deletedOn'], false, true));
     }
 
     /**

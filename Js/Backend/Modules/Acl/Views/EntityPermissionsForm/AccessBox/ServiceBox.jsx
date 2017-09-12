@@ -66,7 +66,7 @@ class ServiceBox extends Webiny.Ui.Component {
                         <div className={styles.methodTypeLabel}>
                             {method.method.toUpperCase()}
                         </div>
-                        <div>{method.path}</div>
+                        <div title={method.path} className={styles.methodPathLabel}>{method.path}</div>
                     </div>
                     <div className="clearfix"/>
                 </li>

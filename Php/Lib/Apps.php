@@ -8,6 +8,7 @@
 namespace Apps\Webiny\Php\Lib;
 
 use Apps\Webiny\Php\Lib\Apps\App;
+use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\StdLib\SingletonTrait;
 
 /**
@@ -34,7 +35,8 @@ class Apps implements \IteratorAggregate
         }
 
         // Get list of enabled apps
-        $apps = Config::getInstance()->get('Apps')->toArray();
+        $apps = Config::getInstance()->get('Apps');
+        $apps = $apps instanceof ConfigObject ? $apps->toArray() : [];
 
         // Add Webiny app which must always be included in the bootstrap process
         $apps['Webiny'] = true;
