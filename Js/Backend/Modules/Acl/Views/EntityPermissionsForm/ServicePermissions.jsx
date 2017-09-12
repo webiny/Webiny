@@ -14,7 +14,6 @@ class ServicePermissions extends Webiny.Ui.Component {
         };
 
         this.api = new Webiny.Api.Endpoint('/entities/webiny/user-permissions');
-        this.i18n.namespace = 'Webiny.Backend.Acl.ServicePermissions';
     }
 
     componentWillMount() {
@@ -104,6 +103,8 @@ ServicePermissions.defaultProps = {
         );
     }
 };
+
+ServicePermissions.i18nNamespace = 'Webiny.Backend.Acl.ServicePermissions';
 
 export default Webiny.createComponent(ServicePermissions, {
     modules: [

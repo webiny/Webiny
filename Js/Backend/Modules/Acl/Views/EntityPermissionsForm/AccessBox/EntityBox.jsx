@@ -10,7 +10,6 @@ class EntityBox extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
         this.state = {entityFilter: ''};
-        this.i18n.namespace = 'Webiny.Backend.Acl.EntityBox';
 
         this.crud = {
             create: '/.post',
@@ -160,6 +159,8 @@ EntityBox.defaultProps = {
         );
     }
 };
+
+EntityBox.i18nNamespace = 'Webiny.Backend.Acl.EntityBox';
 
 export default Webiny.createComponent(EntityBox, {
     modules: ['Input', 'ClickConfirm', 'Tooltip']

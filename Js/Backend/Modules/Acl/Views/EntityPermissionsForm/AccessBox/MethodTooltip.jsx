@@ -4,10 +4,6 @@ import Webiny from 'webiny';
 import styles from './styles.css';
 
 class MethodTooltip extends Webiny.Ui.Component {
-    constructor() {
-        super();
-        this.i18n.namespace = 'Webiny.Backend.Acl.MethodTooltip';
-    }
 }
 
 MethodTooltip.defaultProps = {
@@ -89,6 +85,8 @@ MethodTooltip.defaultProps = {
         );
     }
 };
+
+MethodTooltip.i18nNamespace = 'Webiny.Backend.Acl.MethodTooltip';
 
 export default Webiny.createComponent(MethodTooltip, {
     modules: ['Link']

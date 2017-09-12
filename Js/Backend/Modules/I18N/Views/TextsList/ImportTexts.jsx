@@ -2,11 +2,6 @@ import React from 'react';
 import Webiny from 'webiny';
 
 class ImportTexts extends Webiny.Ui.ModalComponent {
-    constructor() {
-        super();
-        this.i18n.namespace = 'Webiny.Backend.I18N.ImportTexts';
-    }
-
     renderDialog() {
         const {Ui} = this.props;
 
@@ -55,6 +50,8 @@ class ImportTexts extends Webiny.Ui.ModalComponent {
         );
     }
 }
+
+ImportTexts.i18nNamespace = 'Webiny.Backend.I18N.ImportTexts';
 
 export default Webiny.createComponent(ImportTexts, {
     modulesProp: 'Ui',

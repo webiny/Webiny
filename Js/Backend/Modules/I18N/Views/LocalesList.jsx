@@ -7,7 +7,6 @@ class LocalesList extends Webiny.Ui.View {
         super();
         this.addLocaleModal = null;
         this.localesList = null;
-        this.i18n.namespace = 'Webiny.Backend.I18N.LocalesList';
     }
 }
 
@@ -61,5 +60,7 @@ LocalesList.defaultProps = {
         );
     }
 };
+
+LocalesList.i18nNamespace = 'Webiny.Backend.I18N.LocalesList';
 
 export default LocalesList;

@@ -6,7 +6,6 @@ class AddEntityModal extends Webiny.Ui.ModalComponent {
     constructor() {
         super();
         this.api = new Webiny.Api.Endpoint('/services/webiny/entities');
-        this.i18n.namespace = 'Webiny.Backend.Acl.AddEntityModal';
     }
 
     renderDialog() {
@@ -69,6 +68,8 @@ AddEntityModal.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps
     onSubmit: _.noop,
     exclude: []
 });
+
+AddEntityModal.i18nNamespace = 'Webiny.Backend.Acl.AddEntityModal';
 
 export default Webiny.createComponent(AddEntityModal, {
     modules: ['Modal', 'Form', 'Grid', 'Select', 'Button']

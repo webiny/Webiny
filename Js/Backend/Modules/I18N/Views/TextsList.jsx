@@ -10,10 +10,6 @@ import accounting from 'accounting';
 import I18N from './../../I18N';
 
 class TextsList extends Webiny.Ui.View {
-    constructor() {
-        super();
-        this.i18n.namespace = 'Webiny.Backend.I18N.TextsList';
-    }
 }
 
 TextsList.defaultProps = {
@@ -99,6 +95,8 @@ TextsList.defaultProps = {
         );
     }
 };
+
+TextsList.i18nNamespace = 'Webiny.Backend.I18N.TextsList';
 
 class i18n {
     constructor() {

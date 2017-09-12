@@ -2,10 +2,6 @@ import React from 'react';
 import Webiny from 'webiny';
 
 class UsersList extends Webiny.Ui.View {
-    constructor() {
-        super();
-        this.i18n.namespace = 'Webiny.Backend.Acl.UsersList';
-    }
 }
 
 UsersList.defaultProps = {
@@ -78,6 +74,8 @@ UsersList.defaultProps = {
         );
     }
 };
+
+UsersList.i18nNamespace = 'Webiny.Backend.Acl.UsersList';
 
 export default Webiny.createComponent(UsersList, {
     modules: ['View', 'List', 'Link', 'Icon', 'Input']

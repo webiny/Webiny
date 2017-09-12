@@ -14,7 +14,6 @@ class EntityPermissions extends Webiny.Ui.Component {
         };
 
         this.api = new Webiny.Api.Endpoint('/entities/webiny/user-permissions');
-        this.i18n.namespace = 'Webiny.Backend.Acl.EntityPermissions';
     }
 
     componentWillMount() {
@@ -104,6 +103,8 @@ EntityPermissions.defaultProps = {
         );
     }
 };
+
+EntityPermissions.i18nNamespace = 'Webiny.Backend.Acl.EntityPermissions';
 
 export default Webiny.createComponent(EntityPermissions, {
     modules: [

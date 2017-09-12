@@ -3,11 +3,6 @@ import Webiny from 'webiny';
 import _ from 'lodash';
 
 class ScanTexts extends Webiny.Ui.ModalComponent {
-    constructor() {
-        super();
-        this.i18n.namespace = 'Webiny.Backend.I18N.ScanTexts';
-    }
-
     canSubmit(model) {
         if (_.isEmpty(model)) {
             return;
@@ -96,6 +91,8 @@ class ScanTexts extends Webiny.Ui.ModalComponent {
 ScanTexts.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps, {
     onTextsScanned: _.noop
 });
+
+ScanTexts.i18nNamespace = 'Webiny.Backend.I18N.ScanTexts';
 
 export default Webiny.createComponent(ScanTexts, {
     modulesProp: 'Ui',

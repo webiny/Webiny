@@ -10,7 +10,6 @@ class ServiceBox extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
         this.state = {serviceFilter: ''};
-        this.i18n.namespace = 'Webiny.Backend.Acl.EntityBox';
     }
 
     /**
@@ -116,6 +115,8 @@ ServiceBox.defaultProps = {
         );
     }
 };
+
+ServiceBox.i18nNamespace = 'Webiny.Backend.Acl.EntityBox';
 
 export default Webiny.createComponent(ServiceBox, {
     modules: ['Input', 'ClickConfirm', 'Tooltip']
