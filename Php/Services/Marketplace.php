@@ -70,6 +70,8 @@ class Marketplace extends AbstractService
             try {
                 $appInstaller = new AppInstaller();
                 $appInstaller->install($app->keyNested('data.entity'));
+                // After the app is installed, increment installations counter
+                $this->server('/services/marketplace-manager/marketplace/apps/' . $id . '/installed', 'POST');
             } catch (AppException $e) {
                 // Don't do anything, the message was already sent to browser.
             }

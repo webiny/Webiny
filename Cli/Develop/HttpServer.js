@@ -95,12 +95,7 @@ class HttpServer {
                 lastProgress = progress;
                 const percentage = (Math.round(progress * 100) * 100 / 100);
 
-                const data = {progress: percentage};
-                if (percentage === 100) {
-                    data.message = 'Finished!';
-                }
-
-                !res.finished && httpWrite(data);
+                !res.finished && httpWrite({progress: percentage});
             }, () => {
                 // At the moment, we are not sending anything back. Just end the request to signal success.
                 !res.finished && res.end();

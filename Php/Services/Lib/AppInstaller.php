@@ -42,6 +42,7 @@ class AppInstaller
         }
 
         $curl->post($bsPath . '/?action=install', $cliData);
+        $this->echo(['message' => 'Finalizing...']);
 
         // If we got this far it means everything is ok and now we need to assign admin roles
         $app = $this->wApps()->loadApp($appData['localName']);
