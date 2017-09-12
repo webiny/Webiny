@@ -56,7 +56,7 @@ class Bootstrap
 
         // Append Js configs (these need to be loaded at the very end to inject proper values)
         foreach ($this->jsConfigs as $jsConfig) {
-            $this->wConfig()->appendConfig($jsConfig);
+            $this->wConfig()->append($jsConfig);
         }
 
         // set error handler
@@ -167,14 +167,14 @@ class Bootstrap
                     continue;
                 }
                 try {
-                    $this->wConfig()->appendConfig($key->val());
+                    $this->wConfig()->append($key->val());
                 } catch (ConfigException $e) {
                     continue;
                 }
             }
 
             // append config sets
-            $this->wConfig()->appendConfig('Configs/ConfigSets.yaml');
+            $this->wConfig()->append('Configs/ConfigSets.yaml');
         } catch (\Exception $e) {
             throw new \Exception('Unable to build config set ' . $configSet . '. ' . $e->getMessage());
         }

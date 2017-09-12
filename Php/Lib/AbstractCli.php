@@ -22,7 +22,7 @@ abstract class AbstractCli
     {
         if (!$domain || $domain === 'Local') {
             try {
-                $config = $this->wConfig()->parseConfig('Configs/Local/Application.yaml');
+                $config = $this->wConfig()->yaml('Configs/Local/Application.yaml');
                 $domain = $config->get('Application.WebPath');
             } catch (ConfigException $e) {
                 // In case no Local config set is present we abort execution

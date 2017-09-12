@@ -44,21 +44,29 @@ class Config
      *
      * @param string $resource Path to the config file, should be relative to app root.
      */
-    public function appendConfig($resource)
+    public function append($resource)
     {
-        self::$config->mergeWith($this->parseConfig($resource));
+        self::$config->mergeWith($this->yaml($resource));
     }
 
     /**
      * Parses and returns the config without appending it to the global configuration.
      *
-     * @param string $resource Path to the config file, should be relative to app root.
+     * @param string $resource Path to the config file, can be relative to app root or absolute path.
+     *
+     * Ex1 - path relative to the app root: Configs/ConfigSets.yaml
+     * Ex2 - absolute path: /my/app/Configs/ConfigSets.yaml
      *
      * @return ConfigObject
      */
-    public function parseConfig($resource)
+    public function yaml($resource)
     {
-        return self::$configReader->yaml(Storage::getInstance()->getPath($resource));
+        $projectRoot = realpath(self::$config->get('Application.AbsolutePath'));
+        if (strpos($resource, $projectRoot) === false) {
+            $resource = Storage::getInstance()->getPath($resource);
+        }
+
+        return self::$configReader->yaml($resource);
     }
 
     /**
@@ -95,5 +103,4 @@ class Config
     {
         return $this->get($name);
     }
-
 }
