@@ -2,9 +2,11 @@
 
 namespace Apps\Webiny\Php\Entities;
 
+use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\EntityQuery;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\Filter;
+use Apps\Webiny\Php\Lib\Entity\EntityQuery\QueryContainer;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\I18N\I18N;
 use Apps\Webiny\Php\Lib\I18N\I18NAppTexts;
@@ -30,10 +32,9 @@ class I18NText extends AbstractEntity
     protected static $entityCollection = 'I18NTexts';
     protected static $i18nNamespace = 'Webiny.Entities.I18NText';
 
-    protected static function entityQuery()
+    protected static function entityQuery(QueryContainer $query)
     {
-        // TODO
-        return [
+        $query->add(
             new Filter('edited', function (EntityQuery $query, $flag) {
                 $query->removeCondition('edited');
                 $flag = filter_var($flag, FILTER_VALIDATE_BOOLEAN);
@@ -54,7 +55,7 @@ class I18NText extends AbstractEntity
                     ]);
                 }
             })
-        ];
+        );
     }
 
     public function __construct()
@@ -76,13 +77,18 @@ class I18NText extends AbstractEntity
 
             return $texts;
         });
+    }
+
+    protected function entityApi(ApiContainer $api)
+    {
+        parent::entityApi($api);
 
         /**
          * @api.name        Get translation by key
          * @api.description Gets a translation by a given key.
          * @api.path.key    string  Translation key
          */
-        $this->api('GET', 'keys/{$key}', function ($key) {
+        $api->get('keys/{$key}', function ($key) {
             if ($translation = I18NText::findByKey($key)) {
                 return $this->apiFormatEntity($translation, $this->wRequest()->getFields());
             }
@@ -96,7 +102,7 @@ class I18NText extends AbstractEntity
          * @api.body.key            string  Translation key
          * @api.body.placeholder    string  Default placeholder text for this translation (default text if no translation for selected language is present).
          */
-        $this->api('POST', 'keys', function () {
+        $api->post('keys', function () {
             $data = $this->wRequest()->getRequestData();
             $translation = I18NText::findByKey($data['key']);
             if (!$translation) {
@@ -118,7 +124,7 @@ class I18NText extends AbstractEntity
          *
          * @api.body.apps   array   Apps to be scanned (min. 1 required)
          */
-        $this->api('PATCH', 'keys/{$key}', function ($key) {
+        $api->patch('keys/{$key}', function ($key) {
             $data = $this->wRequest()->getRequestData();
             $data['translation'] = $data['translation'] ?? '';
 
@@ -147,7 +153,7 @@ class I18NText extends AbstractEntity
          *
          * @api.body.apps   array  Apps to be exported
          */
-        $this->api('POST', 'import', function () {
+        $api->post('import', function () {
             $src = $this->wRequest()->getRequestData()['file']['src'] ?? null;
 
             return I18N::getInstance()->importTextsFromZip($src);
@@ -159,7 +165,7 @@ class I18NText extends AbstractEntity
          *
          * @api.body.apps   array  Apps to be exported
          */
-        $this->api('POST', 'scan/import', function () {
+        $api->post('scan/import', function () {
             $apps = $this->wRequest()->getRequestData()['apps'] ?? [];
             $results = I18NParser::getInstance()->parseApps($apps);
 
@@ -174,7 +180,7 @@ class I18NText extends AbstractEntity
          * @api.body.apps   array   Apps to be scanned (min. 1 required)
          * @api.body.import boolean Imports texts into database (optional)
          */
-        $this->api('POST', 'scan/export', function () {
+        $api->post('scan/export', function () {
             $apps = $this->wRequest()->getRequestData()['apps'] ?? [];
             if (empty($apps)) {
                 die('Please pass at least one app for text scanning.');
@@ -203,7 +209,7 @@ class I18NText extends AbstractEntity
          *
          * @api.body.language   string  Language for which the translations will be returned
          */
-        $this->api('GET', 'edited', function () {
+        $api->get('edited', function () {
 
             $settings = TranslationSettings::load();
             $return = [
