@@ -67,8 +67,7 @@ class User extends AbstractEntity implements UserInterface
         });
         $this->attr('passwordRecoveryCode')->char();
         $this->attr('enabled')->boolean()->setDefaultValue(true);
-        $userRole = '\Apps\Webiny\Php\Entities\UserRole';
-        $this->attr('roles')->many2many('User2UserRole')->setEntity($userRole)->onSet(function ($roles) {
+        $this->attr('roles')->many2many('User2UserRole')->setEntity(UserRole::class)->onSet(function ($roles) {
             // If not mongo Ids - load roles by slugs
             if (is_array($roles)) {
                 foreach ($roles as $i => $role) {

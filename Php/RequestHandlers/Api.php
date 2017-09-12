@@ -17,7 +17,7 @@ class Api
 {
     use WebinyTrait, StdLibTrait;
 
-    private $apiResponse = '\Apps\Webiny\Php\Lib\Response\ApiResponse';
+    private $apiResponse = ApiResponse::class;
     private $apiEvent;
 
     public function handle()

@@ -776,7 +776,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                 }
             }
 
-            if ($class == 'Apps\Webiny\Php\Lib\Entity\AbstractEntity') {
+            if ($class == AbstractEntity::class) {
                 $callbacks = $this->instanceCallbacks[$eventName] ?? [];
                 foreach ($callbacks as $callback) {
                     if (is_callable($callback)) {

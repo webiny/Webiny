@@ -7,6 +7,7 @@
 
 namespace Apps\Webiny\Php\Lib\Entity\Attributes;
 
+use Apps\Webiny\Php\Entities\File;
 use Webiny\Component\Entity\Attribute\One2ManyAttribute;
 use Webiny\Component\Storage\Storage;
 
@@ -26,7 +27,7 @@ class FilesAttribute extends One2ManyAttribute
     public function __construct()
     {
         parent::__construct(null, null, 'ref');
-        $this->setEntity('\Apps\Webiny\Php\Entities\File')->setSorter('order');
+        $this->setEntity(File::class)->setSorter('order');
     }
 
     /**

@@ -87,9 +87,8 @@ class Bootstrap
             return $this->processMultipleRequests();
         }
 
-        $responseClass = '\Apps\Webiny\Php\Lib\Response\AbstractResponse';
         /* @var $response AbstractResponse */
-        $response = $this->wEvents()->fire('Webiny.Bootstrap.Request', new BootstrapEvent(), $responseClass, 1);
+        $response = $this->wEvents()->fire('Webiny.Bootstrap.Request', new BootstrapEvent(), AbstractResponse::class, 1);
         if ($response) {
             if ($response instanceof ApiResponse) {
                 $response->setErrors($this->errorHandler->getErrors());
@@ -113,7 +112,6 @@ class Bootstrap
     {
         $requests = $this->wRequest()->getRequestData()['requests'];
         $responses = [];
-        $responseClass = '\Apps\Webiny\Php\Lib\Response\AbstractResponse';
         $headers = [];
         foreach ($requests as $req) {
             if (count($headers)) {
@@ -137,7 +135,7 @@ class Bootstrap
             }
             Request::getInstance();
             Authorization::getInstance()->reset();
-            $response = $this->wEvents()->fire('Webiny.Bootstrap.Request', new BootstrapEvent(), $responseClass, 1);
+            $response = $this->wEvents()->fire('Webiny.Bootstrap.Request', new BootstrapEvent(), AbstractResponse::class, 1);
             if ($response instanceof ApiResponse) {
                 $responseData = $this->processResponse($response, true);
                 $responseData['statusCode'] = $response->getStatusCode();

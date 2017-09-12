@@ -48,7 +48,7 @@ class UserPermission extends AbstractEntity
         })->setToArrayDefault();
 
         $this->attr('description')->char()->setToArrayDefault();
-        $this->attr('roles')->many2many('UserRole2UserPermission')->setEntity('\Apps\Webiny\Php\Entities\UserRole');
+        $this->attr('roles')->many2many('UserRole2UserPermission')->setEntity(UserRole::class);
         $this->attr('permissions')->object();
     }
 
