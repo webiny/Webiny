@@ -3,30 +3,28 @@
         "name": "User profile",
         "slug": "webiny-acl-user-profile",
         "permissions": {
-            "entities": {
-                "Apps\\Webiny\\Php\\Entities\\User": {
-                    "login": {
-                        "post": true
-                    },
-                    "reset-password": {
-                        "post": true
-                    },
-                    "set-password": {
-                        "post": true
-                    },
-                    "me": {
-                        "get": true,
-                        "patch": true
-                    },
-                    "2factor-qr": {
-                        "get": true
-                    },
-                    "2factor-verify": {
-                        "post": true
-                    },
-                    "2factor-recovery-codes": {
-                        "get": true
-                    }
+            "Webiny.Entities.User": {
+                "login": {
+                    "post": true
+                },
+                "reset-password": {
+                    "post": true
+                },
+                "set-password": {
+                    "post": true
+                },
+                "me": {
+                    "get": true,
+                    "patch": true
+                },
+                "2factor-qr": {
+                    "get": true
+                },
+                "2factor-verify": {
+                    "post": true
+                },
+                "2factor-recovery-codes": {
+                    "get": true
                 }
             }
         },
@@ -37,11 +35,9 @@
         "slug": "webiny-logger-log-errors",
         "description": "Allows user to log JS/PHP/API errors",
         "permissions": {
-            "entities": {
-                "Apps\\Webiny\\Php\\Entities\\LoggerErrorGroup": {
-                    "save-report": {
-                        "post": true
-                    }
+            "Webiny.Entities.LoggerErrorGroup": {
+                "save-report": {
+                    "post": true
                 }
             }
         }
@@ -51,19 +47,15 @@
         "slug": "webiny-access-apps",
         "description": "Allows users to read data about system apps (needed for app bootstrap!)",
         "permissions": {
-            "entities": {
-                "Apps\\BackupApp\\Php\\Entities\\Backup": {
-                    "crudCreate": false
-                }
+            "BackupApp.Entities.Backup": {
+                "c": false
             },
-            "services": {
-                "Apps\\Webiny\\Php\\Services\\Apps": {
-                    "/": {
-                        "get": true
-                    },
-                    "{appName}": {
-                        "get": true
-                    }
+            "Webiny.Services.Apps": {
+                "/": {
+                    "get": true
+                },
+                "{appName}": {
+                    "get": true
                 }
             }
         }
@@ -73,28 +65,24 @@
         "slug": "webiny-acl-manage-api-tokens",
         "description": "Allows user to manage API tokens",
         "permissions": {
-            "entities": {
-                "Apps\\Webiny\\Php\\Entities\\ApiToken": {
-                    "crudCreate": true,
-                    "crudRead": true,
-                    "crudUpdate": true,
-                    "crudDelete": true
-                },
-                "Apps\\Webiny\\Php\\Entities\\ApiLog": {
-                    "crudDelete": true,
-                    "crudUpdate": true,
-                    "crudRead": true,
-                    "crudCreate": true,
-                    "methods": {
-                        "get": true
-                    }
+            "Webiny.Entities.ApiToken": {
+                "c": true,
+                "r": true,
+                "u": true,
+                "d": true
+            },
+            "Webiny.Entities.ApiLog": {
+                "d": true,
+                "u": true,
+                "r": true,
+                "c": true,
+                "methods": {
+                    "get": true
                 }
             },
-            "services": {
-                "Apps\\Webiny\\Php\\Services\\Acl": {
-                    "token": {
-                        "get": true
-                    }
+            "Webiny.Services.Acl": {
+                "token": {
+                    "get": true
                 }
             }
         }
@@ -104,22 +92,20 @@
         "slug": "webiny-discover-entities-services",
         "description": "Allows user to get info about system entities and services (their class names, attributes, methods, etc.)",
         "permissions": {
-            "services": {
-                "Apps\\Webiny\\Php\\Services\\Services": {
-                    "/": {
-                        "get": true
-                    }
+            "Webiny.Services.Services": {
+                "/": {
+                    "get": true
+                }
+            },
+            "Webiny.Services.Entities": {
+                "/": {
+                    "get": true
                 },
-                "Apps\\Webiny\\Php\\Services\\Entities": {
-                    "/": {
-                        "get": true
-                    },
-                    "attributes": {
-                        "get": true
-                    },
-                    "methods": {
-                        "get": true
-                    }
+                "attributes": {
+                    "get": true
+                },
+                "methods": {
+                    "get": true
                 }
             }
         }
@@ -129,25 +115,23 @@
         "slug": "webiny-acl-manage-users",
         "description": "Allows user to manage user accounts (create, read, update and delete them)",
         "permissions": {
-            "entities": {
-                "Apps\\Webiny\\Php\\Entities\\User": {
-                    "crudCreate": true,
-                    "crudRead": true,
-                    "crudUpdate": true,
-                    "crudDelete": true
-                },
-                "Apps\\Webiny\\Php\\Entities\\UserPermission": {
-                    "crudCreate": false,
-                    "crudRead": false,
-                    "crudUpdate": false,
-                    "crudDelete": false
-                },
-                "Apps\\Webiny\\Php\\Entities\\UserRole": {
-                    "crudDelete": false,
-                    "crudUpdate": false,
-                    "crudRead": true,
-                    "crudCreate": false
-                }
+            "Webiny.Entities.User": {
+                "c": true,
+                "r": true,
+                "u": true,
+                "d": true
+            },
+            "Webiny.Entities.UserPermission": {
+                "c": false,
+                "r": false,
+                "u": false,
+                "d": false
+            },
+            "Webiny.Entities.UserRole": {
+                "d": false,
+                "u": false,
+                "r": true,
+                "c": false
             }
         }
     },
@@ -156,16 +140,14 @@
         "slug": "webiny-acl-manage-roles",
         "description": "Allow user to manage user roles",
         "permissions": {
-            "entities": {
-                "Apps\\Webiny\\Php\\Entities\\UserRole": {
-                    "crudCreate": true,
-                    "crudRead": true,
-                    "crudUpdate": true,
-                    "crudDelete": true
-                },
-                "Apps\\Webiny\\Php\\Entities\\UserPermission": {
-                    "crudRead": true
-                }
+            "Webiny.Entities.UserRole": {
+                "c": true,
+                "r": true,
+                "u": true,
+                "d": true
+            },
+            "Webiny.Entities.UserPermission": {
+                "r": true
             }
         }
     },
@@ -174,18 +156,16 @@
         "slug": "webiny-acl-manage-permissions",
         "description": "Allow user to manage user permissions",
         "permissions": {
-            "entities": {
-                "Apps\\Webiny\\Php\\Entities\\UserPermission": {
-                    "crudCreate": true,
-                    "crudRead": true,
-                    "crudUpdate": true,
-                    "crudDelete": true,
-                    "entity": {
-                        "get": true
-                    },
-                    "service": {
-                        "get": true
-                    }
+            "Webiny.Entities.UserPermission": {
+                "c": true,
+                "r": true,
+                "u": true,
+                "d": true,
+                "entity": {
+                    "get": true
+                },
+                "service": {
+                    "get": true
                 }
             }
         }
@@ -195,24 +175,22 @@
         "slug": "webiny-logger-manage-logs",
         "description": "Allow user to manage error logs",
         "permissions": {
-            "entities": {
-                "Apps\\Webiny\\Php\\Entities\\LoggerEntry": {
-                    "crudCreate": true,
-                    "crudRead": true,
-                    "crudUpdate": true,
-                    "crudDelete": true,
-                    "{id}/resolve": {
-                        "post": true
-                    }
-                },
-                "Apps\\Webiny\\Php\\Entities\\LoggerErrorGroup": {
-                    "crudDelete": true,
-                    "crudUpdate": true,
-                    "crudCreate": true,
-                    "crudRead": true,
-                    "save-report": {
-                        "post": true
-                    }
+            "Webiny.Entities.LoggerEntry": {
+                "c": true,
+                "r": true,
+                "u": true,
+                "d": true,
+                "{id}/resolve": {
+                    "post": true
+                }
+            },
+            "Webiny.Entities.LoggerErrorGroup": {
+                "d": true,
+                "u": true,
+                "c": true,
+                "r": true,
+                "save-report": {
+                    "post": true
                 }
             }
         }
@@ -222,21 +200,18 @@
         "slug": "webiny-dashboard",
         "description": "Access to Webiny dashboard module",
         "permissions": {
-            "entities": {
-                "Apps\\Webiny\\Php\\Entities\\DashboardUpdates": {
-                    "{dashboardUpdate}/dismiss": {
-                        "get": true
-                    },
-                    "latest": {
-                        "get": true
-                    },
-                    "crudCreate": true,
-                    "crudRead": true,
-                    "crudUpdate": true,
-                    "crudDelete": true
-                }
-            },
-            "services": []
+            "Webiny.Entities.DashboardUpdates": {
+                "{dashboardUpdate}/dismiss": {
+                    "get": true
+                },
+                "latest": {
+                    "get": true
+                },
+                "c": true,
+                "r": true,
+                "u": true,
+                "d": true
+            }
         }
     },
     {
@@ -244,24 +219,21 @@
         "slug": "webiny-marketplace",
         "description": "Access to marketplace",
         "permissions": {
-            "entities": [],
-            "services": {
-                "Apps\\Webiny\\Php\\Services\\Marketplace": {
-                    "me": {
-                        "get": true
-                    },
-                    "apps": {
-                        "get": true
-                    },
-                    "apps/{id}": {
-                        "get": true
-                    },
-                    "login": {
-                        "post": true
-                    },
-                    "reset-password": {
-                        "post": true
-                    }
+            "Webiny.Services.Marketplace": {
+                "me": {
+                    "get": true
+                },
+                "apps": {
+                    "get": true
+                },
+                "apps/{id}": {
+                    "get": true
+                },
+                "login": {
+                    "post": true
+                },
+                "reset-password": {
+                    "post": true
                 }
             }
         }

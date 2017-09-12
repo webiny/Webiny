@@ -52,11 +52,11 @@ class Authorization
     private $security;
 
     private $patterns = [
-        '/.get'       => 'crudRead',
-        '{id}.get'    => 'crudRead',
-        '/.post'      => 'crudCreate',
-        '{id}.patch'  => 'crudUpdate',
-        '{id}.delete' => 'crudDelete'
+        '/.post'      => 'c',
+        '/.get'       => 'r',
+        '{id}.get'    => 'r',
+        '{id}.patch'  => 'u',
+        '{id}.delete' => 'd'
     ];
 
     protected function init()
@@ -205,22 +205,22 @@ class Authorization
 
     public function canCreate($class)
     {
-        return $this->checkPermission($class, 'crudCreate');
+        return $this->checkPermission($class, 'c');
     }
 
     public function canRead($class)
     {
-        return $this->checkPermission($class, 'crudRead');
+        return $this->checkPermission($class, 'r');
     }
 
     public function canUpdate($class)
     {
-        return $this->checkPermission($class, 'crudUpdate');
+        return $this->checkPermission($class, 'u');
     }
 
     public function canDelete($class)
     {
-        return $this->checkPermission($class, 'crudDelete');
+        return $this->checkPermission($class, 'd');
     }
 
     public function canExecute($class, $method = null)

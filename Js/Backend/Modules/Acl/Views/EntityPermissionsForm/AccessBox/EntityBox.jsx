@@ -26,10 +26,10 @@ class EntityBox extends Webiny.Ui.Component {
         const {Tooltip, entity, permissions, onTogglePermission, currentlyEditingPermission} = this.props;
 
         const existingOperations = {
-            crudCreate: _.find(entity.methods, {key: this.crud.create}),
-            crudRead: _.find(entity.methods, {key: this.crud.get}) || _.find(entity.methods, {key: this.crud.list}),
-            crudUpdate: _.find(entity.methods, {key: this.crud.update}),
-            crudDelete: _.find(entity.methods, {key: this.crud.delete})
+            c: _.find(entity.methods, {key: this.crud.create}),
+            r: _.find(entity.methods, {key: this.crud.get}) || _.find(entity.methods, {key: this.crud.list}),
+            u: _.find(entity.methods, {key: this.crud.update}),
+            d: _.find(entity.methods, {key: this.crud.delete})
         };
 
         const buttons = [];

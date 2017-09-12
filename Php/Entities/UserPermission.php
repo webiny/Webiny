@@ -262,13 +262,13 @@ class UserPermission extends AbstractEntity
             switch ($method['key']) {
                 case '/.get':
                 case '{id}.get':
-                    return 'crudRead';
+                    return 'r';
                 case '/.post':
-                    return 'crudCreate';
+                    return 'c';
                 case '/.delete':
-                    return 'crudDelete';
+                    return 'd';
                 case '/.patch':
-                    return 'crudUpdate';
+                    return 'u';
             }
         }
 
