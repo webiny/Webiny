@@ -33,7 +33,7 @@ class LoggerEntry extends AbstractEntity
         $this->attr('date')->datetime()->setToArrayDefault();
         $this->attr('stack')->char();
         $this->attr('clientData')->object();
-        $this->attr('errorGroup')->many2one()->setEntity('Apps\Webiny\Php\Entities\LoggerErrorGroup');
+        $this->attr('errorGroup')->many2one()->setEntity(LoggerErrorGroup::class);
     }
 
     protected function entityApi(ApiContainer $api)

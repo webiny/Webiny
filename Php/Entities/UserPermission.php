@@ -8,7 +8,7 @@ use Apps\Webiny\Php\Lib\Apps\Parser\ServiceParser;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Apps\Webiny\Php\Lib\Apps\App;
 use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
-use Webiny\Component\Mongo\Index\SingleIndex;
+use Webiny\Component\Mongo\Index\CompoundIndex;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
 /**
@@ -48,7 +48,7 @@ class UserPermission extends AbstractEntity
         })->setToArrayDefault();
 
         $this->attr('description')->char()->setToArrayDefault();
-        $this->attr('roles')->many2many('UserRole2UserPermission')->setEntity('\Apps\Webiny\Php\Entities\UserRole');
+        $this->attr('roles')->many2many('UserRole2UserPermission')->setEntity(UserRole::class);
         $this->attr('permissions')->object();
     }
 
@@ -180,7 +180,7 @@ class UserPermission extends AbstractEntity
     {
         parent::entityIndexes($indexes);
 
-        $indexes->add(new SingleIndex('slug', 'slug', false, true));
+        $indexes->add(new CompoundIndex('unique', ['slug', 'deletedOn'], false, true));
     }
 
 

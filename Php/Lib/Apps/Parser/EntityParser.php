@@ -11,7 +11,7 @@ use Webiny\Component\Entity\Attribute\One2ManyAttribute;
 
 class EntityParser extends AbstractParser
 {
-    protected $baseClass = 'Apps\Webiny\Php\Lib\Entity\AbstractEntity';
+    protected $baseClass = AbstractEntity::class;
     private $apiMethods;
     private $defaultValues;
     private $attributeDescription;

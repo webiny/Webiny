@@ -6,6 +6,7 @@
         "webiny/framework": "dev-master",
         "webiny/login": "dev-master",
         "webiny/analytics-db": "dev-master",
+        "webiny/hrc": "dev-master",
         "mikehaertl/phpwkhtmltopdf": "^2.0@dev",
         "league/csv": "^7.1@dev",
         "phpzip/phpzip": "dev-master",

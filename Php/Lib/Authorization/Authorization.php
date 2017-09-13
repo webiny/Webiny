@@ -2,7 +2,9 @@
 
 namespace Apps\Webiny\Php\Lib\Authorization;
 
+use Apps\Webiny\Php\Lib\Interfaces\PublicApiInterface;
 use Apps\Webiny\Php\Lib\Interfaces\UserInterface;
+use Apps\Webiny\Php\Lib\Services\AbstractService;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Apps\Webiny\Php\Entities\ApiToken;
@@ -42,7 +44,7 @@ class Authorization
     /**
      * @var string
      */
-    private $userClass = 'Apps\Webiny\Php\Entities\User';
+    private $userClass = User::class;
 
     /**
      * @var Security
@@ -238,8 +240,8 @@ class Authorization
             $class = trim($class, '\\');
         }
 
-        $isService = in_array('Apps\Webiny\Php\Lib\Services\AbstractService', class_parents($class));
-        if ($isService && in_array('Apps\Webiny\Php\Lib\Interfaces\PublicApiInterface', class_implements($class))) {
+        $isService = in_array(AbstractService::class, class_parents($class));
+        if ($isService && in_array(PublicApiInterface::class, class_implements($class))) {
             return true;
         }
 

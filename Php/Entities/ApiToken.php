@@ -47,8 +47,7 @@ class ApiToken extends AbstractEntity implements UserInterface
         $this->attr('logRequests')->boolean()->setDefaultValue(false)->setToArrayDefault();
         $this->attr('requests')->integer()->setToArrayDefault()->setDefaultValue(0);
         $this->attr('enabled')->boolean()->setDefaultValue(true)->setToArrayDefault();
-        $userRole = '\Apps\Webiny\Php\Entities\UserRole';
-        $this->attr('roles')->many2many('ApiToken2UserRole')->setEntity($userRole)->onSet(function ($roles) {
+        $this->attr('roles')->many2many('ApiToken2UserRole')->setEntity(UserRole::class)->onSet(function ($roles) {
             // If not mongo Ids - load roles by slugs
             if (is_array($roles)) {
                 foreach ($roles as $i => $role) {

@@ -18,6 +18,11 @@ class Marketplace extends AbstractService
 {
     protected function serviceApi(ApiContainer $api)
     {
+        // This service is only accessible in development
+        if ($this->wIsProduction()) {
+            return;
+        }
+
         $api->get('me', function () {
             $response = $this->server('/entities/webiny/users/me');
             $resData = json_decode($response, true);
@@ -59,9 +64,18 @@ class Marketplace extends AbstractService
 
             // Begin installation
             header("X-Accel-Buffering: no");
+            header("Content-Type: text/event-stream");
+            header("Cache-Control: no-cache");
             ob_end_flush();
-            $appInstaller = new AppInstaller();
-            $appInstaller->install($app->keyNested('data.entity'));
+            try {
+                $appInstaller = new AppInstaller();
+                $appInstaller->install($app->keyNested('data.entity'));
+                // After the app is installed, increment installations counter
+                $this->server('/services/marketplace-manager/marketplace/apps/' . $id . '/installed', 'POST');
+            } catch (AppException $e) {
+                // Don't do anything, the message was already sent to browser.
+            }
+
             die();
         })->setPublic();
 

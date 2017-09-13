@@ -2,6 +2,7 @@ import React from 'react';
 import Webiny from 'webiny';
 import styles from './styles.css';
 import AppBox from './../Components/AppBox';
+import SubmitAppBox from './../Components/SubmitAppBox';
 import LoginRegister from './LoginRegister';
 import User from './../Components/User';
 
@@ -86,6 +87,9 @@ class Browse extends Webiny.Ui.View {
                                         <AppBox app={app}/>
                                     </Grid.Col>
                                 ))}
+                                <Grid.Col all={6}>
+                                    <SubmitAppBox/>
+                                </Grid.Col>
                             </Grid.Row>
                         </Webiny.Ui.Placeholder>
                     </View.Body>

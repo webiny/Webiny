@@ -102,6 +102,13 @@ ul.customMethodsList .toggleAccessButtonWrapper button.toggleAccessButton {
 ul.customMethodsList .methodDetails {
 	float: left;
 	margin-left: 5px;
+	max-width: 75%;
+}
+
+@media (max-width: 383px) {
+	ul.customMethodsList .methodDetails {
+		max-width: 60%;
+	}
 }
 
 ul.customMethodsList .methodTypeLabel {
@@ -109,7 +116,9 @@ ul.customMethodsList .methodTypeLabel {
 }
 
 ul.customMethodsList .methodPathLabel {
-	font-size: 13px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 div.noCustomMethods {

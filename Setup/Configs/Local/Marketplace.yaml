@@ -1,5 +1,0 @@
-Marketplace:
-    Username: ''
-    Keys:
-        Public: __DIR__/Keys/id_rsa.pub
-        Private: __DIR__/Keys/id_rsa

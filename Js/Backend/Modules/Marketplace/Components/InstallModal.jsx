@@ -2,18 +2,13 @@ import React from 'react';
 import Webiny from 'webiny';
 import styles from './../Views/styles.css';
 
-
 class InstallModal extends Webiny.Ui.ModalComponent {
     constructor(props) {
         super(props);
 
-        this.state = {
-            started: false,
-            progress: 0,
-            messages: []
-        };
+        this.state = {messages: [], started: false, progress: 0, finished: false};
 
-        this.bindMethods('startInstallation');
+        this.bindMethods('startInstallation,onClose');
     }
 
     startInstallation() {
@@ -21,6 +16,12 @@ class InstallModal extends Webiny.Ui.ModalComponent {
         this.setState({started: true});
         const api = new Webiny.Api.Endpoint('/services/webiny/marketplace');
         let currentResponseLength = false;
+
+        // Add initial message
+        const messages = this.state.messages;
+        messages.push({message: 'Fetching app details...'});
+        this.setState({messages});
+
         api.setConfig({
             downloadProgress: e => {
                 let response = e.currentTarget.response || '';
@@ -38,19 +39,18 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                 response.split("_-_").filter(l => l.length).map(line => {
                     try {
                         const res = JSON.parse(line);
-                        if (res.message) {
-                            messages.push(res);
-                            this.setState({messages, time: new Date().getTime()});
+                        if (res.roles) {
+                            Webiny.Model.set(['User', 'roles'], res.roles);
                         }
 
                         if (res.progress) {
-                            this.setState({progress: parseInt(res.progress), finished: res.progress === 100});
+                            const lastMessage = messages.length - 1;
+                            messages[lastMessage].message = <Progress value={parseInt(res.progress)}/>;
+                            this.setState({messages, progress: parseInt(res.progress), finished: res.progress === 100});
                         }
 
-                        if (res.cli) {
-                            const lastMessage = messages.length - 1;
-                            // TODO: store previous value to keep progress consistent without jumps
-                            messages[lastMessage].message = <Progress value={parseInt(res.cli)}/>;
+                        if (res.message) {
+                            messages.push(res);
                             this.setState({messages, time: new Date().getTime()});
                         }
                     } catch (e) {
@@ -66,7 +66,12 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                 Webiny.includeApp(appName).then(app => app.run()).then(() => {
                     Webiny.Model.set(['Navigation', 'highlight'], appName);
                     Webiny.Router.start();
-                    //this.hide();
+                    setTimeout(() => {
+                        const message = (
+                            <span><strong>{this.props.app.name}</strong> was installed successfully!</span>
+                        );
+                        this.hide().then(() => Webiny.Growl.success(message, 'Installation finished!', false, 4000));
+                    }, 2000);
                 });
             }
         });
@@ -79,18 +84,28 @@ class InstallModal extends Webiny.Ui.ModalComponent {
         }
     }
 
-    show() {
+    resetState() {
         this.setState({messages: [], started: false, progress: 0, finished: false});
+    }
+
+    show() {
+        this.resetState();
         return super.show();
     }
 
+    onClose() {
+        if (!this.state.started) {
+            this.hide();
+        }
+    }
+
     renderDialog() {
-        const {Modal, Button, Link, Grid, Logic, Alert, Progress} = this.props;
+        const {Modal, Button, Link, Grid, Logic, Alert} = this.props;
 
         return (
-            <Modal.Dialog>
+            <Modal.Dialog closeOnClick={!this.state.started} onClose={this.onClose}>
                 <Modal.Content>
-                    <Modal.Header onClose={this.hide} title="Install"/>
+                    <Modal.Header onClose={this.onClose} title="Install"/>
                     <Modal.Body>
                         <Logic.Hide if={this.state.started}>
                             <Alert type="warning" title="Notice">
@@ -106,7 +121,7 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                                     Your app is installed and ready to use!
                                 </Alert>
                             </Logic.Show>
-                            <pre style={{height: 300, overflow: 'scroll', fontSize: 12}} ref={ref => this.logger = ref}>
+                            <pre style={{height: 500, overflow: 'scroll', fontSize: 12}} ref={ref => this.logger = ref}>
                             {this.state.messages.map((m, i) => (
                                 <div key={i}>{m.message}</div>
                             ))}

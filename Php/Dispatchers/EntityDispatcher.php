@@ -38,7 +38,7 @@ class EntityDispatcher extends AbstractApiDispatcher
             $entityClass = $plural;
         }
 
-        $flows = $this->wService()->getServicesByTag('entity-dispatcher-flow', '\Apps\Webiny\Php\Dispatchers\Flows\AbstractFlow');
+        $flows = $this->wService()->getServicesByTag('entity-dispatcher-flow', AbstractFlow::class);
 
         usort($flows, function (AbstractFlow $flow1, AbstractFlow $flow2) {
             return $flow1->getPriority() <=> $flow2->getPriority();

@@ -7,6 +7,7 @@
 
 namespace Apps\Webiny\Php\Lib\Entity\Attributes;
 
+use Apps\Webiny\Php\Entities\File;
 use Webiny\Component\Entity\Attribute\Many2OneAttribute;
 use Webiny\Component\Storage\Storage;
 
@@ -26,7 +27,7 @@ class FileAttribute extends Many2OneAttribute
     public function __construct()
     {
         parent::__construct();
-        $this->setEntity('\Apps\Webiny\Php\Entities\File')->onSetNull('delete')->setUpdateExisting();
+        $this->setEntity(File::class)->onSetNull('delete')->setUpdateExisting();
     }
 
     /**

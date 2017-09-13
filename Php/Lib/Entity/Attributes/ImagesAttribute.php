@@ -24,7 +24,7 @@ class ImagesAttribute extends FilesAttribute
     public function __construct()
     {
         parent::__construct();
-        $this->setEntity('\Apps\Webiny\Php\Entities\Image')->setSorter('order');
+        $this->setEntity(Image::class)->setSorter('order');
     }
 
     public function setDimensions(array $dimensions)

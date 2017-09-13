@@ -27,7 +27,7 @@ MultiAction.defaultProps = {
 
         if (this.props.download) {
             return (
-                <DownloadLink download={this.props.download} data={this.props.data}>{this.props.label}</DownloadLink>
+                <DownloadLink download={this.props.download} params={this.props.data}>{this.props.label}</DownloadLink>
             );
         }
 
