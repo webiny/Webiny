@@ -30,7 +30,8 @@ class JsParser
     const REGEX = [
         'namespace'     => '/i18nNamespace\s{0,}:\s{0,}[\'|"|`]([a-zA-Z0-9\.-_:]+)[\'|"|`]/',
         'basic'   => '/this\.i18n\([\'\`\"]/mi',
-        'customNamespace' => '/\.i18n\([\'|"|`]{1}.*?[\'|"|`]{1},.*?, ?\{.*?[\'|"|`]?namespace[\'|"|`]? ?: ?[\'|"|`]{1}([A-Za-z\.]*?)[\'|"|`]{1}.*?\}\)/'
+        'customNamespace' => '/\.i18n\([\'|"|`]{1}.*?[\'|"|`]{1},.*?, ?\{.*?[\'|"|`]?namespace[\'|"|`]? ?: ?[\'|"|`]{1}([A-Za-z\.]*?)[\'|"|`]{1}.*?\}\)/',
+        'inlineNamespace' => 123
     ];
 
     /**
@@ -38,12 +39,12 @@ class JsParser
      * 1) this.i18n('Some text')
      * 2) this.i18n('Some text and a {variable}', {variable: 'Variable Value'})
      * 3) this.i18n('Some text and a {variable}', {variable: 'Variable Value'}, {key: 'App.CustomNamespace', xyz: 'asd'})
-     * 4) same as above, except instead of this.i18n, we have Webiny.i18n, which has a 'key' as a first parameter, so total of 4 parameters here.
+     * 4) same as above, except instead of this.i18n, we have Webiny.I18n, which has a 'key' as a first parameter, so total of 4 parameters here.
      *
      * So these are the method definitions:
      *
      * this.i18n(placeholder, variables, options)
-     * Webiny.i18n(key, placeholder, variables, options)
+     * Webiny.I18n(key, placeholder, variables, options)
      *
      * Parsing is hard because user can type anything as a placeholder, delimiters could be ', ` or ", and inside the text developer
      * could've used an escaped version of the same character too. We could also have a combination of strings, like 'string1' + `string2`,

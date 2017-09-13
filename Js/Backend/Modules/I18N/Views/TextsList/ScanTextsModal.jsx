@@ -23,7 +23,7 @@ class ScanTextsModal extends Webiny.Ui.ModalComponent {
                     onSuccessMessage={null}
                     onSubmitSuccess={async response => {
                         this.i18n(`Inserted {inserted|plural:1:translation:default:translations} ({ignored} ignored).`, {
-                            inserted: {value: <strong>{response.getData('ignored')}</strong>, format:},
+                            inserted: {value: <strong>{response.getData('ignored')}</strong>, format: 'bajo'},
                             ignored: <strong>{response.getData('ignored')}</strong>
                         });
 
@@ -38,13 +38,15 @@ class ScanTextsModal extends Webiny.Ui.ModalComponent {
                                 <Ui.Form.Error/>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
-                                        <Ui.CheckboxGroup
-                                            name="apps"
-                                            label={this.i18n('Select apps to scan for texts')}
-                                            api="/services/webiny/apps"
-                                            url="/installed"
-                                            textAttr="name"
-                                            valueAttr="name"/>
+                                        <Webiny.I18n.Namespace name="bajoman">
+                                            <Ui.CheckboxGroup
+                                                name="apps"
+                                                label={this.i18n('Select apps to scan for texts')}
+                                                api="/services/webiny/apps"
+                                                url="/installed"
+                                                textAttr="name"
+                                                valueAttr="name"/>
+                                        </Webiny.I18n.Namespace>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
 

@@ -19,7 +19,7 @@ class Component extends React.Component {
 
     /**
      * Method for a more convenient use of i18n module - this will automatically generate a complete namespace for the label
-     * If this method is called without parameters, it will return Webiny.i18n module, from which you can use other functions as well
+     * If this method is called without parameters, it will return Webiny.I18n module, from which you can use other functions as well
      * @param text
      * @param variables
      * @param options
@@ -27,7 +27,7 @@ class Component extends React.Component {
      */
     i18n(text, variables, options = {}) {
         if (!text) {
-            return Webiny.i18n;
+            return Webiny.I18n;
         }
 
         const namespace = options.namespace || _.get(this.props, 'i18nNamespace');
@@ -41,7 +41,7 @@ class Component extends React.Component {
         }
 
         const key = _.trimEnd(namespace, '.') + '.' + md5(text);
-        return Webiny.i18n.render(key, text, variables);
+        return Webiny.I18n.render(key, text, variables);
     }
 
     componentWillMount() {

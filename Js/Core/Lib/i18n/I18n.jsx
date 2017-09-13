@@ -3,10 +3,10 @@ import React from 'react';
 import createComponent from './../createComponent';
 import Component from './../Core/Component';
 
-class I18N extends Component {
+class I18n extends Component {
 }
 
-I18N.defaultProps = {
+I18n.defaultProps = {
     translationKey: '',
     text: '',
     variables: {},
@@ -17,9 +17,9 @@ I18N.defaultProps = {
                 text: this.props.text,
                 'translation-key': this.props.translationKey
             },
-            Webiny.i18n(this.props.text, this.props.variables, this.props.translationKey)
+            Webiny.I18n(this.props.text, this.props.variables, this.props.translationKey)
         );
     }
 };
 
-export default createComponent(I18N, {i18n: true});
+export default createComponent(I18n, {i18n: true});

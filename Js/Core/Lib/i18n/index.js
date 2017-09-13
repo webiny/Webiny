@@ -2,13 +2,14 @@ import _ from 'lodash';
 import Webiny from 'webiny';
 import React from 'react';
 import accounting from 'accounting';
-import I18N from './I18N';
+import I18nComponent from './I18N';
 
-class i18n {
+class I18n {
     constructor() {
         this.locale = '';
         this.api = null;
         this.cacheKey = null;
+        this.Namespace = Namespace;
 
         /**
          * All registered modifiers. We already have built-in modifiers 'count', 'case' and 'if'.
@@ -71,13 +72,13 @@ class i18n {
         ];
 
         this.translations = {};
-        this.component = I18N;
+        this.component = I18nComponent;
 
         const translate = (text, variables = {}, key = null) => {
             return this.translate(text, variables, key);
         };
 
-        Object.getOwnPropertyNames(i18n.prototype).map(method => {
+        Object.getOwnPropertyNames(I18n.prototype).map(method => {
             if (method !== 'constructor') {
                 translate[method] = this[method].bind(this);
             }
@@ -160,6 +161,7 @@ class i18n {
     setComponent(component) {
         this.component = component;
     }
+
 
     /**
      * Used for rendering text in DOM
@@ -266,16 +268,16 @@ class i18n {
         // TODO: Set moment / accounting locale settings here
 
         // If we have the same cache key, that means we have latest translations - we can safely read from local storage.
-        if (this.cacheKey === parseInt(Webiny.LocalStorage.get('Webiny.i18n.cacheKey'))) {
-            this.translations = JSON.parse(Webiny.LocalStorage.get('Webiny.i18n.translations'));
+        if (this.cacheKey === parseInt(Webiny.LocalStorage.get('Webiny.I18n.cacheKey'))) {
+            this.translations = JSON.parse(Webiny.LocalStorage.get('Webiny.I18n.translations'));
             return Promise.resolve();
         }
 
         // If we have a different cache key (or no cache key at all), we must fetch translations from server
         return this.api.setQuery({key: this.locale}).execute().then(apiResponse => {
-            Webiny.LocalStorage.set('Webiny.i18n.locale', this.locale);
-            Webiny.LocalStorage.set('Webiny.i18n.cacheKey', apiResponse.getData('cacheKey', null));
-            Webiny.LocalStorage.set('Webiny.i18n.translations', JSON.stringify(apiResponse.getData('translations')));
+            Webiny.LocalStorage.set('Webiny.I18n.locale', this.locale);
+            Webiny.LocalStorage.set('Webiny.I18n.cacheKey', apiResponse.getData('cacheKey', null));
+            Webiny.LocalStorage.set('Webiny.I18n.translations', JSON.stringify(apiResponse.getData('translations')));
             this.translations = _.assign(this.translations, apiResponse.getData('translations'));
             return apiResponse;
         });
@@ -295,5 +297,4 @@ class i18n {
     }
 }
 
-
-export default new i18n();
+export default new I18n();
