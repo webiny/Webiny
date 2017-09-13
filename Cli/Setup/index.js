@@ -31,7 +31,8 @@ class Setup extends Plugin {
         this.selectApps = false;
     }
 
-    runWizard() {
+    runWizard({env}) {
+        const docker = env === 'docker';
         const inquirer = require('inquirer');
         const yaml = require('js-yaml');
         const _ = require('lodash');
@@ -134,14 +135,22 @@ class Setup extends Plugin {
                 return;
             }
 
+            if (docker) {
+                Webiny.info('Initializing Docker containers...');
+                // Run Docker containers so we can execute install scripts.
+                Webiny.shellExecute('docker-compose up -d');
+            }
+
+            const php = docker ? 'docker-compose run php php ' : 'php ';
+
             // Run Webiny installation procedure
             Webiny.info('Running Webiny app installation...');
-            Webiny.shellExecute('php Apps/Webiny/Php/Cli/install.php Local Webiny');
+            Webiny.shellExecute(php + ' Apps/Webiny/Php/Cli/install.php Local Webiny');
 
             // Create admin user
             const params = [answers.user, answers.password].join(' ');
             try {
-                let output = Webiny.shellExecute('php Apps/Webiny/Php/Cli/admin.php Local ' + params, {stdio: 'pipe'});
+                let output = Webiny.shellExecute(php + ' Apps/Webiny/Php/Cli/admin.php Local ' + params, {stdio: 'pipe'});
                 output = JSON.parse(output);
                 if (output.status === 'created') {
                     Webiny.success('Admin user created successfully!');
@@ -165,7 +174,7 @@ class Setup extends Plugin {
                     name: 'createHost',
                     message: 'Would you like us to create a new nginx virtual host for you?',
                     default: true
-                }).then(function (a) {
+                }).then(a => {
                     if (a.createHost) {
                         hostAnswers.createHost = true;
                         return errorLogFile();
@@ -183,7 +192,7 @@ class Setup extends Plugin {
                         const server = answers.domain.replace('http://', '').replace('https://', '').split(':')[0];
                         return '/var/log/nginx/' + server + '-error.log';
                     }
-                }).then(function (a) {
+                }).then(a => {
                     hostAnswers.errorLogFile = a.errorLogFile;
                     return setupVirtualHost(hostAnswers);
                 });
