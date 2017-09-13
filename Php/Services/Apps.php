@@ -27,7 +27,7 @@ class Apps extends AbstractService
          * @api.name List installed apps
          * @api.description Lists all installed apps
          */
-        $this->api('get', '/installed', function () {
+        $api->get('/installed', function () {
             $list = [];
             foreach ($this->wApps() as $appObj) {
                 /* @var App $appObj */
