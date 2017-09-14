@@ -29,6 +29,8 @@ class DiscoverDispatcher extends AbstractApiDispatcher
                 $message = 'You are not authorized to discover the API';
                 throw new ApiException($message, 'WBY-AUTHORIZATION', 401);
             }
+
+            return $this->generatePostmanCollections($apiUrl);
         }
     }
 
