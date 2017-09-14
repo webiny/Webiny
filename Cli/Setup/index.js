@@ -104,6 +104,9 @@ class Setup extends Plugin {
                 // Populate Base/Database.yaml
                 config = yaml.safeLoad(Webiny.readFile(configs.base.database));
                 config.Mongo.Services.Webiny.Calls[0][1] = [answers.database];
+                if (docker) {
+                    config.Mongo.Services.Webiny.Arguments.Uri = 'mongodb:27017';
+                }
                 Webiny.writeFile(configs.base.database, yaml.safeDump(config, {indent: 4, flowLevel: 5}));
 
                 // Populate Base/Security.yaml
