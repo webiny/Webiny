@@ -2,240 +2,297 @@
     {
         "name": "User profile",
         "slug": "webiny-acl-user-profile",
-        "permissions": {
-            "Webiny.Entities.User": {
-                "login": {
-                    "post": true
-                },
-                "reset-password": {
-                    "post": true
-                },
-                "set-password": {
-                    "post": true
-                },
-                "me": {
-                    "get": true,
-                    "patch": true
-                },
-                "2factor-qr": {
-                    "get": true
-                },
-                "2factor-verify": {
-                    "post": true
-                },
-                "2factor-recovery-codes": {
-                    "get": true
+        "permissions": [
+            {
+                "classId": "Webiny.Entities.User",
+                "rules": {
+                    "login": {
+                        "post": true
+                    },
+                    "reset-password": {
+                        "post": true
+                    },
+                    "set-password": {
+                        "post": true
+                    },
+                    "me": {
+                        "get": true,
+                        "patch": true
+                    },
+                    "2factor-qr": {
+                        "get": true
+                    },
+                    "2factor-verify": {
+                        "post": true
+                    },
+                    "2factor-recovery-codes": {
+                        "get": true
+                    }
                 }
             }
-        },
+        ],
         "description": "Allows the user to login and update his profile"
     },
     {
         "name": "Log errors",
         "slug": "webiny-logger-log-errors",
         "description": "Allows user to log JS/PHP/API errors",
-        "permissions": {
-            "Webiny.Entities.LoggerErrorGroup": {
-                "save-report": {
-                    "post": true
+        "permissions": [
+            {
+                "classId": "Webiny.Entities.LoggerErrorGroup",
+                "rules": {
+                    "save-report": {
+                        "post": true
+                    }
                 }
             }
-        }
+        ]
     },
     {
         "name": "Access Apps",
         "slug": "webiny-access-apps",
         "description": "Allows users to read data about system apps (needed for app bootstrap!)",
-        "permissions": {
-            "BackupApp.Entities.Backup": {
-                "c": false
+        "permissions": [
+            {
+                "classId": "BackupApp.Entities.Backup",
+                "rules": {
+                    "c": false
+                }
             },
-            "Webiny.Services.Apps": {
-                "/": {
-                    "get": true
-                },
-                "{appName}": {
-                    "get": true
+            {
+                "classId": "Webiny.Services.Apps",
+                "rules": {
+                    "/": {
+                        "get": true
+                    },
+                    "{appName}": {
+                        "get": true
+                    }
                 }
             }
-        }
+        ]
     },
     {
         "name": "Manage API tokens",
         "slug": "webiny-acl-manage-api-tokens",
         "description": "Allows user to manage API tokens",
-        "permissions": {
-            "Webiny.Entities.ApiToken": {
-                "c": true,
-                "r": true,
-                "u": true,
-                "d": true
-            },
-            "Webiny.Entities.ApiLog": {
-                "d": true,
-                "u": true,
-                "r": true,
-                "c": true,
-                "methods": {
-                    "get": true
+        "permissions": [
+            {
+                "classId": "Webiny.Entities.ApiToken",
+                "rules": {
+                    "c": true,
+                    "r": true,
+                    "u": true,
+                    "d": true
                 }
             },
-            "Webiny.Services.Acl": {
-                "token": {
-                    "get": true
+            {
+                "classId": "Webiny.Entities.ApiLog",
+                "rules": {
+                    "d": true,
+                    "u": true,
+                    "r": true,
+                    "c": true,
+                    "methods": {
+                        "get": true
+                    }
+                }
+            },
+            {
+                "classId": "Webiny.Services.Acl",
+                "rules": {
+                    "token": {
+                        "get": true
+                    }
                 }
             }
-        }
+        ]
     },
     {
         "name": "Discover system Entities and Services",
         "slug": "webiny-discover-entities-services",
         "description": "Allows user to get info about system entities and services (their class names, attributes, methods, etc.)",
-        "permissions": {
-            "Webiny.Services.Services": {
-                "/": {
-                    "get": true
+        "permissions": [
+            {
+                "classId": "Webiny.Services.Services",
+                "rules": {
+                    "/": {
+                        "get": true
+                    }
                 }
             },
-            "Webiny.Services.Entities": {
-                "/": {
-                    "get": true
-                },
-                "attributes": {
-                    "get": true
-                },
-                "methods": {
-                    "get": true
+            {
+                "classId": "Webiny.Services.Entities",
+                "rules": {
+                    "/": {
+                        "get": true
+                    },
+                    "attributes": {
+                        "get": true
+                    },
+                    "methods": {
+                        "get": true
+                    }
                 }
             }
-        }
+        ]
     },
     {
         "name": "Manage users",
         "slug": "webiny-acl-manage-users",
         "description": "Allows user to manage user accounts (create, read, update and delete them)",
-        "permissions": {
-            "Webiny.Entities.User": {
-                "c": true,
-                "r": true,
-                "u": true,
-                "d": true
+        "permissions": [
+            {
+                "classId": "Webiny.Entities.User",
+                "rules": {
+                    "c": true,
+                    "r": true,
+                    "u": true,
+                    "d": true
+                }
             },
-            "Webiny.Entities.UserPermission": {
-                "c": false,
-                "r": false,
-                "u": false,
-                "d": false
+            {
+                "classId": "Webiny.Entities.UserPermission",
+                "rules": {
+                    "c": false,
+                    "r": false,
+                    "u": false,
+                    "d": false
+                }
             },
-            "Webiny.Entities.UserRole": {
-                "d": false,
-                "u": false,
-                "r": true,
-                "c": false
+            {
+                "classId": "Webiny.Entities.UserRole",
+                "rules": {
+                    "d": false,
+                    "u": false,
+                    "r": true,
+                    "c": false
+                }
             }
-        }
+        ]
     },
     {
         "name": "Manage user roles",
         "slug": "webiny-acl-manage-roles",
         "description": "Allow user to manage user roles",
-        "permissions": {
-            "Webiny.Entities.UserRole": {
-                "c": true,
-                "r": true,
-                "u": true,
-                "d": true
+        "permissions": [
+            {
+                "classId": "Webiny.Entities.UserRole",
+                "rules": {
+                    "c": true,
+                    "r": true,
+                    "u": true,
+                    "d": true
+                }
             },
-            "Webiny.Entities.UserPermission": {
-                "r": true
+            {
+                "classId": "Webiny.Entities.UserPermission",
+                "rules": {
+                    "r": true
+                }
             }
-        }
+        ]
     },
     {
         "name": "Manage permissions",
         "slug": "webiny-acl-manage-permissions",
         "description": "Allow user to manage user permissions",
-        "permissions": {
-            "Webiny.Entities.UserPermission": {
-                "c": true,
-                "r": true,
-                "u": true,
-                "d": true,
-                "entity": {
-                    "get": true
-                },
-                "service": {
-                    "get": true
+        "permissions": [
+            {
+                "classId": "Webiny.Entities.UserPermission",
+                "rules": {
+                    "c": true,
+                    "r": true,
+                    "u": true,
+                    "d": true,
+                    "entity": {
+                        "get": true
+                    },
+                    "service": {
+                        "get": true
+                    }
                 }
             }
-        }
+        ]
     },
     {
         "name": "Manage error logs",
         "slug": "webiny-logger-manage-logs",
         "description": "Allow user to manage error logs",
-        "permissions": {
-            "Webiny.Entities.LoggerEntry": {
-                "c": true,
-                "r": true,
-                "u": true,
-                "d": true,
-                "{id}/resolve": {
-                    "post": true
+        "permissions": [
+            {
+                "classId": "Webiny.Entities.LoggerEntry",
+                "rules": {
+                    "c": true,
+                    "r": true,
+                    "u": true,
+                    "d": true,
+                    "{id}/resolve": {
+                        "post": true
+                    }
                 }
             },
-            "Webiny.Entities.LoggerErrorGroup": {
-                "d": true,
-                "u": true,
-                "c": true,
-                "r": true,
-                "save-report": {
-                    "post": true
+            {
+                "classId": "Webiny.Entities.LoggerErrorGroup",
+                "rules": {
+                    "d": true,
+                    "u": true,
+                    "c": true,
+                    "r": true,
+                    "save-report": {
+                        "post": true
+                    }
                 }
             }
-        }
+        ]
     },
     {
         "name": "Dashboard",
         "slug": "webiny-dashboard",
         "description": "Access to Webiny dashboard module",
-        "permissions": {
-            "Webiny.Entities.DashboardUpdates": {
-                "{dashboardUpdate}/dismiss": {
-                    "get": true
-                },
-                "latest": {
-                    "get": true
-                },
-                "c": true,
-                "r": true,
-                "u": true,
-                "d": true
+        "permissions": [
+            {
+                "classId": "Webiny.Entities.DashboardUpdates",
+                "rules": {
+                    "{dashboardUpdate}/dismiss": {
+                        "get": true
+                    },
+                    "latest": {
+                        "get": true
+                    },
+                    "c": true,
+                    "r": true,
+                    "u": true,
+                    "d": true
+                }
             }
-        }
+        ]
     },
     {
         "name": "Marketplace",
         "slug": "webiny-marketplace",
         "description": "Access to marketplace",
-        "permissions": {
-            "Webiny.Services.Marketplace": {
-                "me": {
-                    "get": true
-                },
-                "apps": {
-                    "get": true
-                },
-                "apps/{id}": {
-                    "get": true
-                },
-                "login": {
-                    "post": true
-                },
-                "reset-password": {
-                    "post": true
+        "permissions": [
+            {
+                "classId": "Webiny.Services.Marketplace",
+                "rules": {
+                    "me": {
+                        "get": true
+                    },
+                    "apps": {
+                        "get": true
+                    },
+                    "apps/{id}": {
+                        "get": true
+                    },
+                    "login": {
+                        "post": true
+                    },
+                    "reset-password": {
+                        "post": true
+                    }
                 }
             }
-        }
+        ]
     }
 ]

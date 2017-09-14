@@ -21,6 +21,7 @@ use Webiny\Component\Entity\EntityCollection;
  */
 trait ApiExpositionTrait
 {
+    protected static $classId;
     protected static $apiContainers = [];
 
     /**
@@ -30,11 +31,22 @@ trait ApiExpositionTrait
 
     /**
      * Initialize the given ApiContainer
+     *
      * @param ApiContainer $api
      *
      * @return mixed
      */
     abstract protected function initializeApi(ApiContainer $api);
+
+    /**
+     * Get class id which uniquely identifies the class that uses ApiExpositionTrait
+     *
+     * @return string
+     */
+    public static function getClassId()
+    {
+        return static::$classId;
+    }
 
     /**
      * Format given EntityCollection using $fields into a standard list response

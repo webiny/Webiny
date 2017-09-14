@@ -2,6 +2,8 @@
 
 namespace Apps\Webiny\Php\Lib\Authorization;
 
+use Apps\Webiny\Php\Lib\Api\ApiExpositionTrait;
+use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\Interfaces\PublicApiInterface;
 use Apps\Webiny\Php\Lib\Interfaces\UserInterface;
 use Apps\Webiny\Php\Lib\Services\AbstractService;
@@ -228,6 +230,13 @@ class Authorization
         return $this->checkPermission($class, $method);
     }
 
+    /**
+     * @param string|object $class ApiExpositionTrait instance or classId string
+     * @param string        $permission
+     *
+     * @return bool
+     * @throws AppException
+     */
     private function checkPermission($class, $permission)
     {
         if (!$this->wConfig()->get('Application.Acl.CheckUserPermissions', true) || $this->getUser() instanceof SystemApiToken) {
@@ -235,7 +244,10 @@ class Authorization
         }
 
         if (!is_string($class)) {
-            $class = get_class($class);
+            if (!is_string($class::getClassId())) {
+                throw new AppException(get_class($class) . ' must declare a $classId property');
+            }
+            $class = $class::getClassId();
         } else {
             $class = trim($class, '\\');
         }

@@ -240,6 +240,11 @@ class Form extends Webiny.Ui.Component {
      * @returns {Form}
      */
     setModel(key, value = null, callback = null) {
+        if(_.isFunction(key)) {
+            this.setState(key);
+            return;
+        }
+
         if (_.isObject(key)) {
             _.merge(this.state.model, key);
             this.setState({model: this.state.model}, value);

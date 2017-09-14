@@ -19,11 +19,11 @@ class EntityPermissions extends Webiny.Ui.Component {
 
     componentWillMount() {
         super.componentWillMount();
-        if (!_.isEmpty(this.props.permissions)) {
-            this.setState('loading', true, () => {
-                this.api.setQuery({
-                    entities: _.keys(this.props.permissions)
-                }).get('/entity').then(apiResponse => this.setState({loading: false, entities: apiResponse.getData()}));
+        if (!_.isEmpty(this.props.model.permissions)) {
+            this.setState({loading: true}, () => {
+                this.api.setQuery({classIds: _.map(this.props.model.permissions , 'classId')}).get('/entity').then(apiResponse => {
+                    this.setState({loading: false, entities: apiResponse.getData()})
+                });
             });
         }
     }
@@ -31,7 +31,6 @@ class EntityPermissions extends Webiny.Ui.Component {
 
 EntityPermissions.defaultProps = {
     model: null,
-    permissions: {},
     onTogglePermission: _.noop,
     onAddEntity: _.noop,
     onRemoveEntity: _.noop,
@@ -66,23 +65,26 @@ EntityPermissions.defaultProps = {
                                 </Grid.Row>
                             ) : (
                                 <Grid.Row className={styles.accessBoxesWrapper}>
-                                    {this.state.entities.map(entity => (
-                                        <EntityBox
-                                            currentlyEditingPermission={this.props.model}
-                                            onTogglePermission={(entity, method) => this.props.onTogglePermission(entity, method)}
-                                            onRemoveEntity={entity => {
-                                                const index = this.state.entities.indexOf(entity);
-                                                const entities = _.clone(this.state.entities);
-                                                entities.splice(index, 1);
-                                                this.setState({entities}, () => {
-                                                    this.props.onRemoveEntity(entity);
-                                                    Webiny.Growl.success(this.i18n('Entity removed successfully!'));
-                                                });
-                                            }}
-                                            key={entity.class}
-                                            entity={entity}
-                                            permissions={permissions[entity.class]}/>
-                                    ))}
+                                    {this.state.entities.map(entity => {
+                                        const entityPermissions = _.find(this.props.model.permissions, {classId: entity.classId});
+                                        return (
+                                            <EntityBox
+                                                currentlyEditingPermission={this.props.model}
+                                                onTogglePermission={(entity, method) => this.props.onTogglePermission(entity, method)}
+                                                onRemoveEntity={entity => {
+                                                    const index = _.find(this.state.entities, {classId: entity.classId});
+                                                    const entities = _.clone(this.state.entities);
+                                                    entities.splice(index, 1);
+                                                    this.setState({entities}, () => {
+                                                        this.props.onRemoveEntity(entity);
+                                                        Webiny.Growl.success(this.i18n('Entity removed successfully!'));
+                                                    });
+                                                }}
+                                                key={entity.classId}
+                                                entity={entity}
+                                                permissions={_.get(entityPermissions, 'rules', {})}/>
+                                        );
+                                    })}
                                 </Grid.Row>
                             )}
                         </div>

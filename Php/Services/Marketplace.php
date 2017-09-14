@@ -2,6 +2,8 @@
 
 namespace Apps\Webiny\Php\Services;
 
+set_time_limit(0);
+
 use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\Response\ApiRawResponse;
@@ -12,10 +14,11 @@ use Apps\Webiny\Php\Services\Lib\AppInstaller;
 
 /**
  * Class Marketplace
- * @package Apps\Webiny\Php\Services
  */
 class Marketplace extends AbstractService
 {
+    protected static $classId = 'Webiny.Services.Marketplace';
+
     protected function serviceApi(ApiContainer $api)
     {
         // This service is only accessible in development
@@ -77,7 +80,7 @@ class Marketplace extends AbstractService
             }
 
             die();
-        })->setPublic();
+        });
 
         $api->post('login', function () {
             $data = $this->wRequest()->getRequestData();

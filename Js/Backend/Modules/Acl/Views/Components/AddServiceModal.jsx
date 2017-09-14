@@ -20,7 +20,7 @@ class AddServiceModal extends Webiny.Ui.ModalComponent {
                             form.showLoading();
                             const query = {
                                 details: 'methods',
-                                service: model.class
+                                classId: model.service
                             };
 
                             const apiResponse = await this.api.setQuery(query).get();
@@ -32,7 +32,7 @@ class AddServiceModal extends Webiny.Ui.ModalComponent {
                         }}>
                         {(model, form) => (
                             <Modal.Content>
-                                <Modal.Header title="Add entity" onClose={dialog.hide}/>
+                                <Modal.Header title="Add service" onClose={dialog.hide}/>
                                 <Modal.Body>
                                     <Grid.Row>
                                         <Grid.Col all={12}>
@@ -41,11 +41,11 @@ class AddServiceModal extends Webiny.Ui.ModalComponent {
                                             <Select
                                                 description={this.i18n(`Services already added are not shown.`)}
                                                 placeholder={this.i18n('Select service...')}
-                                                name="class"
+                                                name="service"
                                                 validate="required"
                                                 api="/services/webiny/services"
-                                                query={{exclude: this.props.exclude.map(item => item.class)}}
-                                                valueAttr="class"
+                                                query={{exclude: this.props.exclude.map(item => item.classId)}}
+                                                valueAttr="classId"
                                                 textAttr="class"
                                                 minimumResultsForSearch={5}/>
                                         </Grid.Col>
