@@ -79,6 +79,7 @@ class Setup extends Plugin {
             answers.domain = _.trimEnd(answers.domain, '/');
 
             const configs = {
+                dockerCompose: Webiny.projectRoot('docker-compose.yaml'),
                 configSets: Webiny.projectRoot('Configs/ConfigSets.yaml'),
                 base: {
                     application: Webiny.projectRoot('Configs/Base/Application.yaml'),
@@ -122,8 +123,15 @@ class Setup extends Plugin {
                 Webiny.writeFile(configs.local.application, yaml.safeDump(config, {indent: 4}));
 
                 Webiny.success('Configuration files written successfully!');
+
+                // We need to store the env if the project is run using docker
+                if (docker) {
+                    const wConfig = Webiny.getConfig();
+                    wConfig.env = 'docker';
+                    Webiny.saveConfig(wConfig);
+                }
             } catch (err) {
-                console.log(err);
+                Webiny.failure(err.message, err);
                 return;
             }
 
@@ -133,16 +141,16 @@ class Setup extends Plugin {
                 Webiny.shellExecute('docker-compose up -d');
             }
 
-            const php = docker ? 'docker-compose run php php ' : 'php ';
+            const php = docker ? 'docker-compose run php php' : 'php';
 
             // Run Webiny installation procedure
             Webiny.info('Running Webiny app installation...');
-            Webiny.shellExecute(php + ' Apps/Webiny/Php/Cli/install.php Local Webiny');
+            Webiny.shellExecute(`${php} Apps/Webiny/Php/Cli/install.php Local Webiny`);
 
             // Create admin user
             const params = [answers.user, answers.password].join(' ');
             try {
-                let output = Webiny.shellExecute(php + ' Apps/Webiny/Php/Cli/admin.php Local ' + params, {stdio: 'pipe'});
+                let output = Webiny.shellExecute(`${php} Apps/Webiny/Php/Cli/admin.php Local ${params}`, {stdio: 'pipe'});
                 output = JSON.parse(output);
                 if (output.status === 'created') {
                     Webiny.success('Admin user created successfully!');
@@ -191,7 +199,8 @@ class Setup extends Plugin {
             };
 
             try {
-                Webiny.shellExecute('nginx -v', {stdio: 'pipe'});
+                const nginx = docker ? 'docker-compose run nginx nginx' : 'nginx';
+                Webiny.shellExecute(`${nginx} -v`, {stdio: 'pipe'});
                 return createHost();
             } catch (err) {
                 // Skip host prompts
