@@ -31,7 +31,8 @@ class Setup extends Plugin {
         this.selectApps = false;
     }
 
-    runWizard() {
+    runWizard({env}) {
+        const docker = env === 'docker';
         const inquirer = require('inquirer');
         const yaml = require('js-yaml');
         const _ = require('lodash');
@@ -78,6 +79,7 @@ class Setup extends Plugin {
             answers.domain = _.trimEnd(answers.domain, '/');
 
             const configs = {
+                dockerCompose: Webiny.projectRoot('docker-compose.yaml'),
                 configSets: Webiny.projectRoot('Configs/ConfigSets.yaml'),
                 base: {
                     application: Webiny.projectRoot('Configs/Base/Application.yaml'),
@@ -103,6 +105,9 @@ class Setup extends Plugin {
                 // Populate Base/Database.yaml
                 config = yaml.safeLoad(Webiny.readFile(configs.base.database));
                 config.Mongo.Services.Webiny.Calls[0][1] = [answers.database];
+                if (docker) {
+                    config.Mongo.Services.Webiny.Arguments.Uri = 'mongodb:27017';
+                }
                 Webiny.writeFile(configs.base.database, yaml.safeDump(config, {indent: 4, flowLevel: 5}));
 
                 // Populate Base/Security.yaml
@@ -118,19 +123,34 @@ class Setup extends Plugin {
                 Webiny.writeFile(configs.local.application, yaml.safeDump(config, {indent: 4}));
 
                 Webiny.success('Configuration files written successfully!');
+
+                // We need to store the env if the project is run using docker
+                if (docker) {
+                    const wConfig = Webiny.getConfig();
+                    wConfig.env = 'docker';
+                    Webiny.saveConfig(wConfig);
+                }
             } catch (err) {
-                console.log(err);
+                Webiny.failure(err.message, err);
                 return;
             }
 
+            if (docker) {
+                Webiny.info('Initializing Docker containers...');
+                // Run Docker containers so we can execute install scripts.
+                Webiny.shellExecute('docker-compose up -d');
+            }
+
+            const php = docker ? 'docker-compose run php php' : 'php';
+
             // Run Webiny installation procedure
             Webiny.info('Running Webiny app installation...');
-            Webiny.shellExecute('php Apps/Webiny/Php/Cli/install.php Local Webiny');
+            Webiny.shellExecute(`${php} Apps/Webiny/Php/Cli/install.php Local Webiny`);
 
             // Create admin user
             const params = [answers.user, answers.password].join(' ');
             try {
-                let output = Webiny.shellExecute('php Apps/Webiny/Php/Cli/admin.php Local ' + params, {stdio: 'pipe'});
+                let output = Webiny.shellExecute(`${php} Apps/Webiny/Php/Cli/admin.php Local ${params}`, {stdio: 'pipe'});
                 output = JSON.parse(output);
                 if (output.status === 'created') {
                     Webiny.success('Admin user created successfully!');
@@ -154,7 +174,7 @@ class Setup extends Plugin {
                     name: 'createHost',
                     message: 'Would you like us to create a new nginx virtual host for you?',
                     default: true
-                }).then(function (a) {
+                }).then(a => {
                     if (a.createHost) {
                         hostAnswers.createHost = true;
                         return errorLogFile();
@@ -172,14 +192,15 @@ class Setup extends Plugin {
                         const server = answers.domain.replace('http://', '').replace('https://', '').split(':')[0];
                         return '/var/log/nginx/' + server + '-error.log';
                     }
-                }).then(function (a) {
+                }).then(a => {
                     hostAnswers.errorLogFile = a.errorLogFile;
                     return setupVirtualHost(hostAnswers);
                 });
             };
 
             try {
-                Webiny.shellExecute('nginx -v', {stdio: 'pipe'});
+                const nginx = docker ? 'docker-compose run nginx nginx' : 'nginx';
+                Webiny.shellExecute(`${nginx} -v`, {stdio: 'pipe'});
                 return createHost();
             } catch (err) {
                 // Skip host prompts
