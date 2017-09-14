@@ -2,7 +2,6 @@
 
 namespace Apps\Webiny\Php\Lib\Authorization;
 
-use Apps\Webiny\Php\Lib\Api\ApiExpositionTrait;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\Interfaces\PublicApiInterface;
 use Apps\Webiny\Php\Lib\Interfaces\UserInterface;
@@ -231,7 +230,7 @@ class Authorization
     }
 
     /**
-     * @param string|object $class ApiExpositionTrait instance or classId string
+     * @param string|object $class ApiExpositionTrait instance
      * @param string        $permission
      *
      * @return bool
@@ -243,14 +242,13 @@ class Authorization
             return true;
         }
 
-        if (!is_string($class)) {
-            if (!is_string($class::getClassId())) {
-                throw new AppException(get_class($class) . ' must declare a $classId property');
-            }
-            $class = $class::getClassId();
-        } else {
-            $class = trim($class, '\\');
+        $class = !is_string($class) ? get_class($class) : $class;
+        if (!is_string($class::getClassId())) {
+            throw new AppException($class . ' must declare a $classId property');
         }
+
+        $class = trim($class, '\\');
+        $classId = $class::getClassId();
 
         $isService = in_array(AbstractService::class, class_parents($class));
         if ($isService && in_array(PublicApiInterface::class, class_implements($class))) {
@@ -265,14 +263,15 @@ class Authorization
             }
         }
 
+
         /* @var $role UserRole */
         foreach ($roles as $role) {
-            if ($role->checkPermission($class, $permission)) {
+            if ($role->checkPermission($classId, $permission)) {
                 return true;
             }
 
             // Check if given permission pattern is a crud pattern
-            if (isset($this->patterns[$permission]) && $role->checkPermission($class, $this->patterns[$permission])) {
+            if (isset($this->patterns[$permission]) && $role->checkPermission($classId, $this->patterns[$permission])) {
                 return true;
             }
         }

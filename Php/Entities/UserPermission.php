@@ -92,7 +92,7 @@ class UserPermission extends AbstractEntity
     {
         foreach ($this->permissions as $p) {
             if ($p['classId'] == $item) {
-                return $p['rules'][$permission] ?? false;
+                return $this->arr($p['rules'])->keyNested($permission) ?? false;
             }
         }
 
