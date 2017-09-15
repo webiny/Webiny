@@ -290,6 +290,9 @@
                     },
                     "reset-password": {
                         "post": true
+                    },
+                    "apps/{id}/install": {
+                        "get": true
                     }
                 }
             }
