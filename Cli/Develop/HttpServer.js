@@ -85,6 +85,9 @@ class HttpServer {
                     throw Error(cmdRes.error);
                 }
             }).then(() => {
+                if (!Webiny.fileExists(`Apps/${appData.localName}/package.json`)) {
+                    return;
+                }
                 httpWrite('Installing JS dependencies...');
                 const params = [
                     `cd Apps/${appData.localName}`,
