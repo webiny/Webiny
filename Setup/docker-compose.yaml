@@ -15,6 +15,7 @@ services:
             - ./:/app:delegated
         environment:
             XDEBUG_CONFIG: "remote_enable=0 remote_host=0.0.0.0"
+        extra_hosts: []
 
     mongodb:
         image: mongo
