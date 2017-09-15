@@ -179,7 +179,7 @@ class Setup extends Plugin {
                 // Populate docker-compose.yaml
                 if (docker) {
                     config = yaml.safeLoad(Webiny.readFile(configs.dockerCompose));
-                    config.services.nginx.ports.push([nginxPort + ':80']);
+                    config.services.nginx.ports.push(nginxPort + ':80');
                     config.services.php.extra_hosts.push('dockerhost:' + answers.hostIp);
                     config.services.mongodb.ports.push(answers.databasePort + ':27017');
                     Webiny.writeFile(configs.dockerCompose, yaml.safeDump(config, {indent: 4}));
