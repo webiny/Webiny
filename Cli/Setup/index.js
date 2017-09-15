@@ -213,9 +213,6 @@ class Setup extends Plugin {
             Webiny.info('Running Webiny app installation...');
             Webiny.shellExecute(`${php} Apps/Webiny/Php/Cli/install.php Local Webiny`);
 
-            // Run installation of JS dependencies
-            Webiny.shellExecute(`cd Apps/Webiny && yarn install && cd ${Webiny.projectRoot()}`);
-
             // Create admin user
             const params = [answers.user, answers.password].join(' ');
             try {
