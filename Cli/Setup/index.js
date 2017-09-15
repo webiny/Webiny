@@ -2,6 +2,19 @@ const username = require('username');
 const Plugin = require('webiny-cli/lib/plugin');
 const Webiny = require('webiny-cli/lib/webiny');
 
+function setupDockerVirtualHost(answers) {
+    // Create host file
+    let hostFile = Webiny.readFile(Webiny.projectRoot('docker-nginx.conf'));
+    let server = answers.domain.replace('http://', '').replace('https://', '').split(':')[0];
+    hostFile = hostFile.replace('{DOMAIN_HOST}', server);
+
+    try {
+        Webiny.writeFile(Webiny.projectRoot('docker-nginx.conf'), hostFile);
+    } catch (err) {
+        Webiny.failure(err);
+    }
+}
+
 function setupVirtualHost(answers) {
     const chalk = require('chalk');
     const {magenta, white} = chalk;
@@ -39,7 +52,7 @@ class Setup extends Plugin {
         const generatePassword = require('password-generator');
         const interfaces = require('./interfaces');
 
-        // Save env as it is vital to correct `projectRoot` return values
+        // Save env as it needs to be available as soon as possible for conditional execution
         const wConfig = Webiny.getConfig();
         wConfig.env = env;
         Webiny.saveConfig(wConfig);
@@ -166,9 +179,10 @@ class Setup extends Plugin {
                 if (docker) {
                     config = yaml.safeLoad(Webiny.readFile(configs.dockerCompose));
                     config.services.nginx.ports.push([nginxPort + ':80']);
-                    config.services.php.extra_hosts.push(['dockerhost:' + answers.hostIp]);
-                    config.services.mongodb.ports.push([answers.databasePort + ':27017']);
+                    config.services.php.extra_hosts.push('dockerhost:' + answers.hostIp);
+                    config.services.mongodb.ports.push(answers.databasePort + ':27017');
                     Webiny.writeFile(configs.dockerCompose, yaml.safeDump(config, {indent: 4}));
+                    setupDockerVirtualHost(answers);
                 }
 
                 Webiny.success('Configuration files written successfully!');

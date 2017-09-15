@@ -21,7 +21,7 @@ class CreateAdmin extends Plugin {
                 // Execute an admin.php script
                 const params = [
                     docker ? 'docker-compose run php php' : 'php',
-                    Webiny.projectRoot('Apps/Webiny/Php/Cli/admin.php'),
+                    'Apps/Webiny/Php/Cli/admin.php',
                     'Local',
                     config.user,
                     config.password
