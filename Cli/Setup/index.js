@@ -37,15 +37,42 @@ class Setup extends Plugin {
         const yaml = require('js-yaml');
         const _ = require('lodash');
         const generatePassword = require('password-generator');
+        const interfaces = require('./interfaces');
+
+        // Save env as it is vital to correct `projectRoot` return values
+        const wConfig = Webiny.getConfig();
+        wConfig.env = env;
+        Webiny.saveConfig(wConfig);
 
         Webiny.log("\nNow we need to create a platform configuration and your first user:\n");
 
+        // Need this later in setup
+        let nginxPort = null;
+
+        // Define wizard questions
         const questions = [
             {
                 type: 'input',
                 name: 'domain',
-                message: 'What\'s your local domain (e.g. http://domain.app:8001)?',
-                validate: Webiny.validate.url
+                message: 'What\'s your local domain (e.g. http://domain.app:8010)?',
+                validate: url => {
+                    let valid = Webiny.validate.url(url);
+                    // Check if URL contains port which is mandatory for Docker setup
+                    if (valid === true && docker) {
+                        nginxPort = _.get(url.split(':'), 2);
+                        if (!_.isNumber(nginxPort)) {
+                            valid = 'Docker requires a port to be provided. Please add a port number to the URL.';
+                        }
+                    }
+                    return valid;
+                }
+            },
+            {
+                type: 'list',
+                choices: interfaces(),
+                name: 'hostIp',
+                message: 'Select your host IP address:',
+                when: docker
             },
             {
                 type: 'input',
@@ -53,6 +80,15 @@ class Setup extends Plugin {
                 message: 'What\'s your database name?',
                 default: () => {
                     return 'webiny';
+                }
+            },
+            {
+                type: 'input',
+                name: 'databasePort',
+                when: docker,
+                message: 'What\'s your database container port?',
+                default: ({url}) => {
+                    return _.get(url.split(':'), 2, '');
                 }
             },
             {
@@ -121,6 +157,15 @@ class Setup extends Plugin {
                 config.Application.WebPath = answers.domain;
                 config.Application.ApiPath = answers.domain + '/api';
                 Webiny.writeFile(configs.local.application, yaml.safeDump(config, {indent: 4}));
+
+                // Populate docker-compose.yaml
+                if (docker) {
+                    config = yaml.safeLoad(Webiny.readFile(configs.dockerCompose));
+                    config.services.nginx.ports.push([nginxPort + ':80']);
+                    config.services.php.extra_hosts.push(['dockerhost:' + answers.hostIp]);
+                    config.services.mongodb.ports.push([answers.databasePort + ':27017']);
+                    Webiny.writeFile(configs.dockerCompose, yaml.safeDump(config, {indent: 4}));
+                }
 
                 Webiny.success('Configuration files written successfully!');
 

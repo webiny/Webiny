@@ -76,8 +76,7 @@ class HttpServer {
             const php = docker ? 'docker-compose run php php ' : 'php ';
             // Run installation
             httpWrite('Installing JS dependencies, roles, permissions and DB indexes...');
-            const script = 'Apps/Webiny/Php/Cli/install.php';
-            return this.command(`${php} ${docker ? script : Webiny.projectRoot(script)} Local ${appData.localName}`, httpWrite).then(cmdRes => {
+            return this.command(`${php} ${Webiny.projectRoot('Apps/Webiny/Php/Cli/install.php')} Local ${appData.localName}`, httpWrite).then(cmdRes => {
                 if (cmdRes.error) {
                     throw Error(cmdRes.error);
                 }
