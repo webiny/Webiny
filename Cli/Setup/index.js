@@ -192,6 +192,8 @@ class Setup extends Plugin {
                 if (docker) {
                     const wConfig = Webiny.getConfig();
                     wConfig.env = 'docker';
+                    // Set default browserSync port for Docker only
+                    wConfig.browserSync = {port: 3010};
                     Webiny.saveConfig(wConfig);
                 }
             } catch (err) {
