@@ -34,6 +34,8 @@ class HttpServer {
     }
 
     installApp(req, res, url, appData) {
+        const docker = Webiny.getConfig().env === 'docker';
+
         res.writeHead(200, {
             'Connection': 'Transfer-Encoding',
             'Transfer-Encoding': 'chunked'
@@ -49,7 +51,15 @@ class HttpServer {
         // Run composer
         httpWrite(`Installing ${appData.name}...`);
         httpWrite(`Running composer...`);
-        return this.command(`composer require ${appData.packagist} 2>&1`, httpWrite).then(cmdRes => {
+
+        // Local and docker env have entirely different commands, thus all this garbage
+        let composer = `composer require ${appData.packagist} 2>&1`;
+        if (docker) {
+            composer = `docker run --rm --volume $PWD:/app composer require ${appData.packagist} --ignore-platform-reqs --no-scripts 2>&1`;
+        }
+
+        // Execute command
+        return this.command(composer, httpWrite).then(cmdRes => {
             if (cmdRes.error) {
                 throw Error(cmdRes.error);
             }
@@ -63,9 +73,11 @@ class HttpServer {
             config.Apps[appData.localName] = true;
             Webiny.writeFile(configPath, yaml.safeDump(config, {indent: 4}));
         }).then(() => {
+            const php = docker ? 'docker-compose run php php ' : 'php ';
             // Run installation
             httpWrite('Installing JS dependencies, roles, permissions and DB indexes...');
-            return this.command(`php ${Webiny.projectRoot('Apps/Webiny/Php/Cli/install.php')} Local ${appData.localName}`, httpWrite).then(cmdRes => {
+            const script = 'Apps/Webiny/Php/Cli/install.php';
+            return this.command(`${php} ${docker ? script : Webiny.projectRoot(script)} Local ${appData.localName}`, httpWrite).then(cmdRes => {
                 if (cmdRes.error) {
                     throw Error(cmdRes.error);
                 }
