@@ -8,7 +8,7 @@ const Webiny = require('webiny-cli/lib/webiny');
 class HttpServer {
     constructor(browserSync, port) {
         this.browserSync = browserSync;
-        this.port = port;
+        this.port = parseInt(port);
     }
 
     run() {
