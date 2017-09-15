@@ -32,7 +32,6 @@ class Install implements LifeCycleInterface
      */
     public function run(App $app)
     {
-        $this->installJsDependencies($app);
         $this->createUserPermissions();
         $this->createUserRoles();
         $this->createIndexes($app);
@@ -141,19 +140,6 @@ class Install implements LifeCycleInterface
                     }
                 }
             }
-        }
-    }
-
-    /**
-     * Install JS dependencies
-     * Default: `yarn install` is executed in the root of the app to install both production and development dependencies
-     *
-     * @param App $app
-     */
-    protected function installJsDependencies($app)
-    {
-        if (file_exists($app->getPath() . '/package.json')) {
-            passthru('cd ' . $app->getPath() . ' && yarn install');
         }
     }
 

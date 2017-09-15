@@ -81,7 +81,7 @@ class Release implements LifeCycleInterface
 
     /**
      * Install production JS dependencies
-     * Default: `npm install --production` is executed in the root of the app
+     * Default: `yarn install --production` is executed in the root of the app
      *
      * @param App $app
      */
