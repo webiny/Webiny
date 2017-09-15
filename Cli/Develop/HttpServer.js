@@ -73,18 +73,29 @@ class HttpServer {
             config.Apps[appData.localName] = true;
             Webiny.writeFile(configPath, yaml.safeDump(config, {indent: 4}));
         }).then(() => {
+            httpWrite('Installing roles, permissions and DB indexes...');
             const params = [
                 docker ? 'docker-compose run php php' : 'php',
                 'Apps/Webiny/Php/Cli/install.php',
                 'Local',
                 appData.localName
             ];
-            // Run installation
-            httpWrite('Installing JS dependencies, roles, permissions and DB indexes...');
             return this.command(params.join(' '), httpWrite).then(cmdRes => {
                 if (cmdRes.error) {
                     throw Error(cmdRes.error);
                 }
+            }).then(() => {
+                httpWrite('Installing JS dependencies...');
+                const params = [
+                    `cd Apps/${appData.localName}`,
+                    `yarn install`,
+                    `cd ${Webiny.projectRoot()}`
+                ];
+                return this.command(params.join(' && '), httpWrite).then(cmdRes => {
+                    if (cmdRes.error) {
+                        throw Error(cmdRes.error);
+                    }
+                });
             });
         }).then(() => {
             Webiny.loadApps();

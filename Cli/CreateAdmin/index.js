@@ -33,8 +33,8 @@ class CreateAdmin extends Plugin {
                     Webiny.success('Admin user created successfully!');
                 }
 
-                if (output.status === 'exists') {
-                    Webiny.exclamation('Admin user already exists!');
+                if (output.status === 'failed') {
+                    Webiny.exclamation(output.message);
                 }
 
                 resolve(config);

@@ -213,8 +213,8 @@ class Setup extends Plugin {
             Webiny.info('Running Webiny app installation...');
             Webiny.shellExecute(`${php} Apps/Webiny/Php/Cli/install.php Local Webiny`);
 
-            // Since node-sass is installed inside php container we now need to rebuild the binaries
-            Webiny.shellExecute(`cd Apps/Webiny && yarn add --force node-sass -D && cd ${Webiny.projectRoot()}`);
+            // Run installation of JS dependencies
+            Webiny.shellExecute(`cd Apps/Webiny && yarn install && cd ${Webiny.projectRoot()}`);
 
             // Create admin user
             const params = [answers.user, answers.password].join(' ');
@@ -225,8 +225,8 @@ class Setup extends Plugin {
                     Webiny.success('Admin user created successfully!');
                 }
 
-                if (output.status === 'exists') {
-                    Webiny.exclamation('Admin user already exists!');
+                if (output.status === 'failed') {
+                    Webiny.exclamation(output.message);
                 }
             } catch (err) {
                 Webiny.failure(err.message);
