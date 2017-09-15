@@ -2,6 +2,19 @@ const username = require('username');
 const Plugin = require('webiny-cli/lib/plugin');
 const Webiny = require('webiny-cli/lib/webiny');
 
+function setupDockerVirtualHost(answers) {
+    // Create host file
+    let hostFile = Webiny.readFile(Webiny.projectRoot('docker-nginx.conf'));
+    let server = answers.domain.replace('http://', '').replace('https://', '').split(':')[0];
+    hostFile = hostFile.replace('{DOMAIN_HOST}', server);
+
+    try {
+        Webiny.writeFile(Webiny.projectRoot('docker-nginx.conf'), hostFile);
+    } catch (err) {
+        Webiny.failure(err);
+    }
+}
+
 function setupVirtualHost(answers) {
     const chalk = require('chalk');
     const {magenta, white} = chalk;
@@ -37,15 +50,43 @@ class Setup extends Plugin {
         const yaml = require('js-yaml');
         const _ = require('lodash');
         const generatePassword = require('password-generator');
+        const interfaces = require('./interfaces');
+
+        // Save env as it needs to be available as soon as possible for conditional execution
+        const wConfig = Webiny.getConfig();
+        wConfig.env = env;
+        Webiny.saveConfig(wConfig);
 
         Webiny.log("\nNow we need to create a platform configuration and your first user:\n");
 
+        // Need this later in setup
+        let nginxPort = null;
+
+        // Define wizard questions
         const questions = [
             {
                 type: 'input',
                 name: 'domain',
-                message: 'What\'s your local domain (e.g. http://domain.app:8001)?',
-                validate: Webiny.validate.url
+                message: 'What\'s your local domain (e.g. http://domain.app:8000)?',
+                validate: url => {
+                    let valid = Webiny.validate.url(url);
+                    // Check if URL contains port which is mandatory for Docker setup
+                    if (valid === true && docker) {
+                        const message = 'Docker requires a port to be provided. Please add a port number to the URL.';
+                        nginxPort = parseInt(_.get(url.split(':'), 2));
+                        if (_.isNaN(nginxPort)) {
+                            return message;
+                        }
+                    }
+                    return valid;
+                }
+            },
+            {
+                type: 'list',
+                choices: interfaces(),
+                name: 'hostIp',
+                message: 'Select your host IP address:',
+                when: docker
             },
             {
                 type: 'input',
@@ -53,6 +94,19 @@ class Setup extends Plugin {
                 message: 'What\'s your database name?',
                 default: () => {
                     return 'webiny';
+                }
+            },
+            {
+                type: 'input',
+                name: 'databasePort',
+                when: docker,
+                message: 'What\'s your mongodb service port?',
+                default: ({domain}) => {
+                    try {
+                        return parseInt(domain.split(':')[2]) + 1;
+                    } catch (e) {
+                        return '';
+                    }
                 }
             },
             {
@@ -121,6 +175,16 @@ class Setup extends Plugin {
                 config.Application.WebPath = answers.domain;
                 config.Application.ApiPath = answers.domain + '/api';
                 Webiny.writeFile(configs.local.application, yaml.safeDump(config, {indent: 4}));
+
+                // Populate docker-compose.yaml
+                if (docker) {
+                    config = yaml.safeLoad(Webiny.readFile(configs.dockerCompose));
+                    config.services.nginx.ports.push([nginxPort + ':80']);
+                    config.services.php.extra_hosts.push('dockerhost:' + answers.hostIp);
+                    config.services.mongodb.ports.push(answers.databasePort + ':27017');
+                    Webiny.writeFile(configs.dockerCompose, yaml.safeDump(config, {indent: 4}));
+                    setupDockerVirtualHost(answers);
+                }
 
                 Webiny.success('Configuration files written successfully!');
 

@@ -18,6 +18,11 @@ class AppInstaller
         $bsConfig = $this->arr(json_decode($bsConfig, true));
         $webPath = $this->wConfig()->get('Application.WebPath');
 
+        // If docker, change to dockerhost
+        if ($bsConfig['env'] === 'docker') {
+            $webPath = 'http://dockerhost';
+        }
+
         $port = $bsConfig->keyNested('browserSync.port', 3000, true);
         $bsPath = $this->url($webPath)->setPort(intval($port) + 1);
 

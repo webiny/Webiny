@@ -3,18 +3,18 @@ version: '2'
 services:
     nginx:
         image: nginx:alpine
-        ports:
-            - "8000:80"
+        ports: []
         volumes:
             - ./:/app
             - ./docker-nginx.conf:/etc/nginx/conf.d/default.conf
 
     php:
-        build: .
+        image: webiny/php7:dev
         volumes:
             - ./:/app:delegated
         environment:
             XDEBUG_CONFIG: "remote_enable=0 remote_host=0.0.0.0"
+        extra_hosts: []
 
     mongodb:
         image: mongo
@@ -23,6 +23,5 @@ services:
           - MONGO_LOG_DIR=/dev/null
         volumes:
           - ./data/db:/data/db
-        ports:
-            - 8001:27017
+        ports: []
         command: mongod --smallfiles --logpath=/dev/null # --quiet
