@@ -211,6 +211,9 @@ class Setup extends Plugin {
             Webiny.info('Running Webiny app installation...');
             Webiny.shellExecute(`${php} Apps/Webiny/Php/Cli/install.php Local Webiny`);
 
+            // Since node-sass is installed inside php container we now need to rebuild the binaries
+            Webiny.shellExecute(`cd Apps/Webiny && yarn add --force node-sass -D && cd ${Webiny.projectRoot()}`);
+
             // Create admin user
             const params = [answers.user, answers.password].join(' ');
             try {
@@ -227,12 +230,19 @@ class Setup extends Plugin {
                 Webiny.failure(err.message);
             }
 
-            // Virtual host wizard
-            const hostAnswers = {
-                domain: answers.domain
-            };
+            // If Docker - we do not run nginx setup wizard
+            if (docker) {
+                return Promise.resolve();
+            }
 
-            const createHost = function () {
+            // Optionally create nginx config
+            try {
+                // Virtual host wizard
+                const hostAnswers = {
+                    domain: answers.domain
+                };
+
+                Webiny.shellExecute('nginx -v', {stdio: 'pipe'});
                 return inquirer.prompt({
                     type: 'confirm',
                     name: 'createHost',
@@ -241,31 +251,21 @@ class Setup extends Plugin {
                 }).then(a => {
                     if (a.createHost) {
                         hostAnswers.createHost = true;
-                        return errorLogFile();
+                        return inquirer.prompt({
+                            type: 'input',
+                            name: 'errorLogFile',
+                            message: 'Where do you want to place your error log file (including file name)?',
+                            default: function () {
+                                const server = answers.domain.replace('http://', '').replace('https://', '').split(':')[0];
+                                return '/var/log/nginx/' + server + '-error.log';
+                            }
+                        }).then(a => {
+                            hostAnswers.errorLogFile = a.errorLogFile;
+                            return setupVirtualHost(hostAnswers);
+                        });
                     }
                     return answers;
                 });
-            };
-
-            const errorLogFile = function () {
-                return inquirer.prompt({
-                    type: 'input',
-                    name: 'errorLogFile',
-                    message: 'Where do you want to place your error log file (including file name)?',
-                    default: function () {
-                        const server = answers.domain.replace('http://', '').replace('https://', '').split(':')[0];
-                        return '/var/log/nginx/' + server + '-error.log';
-                    }
-                }).then(a => {
-                    hostAnswers.errorLogFile = a.errorLogFile;
-                    return setupVirtualHost(hostAnswers);
-                });
-            };
-
-            try {
-                const nginx = docker ? 'docker-compose run nginx nginx' : 'nginx';
-                Webiny.shellExecute(`${nginx} -v`, {stdio: 'pipe'});
-                return createHost();
             } catch (err) {
                 // Skip host prompts
             }
