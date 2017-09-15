@@ -21,7 +21,7 @@ class AddEntityModal extends Webiny.Ui.ModalComponent {
                             const query = {
                                 details: 'methods',
                                 crudMethods: true,
-                                entity: model.class
+                                classId: model.entity
                             };
 
                             const apiResponse = await this.api.setQuery(query).get();
@@ -42,11 +42,11 @@ class AddEntityModal extends Webiny.Ui.ModalComponent {
                                             <Select
                                                 description={this.i18n(`Entities already added are not shown.`)}
                                                 placeholder={this.i18n('Select entity...')}
-                                                name="class"
+                                                name="entity"
                                                 validate="required"
                                                 api="/services/webiny/entities"
-                                                query={{exclude: this.props.exclude.map(item => item.class)}}
-                                                valueAttr="class"
+                                                query={{exclude: this.props.exclude.map(item => item.classId)}}
+                                                valueAttr="classId"
                                                 textAttr="class"
                                                 minimumResultsForSearch={5}/>
                                         </Grid.Col>

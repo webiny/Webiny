@@ -24,14 +24,13 @@ if (!defined('DS')) {
  * @property array  $tags Tags assigned to file
  * @property string $ref Reference to entity
  * @property int    $order Order of file (used in image galleries)
- *
- * @package Apps\Webiny\Php\Entities
  */
 class File extends AbstractEntity
 {
     use StorageTrait;
 
     const DEFAULT_STORAGE = 'Files';
+    protected static $classId = 'Webiny.Entities.File';
     protected static $entityCollection = 'Files';
     /**
      * @var Storage

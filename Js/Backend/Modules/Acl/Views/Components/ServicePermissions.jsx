@@ -19,11 +19,11 @@ class ServicePermissions extends Webiny.Ui.Component {
 
     componentWillMount() {
         super.componentWillMount();
-        if (!_.isEmpty(this.props.permissions)) {
-            this.setState('loading', true, () => {
-                this.api.setQuery({
-                    services: _.keys(this.props.permissions)
-                }).get('/service').then(apiResponse => this.setState({loading: false, services: apiResponse.getData()}));
+        if (!_.isEmpty(this.props.model.permissions)) {
+            this.setState({loading: true}, () => {
+                this.api.setQuery({classIds: _.map(this.props.model.permissions, 'classId')}).get('/service').then(apiResponse => {
+                    this.setState({loading: false, services: apiResponse.getData()})
+                });
             });
         }
     }
@@ -31,12 +31,11 @@ class ServicePermissions extends Webiny.Ui.Component {
 
 ServicePermissions.defaultProps = {
     model: null,
-    permissions: {},
     onTogglePermission: _.noop,
     onAddService: _.noop,
     onRemoveService: _.noop,
     renderer() {
-        const {Loader, Button, ViewSwitcher, Grid, Icon, permissions} = this.props;
+        const {Loader, Button, ViewSwitcher, Grid, Icon} = this.props;
 
         return (
             <ViewSwitcher>
@@ -66,23 +65,26 @@ ServicePermissions.defaultProps = {
                                 </Grid.Row>
                             ) : (
                                 <Grid.Row className={styles.accessBoxesWrapper}>
-                                    {this.state.services.map(service => (
-                                        <ServiceBox
-                                            currentlyEditingPermission={this.props.model}
-                                            onTogglePermission={(service, method) => this.props.onTogglePermission(service, method)}
-                                            onRemoveService={service => {
-                                                const index = this.state.services.indexOf(service);
-                                                const services = _.clone(this.state.services);
-                                                services.splice(index, 1);
-                                                this.setState({services}, () => {
-                                                    this.props.onRemoveService(service);
-                                                    Webiny.Growl.success(this.i18n('Service removed successfully!'));
-                                                });
-                                            }}
-                                            key={service.class}
-                                            service={service}
-                                            permissions={permissions[service.class]}/>
-                                    ))}
+                                    {this.state.services.map(service => {
+                                        const servicePermissions = _.find(this.props.model.permissions, {classId: service.classId});
+                                        return (
+                                            <ServiceBox
+                                                currentlyEditingPermission={this.props.model}
+                                                onTogglePermission={(service, method) => this.props.onTogglePermission(service, method)}
+                                                onRemoveService={service => {
+                                                    const index = _.find(this.state.services, {classId: service.classId});
+                                                    const services = _.clone(this.state.services);
+                                                    services.splice(index, 1);
+                                                    this.setState({services}, () => {
+                                                        this.props.onRemoveService(service);
+                                                        Webiny.Growl.success(this.i18n('Service removed successfully!'));
+                                                    });
+                                                }}
+                                                key={service.classId}
+                                                service={service}
+                                                permissions={_.get(servicePermissions, 'rules', {})}/>
+                                        );
+                                    })}
                                 </Grid.Row>
                             )}
                         </div>

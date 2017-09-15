@@ -4,7 +4,6 @@ namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
 use Apps\Webiny\Php\Lib\Interfaces\UserInterface;
-use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Webiny\Component\Crypt\CryptTrait;
 use Webiny\Component\Entity\EntityCollection;
@@ -21,13 +20,12 @@ use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
  * @property integer          $requests
  * @property DateTimeObject   $lastActivity
  * @property EntityCollection $roles
- *
- * @package Apps\Webiny\Php\Entities
  */
 class ApiToken extends AbstractEntity implements UserInterface
 {
-    use WebinyTrait, CryptTrait;
+    use CryptTrait;
 
+    protected static $classId = 'Webiny.Entities.ApiToken';
     protected static $entityCollection = 'ApiTokens';
     protected static $entityMask = '{id}';
 

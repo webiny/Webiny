@@ -5,7 +5,6 @@ namespace Apps\Webiny\Php\Entities;
 use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
-use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Webiny\Component\Mongo\Index\SingleIndex;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
@@ -16,14 +15,10 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  * @property string $id
  * @property string $key
  * @property object $settings
- *
- * @package Apps\Webiny\Php\Entities
- *
  */
 class Settings extends AbstractEntity
 {
-    use WebinyTrait;
-
+    protected static $classId = 'Webiny.Entities.Settings';
     protected static $entityCollection = 'Settings';
     protected static $entityMask = '{key}';
     protected static $key = null;

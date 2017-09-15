@@ -7,10 +7,11 @@ use Apps\Webiny\Php\Lib\Services\AbstractService;
 
 /**
  * Class Acl
- * @package Apps\Webiny\Php\Services
  */
 class Acl extends AbstractService
 {
+    protected static $classId = 'Webiny.Services.Acl';
+
     protected function serviceApi(ApiContainer $api)
     {
         /**

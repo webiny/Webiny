@@ -19,14 +19,11 @@ use Webiny\Component\Mongo\Index\SingleIndex;
  * @property string         $token Token ID or 'system' if request was made using system API token
  * @property AbstractEntity $user User that made the request
  * @property array          $request Request details
- *
- * @package Apps\Webiny\Php\Entities
- *
  */
 class ApiLog extends AbstractEntity
 {
+    protected static $classId = 'Webiny.Entities.ApiLog';
     protected static $entityCollection = 'ApiLogs';
-    protected static $entityMask = '{id}';
 
     public function __construct()
     {
@@ -70,18 +67,16 @@ class ApiLog extends AbstractEntity
 
     protected static function entityQuery(QueryContainer $query)
     {
-        $query->add(
-            new Filter('*', function (EntityQuery $query) {
-                $user = self::wAuth()->getUser();
-                if (!$user) {
-                    return $query->abort();
-                }
+        $query->add(new Filter('*', function (EntityQuery $query) {
+            $user = self::wAuth()->getUser();
+            if (!$user) {
+                return $query->abort();
+            }
 
-                if (!$user->hasRole('webiny-acl-api-token-manager')) {
-                    $query->setCondition('token', ['$ne' => 'system']);
-                }
-            })
-        );
+            if (!$user->hasRole('webiny-acl-api-token-manager')) {
+                $query->setCondition('token', ['$ne' => 'system']);
+            }
+        }));
     }
 
     protected static function entityIndexes(IndexContainer $indexes)

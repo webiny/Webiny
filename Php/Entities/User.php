@@ -6,7 +6,6 @@ use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Authorization\TwoFactorAuth;
 use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
 use Apps\Webiny\Php\Lib\Interfaces\UserInterface;
-use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Lib\Entity\Attributes\FileAttribute;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
@@ -31,14 +30,12 @@ use Webiny\Component\Mongo\Index\CompoundIndex;
  * @property EntityCollection $roles
  * @property bool             $enabled
  * @property array            $meta
- *
- * @package Apps\Webiny\Php\Entities
- *
  */
 class User extends AbstractEntity implements UserInterface
 {
-    use WebinyTrait, CryptTrait, MailerTrait;
+    use CryptTrait, MailerTrait;
 
+    protected static $classId = 'Webiny.Entities.User';
     protected static $entityCollection = 'Users';
     protected static $entityMask = '{email}';
 

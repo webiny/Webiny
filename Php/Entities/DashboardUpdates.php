@@ -5,7 +5,6 @@ namespace Apps\Webiny\Php\Entities;
 use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
-use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\Mongo\Index\CompoundIndex;
 use Webiny\Component\Mongo\Index\SingleIndex;
 
@@ -13,13 +12,10 @@ use Webiny\Component\Mongo\Index\SingleIndex;
  * Class Updates controls the updates that will be delivered to Webiny Dashboard
  *
  * @property boolean $dismissed
- *
- * @package Apps\Webiny\Php\Entities
  */
 class DashboardUpdates extends AbstractEntity
 {
-    use WebinyTrait;
-
+    protected static $classId = 'Webiny.Entities.DashboardUpdates';
     protected static $entityCollection = 'DashboardUpdates';
 
     public function __construct()

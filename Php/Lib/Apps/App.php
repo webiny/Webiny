@@ -114,9 +114,10 @@ class App extends AbstractApp
             $cls = new \ReflectionClass($entityClass);
             if (!$cls->isAbstract() && !$cls->isTrait()) {
                 $entities[$entityName] = [
-                    'app'   => $this->getName(),
-                    'name'  => $this->getName() . '.' . $entityName,
-                    'class' => $entityClass,
+                    'app'     => $this->getName(),
+                    'name'    => $this->getName() . '.' . $entityName,
+                    'class'   => $entityClass,
+                    'classId' => $entityClass::getClassId()
                 ];
             }
         }
@@ -143,6 +144,7 @@ class App extends AbstractApp
                     'app'           => $this->getName(),
                     'name'          => $serviceName,
                     'class'         => $serviceClass,
+                    'classId'       => $serviceClass::getClassId(),
                     'public'        => $public,
                     'authorization' => !$public
                 ];

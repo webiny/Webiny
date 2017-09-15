@@ -1,16 +1,37 @@
 import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
-import EntityPermissions from './EntityPermissionsForm/EntityPermissions';
-import ServicePermissions from './EntityPermissionsForm/ServicePermissions';
+import EntityPermissions from './Components/EntityPermissions';
+import ServicePermissions from './Components/ServicePermissions';
 
 class UserPermissionsForm extends Webiny.Ui.View {
     constructor(props) {
         super(props);
-        this.state = {
-            entities: [],
-            services: []
-        };
+        this.state = {};
+    }
+
+    onToggle(model, form, classId, method) {
+        const pIndex = _.findIndex(model.permissions, {classId});
+
+        const rules = model.permissions[pIndex].rules;
+        _.set(rules, method, !_.get(rules, method));
+
+        model.permissions[pIndex].rules = rules;
+        form.setState({model});
+    }
+
+    onAdd(model, form, resource) {
+        model.permissions.push({
+            classId: resource.classId,
+            rules: {}
+        });
+        form.setState({model});
+    }
+
+    onRemove(model, form, resource) {
+        const pIndex = _.findIndex(model.permissions, {classId: resource.classId});
+        model.permissions.splice(pIndex, 1);
+        form.setState({model});
     }
 
     renderView(Ui) {
@@ -23,13 +44,11 @@ class UserPermissionsForm extends Webiny.Ui.View {
                 connectToRouter
                 onSubmitSuccess="UserPermissions.List"
                 onCancel="UserPermissions.List"
-                defaultModel={{permissions: {entities: {}, services: {}}}}
+                defaultModel={{permissions: []}}
                 onSuccessMessage={(record) => {
                     return <span>Permission <strong>{record.name}</strong> was saved!</span>;
                 }}>
                 {(model, form) => {
-                    const entities = _.get(model, 'permissions.entities');
-                    const services = _.get(model, 'permissions.services');
                     return (
                         <Ui.View.Form>
                             <Ui.View.Header title={model.id ? 'ACL - Edit permission' : 'ACL - Create permission'}/>
@@ -46,70 +65,23 @@ class UserPermissionsForm extends Webiny.Ui.View {
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
                                         <Ui.Input label="Description" name="description" validate="required"/>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={12}>
                                         <Ui.Tabs>
                                             <Ui.Tabs.Tab label="Entities">
                                                 {(newUserPermission || model.id) && (
                                                     <EntityPermissions
                                                         model={model}
-                                                        permissions={entities}
-                                                        onTogglePermission={(entity, method) => {
-                                                            const key = `permissions.entities.${entity}`;
-                                                            let permissions = _.get(model, key, {});
-                                                            if (_.isArray(permissions)) {
-                                                                permissions = {};
-                                                            }
-
-                                                            _.set(permissions, method, !_.get(permissions, method));
-                                                            form.setModel(key, permissions);
-                                                        }}
-                                                        onAddEntity={entity => {
-                                                            let entities = _.clone(model.permissions.entities);
-                                                            if (_.isArray(entities)) {
-                                                                entities = {};
-                                                            }
-                                                            entities[entity.class] = {};
-                                                            form.setModel('permissions.entities', entities);
-                                                        }}
-                                                        onRemoveEntity={entity => {
-                                                            const entities = _.clone(model.permissions.entities);
-                                                            delete entities[entity.class];
-                                                            form.setModel('permissions.entities', entities);
-                                                        }}/>
+                                                        onTogglePermission={(classId, method) => this.onToggle(model, form, classId, method)}
+                                                        onAddEntity={resource => this.onAdd(model, form, resource)}
+                                                        onRemoveEntity={resource => this.onRemove(model, form, resource)}/>
                                                 )}
                                             </Ui.Tabs.Tab>
                                             <Ui.Tabs.Tab label="Services">
                                                 {(newUserPermission || model.id) && (
                                                     <ServicePermissions
                                                         model={model}
-                                                        permissions={services}
-                                                        onTogglePermission={(service, method) => {
-                                                            const key = `permissions.services.${service}`;
-                                                            let permissions = _.get(model, key, {});
-                                                            if (_.isArray(permissions)) {
-                                                                permissions = {};
-                                                            }
-
-                                                            _.set(permissions, method, !_.get(permissions, method));
-                                                            form.setModel(key, permissions);
-                                                        }}
-                                                        onAddService={service => {
-                                                            let services = _.clone(model.permissions.services);
-                                                            if (_.isArray(services)) {
-                                                                services = {};
-                                                            }
-
-                                                            services[service.class] = {};
-                                                            form.setModel('permissions.services', services);
-                                                        }}
-                                                        onRemoveService={service => {
-                                                            const services = _.clone(model.permissions.services);
-                                                            delete services[service.class];
-                                                            form.setModel('permissions.services', services);
-                                                        }}/>
+                                                        onTogglePermission={(classId, method) => this.onToggle(model, form, classId, method)}
+                                                        onAddService={resource => this.onAdd(model, form, resource)}
+                                                        onRemoveService={resource => this.onRemove(model, form, resource)}/>
                                                 )}
                                             </Ui.Tabs.Tab>
                                         </Ui.Tabs>

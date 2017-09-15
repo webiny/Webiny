@@ -3,6 +3,7 @@
 namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\Lib\Api\ApiContainer;
+use Apps\Webiny\Php\Lib\Apps\Parser\AbstractParser;
 use Apps\Webiny\Php\Lib\Apps\Parser\EntityParser;
 use Apps\Webiny\Php\Lib\Apps\Parser\ServiceParser;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
@@ -17,13 +18,10 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  * @property string      $name
  * @property string      $slug
  * @property ArrayObject $permissions
- *
- * @package Apps\Webiny\Php\Entities
- *
  */
 class UserPermission extends AbstractEntity
 {
-
+    protected static $classId = 'Webiny.Entities.UserPermission';
     protected static $entityCollection = 'UserPermissions';
     protected static $entityMask = '{name}';
 
@@ -59,122 +57,29 @@ class UserPermission extends AbstractEntity
         /**
          * @api.name                    List entity API methods
          * @api.description             Lists CRUD and custom entity methods from all available applications.
-         * @api.query.exclude   array   Array of entities that must be excluded in the response
-         * @api.query.entities  array   Array of entities that must be included in the response
-         * @api.query.entity    string  Single entity for which the information is needed
+         * @api.query.exclude   array   Array of classIds that must be excluded from the response
+         * @api.query.classIds  array   Array of classIds that must be included in the response
+         * @api.query.classId    string  Single classId for which the information is needed
          */
         $api->get('/entity', function () {
-            // Entities listed here will not be returned in the final response.
-            $excludeEntities = $this->wRequest()->query('exclude', []);
+            $query = $this->wRequest()->query();
 
-            $singleEntity = false;
-            $multipleEntities = $this->wRequest()->query('entities', false);
-
-            if (!$multipleEntities) {
-                $singleEntity = $this->wRequest()->query('entity', false);
-                if ($singleEntity) {
-                    $multipleEntities = [$singleEntity];
-                }
-            }
-
-            $entities = [];
-
-            foreach ($this->wApps() as $app) {
-                /* @var $app App */
-                foreach ($app->getEntities() as $entity) {
-                    if (in_array($entity['class'], $excludeEntities)) {
-                        continue;
-                    }
-
-                    if ($multipleEntities && !in_array($entity['class'], $multipleEntities)) {
-                        continue;
-                    }
-
-                    $entityParser = new EntityParser($entity['class']);
-                    $entity['methods'] = $entityParser->getApiMethods(true);
-
-                    if ($singleEntity && $entity['class'] == $singleEntity) {
-                        foreach ($entity['methods'] as &$method) {
-                            $method['usages'] = $this->getMethodUsages($entity, $method);
-                        }
-
-                        return $entity;
-                    }
-
-                    $entities[] = $entity;
-                }
-            }
-
-            // Additionally, we want to know who else is exposing particular method.
-            foreach ($entities as &$entity) {
-                foreach ($entity['methods'] as &$method) {
-                    $method['usages'] = $this->getMethodUsages($entity, $method);
-                }
-            }
-
-            return $entities;
+            return $this->getResources($query, 'getEntities', EntityParser::class);
         });
 
         /**
          * @api.name                    List available services
          * @api.description             Lists service methods from all available applications.
-         * @api.query.exclude   array   Array of services that must be excluded in the response
-         * @api.query.services  array   Array of services that must be included in the response
-         * @api.query.service    string Single service for which the information is needed
+         * @api.query.exclude   array   Array of classIds that must be excluded from the response
+         * @api.query.classIds  array   Array of classIds that must be included in the response
+         * @api.query.classId   string  Single classId for which the information is needed
          */
         $api->get('/service', function () {
+            $query = $this->wRequest()->query();
 
-            // Services listed here will not be returned in the final response.
-            $excludeServices = $this->wRequest()->query('exclude', []);
-
-            $singleService = false;
-            $multipleServices = $this->wRequest()->query('services', false);
-
-            if (!$multipleServices) {
-                $singleService = $this->wRequest()->query('service', false);
-                if ($singleService) {
-                    $multipleServices = [$singleService];
-                }
-            }
-
-            $services = [];
-            /* @var $app App */
-            foreach ($this->wApps() as $app) {
-                foreach ($app->getServices() as $service) {
-                    if (in_array($service['class'], $excludeServices)) {
-                        continue;
-                    }
-
-                    if ($multipleServices && !in_array($service['class'], $multipleServices)) {
-                        continue;
-                    }
-
-                    $serviceParser = new ServiceParser($service['class']);
-                    $service['methods'] = $serviceParser->getApiMethods();
-
-                    if ($service['class'] == $singleService) {
-                        foreach ($service['methods'] as &$method) {
-                            $method['usages'] = $this->getMethodUsages($service, $method, 'services');
-                        }
-
-                        return $service;
-                    }
-
-                    $services[] = $service;
-                }
-            }
-
-            // Additionally, we want to know who else is exposing particular method.
-            foreach ($services as &$service) {
-                foreach ($service['methods'] as &$method) {
-                    $method['usages'] = $this->getMethodUsages($service, $method, 'services');
-                }
-            }
-
-            return $services;
+            return $this->getResources($query, 'getServices', ServiceParser::class);
         });
     }
-
 
     protected static function entityIndexes(IndexContainer $indexes)
     {
@@ -183,32 +88,83 @@ class UserPermission extends AbstractEntity
         $indexes->add(new CompoundIndex('unique', ['slug', 'deletedOn'], false, true));
     }
 
-
     public function checkPermission($item, $permission)
     {
-        $class = $this->str($item)->explode('\\')->filter()->values()->val();
-
-        // We ony handle the common namespace structure. Everything else will be ignored and returned as false
-        if ($class[3] != 'Entities' && $class[3] != 'Services') {
-            return false;
+        foreach ($this->permissions as $p) {
+            if ($p['classId'] == $item) {
+                return $this->arr($p['rules'])->keyNested($permission) ?? false;
+            }
         }
 
-        $key = strtolower($class[3]) . '.' . $item;
-
-        if (!$this->permissions->keyExistsNested($key)) {
-            return false;
-        }
-
-        return $this->permissions->keyNested($key . '.' . $permission);
+        return false;
     }
 
-    private function getMethodUsages($entity, $method, $type = 'entities')
+    private function getResources($data, $appMethod, $parserClass)
     {
-        $key = $key = 'permissions.' . $type . '.' . $entity['class'] . '.';
-        $crudMethod = $type === 'services' ? false : $this->isCrudEntityMethod($method);
-        $key .= $crudMethod ? $crudMethod : $method['key'];
+        $exclude = $data['exclude'] ?? [];
+        $multiple = $data['classIds'] ?? false;
+        $single = false;
 
-        $params = ['UserPermissions', [$key => true], [], 0, 0, ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1]]];
+        if (!$multiple) {
+            $single = $data['classId'] ?? false;
+            if ($single) {
+                $multiple = [$single];
+            }
+        }
+
+        $resources = [];
+        /* @var $app App */
+        foreach ($this->wApps() as $app) {
+            foreach ($app->$appMethod() as $resource) {
+                if (in_array($resource['classId'], $exclude)) {
+                    continue;
+                }
+
+                if ($multiple && !in_array($resource['classId'], $multiple)) {
+                    continue;
+                }
+
+                /* @var $parser AbstractParser */
+                $parser = new $parserClass($resource['class']);
+                $resource['methods'] = $parser->getApiMethods();
+
+                if ($resource['classId'] == $single) {
+                    foreach ($resource['methods'] as &$method) {
+                        $method['usages'] = $this->getMethodUsages($resource['classId'], $method);
+                    }
+
+                    return $resource;
+                }
+
+                $resources[] = $resource;
+            }
+        }
+
+        // Additionally, we want to know who else is exposing particular method.
+        foreach ($resources as &$resource) {
+            foreach ($resource['methods'] as &$method) {
+                $method['usages'] = $this->getMethodUsages($resource['classId'], $method);
+            }
+        }
+
+        return $resources;
+    }
+
+    private function getMethodUsages($classId, $method, $checkCrud = false)
+    {
+        $crudMethod = $checkCrud ? $this->isCrudEntityMethod($method) : false;
+
+        $key = 'rules.' . ($crudMethod ? $crudMethod : $method['key']);
+        $query = [
+            'permissions' => [
+                '$elemMatch' => [
+                    'classId' => $classId,
+                    $key      => true
+                ]
+            ]
+        ];
+
+        $params = ['UserPermissions', $query, [], 0, 0, ['projection' => ['_id' => 0, 'id' => 1, 'name' => 1]]];
         $return = $this->wDatabase()->find(...$params);
 
         if (empty($return)) {
@@ -262,13 +218,13 @@ class UserPermission extends AbstractEntity
             switch ($method['key']) {
                 case '/.get':
                 case '{id}.get':
-                    return 'crudRead';
+                    return 'r';
                 case '/.post':
-                    return 'crudCreate';
+                    return 'c';
                 case '/.delete':
-                    return 'crudDelete';
+                    return 'd';
                 case '/.patch':
-                    return 'crudUpdate';
+                    return 'u';
             }
         }
 

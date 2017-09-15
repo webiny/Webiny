@@ -6,64 +6,22 @@ import MethodTooltip from './MethodTooltip';
 
 import styles from './styles.css';
 
-class EntityBox extends Webiny.Ui.Component {
+class ServiceBox extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
-        this.state = {entityFilter: ''};
-        this.crud = {
-            create: '/.post',
-            read: '{id}.get',
-            list: '/.get',
-            update: '{id}.patch',
-            delete: '{id}.delete'
-        };
+        this.state = {serviceFilter: ''};
     }
 
     /**
-     * Renders toggle buttons for basic CRUD API endpoints (if they exist on given entity).
-     */
-    renderCrudMethods() {
-        const {Tooltip, entity, permissions, onTogglePermission, currentlyEditingPermission} = this.props;
-
-        const existingOperations = {
-            crudCreate: _.find(entity.methods, {key: this.crud.create}),
-            crudRead: _.find(entity.methods, {key: this.crud.get}) || _.find(entity.methods, {key: this.crud.list}),
-            crudUpdate: _.find(entity.methods, {key: this.crud.update}),
-            crudDelete: _.find(entity.methods, {key: this.crud.delete})
-        };
-
-        const buttons = [];
-        _.each(existingOperations, (method, key) => {
-            if (method) {
-                buttons.push(
-                    <Tooltip interactive placement="top" key={key} target={(
-                        <ToggleAccessButton
-                            method={method}
-                            onClick={() => onTogglePermission(entity.class, key)}
-                            value={permissions[key]}/>
-                    )}>
-                        <MethodTooltip method={method} currentlyEditingPermission={currentlyEditingPermission}/>
-                    </Tooltip>
-                );
-            }
-        });
-
-        return <div>{buttons}</div>;
-    }
-
-    /**
-     * Renders toggle buttons for custom API endpoints (if they exist on given entity).
+     * Renders toggle buttons for custom API endpoints (if they exist on given service).
      */
     renderCustomMethods() {
-        const {Input, Tooltip, entity, permissions, currentlyEditingPermission, onTogglePermission} = this.props;
+        const {Input, Tooltip, service, permissions, currentlyEditingPermission, onTogglePermission} = this.props;
 
         let customMethods = [];
 
-        _.each(entity.methods, method => {
-            if (!method.custom) {
-                return true;
-            }
-            const exposed = _.get(permissions, entity.class + '.' + method.key, false);
+        _.each(service.methods, method => {
+            const exposed = _.get(permissions, method.key, false);
             customMethods.push(_.assign({}, method, {exposed}));
         });
 
@@ -82,12 +40,12 @@ class EntityBox extends Webiny.Ui.Component {
         header = (
             <span>
                 <h2 className={styles.customMethodsTitle}>{this.i18n(`Custom methods`)}</h2>
-                <Input placeholder="Filter methods..." {...this.bindTo('entityFilter')} delay={0}/>
+                <Input placeholder="Filter methods..." {...this.bindTo('serviceFilter')} delay={0}/>
             </span>
         );
 
         let methods = customMethods.map(method => {
-            if (method.url.indexOf(this.state.entityFilter.toLowerCase()) === -1) {
+            if (method.url.indexOf(this.state.serviceFilter.toLowerCase()) === -1) {
                 return;
             }
 
@@ -98,8 +56,8 @@ class EntityBox extends Webiny.Ui.Component {
                             label={this.i18n(`E`)}
                             key={method.key}
                             method={method}
-                            onClick={() => onTogglePermission(entity.class, method.key)}
-                            value={_.get(permissions, method.key)}/>
+                            onClick={() => onTogglePermission(service.classId, method.key)}
+                            value={method.exposed}/>
                     )}>
                         <MethodTooltip method={method} currentlyEditingPermission={currentlyEditingPermission}/>
                     </Tooltip>
@@ -129,12 +87,12 @@ class EntityBox extends Webiny.Ui.Component {
     }
 }
 
-EntityBox.defaultProps = {
+ServiceBox.defaultProps = {
     currentlyEditingPermission: null,
-    entity: {},
+    service: {},
     permissions: {},
     onTogglePermission: _.noop,
-    onRemoveEntity: _.noop,
+    onRemoveService: _.noop,
     renderer() {
         const {ClickConfirm} = this.props;
 
@@ -142,15 +100,17 @@ EntityBox.defaultProps = {
             <div className="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div className={styles.box}>
                     <div>
-                        <h1 className={styles.title}>{this.props.entity.class}</h1>
+                        <h1 className={styles.title}>
+                            {this.props.service.classId}<br/>
+                            <small>{this.props.service.class}</small>
+                        </h1>
                         <ClickConfirm
-                            onComplete={() => this.props.onRemoveEntity(this.props.entity)}
-                            message={this.i18n('Are you sure you want to remove {entity}?', {
-                                entity: <strong>{this.props.entity.class}</strong>
+                            onComplete={() => this.props.onRemoveService(this.props.service)}
+                            message={this.i18n('Are you sure you want to remove {service}?', {
+                                service: <strong>{this.props.service.class}</strong>
                             })}>
                             <span onClick={_.noop} className={styles.removeButton}>×</span>
                         </ClickConfirm>
-                        {this.renderCrudMethods()}
                         {this.renderCustomMethods()}
                     </div>
                 </div>
@@ -159,6 +119,6 @@ EntityBox.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(EntityBox, {
+export default Webiny.createComponent(ServiceBox, {
     modules: ['Input', 'ClickConfirm', 'Tooltip']
 });
