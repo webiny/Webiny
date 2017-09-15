@@ -86,9 +86,13 @@ class Setup extends Plugin {
                 type: 'input',
                 name: 'databasePort',
                 when: docker,
-                message: 'What\'s your database container port?',
-                default: ({url}) => {
-                    return _.get(url.split(':'), 2, '');
+                message: 'What\'s your mongodb service port?',
+                default: ({domain}) => {
+                    try {
+                        return parseInt(domain.split(':')[2]) + 1;
+                    } catch (e) {
+                        return '';
+                    }
                 }
             },
             {
