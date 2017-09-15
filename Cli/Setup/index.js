@@ -60,7 +60,7 @@ class Setup extends Plugin {
                     // Check if URL contains port which is mandatory for Docker setup
                     if (valid === true && docker) {
                         nginxPort = _.get(url.split(':'), 2);
-                        if (!_.isNumber(nginxPort)) {
+                        if (!_.isNumber(parseInt(nginxPort))) {
                             valid = 'Docker requires a port to be provided. Please add a port number to the URL.';
                         }
                     }
