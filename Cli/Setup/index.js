@@ -67,14 +67,15 @@ class Setup extends Plugin {
             {
                 type: 'input',
                 name: 'domain',
-                message: 'What\'s your local domain (e.g. http://domain.app:8010)?',
+                message: 'What\'s your local domain (e.g. http://domain.app:8000)?',
                 validate: url => {
                     let valid = Webiny.validate.url(url);
                     // Check if URL contains port which is mandatory for Docker setup
                     if (valid === true && docker) {
-                        nginxPort = _.get(url.split(':'), 2);
-                        if (!_.isNumber(parseInt(nginxPort))) {
-                            valid = 'Docker requires a port to be provided. Please add a port number to the URL.';
+                        const message = 'Docker requires a port to be provided. Please add a port number to the URL.';
+                        nginxPort = parseInt(_.get(url.split(':'), 2));
+                        if (_.isNaN(nginxPort)) {
+                            return message;
                         }
                     }
                     return valid;
