@@ -36,6 +36,7 @@ class ApiTokenModal extends Webiny.Ui.ModalComponent {
                                                 label="Description"
                                                 name="description"
                                                 validate="required"
+                                                description={<span>Try to keep it short, for example: <strong>Project X - Issue tracker</strong></span>}
                                                 placeholder="Short description of usage"/>
                                             <Switch label="Enabled" name="enabled"/>
                                             <Switch label="Log requests" name="logRequests"/>
