@@ -181,6 +181,7 @@ class Setup extends Plugin {
                     config = yaml.safeLoad(Webiny.readFile(configs.dockerCompose));
                     config.services.nginx.ports.push(nginxPort + ':80');
                     config.services.php.extra_hosts.push('dockerhost:' + answers.hostIp);
+                    config.services.php.environment.XDEBUG_CONFIG = `remote_enable=0 remote_host=${answers.hostIp}`;
                     config.services.mongodb.ports.push(answers.databasePort + ':27017');
                     Webiny.writeFile(configs.dockerCompose, yaml.safeDump(config, {indent: 4}));
                     setupDockerVirtualHost(answers);
