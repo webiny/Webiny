@@ -231,7 +231,7 @@ class Setup extends Plugin {
 
             // If Docker - we do not run nginx setup wizard
             if (docker) {
-                return Promise.resolve();
+                return answers;
             }
 
             // Optionally create nginx config
