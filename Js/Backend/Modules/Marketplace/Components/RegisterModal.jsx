@@ -24,14 +24,14 @@ class ModalForm extends Webiny.Ui.ModalComponent {
 
     renderRegisterForm() {
         const containerProps = {
-            api: Webiny.Auth.getApiEndpoint().setUrl('/register'),
+            api: Webiny.Auth.getApiEndpoint(),
+            url: 'register',
             fields: 'id,firstName,lastName,email',
             onSubmitSuccess: () => this.setState({success: true}),
             onCancel: this.hide,
             onSuccessMessage: null
         };
 
-        const {Modal, Form, Input, Password, Button, Grid, Link} = this.props;
 
         return (
             <Modal.Dialog>
