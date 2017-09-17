@@ -17,39 +17,6 @@ class Component extends React.Component {
         this.bindMethods('bindTo', 'isRendered', 'i18n');
     }
 
-    /**
-     * Method for a more convenient use of i18n module - this will automatically generate a complete namespace for the label
-     * If this method is called without parameters, it will return Webiny.I18n module, from which you can use other functions as well
-     * @param text
-     * @param variables
-     * @param options
-     * @returns {*}
-     */
-    i18n(text, variables, options = {}) {
-        if (_.isString(text) && _.isString(variables)) {
-            return this.i18n(variables, options, {namespace: text});
-        }
-
-        if (!text) {
-            return Webiny.I18n;
-        }
-
-        if (!options.namespace) {
-            throw new Error('Using i18n but namespace is undefined.');
-        }
-
-        if (!/^[a-zA-Z0-9\.]+$/.test(options.namespace)) {
-            throw new Error('Namespace "' + options.namespace + '" contains invalid characters, only letters, numbers and dots (".") are allowed.');
-        }
-
-        const key = _.trimEnd(options.namespace, '.') + '.' + md5(text);
-        return Webiny.I18n.render(key, text, variables);
-    }
-
-    _i18n(ns, placeholder, variables = {}) {
-        return this.i18n(placeholder, variables, {namespace: ns});
-    }
-
     componentWillMount() {
         // This is deprecated and will be removed in the next release
         if (this.props.ui) {
@@ -181,6 +148,27 @@ class Component extends React.Component {
                 console.info('Missing method [' + name + ']', this);
             }
         });
+    }
+
+    /**
+     * Method for a more convenient use of i18n module - this will automatically generate a complete namespace for the label
+     * If this method is called without parameters, it will return Webiny.I18n module, from which you can use other functions as well
+     * @param base
+     * @param variables
+     * @param options
+     * @returns {*}
+     */
+    i18n(base, variables, options = {}) {
+        if (!base) {
+            return Webiny.I18n;
+        }
+
+        const translationKey = _.trimEnd(options.namespace, '.') + '.' + md5(base);
+        return Webiny.I18n.render(translationKey, base, variables);
+    }
+
+    _i18n(namespace, base, variables = {}) {
+        return this.i18n(base, variables, {namespace});
     }
 
     /**

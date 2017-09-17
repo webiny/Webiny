@@ -11,7 +11,7 @@ class I18n {
         this.cacheKey = null;
 
         /**
-         * All registered modifiers. We already have built-in modifiers 'count', 'case' and 'if'.
+         * All registered modifiers. We already have built-in modifiers 'plural', 'case' and 'if'.
          * @type {Array}
          */
         this.modifiers = {
@@ -73,8 +73,8 @@ class I18n {
         this.translations = {};
         this.component = I18nComponent;
 
-        const translate = (text, variables = {}, key = null) => {
-            return this.translate(text, variables, key);
+        const translate = (base, variables = {}, key = null) => {
+            return this.translate(base, variables, key);
         };
 
         Object.getOwnPropertyNames(I18n.prototype).map(method => {
@@ -148,11 +148,11 @@ class I18n {
         return parts.map((part, index) => <webiny-i18n-part key={index}>{this.processTextPart(part, values)}</webiny-i18n-part>);
     }
 
-    translate(text, variables = {}, key = null) {
-        let output = this.getTranslation(key) || text;
+    translate(base, variables = {}, translationKey = null) {
+        let output = this.getTranslation(translationKey) || base;
         output = this.replaceVariables(output, variables);
         this.parsers.forEach(parser => {
-            output = parser(output, key, text, variables);
+            output = parser(output, translationKey, base, variables);
         });
         return output;
     }
@@ -164,12 +164,12 @@ class I18n {
     /**
      * Used for rendering text in DOM
      * @param translationKey
-     * @param text
+     * @param base
      * @param variables
      * @returns {XML}
      */
-    render(translationKey, text, variables) {
-        return React.createElement(this.component, {translationKey, text, variables});
+    render(translationKey, base, variables) {
+        return React.createElement(this.component, {translationKey, base, variables});
     }
 
     // Following methods are plain-simple for now - let's make them smarter in the near future
