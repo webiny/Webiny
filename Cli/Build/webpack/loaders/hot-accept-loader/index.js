@@ -4,16 +4,14 @@ module.exports = function (source) {
         this.cacheable();
     }
 
-    if (!/\bimport Webiny\b/.test(source)) {
-        source = `import Webiny from 'webiny';\n${source}`
-    }
-
     if (this.resourcePath.endsWith('/App.js')) {
+        if (!/\bimport Webiny\b/.test(source)) {
+            source = `import Webiny from 'webiny';\n${source}`
+        }
+
         return `
             ${source}
-            
-            if (module.hot && !Webiny.updating) {
-                console.log('Hot updating App.js');
+            if (module.hot) {
                 // Accept update and suppress errors
                 module.hot.accept(() => {});
                 let lastStatus = 'idle';
@@ -34,9 +32,6 @@ module.exports = function (source) {
 
     return `
         ${source}
-        if(!Webiny.updating) {
-            console.log('Hot updating');
-            //module.hot.accept(() => {});
-        }
+        module.hot.accept(() => {});
     `
 };
