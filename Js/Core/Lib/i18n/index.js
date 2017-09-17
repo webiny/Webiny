@@ -87,38 +87,36 @@ class I18n {
         return text.split(/(\{.*?\})/);
     }
 
-    processTextPart(text, values) {
+    processTextPart(part, values) {
         // If not a variable, but an ordinary text, just return it, we don't need to do any extra processing with it.
-        if (!_.startsWith(text, '{')) {
-            return text;
+        if (!_.startsWith(part, '{')) {
+            return part;
         }
 
-        text = _.trim(text, '{}');
+        part = _.trim(part, '{}');
+        part = part.split('|');
 
-        const modifiers = text.split('|');
-        const variable = modifiers.shift();
-        let formatter;
+        let [variable, modifier] = part;
 
-        text = values[variable];
-
-        if (_.isPlainObject(text) && text.value && _.isFunction(text.format)) {
-            formatter = text.format;
-            text = text.value;
+        // Check if we have received {value: ..., format: ...} object.
+        const output = {value: values[variable], format: null};
+        if (output.value.value && _.isFunction(output.value.format)) {
+            output.format = output.value.format;
+            output.value = output.value.value;
         }
 
-        modifiers.forEach(modifier => {
-            const parameters = modifier.split(':');
-            modifier = parameters.shift();
-            if (this.modifiers[modifier]) {
-                text = this.modifiers[modifier](text, parameters);
+        if (modifier) {
+            let [name, parameters] = modifier.split(':');
+            if (this.modifiers[name]) {
+                output.value = this.modifiers[name](output.value, parameters);
             }
-        });
-
-        if (formatter) {
-            return formatter(text);
         }
 
-        return text;
+        if (output.format) {
+            return output.format(output.value);
+        }
+
+        return part;
     }
 
     /**
