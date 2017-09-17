@@ -4,11 +4,11 @@ module.exports = function (source) {
         this.cacheable();
     }
 
-    if (this.resourcePath.endsWith('/App.js')) {
-        if (!/\bimport Webiny\b/.test(source)) {
-            source = `import Webiny from 'webiny';\n${source}`
-        }
+    if (!/\bimport Webiny\b/.test(source)) {
+        source = `import Webiny from 'webiny';\n${source}`
+    }
 
+    if (this.resourcePath.endsWith('/App.js')) {
         return `
             ${source}
             if (module.hot && !Webiny.updating) {
