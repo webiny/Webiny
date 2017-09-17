@@ -9,7 +9,6 @@ class I18n {
         this.locale = '';
         this.api = null;
         this.cacheKey = null;
-        this.Namespace = Namespace;
 
         /**
          * All registered modifiers. We already have built-in modifiers 'count', 'case' and 'if'.
@@ -161,7 +160,6 @@ class I18n {
     setComponent(component) {
         this.component = component;
     }
-
 
     /**
      * Used for rendering text in DOM

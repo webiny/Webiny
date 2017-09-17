@@ -1,25 +1,80 @@
 'use strict';
-const loaderUtils = require("loader-utils");
 
-const keyRegex = /this\.i18n\.key\s{0,}=\s{0,}['|"|`]([a-zA-Z0-9\.-_:]+)['|"|`]/;
-const stringRegex = /this\.i18n\(['|"|`]([a-zA-Z0-9\.\s-{}]+?)['|"|`]/gm;
+const _ = require('lodash');
+
+/**
+ * Returns an array with all detected namespaces in current file. Each namespace will have opening and closing tag positions.
+ * @param source
+ * @returns {Array}
+ */
+function getNamespaces(source) {
+    const matches = [], regex = /@i18n\.namespace +([A-Za-z\.0-9]*)?/g;
+
+    let match;
+    while ((match = regex.exec(source))) {
+        matches.push({index: match.index, name: match[1]});
+    }
+
+    const output = [];
+    _.forEachRight(matches, match => {
+        if (!match.name) {
+            output.unshift({from: undefined, name: undefined, to: match.index});
+            return true;
+        }
+
+        const index = _.findIndex(output, {from: undefined});
+        if (index >= 0) {
+            output[index].from = match.index;
+            output[index].name = match.name;
+        } else {
+            output.unshift({name: match.name, from: match.index});
+        }
+    });
+
+    return _.sortBy(output, 'from');
+}
+
+/**
+ * Tells us to which i18n namespace current index belongs to.
+ * @param index
+ * @param namespaces
+ * @returns {*}
+ */
+function getNamespaceOnIndex(index, namespaces) {
+    let current = null;
+    _.forEachRight(namespaces, namespace => {
+        if (namespace.from < index) {
+            current = namespace.name;
+            return false;
+        }
+    });
+    return current;
+}
 
 module.exports = function (source) {
-    const options = loaderUtils.getOptions(this);
-    if (this.cacheable) {
-        this.cacheable();
+    const regex = {
+        i18n: /this\.i18n\(['`"]/g,
+        webinyI18n: /Webiny\.i18n\(['`"]/g
+    };
+
+    // Let's detect all defined i18n namespaces in source.
+    const namespaces = getNamespaces(source);
+
+    let match;
+    while ((match = regex.i18n.exec(source))) {
+        const namespace = getNamespaceOnIndex(match.index, namespaces);
+        if (!namespace) {
+            throw Error('Using "this.i18n" but namespace not defined.');
+        }
+        source = source.slice(0, match.index) + `this._i18n("${namespace}", ` + source.slice(match.index + 10);
     }
 
-    let i18nKey;
-    if(i18nKey = keyRegex.exec(source)) {
-        i18nKey = i18nKey[1];
-    } else {
-        i18nKey = this.resourcePath.split('Apps/').pop().replace('/Js/', '/').replace(/\.jsx?/, '').replace(/\//g, '.');
-    }
-
-    let m;
-    while (m = stringRegex.exec(source)) {
-        options.addString(this.resourcePath, i18nKey, m[1]);
+    while ((match = regex.webinyI18n.exec(source))) {
+        const namespace = getNamespaceOnIndex(match.index, namespaces);
+        if (!namespace) {
+            throw Error('Using "Webiny.i18n" but namespace not defined.');
+        }
+        source = source.slice(0, match.index) + `this._i18n("${namespace}", ` + source.slice(match.index + 10);
     }
 
     return source;

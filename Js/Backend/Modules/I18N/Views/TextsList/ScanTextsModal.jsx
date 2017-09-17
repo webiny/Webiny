@@ -2,6 +2,9 @@ import React from 'react';
 import Webiny from 'webiny';
 import _ from 'lodash';
 
+/**
+ * @i18n.namespace Webiny.Backend.I18N.ScanTexts
+ */
 class ScanTextsModal extends Webiny.Ui.ModalComponent {
     canSubmit(model) {
         if (_.isEmpty(model)) {
@@ -38,15 +41,13 @@ class ScanTextsModal extends Webiny.Ui.ModalComponent {
                                 <Ui.Form.Error/>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
-                                        <Webiny.I18n.Namespace name="bajoman">
-                                            <Ui.CheckboxGroup
-                                                name="apps"
-                                                label={this.i18n('Select apps to scan for texts')}
-                                                api="/services/webiny/apps"
-                                                url="/installed"
-                                                textAttr="name"
-                                                valueAttr="name"/>
-                                        </Webiny.I18n.Namespace>
+                                        <Ui.CheckboxGroup
+                                            name="apps"
+                                            label={this.i18n('Select apps to scan for texts')}
+                                            api="/services/webiny/apps"
+                                            url="/installed"
+                                            textAttr="name"
+                                            valueAttr="name"/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
 
@@ -93,8 +94,7 @@ class ScanTextsModal extends Webiny.Ui.ModalComponent {
 }
 
 ScanTextsModal.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps, {
-    onTextsScanned: _.noop,
-    i18nNamespace: 'Webiny.Backend.I18N.ScanTexts'
+    onTextsScanned: _.noop
 });
 
 export default Webiny.createComponent(ScanTextsModal, {

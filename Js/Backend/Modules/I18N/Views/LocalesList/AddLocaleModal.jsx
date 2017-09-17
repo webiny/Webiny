@@ -2,6 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Backend.I18N.TextsList
+ */
 class AddLocaleModal extends Webiny.Ui.ModalComponent {
     renderDialog() {
         const {Button, Modal, Link, Grid, Form, Select} = this.props;
@@ -46,8 +49,7 @@ class AddLocaleModal extends Webiny.Ui.ModalComponent {
 
 AddLocaleModal.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps, {
     onSubmitSuccess: _.noop,
-    onSuccessMessage: _.noop,
-    i18nNamespace : 'Webiny.Backend.I18N.TextsList'
+    onSuccessMessage: _.noop
 });
 
 export default Webiny.createComponent(AddLocaleModal, {

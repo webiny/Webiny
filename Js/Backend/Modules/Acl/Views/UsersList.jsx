@@ -1,11 +1,13 @@
 import React from 'react';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Backend.Acl.UsersList
+ */
 class UsersList extends Webiny.Ui.View {
 }
 
 UsersList.defaultProps = {
-    i18nNamespace : 'Webiny.Backend.Acl.UsersList',
     renderer() {
         const listProps = {
             api: '/entities/webiny/users',

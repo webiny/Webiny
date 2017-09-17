@@ -22,7 +22,6 @@ import Router from './Router/Router';
 import Route from './Router/Route';
 import Http from './Http/Http';
 import I18n from './I18n';
-import I18nNamespace from './I18n/Namespace';
 import Endpoint from './Api/Endpoint';
 import Placeholder from './Ui/Placeholder';
 import RootElement from './Ui/RootElement';
@@ -33,8 +32,6 @@ import Validator from './Validation/Validator';
 import ModuleLoader from './Core/ModuleLoader';
 
 App.Module = AppModule;
-
-I18n.Namespace = I18nNamespace;
 
 export default (Webiny) => {
     const lib = {

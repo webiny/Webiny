@@ -2,6 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Backend.Acl.AddEntityModal
+ */
 class AddEntityModal extends Webiny.Ui.ModalComponent {
     constructor() {
         super();
@@ -66,8 +69,7 @@ class AddEntityModal extends Webiny.Ui.ModalComponent {
 
 AddEntityModal.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps, {
     onSubmit: _.noop,
-    exclude: [],
-    i18nNamespace : 'Webiny.Backend.Acl.AddEntityModal'
+    exclude: []
 });
 
 export default Webiny.createComponent(AddEntityModal, {

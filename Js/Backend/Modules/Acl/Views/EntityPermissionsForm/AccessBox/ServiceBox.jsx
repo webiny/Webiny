@@ -6,6 +6,9 @@ import MethodTooltip from './MethodTooltip';
 
 import styles from './styles.css';
 
+/**
+ * @i18n.namespace Webiny.Backend.Acl.EntityBox
+ */
 class ServiceBox extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
@@ -93,7 +96,6 @@ ServiceBox.defaultProps = {
     permissions: {},
     onTogglePermission: _.noop,
     onRemoveService: _.noop,
-    i18nNamespace : 'Webiny.Backend.Acl.EntityBox',
     renderer() {
         const {ClickConfirm} = this.props;
 

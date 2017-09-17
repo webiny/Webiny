@@ -5,6 +5,9 @@ import styles from './styles.css';
 import EntityBox from './AccessBox/EntityBox';
 import AddEntityModal from './AddEntityModal';
 
+/**
+ * @i18n.namespace Webiny.Backend.Acl.EntityPermissions
+ */
 class EntityPermissions extends Webiny.Ui.Component {
     constructor() {
         super();
@@ -34,7 +37,6 @@ EntityPermissions.defaultProps = {
     onTogglePermission: _.noop,
     onAddEntity: _.noop,
     onRemoveEntity: _.noop,
-    i18nNamespace : 'Webiny.Backend.Acl.EntityPermissions',
     renderer() {
         const {Loader, Button, ViewSwitcher, Grid, Icon, permissions} = this.props;
 

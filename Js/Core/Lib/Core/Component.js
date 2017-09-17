@@ -26,22 +26,28 @@ class Component extends React.Component {
      * @returns {*}
      */
     i18n(text, variables, options = {}) {
+        if (_.isString(text) && _.isString(variables)) {
+            return this.i18n(variables, options, {namespace: text});
+        }
+
         if (!text) {
             return Webiny.I18n;
         }
 
-        const namespace = options.namespace || _.get(this.props, 'i18nNamespace');
-
-        if (!namespace) {
+        if (!options.namespace) {
             throw new Error('Using i18n but namespace is undefined.');
         }
 
-        if (!/^[a-zA-Z0-9\.]+$/.test(namespace)) {
-            throw new Error('Namespace "' + namespace + '" contains invalid characters, only letters, numbers and dots (".") are allowed.');
+        if (!/^[a-zA-Z0-9\.]+$/.test(options.namespace)) {
+            throw new Error('Namespace "' + options.namespace + '" contains invalid characters, only letters, numbers and dots (".") are allowed.');
         }
 
-        const key = _.trimEnd(namespace, '.') + '.' + md5(text);
+        const key = _.trimEnd(options.namespace, '.') + '.' + md5(text);
         return Webiny.I18n.render(key, text, variables);
+    }
+
+    _i18n(ns, placeholder, variables = {}) {
+        return this.i18n(placeholder, variables, {namespace: ns});
     }
 
     componentWillMount() {

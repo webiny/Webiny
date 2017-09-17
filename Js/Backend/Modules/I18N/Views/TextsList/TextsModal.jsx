@@ -2,6 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace  Webiny.Backend.I18N.TranslationModal
+ */
 class TranslationModal extends Webiny.Ui.ModalComponent {
     renderDialog() {
         const {Ui} = this.props;
@@ -90,8 +93,7 @@ class TranslationModal extends Webiny.Ui.ModalComponent {
 }
 
 TranslationModal.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
-    onSubmit: _.noop,
-    i18nNamespace : 'Webiny.Backend.I18N.TranslationModal'
+    onSubmit: _.noop
 });
 
 export default Webiny.createComponent(TranslationModal, {

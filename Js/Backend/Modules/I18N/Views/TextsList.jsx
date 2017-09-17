@@ -4,11 +4,13 @@ import TranslationsModal from './TextsList/TextsModal';
 import ScanTextsModal from './TextsList/ScanTextsModal';
 import ImportTextsModal from './TextsList/ImportTextsModal';
 
+/**
+ * @i18n.namespace Webiny.Backend.I18N.TextsList
+ */
 class TextsList extends Webiny.Ui.View {
 }
 
 TextsList.defaultProps = {
-    i18nNamespace : 'Webiny.Backend.I18N.TextsList',
     renderer () {
         return (
             <Webiny.Ui.LazyLoad modules={['ViewSwitcher', 'View', 'Button', 'Icon', 'List', 'Input', 'Link']}>

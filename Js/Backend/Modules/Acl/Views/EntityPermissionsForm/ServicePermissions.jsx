@@ -5,6 +5,9 @@ import styles from './styles.css';
 import ServiceBox from './AccessBox/ServiceBox';
 import AddServiceModal from './AddServiceModal';
 
+/**
+ * @i18n.namespace Webiny.Backend.Acl.ServicePermissions
+ */
 class ServicePermissions extends Webiny.Ui.Component {
     constructor() {
         super();
@@ -34,7 +37,6 @@ ServicePermissions.defaultProps = {
     onTogglePermission: _.noop,
     onAddService: _.noop,
     onRemoveService: _.noop,
-    i18nNamespace : 'Webiny.Backend.Acl.ServicePermissions',
     renderer() {
         const {Loader, Button, ViewSwitcher, Grid, Icon, permissions} = this.props;
 

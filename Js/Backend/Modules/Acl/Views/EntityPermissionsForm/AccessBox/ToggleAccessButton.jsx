@@ -11,6 +11,9 @@ const crudLabels = {
     '{id}.delete': 'D'
 };
 
+/**
+ * @i18n.namespace Webiny.Backend.Acl.ToggleAccessButton
+ */
 class ToggleAccessButton extends Webiny.Ui.Component {
     renderLabel() {
         if (this.props.label) {
@@ -27,7 +30,6 @@ ToggleAccessButton.defaultProps = {
     method: null,
     value: false,
     onClick: _.noop,
-    i18nNamespace : 'Webiny.Backend.Acl.ToggleAccessButton',
     renderer() {
         const {Button, method, onClick, value} = this.props;
         return (

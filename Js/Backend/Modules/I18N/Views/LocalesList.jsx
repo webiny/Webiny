@@ -2,6 +2,9 @@ import React from 'react';
 import Webiny from 'webiny';
 import AddLocaleModal from './LocalesList/AddLocaleModal';
 
+/**
+ * @i18n.namespace Webiny.Backend.I18N.LocalesList
+ */
 class LocalesList extends Webiny.Ui.View {
     constructor() {
         super();
@@ -11,7 +14,6 @@ class LocalesList extends Webiny.Ui.View {
 }
 
 LocalesList.defaultProps = {
-    i18nNamespace : 'Webiny.Backend.I18N.LocalesList',
     renderer: function render() {
         return (
             <Webiny.Ui.LazyLoad modules={['View', 'List', 'Icon', 'Button']}>

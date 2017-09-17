@@ -28,10 +28,9 @@ class JsParser
 
     // With a simple regex, we first find all this.i18n usages in given source.
     const REGEX = [
-        'namespace'     => '/i18nNamespace\s{0,}:\s{0,}[\'|"|`]([a-zA-Z0-9\.-_:]+)[\'|"|`]/',
+        'namespace'     => '/@i18n.namespace ([A-Za-z\.0-9]*)?/',
         'basic'   => '/this\.i18n\([\'\`\"]/mi',
-        'customNamespace' => '/\.i18n\([\'|"|`]{1}.*?[\'|"|`]{1},.*?, ?\{.*?[\'|"|`]?namespace[\'|"|`]? ?: ?[\'|"|`]{1}([A-Za-z\.]*?)[\'|"|`]{1}.*?\}\)/',
-        'inlineNamespace' => 123
+        'customNamespace' => '/\.i18n\([\'|"|`]{1}.*?[\'|"|`]{1},.*?, ?\{.*?[\'|"|`]?namespace[\'|"|`]? ?: ?[\'|"|`]{1}([A-Za-z0-9\.]*?)[\'|"|`]{1}.*?\}\)/',
     ];
 
     /**
