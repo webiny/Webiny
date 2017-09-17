@@ -11,7 +11,7 @@ module.exports = function (source) {
 
         return `
             ${source}
-            if (module.hot) {
+            if (module.hot && !Webiny.updating) {
                 // Accept update and suppress errors
                 module.hot.accept(() => {});
                 let lastStatus = 'idle';
@@ -32,6 +32,8 @@ module.exports = function (source) {
 
     return `
         ${source}
-        module.hot.accept(() => {});
+        if(!Webiny.updating) {
+            module.hot.accept(() => {});
+        }
     `
 };
