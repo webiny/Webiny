@@ -12,7 +12,8 @@ class ImportTextsModal extends Webiny.Ui.ModalComponent {
         return (
             <Ui.Modal.Dialog>
                 <Ui.Form 
-                    api="/entities/webiny/i18n-texts" url="/import"
+                    api="/entities/webiny/i18n-texts"
+                    url="/import"
                     onSuccessMessage={model => (
                         this.i18n(`Inserted {inserted|plural:1:translation:default:translations} ({ignored} ignored).`, {
                             inserted: model.inserted,

@@ -63,13 +63,6 @@ class I18n {
             }
         };
 
-        // Initial parser for parsing modifiers is already built-in.
-        this.parsers = [
-            (output, key, placeholder) => {
-                return output;
-            }
-        ];
-
         this.translations = {};
         this.component = I18nComponent;
 
@@ -104,7 +97,14 @@ class I18n {
 
         const modifiers = text.split('|');
         const variable = modifiers.shift();
+        let formatter;
+
         text = values[variable];
+
+        if (_.isPlainObject(text) && text.value && _.isFunction(text.format)) {
+            formatter = text.format;
+            text = text.value;
+        }
 
         modifiers.forEach(modifier => {
             const parameters = modifier.split(':');
@@ -113,6 +113,11 @@ class I18n {
                 text = this.modifiers[modifier](text, parameters);
             }
         });
+
+        if (formatter) {
+            return formatter(text);
+        }
+
         return text;
     }
 
@@ -150,11 +155,7 @@ class I18n {
 
     translate(base, variables = {}, translationKey = null) {
         let output = this.getTranslation(translationKey) || base;
-        output = this.replaceVariables(output, variables);
-        this.parsers.forEach(parser => {
-            output = parser(output, translationKey, base, variables);
-        });
-        return output;
+        return this.replaceVariables(output, variables);
     }
 
     setComponent(component) {
@@ -237,25 +238,6 @@ class I18n {
         return this.locale;
     }
 
-    /**
-     * Registers a new parser, which will be called on each translation.
-     * @param callback
-     * @returns {i18n}
-     */
-    registerParser(callback) {
-        this.parsers.push(callback);
-        return this;
-    }
-
-    /**
-     * Un-registers all parsers.
-     * @returns {i18n}
-     */
-    unregisterParsers() {
-        this.parsers = [];
-        return this;
-    }
-
     setCacheKey(cacheKey) {
         this.cacheKey = cacheKey;
         return this;
@@ -288,7 +270,7 @@ class I18n {
 
         if (Webiny.elementHasFlag(element, 'i18n')) {
             const props = element.props;
-            return this.translate(props.translationKey, props.placeholder, props.variables, props.options);
+            return this.translate(props.base, props.variables, props.translationKey);
         }
 
         return '';
