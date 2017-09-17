@@ -52,6 +52,10 @@ class UserPermission extends AbstractEntity
                 $value = [];
             }
 
+            if (count($value) === 0) {
+                return $value;
+            }
+
             // Cleanup `false` values
             $clean = [];
             foreach ($value as $perm) {
@@ -63,15 +67,15 @@ class UserPermission extends AbstractEntity
                         $cleanPerm['rules'][$url] = true;
                     }
 
-                    foreach($rules as $m => $v) {
-                        if($v) {
+                    foreach ($rules as $m => $v) {
+                        if ($v) {
                             $on++;
                             $cleanPerm['rules'][$url][$m] = true;
                         }
                     }
                 }
 
-                if($on > 0) {
+                if ($on > 0) {
                     $clean[] = $cleanPerm;
                 }
             }
