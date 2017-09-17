@@ -53,9 +53,9 @@ class HttpServer {
         httpWrite(`Running composer...`);
 
         // Local and docker env have entirely different commands, thus all this garbage
-        let composer = `composer require ${appData.packagist} 2>&1`;
+        let composer = `composer require ${appData.packagist}:${appData.version} 2>&1`;
         if (docker) {
-            composer = `docker run --rm --volume $PWD:/app composer require ${appData.packagist} --ignore-platform-reqs --no-scripts 2>&1`;
+            composer = `docker run --rm --volume $PWD:/app composer require ${appData.packagist}:${appData.version} --ignore-platform-reqs --no-scripts 2>&1`;
         }
 
         // Execute command
