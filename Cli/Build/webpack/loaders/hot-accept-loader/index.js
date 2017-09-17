@@ -11,11 +11,9 @@ module.exports = function (source) {
     if (this.resourcePath.endsWith('/App.js')) {
         return `
             ${source}
-            if (Webiny.updating) {
-                module.hot = null;
-            }
             
             if (module.hot && !Webiny.updating) {
+                console.log('Hot updating App.js');
                 // Accept update and suppress errors
                 module.hot.accept(() => {});
                 let lastStatus = 'idle';
@@ -37,7 +35,8 @@ module.exports = function (source) {
     return `
         ${source}
         if(!Webiny.updating) {
-            module.hot.accept(() => {});
+            console.log('Hot updating');
+            //module.hot.accept(() => {});
         }
     `
 };
