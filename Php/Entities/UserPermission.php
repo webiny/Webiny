@@ -47,7 +47,37 @@ class UserPermission extends AbstractEntity
 
         $this->attr('description')->char()->setToArrayDefault();
         $this->attr('roles')->many2many('UserRole2UserPermission')->setEntity(UserRole::class);
-        $this->attr('permissions')->object();
+        $this->attr('permissions')->object()->onSet(function ($value) {
+            if (!is_array($value)) {
+                $value = [];
+            }
+
+            // Cleanup `false` values
+            $clean = [];
+            foreach ($value as $perm) {
+                $on = 0;
+                $cleanPerm = ['classId' => $perm['classId'], 'rules' => []];
+                foreach ($perm['rules'] as $url => $rules) {
+                    if (is_bool($rules) && $rules === true) {
+                        $on++;
+                        $cleanPerm['rules'][$url] = true;
+                    }
+
+                    foreach($rules as $m => $v) {
+                        if($v) {
+                            $on++;
+                            $cleanPerm['rules'][$url][$m] = true;
+                        }
+                    }
+                }
+
+                if($on > 0) {
+                    $clean[] = $cleanPerm;
+                }
+            }
+
+            return $clean;
+        });
     }
 
     protected function entityApi(ApiContainer $api)
