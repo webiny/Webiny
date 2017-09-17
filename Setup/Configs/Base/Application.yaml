@@ -6,6 +6,7 @@ Application:
         CheckUserPermissions: true
         LogSystemApiTokenRequests: true
         LogUserRequests: true
+        LogIncognitoRequests: false
     Logger:
         DisplayErrors: false
         Enabled: true
