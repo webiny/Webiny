@@ -8,7 +8,7 @@ AuthorLink: http://www.webiny.com
 AuthorEmail: info@webiny.com
 
 Marketplace:
-    Api: http://thehub.app:8001/api
+    Api: https://api.webiny.com
 
 Storage:
     Services:
