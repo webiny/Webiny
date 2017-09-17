@@ -38,24 +38,26 @@ LoginRegister.defaultProps = {
         const formProps = {
             api: '/services/webiny/marketplace',
             url: 'login',
-            onSubmit: this.submit,
-            onSubmitSuccess: this.onSuccess,
+            onSubmitSuccess: apiResponse => this.props.onUser(apiResponse.getData()),
             onSuccessMessage: null
         };
 
+        const cantRemember = (
+            <Link className={this.classSet(styles.cantRemember, 'small')} onClick={this.showForgotPassword}>I CAN'T REMEMBER</Link>
+        );
+
         return (
-            <div className={styles.loginRegister}>
-                <div className={styles.message}>
-                    <h2><Icon icon="icon-basket_n"/> Webiny Marketplace</h2>
-                    <h3>Find and Install Apps for Webiny</h3>
-                    <p>Access to the markeplace requires a Webiny.com profile. <br/>If you already have a profile, please sign-in,
-                        otherwise please register.</p>
-
-                    <div className={styles.loginForm}>
-                        <Form {...formProps}>
-                            {(model, form) => (
-
+            <Form {...formProps}>
+                {(model, form) => (
+                    <div className={styles.loginRegister}>
+                        <div className={styles.message}>
+                            <h2><Icon icon="icon-basket_n"/> Webiny Marketplace</h2>
+                            <h3>Find and Install Apps for Webiny</h3>
+                            <p>Access to the markeplace requires a Webiny.com profile.<br/>If you already have a profile, please sign-in,
+                                otherwise please register.</p>
+                            <div className={styles.loginForm}>
                                 <Grid.Row>
+                                    <Form.Loader/>
                                     <Grid.Col all={12}>
                                         <Form.Error/>
                                         <Input
@@ -72,9 +74,7 @@ LoginRegister.defaultProps = {
                                             name="password"
                                             validate="required"
                                             onEnter={form.submit}
-                                            description={<Link className={this.classSet(styles.cantRemember, 'small')} onClick={this.showForgotPassword}>I CAN'T
-                                                REMEMBER</Link>}
-                                        />
+                                            description={cantRemember}/>
                                     </Grid.Col>
                                     <Grid.Col all={12} className={styles.modalAction}>
                                         <Button
@@ -85,21 +85,18 @@ LoginRegister.defaultProps = {
                                             label="Sign In"/>
                                     </Grid.Col>
                                 </Grid.Row>
-                            )}
-                        </Form>
-                    </div>
-
-                    <div className={styles.actions}>
-                        <div className="text-center">
-                            Not a member? <Link onClick={this.showRegister}><br/>
-                            Sign up here
-                        </Link>
+                            </div>
+                            <div className={styles.actions}>
+                                <div className="text-center">
+                                    Not a member? <Link onClick={this.showRegister}><br/>Sign up here</Link>
+                                </div>
+                            </div>
                         </div>
+                        <RegisterModal {...childProps} ref={ref => this.registerModal = ref}/>
+                        <ForgotPasswordModal {...childProps} ref={ref => this.forgotPasswordModal = ref}/>
                     </div>
-                </div>
-                <RegisterModal {...childProps} ref={ref => this.registerModal = ref}/>
-                <ForgotPasswordModal {...childProps} ref={ref => this.forgotPasswordModal = ref}/>
-            </div>
+                )}
+            </Form>
         );
     }
 };
