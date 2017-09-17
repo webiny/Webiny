@@ -11,6 +11,10 @@ module.exports = function (source) {
     if (this.resourcePath.endsWith('/App.js')) {
         return `
             ${source}
+            if (Webiny.updating) {
+                module.hot = null;
+            }
+            
             if (module.hot && !Webiny.updating) {
                 // Accept update and suppress errors
                 module.hot.accept(() => {});
