@@ -43,7 +43,7 @@ function getNamespaces(source) {
 function getNamespaceOnIndex(index, namespaces) {
     let current = null;
     _.forEachRight(namespaces, namespace => {
-        if (namespace.from < index) {
+        if (namespace.from < index && (!namespace.to || namespace.to > index)) {
             current = namespace.name;
             return false;
         }

@@ -31,7 +31,7 @@ TextsList.defaultProps = {
                                             align="right"
                                             onClick={showView('importTextsModal')}
                                             icon="icon-cloud-download"
-                                            label={this.i18n(`Import Texts`)}/>
+                                            label={this.i18n(`Import`)}/>
                                     </Ui.View.Header>
                                     <Ui.View.Body>
                                         <Ui.List

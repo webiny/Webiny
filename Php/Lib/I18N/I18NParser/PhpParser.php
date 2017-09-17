@@ -10,17 +10,7 @@ use RecursiveIteratorIterator;
 use SplFileInfo;
 use Webiny\Component\StdLib\SingletonTrait;
 use Webiny\Component\StdLib\StdLibTrait;
-use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
-/**
- * Class User
- *
- * @package Apps\Selecto\Php\Entities
- *
- * @property string      $key
- * @property string      $placeholder
- * @property ArrayObject $translations
- */
 class PhpParser
 {
     use StdLibTrait, WebinyTrait, SingletonTrait;

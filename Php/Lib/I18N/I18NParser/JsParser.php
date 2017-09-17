@@ -11,25 +11,15 @@ use RecursiveIteratorIterator;
 use SplFileInfo;
 use Webiny\Component\StdLib\SingletonTrait;
 use Webiny\Component\StdLib\StdLibTrait;
-use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
-/**
- * Class User
- *
- * @package Apps\Selecto\Php\Entities
- *
- * @property string      $key
- * @property string      $placeholder
- * @property ArrayObject $translations
- */
 class JsParser
 {
     use StdLibTrait, WebinyTrait, SingletonTrait;
 
     // With a simple regex, we first find all this.i18n usages in given source.
     const REGEX = [
-        'namespace'     => '/@i18n.namespace ([A-Za-z\.0-9]*)?/',
-        'basic'   => '/this\.i18n\([\'\`\"]/mi',
+        'namespace'       => '/@i18n.namespace ([A-Za-z\.0-9]*)?/',
+        'basic'           => '/this\.i18n\([\'\`\"]/mi',
         'customNamespace' => '/\.i18n\([\'|"|`]{1}.*?[\'|"|`]{1},.*?, ?\{.*?[\'|"|`]?namespace[\'|"|`]? ?: ?[\'|"|`]{1}([A-Za-z0-9\.]*?)[\'|"|`]{1}.*?\}\)/',
     ];
 
@@ -68,25 +58,16 @@ class JsParser
                     $content = file_get_contents($file->getPathname());
                     $content = trim(preg_replace('/\s+/', ' ', $content));
 
-                    $parsed = ['namespace' => self::parseNamespace($content), 'texts' => self::parseTexts($content)];
-                    if (empty($parsed['texts'])) {
-                        continue;
-                    }
-
+                    $parsed = self::parseTexts($content, $file);
                     // If we don't have a global i18n namespace, we must ensure each text has it's own namespace in the file.
-                    foreach ($parsed['texts'] as $text) {
-                        $namespace = $text['namespace'] ?? $parsed['namespace'];
-                        if (!$namespace) {
-                            throw new AppException('Missing text namespace for placeholder "' . $text['placeholder'] . '", in ' . $file->getPathname());
-                        }
-
-                        if (!isset($texts[$namespace])) {
-                            $texts[$namespace] = [];
+                    foreach ($parsed as $text) {
+                        if (!isset($texts[$text['namespace']])) {
+                            $texts[$text['namespace']] = [];
                         }
 
                         // We don't need to have duplicate texts in the array.
-                        if (!in_array($text['placeholder'], $texts[$namespace])) {
-                            $texts[$namespace][] = $text['placeholder'];
+                        if (!in_array($text['placeholder'], $texts[$text['namespace']])) {
+                            $texts[$text['namespace']][] = $text['placeholder'];
                         }
                     }
                 }
@@ -96,14 +77,81 @@ class JsParser
         return $texts;
     }
 
-    private function parseNamespace($content)
+    /**
+     * Returns an array with all detected namespaces in current file. Each namespace will have opening and closing tag positions.
+     *
+     * @param source
+     * @returns {Array}
+     */
+    private static function parseNamespaces($source)
     {
-        preg_match_all(self::REGEX['namespace'], $content, $namespace);
+        $matches = [];
+        preg_match_all('/@i18n\.namespace +([A-Za-z\.0-9]*)?/', $source, $occurrences, PREG_OFFSET_CAPTURE);
 
-        return self::arr($namespace)->keyNested('1.0');
+        if (empty($occurrences[1])) {
+            return [];
+        }
+
+        $occurrences = $occurrences[1];
+        foreach ($occurrences as $occurrence) {
+            $matches[] = ['index' => $occurrence[1], 'name' => trim($occurrence[0])];
+        }
+
+        $matches = array_reverse($matches);
+        $output = [];
+        foreach ($matches as $match) {
+            if (!$match['name']) {
+                array_unshift($output, ['from' => null, 'name' => null, 'to' => $match['index']]);
+                continue;
+            }
+
+            $index = -1;
+            foreach ($output as $i => $namespace) {
+                if (!$namespace['from']) {
+                    $index = $i;
+                    break;
+                }
+            }
+
+            if ($index >= 0) {
+                $output[$index]['from'] = $match['index'];
+                $output[$index]['name'] = $match['name'];
+            } else {
+                array_unshift($output, ['name' => $match['name'], 'from' => $match['index'], 'to' => null]);
+            }
+        }
+
+        usort($output, function ($item1, $item2) {
+            return $item1['from'] <=> $item2['from'];
+        });
+
+        return $output;
     }
 
-    private function parseTexts($content)
+    /**
+     * Tells us to which i18n namespace current index belongs to.
+     *
+     * @param index
+     * @param namespaces
+     * @returns {*}
+     */
+    private static function getNamespaceOnIndex($index, $namespaces)
+    {
+        $current = null;
+        foreach (array_reverse($namespaces) as $namespace) {
+            if (!$namespace['to'] && $namespace['from'] < $index) {
+                return $namespace['name'];
+            }
+
+            if ($namespace['from'] < $index && (!$namespace['to'] || $namespace['to'] > $index)) {
+                return $namespace['name'];
+            }
+        };
+
+        return $current;
+    }
+
+    private function parseTexts($content, SplFileInfo $file)
     {
         preg_match_all(self::REGEX['basic'], $content, $positions, PREG_OFFSET_CAPTURE);
         if (empty($positions)) {
@@ -117,11 +165,12 @@ class JsParser
 
         $contentLength = strlen($content);
 
+        $namespaces = self::parseNamespaces($content);
+
         // Parsing this.i18n usages is hard. We must analyze each use thoroughly, one by one.
-        return array_map(function ($index) use ($content, $contentLength) {
+        return array_map(function ($index) use ($content, $contentLength, $file, $namespaces) {
             // Now let's get the full string, we must look forward until we reach the closing ')'.
             $placeholder = ['part' => null, 'parts' => []];
-
 
             for ($i = $index + 10; $i < $contentLength; $i++) {
                 if (!$placeholder['part']) {
@@ -132,7 +181,14 @@ class JsParser
                     $firstCharacterAfterLastlyProcessedPlaceholderPart = ltrim(substr($content, $i, 1));
 
                     if (in_array($firstCharacterAfterLastlyProcessedPlaceholderPart, [',', ')'])) {
-                        $output = ['placeholder' => implode('', $placeholder['parts'])];
+                        $output = [
+                            'placeholder' => implode('', $placeholder['parts']),
+                            'namespace'   => self::getNamespaceOnIndex($index, $namespaces)
+                        ];
+
+                        if (!$output['namespace']) {
+                            throw new AppException('Missing text namespace for placeholder "' . $output['placeholder'] . '", in ' . $file->getPathname());
+                        }
 
                         if ($firstCharacterAfterLastlyProcessedPlaceholderPart === ')') {
                             // This means no additional parameters were sent. We can immediately return the placeholder.
@@ -144,7 +200,7 @@ class JsParser
                         // We try to match the last JSON with all possible options.
                         preg_match(self::REGEX['customNamespace'], substr($content, $index), $matchedCustomNamespace);
                         if (isset($matchedCustomNamespace[1])) {
-                            $output['key'] = $matchedCustomNamespace[1];
+                            $output['namespace'] = $matchedCustomNamespace[1];
                         }
 
                         return $output;
