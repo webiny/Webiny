@@ -52,6 +52,7 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                         }
 
                         if (res.message) {
+                            console.log(res.message);
                             messages.push(res);
                             this.setState({messages, time: new Date().getTime()});
                         }
@@ -63,13 +64,15 @@ class InstallModal extends Webiny.Ui.ModalComponent {
         });
 
         return api.get(`apps/${this.props.app.id}/install`).then(() => {
-            __REACT_HOT_LOADER__ = rhl;
             if (this.state.finished) {
                 const appName = this.props.app.localName + '.Backend';
                 Webiny.includeApp(appName).then(app => app.run()).then(() => {
                     Webiny.Model.set(['Navigation', 'highlight'], appName);
-                    Webiny.Router.start();
+                    if (this.props.app.localName !== 'Webiny') {
+                        Webiny.Router.start();
+                    }
                     setTimeout(() => {
+                        __REACT_HOT_LOADER__ = rhl;
                         const message = (
                             <span><strong>{this.props.app.name}</strong> was installed successfully!</span>
                         );
