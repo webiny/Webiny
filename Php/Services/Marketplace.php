@@ -11,6 +11,7 @@ use Apps\Webiny\Php\Lib\Response\ApiResponse;
 use Apps\Webiny\Php\Lib\Services\AbstractService;
 use Apps\Webiny\Php\Entities\User;
 use Apps\Webiny\Php\Services\Lib\AppInstaller;
+use Composer\Semver\Semver;
 
 /**
  * Class Marketplace
@@ -46,12 +47,35 @@ class Marketplace extends AbstractService
 
         $api->get('apps', function () {
             $response = $this->server('/services/marketplace-manager/marketplace/apps');
+            $response = json_decode($response, true);
+
+            // Check which apps are installed locally and add their version to the response
+            $localApps = $this->wApps()->getInstalledApps();
+            foreach ($response['data']['list'] as $index => $app) {
+                $localName = $app['localName'];
+                if (array_key_exists($localName, $localApps)) {
+                    $response['data']['list'][$index]['installedVersion'] = $localApps[$localName]['Version'];
+                }
+            }
 
             return new ApiRawResponse($response);
         });
 
         $api->get('apps/{id}', function ($id) {
             $response = $this->server('/services/marketplace-manager/marketplace/apps/' . $id);
+            $response = json_decode($response, true);
+            $app = $response['data']['entity'];
+
+            $localApps = $this->wApps()->getInstalledApps();
+            $app['installedVersion'] = $localApps[$app['localName']]['Version'] ?? null;
+            $app['installedWebinyVersion'] = $localApps['Webiny']['Version'];
+            $app['canInstall'] = Semver::satisfies($localApps['Webiny']['Version'], $app['webinyVersion']);
+
+            if ($app['version'] === $app['installedVersion']) {
+                $app['canInstall'] = false;
+            }
+
+            $response['data']['entity'] = $app;
 
             return new ApiRawResponse($response);
         });
@@ -65,14 +89,18 @@ class Marketplace extends AbstractService
                 throw new AppException('Requested app was not found');
             }
 
+
+            $appInstaller = new AppInstaller($app->keyNested('data.entity'));
+            $appInstaller->checkRequirements();
+
             // Begin installation
             header("X-Accel-Buffering: no");
             header("Content-Type: text/event-stream");
             header("Cache-Control: no-cache");
             ob_end_flush();
+
             try {
-                $appInstaller = new AppInstaller();
-                $appInstaller->install($app->keyNested('data.entity'));
+                $appInstaller->install();
                 // After the app is installed, increment installations counter
                 $this->server('/services/marketplace-manager/marketplace/apps/' . $id . '/installed', 'POST');
             } catch (AppException $e) {

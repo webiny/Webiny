@@ -1,14 +1,14 @@
 Name: Webiny
-Version: 0.1.0
-Link: http://www.webiny.com/store/webiny/core/
-Description: The Core app provides the essential functions for Webiny platform.
+Version: dev-master
+Link: https://github.com/Webiny/Webiny
+Description: The Webiny app provides all the necessary platform features to develop new apps
 
 AuthorName: Webiny LTD
 AuthorLink: http://www.webiny.com
 AuthorEmail: info@webiny.com
 
 Marketplace:
-    Api: https://api.webiny.com
+    Api: https://beta.webiny.com/api
 
 Storage:
     Services:

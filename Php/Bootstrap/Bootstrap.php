@@ -225,7 +225,7 @@ class Bootstrap
         }
 
         // Build response body
-        $responseBody = $webinyResponse->output($this->wIsProduction() ? 0 : JSON_PRETTY_PRINT);
+        $responseBody = $webinyResponse->output();
         $response = Response::create($responseBody, $webinyResponse->getStatusCode());
         $response->cacheControl()->setCacheControl($webinyResponse->getCacheControlHeaders());
         $response->send();

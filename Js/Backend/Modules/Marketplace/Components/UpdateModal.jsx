@@ -12,10 +12,12 @@ class InstallModal extends Webiny.Ui.ModalComponent {
 
         this.state = {messages: [], started: false, ended: false, progress: 0, finished: false};
 
-        this.bindMethods('startInstallation,onClose');
+        this.bindMethods('startUpdate,onClose');
     }
 
-    startInstallation() {
+    startUpdate() {
+        // Before we begin the update - we need to disable React Hot Loader to prevent possible errors during installation since webpack is still watching
+        __REACT_HOT_LOADER__ = null;
         const {Progress} = this.props;
         this.setState({started: true});
         const api = new Webiny.Api.Endpoint('/services/webiny/marketplace');
@@ -64,28 +66,12 @@ class InstallModal extends Webiny.Ui.ModalComponent {
             }
         });
 
-        return api.get(`apps/${this.props.app.id}/install`).then(apiResponse => {
+        return api.get(`apps/${this.props.app.id}/install`).then(() => {
             this.setState({ended: true});
-
-            if (apiResponse.isError()) {
-                const messages = this.state.messages;
-                messages.push(apiResponse.getError());
-                this.setState({messages});
-                return;
-            }
-
             if (this.state.finished) {
-                const appName = this.props.app.localName + '.Backend';
-                Webiny.includeApp(appName).then(app => app.run()).then(() => {
-                    Webiny.Model.set(['Navigation', 'highlight'], appName);
-                    Webiny.Router.start();
-                    setTimeout(() => {
-                        const message = (
-                            <span><strong>{this.props.app.name}</strong> was installed successfully!</span>
-                        );
-                        this.hide().then(() => Webiny.Growl.success(message, 'Installation finished!', false, 4000));
-                    }, 2000);
-                });
+                setTimeout(() => {
+                    this.hide().then(() => this.props.onUpdated());
+                }, 2000);
             }
         });
     }
@@ -118,20 +104,20 @@ class InstallModal extends Webiny.Ui.ModalComponent {
         return (
             <Modal.Dialog closeOnClick={!this.state.started || this.state.ended} onClose={this.onClose}>
                 <Modal.Content>
-                    <Modal.Header onClose={this.onClose} title="Install"/>
+                    <Modal.Header onClose={this.onClose} title="Update"/>
                     <Modal.Body>
                         <Logic.Hide if={this.state.started}>
                             <Alert type="warning" title="Notice">
-                                Make sure your watch process is running before installing the app.
+                                Make sure your watch process is running before updating the app.
                             </Alert>
                             <div className="text-center">
-                                <Button type="primary" label="Begin Installation" onClick={this.startInstallation}/>
+                                <Button type="primary" label="Begin Update" onClick={this.startUpdate}/>
                             </div>
                         </Logic.Hide>
                         <Logic.Hide if={!this.state.started}>
                             <Logic.Show if={this.state.finished}>
                                 <Alert type="success" title="Done">
-                                    Your app is installed and ready to use!
+                                    Your app is updated!
                                 </Alert>
                             </Logic.Show>
                             <pre style={{height: 500, overflow: 'scroll', fontSize: 12}} ref={ref => this.logger = ref}>

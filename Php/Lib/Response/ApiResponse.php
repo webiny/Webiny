@@ -2,11 +2,14 @@
 
 namespace Apps\Webiny\Php\Lib\Response;
 
+use Apps\Webiny\Php\Lib\WebinyTrait;
+
 /**
  * Class ApiResponse
  */
 class ApiResponse extends AbstractResponse implements \ArrayAccess
 {
+    use WebinyTrait;
 
     protected $data;
     protected $msg;
@@ -36,12 +39,43 @@ class ApiResponse extends AbstractResponse implements \ArrayAccess
         return $format ? $this->formatResponse() : $this->data;
     }
 
-    public function output($jsonOptions = 0)
+    public function setData($data = [])
+    {
+        $this->data = $data;
+
+        return $this;
+    }
+
+    /**
+     * Get response message
+     *
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->msg;
+    }
+
+    /**
+     * Set response message
+     *
+     * @param string $message
+     *
+     * @return $this
+     */
+    public function setMessage($message)
+    {
+        $this->msg = $message;
+
+        return $this;
+    }
+
+    public function output()
     {
         $data = $this->formatResponse();
         header("Content-type: application/json");
 
-        return is_string($data) ? $data : json_encode($data, $jsonOptions);
+        return is_string($data) ? $data : json_encode($data, $this->wIsProduction() ? 0 : JSON_PRETTY_PRINT);
     }
 
     public function setErrors(array $errors)

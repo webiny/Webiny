@@ -12,7 +12,6 @@ class Success extends Webiny.Ui.ModalComponent {
     constructor(props) {
         super(props);
 
-        this.data = [];
         this.bindMethods('renderContent');
     }
 
@@ -23,37 +22,52 @@ class Success extends Webiny.Ui.ModalComponent {
         }
 
         if (_.isFunction(content)) {
-            content = content();
+            content = content(this);
         }
         return content;
     }
 
-    setData(...data) {
-        this.data = data;
-        return this;
+    renderFooter() {
+        let {Button, closeBtn, onClose} = this.props;
+        let button = null;
+
+        if (_.isFunction(closeBtn)) {
+            closeBtn = closeBtn(this);
+        }
+
+        if (_.isString(closeBtn)) {
+            button = <Button type="primary" label={closeBtn} onClick={() => this.hide().then(onClose)}/>;
+        }
+
+        if (React.isValidElement(closeBtn)) {
+            button = closeBtn;
+        }
+
+        return (
+            <Footer>{button}</Footer>
+        );
     }
 }
 
 Success.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
     title: 'Awesome!',
-    close: 'Close',
+    closeBtn: 'Close',
     onClose: _.noop,
+    onShown: _.noop,
     renderDialog() {
-        const {Button, Icon} = this.props;
+        const {Icon, onShown} = this.props;
         return (
-            <Dialog modalContainerTag="success-modal" className={styles.alertModal}>
+            <Dialog modalContainerTag="success-modal" className={styles.alertModal} onShown={onShown}>
                 <Content>
                     <Body>
                     <div className="text-center">
                         <Icon type="success" size="4x" icon="icon-check-circle" element="div"/>
                         <h4>{this.props.title}</h4>
 
-                        <p>{this.renderContent()}</p>
+                        <div>{this.renderContent()}</div>
                     </div>
                     </Body>
-                    <Footer>
-                        <Button type="primary" label="Close" onClick={() => this.hide().then(this.props.onClose)}/>
-                    </Footer>
+                    {this.renderFooter()}
                 </Content>
             </Dialog>
         );

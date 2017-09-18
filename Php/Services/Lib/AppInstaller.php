@@ -6,14 +6,43 @@ use Apps\Webiny\Php\Entities\User;
 use Apps\Webiny\Php\Entities\UserRole;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\WebinyTrait;
+use Composer\Semver\Semver;
 use Webiny\Component\StdLib\StdLibTrait;
 
 class AppInstaller
 {
     use WebinyTrait, StdLibTrait;
 
-    public function install($appData)
+    private $appData;
+
+    public function __construct($appData)
     {
+        $this->appData = $appData;
+    }
+
+    /**
+     * Check app requirements
+     *
+     * @throws AppException
+     */
+    public function checkRequirements()
+    {
+        // If we are trying to install Webiny itself, there will be no extra requirements
+        if ($this->appData['localName'] !== 'Webiny') {
+            // Each app requires a certain version of Webiny
+            $webinyVersion = $this->wApps()->getApp('Webiny')->getVersion();
+            $requiredVersion = $this->appData['webinyVersion'];
+            if (!Semver::satisfies($webinyVersion, $requiredVersion)) {
+                throw new AppException('This app requires Webiny ' . $requiredVersion . '. Please update Webiny first.');
+            }
+        }
+
+        return $this;
+    }
+
+    public function install()
+    {
+        $appData = $this->appData;
         $bsConfig = file_get_contents($this->wStorage('Root')->getAbsolutePath('webiny.json'));
         $bsConfig = $this->arr(json_decode($bsConfig, true));
         $webPath = $this->wConfig()->get('Application.WebPath');

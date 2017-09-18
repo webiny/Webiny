@@ -27,6 +27,11 @@ class Authorization
     use WebinyTrait, SingletonTrait, SecurityTrait, StdLibTrait;
 
     /**
+     * @var string
+     */
+    private $tokenHeaderName = 'X-Webiny-Authorization';
+
+    /**
      * @var LoginApp
      */
     private $login;
@@ -119,16 +124,18 @@ class Authorization
     public function getUser()
     {
         if (!$this->user && !$this->initialized) {
+            $request = $this->wRequest();
             $this->initialized = true;
-            $requestToken = $this->wRequest()->header('X-Webiny-Authorization');
+            $requestToken = $request->header($this->tokenHeaderName);
             if (!$requestToken) {
-                $requestToken = $this->wRequest()->getRequestData()['X-Webiny-Authorization'] ?? null;
+                $requestToken = $request->getRequestData()[$this->tokenHeaderName] ?? null;
             }
 
             /* @var $class AbstractEntity */
             $class = $this->userClass;
             if ($requestToken) {
                 try {
+                    /* @var $user \Webiny\Component\Security\User\AbstractUser */
                     $user = $this->login->getUser($requestToken);
                     $this->user = $class::findOne(['email' => $user->getUsername()]);
 
@@ -139,7 +146,7 @@ class Authorization
                     return $this->user;
                 } catch (LoginException $le) {
                     // Do not throw exception if the request is an attempt to login
-                    if ($this->wRequest()->isPost() && $this->wRequest()->getCurrentUrl(true)->getPath(true)->endsWith('/login')) {
+                    if ($request->isPost() && $request->getCurrentUrl(true)->getPath(true)->endsWith('/login')) {
                         return null;
                     }
 

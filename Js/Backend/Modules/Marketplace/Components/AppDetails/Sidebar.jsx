@@ -21,15 +21,19 @@ Sidebar.defaultProps = {
                         <span>{app.version}</span>
                     </li>
 
-                    <li>
-                        Installations:
-                        <span>{app.installations}</span>
-                    </li>
+                    {app.localName !== 'Webiny' && (
+                        <li>
+                            Installations:
+                            <span>{app.installations}</span>
+                        </li>
+                    )}
 
-                    <li>
-                        Required Webiny version:
-                        <span>{app.webinyVersion}</span>
-                    </li>
+                    {app.localName !== 'Webiny' && (
+                        <li>
+                            Required Webiny version:
+                            <span>{app.webinyVersion}</span>
+                        </li>
+                    )}
 
                     <li>
                         Repository:

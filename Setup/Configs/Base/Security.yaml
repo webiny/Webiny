@@ -26,6 +26,5 @@ Login:
     2FactorAuth: false
     BlockThreshold: 6
     BlockTimelimit: 10
-    SessionTtl: 30
     RateLimitWhitelist:
         - 127.0.0.1
