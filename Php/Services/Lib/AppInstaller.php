@@ -83,9 +83,7 @@ class AppInstaller
 
         /* @var $user User */
         $user = $this->wAuth()->getUser();
-        /* @var $install \Apps\Webiny\Php\Lib\LifeCycle\Install */
-        $install = $app->getLifeCycleObject('Install');
-        foreach ($install->getUserRoles() as $role) {
+        foreach ($app->getUserRoles() as $role) {
             if ($role['isAdminRole'] ?? false) {
                 $user->roles[] = UserRole::findOne(['slug' => $role['slug']]);
             }

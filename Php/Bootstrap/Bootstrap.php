@@ -75,7 +75,7 @@ class Bootstrap
 
         /* @var $app App */
         foreach ($this->wApps() as $app) {
-            $app->getLifeCycleObject('Bootstrap')->run($app);
+            $app->bootstrap();
         }
 
         $this->wEvents()->fire('Webiny.Bootstrap.End');

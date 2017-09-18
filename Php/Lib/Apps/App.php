@@ -1,181 +1,284 @@
 <?php
-/**
- * Webiny Platform (http://www.webiny.com/)
- *
- * @copyright Copyright Webiny LTD
- */
 
 namespace Apps\Webiny\Php\Lib\Apps;
 
-use Apps\Webiny\Php\Lib\Interfaces\PublicApiInterface;
-use Apps\Webiny\Php\Lib\LifeCycle\LifeCycleInterface;
-use Webiny\Component\Config\ConfigObject;
-use Webiny\Component\Storage\Directory\Directory;
+use Apps\Webiny\Php\Entities\UserPermission;
+use Apps\Webiny\Php\Entities\UserRole;
+use Apps\Webiny\Php\Lib\Response\ApiErrorResponse;
+use Apps\Webiny\Php\Lib\Response\HtmlResponse;
+use Closure;
+use MongoDB\Driver\Exception\BulkWriteException;
+use MongoDB\Driver\Exception\RuntimeException;
+use Webiny\Component\Entity\EntityException;
 
 /**
  * Class that holds information about an application.
  */
 class App extends AbstractApp
 {
-    /**
-     * Application base constructor.
-     *
-     * @param ConfigObject $info Application information object.
-     * @param string       $path Absolute path to the application.
-     *
-     * @throws \Exception
-     */
-    public function __construct(ConfigObject $info, $path)
+    public function bootstrap()
     {
-        parent::__construct($info, $path);
-        $this->name = $info->get('Name', '');
-        $this->version = $info->get('Version', '');
+        // Override to implement
+    }
 
-        if ($this->name == '' || $this->version == '') {
-            throw new \Exception('A component must have both name and version properties defined');
+    public function install()
+    {
+        $this->createUserPermissions();
+        $this->createUserRoles();
+        $this->createIndexes();
+    }
+
+    public function release()
+    {
+        $this->createUserPermissions();
+        $this->createUserRoles();
+        $this->installJsDependencies();
+        $this->manageIndexes();
+    }
+
+    public function getUserRoles()
+    {
+        $roles = [];
+        $rolesFile = $this->getPath() . '/Php/Install/UserRoles.json';
+        if (file_exists($rolesFile)) {
+            $roles = json_decode(file_get_contents($rolesFile), true);
         }
 
-        $this->registerAutoloaderMap();
-        $this->parseNamespace($path);
-        $this->parseEvents($info);
-        $this->parseStorages($info);
-        $this->parseServices($info);
-        $this->parseRoutes($info);
+        return $roles;
+    }
+
+    public function getUserRoleGroups()
+    {
+        $roleGroups = [];
+        $roleGroupsFile = $this->getPath() . '/Php/Install/UserRoleGroups.json';
+        if (file_exists($roleGroupsFile)) {
+            $roleGroups = json_decode(file_get_contents($roleGroupsFile), true);
+        }
+
+        return $roleGroups;
+    }
+
+    public function getUserPermissions()
+    {
+        $permissions = [];
+        $permissionsFile = $this->getPath() . '/Php/Install/UserPermissions.json';
+        if (file_exists($permissionsFile)) {
+            $permissions = json_decode(file_get_contents($permissionsFile), true);
+        }
+
+        return $permissions;
     }
 
     /**
-     * Get a single JsApp or an array of all JS apps from current Webiny app
+     * Get array of app notification classes
      *
-     * @param null $jsApp
-     *
-     * @return JsApp|array
+     * @return array
      */
-    public function getJsApps($jsApp = null)
+    public function getAppNotificationTypes()
     {
-        $storage = $this->wStorage('Apps');
-        $directory = new Directory($this->getName() . '/Js', $storage, 0);
-        $jsApps = [];
-        /* @var $dir Directory */
-        foreach ($directory as $dir) {
-            if ($dir instanceof Directory) {
-                $jsAppInstance = new JsApp($this, $dir);
-                if ($jsApp) {
-                    if ($jsAppInstance->getName() == $jsApp) {
-                        return $jsAppInstance;
+        return [];
+    }
+
+    /**
+     * Scan app entities and create/drop indexes as needed
+     */
+    protected function manageIndexes()
+    {
+        foreach ($this->getEntities() as $e) {
+            /* @var $entity \Apps\Webiny\Php\Lib\Entity\AbstractEntity */
+            $entity = new $e['class'];
+            $collection = $entity->getEntityCollection();
+            $indexes = $entity->getIndexes();
+
+            $dbIndexes = $this->wDatabase()->listIndexes($entity->getEntityCollection());
+            $installedIndexes = [];
+            foreach ($dbIndexes as $ind) {
+                $installedIndexes[] = $ind['name'];
+            }
+
+            // Check if any indexes need to be created
+            /* @var $index \Webiny\Component\Mongo\Index\AbstractIndex */
+            foreach ($indexes as $index) {
+                $installed = in_array($index->getName(), $installedIndexes);
+                if (!$installed) {
+                    echo "Creating '" . $index->getName() . "' index in '" . $collection . "' collection...\n";
+                    try {
+                        $this->wDatabase()->createIndex($collection, $index);
+                    } catch (RuntimeException $e) {
+                        if ($e->getCode() === 85) {
+                            echo "WARNING: another index with same fields already exists. Skipping creation of '" . $index->getName() . "' index.\n";
+                        } else {
+                            echo $e->getMessage() . "\n";
+                        }
                     }
-                } else {
-                    $jsApps[] = $jsAppInstance;
+                }
+            }
+
+            // Check of any indexes need to be dropped
+            foreach ($installedIndexes as $index) {
+                $removed = !$indexes->exists($index);
+                if ($removed && $index !== '_id_') {
+                    echo "Dropping '" . $index . "' index from '" . $collection . "' collection...\n";
+                    $this->wDatabase()->dropIndex($collection, $index);
                 }
             }
         }
-
-        return $jsApps;
-    }
-
-    public function getVersion()
-    {
-        return $this->version;
-    }
-
-    public function getPath($absolute = true)
-    {
-        if ($absolute) {
-            return $this->wConfig()->get('Application.AbsolutePath') . 'Apps/' . $this->name;
-        }
-
-        return 'Apps/' . $this->name;
-    }
-
-    public function getBuildMeta($jsApp = null)
-    {
-        $meta = [];
-        foreach ($this->getJsApps() as $app) {
-            if ($jsApp && $app->getName() == $jsApp) {
-                return $app->getBuildMeta();
-            }
-
-            $meta[] = $app->getBuildMeta();
-        }
-
-        return $meta;
-    }
-
-    public function getEntities()
-    {
-        $entitiesDir = $this->getName() . '/Php/Entities';
-        $dir = new Directory($entitiesDir, $this->wStorage('Apps'), false, '*.php');
-        $entities = [];
-        /* @var $file \Webiny\Component\Storage\File\File */
-        foreach ($dir as $file) {
-            $entityClass = 'Apps\\' . $this->str($file->getKey())->replace('.php', '')->replace('/', '\\')->val();
-            $entityName = $this->str($file->getKey())->explode('/')->last()->replace('.php', '')->val();
-
-            // Check if abstract or trait
-            $cls = new \ReflectionClass($entityClass);
-            if (!$cls->isAbstract() && !$cls->isTrait()) {
-                $entities[$entityName] = [
-                    'app'     => $this->getName(),
-                    'name'    => $this->getName() . '.' . $entityName,
-                    'class'   => $entityClass,
-                    'classId' => $entityClass::getClassId()
-                ];
-            }
-        }
-
-        return $entities;
-    }
-
-    public function getServices()
-    {
-        $servicesDir = $this->getName() . '/Php/Services';
-        $dir = new Directory($servicesDir, $this->wStorage('Apps'), false, '*.php');
-        $services = [];
-        /* @var $file \Webiny\Component\Storage\File\File */
-        foreach ($dir as $file) {
-            $serviceClass = 'Apps\\' . $this->str($file->getKey())->replace('.php', '')->replace('/', '\\')->val();
-            $serviceName = $this->str($file->getKey())->explode('/')->last()->replace('.php', '')->val();
-            // Check if abstract
-            $cls = new \ReflectionClass($serviceClass);
-            if (!$cls->isAbstract()) {
-                $interfaces = class_implements($serviceClass);
-                $public = in_array(PublicApiInterface::class, $interfaces);
-
-                $services[$serviceName] = [
-                    'app'           => $this->getName(),
-                    'name'          => $serviceName,
-                    'class'         => $serviceClass,
-                    'classId'       => $serviceClass::getClassId(),
-                    'public'        => $public,
-                    'authorization' => !$public
-                ];
-            }
-        }
-
-        return $services;
     }
 
     /**
-     * Get instance of a lifecycle object: Bootstrap, Install or Release
-     *
-     * @param string $name Life cycle object name
-     *
-     * @return LifeCycleInterface
+     * Install production JS dependencies
+     * Default: `yarn install --production` is executed in the root of the app
+     * TODO: move this to Deploy CLI plugin
      */
-    public function getLifeCycleObject($name)
+    protected function installJsDependencies()
     {
-        $builtInClass = 'Apps\Webiny\Php\Lib\LifeCycle\\' . $name;
-        if (file_exists($this->getPath(true) . '/Php/' . $name . '.php')) {
-            $class = 'Apps\\' . $this->getName() . '\\Php\\' . $name;
-            if (in_array($builtInClass, class_parents($class))) {
-                return new $class;
-            }
+        if (file_exists($this->getPath() . '/package.json')) {
+            exec('cd ' . $this->getPath() . ' && yarn install --production');
         }
-
-        return new $builtInClass();
     }
 
-    private function registerAutoloaderMap()
+    /**
+     * Add an app route and a template that will be rendered for that route.<br/>
+     *
+     * @param string|\Closure $regex
+     * @param string          $template
+     * @param int             $priority
+     * @param array|callable  $dataSource
+     */
+    protected function addAppRoute($regex, $template, $priority = 400, $dataSource = [])
     {
-        $this->wClassLoader()->appendLibrary('Apps\\' . $this->name . '\\', $this->getPath());
+        $this->wEvents()->listen('Webiny.Bootstrap.Request', function () use ($regex, $template, $dataSource) {
+            $path = $this->wRequest()->getCurrentUrl(true)->getPath(true);
+
+            if (is_callable($regex) && !$regex($path)) {
+                return null;
+            }
+
+            if (is_string($regex) && !$path->match($regex)) {
+                return null;
+            }
+
+            return $this->renderApp($template, $dataSource);
+        }, $priority);
+    }
+
+    /**
+     * Create user permissions
+     */
+    protected function createUserPermissions()
+    {
+        foreach ($this->getUserPermissions() as $perm) {
+            $p = new UserPermission();
+            try {
+                $p->populate($perm)->save();
+            } catch (BulkWriteException $e) {
+                $this->printException($e->getMessage());
+            } catch (EntityException $e) {
+                $invalidAttributes = $e->getInvalidAttributes();
+                if (array_key_exists('slug', $invalidAttributes)) {
+                    $p = UserPermission::findOne(['slug' => $perm['slug']]);
+                    if ($p) {
+                        try {
+                            $p->populate($perm)->save();
+                        } catch (EntityException $e) {
+                            $this->printException($e);
+                        }
+
+                        continue;
+                    }
+                }
+                $this->printException($e);
+            }
+        }
+    }
+
+    /**
+     * Create user roles
+     */
+    protected function createUserRoles()
+    {
+        foreach ($this->getUserRoles() as $role) {
+            $r = new UserRole();
+            try {
+                $r->populate($role)->save();
+            } catch (BulkWriteException $e) {
+                $this->printException($e->getMessage());
+            } catch (EntityException $e) {
+                $invalidAttributes = $e->getInvalidAttributes();
+                if (array_key_exists('slug', $invalidAttributes)) {
+                    $r = UserRole::findOne(['slug' => $role['slug']]);
+                    if ($r) {
+                        try {
+                            $r->populate($role)->save();
+                        } catch (EntityException $e) {
+                            $this->printException($e);
+                        }
+
+                        continue;
+                    }
+                }
+                $this->printException($e);
+            }
+        }
+    }
+
+    /**
+     * Scan app entities and create indexes if needed
+     */
+    protected function createIndexes()
+    {
+        foreach ($this->getEntities() as $e) {
+            /* @var $entity \Apps\Webiny\Php\Lib\Entity\AbstractEntity */
+            $entity = new $e['class'];
+            $collection = $entity->getEntityCollection();
+            $indexes = $entity->getIndexes();
+
+            /* @var $index \Webiny\Component\Mongo\Index\AbstractIndex */
+            foreach ($indexes as $index) {
+                try {
+                    $this->wDatabase()->createIndex($collection, $index);
+                } catch (RuntimeException $e) {
+                    if ($e->getCode() === 85) {
+                        echo "WARNING: Skipping creation of '" . $index->getName() . "' index (index with the same fields already exist).\n";
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Renders template and returns HTML response
+     *
+     * @param string        $template
+     * @param array|Closure $dataSource
+     *
+     * @return HtmlResponse
+     */
+    private function renderApp($template, $dataSource)
+    {
+        $data = $dataSource;
+        if (is_callable($dataSource)) {
+            $data = $dataSource();
+        }
+        $html = $this->wTemplateEngine()->fetch($template, $data);
+
+        return new HtmlResponse($html);
+    }
+
+    /**
+     * Print exception in form of ApiErrorResponse.
+     * This is printing directly because it is always run as a CLI script
+     *
+     * @param $e
+     */
+    private function printException($e)
+    {
+        $message = $e instanceof \Exception ? $e->getMessage() : $e;
+        if ($e instanceof EntityException) {
+            $response = new ApiErrorResponse($e->getInvalidAttributes(), $e->getMessage(), $e->getCode());
+            $message = $response->getData(true);
+        }
+
+        print_r($message);
     }
 }

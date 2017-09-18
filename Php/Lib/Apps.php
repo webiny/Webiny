@@ -71,12 +71,22 @@ class Apps implements \IteratorAggregate
             return $existingApp;
         }
 
+        $projectRoot = $this->wConfig()->get('Application.AbsolutePath');
         $configPath = 'Apps/' . $app . '/App.yaml';
-        if (!file_exists($this->wConfig()->get('Application.AbsolutePath') . '/' . $configPath)) {
+        if (!file_exists($projectRoot . '/' . $configPath)) {
             return null;
         }
         $config = $this->wConfig()->yaml($configPath);
-        $newApp = new App($config, 'Apps/' . $app);
+
+        // Check if App.php file exists
+        $appClass = App::class;
+        $appFile = $projectRoot . '/Apps/' . $app . '/Php/App.php';
+        if (file_exists($appFile)) {
+            $appClass = 'Apps\\' . $app . '\\Php\\App';
+            // We need to manually include the file since autoloader mapping is not yet registered
+            include $appFile;
+        }
+        $newApp = new $appClass($config, 'Apps/' . $app);
         $this->apps[] = $newApp;
 
         return $newApp;
