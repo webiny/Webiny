@@ -1,8 +1,8 @@
 import _ from 'lodash';
 import Webiny from 'webiny';
 import React from 'react';
-import accounting from 'accounting';
 import I18nComponent from './I18N';
+import BuiltInModifiers from './BuiltInModifiers';
 
 class I18n {
     constructor() {
@@ -10,59 +10,7 @@ class I18n {
         this.api = null;
         this.cacheKey = null;
 
-        /**
-         * All registered modifiers. We already have built-in modifiers 'plural', 'case' and 'if'.
-         * @type {Array}
-         */
-        this.modifiers = {
-            if: (value, parameters) => {
-                // This is intentionally "==", because received parameters are all strings.
-                return value == parameters[0] ? parameters[1] : parameters[2] || '';
-            },
-            gender: (value, parameters) => {
-                return value === 'male' ? parameters[0] : parameters[1];
-            },
-            plural: (value, parameters) => {
-                // Numbers can be single number or ranges.
-                for (let i = 0; i < parameters.length; i = i + 2) {
-                    const current = parameters[i];
-                    if (current === 'default') {
-                        return value + ' ' + parameters[i + 1];
-                    }
-
-                    const numbers = current.split('-');
-
-                    // If we are dealing with a numbers range, then let's check if we are in it.
-                    if (numbers.length === 2) {
-                        if (value >= numbers[0] && value <= numbers[1]) {
-                            return value + ' ' + parameters[i + 1];
-                        }
-                        continue;
-                    }
-
-                    // This is intentionally "==", because received parameters are all strings.
-                    if (value == numbers[0]) {
-                        return value + ' ' + parameters[i + 1];
-                    }
-                }
-
-                // If we didn't match any condition, let's just remove the received value.
-                return value;
-            },
-
-
-            // TODO: finish these one Locale settings are done.
-            date: value => {
-                return 'DATE: ' + value;
-            },
-            time: value => {
-                return 'TIME: ' + value;
-            },
-            datetime: value => {
-                return 'DATETIME: ' + value;
-            }
-        };
-
+        this.modifiers = BuiltInModifiers;
         this.translations = {};
         this.component = I18nComponent;
 
@@ -100,13 +48,14 @@ class I18n {
 
         // Check if we have received {value: ..., format: ...} object.
         const output = {value: values[variable], format: null};
-        if (output.value.value && _.isFunction(output.value.format)) {
+        if (_.isFunction(output.value.format)) {
             output.format = output.value.format;
             output.value = output.value.value;
         }
 
         if (modifier) {
-            let [name, parameters] = modifier.split(':');
+            let parameters = modifier.split(':');
+            let name = parameters.shift();
             if (this.modifiers[name]) {
                 output.value = this.modifiers[name](output.value, parameters);
             }
@@ -116,7 +65,7 @@ class I18n {
             return output.format(output.value);
         }
 
-        return part;
+        return output.value;
     }
 
     /**
@@ -160,39 +109,6 @@ class I18n {
         this.component = component;
     }
 
-    /**
-     * Used for rendering text in DOM
-     * @param translationKey
-     * @param base
-     * @param variables
-     * @returns {XML}
-     */
-    render(translationKey, base, variables) {
-        return React.createElement(this.component, {translationKey, base, variables});
-    }
-
-    // Following methods are plain-simple for now - let's make them smarter in the near future
-    price(value, currency = '£', precision = 2) {
-        const currencySymbols = {gbp: '£', usd: '$', eur: '€'}; // Plain simple for now
-        return accounting.formatMoney(value, _.get(currencySymbols, currency, currency), precision);
-    }
-
-    number(value, decimals = 0) {
-        return accounting.formatNumber(value, decimals);
-    }
-
-    date(value, format = 'DD/MMM/YY') {
-        return moment(value).format(format);
-    }
-
-    time(value, format = 'HH:mm') {
-        return moment(value).format(format);
-    }
-
-    datetime(value, format = 'DD/MMM/YY HH:mm') {
-        return moment(value).format(format);
-    }
-
     getTranslation(key) {
         return this.translations[key] || '';
     }
@@ -229,11 +145,19 @@ class I18n {
     }
 
     /**
-     * Returns currently set locale.
+     * Returns currently selected locale.
      * @returns {string|string|*}
      */
     getLocale() {
         return this.locale;
+    }
+
+    /**
+     * @returns {string|string|*}
+     */
+    setLocale(locale) {
+        this.locale = locale;
+        return this;
     }
 
     setCacheKey(cacheKey) {
@@ -241,8 +165,39 @@ class I18n {
         return this;
     }
 
+    /**
+     * Registers single modifier.
+     * @param name
+     * @param callback
+     * @returns {I18n}
+     */
+    registerModifier(name, callback) {
+        this.modifiers[name] = callback;
+        return this;
+    }
+
+    /**
+     * Registers all modifiers in given array.
+     * @param modifiers
+     * @returns {I18n}
+     */
+    registerModifiers(modifiers) {
+        modifiers.forEach((callback, name) => this.registerModifier(name, callback))
+        return this;
+    }
+
+    /**
+     * Unregisters given modifier.
+     * @param name
+     * @returns {I18n}
+     */
+    unregisterModifier(name) {
+        delete this.modifiers[name];
+        return this;
+    }
+
     initialize(locale = 'en_GB') {
-        this.locale = locale;
+        this.setLocale(locale);
         // TODO: Set moment / accounting locale settings here
 
         // If we have the same cache key, that means we have latest translations - we can safely read from local storage.
@@ -273,6 +228,18 @@ class I18n {
 
         return '';
     }
+
+    /**
+     * Used for rendering text in DOM
+     * @param translationKey
+     * @param base
+     * @param variables
+     * @returns {XML}
+     */
+    render(translationKey, base, variables) {
+        return React.createElement(this.component, {translationKey, base, variables});
+    }
+
 }
 
 export default new I18n();

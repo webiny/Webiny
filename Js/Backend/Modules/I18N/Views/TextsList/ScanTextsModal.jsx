@@ -26,11 +26,9 @@ class ScanTextsModal extends Webiny.Ui.ModalComponent {
                     onSuccessMessage={null}
                     onSubmitSuccess={async response => {
                         Webiny.Growl.success(
-                            this.i18n(`Inserted {inserted|plural:1:translation:default:translations} ({ignored} ignored).`, {
-                                inserted: {
-                                    value: response.getData('inserted'),
-                                    format: output => <strong>{output}</strong>
-                                },
+                            this.i18n(`Inserted {inserted} {translations|plural:1:translation:default:translations} ({ignored} ignored).`, {
+                                inserted: <strong>{response.getData('inserted')}</strong>,
+                                translations: response.getData('inserted'),
                                 ignored: <strong>{response.getData('ignored')}</strong>
                             })
                         );
