@@ -32,8 +32,8 @@ class Browse extends Webiny.Ui.View {
 
     componentWillUnmount() {
         super.componentWillUnmount();
-        this.meEp && this.meEp.abort();
-        this.appsEp && this.appsEp.abort();
+        this.meEp && this.meEp.cancel();
+        this.appsEp && this.appsEp.cancel();
     }
 
     loadApps() {
