@@ -1,7 +1,7 @@
 import React from 'react';
 import Webiny from 'webiny';
-import ExportPermissionModal from './Modal/ExportPermissionModal';
-import ImportPermissionModal from './Modal/ImportPermissionModal';
+import ExportPermissionModal from './Modal/ExportModal';
+import ImportPermissionModal from './Modal/ImportModal';
 
 class List extends Webiny.Ui.View {
 
@@ -90,11 +90,22 @@ List.defaultProps = {
                 </Ui.ViewSwitcher.View>
 
                 <Ui.ViewSwitcher.View view="exportModal" modal>
-                    {(showView, data) => <ExportPermissionModal permission={data}/>}
+                    {(showView, data) => (
+                        <ExportPermissionModal
+                            data={data}
+                            api="/entities/webiny/user-permissions"
+                            fields="name,slug,description,permissions"
+                            label="Permission"/>
+                    )}
                 </Ui.ViewSwitcher.View>
 
                 <Ui.ViewSwitcher.View view="importModal" modal>
-                    {(showView) => <ImportPermissionModal onImported={() => this.list.loadData()}/>}
+                    {(showView) => (
+                        <ImportPermissionModal
+                            api="/entities/webiny/user-permissions"
+                            label="Permission"
+                            onImported={() => this.list.loadData()}/>
+                    )}
                 </Ui.ViewSwitcher.View>
             </Ui.ViewSwitcher>
         );

@@ -2,6 +2,7 @@
 
 namespace Apps\Webiny\Php\Entities;
 
+use Apps\Webiny\Php\Entities\UserRoleGroup;
 use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
 use Apps\Webiny\Php\Lib\Interfaces\UserInterface;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
@@ -20,6 +21,7 @@ use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
  * @property integer          $requests
  * @property DateTimeObject   $lastActivity
  * @property EntityCollection $roles
+ * @property EntityCollection $roleGroups
  */
 class ApiToken extends AbstractEntity implements UserInterface
 {
@@ -63,6 +65,24 @@ class ApiToken extends AbstractEntity implements UserInterface
 
             return $roles;
         });
+        $this->attr('roleGroups')->many2many('ApiToken2UserRoleGroup')->setEntity(UserRoleGroup::class)->onSet(function ($roleGroups) {
+            // If not mongo Ids - load roles by slugs
+            if (is_array($roleGroups)) {
+                foreach ($roleGroups as $i => $rg) {
+                    if (!$this->wDatabase()->isId($rg)) {
+                        if (is_string($rg)) {
+                            $roleGroups[$i] = UserRoleGroup::findOne(['slug' => $rg]);
+                        } elseif (isset($rg['id'])) {
+                            $roleGroups[$i] = $rg['id'];
+                        } elseif (isset($rg['slug'])) {
+                            $roleGroups[$i] = UserRoleGroup::findOne(['slug' => $rg['slug']]);
+                        }
+                    }
+                }
+            }
+
+            return $roleGroups;
+        });
     }
 
     protected static function entityIndexes(IndexContainer $indexes)
@@ -75,7 +95,15 @@ class ApiToken extends AbstractEntity implements UserInterface
 
     public function getUserRoles()
     {
-        return $this->roles;
+        $roles = $this->roles->getIterator();
+        /* @var $group UserRoleGroup */
+        foreach ($this->roleGroups as $group) {
+            foreach ($group->roles as $r) {
+                $roles[] = $r;
+            }
+        }
+
+        return $roles;
     }
 
     public function hasRole($name)

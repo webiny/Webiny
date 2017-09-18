@@ -5,7 +5,7 @@ import Webiny from 'webiny';
 class ApiTokenModal extends Webiny.Ui.ModalComponent {
 
     renderDialog() {
-        const {Modal, Form, Grid, Input, Switch, Button, UserRoles} = this.props;
+        const {Modal, Form, Grid, Input, Switch, Button, Tabs, UserRoles, UserRoleGroups} = this.props;
 
         const formProps = {
             api: '/entities/webiny/api-token',
@@ -40,7 +40,19 @@ class ApiTokenModal extends Webiny.Ui.ModalComponent {
                                                 placeholder="Short description of usage"/>
                                             <Switch label="Enabled" name="enabled"/>
                                             <Switch label="Log requests" name="logRequests"/>
-                                            <UserRoles name="roles"/>
+                                        </Grid.Col>
+                                    </Grid.Row>
+                                    <br/>
+                                    <Grid.Row>
+                                        <Grid.Col all={12}>
+                                            <Tabs>
+                                                <Tabs.Tab label="Roles" icon="fa-user">
+                                                    <UserRoles name="roles"/>
+                                                </Tabs.Tab>
+                                                <Tabs.Tab label="Role Groups" icon="fa-users">
+                                                    <UserRoleGroups name="roleGroups"/>
+                                                </Tabs.Tab>
+                                            </Tabs>
                                         </Grid.Col>
                                     </Grid.Row>
                                 </Modal.Body>
@@ -58,5 +70,8 @@ class ApiTokenModal extends Webiny.Ui.ModalComponent {
 }
 
 export default Webiny.createComponent(ApiTokenModal, {
-    modules: ['Modal', 'Form', 'Grid', 'Input', 'Switch', 'Button', {UserRoles: 'Webiny/Backend/UserRoles'}]
+    modules: ['Modal', 'Form', 'Grid', 'Input', 'Switch', 'Button', 'Tabs', {
+        UserRoles: 'Webiny/Backend/UserRoles',
+        UserRoleGroups: 'Webiny/Backend/UserRoleGroups'
+    }]
 });

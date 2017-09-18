@@ -4,6 +4,7 @@ namespace Apps\Webiny\Php\Lib\Apps;
 
 use Apps\Webiny\Php\Entities\UserPermission;
 use Apps\Webiny\Php\Entities\UserRole;
+use Apps\Webiny\Php\Entities\UserRoleGroup;
 use Apps\Webiny\Php\Lib\Response\ApiErrorResponse;
 use Apps\Webiny\Php\Lib\Response\HtmlResponse;
 use Closure;
@@ -25,6 +26,7 @@ class App extends AbstractApp
     {
         $this->createUserPermissions();
         $this->createUserRoles();
+        $this->createUserRoleGroups();
         $this->createIndexes();
     }
 
@@ -32,6 +34,7 @@ class App extends AbstractApp
     {
         $this->createUserPermissions();
         $this->createUserRoles();
+        $this->createUserRoleGroups();
         $this->installJsDependencies();
         $this->manageIndexes();
     }
@@ -210,6 +213,36 @@ class App extends AbstractApp
                     if ($r) {
                         try {
                             $r->populate($role)->save();
+                        } catch (EntityException $e) {
+                            $this->printException($e);
+                        }
+
+                        continue;
+                    }
+                }
+                $this->printException($e);
+            }
+        }
+    }
+
+    /**
+     * Create user role groups
+     */
+    protected function createUserRoleGroups()
+    {
+        foreach ($this->getUserRoleGroups() as $roleGroup) {
+            $r = new UserRoleGroup();
+            try {
+                $r->populate($roleGroup)->save();
+            } catch (BulkWriteException $e) {
+                $this->printException($e->getMessage());
+            } catch (EntityException $e) {
+                $invalidAttributes = $e->getInvalidAttributes();
+                if (array_key_exists('slug', $invalidAttributes)) {
+                    $r = UserRoleGroup::findOne(['slug' => $roleGroup['slug']]);
+                    if ($r) {
+                        try {
+                            $r->populate($roleGroup)->save();
                         } catch (EntityException $e) {
                             $this->printException($e);
                         }

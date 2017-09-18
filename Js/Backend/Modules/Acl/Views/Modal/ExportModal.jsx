@@ -1,7 +1,8 @@
 import React from 'react';
+import _ from 'lodash';
 import Webiny from 'webiny';
 
-class ExportPermissionModal extends Webiny.Ui.ModalComponent {
+class ExportModal extends Webiny.Ui.ModalComponent {
 
     constructor(props) {
         super(props);
@@ -14,11 +15,14 @@ class ExportPermissionModal extends Webiny.Ui.ModalComponent {
 
     componentWillMount() {
         super.componentWillMount();
-        const _fields = 'name,slug,description,permissions';
-        const api = new Webiny.Api.Endpoint('/entities/webiny/user-permissions');
-        return api.get(this.props.permission.id, {_fields}).then(response => {
-            const data = response.getData('entity');
+        const _fields = this.props.fields;
+        const api = new Webiny.Api.Endpoint(this.props.api);
+        return api.get(this.props.data.id, {_fields}).then(response => {
+            let data = response.getData('entity');
             delete data.id;
+            if(this.props.map) {
+                data[this.props.map] = _.map(data[this.props.map], 'slug');
+            }
 
             this.setState({
                 loading: false,
@@ -28,11 +32,11 @@ class ExportPermissionModal extends Webiny.Ui.ModalComponent {
     }
 
     renderDialog() {
-        const {Modal, Copy, CodeHighlight, Loader} = this.props;
+        const {Modal, Copy, CodeHighlight, Loader, label} = this.props;
         return (
             <Modal.Dialog>
                 <Modal.Content>
-                    <Modal.Header title="Export Permission"/>
+                    <Modal.Header title={`Export ${label}`}/>
                     <Modal.Body style={this.state.loading ? {height: 200} : {}}>
                         {this.state.loading ? <Loader/> : <CodeHighlight language="json">{this.state.content}</CodeHighlight>}
                     </Modal.Body>
@@ -45,4 +49,12 @@ class ExportPermissionModal extends Webiny.Ui.ModalComponent {
     }
 }
 
-export default Webiny.createComponent(ExportPermissionModal, {modules: ['Modal', 'Copy', 'CodeHighlight', 'Loader']});
+ExportModal.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps, {
+    api: '',
+    data: {},
+    map: '',
+    label: '',
+    fields: ''
+});
+
+export default Webiny.createComponent(ExportModal, {modules: ['Modal', 'Copy', 'CodeHighlight', 'Loader']});

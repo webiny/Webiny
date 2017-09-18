@@ -10,7 +10,7 @@ List.defaultProps = {
     renderer() {
         const listProps = {
             ref: ref => this.list = ref,
-            api: '/entities/webiny/user-roles',
+            api: '/entities/webiny/user-role-groups',
             fields: 'id,name,slug,description,createdOn',
             connectToRouter: true,
             query: {_sort: 'name'},
@@ -22,20 +22,20 @@ List.defaultProps = {
         const Table = Ui.List.Table;
 
         const users = <Ui.Link route="Users.List">Users</Ui.Link>;
-        const permissions = <Ui.Link route="UserPermissions.List">Permissions</Ui.Link>;
+        const roles = <Ui.Link route="UserRoles.List">Roles</Ui.Link>;
         return (
             <Ui.ViewSwitcher>
                 <Ui.ViewSwitcher.View view="listView" defaultView>
                     {showView => (
                         <Ui.View.List>
                             <Ui.View.Header
-                                title="ACL - Roles"
+                                title="ACL - Role Groups"
                                 description={(
-                                    <span>Roles are a simple way to control what permissions certain users have. Create a role with a set
-                                        of {permissions} and then assign roles to {users}.</span>
+                                    <span>Role Groups are a simple way to control what set of roles certain users have. Create a role group with a set
+                                        of {roles} and then assign role groups to {users}.</span>
                                 )}>
                                 <Ui.ButtonGroup>
-                                    <Ui.Link type="primary" route="UserRoles.Create">
+                                    <Ui.Link type="primary" route="UserRoleGroups.Create">
                                         <Ui.Icon icon="icon-plus-circled"/>
                                         Create
                                     </Ui.Link>
@@ -65,17 +65,17 @@ List.defaultProps = {
                                             <Table.Field name="name" label="Name" sort="name">
                                                 {data => (
                                                     <span>
-                                            <Ui.Link route="UserRoles.Edit" params={{id: data.id}}>
-                                                <strong>{data.name}</strong>
-                                            </Ui.Link>
-                                            <br/>
+                                                        <Ui.Link route="UserRoleGroups.Edit" params={{id: data.id}}>
+                                                            <strong>{data.name}</strong>
+                                                        </Ui.Link>
+                                                        <br/>
                                                         {data.description}
-                                        </span>
+                                                    </span>
                                                 )}
                                             </Table.Field>
                                             <Table.Field name="slug" label="Slug" sort="slug"/>
                                             <Table.Actions>
-                                                <Table.EditAction route="UserRoles.Edit"/>
+                                                <Table.EditAction route="UserRoleGroups.Edit"/>
                                                 <Table.Action
                                                     label="Export"
                                                     icon="fa-download"
@@ -95,18 +95,18 @@ List.defaultProps = {
                     {(showView, data) => (
                         <ExportModal
                             data={data}
-                            map="permissions"
-                            api="/entities/webiny/user-roles"
-                            fields="name,slug,description,permissions.slug"
-                            label="Role"/>
+                            map="roles"
+                            api="/entities/webiny/user-role-groups"
+                            fields="name,slug,description,roles"
+                            label="Role Group"/>
                     )}
                 </Ui.ViewSwitcher.View>
 
                 <Ui.ViewSwitcher.View view="importModal" modal>
                     {(showView) => (
                         <ImportModal
-                            api="/entities/webiny/user-roles"
-                            label="Role"
+                            api="/entities/webiny/user-role-groups"
+                            label="Role Group"
                             onImported={() => this.list.loadData()}/>
                     )}
                 </Ui.ViewSwitcher.View>

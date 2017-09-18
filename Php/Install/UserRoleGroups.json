@@ -1,0 +1,16 @@
+[
+    {
+        "name": "Administrator",
+        "slug": "administrator",
+        "description": "All administrative roles",
+        "roles": [
+            "backup-app-manager",
+            "demo-manager",
+            "faq",
+            "marketplace-manager",
+            "notification-manager",
+            "webiny-acl-api-token-manager",
+            "webiny-dashboard"
+        ]
+    }
+]

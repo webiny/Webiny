@@ -28,6 +28,7 @@ use Webiny\Component\Mongo\Index\CompoundIndex;
  * @property string           $lastLogin
  * @property string           $passwordRecoveryCode
  * @property EntityCollection $roles
+ * @property EntityCollection $roleGroups
  * @property bool             $enabled
  * @property array            $meta
  */
@@ -81,6 +82,24 @@ class User extends AbstractEntity implements UserInterface
             }
 
             return $roles;
+        });
+        $this->attr('roleGroups')->many2many('User2UserRoleGroup')->setEntity(UserRoleGroup::class)->onSet(function ($roleGroups) {
+            // If not mongo Ids - load roles by slugs
+            if (is_array($roleGroups)) {
+                foreach ($roleGroups as $i => $rg) {
+                    if (!$this->wDatabase()->isId($rg)) {
+                        if (is_string($rg)) {
+                            $roleGroups[$i] = UserRoleGroup::findOne(['slug' => $rg]);
+                        } elseif (isset($rg['id'])) {
+                            $roleGroups[$i] = $rg['id'];
+                        } elseif (isset($rg['slug'])) {
+                            $roleGroups[$i] = UserRoleGroup::findOne(['slug' => $rg['slug']]);
+                        }
+                    }
+                }
+            }
+
+            return $roleGroups;
         });
         $this->attr('lastActive')->datetime();
         $this->attr('lastLogin')->datetime();
@@ -271,6 +290,7 @@ class User extends AbstractEntity implements UserInterface
          * @api.description Returns the data/base64  qr code for the authenticator application.
          */
         $api->get('/2factor-qr', function () {
+            /* @var $user User */
             $user = $this->wAuth()->getUser();
             $tfa = new TwoFactorAuth($user);
 
@@ -286,6 +306,7 @@ class User extends AbstractEntity implements UserInterface
          */
         $api->post('/2factor-verify', function () {
             $data = $this->wRequest()->getRequestData();
+            /* @var $user User */
             $user = $this->wAuth()->getUser();
             $tfa = new TwoFactorAuth($user);
 
@@ -305,6 +326,7 @@ class User extends AbstractEntity implements UserInterface
          * @api.description Returns the data/base64  qr code for the authenticator application.
          */
         $api->get('/2factor-recovery-codes', function () {
+            /* @var $user User */
             $user = $this->wAuth()->getUser();
             $tfa = new TwoFactorAuth($user);
 
@@ -331,7 +353,15 @@ class User extends AbstractEntity implements UserInterface
      */
     public function getUserRoles()
     {
-        return $this->roles;
+        $roles = $this->roles->getIterator();
+        /* @var $group UserRoleGroup */
+        foreach ($this->roleGroups as $group) {
+            foreach ($group->roles as $r) {
+                $roles[] = $r;
+            }
+        }
+
+        return $roles;
     }
 
     /**

@@ -14,9 +14,10 @@ class Module extends Webiny.App.Module {
         this.registerMenus(
             <Menu label="ACL" icon="icon-users">
                 <Menu label="User Management" role={aclManageUsers}>
-                    <Menu label="Users" route="Users.List"/>
-                    <Menu label="Roles" route="UserRoles.List"/>
-                    <Menu label="Permissions" route="UserPermissions.List"/>
+                    <Menu label="Permissions" route="UserPermissions.List" order={1}/>
+                    <Menu label="Roles" route="UserRoles.List" order={2}/>
+                    <Menu label="Role Groups" route="UserRoleGroups.List" order={3}/>
+                    <Menu label="Users" route="Users.List" order={4}/>
                 </Menu>
                 <Menu label="API" role={aclApiTokens}>
                     <Menu label="Request Logs" route="ApiLogs.List"/>
@@ -32,6 +33,9 @@ class Module extends Webiny.App.Module {
             new Webiny.Route('UserRoles.Create', '/acl/roles/new', Views.UserRolesForm, 'ACL - Create Role').setRole(aclManageUsers),
             new Webiny.Route('UserRoles.Edit', '/acl/roles/:id', Views.UserRolesForm, 'ACL - Edit Role').setRole(aclManageUsers),
             new Webiny.Route('UserRoles.List', '/acl/roles', Views.UserRolesList, 'ACL - Roles').setRole(aclManageUsers),
+            new Webiny.Route('UserRoleGroups.Create', '/acl/role-groups/new', Views.UserRoleGroupsForm, 'ACL - Create Role Group').setRole(aclManageUsers),
+            new Webiny.Route('UserRoleGroups.Edit', '/acl/role-groups/:id', Views.UserRoleGroupsForm, 'ACL - Edit Role Group').setRole(aclManageUsers),
+            new Webiny.Route('UserRoleGroups.List', '/acl/role-groups', Views.UserRoleGroupsList, 'ACL - Role Groups').setRole(aclManageUsers),
             new Webiny.Route('UserPermissions.Create', '/acl/permissions/new', Views.UserPermissionsForm, 'ACL - Create Permission').setRole(aclManageUsers),
             new Webiny.Route('UserPermissions.Edit', '/acl/permissions/:id', Views.UserPermissionsForm, 'ACL - Edit Permission').setRole(aclManageUsers),
             new Webiny.Route('UserPermissions.List', '/acl/permissions', Views.UserPermissionsList, 'ACL - Permissions').setRole(aclManageUsers),
