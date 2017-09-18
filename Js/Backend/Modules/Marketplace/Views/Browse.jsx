@@ -22,7 +22,7 @@ class Browse extends Webiny.Ui.View {
     componentWillMount() {
         super.componentWillMount();
         this.setState({loadingUser: true});
-        new Webiny.Api.Endpoint('/services/webiny/marketplace').get('/me').then(apiResponse => {
+        this.meEp = new Webiny.Api.Endpoint('/services/webiny/marketplace').get('/me').then(apiResponse => {
             if (!apiResponse.isError()) {
                 this.onUser(apiResponse.getData());
             }
@@ -30,9 +30,15 @@ class Browse extends Webiny.Ui.View {
         });
     }
 
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        this.meEp && this.meEp.abort();
+        this.appsEp && this.appsEp.abort();
+    }
+
     loadApps() {
         this.setState({loadingApps: true});
-        new Webiny.Api.Endpoint('/services/webiny/marketplace').get('/apps').then(apiResponse => {
+        this.appsEp = new Webiny.Api.Endpoint('/services/webiny/marketplace').get('/apps').then(apiResponse => {
             this.setState({apps: apiResponse.getData('list'), loadingApps: false});
         });
     }

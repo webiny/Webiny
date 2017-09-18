@@ -53,7 +53,7 @@ AppDetails.defaultProps = {
                 {!app.canInstall && (
                     <Alert type="warning">
                         This app requires Webiny <strong>{app.webinyVersion}</strong>. Your current Webiny is
-                        <strong>{app.installedWebinyVersion}</strong>.
+                        &nbsp;<strong>{app.installedWebinyVersion}</strong>.
                         <br/>Please update Webiny before attempting to install this app.
                     </Alert>
                 )}
