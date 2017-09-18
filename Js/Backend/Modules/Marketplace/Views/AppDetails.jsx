@@ -70,7 +70,7 @@ AppDetails.defaultProps = {
                         <InstallModal ref={ref => this.installModal = ref} app={app}/>
                         <UpdateModal ref={ref => this.updateModal = ref} app={app} onUpdated={() => this.updateSuccessModal.show()}/>
                         <UpdateSuccessModal ref={ref => this.updateSuccessModal = ref} app={app}/>
-                        <span onClick={() => this.updateSuccessModal.show()}>ShowSuccess</span>
+                        {/*<span onClick={() => this.updateSuccessModal.show()}>ShowSuccess</span>*/}
                     </div>
                 </div>
                 <Tabs>
