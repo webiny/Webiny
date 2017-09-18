@@ -62,9 +62,12 @@ class UserPermission extends AbstractEntity
                 $on = 0;
                 $cleanPerm = ['classId' => $perm['classId'], 'rules' => []];
                 foreach ($perm['rules'] as $url => $rules) {
-                    if (is_bool($rules) && $rules === true) {
-                        $on++;
-                        $cleanPerm['rules'][$url] = true;
+                    if (is_bool($rules)) {
+                        if ($rules) {
+                            $on++;
+                            $cleanPerm['rules'][$url] = true;
+                        }
+
                         continue;
                     }
 
