@@ -69,6 +69,6 @@ class I18NTextsExport
 
     public function toJson()
     {
-        return json_encode(['groups' => $this->groups, 'texts' => $this->texts, 'apps' => $this->apps]);
+        return json_encode(['apps' => $this->apps, 'groups' => $this->groups, 'texts' => $this->texts]);
     }
 }

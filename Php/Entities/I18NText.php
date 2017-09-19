@@ -9,9 +9,6 @@ use Apps\Webiny\Php\Lib\Entity\EntityQuery\Filter;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\QueryContainer;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\I18N\I18N;
-use Apps\Webiny\Php\Lib\I18N\I18NTextsCollection;
-use Apps\Webiny\Php\Lib\I18N\I18NScanner;
-use Apps\Webiny\Php\Lib\I18N\I18NTextsExport;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use PHPZip\Zip\Stream\ZipStream;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
@@ -90,9 +87,8 @@ class I18NText extends AbstractEntity
          */
         $api->post('scan', function () {
             $apps = $this->wRequest()->getRequestData()['apps'] ?? [];
-            $results = I18N::getInstance()->scanApps($apps);
 
-            return I18N::getInstance()->importTexts($results, ['overwriteExisting' => false]);
+            return I18N::getInstance()->scanApps($apps, ['overwriteExisting' => false]);
         })->setBodyValidators(['apps' => 'required,minLength:1'])->setPublic();
 
         /**
@@ -121,8 +117,9 @@ class I18NText extends AbstractEntity
          */
         $api->post('import/zip', function () {
             $src = $this->wRequest()->getRequestData()['file']['src'] ?? null;
+            $export = I18N::getInstance()->extractExportedTextsZip($src);
 
-            return I18N::getInstance()->importTextsFromZip($src, ['overwriteExisting' => true]);
+            return I18N::getInstance()->importTexts($export, ['overwriteExisting' => true]);
         })->setBodyValidators(['file' => 'required'])->setPublic();
 
         /**
