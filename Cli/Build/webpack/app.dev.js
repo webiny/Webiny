@@ -8,7 +8,6 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const Visualizer = require('webpack-visualizer-plugin');
 const _ = require('lodash');
 const AssetsPlugin = require('./plugins/Assets');
-const i18nPlugin = require('./plugins/i18n');
 const ModuleIdsPlugin = require('./plugins/ModuleIds');
 const ChunkIdsPlugin = require('./plugins/ChunkIds');
 const Webiny = require('webiny-cli/lib/webiny');
@@ -24,7 +23,6 @@ module.exports = function (app) {
     const outputPath = path.resolve(Webiny.projectRoot(), 'public_html/build/development', app.getPath());
     const publicPath = url + '/build/development/' + app.getPath() + '/';
 
-    const i18nPluginInstance = new i18nPlugin();
     const plugins = [
         new webpack.NamedModulesPlugin(),
         new ModuleIdsPlugin(),
@@ -39,8 +37,6 @@ module.exports = function (app) {
         }),
         new webpack.HotModuleReplacementPlugin(),
         new ExtractTextPlugin('app.css'),
-        // Parse i18n strings and generate external file with translations
-        i18nPluginInstance,
         // Generate meta.json to use for app bootstrap based on generated assets
         new AssetsPlugin({
             manifestVariable: 'window["webinyConfig"]["Meta"]["' + name + '"].chunks'
@@ -126,7 +122,7 @@ module.exports = function (app) {
                     test: /\.(js|jsx)$/,
                     exclude: /node_modules/,
                     include: Webiny.projectRoot(),
-                    use: [i18nPluginInstance.getLoader()]
+                    use: 'i18n-loader'
                 },
                 require('./styles')(app),
                 {

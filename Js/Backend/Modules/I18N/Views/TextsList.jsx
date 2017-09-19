@@ -13,7 +13,7 @@ class TextsList extends Webiny.Ui.View {
 TextsList.defaultProps = {
     renderer () {
         return (
-            <Webiny.Ui.LazyLoad modules={['ViewSwitcher', 'View', 'Button', 'Icon', 'List', 'Input', 'Link']}>
+            <Webiny.Ui.LazyLoad modules={['ViewSwitcher', 'View', 'Button', 'Icon', 'List', 'Input', 'Link', 'Grid', 'Select']}>
                 {Ui => (
                     <Ui.ViewSwitcher>
                         <Ui.ViewSwitcher.View view="translationsList" defaultView>
@@ -43,11 +43,23 @@ TextsList.defaultProps = {
                                             sort="-createdOn"
                                             ui="textList">
                                             <Ui.List.FormFilters>
-                                                {applyFilters => (
-                                                    <Ui.Input
-                                                        placeholder="Search"
-                                                        name="_searchQuery"
-                                                        onEnter={applyFilters()}/>
+                                                {(apply) => (
+                                                    <Ui.Grid.Row>
+                                                        <Ui.Grid.Col all={3}>
+                                                            <Ui.Input
+                                                                name="_searchQuery"
+                                                                placeholder="Search by method or URL"
+                                                                onEnter={apply()}/>
+                                                        </Ui.Grid.Col>
+                                                        <Ui.Grid.Col all={3}>
+                                                            <Ui.Select
+                                                                api="/entities/webiny/api-logs/methods"
+                                                                name="method"
+                                                                placeholder="Filter by HTTP method"
+                                                                allowClear
+                                                                onChange={apply()}/>
+                                                        </Ui.Grid.Col>
+                                                    </Ui.Grid.Row>
                                                 )}
                                             </Ui.List.FormFilters>
                                             <Ui.List.Table>

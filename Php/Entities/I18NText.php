@@ -16,14 +16,12 @@ use PHPZip\Zip\Stream\ZipStream;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
 /**
- * Class User
- *
- * @package Apps\Selecto\Php\Entities
- *
- * @property string      $key
- * @property string      $app
- * @property string      $placeholder
- * @property ArrayObject $translations
+ * Class I18NText
+ * @property string        $key
+ * @property string        $app
+ * @property string        $placeholder
+ * @property ArrayObject   $translations
+ * @property I18NTextGroup $group
  */
 class I18NText extends AbstractEntity
 {
@@ -34,28 +32,26 @@ class I18NText extends AbstractEntity
 
     protected static function entityQuery(QueryContainer $query)
     {
-        $query->add(
-            new Filter('edited', function (EntityQuery $query, $flag) {
-                $query->removeCondition('edited');
-                $flag = filter_var($flag, FILTER_VALIDATE_BOOLEAN);
+        $query->add(new Filter('edited', function (EntityQuery $query, $flag) {
+            $query->removeCondition('edited');
+            $flag = filter_var($flag, FILTER_VALIDATE_BOOLEAN);
 
-                if ($flag) {
-                    $query->setConditions([
-                        '$and' => [
-                            ['translations.en_GB' => ['$exists' => true]],
-                            ['translations.en_GB' => ['$nin' => [null, ""]]],
-                        ]
-                    ]);
-                } else {
-                    $query->setConditions([
-                        '$or' => [
-                            ['translations.en_GB' => ['$exists' => false]],
-                            ['translations.en_GB' => ['$in' => [null, ""]]],
-                        ]
-                    ]);
-                }
-            })
-        );
+            if ($flag) {
+                $query->setConditions([
+                    '$and' => [
+                        ['translations.en_GB' => ['$exists' => true]],
+                        ['translations.en_GB' => ['$nin' => [null, ""]]],
+                    ]
+                ]);
+            } else {
+                $query->setConditions([
+                    '$or' => [
+                        ['translations.en_GB' => ['$exists' => false]],
+                        ['translations.en_GB' => ['$in' => [null, ""]]],
+                    ]
+                ]);
+            }
+        }));
     }
 
     public function __construct()

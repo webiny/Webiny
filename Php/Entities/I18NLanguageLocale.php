@@ -2,6 +2,10 @@
 
 namespace Apps\Webiny\Php\Entities;
 
+/**
+ * Class I18NLanguageLocale
+ * @package Apps\Webiny\Php\Entities
+ */
 class I18NLanguageLocale
 {
     static function getLocales($exclude = [])

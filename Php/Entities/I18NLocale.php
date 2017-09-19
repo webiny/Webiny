@@ -8,7 +8,7 @@ use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\Entity\Attribute\Validation\ValidationException;
 
 /**
- * Class I18NLanguage
+ * Class I18NLocale
  *
  * @package Apps\Selecto\Php\Entities
  *
