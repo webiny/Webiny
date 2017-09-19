@@ -5,7 +5,7 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Webiny\Php\Dispatchers\Flows;
+namespace Apps\Webiny\Php\RequestHandlers\ApiHandlers\EntityFlows;
 
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
@@ -16,10 +16,9 @@ use Webiny\Component\Entity\EntityException;
 use Webiny\Component\StdLib\Exception\AbstractException;
 
 /**
- * Class ExecuteMethodFlow
- * @package Apps\Webiny\Php\Dispatchers\Flows
+ * Class DefaultEntityFlow
  */
-class ExecuteEntityMethodFlow extends AbstractFlow
+class DefaultEntityFlow extends AbstractEntityFlow
 {
     public function handle(AbstractEntity $entity, $params)
     {

@@ -1,10 +1,10 @@
 <?php
-namespace Apps\Webiny\Php\Discover;
+namespace Apps\Webiny\Php\RequestHandlers\ApiHandlers\Discover;
 
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Lib\Apps\Parser\EntityParser;
 use Apps\Webiny\Php\Lib\Apps\Parser\ServiceParser;
-use Apps\Webiny\Php\Discover\Postman\EndPoint;
+use Apps\Webiny\Php\RequestHandlers\ApiHandlers\Discover\Postman\EndPoint;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
 

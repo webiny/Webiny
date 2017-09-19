@@ -11,8 +11,6 @@ use Apps\Webiny\Php\Entities\Image;
 
 /**
  * Images attribute
- *
- * @package Apps\Webiny\Php\Lib\Entity\Attributes
  */
 class ImagesAttribute extends FilesAttribute
 {

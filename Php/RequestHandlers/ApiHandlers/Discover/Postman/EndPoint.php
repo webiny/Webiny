@@ -1,5 +1,5 @@
 <?php
-namespace Apps\Webiny\Php\Discover\Postman;
+namespace Apps\Webiny\Php\RequestHandlers\ApiHandlers\Discover\Postman;
 
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Lib\Apps\App;

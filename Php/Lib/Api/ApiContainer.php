@@ -14,8 +14,6 @@ use Webiny\Component\StdLib\StdLibTrait;
  * Class ApiContainer
  *
  * This class is a container of all entity API methods that is reused among entity instances
- *
- * @package Apps\Webiny\Php\Lib\Api
  */
 class ApiContainer
 {

@@ -16,7 +16,6 @@ use Webiny\Component\Mongo\Index\CompoundIndex;
 
 /**
  * Many2ManyAttribute
- * @package Apps\Webiny\Php\Lib\Entity\Attributes
  */
 class Many2ManyAttribute extends \Webiny\Component\Entity\Attribute\Many2ManyAttribute
 {

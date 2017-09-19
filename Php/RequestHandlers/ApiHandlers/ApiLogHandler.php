@@ -5,7 +5,7 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Webiny\Php\Dispatchers;
+namespace Apps\Webiny\Php\RequestHandlers\ApiHandlers;
 
 use Apps\Webiny\Php\Lib\Authorization\SystemApiToken;
 use Apps\Webiny\Php\Lib\Request;
@@ -15,11 +15,9 @@ use Apps\Webiny\Php\Entities\User;
 use Apps\Webiny\Php\RequestHandlers\ApiEvent;
 
 /**
- * Class ApiLog
- *
- * @package Apps\Webiny\Php\Dispatchers
+ * Class ApiLogHandler
  */
-class ApiLogger extends AbstractApiDispatcher
+class ApiLogHandler extends AbstractApiHandler
 {
     public function handle(ApiEvent $event)
     {

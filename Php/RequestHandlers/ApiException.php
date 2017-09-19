@@ -11,8 +11,6 @@ use Apps\Webiny\Php\Lib\Exceptions\AppException;
 
 /**
  * ApiExceptions are thrown by the API methods.
- *
- * @package Apps\Webiny\Php\RequestHandlers
  */
 class ApiException extends AppException
 {

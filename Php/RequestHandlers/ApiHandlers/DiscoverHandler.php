@@ -5,15 +5,15 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Webiny\Php\Dispatchers;
+namespace Apps\Webiny\Php\RequestHandlers\ApiHandlers;
 
 use Apps\Webiny\Php\Lib\Response\ApiRawResponse;
-use Apps\Webiny\Php\Discover\Postman;
 use Apps\Webiny\Php\RequestHandlers\ApiEvent;
 use Apps\Webiny\Php\RequestHandlers\ApiException;
+use Apps\Webiny\Php\RequestHandlers\ApiHandlers\Discover\Postman;
 use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
 
-class DiscoverDispatcher extends AbstractApiDispatcher
+class DiscoverHandler extends AbstractApiHandler
 {
     public function handle(ApiEvent $event)
     {

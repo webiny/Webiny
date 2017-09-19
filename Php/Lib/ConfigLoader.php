@@ -12,8 +12,6 @@ use Webiny\Component\StdLib\SingletonTrait;
 
 /**
  * Class ConfigLoader parses module config and injects variables from App config
- *
- * @package Apps\Webiny\Php\Lib
  */
 class ConfigLoader
 {

@@ -5,7 +5,7 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Webiny\Php\Dispatchers;
+namespace Apps\Webiny\Php\RequestHandlers\ApiHandlers;
 
 use Apps\Webiny\Php\Lib\Api\MatchedApiMethod;
 use Apps\Webiny\Php\Lib\Interfaces\PublicApiInterface;
@@ -15,7 +15,7 @@ use Apps\Webiny\Php\Lib\Services\AbstractService;
 use Apps\Webiny\Php\RequestHandlers\ApiEvent;
 use Apps\Webiny\Php\RequestHandlers\ApiException;
 
-class ServiceDispatcher extends AbstractApiDispatcher
+class ServiceHandler extends AbstractApiHandler
 {
     public function handle(ApiEvent $event)
     {

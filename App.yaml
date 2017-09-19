@@ -37,7 +37,7 @@ Storage:
                         Config:
                             Directory: __DIR__/../../Temp
                             Create: true
-        DevBuild:
+        DevelopmentBuild:
             Class: \Webiny\Component\Storage\Storage
             Arguments:
                 Driver:
@@ -73,19 +73,19 @@ Events:
                 - {Handler: Php/RequestHandlers/Routes, Priority: 390}
         Api:
             Before:
-                - {Handler: Php/Dispatchers/ApiLogger, Priority: 500}
-                - {Handler: Php/Dispatchers/ApiCache::cacheRead}
+                - {Handler: Php/RequestHandlers/ApiHandlers/ApiLogHandler, Priority: 500}
+                - {Handler: Php/RequestHandlers/ApiHandlers/ApiCacheHandler::cacheRead}
             Request:
-                - {Handler: Php/Dispatchers/DiscoverDispatcher}
-                - {Handler: Php/Dispatchers/EntityDispatcher}
-                - {Handler: Php/Dispatchers/ServiceDispatcher}
+                - {Handler: Php/RequestHandlers/ApiHandlers/DiscoverHandler}
+                - {Handler: Php/RequestHandlers/ApiHandlers/EntityHandler}
+                - {Handler: Php/RequestHandlers/ApiHandlers/ServiceHandler}
             After:
-                - {Handler: Php/Dispatchers/ApiCache::cacheSave}
+                - {Handler: Php/RequestHandlers/ApiHandlers/ApiCacheHandler::cacheSave}
 
 Services:
-    ExecuteEntityMethodFlow:
-        Class: \Apps\Webiny\Php\Dispatchers\Flows\ExecuteEntityMethodFlow
-        Tags: [entity-dispatcher-flow]
+    DefaultEntityFlow:
+        Class: \Apps\Webiny\Php\RequestHandlers\ApiHandlers\EntityFlows\DefaultEntityFlow
+        Tags: [entity-flow]
 
     SmartyExtension:
         Class: \Apps\Webiny\Php\View\SmartyExtension

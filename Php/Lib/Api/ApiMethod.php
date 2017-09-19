@@ -19,8 +19,6 @@ use Webiny\Component\Validation\ValidationException;
  * Class ApiMethod
  *
  * This class is used when we want to expose class or service method to the API
- *
- * @package Apps\Webiny\Php\Lib\Api
  */
 class ApiMethod
 {

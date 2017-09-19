@@ -11,8 +11,6 @@ namespace Apps\Webiny\Php\Lib\Api;
  * Class MatchedApiMethod
  *
  * This class is used when ApiMethod is matched and URL parameters are extracted
- *
- * @package Apps\Webiny\Php\Dispatchers
  */
 class MatchedApiMethod
 {

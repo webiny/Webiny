@@ -9,7 +9,7 @@
 namespace Apps\Webiny\Php\Lib\Entity\EntityQuery;
 
 /**
- * @package Apps\Webiny\Php\Lib\Entity
+ * Class Sorter
  */
 class Sorter extends EntityQueryManipulator
 {

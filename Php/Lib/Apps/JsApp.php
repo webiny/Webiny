@@ -68,7 +68,7 @@ class JsApp
         if ($this->wIsProduction()) {
             $storage = $this->wStorage('ProductionBuild');
         } else {
-            $storage = $this->wStorage('DevBuild');
+            $storage = $this->wStorage('DevelopmentBuild');
         }
 
         return $storage->getAbsolutePath($this->app->getName() . '_' . $this->name);

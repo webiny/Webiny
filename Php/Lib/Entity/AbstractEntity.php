@@ -57,7 +57,6 @@ use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
  * @method static void onAfterSave (\Closure $callback)
  * @method static void onBeforeDelete (\Closure $callback)
  * @method static void onAfterDelete (\Closure $callback)
- * @package Apps\Webiny\Php\Lib\Entity
  */
 abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 {

@@ -13,7 +13,6 @@ use Webiny\Component\Storage\Storage;
 
 /**
  * File attribute
- * @package Apps\Webiny\Php\Lib\Entity\Attributes
  */
 class FileAttribute extends Many2OneAttribute
 {
