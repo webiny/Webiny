@@ -51,7 +51,7 @@ class TranslationModal extends Webiny.Ui.ModalComponent {
 
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
-                                        <Ui.Textarea disabled label="Placeholder" name="placeholder"/>
+                                        <Ui.Textarea disabled label="Base" name="base"/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
 

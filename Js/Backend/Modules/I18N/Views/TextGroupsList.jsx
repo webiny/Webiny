@@ -26,8 +26,8 @@ TextGroupsList.defaultProps = {
                                             type="primary"
                                             align="right"
                                             onClick={showView('textGroupsModal')}
-                                            icon="icon-cloud-download"
-                                            label={this.i18n(`Create text group`)}/>
+                                            icon="icon-plus-circled"
+                                            label={this.i18n(`Create`)}/>
                                     </Ui.View.Header>
                                     <Ui.View.Body>
                                         <Ui.List

@@ -186,16 +186,16 @@ trait WebinyTrait
     }
 
     /**
-     * @param       $placeholder
+     * @param       $base
      * @param array $variables
      * @param array $options
      *
      * @return string
      */
-    static protected function wI18n($placeholder, $variables = [], $options = [])
+    static protected function wI18n($base, $variables = [], $options = [])
     {
         $options['namespace'] = $options['namespace'] ?? static::$i18nNamespace ?? null;
-        return I18N::getInstance()->translate($placeholder, $variables, $options);
+        return I18N::getInstance()->translate($base, $variables, $options);
     }
 
     /**

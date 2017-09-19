@@ -38,8 +38,8 @@ TextsList.defaultProps = {
                                             connectToRouter
                                             title={this.i18n(`Translations`)}
                                             api="/entities/webiny/i18n-texts"
-                                            searchFields="key,placeholder,app"
-                                            fields="key,placeholder,app,translations"
+                                            searchFields="key,base,app"
+                                            fields="key,base,app,translations"
                                             sort="-createdOn">
                                             <Ui.List.FormFilters>
                                                 {(apply) => (
@@ -67,7 +67,7 @@ TextsList.defaultProps = {
                                                         {row => (
                                                             <span onClick={() => showView('textModal')(row)}>
                                                                 <strong>{row.key}</strong><br/>
-                                                                <small>{row.placeholder}</small>
+                                                                <small>{row.base}</small>
                                                             </span>
                                                         )}
                                                     </Ui.List.Table.Field>

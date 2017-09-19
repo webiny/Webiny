@@ -32,10 +32,10 @@ class JsParser
      *
      * So these are the method definitions:
      *
-     * this.i18n(placeholder, variables, options)
-     * Webiny.I18n(key, placeholder, variables, options)
+     * this.i18n(base, variables, options)
+     * Webiny.I18n(key, base, variables, options)
      *
-     * Parsing is hard because user can type anything as a placeholder, delimiters could be ', ` or ", and inside the text developer
+     * Parsing is hard because user can type anything as a base, delimiters could be ', ` or ", and inside the text developer
      * could've used an escaped version of the same character too. We could also have a combination of strings, like 'string1' + `string2`,
      * which adds another level of complexity to the whole feature.
      *
@@ -66,8 +66,8 @@ class JsParser
                         }
 
                         // We don't need to have duplicate texts in the array.
-                        if (!in_array($text['placeholder'], $texts[$text['namespace']])) {
-                            $texts[$text['namespace']][] = $text['placeholder'];
+                        if (!in_array($text['base'], $texts[$text['namespace']])) {
+                            $texts[$text['namespace']][] = $text['base'];
                         }
                     }
                 }
@@ -170,10 +170,10 @@ class JsParser
         // Parsing this.i18n usages is hard. We must analyze each use thoroughly, one by one.
         return array_map(function ($index) use ($content, $contentLength, $file, $namespaces) {
             // Now let's get the full string, we must look forward until we reach the closing ')'.
-            $placeholder = ['part' => null, 'parts' => []];
+            $base = ['part' => null, 'parts' => []];
 
             for ($i = $index + 10; $i < $contentLength; $i++) {
-                if (!$placeholder['part']) {
+                if (!$base['part']) {
                     // We don't have a part that we are working on.
                     // Did we then reach the end of placeholder ? If the next non-whitespace character is ',' or ')', we are done with matching
                     // the placeholder, otherwise we continue matching the rest. We only care about the rest if third parameter was set, as
@@ -182,12 +182,12 @@ class JsParser
 
                     if (in_array($firstCharacterAfterLastlyProcessedPlaceholderPart, [',', ')'])) {
                         $output = [
-                            'placeholder' => implode('', $placeholder['parts']),
+                            'base' => implode('', $base['parts']),
                             'namespace'   => self::getNamespaceOnIndex($index, $namespaces)
                         ];
 
                         if (!$output['namespace']) {
-                            throw new AppException('Missing text namespace for placeholder "' . $output['placeholder'] . '", in ' . $file->getPathname());
+                            throw new AppException('Missing text namespace for text "' . $output['text'] . '", in ' . $file->getPathname());
                         }
 
                         if ($firstCharacterAfterLastlyProcessedPlaceholderPart === ')') {
@@ -208,7 +208,7 @@ class JsParser
 
                     // If we have a delimiter, then let's assign a new part and process it fully with the following iterations.
                     if (in_array($content[$i], ['`', '\'', '"'])) {
-                        $placeholder['part'] = ['delimiter' => $content[$i], 'start' => $i];
+                        $base['part'] = ['delimiter' => $content[$i], 'start' => $i];
                     }
                     continue;
                 }
@@ -217,7 +217,7 @@ class JsParser
                 // We must recognize the last closing ', " or `. The following examines three things:
                 // 1) Is current character a delimiter
                 // 2) Is it not-escaped - we just check the previous character, it must not be '\'
-                if ($content[$i] !== $placeholder['part']['delimiter']) {
+                if ($content[$i] !== $base['part']['delimiter']) {
                     continue;
                 }
 
@@ -226,8 +226,8 @@ class JsParser
                 }
 
                 // Okay, now we are at the end of the part, so let's add it to the parts.
-                $placeholder['parts'][] = substr($content, $placeholder['part']['start'] + 1, $i - $placeholder['part']['start'] - 1);
-                $placeholder['part'] = null;
+                $base['parts'][] = substr($content, $base['part']['start'] + 1, $i - $base['part']['start'] - 1);
+                $base['part'] = null;
             }
         }, $positions);
     }

@@ -8,7 +8,7 @@ class Module extends Webiny.App.Module {
         const Menu = Webiny.Ui.Menu;
 
         this.registerMenus(
-            <Menu label="I18N" icon="icon-tools" role="webiny-i18n-manager">
+            <Menu label="I18N" icon="icon-earth" role="webiny-i18n-manager">
                 <Menu label="Locales" route="I18N.Locales.List"/>
                 <Menu label="Texts">
                     <Menu label="Text Groups" route="I18N.TextGroups.List"/>

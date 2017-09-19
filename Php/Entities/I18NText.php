@@ -19,7 +19,7 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  * Class I18NText
  * @property string        $key
  * @property string        $app
- * @property string        $placeholder
+ * @property string        $base
  * @property ArrayObject   $translations
  * @property I18NTextGroup $textGroup
  */
@@ -61,7 +61,7 @@ class I18NText extends AbstractEntity
 
         $this->attr('app')->char()->setValidators('required')->setToArrayDefault()->setOnce();
         $this->attr('key')->char()->setValidators('required,unique')->setToArrayDefault()->setOnce();
-        $this->attr('placeholder')->char()->setValidators('required')->setToArrayDefault()->setOnce();
+        $this->attr('base')->char()->setValidators('required')->setToArrayDefault()->setOnce();
         $this->attr('textGroup')->many2one()->setEntity(I18NTextGroup::class);
         $this->attr('translations')->object()->setToArrayDefault()->onSet(function ($texts) {
             // We must check which locales have changed and update cache keys for them
@@ -98,7 +98,7 @@ class I18NText extends AbstractEntity
          * @api.name        Create new translation
          * @api.description Creates a new translation.
          * @api.body.key            string  Translation key
-         * @api.body.placeholder    string  Default placeholder text for this translation (default text if no translation for selected language is present).
+         * @api.body.base    string  Default placeholder text for this translation (default text if no translation for selected language is present).
          */
         $api->post('keys', function () {
             $data = $this->wRequest()->getRequestData();
@@ -106,14 +106,14 @@ class I18NText extends AbstractEntity
             if (!$translation) {
                 $translation = new I18NText();
                 $translation->key = $data['key'];
-                $translation->placeholder = $data['placeholder'] ?? null;
+                $translation->base = $data['base'] ?? null;
                 $translation->save();
             }
 
             return $this->apiFormatEntity($translation, $this->wRequest()->getFields());
         })->setBodyValidators([
             'key'         => 'required',
-            'placeholder' => 'required'
+            'base' => 'required'
         ]);
 
         /**
@@ -134,7 +134,7 @@ class I18NText extends AbstractEntity
             } else {
                 $translation = new I18NText();
                 $translation->key = $key;
-                $translation->placeholder = $data['placeholder'] ?? null;
+                $translation->base = $data['base'] ?? null;
                 $translation->translations->key($data['language'], $data['translation']);
                 $translation->save();
             }
@@ -142,7 +142,7 @@ class I18NText extends AbstractEntity
             return $translation;
         })->setBodyValidators([
             'language'    => 'required',
-            'placeholder' => 'required'
+            'base' => 'required'
         ]);
 
         /**

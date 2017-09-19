@@ -13,33 +13,39 @@ class TextsList extends Webiny.Ui.View {
 TextsList.defaultProps = {
     renderer () {
         return (
-            <Webiny.Ui.LazyLoad modules={['ViewSwitcher', 'View', 'Button', 'Icon', 'List', 'Input', 'Link', 'Grid', 'Select']}>
+            <Webiny.Ui.LazyLoad
+                modules={['ViewSwitcher', 'View', 'Button', 'ButtonGroup', 'Icon', 'List', 'Input', 'Link', 'Grid', 'Select']}>
                 {Ui => (
                     <Ui.ViewSwitcher>
                         <Ui.ViewSwitcher.View view="translationsList" defaultView>
                             {showView => (
                                 <Ui.View.List>
                                     <Ui.View.Header title={this.i18n(`Texts`)}>
-                                        <Ui.Button
-                                            type="primary"
-                                            align="right"
-                                            onClick={showView('scanTextsModal')}
-                                            icon="icon-cloud-download"
-                                            label={this.i18n(`Scan`)}/>
-                                        <Ui.Button
-                                            type="primary"
-                                            align="right"
-                                            onClick={showView('importTextsModal')}
-                                            icon="icon-cloud-download"
-                                            label={this.i18n(`Import`)}/>
+                                        <Ui.ButtonGroup>
+                                            <Ui.Button
+                                                type="primary"
+                                                onClick={showView('importTextsModal')}
+                                                icon="icon-plus-circled"
+                                                label={this.i18n(`Create`)}/>
+                                            <Ui.Button
+                                                type="secondary"
+                                                onClick={showView('importTextsModal')}
+                                                icon="fa-download"
+                                                label={this.i18n(`Import`)}/>
+                                            <Ui.Button
+                                                type="secondary"
+                                                icon="icon-arrow-circle-right"
+                                                onClick={showView('scanTextsModal')}
+                                                label={this.i18n(`Scan`)}/>
+                                        </Ui.ButtonGroup>
                                     </Ui.View.Header>
                                     <Ui.View.Body>
                                         <Ui.List
                                             connectToRouter
                                             title={this.i18n(`Translations`)}
                                             api="/entities/webiny/i18n-texts"
-                                            searchFields="key,placeholder,app"
-                                            fields="key,placeholder,app,translations"
+                                            searchFields="key,base,app"
+                                            fields="key,base,app,translations,textGroup"
                                             sort="-createdOn">
                                             <Ui.List.FormFilters>
                                                 {(apply) => (
@@ -52,9 +58,20 @@ TextsList.defaultProps = {
                                                         </Ui.Grid.Col>
                                                         <Ui.Grid.Col all={3}>
                                                             <Ui.Select
-                                                                api="/entities/webiny/api-logs/methods"
-                                                                name="method"
-                                                                placeholder="Filter by HTTP method"
+                                                                name="app"
+                                                                api="/services/webiny/apps"
+                                                                url="/installed"
+                                                                textAttr="name"
+                                                                valueAttr="name"
+                                                                placeholder="Filter by app"
+                                                                allowClear
+                                                                onChange={apply()}/>
+                                                        </Ui.Grid.Col>
+                                                        <Ui.Grid.Col all={3}>
+                                                            <Ui.Select
+                                                                api="/entities/webiny/i18n-text-groups"
+                                                                name="textGroup"
+                                                                placeholder="Filter by text group"
                                                                 allowClear
                                                                 onChange={apply()}/>
                                                         </Ui.Grid.Col>
@@ -67,10 +84,14 @@ TextsList.defaultProps = {
                                                         {row => (
                                                             <span onClick={() => showView('textModal')(row)}>
                                                                 <strong>{row.key}</strong><br/>
-                                                                <small>{row.placeholder}</small>
+                                                                <small>{row.base}</small>
                                                             </span>
                                                         )}
                                                     </Ui.List.Table.Field>
+                                                    <Ui.List.Table.Field
+                                                        name="textGroup.name"
+                                                        label={this.i18n('Text Group')}
+                                                        align="center"/>
                                                     <Ui.List.Table.Actions>
                                                         <Ui.List.Table.Action label="Edit" onClick={showView('translationModal')}/>
                                                     </Ui.List.Table.Actions>

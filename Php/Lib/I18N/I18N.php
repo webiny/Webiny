@@ -32,15 +32,15 @@ class I18N
         return true;
     }
 
-    public function translate($placeholder, $variables = [], $options = [])
+    public function translate($base, $variables = [], $options = [])
     {
-        $output = $placeholder;
+        $output = $base;
         $namespace = $options['namespace'] ?? null;
         if (!$namespace) {
             throw new AppException('Cannot translate - text namespace missing.');
         }
 
-        if ($text = I18NText::findByKey($namespace . '.' . md5($placeholder))) {
+        if ($text = I18NText::findByKey($namespace . '.' . md5($base))) {
             $locale = $this->getLocale();
             /* @var I18NText $text */
             if ($text->hasText($locale)) {
@@ -100,8 +100,8 @@ class I18N
         foreach ($data as $appTexts) {
             /* @var I18NAppTexts $appTexts */
             foreach ($appTexts->getTexts() as $key => $texts) {
-                foreach ($texts as $text) {
-                    $textKey = $key . '.' . md5($text);
+                foreach ($texts as $base) {
+                    $textKey = $key . '.' . md5($base);
                     if (I18NText::count(['key' => $textKey])) {
                         $stats['ignored']++;
                         continue;
@@ -110,7 +110,7 @@ class I18N
                     $i18nText = new I18NText();
                     $i18nText->key = $textKey;
                     $i18nText->app = $appTexts->getApp()->getName();
-                    $i18nText->placeholder = $text;
+                    $i18nText->base = $base;
                     $i18nText->save();
 
                     $stats['inserted']++;

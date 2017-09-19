@@ -49,7 +49,7 @@ class PhpParser
                 foreach ($parsed['texts'] as $text) {
                     $namespace = $text['namespace'] ?? $parsed['namespace'];
                     if (!$namespace) {
-                        throw new AppException('Missing text namespace for placeholder "' . $text['placeholder'] . '", in ' . $file->getPathname());
+                        throw new AppException('Missing text namespace for text "' . $text['base'] . '", in ' . $file->getPathname());
                     }
 
                     if (!isset($texts[$namespace])) {
@@ -57,8 +57,8 @@ class PhpParser
                     }
 
                     // We don't need to have duplicate texts in the array.
-                    if (!in_array($text['placeholder'], $texts[$namespace])) {
-                        $texts[$namespace][] = $text['placeholder'];
+                    if (!in_array($text['base'], $texts[$namespace])) {
+                        $texts[$namespace][] = $text['base'];
                     }
                 }
             }
@@ -91,19 +91,19 @@ class PhpParser
         // Parsing this.i18n usages is hard. We must analyze each use thoroughly, one by one.
         return array_map(function ($index) use ($content, $contentLength) {
             // Now let's get the full string, we must look forward until we reach the closing ')'.
-            $placeholder = ['part' => null, 'parts' => []];
+            $base = ['part' => null, 'parts' => []];
 
 
             for ($i = $index + 6; $i < $contentLength; $i++) {
-                if (!$placeholder['part']) {
+                if (!$base['part']) {
                     // We don't have a part that we are working on.
-                    // Did we then reach the end of placeholder ? If the next non-whitespace character is ',' or ')', we are done with matching
-                    // the placeholder, otherwise we continue matching the rest. We only care about the rest if third parameter was set, as
+                    // Did we then reach the end of base ? If the next non-whitespace character is ',' or ')', we are done with matching
+                    // the base, otherwise we continue matching the rest. We only care about the rest if third parameter was set, as
                     // it may be an object that has 'key' field in it, which forces a custom key for the text.
                     $firstCharacterAfterLastlyProcessedPlaceholderPart = ltrim(substr($content, $i, 1));
 
                     if (in_array($firstCharacterAfterLastlyProcessedPlaceholderPart, [',', ')'])) {
-                        $output = ['placeholder' => implode('', $placeholder['parts'])];
+                        $output = ['base' => implode('', $base['parts'])];
 
                         if ($firstCharacterAfterLastlyProcessedPlaceholderPart === ')') {
                             // This means no additional parameters were sent. We can immediately return the placeholder.
@@ -121,7 +121,7 @@ class PhpParser
 
                     // If we have a delimiter, then let's assign a new part and process it fully with the following iterations.
                     if (in_array($content[$i], ['`', '\'', '"'])) {
-                        $placeholder['part'] = ['delimiter' => $content[$i], 'start' => $i];
+                        $base['part'] = ['delimiter' => $content[$i], 'start' => $i];
                     }
                     continue;
                 }
@@ -130,7 +130,7 @@ class PhpParser
                 // We must recognize the last closing ', " or `. The following examines three things:
                 // 1) Is current character a delimiter
                 // 2) Is it not-escaped - we just check the previous character, it must not be '\'
-                if ($content[$i] !== $placeholder['part']['delimiter']) {
+                if ($content[$i] !== $base['part']['delimiter']) {
                     continue;
                 }
 
@@ -139,8 +139,8 @@ class PhpParser
                 }
 
                 // Okay, now we are at the end of the part, so let's add it to the parts.
-                $placeholder['parts'][] = substr($content, $placeholder['part']['start'] + 1, $i - $placeholder['part']['start'] - 1);
-                $placeholder['part'] = null;
+                $base['parts'][] = substr($content, $base['part']['start'] + 1, $i - $base['part']['start'] - 1);
+                $base['part'] = null;
             }
 
         }, $positions);
