@@ -27,7 +27,7 @@ TextsList.defaultProps = {
                                 <Ui.View.List>
                                     <Ui.View.Header
                                         title={this.i18n(`Texts`)}
-                                        description={this.i18n('Scan, create or manage existing texts in all installed apps.')}>
+                                        description={this.i18n('Scan, create and manage existing texts in all installed apps.')}>
                                         <Ui.ButtonGroup>
                                             <Ui.Button
                                                 type="primary"

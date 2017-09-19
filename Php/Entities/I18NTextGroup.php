@@ -10,6 +10,8 @@ use Apps\Webiny\Php\Lib\WebinyTrait;
  * Class I18NTextGroup
  *
  * @property string $name
+ * @property string $description
+ * @property string $app
  * @property int    $totalTexts
  */
 class I18NTextGroup extends AbstractEntity

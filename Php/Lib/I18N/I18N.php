@@ -101,6 +101,14 @@ class I18N
         return $this->saveTextsToDb($texts, $options);
     }
 
+    public function exportTranslations()
+    {
+    }
+
+    public function importTranslations()
+    {
+    }
+
     /**
      * Returns export of all texts and text groups for given list of apps, which can be imported in another environment.
      *
@@ -129,7 +137,6 @@ class I18N
         return new I18NTextsExport($texts, $groups, $list);
     }
 
-
     /**
      * @param I18NTextsExport $export
      * @param array           $options
@@ -146,9 +153,15 @@ class I18N
             $group = I18NTextGroup::findById($id);
             if (!$group) {
                 $group = new I18NTextGroup();
+                $group->id = $id;
             }
 
-            $group->populate($data)->save();
+            /* @var I18NTextGroup $group */
+            $group->name = $data['name'];
+            $group->description = $data['description'];
+            $group->app = $data['app'];
+            $group->save();
+
         }
 
         return $this->saveTextsToDb($export->getTexts(), $options);
@@ -177,11 +190,11 @@ class I18N
         // To unzip, we must first store the file in temporary folder.
         $storage = $this->wStorage('Temp');
         $temp = ['folder' => uniqid(), 'file' => uniqid() . '.zip'];
-        $storage->setContents($temp['file'], $content);
+        $storage->setContents($temp['folder'] . '/' . $temp['file'], $content);
 
         // Let's extract it and import file by file.
         $zip = new \ZipArchive;
-        $opened = $zip->open($storage->getAbsolutePath($temp['file']));
+        $opened = $zip->open($storage->getAbsolutePath($temp['folder'] . '/' . $temp['file']));
         if ($opened === true) {
             $zip->extractTo($storage->getAbsolutePath($temp['folder']));
             $zip->close();
@@ -189,15 +202,13 @@ class I18N
             $texts = new I18NTextsExport();
             $texts->fromJson($storage->getContents($temp['folder'] . '/export'));
 
-            $storage->deleteKey($temp['file']);
-            $storage->deleteKey($temp['folder']);
+            // Let's remove the folder completely.
+            exec('rm -rf ' . $storage->getAbsolutePath($temp['folder']));
 
-            // TODO: Delete everything
             return $texts;
         }
 
         throw new AppException($this->wI18n('Failed to open received ZIP archive.'));
-
     }
 
     /**
@@ -293,14 +304,5 @@ class I18N
         }
 
         return $output;
-    }
-
-
-    public function importTranslations()
-    {
-    }
-
-    public function importTranslationsFromZip()
-    {
     }
 }
