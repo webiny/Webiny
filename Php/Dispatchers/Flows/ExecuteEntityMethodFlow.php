@@ -36,7 +36,7 @@ class ExecuteEntityMethodFlow extends AbstractFlow
 
         $pattern = $apiMethod->getPattern() . '.' . $httpMethod;
         if (!$apiMethod->getPublic() && !$this->wAuth()->canExecute($entity, $pattern)) {
-            $message = 'You are not authorized to execute ' . strtoupper($httpMethod) . ':' . $apiMethod->getPattern() . ' on ' . get_class($entity);
+            $message = 'You are not authorized to execute ' . strtoupper($httpMethod) . ':' . $apiMethod->getPattern() . ' on ' . $entity::getClassId();
             throw new ApiException($message, 'WBY-AUTHORIZATION', 401);
         }
 

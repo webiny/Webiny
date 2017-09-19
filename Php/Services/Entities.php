@@ -10,10 +10,11 @@ use Webiny\Component\StdLib\StdObject\StdObjectWrapper;
 
 /**
  * Class Entities
- * @package Apps\Webiny\Php\Services
  */
 class Entities extends AbstractService
 {
+    protected static $classId = 'Webiny.Services.Entities';
+
     protected function serviceApi(ApiContainer $api)
     {
         /**
@@ -27,10 +28,10 @@ class Entities extends AbstractService
             $excludeEntities = $this->wRequest()->query('exclude', []);
 
             $singleEntity = false;
-            $multipleEntities = $this->wRequest()->query('entities', false);
+            $multipleEntities = $this->wRequest()->query('classIds', false);
 
             if (!$multipleEntities) {
-                $singleEntity = $this->wRequest()->query('entity', false);
+                $singleEntity = $this->wRequest()->query('classId', false);
                 if ($singleEntity) {
                     $multipleEntities = [$singleEntity];
                 }
@@ -45,11 +46,11 @@ class Entities extends AbstractService
             /* @var $app App */
             foreach ($this->wApps() as $app) {
                 foreach ($app->getEntities() as $entity) {
-                    if (in_array($entity['class'], $excludeEntities)) {
+                    if (in_array($entity['classId'], $excludeEntities)) {
                         continue;
                     }
 
-                    if ($multipleEntities && !in_array($entity['class'], $multipleEntities)) {
+                    if ($multipleEntities && !in_array($entity['classId'], $multipleEntities)) {
                         continue;
                     }
 
@@ -66,7 +67,7 @@ class Entities extends AbstractService
                         $entity['relations'] = $entityParser->getRelations();
                     }
 
-                    if ($singleEntity && $entity['class'] == $singleEntity) {
+                    if ($singleEntity && $entity['classId'] == $singleEntity) {
                         return $entity;
                     }
 
@@ -83,7 +84,7 @@ class Entities extends AbstractService
          * @api.query.entity string Entity class for which to get attributes
          */
         $api->get('attributes', function () {
-            $entityClass = $this->wRequest()->query('entity');
+            $entityClass = $this->wRequest()->query('classId');
             $entity = new EntityParser($entityClass);
 
             return $entity->getAttributes();
@@ -95,7 +96,7 @@ class Entities extends AbstractService
          * @api.query.entity string Entity class for which to get methods
          */
         $api->get('methods', function () {
-            $entityClass = $this->wRequest()->query('entity');
+            $entityClass = $this->wRequest()->query('classId');
             $entity = new EntityParser($entityClass);
 
             return $entity->getApiMethods(false);

@@ -2,6 +2,19 @@ const username = require('username');
 const Plugin = require('webiny-cli/lib/plugin');
 const Webiny = require('webiny-cli/lib/webiny');
 
+function setupDockerVirtualHost(answers) {
+    // Create host file
+    let hostFile = Webiny.readFile(Webiny.projectRoot('docker-nginx.conf'));
+    let server = answers.domain.replace('http://', '').replace('https://', '').split(':')[0];
+    hostFile = hostFile.replace('{DOMAIN_HOST}', server);
+
+    try {
+        Webiny.writeFile(Webiny.projectRoot('docker-nginx.conf'), hostFile);
+    } catch (err) {
+        Webiny.failure(err);
+    }
+}
+
 function setupVirtualHost(answers) {
     const chalk = require('chalk');
     const {magenta, white} = chalk;
@@ -31,20 +44,49 @@ class Setup extends Plugin {
         this.selectApps = false;
     }
 
-    runWizard() {
+    runWizard({env}) {
+        const docker = env === 'docker';
         const inquirer = require('inquirer');
         const yaml = require('js-yaml');
         const _ = require('lodash');
         const generatePassword = require('password-generator');
+        const interfaces = require('./interfaces');
+
+        // Save env as it needs to be available as soon as possible for conditional execution
+        const wConfig = Webiny.getConfig();
+        wConfig.env = env;
+        Webiny.saveConfig(wConfig);
 
         Webiny.log("\nNow we need to create a platform configuration and your first user:\n");
 
+        // Need this later in setup
+        let nginxPort = null;
+
+        // Define wizard questions
         const questions = [
             {
                 type: 'input',
                 name: 'domain',
-                message: 'What\'s your local domain (e.g. http://domain.app:8001)?',
-                validate: Webiny.validate.url
+                message: 'What\'s your local domain (e.g. http://domain.app:8000)?',
+                validate: url => {
+                    let valid = Webiny.validate.url(url);
+                    // Check if URL contains port which is mandatory for Docker setup
+                    if (valid === true && docker) {
+                        const message = 'Docker requires a port to be provided. Please add a port number to the URL.';
+                        nginxPort = parseInt(_.get(url.split(':'), 2));
+                        if (_.isNaN(nginxPort)) {
+                            return message;
+                        }
+                    }
+                    return valid;
+                }
+            },
+            {
+                type: 'list',
+                choices: interfaces(),
+                name: 'hostIp',
+                message: 'Select your host IP address:',
+                when: docker
             },
             {
                 type: 'input',
@@ -52,6 +94,19 @@ class Setup extends Plugin {
                 message: 'What\'s your database name?',
                 default: () => {
                     return 'webiny';
+                }
+            },
+            {
+                type: 'input',
+                name: 'databasePort',
+                when: docker,
+                message: 'What\'s your mongodb service port?',
+                default: ({domain}) => {
+                    try {
+                        return parseInt(domain.split(':')[2]) + 1;
+                    } catch (e) {
+                        return '';
+                    }
                 }
             },
             {
@@ -78,6 +133,7 @@ class Setup extends Plugin {
             answers.domain = _.trimEnd(answers.domain, '/');
 
             const configs = {
+                dockerCompose: Webiny.projectRoot('docker-compose.yaml'),
                 configSets: Webiny.projectRoot('Configs/ConfigSets.yaml'),
                 base: {
                     application: Webiny.projectRoot('Configs/Base/Application.yaml'),
@@ -103,6 +159,9 @@ class Setup extends Plugin {
                 // Populate Base/Database.yaml
                 config = yaml.safeLoad(Webiny.readFile(configs.base.database));
                 config.Mongo.Services.Webiny.Calls[0][1] = [answers.database];
+                if (docker) {
+                    config.Mongo.Services.Webiny.Arguments.Uri = 'mongodb:27017';
+                }
                 Webiny.writeFile(configs.base.database, yaml.safeDump(config, {indent: 4, flowLevel: 5}));
 
                 // Populate Base/Security.yaml
@@ -117,70 +176,96 @@ class Setup extends Plugin {
                 config.Application.ApiPath = answers.domain + '/api';
                 Webiny.writeFile(configs.local.application, yaml.safeDump(config, {indent: 4}));
 
+                // Populate docker-compose.yaml
+                if (docker) {
+                    config = yaml.safeLoad(Webiny.readFile(configs.dockerCompose));
+                    config.services.nginx.ports.push(nginxPort + ':80');
+                    config.services.php.extra_hosts.push('dockerhost:' + answers.hostIp);
+                    config.services.php.environment.XDEBUG_CONFIG = `remote_enable=0 remote_host=${answers.hostIp}`;
+                    config.services.mongodb.ports.push(answers.databasePort + ':27017');
+                    Webiny.writeFile(configs.dockerCompose, yaml.safeDump(config, {indent: 4}));
+                    setupDockerVirtualHost(answers);
+                }
+
                 Webiny.success('Configuration files written successfully!');
+
+                // We need to store the env if the project is run using docker
+                if (docker) {
+                    const wConfig = Webiny.getConfig();
+                    wConfig.env = 'docker';
+                    // Set default browserSync port for Docker only
+                    wConfig.browserSync = {port: 3010};
+                    Webiny.saveConfig(wConfig);
+                }
             } catch (err) {
-                console.log(err);
+                Webiny.failure(err.message, err);
                 return;
             }
 
+            if (docker) {
+                Webiny.info('Initializing Docker containers...');
+                // Run Docker containers so we can execute install scripts.
+                Webiny.shellExecute('docker-compose up -d');
+            }
+
+            const php = docker ? 'docker-compose run php php' : 'php';
+
             // Run Webiny installation procedure
             Webiny.info('Running Webiny app installation...');
-            Webiny.shellExecute('php Apps/Webiny/Php/Cli/install.php Local Webiny');
+            Webiny.shellExecute(`${php} Apps/Webiny/Php/Cli/install.php Local Webiny`);
 
             // Create admin user
             const params = [answers.user, answers.password].join(' ');
             try {
-                let output = Webiny.shellExecute('php Apps/Webiny/Php/Cli/admin.php Local ' + params, {stdio: 'pipe'});
+                let output = Webiny.shellExecute(`${php} Apps/Webiny/Php/Cli/admin.php Local ${params}`, {stdio: 'pipe'});
                 output = JSON.parse(output);
                 if (output.status === 'created') {
                     Webiny.success('Admin user created successfully!');
                 }
 
-                if (output.status === 'exists') {
-                    Webiny.exclamation('Admin user already exists!');
+                if (output.status === 'failed') {
+                    Webiny.exclamation(output.message);
                 }
             } catch (err) {
                 Webiny.failure(err.message);
             }
 
-            // Virtual host wizard
-            const hostAnswers = {
-                domain: answers.domain
-            };
+            // If Docker - we do not run nginx setup wizard
+            if (docker) {
+                return answers;
+            }
 
-            const createHost = function () {
+            // Optionally create nginx config
+            try {
+                // Virtual host wizard
+                const hostAnswers = {
+                    domain: answers.domain
+                };
+
+                Webiny.shellExecute('nginx -v', {stdio: 'pipe'});
                 return inquirer.prompt({
                     type: 'confirm',
                     name: 'createHost',
                     message: 'Would you like us to create a new nginx virtual host for you?',
                     default: true
-                }).then(function (a) {
+                }).then(a => {
                     if (a.createHost) {
                         hostAnswers.createHost = true;
-                        return errorLogFile();
+                        return inquirer.prompt({
+                            type: 'input',
+                            name: 'errorLogFile',
+                            message: 'Where do you want to place your error log file (including file name)?',
+                            default: function () {
+                                const server = answers.domain.replace('http://', '').replace('https://', '').split(':')[0];
+                                return '/var/log/nginx/' + server + '-error.log';
+                            }
+                        }).then(a => {
+                            hostAnswers.errorLogFile = a.errorLogFile;
+                            return setupVirtualHost(hostAnswers);
+                        });
                     }
                     return answers;
                 });
-            };
-
-            const errorLogFile = function () {
-                return inquirer.prompt({
-                    type: 'input',
-                    name: 'errorLogFile',
-                    message: 'Where do you want to place your error log file (including file name)?',
-                    default: function () {
-                        const server = answers.domain.replace('http://', '').replace('https://', '').split(':')[0];
-                        return '/var/log/nginx/' + server + '-error.log';
-                    }
-                }).then(function (a) {
-                    hostAnswers.errorLogFile = a.errorLogFile;
-                    return setupVirtualHost(hostAnswers);
-                });
-            };
-
-            try {
-                Webiny.shellExecute('nginx -v', {stdio: 'pipe'});
-                return createHost();
             } catch (err) {
                 // Skip host prompts
             }

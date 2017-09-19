@@ -17,7 +17,7 @@ class Api
 {
     use WebinyTrait, StdLibTrait;
 
-    private $apiResponse = '\Apps\Webiny\Php\Lib\Response\ApiResponse';
+    private $apiResponse = ApiResponse::class;
     private $apiEvent;
 
     public function handle()
@@ -49,9 +49,9 @@ class Api
         } catch (ApiException $e) {
             return new ApiErrorResponse($e->getData(), $e->getErrorMessage(), $e->getErrorCode(), $e->getResponseCode());
         } catch (AppException $e) {
-            return new ApiErrorResponse($e->getData(), $e->getErrorMessage(), $e->getErrorCode(), 404);
+            return new ApiErrorResponse($e->getData(), $e->getErrorMessage(), $e->getErrorCode());
         } catch (\Exception $e) {
-            return new ApiErrorResponse(null, $e->getMessage(), $e->getCode(), 404);
+            return new ApiErrorResponse(null, $e->getMessage(), $e->getCode());
         }
     }
 }

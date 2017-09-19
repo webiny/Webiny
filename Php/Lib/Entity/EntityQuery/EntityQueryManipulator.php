@@ -53,7 +53,7 @@ class EntityQueryManipulator
         $parameter = $callback->getParameters()[1] ?? null;
         if ($parameter) {
             $entityClass = $parameter->getClass()->name ?? null;
-            if ($entityClass && is_subclass_of($entityClass, 'Apps\Webiny\Php\Lib\Entity\AbstractEntity')) {
+            if ($entityClass && is_subclass_of($entityClass, AbstractEntity::class)) {
                 /* @var AbstractEntity $entityClass */
                 if ($entity = $entityClass::findById($manipulatorValue)) {
                     $filterParams[] = $entity;

@@ -143,6 +143,10 @@
 
 .alertModal .body {
 	padding: 35px 35px 0;
+	font-size: 1.2em;
+	color: #393939;
+	margin-bottom: 25px;
+	line-height: 150%;
 }
 
 .alertModal h2 {

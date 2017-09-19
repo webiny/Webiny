@@ -29,7 +29,6 @@ class ApiLogger extends AbstractApiDispatcher
         if ($user instanceof User) {
             if ($this->wConfig()->get('Application.Acl.LogUserRequests', false)) {
                 $this->saveTokenLog($request, $user);
-
             }
 
             return;
@@ -52,6 +51,16 @@ class ApiLogger extends AbstractApiDispatcher
             if ($this->wConfig()->get('Application.Acl.LogSystemApiTokenRequests', false)) {
                 $this->saveTokenLog($request, 'system');
             }
+
+            return;
+        }
+
+        if (!$user) {
+            if ($this->wConfig()->get('Application.Acl.LogIncognitoRequests', false)) {
+                $this->saveTokenLog($request, 'incognito');
+            }
+
+            return;
         }
     }
 

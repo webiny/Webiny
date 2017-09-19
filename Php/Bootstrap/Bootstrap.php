@@ -56,7 +56,7 @@ class Bootstrap
 
         // Append Js configs (these need to be loaded at the very end to inject proper values)
         foreach ($this->jsConfigs as $jsConfig) {
-            $this->wConfig()->appendConfig($jsConfig);
+            $this->wConfig()->append($jsConfig);
         }
 
         // set error handler
@@ -75,7 +75,7 @@ class Bootstrap
 
         /* @var $app App */
         foreach ($this->wApps() as $app) {
-            $app->getLifeCycleObject('Bootstrap')->run($app);
+            $app->bootstrap();
         }
 
         $this->wEvents()->fire('Webiny.Bootstrap.End');
@@ -87,9 +87,8 @@ class Bootstrap
             return $this->processMultipleRequests();
         }
 
-        $responseClass = '\Apps\Webiny\Php\Lib\Response\AbstractResponse';
         /* @var $response AbstractResponse */
-        $response = $this->wEvents()->fire('Webiny.Bootstrap.Request', new BootstrapEvent(), $responseClass, 1);
+        $response = $this->wEvents()->fire('Webiny.Bootstrap.Request', new BootstrapEvent(), AbstractResponse::class, 1);
         if ($response) {
             if ($response instanceof ApiResponse) {
                 $response->setErrors($this->errorHandler->getErrors());
@@ -113,7 +112,6 @@ class Bootstrap
     {
         $requests = $this->wRequest()->getRequestData()['requests'];
         $responses = [];
-        $responseClass = '\Apps\Webiny\Php\Lib\Response\AbstractResponse';
         $headers = [];
         foreach ($requests as $req) {
             if (count($headers)) {
@@ -137,7 +135,7 @@ class Bootstrap
             }
             Request::getInstance();
             Authorization::getInstance()->reset();
-            $response = $this->wEvents()->fire('Webiny.Bootstrap.Request', new BootstrapEvent(), $responseClass, 1);
+            $response = $this->wEvents()->fire('Webiny.Bootstrap.Request', new BootstrapEvent(), AbstractResponse::class, 1);
             if ($response instanceof ApiResponse) {
                 $responseData = $this->processResponse($response, true);
                 $responseData['statusCode'] = $response->getStatusCode();
@@ -167,14 +165,14 @@ class Bootstrap
                     continue;
                 }
                 try {
-                    $this->wConfig()->appendConfig($key->val());
+                    $this->wConfig()->append($key->val());
                 } catch (ConfigException $e) {
                     continue;
                 }
             }
 
             // append config sets
-            $this->wConfig()->appendConfig('Configs/ConfigSets.yaml');
+            $this->wConfig()->append('Configs/ConfigSets.yaml');
         } catch (\Exception $e) {
             throw new \Exception('Unable to build config set ' . $configSet . '. ' . $e->getMessage());
         }
@@ -227,7 +225,7 @@ class Bootstrap
         }
 
         // Build response body
-        $responseBody = $webinyResponse->output($this->wIsProduction() ? 0 : JSON_PRETTY_PRINT);
+        $responseBody = $webinyResponse->output();
         $response = Response::create($responseBody, $webinyResponse->getStatusCode());
         $response->cacheControl()->setCacheControl($webinyResponse->getCacheControlHeaders());
         $response->send();

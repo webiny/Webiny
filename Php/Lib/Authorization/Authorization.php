@@ -2,7 +2,10 @@
 
 namespace Apps\Webiny\Php\Lib\Authorization;
 
+use Apps\Webiny\Php\Lib\Exceptions\AppException;
+use Apps\Webiny\Php\Lib\Interfaces\PublicApiInterface;
 use Apps\Webiny\Php\Lib\Interfaces\UserInterface;
+use Apps\Webiny\Php\Lib\Services\AbstractService;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Apps\Webiny\Php\Entities\ApiToken;
@@ -24,6 +27,11 @@ class Authorization
     use WebinyTrait, SingletonTrait, SecurityTrait, StdLibTrait;
 
     /**
+     * @var string
+     */
+    private $tokenHeaderName = 'X-Webiny-Authorization';
+
+    /**
      * @var LoginApp
      */
     private $login;
@@ -42,7 +50,7 @@ class Authorization
     /**
      * @var string
      */
-    private $userClass = 'Apps\Webiny\Php\Entities\User';
+    private $userClass = User::class;
 
     /**
      * @var Security
@@ -50,11 +58,11 @@ class Authorization
     private $security;
 
     private $patterns = [
-        '/.get'       => 'crudRead',
-        '{id}.get'    => 'crudRead',
-        '/.post'      => 'crudCreate',
-        '{id}.patch'  => 'crudUpdate',
-        '{id}.delete' => 'crudDelete'
+        '/.post'      => 'c',
+        '/.get'       => 'r',
+        '{id}.get'    => 'r',
+        '{id}.patch'  => 'u',
+        '{id}.delete' => 'd'
     ];
 
     protected function init()
@@ -116,16 +124,18 @@ class Authorization
     public function getUser()
     {
         if (!$this->user && !$this->initialized) {
+            $request = $this->wRequest();
             $this->initialized = true;
-            $requestToken = $this->wRequest()->header('X-Webiny-Authorization');
+            $requestToken = $request->header($this->tokenHeaderName);
             if (!$requestToken) {
-                $requestToken = $this->wRequest()->getRequestData()['X-Webiny-Authorization'] ?? null;
+                $requestToken = $request->getRequestData()[$this->tokenHeaderName] ?? null;
             }
 
             /* @var $class AbstractEntity */
             $class = $this->userClass;
             if ($requestToken) {
                 try {
+                    /* @var $user \Webiny\Component\Security\User\AbstractUser */
                     $user = $this->login->getUser($requestToken);
                     $this->user = $class::findOne(['email' => $user->getUsername()]);
 
@@ -136,7 +146,7 @@ class Authorization
                     return $this->user;
                 } catch (LoginException $le) {
                     // Do not throw exception if the request is an attempt to login
-                    if ($this->wRequest()->isPost() && $this->wRequest()->getCurrentUrl(true)->getPath(true)->endsWith('/login')) {
+                    if ($request->isPost() && $request->getCurrentUrl(true)->getPath(true)->endsWith('/login')) {
                         return null;
                     }
 
@@ -203,22 +213,22 @@ class Authorization
 
     public function canCreate($class)
     {
-        return $this->checkPermission($class, 'crudCreate');
+        return $this->checkPermission($class, 'c');
     }
 
     public function canRead($class)
     {
-        return $this->checkPermission($class, 'crudRead');
+        return $this->checkPermission($class, 'r');
     }
 
     public function canUpdate($class)
     {
-        return $this->checkPermission($class, 'crudUpdate');
+        return $this->checkPermission($class, 'u');
     }
 
     public function canDelete($class)
     {
-        return $this->checkPermission($class, 'crudDelete');
+        return $this->checkPermission($class, 'd');
     }
 
     public function canExecute($class, $method = null)
@@ -226,20 +236,29 @@ class Authorization
         return $this->checkPermission($class, $method);
     }
 
+    /**
+     * @param string|object $class ApiExpositionTrait instance
+     * @param string        $permission
+     *
+     * @return bool
+     * @throws AppException
+     */
     private function checkPermission($class, $permission)
     {
         if (!$this->wConfig()->get('Application.Acl.CheckUserPermissions', true) || $this->getUser() instanceof SystemApiToken) {
             return true;
         }
 
-        if (!is_string($class)) {
-            $class = get_class($class);
-        } else {
-            $class = trim($class, '\\');
+        $class = !is_string($class) ? get_class($class) : $class;
+        if (!is_string($class::getClassId())) {
+            throw new AppException($class . ' must declare a $classId property');
         }
 
-        $isService = in_array('Apps\Webiny\Php\Lib\Services\AbstractService', class_parents($class));
-        if ($isService && in_array('Apps\Webiny\Php\Lib\Interfaces\PublicApiInterface', class_implements($class))) {
+        $class = trim($class, '\\');
+        $classId = $class::getClassId();
+
+        $isService = in_array(AbstractService::class, class_parents($class));
+        if ($isService && in_array(PublicApiInterface::class, class_implements($class))) {
             return true;
         }
 
@@ -251,14 +270,15 @@ class Authorization
             }
         }
 
+
         /* @var $role UserRole */
         foreach ($roles as $role) {
-            if ($role->checkPermission($class, $permission)) {
+            if ($role->checkPermission($classId, $permission)) {
                 return true;
             }
 
             // Check if given permission pattern is a crud pattern
-            if (isset($this->patterns[$permission]) && $role->checkPermission($class, $this->patterns[$permission])) {
+            if (isset($this->patterns[$permission]) && $role->checkPermission($classId, $this->patterns[$permission])) {
                 return true;
             }
         }

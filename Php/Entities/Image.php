@@ -18,13 +18,12 @@ use Webiny\Component\Storage\File\File as StorageFile;
  * @property float   $aspectRatio
  * @property bool    $isPortrait
  * @property bool    $isLandscape
- *
- * @package Apps\Webiny\Php\Entities
  */
 class Image extends File
 {
     use ImageTrait;
 
+    protected static $classId = 'Webiny.Entities.Image';
     protected $dimensions = [];
 
     public function __construct()

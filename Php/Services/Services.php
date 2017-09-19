@@ -9,10 +9,11 @@ use Apps\Webiny\Php\Lib\Apps\App;
 
 /**
  * Class Services
- * @package Apps\Webiny\Php\Services
  */
 class Services extends AbstractService
 {
+    protected static $classId = 'Webiny.Services.Services';
+
     protected function serviceApi(ApiContainer $api)
     {
         /**
@@ -25,10 +26,10 @@ class Services extends AbstractService
             $excludeServices = $this->wRequest()->query('exclude', []);
 
             $singleService = false;
-            $multipleServices = $this->wRequest()->query('services', false);
+            $multipleServices = $this->wRequest()->query('classIds', false);
 
             if (!$multipleServices) {
-                $singleService = $this->wRequest()->query('service', false);
+                $singleService = $this->wRequest()->query('classId', false);
                 if ($singleService) {
                     $multipleServices = [$singleService];
                 }
@@ -41,11 +42,11 @@ class Services extends AbstractService
             /* @var $app App */
             foreach ($this->wApps() as $app) {
                 foreach ($app->getServices() as $service) {
-                    if (in_array($service['class'], $excludeServices)) {
+                    if (in_array($service['classId'], $excludeServices)) {
                         continue;
                     }
 
-                    if ($multipleServices && !in_array($service['class'], $multipleServices)) {
+                    if ($multipleServices && !in_array($service['classId'], $multipleServices)) {
                         continue;
                     }
 
@@ -54,7 +55,7 @@ class Services extends AbstractService
                         $service['methods'] = $serviceParser->getApiMethods();
                     }
 
-                    if ($service['class'] == $singleService) {
+                    if ($service['classId'] == $singleService) {
                         return $service;
                     }
 

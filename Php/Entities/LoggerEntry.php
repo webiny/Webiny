@@ -15,15 +15,11 @@ use Webiny\Component\Mongo\Index\SingleIndex;
  * @property string           $stack
  * @property string           $clientData
  * @property LoggerErrorGroup $errorGroup
- *
- * @package Apps\Webiny\Php\Entities
- *
  */
 class LoggerEntry extends AbstractEntity
 {
-
+    protected static $classId = 'Webiny.Entities.LoggerEntry';
     protected static $entityCollection = 'LoggerEntry';
-    protected static $entityMask = '{id}';
 
     public function __construct()
     {
@@ -33,7 +29,7 @@ class LoggerEntry extends AbstractEntity
         $this->attr('date')->datetime()->setToArrayDefault();
         $this->attr('stack')->char();
         $this->attr('clientData')->object();
-        $this->attr('errorGroup')->many2one()->setEntity('Apps\Webiny\Php\Entities\LoggerErrorGroup');
+        $this->attr('errorGroup')->many2one()->setEntity(LoggerErrorGroup::class);
     }
 
     protected function entityApi(ApiContainer $api)

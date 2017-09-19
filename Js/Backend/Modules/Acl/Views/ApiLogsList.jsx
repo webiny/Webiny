@@ -15,40 +15,57 @@ class ApiLogsList extends Webiny.Ui.View {
             id: 'system',
             description: 'System Token'
         };
+
+        this.incognitoRequests = {
+            id: 'incognito',
+            description: 'Incognito Requests'
+        };
     }
 
     componentWillMount() {
         super.componentWillMount();
-        const token = Webiny.Router.getParams('token');
-        if (token === 'system') {
-            return this.setState({
-                token: this.systemToken
-            });
-        }
 
-        if (token !== 'system') {
-            new Webiny.Api.Endpoint('/entities/webiny/api-tokens').get(Webiny.Router.getParams('token')).then(apiResponse => {
-                this.setState({token: apiResponse.getData('entity')});
-            });
-        }
+        // Set requested token data to render view title
+        this.setToken(Webiny.Router.getParams('token'));
 
         this.prepareTokenOptions();
     }
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        if (!Webiny.Router.getParams('token')) {
-            this.setState({token: null});
+        this.setToken(Webiny.Router.getParams('token'));
+    }
+
+    setToken(token) {
+        if (!token) {
+            return this.setState({token: null});
+        }
+
+        if (token === 'system') {
+            this.setState({token: this.systemToken});
+        } else if (token === 'incognito') {
+            this.setState({token: this.incognitoRequests});
+        } else {
+            this.loadToken(token);
         }
     }
 
+    loadToken(id) {
+        return new Webiny.Api.Endpoint('/entities/webiny/api-tokens').get(id, {_fields: 'owner,description'}).then(apiResponse => {
+            this.setState({token: apiResponse.getData('entity')});
+        });
+    }
+
     prepareTokenOptions() {
-        const options = [];
+        const options = [this.incognitoRequests];
+        // Check if current user has permissions to view system token and its logs
         return new Webiny.Api.Endpoint('/services/webiny/acl').get('token').then(apiResponse => {
             if (!apiResponse.isError()) {
+                // Great, the user can view system token
                 options.push(this.systemToken);
             }
 
+            // Load other API tokens
             return new Webiny.Api.Endpoint('/entities/webiny/api-tokens').get('/', {_fields: 'id,owner,description'}).then(apiResponse => {
                 if (!apiResponse.isError()) {
                     apiResponse.getData('list').map(token => options.push(token));
@@ -77,6 +94,10 @@ class ApiLogsList extends Webiny.Ui.View {
             if (token === 'system') {
                 tokenLabel = (
                     <Ui.Label type="error" inline>System token</Ui.Label>
+                );
+            } else if (token === 'incognito') {
+                tokenLabel = (
+                    <Ui.Label type="default" inline>Incognito</Ui.Label>
                 );
             } else {
                 tokenLabel = (
@@ -121,12 +142,19 @@ ApiLogsList.defaultProps = {
         };
 
         const {Ui} = this.props;
-        const isSystemToken = this.state.token === 'system';
+
+        let title = null;
+        if (this.state.token) {
+            title = this.state.token.description;
+            if (this.state.token.owner) {
+                title += ` (${this.state.token.owner})`;
+            }
+        }
 
         return (
             <Ui.View.List>
                 <Ui.View.Header
-                    title={this.state.token ? `ACL - API Logs: ${this.state.token.description}` : 'ACL - API Logs'}
+                    title={this.state.token ? `ACL - API Logs: ${title}` : 'ACL - API Logs'}
                     description="Here you can view all API request logs."/>
                 <Ui.View.Body>
                     <Ui.List {...listProps}>
@@ -151,7 +179,7 @@ ApiLogsList.defaultProps = {
                                                             allowClear={true}
                                                             onChange={apply()}/>
                                                     </Ui.Grid.Col>
-                                                    <Ui.Grid.Col all={3} renderIf={!isSystemToken}>
+                                                    <Ui.Grid.Col all={3}>
                                                         <Ui.Select
                                                             options={this.state.tokens}
                                                             optionRenderer={this.renderTokenOption}
@@ -161,7 +189,7 @@ ApiLogsList.defaultProps = {
                                                             allowClear={true}
                                                             onChange={apply()}/>
                                                     </Ui.Grid.Col>
-                                                    <Ui.Grid.Col all={3} renderIf={!isSystemToken}>
+                                                    <Ui.Grid.Col all={3}>
                                                         <Ui.Search
                                                             api="/entities/webiny/users"
                                                             fields="id,firstName,lastName,email"

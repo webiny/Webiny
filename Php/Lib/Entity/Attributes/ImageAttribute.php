@@ -7,6 +7,8 @@
 
 namespace Apps\Webiny\Php\Lib\Entity\Attributes;
 
+use Apps\Webiny\Php\Entities\Image;
+
 /**
  * File ImageAttribute
  * @package Apps\Webiny\Php\Lib\Entity\Attributes
@@ -21,7 +23,7 @@ class ImageAttribute extends FileAttribute
     public function __construct()
     {
         parent::__construct();
-        $this->setEntity('\Apps\Webiny\Php\Entities\Image');
+        $this->setEntity(Image::class);
     }
 
     public function setDimensions(array $dimensions)

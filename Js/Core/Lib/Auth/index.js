@@ -94,7 +94,7 @@ class Auth {
             return new Promise((resolve) => {
                 const user = Webiny.Model.get('User');
 
-                if (user && _.isArray(routerEvent.route.role) && _.find(user.roles, r => routerEvent.route.role.indexOf(r.slug) > -1)) {
+                if (user && _.isArray(routerEvent.route.role) && this.hasRole(routerEvent.route.role)) {
                     return resolve(routerEvent);
                 }
 
@@ -153,13 +153,13 @@ class Auth {
     }
 
     getUserFields() {
-        return '*,roles.slug,gravatar';
+        return '*,roles.slug,roleGroups[id,name,roles.slug],gravatar';
     }
 
     /**
      * Fetch user profile and verify the returned data.
      *
-     * @returns {Promise.<TResult>}
+     * @returns Promise
      */
     getUser() {
         return this.getApiEndpoint().get('/me', {_fields: this.getUserFields()}).then(apiResponse => {
@@ -167,6 +167,10 @@ class Auth {
         });
     }
 
+    /**
+     * Get cookie name
+     * @returns {string}
+     */
     getCookieName() {
         return 'webiny-token';
     }
@@ -211,6 +215,31 @@ class Auth {
             return this.logout();
         }
         Webiny.Model.set('User', data);
+    }
+
+    /**
+     * Check if current user has any of the requested roles (checks both roles and roleGroups)
+     * @param role
+     */
+    hasRole(role) {
+        if (_.isString(role)) {
+            role = [role];
+        }
+
+        const user = Webiny.Model.get('User');
+        // First check user roles
+        let hasRole = _.find(user.roles, r => role.indexOf(r.slug) > -1);
+        if (!hasRole) {
+            // Check user role groups
+            _.each(user.roleGroups, group => {
+                hasRole = _.find(group.roles, r => role.indexOf(r.slug) > -1);
+                if (hasRole) {
+                    return false;
+                }
+            });
+        }
+
+        return hasRole;
     }
 
     /**

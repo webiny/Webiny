@@ -36,10 +36,6 @@ abstract class AbstractApiDispatcher
     protected function fileExists($class)
     {
         $parts = $this->str($class)->explode('\\')->filter()->values()->val();
-        $path = $this->wApps($parts[1])->getVersionPath();
-        if ($path) {
-            array_splice($parts, 2, 0, $path);
-        }
 
         return file_exists($this->wConfig()->get('Application.AbsolutePath') . join('/', $parts) . '.php');
     }

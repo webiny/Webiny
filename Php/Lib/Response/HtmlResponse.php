@@ -1,4 +1,5 @@
 <?php
+
 namespace Apps\Webiny\Php\Lib\Response;
 
 /**
@@ -14,6 +15,35 @@ class HtmlResponse extends AbstractResponse
         $this->statusCode = $statusCode;
     }
 
+    /**
+     * Get response html
+     *
+     * @return string
+     */
+    public function getHtml()
+    {
+        return $this->html;
+    }
+
+    /**
+     * Set response html
+     *
+     * @param string $html
+     *
+     * @return $this
+     */
+    public function setHtml($html)
+    {
+        $this->html = $html;
+
+        return $this;
+    }
+
+    /**
+     * Get response output
+     *
+     * @return string
+     */
     public function output()
     {
         return $this->html;

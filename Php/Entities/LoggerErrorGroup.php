@@ -12,16 +12,13 @@ use Webiny\Component\Entity\EntityCollection;
  * @property string           $error
  * @property string           $errorHash
  * @property string           $type
- * @property date             $lastEntry
+ * @property string           $lastEntry
  * @property integer          $errorCount
  * @property EntityCollection $errorEntries
- *
- * @package Apps\Webiny\Php\Entities
- *
  */
 class LoggerErrorGroup extends AbstractEntity
 {
-
+    protected static $classId = 'Webiny.Entities.LoggerErrorGroup';
     protected static $entityCollection = 'LoggerErrorGroup';
     protected static $entityMask = '{error}';
 
@@ -32,7 +29,7 @@ class LoggerErrorGroup extends AbstractEntity
         $this->attr('error')->char()->setToArrayDefault();
         $this->attr('errorHash')->char();
         $this->attr('type')->char()->setToArrayDefault()->setValidators('in:api:js:php');
-        $this->attr('errorEntries')->one2many('errorGroup')->setEntity('\Apps\Webiny\Php\Entities\LoggerEntry');
+        $this->attr('errorEntries')->one2many('errorGroup')->setEntity(LoggerEntry::class);
         $this->attr('lastEntry')->datetime()->setToArrayDefault();
         $this->attr('errorCount')->integer()->setToArrayDefault()->setDefaultValue(0);
     }

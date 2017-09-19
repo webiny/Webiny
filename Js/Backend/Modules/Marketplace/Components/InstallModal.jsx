@@ -6,7 +6,11 @@ class InstallModal extends Webiny.Ui.ModalComponent {
     constructor(props) {
         super(props);
 
-        this.state = {messages: [], started: false, progress: 0, finished: false};
+        // started - installation has started
+        // ended - API call has ended
+        // finished - installation reached 100%
+
+        this.state = {messages: [], started: false, ended: false, progress: 0, finished: false};
 
         this.bindMethods('startInstallation,onClose');
     }
@@ -60,7 +64,16 @@ class InstallModal extends Webiny.Ui.ModalComponent {
             }
         });
 
-        return api.get(`apps/${this.props.app.id}/install`).then(() => {
+        return api.get(`apps/${this.props.app.id}/install`).then(apiResponse => {
+            this.setState({ended: true});
+
+            if (apiResponse.isError()) {
+                const messages = this.state.messages;
+                messages.push(apiResponse.getError());
+                this.setState({messages});
+                return;
+            }
+
             if (this.state.finished) {
                 const appName = this.props.app.localName + '.Backend';
                 Webiny.includeApp(appName).then(app => app.run()).then(() => {
@@ -85,7 +98,7 @@ class InstallModal extends Webiny.Ui.ModalComponent {
     }
 
     resetState() {
-        this.setState({messages: [], started: false, progress: 0, finished: false});
+        this.setState({messages: [], started: false, ended: false, progress: 0, finished: false});
     }
 
     show() {
@@ -94,7 +107,7 @@ class InstallModal extends Webiny.Ui.ModalComponent {
     }
 
     onClose() {
-        if (!this.state.started) {
+        if (!this.state.started || this.state.ended) {
             this.hide();
         }
     }
@@ -103,7 +116,7 @@ class InstallModal extends Webiny.Ui.ModalComponent {
         const {Modal, Button, Link, Grid, Logic, Alert} = this.props;
 
         return (
-            <Modal.Dialog closeOnClick={!this.state.started} onClose={this.onClose}>
+            <Modal.Dialog closeOnClick={!this.state.started || this.state.ended} onClose={this.onClose}>
                 <Modal.Content>
                     <Modal.Header onClose={this.onClose} title="Install"/>
                     <Modal.Body>
@@ -128,7 +141,7 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                             </pre>
                         </Logic.Hide>
                     </Modal.Body>
-                    {this.state.finished && (
+                    {(this.state.finished || this.state.ended) && (
                         <Modal.Footer>
                             <Button align="right" label="Close" onClick={this.hide}/>
                         </Modal.Footer>

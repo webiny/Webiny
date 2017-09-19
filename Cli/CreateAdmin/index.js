@@ -17,10 +17,11 @@ class CreateAdmin extends Plugin {
         const Webiny = require('webiny-cli/lib/webiny');
         return new Promise((resolve, reject) => {
             try {
+                const docker = Webiny.getConfig().env === 'docker';
                 // Execute an admin.php script
                 const params = [
-                    'php',
-                    Webiny.projectRoot('Apps/Webiny/Php/Cli/admin.php'),
+                    docker ? 'docker-compose run php php' : 'php',
+                    'Apps/Webiny/Php/Cli/admin.php',
                     'Local',
                     config.user,
                     config.password
@@ -32,8 +33,8 @@ class CreateAdmin extends Plugin {
                     Webiny.success('Admin user created successfully!');
                 }
 
-                if (output.status === 'exists') {
-                    Webiny.exclamation('Admin user already exists!');
+                if (output.status === 'failed') {
+                    Webiny.exclamation(output.message);
                 }
 
                 resolve(config);

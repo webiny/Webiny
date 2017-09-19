@@ -2,9 +2,9 @@
 
 namespace Apps\Webiny\Php\Entities;
 
+use Apps\Webiny\Php\Entities\UserRoleGroup;
 use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
 use Apps\Webiny\Php\Lib\Interfaces\UserInterface;
-use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Webiny\Component\Crypt\CryptTrait;
 use Webiny\Component\Entity\EntityCollection;
@@ -21,13 +21,13 @@ use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
  * @property integer          $requests
  * @property DateTimeObject   $lastActivity
  * @property EntityCollection $roles
- *
- * @package Apps\Webiny\Php\Entities
+ * @property EntityCollection $roleGroups
  */
 class ApiToken extends AbstractEntity implements UserInterface
 {
-    use WebinyTrait, CryptTrait;
+    use CryptTrait;
 
+    protected static $classId = 'Webiny.Entities.ApiToken';
     protected static $entityCollection = 'ApiTokens';
     protected static $entityMask = '{id}';
 
@@ -47,8 +47,7 @@ class ApiToken extends AbstractEntity implements UserInterface
         $this->attr('logRequests')->boolean()->setDefaultValue(false)->setToArrayDefault();
         $this->attr('requests')->integer()->setToArrayDefault()->setDefaultValue(0);
         $this->attr('enabled')->boolean()->setDefaultValue(true)->setToArrayDefault();
-        $userRole = '\Apps\Webiny\Php\Entities\UserRole';
-        $this->attr('roles')->many2many('ApiToken2UserRole')->setEntity($userRole)->onSet(function ($roles) {
+        $this->attr('roles')->many2many('ApiToken2UserRole')->setEntity(UserRole::class)->onSet(function ($roles) {
             // If not mongo Ids - load roles by slugs
             if (is_array($roles)) {
                 foreach ($roles as $i => $role) {
@@ -66,6 +65,24 @@ class ApiToken extends AbstractEntity implements UserInterface
 
             return $roles;
         });
+        $this->attr('roleGroups')->many2many('ApiToken2UserRoleGroup')->setEntity(UserRoleGroup::class)->onSet(function ($roleGroups) {
+            // If not mongo Ids - load roles by slugs
+            if (is_array($roleGroups)) {
+                foreach ($roleGroups as $i => $rg) {
+                    if (!$this->wDatabase()->isId($rg)) {
+                        if (is_string($rg)) {
+                            $roleGroups[$i] = UserRoleGroup::findOne(['slug' => $rg]);
+                        } elseif (isset($rg['id'])) {
+                            $roleGroups[$i] = $rg['id'];
+                        } elseif (isset($rg['slug'])) {
+                            $roleGroups[$i] = UserRoleGroup::findOne(['slug' => $rg['slug']]);
+                        }
+                    }
+                }
+            }
+
+            return $roleGroups;
+        });
     }
 
     protected static function entityIndexes(IndexContainer $indexes)
@@ -78,7 +95,15 @@ class ApiToken extends AbstractEntity implements UserInterface
 
     public function getUserRoles()
     {
-        return $this->roles;
+        $roles = $this->roles->getIterator();
+        /* @var $group UserRoleGroup */
+        foreach ($this->roleGroups as $group) {
+            foreach ($group->roles as $r) {
+                $roles[] = $r;
+            }
+        }
+
+        return $roles;
     }
 
     public function hasRole($name)

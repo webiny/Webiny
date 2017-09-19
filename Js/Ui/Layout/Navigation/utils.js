@@ -75,7 +75,7 @@ const utils = {
 
         const user = Webiny.Model.get('User');
         const roles = _.isArray(menu.role) ? menu.role : menu.role.split(',');
-        if (!user || !_.find(user.roles, r => roles.includes(r.slug))) {
+        if (!user || !Webiny.Auth.hasRole(roles)) {
             return false;
         }
         return true;

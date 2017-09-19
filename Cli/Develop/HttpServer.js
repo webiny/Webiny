@@ -8,7 +8,7 @@ const Webiny = require('webiny-cli/lib/webiny');
 class HttpServer {
     constructor(browserSync, port) {
         this.browserSync = browserSync;
-        this.port = port;
+        this.port = parseInt(port);
     }
 
     run() {
@@ -34,6 +34,8 @@ class HttpServer {
     }
 
     installApp(req, res, url, appData) {
+        const docker = Webiny.getConfig().env === 'docker';
+
         res.writeHead(200, {
             'Connection': 'Transfer-Encoding',
             'Transfer-Encoding': 'chunked'
@@ -49,7 +51,15 @@ class HttpServer {
         // Run composer
         httpWrite(`Installing ${appData.name}...`);
         httpWrite(`Running composer...`);
-        return this.command(`composer require ${appData.packagist} 2>&1`, httpWrite).then(cmdRes => {
+
+        // Local and docker env have entirely different commands, thus all this garbage
+        let composer = `composer require ${appData.packagist}:${appData.version} 2>&1`;
+        if (docker) {
+            composer = `docker run --rm --volume $PWD:/app composer require ${appData.packagist}:${appData.version} --ignore-platform-reqs --no-scripts 2>&1`;
+        }
+
+        // Execute command
+        return this.command(composer, httpWrite).then(cmdRes => {
             if (cmdRes.error) {
                 throw Error(cmdRes.error);
             }
@@ -63,12 +73,32 @@ class HttpServer {
             config.Apps[appData.localName] = true;
             Webiny.writeFile(configPath, yaml.safeDump(config, {indent: 4}));
         }).then(() => {
-            // Run installation
-            httpWrite('Installing JS dependencies, roles, permissions and DB indexes...');
-            return this.command(`php ${Webiny.projectRoot('Apps/Webiny/Php/Cli/install.php')} Local ${appData.localName}`, httpWrite).then(cmdRes => {
+            httpWrite('Installing roles, permissions and DB indexes...');
+            const params = [
+                docker ? 'docker-compose run php php' : 'php',
+                'Apps/Webiny/Php/Cli/install.php',
+                'Local',
+                appData.localName
+            ];
+            return this.command(params.join(' '), httpWrite).then(cmdRes => {
                 if (cmdRes.error) {
                     throw Error(cmdRes.error);
                 }
+            }).then(() => {
+                if (!Webiny.fileExists(`Apps/${appData.localName}/package.json`)) {
+                    return;
+                }
+                httpWrite('Installing JS dependencies...');
+                const params = [
+                    `cd Apps/${appData.localName}`,
+                    `yarn install`,
+                    `cd ${Webiny.projectRoot()}`
+                ];
+                return this.command(params.join(' && '), httpWrite).then(cmdRes => {
+                    if (cmdRes.error) {
+                        throw Error(cmdRes.error);
+                    }
+                });
             });
         }).then(() => {
             Webiny.loadApps();
@@ -95,12 +125,7 @@ class HttpServer {
                 lastProgress = progress;
                 const percentage = (Math.round(progress * 100) * 100 / 100);
 
-                const data = {progress: percentage};
-                if (percentage === 100) {
-                    data.message = 'Finished!';
-                }
-
-                !res.finished && httpWrite(data);
+                !res.finished && httpWrite({progress: percentage});
             }, () => {
                 // At the moment, we are not sending anything back. Just end the request to signal success.
                 !res.finished && res.end();

@@ -21,7 +21,7 @@ class Release extends \Apps\Webiny\Php\Lib\AbstractCli
         foreach ($this->wApps() as $app) {
             echo "Releasing '" . $app->getName() . "'...\n";
             // Run Release script for each app
-            $app->getLifeCycleObject('Release')->run($app);
+            $app->release();
             echo "----------------\n";
         }
     }

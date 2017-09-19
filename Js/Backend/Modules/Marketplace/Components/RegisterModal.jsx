@@ -23,15 +23,17 @@ class ModalForm extends Webiny.Ui.ModalComponent {
     }
 
     renderRegisterForm() {
+        const {Modal, Button, Grid, Password, Form, Link, Input} = this.props;
+
         const containerProps = {
-            api: Webiny.Auth.getApiEndpoint().setUrl('/register'),
+            api: Webiny.Auth.getApiEndpoint(),
+            url: 'register',
             fields: 'id,firstName,lastName,email',
             onSubmitSuccess: () => this.setState({success: true}),
             onCancel: this.hide,
             onSuccessMessage: null
         };
 
-        const {Modal, Form, Input, Password, Button, Grid, Link} = this.props;
 
         return (
             <Modal.Dialog>
@@ -80,9 +82,7 @@ class ModalForm extends Webiny.Ui.ModalComponent {
                                             onEnter={form.submit}
                                         />
                                     </Grid.Col>
-
                                 </Grid.Row>
-
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button
@@ -111,21 +111,17 @@ class ModalForm extends Webiny.Ui.ModalComponent {
                             <br/>
                             <Icon type="success" size="4x" icon="fa-check-circle" element="div"/><br/>
                             <h4>Done</h4>
-
                             <p>Thanks for registering!</p>
                             <p>Your profile is ready, <Link className="text-link" onClick={this.close}>back to login page.</Link></p>
-
                         </div>
                     </Modal.Body>
                 </Modal.Content>
             </Modal.Dialog>
-
         );
     }
 
     renderDialog() {
-        const {Modal, Link} = this.props;
-        return (this.state.success ? this.renderSuccess() : this.renderRegisterForm());
+        return this.state.success ? this.renderSuccess() : this.renderRegisterForm();
     }
 }
 

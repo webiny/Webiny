@@ -17,7 +17,7 @@ class Install extends \Apps\Webiny\Php\Lib\AbstractCli
     {
         $appInstance = $this->wApps($app);
         if ($appInstance) {
-            $appInstance->getLifeCycleObject('Install')->run($appInstance);
+            $appInstance->install();
         }
     }
 }

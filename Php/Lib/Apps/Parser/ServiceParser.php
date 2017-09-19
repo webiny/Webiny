@@ -1,11 +1,12 @@
 <?php
 namespace Apps\Webiny\Php\Lib\Apps\Parser;
 
+use Apps\Webiny\Php\Lib\Interfaces\PublicApiInterface;
 use Apps\Webiny\Php\Lib\Services\AbstractService;
 
 class ServiceParser extends AbstractParser
 {
-    protected $baseClass = 'Apps\Webiny\Php\Lib\Services\AbstractService';
+    protected $baseClass = AbstractService::class;
     protected $publicApiInterface;
 
     function __construct($class)
@@ -14,7 +15,7 @@ class ServiceParser extends AbstractParser
         $this->url = '/services/' . $this->getAppSlug() . '/' . $this->slug;
 
         $interfaces = class_implements($class);
-        $this->publicApiInterface = in_array('Apps\Webiny\Php\Lib\Interfaces\PublicApiInterface', $interfaces);
+        $this->publicApiInterface = in_array(PublicApiInterface::class, $interfaces);
     }
 
     public function getApiMethods()

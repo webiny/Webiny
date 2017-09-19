@@ -37,7 +37,7 @@ class Admin extends \Apps\Webiny\Php\Lib\AbstractCli
             $user->save();
             die(json_encode(['status' => 'created']));
         } catch (AbstractException $e) {
-            die(json_encode(['status' => 'exists']));
+            die(json_encode(['status' => 'failed', 'message' => $e->getMessage()]));
         }
     }
 }

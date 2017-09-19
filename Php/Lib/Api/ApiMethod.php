@@ -212,7 +212,7 @@ class ApiMethod
             if ($mp['class']) {
                 $requestedValue = $params[$pName];
                 // If parameter class is AbstractEntity, it means we need to replace it with the actual context class
-                if ($mp['class'] === 'Apps\Webiny\Php\Lib\Entity\AbstractEntity') {
+                if ($mp['class'] === AbstractEntity::class) {
                     $mp['class'] = get_class($this->context);
                 }
                 $paramValue = call_user_func_array([$mp['class'], 'findById'], [$requestedValue]);
