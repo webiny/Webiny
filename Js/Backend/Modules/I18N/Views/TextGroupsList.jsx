@@ -35,11 +35,12 @@ TextGroupsList.defaultProps = {
                                             connectToRouter
                                             title={this.i18n(`Text Groups`)}
                                             api="/entities/webiny/i18n-text-groups"
-                                            fields="name,totalTexts"
+                                            fields="name,app,totalTexts"
                                             sort="-createdOn">
                                             <Ui.List.Table>
                                                 <Ui.List.Table.Row>
                                                     <Ui.List.Table.Field name="name" label={this.i18n('Name')}/>
+                                                    <Ui.List.Table.Field name="app" label={this.i18n('App')} align="center"/>
                                                     <Ui.List.Table.Field name="totalTexts" label={this.i18n('Total Texts')} align="center"/>
                                                     <Ui.List.Table.Actions>
                                                         <Ui.List.Table.EditAction onClick={showView('groupsModal')}/>

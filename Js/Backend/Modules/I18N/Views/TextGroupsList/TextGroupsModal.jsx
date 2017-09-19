@@ -24,7 +24,25 @@ class TextGroupModal extends Webiny.Ui.ModalComponent {
                                 <Ui.Form.Error/>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
-                                        <Ui.Input label={this.i18n('Name')} placeholder={this.i18n('Name of text group')} name="name"/>
+                                        <Ui.Input
+                                            label={this.i18n('Name')}
+                                            placeholder={this.i18n('Name of text group')}
+                                            name="name"
+                                            validate="required"/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={12}>
+                                        <Ui.Select
+                                            label={this.i18n('App')}
+                                            name="app"
+                                            api="/services/webiny/apps"
+                                            validate="required"
+                                            url="/installed"
+                                            textAttr="name"
+                                            valueAttr="name"
+                                            placeholder="Select an app..."
+                                            allowClear/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                                 <Ui.Grid.Row>
@@ -55,5 +73,5 @@ TextGroupModal.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps,
 
 export default Webiny.createComponent(TextGroupModal, {
     modulesProp: 'Ui',
-    modules: ['Modal', 'Form', 'Grid', 'Input', 'Button', 'Textarea']
+    modules: ['Modal', 'Form', 'Grid', 'Input', 'Button', 'Textarea', 'Select']
 });

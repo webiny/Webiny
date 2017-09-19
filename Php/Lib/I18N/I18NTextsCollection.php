@@ -2,14 +2,11 @@
 
 namespace Apps\Webiny\Php\Lib\I18N;
 
-use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
 /**
- * Class User
- *
- * @package Apps\Selecto\Php\Entities
+ * Class I18NTextsCollection
  *
  * @property string      $key
  * @property string      $placeholder
@@ -18,8 +15,6 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 class I18NTextsCollection
 {
     use WebinyTrait;
-
-    protected static $i18nNamespace = 'Webiny.Lib.I18N';
 
     private $texts = [];
 
@@ -36,23 +31,5 @@ class I18NTextsCollection
     public function getTexts()
     {
         return $this->texts;
-    }
-
-    public function fromJson($content)
-    {
-        $content = json_decode($content, true);
-
-        if (!is_array($content)) {
-            throw new AppException($this->wI18n('Received an invalid JSON file.'));
-        }
-
-        $this->texts = $content['texts'] ?? [];
-
-        return $this;
-    }
-
-    public function toJson()
-    {
-        return json_encode(['texts' => $this->texts]);
     }
 }

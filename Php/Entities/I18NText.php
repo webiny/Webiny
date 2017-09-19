@@ -11,6 +11,7 @@ use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\I18N\I18N;
 use Apps\Webiny\Php\Lib\I18N\I18NTextsCollection;
 use Apps\Webiny\Php\Lib\I18N\I18NScanner;
+use Apps\Webiny\Php\Lib\I18N\I18NTextsExport;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use PHPZip\Zip\Stream\ZipStream;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
@@ -104,13 +105,10 @@ class I18NText extends AbstractEntity
          */
         $api->post('export/zip', function () {
             $apps = $this->wRequest()->getRequestData()['apps'] ?? [];
-            $results = I18N::getInstance()->exportTexts($apps);
+            $export = I18N::getInstance()->exportTexts($apps);
 
             $zip = new ZipStream('i18n_' . time() . '.zip', 'application/zip', null, true);
-            foreach ($results as $appTexts) {
-                /* @var I18NTextsCollection $appTexts */
-                $zip->addFile($appTexts->toJson(), $appTexts->getApp()->getName());
-            }
+            $zip->addFile($export->toJson(), 'export');
 
             return $zip->finalize();
         })->setBodyValidators(['apps' => 'required,minLength:1'])->setPublic();

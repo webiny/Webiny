@@ -4,6 +4,7 @@ namespace Apps\Webiny\Php\Lib\I18N;
 
 use Apps\Webiny\Php\Entities\I18NLocale;
 use Apps\Webiny\Php\Entities\I18NText;
+use Apps\Webiny\Php\Entities\I18NTextGroup;
 use Apps\Webiny\Php\Lib\Apps\App;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\I18N\I18N\JsParser;
@@ -14,9 +15,7 @@ use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
 /**
- * Class User
- *
- * @package Apps\Selecto\Php\Entities
+ * Class I18N
  *
  * @property string      $key
  * @property string      $placeholder
@@ -134,15 +133,6 @@ class I18N
             return $app instanceof App ? $app->getName() : $app;
         }, $list);
 
-        $groups = self::wDatabase()->find(...[
-            'I18NTextGroups',
-            ['deletedOn' => null],
-            [],
-            0,
-            0,
-            ['projection' => ['_id' => 0, 'name' => 1, 'description' => 1]]
-        ]);
-
         $texts = self::wDatabase()->find(...[
             'I18NTexts',
             ['deletedOn' => null, 'app' => ['$in' => $list]],
@@ -152,9 +142,10 @@ class I18N
             ['projection' => ['_id' => 0, 'app' => 1, 'group' => 1, 'key' => 1, 'base' => 1]]
         ]);
 
-        return new I18NTextsCollection();
+        $texts = new I18NTextsCollection($texts);
+        $groups = I18NTextGroup::find(['app' => ['$in' => $list]])->toArray('id,name,app,description');
 
-        return ['groups' => $groups, 'texts' => $texts];
+        return new I18NTextsExport($texts, $groups, $list);
     }
 
     /**
@@ -172,6 +163,16 @@ class I18N
 
         // First iteration is just to make sure all data is valid.
         foreach ($textsCollection->getTexts() as $text) {
+            if (!$text['key'] ?? null) {
+                throw new AppException($this->wI18n('Invalid export format (text key missing).'));
+            }
+
+            if (!$text['base'] ?? null) {
+                throw new AppException($this->wI18n('Invalid export format (base text missing).'));
+            }
+        }
+
+        foreach ($textsCollection->get() as $text) {
             if (!$text['key'] ?? null) {
                 throw new AppException($this->wI18n('Invalid export format (text key missing).'));
             }

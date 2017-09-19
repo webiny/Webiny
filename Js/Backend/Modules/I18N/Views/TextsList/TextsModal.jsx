@@ -51,9 +51,13 @@ class TranslationModal extends Webiny.Ui.ModalComponent {
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
                                         <Ui.Select
+                                            filterBy="app"
+                                            disabled={!model.app}
                                             label={this.i18n('Text group')}
                                             api="/entities/webiny/i18n-text-groups"
                                             name="group"
+                                            textAttr="name"
+                                            valueAttr="id"
                                             placeholder={this.i18n('Optional')}
                                             allowClear/>
                                     </Ui.Grid.Col>
