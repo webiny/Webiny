@@ -26,7 +26,7 @@ class I18NTextGroup extends AbstractEntity
 
         $this->attr('name')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('totalTexts')->dynamic(function () {
-            return I18NText::count(['textGroup' => $this->id]);
+            return I18NText::count(['group' => $this->id]);
         });
         $this->attr('description')->char()->setToArrayDefault();
 

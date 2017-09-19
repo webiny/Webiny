@@ -1,6 +1,6 @@
 <?php
 
-namespace Apps\Webiny\Php\Lib\I18N\I18NParser;
+namespace Apps\Webiny\Php\Lib\I18N\I18N;
 
 use Apps\Webiny\Php\Lib\Apps\App;
 use Apps\Webiny\Php\Lib\Apps\JsApp;
@@ -62,6 +62,7 @@ class JsParser
                     // If we don't have a global i18n namespace, we must ensure each text has it's own namespace in the file.
                     foreach ($parsed as $text) {
                         $texts[] = [
+                            'app' => $app->getName(),
                             'key' => $text['namespace'] . '.' . md5($text['base']),
                             'group' => null,
                             'base'  => $text['base']

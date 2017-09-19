@@ -9,7 +9,7 @@ use Apps\Webiny\Php\Lib\Entity\EntityQuery\Filter;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\QueryContainer;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\I18N\I18N;
-use Apps\Webiny\Php\Lib\I18N\I18NAppTexts;
+use Apps\Webiny\Php\Lib\I18N\I18NTextsCollection;
 use Apps\Webiny\Php\Lib\I18N\I18NScanner;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use PHPZip\Zip\Stream\ZipStream;
@@ -21,7 +21,7 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  * @property string        $app
  * @property string        $base
  * @property ArrayObject   $translations
- * @property I18NTextGroup $textGroup
+ * @property I18NTextGroup $group
  */
 class I18NText extends AbstractEntity
 {
@@ -62,7 +62,7 @@ class I18NText extends AbstractEntity
         $this->attr('app')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('key')->char()->setValidators('required,unique')->setToArrayDefault();
         $this->attr('base')->char()->setValidators('required')->setToArrayDefault();
-        $this->attr('textGroup')->many2one()->setEntity(I18NTextGroup::class);
+        $this->attr('group')->many2one()->setEntity(I18NTextGroup::class);
         $this->attr('translations')->arr()->setToArrayDefault()->onSet(function ($texts) {
             // We must check which locales have changed and update cache keys for them
             foreach ($texts as $locale => $text) {
@@ -80,6 +80,52 @@ class I18NText extends AbstractEntity
     protected function entityApi(ApiContainer $api)
     {
         parent::entityApi($api);
+
+        /**
+         * @api.name        Import texts
+         * @api.description Finds i18n texts in given apps and imports them to local database.
+         *
+         * @api.body.apps   array  Apps to be exported
+         */
+        $api->post('scan', function () {
+            $apps = $this->wRequest()->getRequestData()['apps'] ?? [];
+            $results = I18N::getInstance()->scanApps($apps);
+
+            return I18N::getInstance()->importTexts($results, ['overwriteExisting' => false]);
+        })->setBodyValidators(['apps' => 'required,minLength:1'])->setPublic();
+
+        /**
+         * @api.name        Export texts and download
+         * @api.description Finds i18n texts in given apps and exports them as a ZIP file which can then be imported on a
+         *                  different environment. Optionally, import to local database can also be made.
+         *
+         * @api.body.apps   array   Apps to be scanned (min. 1 required)
+         * @api.body.import boolean Imports texts into database (optional)
+         */
+        $api->post('export/zip', function () {
+            $apps = $this->wRequest()->getRequestData()['apps'] ?? [];
+            $results = I18N::getInstance()->exportTexts($apps);
+
+            $zip = new ZipStream('i18n_' . time() . '.zip', 'application/zip', null, true);
+            foreach ($results as $appTexts) {
+                /* @var I18NTextsCollection $appTexts */
+                $zip->addFile($appTexts->toJson(), $appTexts->getApp()->getName());
+            }
+
+            return $zip->finalize();
+        })->setBodyValidators(['apps' => 'required,minLength:1'])->setPublic();
+
+        /**
+         * @api.name        Import texts
+         * @api.description Finds i18n texts in given apps and imports them to local database.
+         *
+         * @api.body.apps   array  Apps to be exported
+         */
+        $api->post('import/zip', function () {
+            $src = $this->wRequest()->getRequestData()['file']['src'] ?? null;
+
+            return I18N::getInstance()->importTextsFromZip($src, ['overwriteExisting' => true]);
+        })->setBodyValidators(['file' => 'required'])->setPublic();
 
         /**
          * @api.name        Get translation by key
@@ -144,61 +190,6 @@ class I18NText extends AbstractEntity
             'language' => 'required',
             'base'     => 'required'
         ]);
-
-        /**
-         * @api.name        Import texts
-         * @api.description Finds i18n texts in given apps and imports them to local database.
-         *
-         * @api.body.apps   array  Apps to be exported
-         */
-        $api->post('import', function () {
-            $src = $this->wRequest()->getRequestData()['file']['src'] ?? null;
-
-            return I18N::getInstance()->importTextsFromZip($src);
-        })->setBodyValidators(['file' => 'required'])->setPublic();
-
-        /**
-         * @api.name        Import texts
-         * @api.description Finds i18n texts in given apps and imports them to local database.
-         *
-         * @api.body.apps   array  Apps to be exported
-         */
-        $api->post('scan', function () {
-            $apps = $this->wRequest()->getRequestData()['apps'] ?? [];
-            $results = I18NScanner::getInstance()->scanApps($apps);
-
-            return I18N::getInstance()->importTexts($results);
-        })->setBodyValidators(['apps' => 'required,minLength:1'])->setPublic();
-
-        /**
-         * @api.name        Export texts and download
-         * @api.description Finds i18n texts in given apps and exports them as a ZIP file which can then be imported on a
-         *                  different environment. Optionally, import to local database can also be made.
-         *
-         * @api.body.apps   array   Apps to be scanned (min. 1 required)
-         * @api.body.import boolean Imports texts into database (optional)
-         */
-        $api->post('export', function () {
-            $apps = $this->wRequest()->getRequestData()['apps'] ?? [];
-            if (empty($apps)) {
-                die('Please pass at least one app for text scanning.');
-            }
-
-            $import = filter_var($this->wRequest()->getRequestData()['import'] ?? false, FILTER_VALIDATE_BOOLEAN);
-            $results = I18NScanner::getInstance()->scanApps($apps);
-
-            if ($import) {
-                I18N::getInstance()->importText($results);
-            }
-
-            $zip = new ZipStream('i18n_' . time() . '.zip', 'application/zip', null, true);
-            foreach ($results as $appTexts) {
-                /* @var I18NAppTexts $appTexts */
-                $zip->addFile($appTexts->toJson(), $appTexts->getApp()->getName());
-            }
-
-            return $zip->finalize();
-        })->setBodyValidators(['apps' => 'required,minLength:1'])->setPublic();
 
         /**
          * TODO

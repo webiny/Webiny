@@ -3,6 +3,7 @@ import Webiny from 'webiny';
 import TextsModal from './TextsList/TextsModal';
 import ScanTextsModal from './TextsList/ScanTextsModal';
 import ImportTextsModal from './TextsList/ImportTextsModal';
+import ExportTextsModal from './TextsList/ExportTextsModal';
 
 /**
  * @i18n.namespace Webiny.Backend.I18N.TextsList
@@ -57,7 +58,7 @@ TextsList.defaultProps = {
                                             title={this.i18n(`Translations`)}
                                             api="/entities/webiny/i18n-texts"
                                             searchFields="key,base"
-                                            fields="key,base,app,translations,textGroup,createdOn"
+                                            fields="key,base,app,translations,group,createdOn"
                                             sort="-createdOn">
                                             <Ui.List.FormFilters>
                                                 {(apply) => (
@@ -82,7 +83,7 @@ TextsList.defaultProps = {
                                                         <Ui.Grid.Col all={4}>
                                                             <Ui.Select
                                                                 api="/entities/webiny/i18n-text-groups"
-                                                                name="textGroup"
+                                                                name="group"
                                                                 placeholder="Filter by text group"
                                                                 allowClear
                                                                 onChange={apply()}/>
@@ -101,7 +102,7 @@ TextsList.defaultProps = {
                                                         )}
                                                     </Ui.List.Table.Field>
                                                     <Ui.List.Table.Field name="app" label={this.i18n('App')} align="center"/>
-                                                    <Ui.List.Table.Field name="textGroup.name" label={this.i18n('Group')} align="center"/>
+                                                    <Ui.List.Table.Field name="group.name" label={this.i18n('Group')} align="center"/>
                                                     <Ui.List.Table.Actions>
                                                         <Ui.List.Table.Action label="Edit" onClick={showView('textsModal')}/>
                                                     </Ui.List.Table.Actions>
@@ -127,6 +128,11 @@ TextsList.defaultProps = {
                         <Ui.ViewSwitcher.View view="importTextsModal" modal>
                             {(showView, data) => (
                                 <ImportTextsModal {...{showView, data}}/>
+                            )}
+                        </Ui.ViewSwitcher.View>
+                        <Ui.ViewSwitcher.View view="exportTextsModal" modal>
+                            {(showView, data) => (
+                                <ExportTextsModal {...{showView, data}}/>
                             )}
                         </Ui.ViewSwitcher.View>
                     </Ui.ViewSwitcher>

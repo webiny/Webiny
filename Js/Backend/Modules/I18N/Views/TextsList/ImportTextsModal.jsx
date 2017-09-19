@@ -27,7 +27,7 @@ class ImportTextsModal extends Webiny.Ui.ModalComponent {
                     {(model, form) => (
                         <Ui.Modal.Content>
                             <Ui.Form.Loader/>
-                            <Ui.Modal.Header title={this.i18n(`Import Texts`)} onClose={this.hide}/>
+                            <Ui.Modal.Header title={this.i18n(`Import texts`)} onClose={this.hide}/>
                             <Ui.Modal.Body>
                                 <Ui.Form.Error/>
                                 <Ui.Grid.Row>

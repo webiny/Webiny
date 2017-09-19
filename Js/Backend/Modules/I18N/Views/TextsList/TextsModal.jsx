@@ -53,7 +53,7 @@ class TranslationModal extends Webiny.Ui.ModalComponent {
                                         <Ui.Select
                                             label={this.i18n('Text group')}
                                             api="/entities/webiny/i18n-text-groups"
-                                            name="textGroup"
+                                            name="group"
                                             placeholder={this.i18n('Optional')}
                                             allowClear/>
                                     </Ui.Grid.Col>

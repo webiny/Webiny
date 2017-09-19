@@ -1,6 +1,6 @@
 <?php
 
-namespace Apps\Webiny\Php\Lib\I18N\I18NParser;
+namespace Apps\Webiny\Php\Lib\I18N\I18N;
 
 use Apps\Webiny\Php\Lib\Apps\App;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
@@ -53,6 +53,7 @@ class PhpParser
                     }
 
                     $texts[] = [
+                        'app' => $app->getName(),
                         'key' => $namespace . '.' . md5($text['base']),
                         'group' => null,
                         'base' => $text['base']

@@ -4,7 +4,10 @@ namespace Apps\Webiny\Php\Lib\I18N;
 
 use Apps\Webiny\Php\Entities\I18NLocale;
 use Apps\Webiny\Php\Entities\I18NText;
+use Apps\Webiny\Php\Lib\Apps\App;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
+use Apps\Webiny\Php\Lib\I18N\I18N\JsParser;
+use Apps\Webiny\Php\Lib\I18N\I18N\PhpParser;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\StdLib\SingletonTrait;
 use Webiny\Component\StdLib\StdLibTrait;
@@ -85,51 +88,124 @@ class I18N
     }
 
     /**
-     * @param mixed $data
+     * Scans given apps for i18n usages (both PHP and JS code).
      *
-     * @return I18NAppTexts|array
-     * @throws AppException
+     * @param array $list
+     *
+     * @return I18NTextsCollection
      */
-    public function importTexts($data)
+    public function scanApps(array $list)
     {
-        if (!is_array($data)) {
-            $data = [$data];
+        // Normalize list of apps.
+        $list = array_map(function ($app) {
+            return is_string($app) ? self::wApps($app) : $app;
+        }, $list);
+
+        $textsCollection = new I18NTextsCollection();
+
+        // Parse one-by-one.
+        foreach ($list as $app) {
+            /* @var App $app */
+            $newCollection = self::getInstance()->scanApp($app);
+            $textsCollection->appendTextsCollection($newCollection);
         }
 
-        $stats = [
-            'ignored'  => 0,
-            'inserted' => 0
-        ];
+        return $textsCollection;
+    }
 
-        foreach ($data as $appTexts) {
-            /* @var I18NAppTexts $appTexts */
-            foreach ($appTexts->getTexts() as $text) {
-                if (!$text['key'] ?? null) {
-                    throw new AppException($this->wI18n('Invalid export format (text key missing).'));
-                }
+    /**
+     * Scans given app for i18n usages (both PHP and JS code).
+     *
+     * @param App $app
+     *
+     * @return I18NTextsCollection
+     */
+    public function scanApp(App $app)
+    {
+        $texts = array_merge(PhpParser::getInstance()->parse($app), JsParser::getInstance()->parse($app));
 
-                if (I18NText::count(['key' => $text['key']])) {
-                    $stats['ignored']++;
-                    continue;
-                }
+        return new I18NTextsCollection($texts);
+    }
 
-                $i18nText = new I18NText();
-                $i18nText->key = $text['key'];
-                $i18nText->app = $appTexts->getApp()->getName();
-                $i18nText->base = $text['base'];
-                $i18nText->textGroup = $text['group'];
+    public function exportTexts(array $list)
+    {
+        // Normalize list of apps.
+        $list = array_map(function ($app) {
+            return $app instanceof App ? $app->getName() : $app;
+        }, $list);
 
-                $i18nText->save();
+        $groups = self::wDatabase()->find(...[
+            'I18NTextGroups',
+            ['deletedOn' => null],
+            [],
+            0,
+            0,
+            ['projection' => ['_id' => 0, 'name' => 1, 'description' => 1]]
+        ]);
 
-                $stats['inserted']++;
+        $texts = self::wDatabase()->find(...[
+            'I18NTexts',
+            ['deletedOn' => null, 'app' => ['$in' => $list]],
+            [],
+            0,
+            0,
+            ['projection' => ['_id' => 0, 'app' => 1, 'group' => 1, 'key' => 1, 'base' => 1]]
+        ]);
+
+        return new I18NTextsCollection();
+
+        return ['groups' => $groups, 'texts' => $texts];
+    }
+
+    /**
+     * @param mixed $textsCollection
+     *
+     * @param array $options
+     *
+     * @return I18NTextsCollection|array
+     * @throws AppException
+     */
+    public function importTexts(I18NTextsCollection $textsCollection, $options = [])
+    {
+        $options['overwriteExisting'] = $options['overwriteExisting'] ?? false;
+        $stats = ['updated' => 0, 'created' => 0];
+
+        // First iteration is just to make sure all data is valid.
+        foreach ($textsCollection->getTexts() as $text) {
+            if (!$text['key'] ?? null) {
+                throw new AppException($this->wI18n('Invalid export format (text key missing).'));
             }
+
+            if (!$text['base'] ?? null) {
+                throw new AppException($this->wI18n('Invalid export format (base text missing).'));
+            }
+        }
+
+        // Now we know the data is valid, let's do the import.
+        foreach ($textsCollection->getTexts() as $text) {
+            // If text already exists in the database, we only update if overwriteExisting is set to true.
+            $i18nText = I18NText::count(['key' => $text['key']]);
+            if ($i18nText) {
+                if ($options['overwriteExisting']) {
+                    /* @var I18NText $i18nText */
+                    $i18nText->populate($text)->save();
+                    $stats['updated']++;
+                }
+                continue;
+            }
+
+            $i18nText = new I18NText();
+            $i18nText->populate($text)->save();
+            $stats['created']++;
         }
 
         return $stats;
     }
 
-    public function importTextsFromZip($base64EncodedZipContent)
+    public function importTextsFromZip($base64EncodedZipContent, $options = [])
     {
+        $options['overwriteExisting'] = $options['overwriteExisting'] ?? false;
+
         if (!$base64EncodedZipContent) {
             throw new AppException($this->wI18n('Failed to import texts from ZIP archive - empty.'));
         }
@@ -154,8 +230,8 @@ class I18N
 
             $stats = ['ignored' => 0, 'inserted' => 0];
             foreach ($storage->getKeys($temp['folder']) as $file) {
-                $texts = new I18NAppTexts();
-                $importStats = I18N::getInstance()->importTexts($texts->fromJson($storage->getContents($file)));
+                $texts = new I18NTextsCollection();
+                $importStats = I18N::getInstance()->importTexts($texts->fromJson($storage->getContents($file)), $options);
                 $stats['ignored'] += $importStats['ignored'];
                 $stats['inserted'] += $importStats['inserted'];
             }

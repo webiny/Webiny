@@ -18,14 +18,14 @@ TextGroupsList.defaultProps = {
             <Webiny.Ui.LazyLoad modules={['ViewSwitcher', 'View', 'Button', 'List']}>
                 {Ui => (
                     <Ui.ViewSwitcher>
-                        <Ui.ViewSwitcher.View view="textGroupsList" defaultView>
+                        <Ui.ViewSwitcher.View view="groupsList" defaultView>
                             {showView => (
                                 <Ui.View.List>
                                     <Ui.View.Header title={this.i18n(`Text Groups`)}>
                                         <Ui.Button
                                             type="primary"
                                             align="right"
-                                            onClick={showView('textGroupsModal')}
+                                            onClick={showView('groupsModal')}
                                             icon="icon-plus-circled"
                                             label={this.i18n(`Create`)}/>
                                     </Ui.View.Header>
@@ -42,7 +42,7 @@ TextGroupsList.defaultProps = {
                                                     <Ui.List.Table.Field name="name" label={this.i18n('Name')}/>
                                                     <Ui.List.Table.Field name="totalTexts" label={this.i18n('Total Texts')} align="center"/>
                                                     <Ui.List.Table.Actions>
-                                                        <Ui.List.Table.EditAction onClick={showView('textGroupsModal')}/>
+                                                        <Ui.List.Table.EditAction onClick={showView('groupsModal')}/>
                                                         <Ui.List.Table.DeleteAction/>
                                                     </Ui.List.Table.Actions>
                                                 </Ui.List.Table.Row>
@@ -54,7 +54,7 @@ TextGroupsList.defaultProps = {
                                 </Ui.View.List>
                             )}
                         </Ui.ViewSwitcher.View>
-                        <Ui.ViewSwitcher.View view="textGroupsModal" modal>
+                        <Ui.ViewSwitcher.View view="groupsModal" modal>
                             {(showView, data) => (
                                 <TextGroupsModal {...{showView, data}} onSubmitSuccess={() => this.ref.loadData()}/>
                             )}
