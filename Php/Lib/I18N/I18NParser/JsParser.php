@@ -61,20 +61,98 @@ class JsParser
                     $parsed = self::parseTexts($content, $file);
                     // If we don't have a global i18n namespace, we must ensure each text has it's own namespace in the file.
                     foreach ($parsed as $text) {
-                        if (!isset($texts[$text['namespace']])) {
-                            $texts[$text['namespace']] = [];
-                        }
-
-                        // We don't need to have duplicate texts in the array.
-                        if (!in_array($text['base'], $texts[$text['namespace']])) {
-                            $texts[$text['namespace']][] = $text['base'];
-                        }
+                        $texts[] = [
+                            'key' => $text['namespace'] . '.' . md5($text['base']),
+                            'group' => null,
+                            'base'  => $text['base']
+                        ];
                     }
                 }
             }
         }
 
         return $texts;
+    }
+
+    private function parseTexts($content, SplFileInfo $file)
+    {
+        preg_match_all(self::REGEX['basic'], $content, $positions, PREG_OFFSET_CAPTURE);
+        if (empty($positions)) {
+            return [];
+        }
+
+        $positions = array_map(function ($item) {
+            return $item[1];
+        }, $positions[0]);
+
+
+        $contentLength = strlen($content);
+
+        $namespaces = self::parseNamespaces($content);
+
+        // Parsing this.i18n usages is hard. We must analyze each use thoroughly, one by one.
+        return array_map(function ($index) use ($content, $contentLength, $file, $namespaces) {
+            // Now let's get the full string, we must look forward until we reach the closing ')'.
+            $base = ['part' => null, 'parts' => []];
+
+            for ($i = $index + 10; $i < $contentLength; $i++) {
+                if (!$base['part']) {
+                    // We don't have a part that we are working on.
+                    // Did we then reach the end of placeholder ? If the next non-whitespace character is ',' or ')', we are done with matching
+                    // the placeholder, otherwise we continue matching the rest. We only care about the rest if third parameter was set, as
+                    // it may be an object that has 'key' field in it, which forces a custom key for the text.
+                    $firstCharacterAfterLastlyProcessedPlaceholderPart = ltrim(substr($content, $i, 1));
+
+                    if (in_array($firstCharacterAfterLastlyProcessedPlaceholderPart, [',', ')'])) {
+                        $output = [
+                            'base'      => implode('', $base['parts']),
+                            'namespace' => self::getNamespaceOnIndex($index, $namespaces)
+                        ];
+
+                        if (!$output['namespace']) {
+                            throw new AppException('Missing text namespace for text "' . $output['text'] . '", in ' . $file->getPathname());
+                        }
+
+                        if ($firstCharacterAfterLastlyProcessedPlaceholderPart === ')') {
+                            // This means no additional parameters were sent. We can immediately return the placeholder.
+                            return $output;
+                        }
+
+
+                        // This means we have additional parameters set. Let's see if we have custom key defined.
+                        // We try to match the last JSON with all possible options.
+                        preg_match(self::REGEX['customNamespace'], substr($content, $index), $matchedCustomNamespace);
+                        if (isset($matchedCustomNamespace[1])) {
+                            $output['namespace'] = $matchedCustomNamespace[1];
+                        }
+
+                        return $output;
+                    }
+
+                    // If we have a delimiter, then let's assign a new part and process it fully with the following iterations.
+                    if (in_array($content[$i], ['`', '\'', '"'])) {
+                        $base['part'] = ['delimiter' => $content[$i], 'start' => $i];
+                    }
+                    continue;
+                }
+
+
+                // We must recognize the last closing ', " or `. The following examines three things:
+                // 1) Is current character a delimiter
+                // 2) Is it not-escaped - we just check the previous character, it must not be '\'
+                if ($content[$i] !== $base['part']['delimiter']) {
+                    continue;
+                }
+
+                if ($content[$i - 1] === '\\') {
+                    continue;
+                }
+
+                // Okay, now we are at the end of the part, so let's add it to the parts.
+                $base['parts'][] = substr($content, $base['part']['start'] + 1, $i - $base['part']['start'] - 1);
+                $base['part'] = null;
+            }
+        }, $positions);
     }
 
     /**
@@ -149,86 +227,5 @@ class JsParser
         };
 
         return $current;
-    }
-
-    private function parseTexts($content, SplFileInfo $file)
-    {
-        preg_match_all(self::REGEX['basic'], $content, $positions, PREG_OFFSET_CAPTURE);
-        if (empty($positions)) {
-            return [];
-        }
-
-        $positions = array_map(function ($item) {
-            return $item[1];
-        }, $positions[0]);
-
-
-        $contentLength = strlen($content);
-
-        $namespaces = self::parseNamespaces($content);
-
-        // Parsing this.i18n usages is hard. We must analyze each use thoroughly, one by one.
-        return array_map(function ($index) use ($content, $contentLength, $file, $namespaces) {
-            // Now let's get the full string, we must look forward until we reach the closing ')'.
-            $base = ['part' => null, 'parts' => []];
-
-            for ($i = $index + 10; $i < $contentLength; $i++) {
-                if (!$base['part']) {
-                    // We don't have a part that we are working on.
-                    // Did we then reach the end of placeholder ? If the next non-whitespace character is ',' or ')', we are done with matching
-                    // the placeholder, otherwise we continue matching the rest. We only care about the rest if third parameter was set, as
-                    // it may be an object that has 'key' field in it, which forces a custom key for the text.
-                    $firstCharacterAfterLastlyProcessedPlaceholderPart = ltrim(substr($content, $i, 1));
-
-                    if (in_array($firstCharacterAfterLastlyProcessedPlaceholderPart, [',', ')'])) {
-                        $output = [
-                            'base' => implode('', $base['parts']),
-                            'namespace'   => self::getNamespaceOnIndex($index, $namespaces)
-                        ];
-
-                        if (!$output['namespace']) {
-                            throw new AppException('Missing text namespace for text "' . $output['text'] . '", in ' . $file->getPathname());
-                        }
-
-                        if ($firstCharacterAfterLastlyProcessedPlaceholderPart === ')') {
-                            // This means no additional parameters were sent. We can immediately return the placeholder.
-                            return $output;
-                        }
-
-
-                        // This means we have additional parameters set. Let's see if we have custom key defined.
-                        // We try to match the last JSON with all possible options.
-                        preg_match(self::REGEX['customNamespace'], substr($content, $index), $matchedCustomNamespace);
-                        if (isset($matchedCustomNamespace[1])) {
-                            $output['namespace'] = $matchedCustomNamespace[1];
-                        }
-
-                        return $output;
-                    }
-
-                    // If we have a delimiter, then let's assign a new part and process it fully with the following iterations.
-                    if (in_array($content[$i], ['`', '\'', '"'])) {
-                        $base['part'] = ['delimiter' => $content[$i], 'start' => $i];
-                    }
-                    continue;
-                }
-
-
-                // We must recognize the last closing ', " or `. The following examines three things:
-                // 1) Is current character a delimiter
-                // 2) Is it not-escaped - we just check the previous character, it must not be '\'
-                if ($content[$i] !== $base['part']['delimiter']) {
-                    continue;
-                }
-
-                if ($content[$i - 1] === '\\') {
-                    continue;
-                }
-
-                // Okay, now we are at the end of the part, so let's add it to the parts.
-                $base['parts'][] = substr($content, $base['part']['start'] + 1, $i - $base['part']['start'] - 1);
-                $base['part'] = null;
-            }
-        }, $positions);
     }
 }

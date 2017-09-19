@@ -19,18 +19,18 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  * @property string      $placeholder
  * @property ArrayObject $translations
  */
-class I18NParser
+class I18NScanner
 {
     use StdLibTrait, WebinyTrait, SingletonTrait;
 
     /**
-     * Parses given apps
+     * Scans given apps for i18n usages (both PHP and JS code).
      *
      * @param array $list
      *
      * @return array
      */
-    public function parseApps(array $list)
+    public function scanApps(array $list)
     {
         $return = [];
 
@@ -42,13 +42,20 @@ class I18NParser
         // Parse one-by-one.
         foreach ($list as $app) {
             /* @var App $app */
-            $return[] = I18NParser::getInstance()->parseApp($app);
+            $return[] = self::getInstance()->scanApp($app);
         }
 
         return $return;
     }
 
-    public function parseApp(App $app)
+    /**
+     * Scans given app for i18n usages (both PHP and JS code).
+     *
+     * @param App $app
+     *
+     * @return I18NAppTexts
+     */
+    public function scanApp(App $app)
     {
         $texts = array_merge(PhpParser::getInstance()->parse($app), JsParser::getInstance()->parse($app));
 

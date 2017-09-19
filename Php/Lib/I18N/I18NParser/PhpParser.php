@@ -52,14 +52,11 @@ class PhpParser
                         throw new AppException('Missing text namespace for text "' . $text['base'] . '", in ' . $file->getPathname());
                     }
 
-                    if (!isset($texts[$namespace])) {
-                        $texts[$namespace] = [];
-                    }
-
-                    // We don't need to have duplicate texts in the array.
-                    if (!in_array($text['base'], $texts[$namespace])) {
-                        $texts[$namespace][] = $text['base'];
-                    }
+                    $texts[] = [
+                        'key' => $namespace . '.' . md5($text['base']),
+                        'group' => null,
+                        'base' => $text['base']
+                    ];
                 }
             }
         }

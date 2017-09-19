@@ -10,7 +10,7 @@ use Apps\Webiny\Php\Lib\Entity\EntityQuery\QueryContainer;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\I18N\I18N;
 use Apps\Webiny\Php\Lib\I18N\I18NAppTexts;
-use Apps\Webiny\Php\Lib\I18N\I18NParser;
+use Apps\Webiny\Php\Lib\I18N\I18NScanner;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use PHPZip\Zip\Stream\ZipStream;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
@@ -63,7 +63,7 @@ class I18NText extends AbstractEntity
         $this->attr('key')->char()->setValidators('required,unique')->setToArrayDefault();
         $this->attr('base')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('textGroup')->many2one()->setEntity(I18NTextGroup::class);
-        $this->attr('translations')->object()->setToArrayDefault()->onSet(function ($texts) {
+        $this->attr('translations')->arr()->setToArrayDefault()->onSet(function ($texts) {
             // We must check which locales have changed and update cache keys for them
             foreach ($texts as $locale => $text) {
                 if ($this->translations->key($locale) !== $text) {
@@ -163,9 +163,9 @@ class I18NText extends AbstractEntity
          *
          * @api.body.apps   array  Apps to be exported
          */
-        $api->post('scan/import', function () {
+        $api->post('scan', function () {
             $apps = $this->wRequest()->getRequestData()['apps'] ?? [];
-            $results = I18NParser::getInstance()->parseApps($apps);
+            $results = I18NScanner::getInstance()->scanApps($apps);
 
             return I18N::getInstance()->importTexts($results);
         })->setBodyValidators(['apps' => 'required,minLength:1'])->setPublic();
@@ -178,14 +178,14 @@ class I18NText extends AbstractEntity
          * @api.body.apps   array   Apps to be scanned (min. 1 required)
          * @api.body.import boolean Imports texts into database (optional)
          */
-        $api->post('scan/export', function () {
+        $api->post('export', function () {
             $apps = $this->wRequest()->getRequestData()['apps'] ?? [];
             if (empty($apps)) {
                 die('Please pass at least one app for text scanning.');
             }
 
             $import = filter_var($this->wRequest()->getRequestData()['import'] ?? false, FILTER_VALIDATE_BOOLEAN);
-            $results = I18NParser::getInstance()->parseApps($apps);
+            $results = I18NScanner::getInstance()->scanApps($apps);
 
             if ($import) {
                 I18N::getInstance()->importText($results);

@@ -24,7 +24,9 @@ TextsList.defaultProps = {
                         <Ui.ViewSwitcher.View view="translationsList" defaultView>
                             {showView => (
                                 <Ui.View.List>
-                                    <Ui.View.Header title={this.i18n(`Texts`)}>
+                                    <Ui.View.Header
+                                        title={this.i18n(`Texts`)}
+                                        description={this.i18n('Scan, create or manage existing texts in all installed apps.')}>
                                         <Ui.ButtonGroup>
                                             <Ui.Button
                                                 type="primary"
@@ -36,6 +38,11 @@ TextsList.defaultProps = {
                                                 onClick={showView('importTextsModal')}
                                                 icon="fa-download"
                                                 label={this.i18n(`Import`)}/>
+                                            <Ui.Button
+                                                type="secondary"
+                                                onClick={showView('exportTextsModal')}
+                                                icon="fa-upload"
+                                                label={this.i18n(`Export`)}/>
                                             <Ui.Button
                                                 type="secondary"
                                                 icon="icon-arrow-circle-right"

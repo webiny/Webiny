@@ -87,7 +87,8 @@ class I18N
     /**
      * @param mixed $data
      *
-     * @return array|I18NAppTexts
+     * @return I18NAppTexts|array
+     * @throws AppException
      */
     public function importTexts($data)
     {
@@ -95,26 +96,32 @@ class I18N
             $data = [$data];
         }
 
-        $stats = ['ignored' => 0, 'inserted' => 0];
+        $stats = [
+            'ignored'  => 0,
+            'inserted' => 0
+        ];
 
         foreach ($data as $appTexts) {
             /* @var I18NAppTexts $appTexts */
-            foreach ($appTexts->getTexts() as $key => $texts) {
-                foreach ($texts as $base) {
-                    $textKey = $key . '.' . md5($base);
-                    if (I18NText::count(['key' => $textKey])) {
-                        $stats['ignored']++;
-                        continue;
-                    }
-
-                    $i18nText = new I18NText();
-                    $i18nText->key = $textKey;
-                    $i18nText->app = $appTexts->getApp()->getName();
-                    $i18nText->base = $base;
-                    $i18nText->save();
-
-                    $stats['inserted']++;
+            foreach ($appTexts->getTexts() as $text) {
+                if (!$text['key'] ?? null) {
+                    throw new AppException($this->wI18n('Invalid export format (text key missing).'));
                 }
+
+                if (I18NText::count(['key' => $text['key']])) {
+                    $stats['ignored']++;
+                    continue;
+                }
+
+                $i18nText = new I18NText();
+                $i18nText->key = $text['key'];
+                $i18nText->app = $appTexts->getApp()->getName();
+                $i18nText->base = $text['base'];
+                $i18nText->textGroup = $text['group'];
+
+                $i18nText->save();
+
+                $stats['inserted']++;
             }
         }
 

@@ -6,23 +6,15 @@ import _ from 'lodash';
  * @i18n.namespace Webiny.Backend.I18N.ScanTexts
  */
 class ScanTextsModal extends Webiny.Ui.ModalComponent {
-    canSubmit(model) {
-        if (_.isEmpty(model)) {
-            return;
-        }
-
-        return _.size(model.apps) && (model.download || model.import);
-    }
-
     renderDialog() {
         const {Ui} = this.props;
 
         return (
             <Ui.Modal.Dialog>
                 <Ui.Form
-                    defaultModel={{apps: [], download: false, import: false}}
+                    defaultModel={{apps: []}}
                     api="/entities/webiny/i18n-texts"
-                    url="/scan/import"
+                    url="/scan"
                     onSuccessMessage={null}
                     onSubmitSuccess={async response => {
                         Webiny.Growl.success(
@@ -45,6 +37,7 @@ class ScanTextsModal extends Webiny.Ui.ModalComponent {
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
                                         <Ui.CheckboxGroup
+                                            validate="required"
                                             name="apps"
                                             label={this.i18n('Select apps to scan for texts')}
                                             api="/services/webiny/apps"
@@ -53,40 +46,13 @@ class ScanTextsModal extends Webiny.Ui.ModalComponent {
                                             valueAttr="name"/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
-
-                                <Ui.Section title="Options"/>
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={12}>
-                                        <Ui.Checkbox name="import" label={this.i18n('Import immediately to database')}/>
-                                        <Ui.Checkbox name="download" label={this.i18n('Download as ZIP archive')}/>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-
                             </Ui.Modal.Body>
                             <Ui.Modal.Footer >
                                 <Ui.Button label={this.i18n(`Cancel`)} onClick={this.hide}/>
-
                                 <Ui.Button
-                                    renderIf={!model.download}
-                                    disabled={!this.canSubmit(model)}
                                     type="primary"
                                     label={this.i18n(`Scan`)}
                                     onClick={form.submit}/>
-
-                                <Ui.DownloadLink
-                                    renderIf={model.download}
-                                    separate
-                                    disabled={!this.canSubmit(model)}
-                                    onClick={() => {
-                                        console.log('saddas')
-                                    }}
-                                    method="POST"
-                                    params={{import: model.import, apps: model.apps}}
-                                    type="primary"
-                                    download={Webiny.Config.ApiPath + '/entities/webiny/i18n-texts/scan/export'}>
-                                    {this.i18n(`Scan`)}
-                                </Ui.DownloadLink>
-
                             </Ui.Modal.Footer>
                         </Ui.Modal.Content>
                     )}
