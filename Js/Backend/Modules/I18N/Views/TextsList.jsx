@@ -1,6 +1,6 @@
 import React from 'react';
 import Webiny from 'webiny';
-import TranslationsModal from './TextsList/TextsModal';
+import TextsModal from './TextsList/TextsModal';
 import ScanTextsModal from './TextsList/ScanTextsModal';
 import ImportTextsModal from './TextsList/ImportTextsModal';
 
@@ -8,6 +8,10 @@ import ImportTextsModal from './TextsList/ImportTextsModal';
  * @i18n.namespace Webiny.Backend.I18N.TextsList
  */
 class TextsList extends Webiny.Ui.View {
+    constructor() {
+        super();
+        this.ref = null;
+    }
 }
 
 TextsList.defaultProps = {
@@ -24,7 +28,7 @@ TextsList.defaultProps = {
                                         <Ui.ButtonGroup>
                                             <Ui.Button
                                                 type="primary"
-                                                onClick={showView('importTextsModal')}
+                                                onClick={showView('textsModal')}
                                                 icon="icon-plus-circled"
                                                 label={this.i18n(`Create`)}/>
                                             <Ui.Button
@@ -41,22 +45,23 @@ TextsList.defaultProps = {
                                     </Ui.View.Header>
                                     <Ui.View.Body>
                                         <Ui.List
+                                            ref={ref => this.ref = ref}
                                             connectToRouter
                                             title={this.i18n(`Translations`)}
                                             api="/entities/webiny/i18n-texts"
-                                            searchFields="key,base,app"
-                                            fields="key,base,app,translations,textGroup"
+                                            searchFields="key,base"
+                                            fields="key,base,app,translations,textGroup,createdOn"
                                             sort="-createdOn">
                                             <Ui.List.FormFilters>
                                                 {(apply) => (
                                                     <Ui.Grid.Row>
-                                                        <Ui.Grid.Col all={3}>
+                                                        <Ui.Grid.Col all={4}>
                                                             <Ui.Input
                                                                 name="_searchQuery"
-                                                                placeholder="Search by method or URL"
+                                                                placeholder="Search by text key or base text"
                                                                 onEnter={apply()}/>
                                                         </Ui.Grid.Col>
-                                                        <Ui.Grid.Col all={3}>
+                                                        <Ui.Grid.Col all={4}>
                                                             <Ui.Select
                                                                 name="app"
                                                                 api="/services/webiny/apps"
@@ -67,7 +72,7 @@ TextsList.defaultProps = {
                                                                 allowClear
                                                                 onChange={apply()}/>
                                                         </Ui.Grid.Col>
-                                                        <Ui.Grid.Col all={3}>
+                                                        <Ui.Grid.Col all={4}>
                                                             <Ui.Select
                                                                 api="/entities/webiny/i18n-text-groups"
                                                                 name="textGroup"
@@ -88,12 +93,10 @@ TextsList.defaultProps = {
                                                             </span>
                                                         )}
                                                     </Ui.List.Table.Field>
-                                                    <Ui.List.Table.Field
-                                                        name="textGroup.name"
-                                                        label={this.i18n('Text Group')}
-                                                        align="center"/>
+                                                    <Ui.List.Table.Field name="app" label={this.i18n('App')} align="center"/>
+                                                    <Ui.List.Table.Field name="textGroup.name" label={this.i18n('Group')} align="center"/>
                                                     <Ui.List.Table.Actions>
-                                                        <Ui.List.Table.Action label="Edit" onClick={showView('translationModal')}/>
+                                                        <Ui.List.Table.Action label="Edit" onClick={showView('textsModal')}/>
                                                     </Ui.List.Table.Actions>
                                                 </Ui.List.Table.Row>
                                                 <Ui.List.Table.Footer/>
@@ -104,9 +107,9 @@ TextsList.defaultProps = {
                                 </Ui.View.List>
                             )}
                         </Ui.ViewSwitcher.View>
-                        <Ui.ViewSwitcher.View view="translationModal" modal>
+                        <Ui.ViewSwitcher.View view="textsModal" modal>
                             {(showView, data) => (
-                                <TranslationsModal {...{showView, data}}/>
+                                <TextsModal {...{showView, data}} onSubmitSuccess={() => this.ref.loadData()}/>
                             )}
                         </Ui.ViewSwitcher.View>
                         <Ui.ViewSwitcher.View view="scanTextsModal" modal>

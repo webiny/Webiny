@@ -3,6 +3,7 @@
 namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
+use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 
 /**
@@ -25,7 +26,18 @@ class I18NTextGroup extends AbstractEntity
 
         $this->attr('name')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('totalTexts')->dynamic(function () {
-            return I18NText::count(['group' => $this->id]);
+            return I18NText::count(['textGroup' => $this->id]);
         });
+        $this->attr('description')->char()->setToArrayDefault();
+
     }
+
+    public function canDelete()
+    {
+        if ($this->totalTexts > 0) {
+            throw new AppException($this->wI18n("Cannot delete text group because it's in use by existing texts."));
+        }
+        parent::canDelete();
+    }
+
 }

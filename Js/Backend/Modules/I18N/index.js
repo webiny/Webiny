@@ -11,9 +11,9 @@ class Module extends Webiny.App.Module {
             <Menu label="I18N" icon="icon-earth" role="webiny-i18n-manager">
                 <Menu label="Locales" route="I18N.Locales.List"/>
                 <Menu label="Texts">
+                    <Menu label="Translations" route="I18N.Texts.List"/>
                     <Menu label="Text Groups" route="I18N.TextGroups.List"/>
                     <Menu label="Texts" route="I18N.Texts.List"/>
-                    <Menu label="Translations" route="I18N.Texts.List"/>
                 </Menu>
             </Menu>
         );

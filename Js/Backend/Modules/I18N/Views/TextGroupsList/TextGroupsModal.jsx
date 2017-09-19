@@ -14,7 +14,7 @@ class TextGroupModal extends Webiny.Ui.ModalComponent {
                 <Ui.Form
                     id={_.get(this.props, 'data.id')}
                     api="/entities/webiny/i18n-text-groups"
-                    fields="name"
+                    fields="name,description"
                     onSubmitSuccess={() => this.hide().then(this.props.onSubmitSuccess)}>
                     {(model, form) => (
                         <Ui.Modal.Content>
@@ -24,7 +24,15 @@ class TextGroupModal extends Webiny.Ui.ModalComponent {
                                 <Ui.Form.Error/>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
-                                        <Ui.Input label="Name" placeholder={this.i18n('Name of text group')} name="name"/>
+                                        <Ui.Input label={this.i18n('Name')} placeholder={this.i18n('Name of text group')} name="name"/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={12}>
+                                        <Ui.Textarea
+                                            label={this.i18n(`Description`)}
+                                            name="description"
+                                            placeholder={this.i18n('Short description...')}/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                             </Ui.Modal.Body>
@@ -41,10 +49,11 @@ class TextGroupModal extends Webiny.Ui.ModalComponent {
 }
 
 TextGroupModal.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
+    data: null,
     onSubmitSuccess: _.noop
 });
 
 export default Webiny.createComponent(TextGroupModal, {
     modulesProp: 'Ui',
-    modules: ['Modal', 'Form', 'Grid', 'Input', 'Button']
+    modules: ['Modal', 'Form', 'Grid', 'Input', 'Button', 'Textarea']
 });

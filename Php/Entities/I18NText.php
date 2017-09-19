@@ -59,9 +59,9 @@ class I18NText extends AbstractEntity
     {
         parent::__construct();
 
-        $this->attr('app')->char()->setValidators('required')->setToArrayDefault()->setOnce();
-        $this->attr('key')->char()->setValidators('required,unique')->setToArrayDefault()->setOnce();
-        $this->attr('base')->char()->setValidators('required')->setToArrayDefault()->setOnce();
+        $this->attr('app')->char()->setValidators('required')->setToArrayDefault();
+        $this->attr('key')->char()->setValidators('required,unique')->setToArrayDefault();
+        $this->attr('base')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('textGroup')->many2one()->setEntity(I18NTextGroup::class);
         $this->attr('translations')->object()->setToArrayDefault()->onSet(function ($texts) {
             // We must check which locales have changed and update cache keys for them
@@ -97,8 +97,8 @@ class I18NText extends AbstractEntity
         /**
          * @api.name        Create new translation
          * @api.description Creates a new translation.
-         * @api.body.key            string  Translation key
-         * @api.body.base    string  Default placeholder text for this translation (default text if no translation for selected language is present).
+         * @api.body.key    string  Translation key
+         * @api.body.base   string  Default placeholder text for this translation (default text if no translation for selected language is present).
          */
         $api->post('keys', function () {
             $data = $this->wRequest()->getRequestData();
@@ -112,7 +112,7 @@ class I18NText extends AbstractEntity
 
             return $this->apiFormatEntity($translation, $this->wRequest()->getFields());
         })->setBodyValidators([
-            'key'         => 'required',
+            'key'  => 'required',
             'base' => 'required'
         ]);
 
@@ -141,8 +141,8 @@ class I18NText extends AbstractEntity
 
             return $translation;
         })->setBodyValidators([
-            'language'    => 'required',
-            'base' => 'required'
+            'language' => 'required',
+            'base'     => 'required'
         ]);
 
         /**

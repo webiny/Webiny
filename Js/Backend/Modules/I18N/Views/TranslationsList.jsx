@@ -8,6 +8,10 @@ import ImportTextsModal from './TextsList/ImportTextsModal';
  * @i18n.namespace Webiny.Backend.I18N.TextsList
  */
 class TextsList extends Webiny.Ui.View {
+    constructor() {
+        super();
+        this.ref = null;
+    }
 }
 
 TextsList.defaultProps = {

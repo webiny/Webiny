@@ -9,74 +9,53 @@ class TranslationModal extends Webiny.Ui.ModalComponent {
     renderDialog() {
         const {Ui} = this.props;
 
-        // TODO
-        // defaultModel.placeholder = defaultModel.placeholder.replace(/\s+/g, " ");
-
-        // We select first locale automatically - if we have one defined.
-        const defaultModel = _.clone(this.props.data);
-        const definedLocales = Object.keys(this.props.data.translations);
-
-        if (_.first(definedLocales)) {
-            defaultModel.locale = _.first(definedLocales);
-        }
-
         return (
             <Ui.Modal.Dialog>
                 <Ui.Form
-                    defaultModel={defaultModel}
-                    api="/entities/webiny/i18n-translations"
+                    id={_.get(this.props.data, 'id')}
+                    api="/entities/webiny/i18n-texts"
                     fields="*,translations"
-                    onSuccessMessage={() => this.i18n('Your changes have been saved.')}
-                    onSubmit={(model, container) => (
-                        container.onSubmit(_.pick(model, ['id', 'translations'])).then(() => {
-                            this.hide().then(this.props.onSubmit);
-                        })
-                    )}>
+                    onSubmitSuccess={() => this.hide().then(this.props.onSubmitSuccess)}>
                     {(model, form) => (
                         <Ui.Modal.Content>
                             <Ui.Form.Loader/>
-                            <Ui.Modal.Header title="Edit Translation" onClose={this.hide}/>
+                            <Ui.Modal.Header title={this.i18n(`Text`)} onClose={this.hide}/>
                             <Ui.Modal.Body>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
-                                        <Ui.Input disabled label="App" name="app"/>
+                                        <Ui.Input label="Key" name="key" validate="required"/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
 
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
-                                        <Ui.Input disabled label="Key" name="key"/>
+                                        <Ui.Textarea label="Base text" name="base" validate="required"/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
-
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={12}>
-                                        <Ui.Textarea disabled label="Base" name="base"/>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
-
-                                <Ui.Section title="Translations"/>
 
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
                                         <Ui.Select
-                                            name="locale"
-                                            label={this.i18n('Locale')}
-                                            placeholder="Select a locale..."
-                                            api="/entities/webiny/i18n-locales"
-                                            query={{enabled: true}}
-                                            fields="id,label,key"
-                                            textAttr="label"
-                                            valueAttr="key"/>
+                                            label={this.i18n('App')}
+                                            name="app"
+                                            api="/services/webiny/apps"
+                                            validate="required"
+                                            url="/installed"
+                                            textAttr="name"
+                                            valueAttr="name"
+                                            placeholder="Select an app..."
+                                            allowClear/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
 
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
-                                        <Ui.Textarea
-                                            label="Text"
-                                            name={`translations.${model.key}`}
-                                            placeholder="Default placeholder text is used."/>
+                                        <Ui.Select
+                                            label={this.i18n('Text group')}
+                                            api="/entities/webiny/i18n-text-groups"
+                                            name="textGroup"
+                                            placeholder={this.i18n('Optional')}
+                                            allowClear/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                             </Ui.Modal.Body>
@@ -93,6 +72,7 @@ class TranslationModal extends Webiny.Ui.ModalComponent {
 }
 
 TranslationModal.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
+    data: null,
     onSubmit: _.noop
 });
 
