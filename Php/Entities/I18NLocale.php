@@ -4,6 +4,7 @@ namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
+use Apps\Webiny\Php\Lib\I18N\I18NLocales;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\Entity\Attribute\Validation\ValidationException;
 
@@ -22,6 +23,7 @@ class I18NLocale extends AbstractEntity
     use WebinyTrait;
 
     protected static $entityCollection = 'I18NLocales';
+    protected static $classId = 'Webiny.Entities.I18NLocale';
 
     public function __construct()
     {
@@ -29,13 +31,13 @@ class I18NLocale extends AbstractEntity
 
         $this->attr('enabled')->boolean();
         $this->attr('key')->char()->setValidators(function ($value) {
-            if (!self::isValidLocale($value)) {
+            if (!I18NLocales::isValidLocale($value)) {
                 throw new ValidationException('You must select a valid locale.');
             }
         })->setToArrayDefault();
 
         $this->attr('label')->dynamic(function () {
-            return I18NLanguageLocale::getLabel($this->key);
+            return I18NLocales::getLabel($this->key);
         });
 
         $this->attr('cacheKey')->char()->setSkipOnPopulate()->setToArrayDefault();
@@ -50,7 +52,7 @@ class I18NLocale extends AbstractEntity
          * @api.description Lists all available locales.
          */
         $api->get('locales', function () {
-            return I18NLanguageLocale::getLocales();
+            return I18NLocales::getLocales();
         });
 
         /**
@@ -64,11 +66,11 @@ class I18NLocale extends AbstractEntity
                 return $item['locale'];
             }, $exclude);
 
-            return I18NLanguageLocale::getLocales($exclude);
+            return I18NLocales::getLocales($exclude);
         });
     }
 
-        /**
+    /**
      * @param $locale
      *
      * @return I18NLocale|null
@@ -84,11 +86,7 @@ class I18NLocale extends AbstractEntity
     public function updateCacheKey()
     {
         $this->cacheKey = uniqid();
-        return $this;
-    }
 
-    public static function isValidLocale($locale)
-    {
-        return defined('Apps\Webiny\Php\Entities\I18NLanguageLocale::' . $locale);
+        return $this;
     }
 }

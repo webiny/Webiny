@@ -8,4 +8,5 @@ namespace Apps\Webiny\Php\Entities;
 class I18NSettings extends Settings
 {
     protected static $key = 'i18n';
+    protected static $classId = 'Webiny.Entities.I18NSettings';
 }

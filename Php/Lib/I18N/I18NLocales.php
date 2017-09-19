@@ -1,12 +1,12 @@
 <?php
 
-namespace Apps\Webiny\Php\Entities;
+namespace Apps\Webiny\Php\Lib\I18N;
 
 /**
  * Class I18NLanguageLocale
  * @package Apps\Webiny\Php\Entities
  */
-class I18NLanguageLocale
+class I18NLocales
 {
     static function getLocales($exclude = [])
     {
@@ -21,6 +21,10 @@ class I18NLanguageLocale
     static function getLabel($key)
     {
         return self::getLocales()[$key];
+    }
+
+    static function isValidLocale($locale) {
+        return defined(self::class . '::' . $locale);
     }
 
     const af_NA = "Afrikaans (Namibia)";

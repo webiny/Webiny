@@ -8,7 +8,8 @@ use Apps\Webiny\Php\Lib\WebinyTrait;
 /**
  * Class I18NTextGroup
  *
- * @property string      $name
+ * @property string $name
+ * @property int    $totalTexts
  */
 class I18NTextGroup extends AbstractEntity
 {
@@ -16,11 +17,15 @@ class I18NTextGroup extends AbstractEntity
 
     protected static $entityCollection = 'I18NTextGroups';
     protected static $i18nNamespace = 'Webiny.Entities.I18NTextGroup';
+    protected static $classId = 'Webiny.Entities.I18NTextGroup';
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->attr('name')->char()->setValidators('required')->setToArrayDefault()->setOnce();
+        $this->attr('name')->char()->setValidators('required')->setToArrayDefault();
+        $this->attr('totalTexts')->dynamic(function () {
+            return I18NText::count(['group' => $this->id]);
+        });
     }
 }

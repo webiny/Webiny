@@ -21,7 +21,7 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  * @property string        $app
  * @property string        $placeholder
  * @property ArrayObject   $translations
- * @property I18NTextGroup $group
+ * @property I18NTextGroup $textGroup
  */
 class I18NText extends AbstractEntity
 {
@@ -29,6 +29,7 @@ class I18NText extends AbstractEntity
 
     protected static $entityCollection = 'I18NTexts';
     protected static $i18nNamespace = 'Webiny.Entities.I18NText';
+    protected static $classId = 'Webiny.Entities.I18NText';
 
     protected static function entityQuery(QueryContainer $query)
     {
@@ -61,6 +62,7 @@ class I18NText extends AbstractEntity
         $this->attr('app')->char()->setValidators('required')->setToArrayDefault()->setOnce();
         $this->attr('key')->char()->setValidators('required,unique')->setToArrayDefault()->setOnce();
         $this->attr('placeholder')->char()->setValidators('required')->setToArrayDefault()->setOnce();
+        $this->attr('textGroup')->many2one()->setEntity(I18NTextGroup::class);
         $this->attr('translations')->object()->setToArrayDefault()->onSet(function ($texts) {
             // We must check which locales have changed and update cache keys for them
             foreach ($texts as $locale => $text) {
