@@ -127,7 +127,7 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                             </pre>
                         </Logic.Hide>
                     </Modal.Body>
-                    {(this.state.finished || this.state.ended) && (
+                    {(!this.state.finished && this.state.ended) && (
                         <Modal.Footer>
                             <Button align="right" label="Close" onClick={this.hide}/>
                         </Modal.Footer>
