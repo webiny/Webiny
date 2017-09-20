@@ -1,9 +1,13 @@
 .editableTranslation {
   label {
-    background-color: #fa6231;
-    color: white;
-    padding: 3px 4px;
-    font-size: 10px;
-    margin-right: 6px;
+    font-size: 13px;
+    margin-bottom: 0;
+  }
+  textarea {
+    min-height: initial;
+    resize: vertical;
+  }
+  webiny-form-container > div {
+    margin-bottom: 0;
   }
 }

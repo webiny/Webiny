@@ -3,22 +3,23 @@
     display: block;
     font-size: 14px;
     font-weight: bold;
+    padding: 0 8px;
   }
   translation-base {
     display: block;
     font-size: 13px;
+    padding: 0 8px;
   }
   translations {
     display: block;
     border-top: 2px solid red;
     margin-top: 10px;
     ul {
-      margin: 10px 0;
       li {
         list-style: none;
         font-size: 14px;
         border-bottom: 1px solid rgb(224, 224, 224);
-        padding: 5px;
+        padding: 8px;
         &:hover {
           background-color: rgba(255, 160, 130, 0.22);
           cursor: pointer;

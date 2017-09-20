@@ -8,12 +8,19 @@ import css from './EditableTranslation.scss';
 class EditableTranslation extends Webiny.Ui.Component {
     constructor() {
         super();
-        this.state = {open: false};
-        this.bindMethods('toggle');
+        this.state = {edit: false};
+        this.bindMethods('showForm,hideForm');
     }
 
-    toggle() {
-        this.setState({open: !this.state.open});
+    showForm() {
+        if (this.state.edit) {
+            return;
+        }
+        this.setState({edit: true});
+    }
+
+    hideForm() {
+        this.setState({edit: false});
     }
 }
 
@@ -22,9 +29,18 @@ EditableTranslation.defaultProps = {
     renderer() {
         const {Ui, data} = this.props;
         return (
-            <div className={css.editableTranslation}>
-                <label>{this.props.locale}</label>
-                Prijevod nije pronadjen.
+            <div className={css.editableTranslation} onClick={this.showForm}>
+                <label>Bosnian (Bosnia and Herzegovina)</label>
+                {this.state.edit ? (
+                    <Ui.Form
+                        onSubmit={(model, form) => {
+
+                        }}>
+                        {() => <Ui.Textarea name="text"/>}
+                    </Ui.Form>
+                ) : (
+                    <div>Prijevod nije pronadjen.</div>
+                )}
             </div>
         );
     }
@@ -33,6 +49,6 @@ EditableTranslation.defaultProps = {
 export default Webiny.createComponent(EditableTranslation, {
     modulesProp: 'Ui',
     modules: [
-        'Modal', 'Form', 'Grid', 'Input', 'Textarea', 'Button', 'Select', 'Section', 'Input', 'Icon'
+        'Modal', 'Form', 'Grid', 'Input', 'Textarea', 'Button', 'Select', 'Section', 'Input', 'Icon', 'Form'
     ]
 });

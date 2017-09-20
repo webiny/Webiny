@@ -15,8 +15,10 @@ TranslationListRow.defaultProps = {
         return (
             <div className={css.translationListRow}>
                 <div onClick={this.toggle}>
-                    <translation-key className="key">{data.key}</translation-key>
-                    <translation-base className="base">{data.base}</translation-base>
+                    <div>
+                        <translation-key className="key">{data.key}</translation-key>
+                        <translation-base className="base">{data.base}</translation-base>
+                    </div>
                     <translations>
                         <ul>
                             <li>
