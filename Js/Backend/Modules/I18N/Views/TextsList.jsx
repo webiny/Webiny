@@ -66,7 +66,7 @@ TextsList.defaultProps = {
                                                         <Ui.Grid.Col all={4}>
                                                             <Ui.Input
                                                                 name="_searchQuery"
-                                                                placeholder="Search by text key or base text"
+                                                                placeholder="Search by key or base text"
                                                                 onEnter={apply()}/>
                                                         </Ui.Grid.Col>
                                                         <Ui.Grid.Col all={4}>
@@ -95,7 +95,7 @@ TextsList.defaultProps = {
                                                 <Ui.List.Table.Row>
                                                     <Ui.List.Table.Field label={this.i18n('Text')} align="left">
                                                         {row => (
-                                                            <span onClick={() => showView('textModal')(row)}>
+                                                            <span>
                                                                 <strong>{row.key}</strong><br/>
                                                                 <small>{row.base}</small>
                                                             </span>
