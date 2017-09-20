@@ -66,13 +66,14 @@ class I18NText extends AbstractEntity
             foreach ($texts as $locale => $text) {
                 if ($this->translations->key($locale) !== $text) {
                     $this->on('onAfterSave', function () use ($locale) {
-                        I18NLocale::findByKey($locale)->updateCacheKey()->save();
+                        // TODO I18NLocale::findByKey($locale)->updateCacheKey()->save();
                     });
                 }
             }
 
             return $texts;
         });
+
     }
 
     protected function entityApi(ApiContainer $api)
@@ -123,6 +124,26 @@ class I18NText extends AbstractEntity
         })->setBodyValidators(['file' => 'required'])->setPublic();
 
         /**
+         * @api.name        Updates text translation by ID for given language
+         * @api.description Gets a translation by ID and updates the translation in given language
+         */
+        $api->patch('{id}/translations', function () {
+            $data = $this->wRequest()->getRequestData();
+            $locale = I18NLocale::findByKey($data['locale']);
+            if (!$locale) {
+                throw new AppException($this->wI18n('Locale not found.'));
+            }
+
+            $this->setTranslation($locale, $data['text'] ?? '')->save();
+
+            return ['locale' => $locale->key, 'text' => $data['translation']];
+        })->setBodyValidators(['locale' => 'required'])->setPublic();
+
+        /**********************************************************************************************************
+         *                                          !! Entity API !!                                              *
+         **********************************************************************************************************/
+
+        /**
          * @api.name        Get translation by key
          * @api.description Gets a translation by a given key.
          * @api.path.key    string  Translation key
@@ -134,57 +155,6 @@ class I18NText extends AbstractEntity
 
             throw new AppException($this->wI18n('Translation not found.'));
         });
-
-        /**
-         * @api.name        Create new translation
-         * @api.description Creates a new translation.
-         * @api.body.key    string  Translation key
-         * @api.body.base   string  Default placeholder text for this translation (default text if no translation for selected language is present).
-         */
-        $api->post('keys', function () {
-            $data = $this->wRequest()->getRequestData();
-            $translation = I18NText::findByKey($data['key']);
-            if (!$translation) {
-                $translation = new I18NText();
-                $translation->key = $data['key'];
-                $translation->base = $data['base'] ?? null;
-                $translation->save();
-            }
-
-            return $this->apiFormatEntity($translation, $this->wRequest()->getFields());
-        })->setBodyValidators([
-            'key'  => 'required',
-            'base' => 'required'
-        ]);
-
-        /**
-         * @api.name        Updates translation by key for given language
-         * @api.description Gets a translation by a given key and updates it with received data
-         *
-         * @api.body.apps   array   Apps to be scanned (min. 1 required)
-         */
-        $api->patch('keys/{$key}', function ($key) {
-            $data = $this->wRequest()->getRequestData();
-            $data['translation'] = $data['translation'] ?? '';
-
-            $translation = I18NText::findByKey($key);
-            if ($translation) {
-                /* @var I18NText $translation */
-                $translation->translations->key($data['language'], $data['translation']);
-                $translation->save();
-            } else {
-                $translation = new I18NText();
-                $translation->key = $key;
-                $translation->base = $data['base'] ?? null;
-                $translation->translations->key($data['language'], $data['translation']);
-                $translation->save();
-            }
-
-            return $translation;
-        })->setBodyValidators([
-            'language' => 'required',
-            'base'     => 'required'
-        ]);
 
         /**
          * TODO
@@ -241,13 +211,51 @@ class I18NText extends AbstractEntity
         return I18NText::findOne(['key' => $key]);
     }
 
-    public function getText(I18NLocale $locale)
+    /**
+     * @param I18NLocale $locale
+     * @param            $text
+     *
+     * @return $this
+     */
+    public function setTranslation(I18NLocale $locale, string $text)
     {
-        return $this->translations->key($locale->key);
+        $translations = $this->translations->val();
+        foreach ($translations as &$translation) {
+            if ($translation['locale'] === $locale->key) {
+                $translation['text'] = $text;
+                $this->translations = $translations;
+
+                return $this;
+            }
+        }
+
+        $translations[] = ['locale' => $locale->key, 'text' => $text];
+        $this->translations = $translations;
+
+        return $this;
     }
 
-    public function hasText(I18NLocale $locale)
+    /**
+     * @param I18NLocale $locale
+     *
+     * @return mixed
+     */
+    public function getTranslation(I18NLocale $locale)
     {
-        return $this->translations->key($locale->key);
+        foreach ($this->translations as $translation) {
+            if ($translation['locale'] === $locale->key) {
+                return $translation['text'];
+            }
+        }
+    }
+
+    /**
+     * @param I18NLocale $locale
+     *
+     * @return bool
+     */
+    public function hasTranslation(I18NLocale $locale)
+    {
+        return !!$this->getTranslation($locale);
     }
 }

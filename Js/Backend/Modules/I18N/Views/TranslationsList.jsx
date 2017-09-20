@@ -2,7 +2,7 @@ import React from 'react';
 import Webiny from 'webiny';
 import ExportTranslationsModal from './TranslationsList/ExportTranslationsModal';
 import ImportTranslationsModal from './TranslationsList/ImportTranslationsModal';
-import TranslationListRow from './TranslationsList/TranslationListRow';
+import TextRow from './TranslationsList/TextRow';
 
 /**
  * @i18n.namespace Webiny.Backend.I18N.TranslationsList
@@ -11,6 +11,12 @@ class TranslationsList extends Webiny.Ui.View {
     constructor() {
         super();
         this.ref = null;
+        this.state = {locales: []};
+    }
+
+    componentWillMount() {
+    	super.componentWillMount();
+    	Webiny.I18n.getLocales().then(locales => this.setState({locales}));
     }
 }
 
@@ -49,7 +55,7 @@ TranslationsList.defaultProps = {
                                             fields="key,base,app,translations"
                                             sort="-createdOn">
                                             <Ui.List.FormFilters>
-                                                {(apply) => (
+                                                {apply => (
                                                     <Ui.Grid.Row>
                                                         <Ui.Grid.Col all={3}>
                                                             <Ui.Input
@@ -92,7 +98,7 @@ TranslationsList.defaultProps = {
                                             <Ui.List.Table>
                                                 <Ui.List.Table.Row>
                                                     <Ui.List.Table.Field label={this.i18n('Text')} align="left">
-                                                        {row => <TranslationListRow data={row}/>}
+                                                        {row => <TextRow locales={this.state.locales} text={row}/>}
                                                     </Ui.List.Table.Field>
                                                 </Ui.List.Table.Row>
                                                 <Ui.List.Table.Footer/>

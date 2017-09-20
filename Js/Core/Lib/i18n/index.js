@@ -6,10 +6,9 @@ import BuiltInModifiers from './BuiltInModifiers';
 
 class I18n {
     constructor() {
-        this.locale = '';
+        this.locales = {current: null, list: []};
         this.api = null;
         this.cacheKey = null;
-
         this.modifiers = BuiltInModifiers;
         this.translations = {};
         this.component = I18nComponent;
@@ -149,14 +148,23 @@ class I18n {
      * @returns {string|string|*}
      */
     getLocale() {
-        return this.locale;
+        return this.locales.current;
+    }
+
+    /**
+     * Returns a list of all available locales.
+     */
+    async getLocales(query = {_fields: 'id,key,label,enabled'}) {
+        const response = await new Webiny.Api.Endpoint('/entities/webiny/i18n-locales').get(null, query);
+        this.locales.list = response.getData('list');
+        return this.locales.list;
     }
 
     /**
      * @returns {string|string|*}
      */
     setLocale(locale) {
-        this.locale = locale;
+        this.locales.current = locale;
         return this;
     }
 

@@ -288,8 +288,8 @@ class I18N
         if ($text = I18NText::findByKey($namespace . '.' . md5($base))) {
             $locale = $this->getLocale();
             /* @var I18NText $text */
-            if ($text->hasText($locale)) {
-                $output = $text->getText($locale);
+            if ($text->hasTranslation($locale)) {
+                $output = $text->getTranslation($locale);
             }
         }
 

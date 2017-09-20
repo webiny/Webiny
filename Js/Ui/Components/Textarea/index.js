@@ -19,7 +19,9 @@ Textarea.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             value: this.props.value || '',
             placeholder: this.getPlaceholder(),
             style: this.props.style,
-            onChange: this.props.onChange
+            onChange: this.props.onChange,
+            onKeyDown: this.props.onKeyDown,
+            onKeyUp: this.props.onKeyUp
         };
         
         const {DelayedOnChange} = this.props;

@@ -1,22 +1,22 @@
 import React from 'react';
 import Webiny from 'webiny';
 import css from './EditableTranslation.scss';
+import _ from 'lodash';
 
 /**
  * @i18n.namespace  Webiny.Backend.I18N.EditableTranslation
  */
 class EditableTranslation extends Webiny.Ui.Component {
-    constructor() {
+    constructor(props) {
         super();
-        this.state = {edit: false};
+        this.ref = null;
+        this.state = _.assign({}, props, {edit: false});
         this.bindMethods('showForm,hideForm');
     }
 
     showForm() {
-        if (this.state.edit) {
-            return;
-        }
         this.setState({edit: true});
+        setTimeout(() => this.ref.querySelector('textarea').focus(), 100);
     }
 
     hideForm() {
@@ -26,20 +26,39 @@ class EditableTranslation extends Webiny.Ui.Component {
 
 EditableTranslation.defaultProps = {
     locale: null,
+    text: null,
+    translation: null,
     renderer() {
-        const {Ui, data} = this.props;
+        const Ui = this.props.Ui;
+        const {text, locale, translation, edit} = this.state;
+
         return (
-            <div className={css.editableTranslation} onClick={this.showForm}>
-                <label>Bosnian (Bosnia and Herzegovina)</label>
+            <div ref={ref => this.ref = ref} className={css.editableTranslation} onClick={edit ? _.noop : this.showForm}>
+                <label>{locale.label}</label>
                 {this.state.edit ? (
                     <Ui.Form
-                        onSubmit={(model, form) => {
+                        defaultModel={{locale: locale.key, text: translation.text}}
+                        api="/entities/webiny/i18n-texts"
+                        onSubmit={async (model, form) => {
+                            const response = await form.api.patch(`/${text.id}/translations`, model);
+                            if (response.isError()) {
+                                return Webiny.Growl.danger(response.getMessage());
+                            }
 
+                            this.setState({translation: model}, () => {
+                                this.hideForm();
+                                Webiny.Growl.success(this.i18n('Translation successfully saved!'));
+                            });
                         }}>
-                        {() => <Ui.Textarea name="text"/>}
+                        {() => (
+                            <Ui.Textarea
+                                placeholder={this.i18n('No translation available...')}
+                                name="text"
+                                onKeyUp={event => event.key === 'Escape' && this.hideForm()}/>
+                        )}
                     </Ui.Form>
                 ) : (
-                    <div>Prijevod nije pronadjen.</div>
+                    <div>{_.get(translation, 'text', this.i18n('N/A'))}</div>
                 )}
             </div>
         );
@@ -48,7 +67,5 @@ EditableTranslation.defaultProps = {
 
 export default Webiny.createComponent(EditableTranslation, {
     modulesProp: 'Ui',
-    modules: [
-        'Modal', 'Form', 'Grid', 'Input', 'Textarea', 'Button', 'Select', 'Section', 'Input', 'Icon', 'Form'
-    ]
+    modules: ['Form', 'Textarea', 'Form']
 });

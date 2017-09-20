@@ -12,6 +12,7 @@ use Apps\Webiny\Php\Lib\Apps\App;
 use Apps\Webiny\Php\Lib\I18N\I18N;
 use Webiny\AnalyticsDb\AnalyticsDb;
 use Webiny\Component\Cache\CacheStorage;
+use Webiny\Component\Http\Cookie;
 use Webiny\Component\Mongo\Mongo;
 use Webiny\Component\ServiceManager\ServiceManager;
 use Webiny\Component\Storage\Storage as WebinyStorage;
@@ -98,6 +99,16 @@ trait WebinyTrait
     static protected function wRequest()
     {
         return Request::getInstance();
+    }
+
+    /**
+     * Get current cookies
+     *
+     * @return Cookie
+     */
+    static protected function wCookie()
+    {
+        return Cookie::getInstance();
     }
 
     /**
