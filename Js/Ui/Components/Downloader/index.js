@@ -68,7 +68,6 @@ Downloader.defaultProps = {
             debug = <input type="hidden" name="XDEBUG_SESSION_START" value={this.props.debugKey}/>;
         }
 
-        console.log(params)
         return (
             <form ref="downloader" action={action} method={this.state.httpMethod} target="_blank">
                 {params}
