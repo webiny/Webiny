@@ -5,7 +5,7 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Webiny\Apps\Webiny\Php\Lib;
+namespace Apps\Webiny\Php\Lib;
 
 use Webiny\Component\Mongo\Mongo;
 

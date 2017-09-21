@@ -9,6 +9,7 @@ namespace Apps\Webiny\Php\Lib;
 
 use Apps\Webiny\Php\Bootstrap\Bootstrap;
 use Webiny\Component\Config\ConfigException;
+use Webiny\Component\StdLib\StdLibTrait;
 
 if (php_sapi_name() !== 'cli') {
     die('CLI scripts can only be executed from CLI context!');
@@ -16,7 +17,7 @@ if (php_sapi_name() !== 'cli') {
 
 abstract class AbstractCli
 {
-    use \Webiny\Component\StdLib\StdLibTrait, \Apps\Webiny\Php\Lib\WebinyTrait;
+    use StdLibTrait, WebinyTrait;
 
     final public function __construct($domain = null)
     {

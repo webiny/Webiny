@@ -4,6 +4,7 @@ namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
+use Apps\Webiny\Php\Lib\Entity\Attributes\UserAttribute;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\EntityQuery;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\Filter;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\QueryContainer;
@@ -23,7 +24,7 @@ use Webiny\Component\Mongo\Index\SingleIndex;
 class ApiLog extends AbstractEntity
 {
     protected static $classId = 'Webiny.Entities.ApiLog';
-    protected static $entityCollection = 'ApiLogs';
+    protected static $collection = 'ApiLogs';
 
     public function __construct()
     {
@@ -48,7 +49,25 @@ class ApiLog extends AbstractEntity
 
             return $value;
         });
-        $this->attr('user')->many2one()->setEntity($this->wAuth()->getUserClass());
+        $this->attr('user')->char()->onSet(function ($value) {
+            if ($value instanceof User) {
+                return $value->id;
+            }
+
+            return $value;
+        })->onGet(function ($value) {
+            if ($this->wDatabase()->isId($value)) {
+                return $this->wUser()->byId($value);
+            }
+
+            return $value;
+        })->onToDb(function ($value) {
+            if ($value instanceof User) {
+                return $value->id;
+            }
+
+            return $value;
+        });
         $this->attr('request')->object()->setToArrayDefault();
         $this->attr('method')->char()->setToArrayDefault();
 
@@ -60,7 +79,7 @@ class ApiLog extends AbstractEntity
         parent::entityApi($api);
 
         $api->get('/methods', function () {
-            return $this->wDatabase()->distinct(static::$entityCollection, 'request.method');
+            return $this->wDatabase()->distinct(static::$collection, 'request.method');
         });
     }
 

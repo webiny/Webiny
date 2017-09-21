@@ -188,11 +188,26 @@
             {
                 "classId": "Webiny.Entities.UserPermission",
                 "rules": {
-                    "r": true
+                    "r": true,
+                    "service": {
+                        "get": true
+                    },
+                    "entity": {
+                        "get": true
+                    }
+                }
+            },
+            {
+                "classId": "Webiny.Entities.UserRoleGroup",
+                "rules": {
+                    "c": true,
+                    "r": true,
+                    "u": true,
+                    "d": true
                 }
             }
         ]
-    },
+    }
     {
         "name": "Manage permissions",
         "slug": "webiny-acl-manage-permissions",

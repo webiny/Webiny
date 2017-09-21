@@ -9,11 +9,14 @@ class ApiTokenModal extends Webiny.Ui.ModalComponent {
 
         const formProps = {
             api: '/entities/webiny/api-token',
-            fields: '*,roles',
+            fields: '*,roles[id],roleGroups[id]',
             id: _.get(this.props.data, 'id'),
             onSubmitSuccess: () => {
                 this.props.refreshTokens();
                 this.hide();
+            },
+            onSuccessMessage: () => {
+                return `Token was saved successfully!`;
             },
             defaultModel: this.props.data
         };

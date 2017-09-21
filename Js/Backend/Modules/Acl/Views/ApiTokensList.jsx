@@ -82,10 +82,10 @@ ApiTokensList.defaultProps = {
                                                     <Table.Row>
                                                         <Table.Field name="token" align="left" label="Token">
                                                             {data => (
-                                                                <span>
+                                                                <Ui.Link onClick={() => showView('tokenModalView')(data)}>
                                                                     <strong>{data.token}</strong><br/>
                                                                     {data.description}
-                                                            </span>
+                                                                </Ui.Link>
                                                             )}
                                                         </Table.Field>
                                                         <Table.Field name="owner" align="left" label="Owner" sort="owner"/>

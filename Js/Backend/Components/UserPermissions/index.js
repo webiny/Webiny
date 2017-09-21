@@ -34,7 +34,7 @@ UserPermissions.defaultProps = {
     value: [],
     onChange: _.noop,
     renderer() {
-        const {List, Switch} = this.props;
+        const {List, Switch, Link} = this.props;
         return (
             <List.Table data={this.state.permissions}>
                 <List.Table.Row>
@@ -48,7 +48,10 @@ UserPermissions.defaultProps = {
                     </List.Table.Field>
                     <List.Table.Field label="Permission">
                         {(permission) => (
-                            <span><strong>{permission.name}</strong><br/>{permission.slug}</span>
+                            <span>
+                                <Link route="UserPermissions.Edit" params={{id: permission.id}}><strong>{permission.name}</strong></Link>
+                                <br/>{permission.slug}
+                            </span>
                         )}
                     </List.Table.Field>
                     <List.Table.Field label="Description" name="description"/>
@@ -58,4 +61,4 @@ UserPermissions.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(UserPermissions, {modules: ['List', 'Switch']});
+export default Webiny.createComponent(UserPermissions, {modules: ['List', 'Switch', 'Link']});

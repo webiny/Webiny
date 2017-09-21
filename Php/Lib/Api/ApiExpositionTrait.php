@@ -19,6 +19,7 @@ use Webiny\Component\Entity\EntityCollection;
  */
 trait ApiExpositionTrait
 {
+    protected static $isDiscoverable = true;
     protected static $classId;
     protected static $apiContainers = [];
 
@@ -44,6 +45,11 @@ trait ApiExpositionTrait
     public static function getClassId()
     {
         return static::$classId;
+    }
+
+    public static function isDiscoverable()
+    {
+        return static::$isDiscoverable;
     }
 
     /**

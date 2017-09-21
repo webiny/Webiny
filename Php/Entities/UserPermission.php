@@ -22,8 +22,8 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 class UserPermission extends AbstractEntity
 {
     protected static $classId = 'Webiny.Entities.UserPermission';
-    protected static $entityCollection = 'UserPermissions';
-    protected static $entityMask = '{name}';
+    protected static $collection = 'UserPermissions';
+    protected static $mask = '{name}';
 
     public function __construct()
     {
@@ -46,7 +46,7 @@ class UserPermission extends AbstractEntity
         })->setToArrayDefault();
 
         $this->attr('description')->char()->setToArrayDefault();
-        $this->attr('roles')->many2many('UserRole2UserPermission')->setEntity(UserRole::class);
+        $this->attr('roles')->many2many('UserRole2UserPermission', 'UserPermission', 'UserRole')->setEntity(UserRole::class);
         $this->attr('permissions')->object()->onSet(function ($value) {
             if (!is_array($value)) {
                 $value = [];

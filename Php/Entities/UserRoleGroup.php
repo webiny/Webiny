@@ -10,9 +10,9 @@ use Webiny\Component\Mongo\Index\CompoundIndex;
 /**
  * Class UserRoleGroup
  *
- * @property string           $name
- * @property string           $description
- * @property string           $slug
+ * @property string $name
+ * @property string $description
+ * @property string $slug
  * @property EntityCollection $roles
  * @property EntityCollection $users
  * @property EntityCollection $apiTokens
@@ -20,8 +20,8 @@ use Webiny\Component\Mongo\Index\CompoundIndex;
 class UserRoleGroup extends AbstractEntity
 {
     protected static $classId = 'Webiny.Entities.UserRoleGroup';
-    protected static $entityCollection = 'UserRoleGroups';
-    protected static $entityMask = '{name}';
+    protected static $collection = 'UserRoleGroups';
+    protected static $mask = '{name}';
 
     public function __construct()
     {
@@ -44,9 +44,11 @@ class UserRoleGroup extends AbstractEntity
         })->setToArrayDefault();
 
         $this->attr('description')->char()->setValidators('required')->setToArrayDefault();
-        $this->attr('users')->many2many('User2UserRoleGroup')->setEntity(User::class);
-        $this->attr('apiTokens')->many2many('ApiToken2UserRoleGroup')->setEntity(ApiToken::class);
-        $this->attr('roles')->many2many('UserRole2UserRoleGroup')->setEntity(UserRole::class)->onSet(function ($roles) {
+        $this->attr('users')->many2many('User2UserRoleGroup', 'UserRoleGroup', 'User')->setEntity(User::class);
+        $this->attr('apiTokens')->many2many('ApiToken2UserRoleGroup', 'UserRoleGroup', 'ApiToken')->setEntity(ApiToken::class);
+        $this->attr('roles')->many2many('UserRole2UserRoleGroup', 'UserRoleGroup', 'UserRole')->setEntity(UserRole::class)->onSet(function (
+            $roles
+        ) {
             // If not mongo Ids - load roles by slugs
             if (is_array($roles)) {
                 foreach ($roles as $i => $role) {

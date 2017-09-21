@@ -3,6 +3,8 @@
 namespace Apps\Webiny\Php;
 
 use Apps\Webiny\Php\Entities\ApiLog;
+use Apps\Webiny\Php\Entities\SystemApiTokenUser;
+use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\Validators\Password;
 use Apps\Webiny\Php\Entities\User;
 use MongoDB\Driver\Exception\RuntimeException;
@@ -16,7 +18,7 @@ class App extends \Apps\Webiny\Php\Lib\Apps\App
 
         $this->addAppRoute('/^\/welcome/', 'Webiny:Templates/Welcome.tpl');
 
-        $this->addAppRoute('/^\\'.$this->wConfig()->get('Application.Backend').'/', 'Webiny:Templates/Backend.tpl', 380);
+        $this->addAppRoute('/^\\' . $this->wConfig()->get('Application.Backend') . '/', 'Webiny:Templates/Backend.tpl', 380);
 
         User::onActivity(function (User $user) {
             $user->lastActive = new DateTimeObject('now');
@@ -39,8 +41,17 @@ class App extends \Apps\Webiny\Php\Lib\Apps\App
     {
         parent::install();
 
+        // Create SystemApiTokenUser
+        try {
+            $systemUser = new SystemApiTokenUser();
+            $systemUser->save();
+        } catch (AppException $e) {
+            // Means user already exists
+        }
+
+
         // Create a capped collection for ApiLogs
-        $entityCollection = ApiLog::getEntityCollection();
+        $entityCollection = ApiLog::getCollection();
         try {
             $this->wDatabase()->createCollection($entityCollection, [
                 'capped' => true,

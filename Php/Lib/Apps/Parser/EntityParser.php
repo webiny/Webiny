@@ -110,16 +110,9 @@ class EntityParser extends AbstractParser
      *
      * @return array
      * @throws AppException
-    */
+     */
     private function getMethods($includeCrudMethods)
     {
-        $crudPatterns = [
-            '/.get',
-            '{id}.get',
-            '/.post',
-            '{id}.patch',
-            '{id}.delete'
-        ];
         $apiDocs = $this->parseApi($this->class);
 
         // Parse dynamic methods (appended via onExtendApi callback)
@@ -150,8 +143,7 @@ class EntityParser extends AbstractParser
                     continue;
                 }
 
-                $crudMethod = in_array($key, $crudPatterns);
-                if (!$includeCrudMethods && $crudMethod && !$config->key('custom', false, true)) {
+                if (!$includeCrudMethods && $entityMethod->getCrud()) {
                     continue;
                 }
 
@@ -166,7 +158,7 @@ class EntityParser extends AbstractParser
                     'method'        => strtoupper($httpMethod),
                     'public'        => false,
                     'authorization' => true,
-                    'custom'        => !$crudMethod || $config->key('custom', false, true),
+                    'custom'        => !$entityMethod->getCrud(),
                     'headers'       => []
                 ];
 

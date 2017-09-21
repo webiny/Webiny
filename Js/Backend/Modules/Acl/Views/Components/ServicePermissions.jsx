@@ -72,7 +72,7 @@ ServicePermissions.defaultProps = {
                                                 currentlyEditingPermission={this.props.model}
                                                 onTogglePermission={(service, method) => this.props.onTogglePermission(service, method)}
                                                 onRemoveService={service => {
-                                                    const index = _.find(this.state.services, {classId: service.classId});
+                                                    const index = _.findIndex(this.state.services, {classId: service.classId});
                                                     const services = _.clone(this.state.services);
                                                     services.splice(index, 1);
                                                     this.setState({services}, () => {

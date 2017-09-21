@@ -19,8 +19,8 @@ use Webiny\Component\Entity\EntityCollection;
 class LoggerErrorGroup extends AbstractEntity
 {
     protected static $classId = 'Webiny.Entities.LoggerErrorGroup';
-    protected static $entityCollection = 'LoggerErrorGroup';
-    protected static $entityMask = '{error}';
+    protected static $collection = 'LoggerErrorGroup';
+    protected static $mask = '{error}';
 
     public function __construct()
     {

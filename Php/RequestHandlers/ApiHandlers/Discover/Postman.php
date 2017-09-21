@@ -1,4 +1,5 @@
 <?php
+
 namespace Apps\Webiny\Php\RequestHandlers\ApiHandlers\Discover;
 
 use Apps\Webiny\Php\Lib\WebinyTrait;
@@ -15,7 +16,7 @@ class Postman
     public function generate($appName)
     {
         $collectionId = StringObject::uuid();
-        $collectionName = 'Webiny ' . $appName;
+        $collectionName = $appName;
 
         $folders = [];
         $requests = [];
@@ -26,10 +27,17 @@ class Postman
             $order = [];
             $entityParser = new EntityParser($entity['class']);
             foreach ($entityParser->getApiMethods() as $method) {
+                if (!$this->wAuth()->canExecute($entity['class'], $method['key'])) {
+                    continue;
+                }
                 $endpoint = new EndPoint($app, $method);
                 $request = $endpoint->getRequest();
                 $requests[] = $request;
                 $order[] = $request['id'];
+            }
+
+            if (!count($order)) {
+                continue;
             }
 
             // Each Entity is stored in its own folder
@@ -45,10 +53,17 @@ class Postman
             $order = [];
             $serviceParser = new ServiceParser($service['class']);
             foreach ($serviceParser->getApiMethods() as $method) {
+                if (!$this->wAuth()->canExecute($service['class'], $method['key'])) {
+                    continue;
+                }
                 $endpoint = new EndPoint($app, $method);
                 $request = $endpoint->getRequest();
                 $requests[] = $request;
                 $order[] = $request['id'];
+            }
+
+            if (!count($order)) {
+                continue;
             }
 
             // Each Service is stored in its own folder
@@ -67,7 +82,7 @@ class Postman
         return [
             'id'          => $collectionId,
             'name'        => $collectionName,
-            'description' => 'Webiny ' . $appName . ' API docs',
+            'description' => $appName . ' API docs',
             'order'       => [],
             'timestamp'   => time(),
             'owner'       => 0,

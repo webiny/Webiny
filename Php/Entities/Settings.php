@@ -19,8 +19,8 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 class Settings extends AbstractEntity
 {
     protected static $classId = 'Webiny.Entities.Settings';
-    protected static $entityCollection = 'Settings';
-    protected static $entityMask = '{key}';
+    protected static $collection = 'Settings';
+    protected static $mask = '{key}';
     protected static $key = null;
 
     public function __construct()

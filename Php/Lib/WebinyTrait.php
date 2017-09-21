@@ -7,6 +7,7 @@
 
 namespace Apps\Webiny\Php\Lib;
 
+use Apps\Webiny\Php\Lib\AppNotifications\AppNotifications;
 use Apps\Webiny\Php\Lib\Authorization\Authorization;
 use Apps\Webiny\Php\Lib\Apps\App;
 use Webiny\AnalyticsDb\AnalyticsDb;
@@ -21,6 +22,16 @@ use Webiny\Component\Validation\Validation;
  */
 trait WebinyTrait
 {
+    /**
+     * Get access to AppNotifications
+     *
+     * @return AppNotifications
+     */
+    static protected function wAppNotifications()
+    {
+        return AppNotifications::getInstance();
+    }
+
     /**
      * Get access to AnalyticsDb
      *
@@ -208,5 +219,15 @@ trait WebinyTrait
     static protected function wApiCache()
     {
         return ApiCache::getInstance();
+    }
+
+    /**
+     * Get UserProvider instance.
+     *
+     * @return UserProvider
+     */
+    static protected function wUser()
+    {
+        return UserProvider::getInstance();
     }
 }

@@ -1,9 +1,4 @@
 <?php
-/**
- * Webiny Framework (http://www.webiny.com/framework)
- *
- * @copyright Copyright Webiny LTD
- */
 
 namespace Apps\Webiny\Php\Lib\Entity\Attributes;
 

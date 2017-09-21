@@ -2,7 +2,6 @@
 
 namespace Apps\Webiny\Php\Entities;
 
-use Apps\Webiny\Php\Entities\UserRoleGroup;
 use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
 use Apps\Webiny\Php\Lib\Interfaces\UserInterface;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
@@ -17,6 +16,7 @@ use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
  * @property string           $id
  * @property string           $token
  * @property string           $owner
+ * @property ApiTokenUser     $user
  * @property boolean          $logRequests
  * @property integer          $requests
  * @property DateTimeObject   $lastActivity
@@ -28,8 +28,8 @@ class ApiToken extends AbstractEntity implements UserInterface
     use CryptTrait;
 
     protected static $classId = 'Webiny.Entities.ApiToken';
-    protected static $entityCollection = 'ApiTokens';
-    protected static $entityMask = '{id}';
+    protected static $collection = 'ApiTokens';
+    protected static $mask = '{id}';
 
     public function __construct()
     {
@@ -41,13 +41,14 @@ class ApiToken extends AbstractEntity implements UserInterface
 
             return $value;
         })->setToArrayDefault();
+        $this->attr('user')->many2one()->setEntity(ApiTokenUser::class);
         $this->attr('owner')->char()->setToArrayDefault();
         $this->attr('description')->char()->setToArrayDefault();
         $this->attr('lastActivity')->datetime()->setToArrayDefault();
         $this->attr('logRequests')->boolean()->setDefaultValue(false)->setToArrayDefault();
         $this->attr('requests')->integer()->setToArrayDefault()->setDefaultValue(0);
         $this->attr('enabled')->boolean()->setDefaultValue(true)->setToArrayDefault();
-        $this->attr('roles')->many2many('ApiToken2UserRole')->setEntity(UserRole::class)->onSet(function ($roles) {
+        $this->attr('roles')->many2many('ApiToken2UserRole', 'ApiToken', 'UserRole')->setEntity(UserRole::class)->onSet(function ($roles) {
             // If not mongo Ids - load roles by slugs
             if (is_array($roles)) {
                 foreach ($roles as $i => $role) {
@@ -65,33 +66,57 @@ class ApiToken extends AbstractEntity implements UserInterface
 
             return $roles;
         });
-        $this->attr('roleGroups')->many2many('ApiToken2UserRoleGroup')->setEntity(UserRoleGroup::class)->onSet(function ($roleGroups) {
-            // If not mongo Ids - load roles by slugs
-            if (is_array($roleGroups)) {
-                foreach ($roleGroups as $i => $rg) {
-                    if (!$this->wDatabase()->isId($rg)) {
-                        if (is_string($rg)) {
-                            $roleGroups[$i] = UserRoleGroup::findOne(['slug' => $rg]);
-                        } elseif (isset($rg['id'])) {
-                            $roleGroups[$i] = $rg['id'];
-                        } elseif (isset($rg['slug'])) {
-                            $roleGroups[$i] = UserRoleGroup::findOne(['slug' => $rg['slug']]);
-                        }
-                    }
-                }
-            }
+        $this->attr('roleGroups')
+             ->many2many('ApiToken2UserRoleGroup', 'ApiToken', 'UserRoleGroup')
+             ->setEntity(UserRoleGroup::class)
+             ->onSet(function ($roleGroups) {
+                 // If not mongo Ids - load roles by slugs
+                 if (is_array($roleGroups)) {
+                     foreach ($roleGroups as $i => $rg) {
+                         if (!$this->wDatabase()->isId($rg)) {
+                             if (is_string($rg)) {
+                                 $roleGroups[$i] = UserRoleGroup::findOne(['slug' => $rg]);
+                             } elseif (isset($rg['id'])) {
+                                 $roleGroups[$i] = $rg['id'];
+                             } elseif (isset($rg['slug'])) {
+                                 $roleGroups[$i] = UserRoleGroup::findOne(['slug' => $rg['slug']]);
+                             }
+                         }
+                     }
+                 }
 
-            return $roleGroups;
+                 return $roleGroups;
+             });
+
+        // Create a service user for this token
+        $this->onAfterCreate(function () {
+            $user = new ApiTokenUser();
+            $user->meta['apiToken'] = $this->id;
+            $user->save();
+
+            $this->user = $user;
+            $this->save();
         });
     }
+
+    public function delete($permanent = false)
+    {
+        $tokenDeleted = parent::delete($permanent);
+        if ($tokenDeleted && $this->user) {
+            $this->user->delete($permanent);
+        }
+
+        return $tokenDeleted;
+    }
+
 
     protected static function entityIndexes(IndexContainer $indexes)
     {
         parent::entityIndexes($indexes);
 
         $indexes->add(new SingleIndex('token', 'token'));
+        $indexes->add(new SingleIndex('user', 'user'));
     }
-
 
     public function getUserRoles()
     {

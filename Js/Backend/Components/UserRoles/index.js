@@ -3,7 +3,7 @@ import _ from 'lodash';
 import Webiny from 'webiny';
 
 class UserRoles extends Webiny.Ui.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -38,7 +38,7 @@ UserRoles.defaultProps = {
     value: [],
     onChange: _.noop,
     renderer() {
-        const {List, Switch} = this.props;
+        const {List, Switch, Link} = this.props;
         return (
             <List.Table data={this.state.roles}>
                 <List.Table.Row>
@@ -52,7 +52,9 @@ UserRoles.defaultProps = {
                     </List.Table.Field>
                     <List.Table.Field label="Role">
                         {(role) => (
-                            <span><strong>{role.name}</strong><br/>{role.slug}</span>
+                            <span>
+                                <Link route="UserRoles.Edit" params={{id: role.id}}><strong>{role.name}</strong></Link><br/>{role.slug}
+                            </span>
                         )}
                     </List.Table.Field>
                     <List.Table.Field label="Description" name="description"/>
@@ -62,4 +64,4 @@ UserRoles.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(UserRoles, {modules: ['List', 'Switch']});
+export default Webiny.createComponent(UserRoles, {modules: ['List', 'Switch', 'Link']});

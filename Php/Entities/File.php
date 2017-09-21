@@ -31,7 +31,7 @@ class File extends AbstractEntity
 
     const DEFAULT_STORAGE = 'Files';
     protected static $classId = 'Webiny.Entities.File';
-    protected static $entityCollection = 'Files';
+    protected static $collection = 'Files';
     /**
      * @var Storage
      */

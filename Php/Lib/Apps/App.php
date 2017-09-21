@@ -90,10 +90,10 @@ class App extends AbstractApp
         foreach ($this->getEntities() as $e) {
             /* @var $entity \Apps\Webiny\Php\Lib\Entity\AbstractEntity */
             $entity = new $e['class'];
-            $collection = $entity->getEntityCollection();
+            $collection = $entity->getCollection();
             $indexes = $entity->getIndexes();
 
-            $dbIndexes = $this->wDatabase()->listIndexes($entity->getEntityCollection());
+            $dbIndexes = $this->wDatabase()->listIndexes($entity->getCollection());
             $installedIndexes = [];
             foreach ($dbIndexes as $ind) {
                 $installedIndexes[] = $ind['name'];
@@ -263,7 +263,7 @@ class App extends AbstractApp
         foreach ($this->getEntities() as $e) {
             /* @var $entity \Apps\Webiny\Php\Lib\Entity\AbstractEntity */
             $entity = new $e['class'];
-            $collection = $entity->getEntityCollection();
+            $collection = $entity->getCollection();
             $indexes = $entity->getIndexes();
 
             /* @var $index \Webiny\Component\Mongo\Index\AbstractIndex */

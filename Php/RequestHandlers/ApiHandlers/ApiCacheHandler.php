@@ -47,7 +47,7 @@ class ApiCacheHandler extends AbstractApiHandler
         }
 
         // we need to flush the current HRC request because of the aggregated API requests
-        self::wApiCache()->hrc()->flushRequest();
+        $this->wApiCache()->hrc()->flushRequest();
 
         // read cache
         $response = self::wApiCache()->hrc()->read('response');
@@ -81,7 +81,7 @@ class ApiCacheHandler extends AbstractApiHandler
         // extract the data
         $data = $response->getData(false);
         // save cache
-        self::wApiCache()->hrc()->save('response', json_encode(['data' => $data]));
+        $this->wApiCache()->hrc()->save('response', json_encode(['data' => $data]));
     }
 
 }

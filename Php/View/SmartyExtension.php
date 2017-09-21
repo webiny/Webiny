@@ -76,7 +76,7 @@ class SmartyExtension extends AbstractSmartyExtension
             $bsConfig = file_get_contents($this->wStorage('Root')->getAbsolutePath('webiny.json'));
             $bsConfig = $this->arr(json_decode($bsConfig, true));
             $webPath = $this->wConfig()->get('Application.WebPath');
-            $bsPath = $this->url($webPath)->setPort($bsConfig->keyNested('browserSync.port', 3000,true));
+            $bsPath = $this->url($webPath)->setPort($bsConfig->keyNested('browserSync.port', 3000, true));
             $browserSync = '<script src="' . $bsPath . '/browser-sync/browser-sync-client.js?v=2.18.6"></script>';
         }
 
@@ -108,6 +108,9 @@ EOT;
         $preload = [];
         foreach ($apps as $jsApp) {
             $meta = $this->getMeta($jsApp);
+            if (empty($meta)) {
+                continue;
+            }
             $preload[] = ['src' => $meta['app'], 'as' => 'script'];
             if (isset($meta['vendor'])) {
                 $preload[] = ['src' => $meta['vendor'], 'as' => 'script'];

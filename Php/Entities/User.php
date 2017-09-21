@@ -6,7 +6,6 @@ use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Authorization\TwoFactorAuth;
 use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
 use Apps\Webiny\Php\Lib\Interfaces\UserInterface;
-use Apps\Webiny\Php\Lib\Entity\Attributes\FileAttribute;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\RequestHandlers\ApiException;
@@ -15,6 +14,7 @@ use Webiny\Component\Entity\EntityCollection;
 use Webiny\Component\Mailer\Email;
 use Webiny\Component\Mailer\MailerTrait;
 use Webiny\Component\Mongo\Index\CompoundIndex;
+use Webiny\Component\Mongo\Index\SingleIndex;
 
 /**
  * Class User
@@ -26,6 +26,7 @@ use Webiny\Component\Mongo\Index\CompoundIndex;
  * @property string           $lastName
  * @property string           $lastActive
  * @property string           $lastLogin
+ * @property string           $type
  * @property string           $passwordRecoveryCode
  * @property EntityCollection $roles
  * @property EntityCollection $roleGroups
@@ -37,8 +38,8 @@ class User extends AbstractEntity implements UserInterface
     use CryptTrait, MailerTrait;
 
     protected static $classId = 'Webiny.Entities.User';
-    protected static $entityCollection = 'Users';
-    protected static $entityMask = '{email}';
+    protected static $collection = 'Users';
+    protected static $mask = '{email}';
 
     public function __construct()
     {
@@ -50,12 +51,12 @@ class User extends AbstractEntity implements UserInterface
             'unique' => 'Given e-mail address already exists.'
         ])->setToArrayDefault();
 
-        $this->attr('avatar')->smart(new FileAttribute())->setTags('user', 'avatar')->setOnDelete('cascade');
+        $this->attr('avatar')->file()->setTags('user', 'avatar')->setOnDelete('cascade');
         $this->attr('gravatar')->dynamic(function () {
             return md5($this->email);
         })->setToArrayDefault();
-        $this->attr('firstName')->char()->setValidators('required')->setToArrayDefault();
-        $this->attr('lastName')->char()->setValidators('required')->setToArrayDefault();
+        $this->attr('firstName')->char()->setToArrayDefault();
+        $this->attr('lastName')->char()->setToArrayDefault();
         $this->attr('password')->char()->onSet(function ($password) {
             if (!empty($password) && $this->wValidation()->validate($password, 'password')) {
                 return $this->wAuth()->createPasswordHash($password);
@@ -65,7 +66,8 @@ class User extends AbstractEntity implements UserInterface
         });
         $this->attr('passwordRecoveryCode')->char();
         $this->attr('enabled')->boolean()->setDefaultValue(true);
-        $this->attr('roles')->many2many('User2UserRole')->setEntity(UserRole::class)->onSet(function ($roles) {
+        $this->attr('type')->char()->setDefaultValue('user')->setValidators('in:user:service');
+        $this->attr('roles')->many2many('User2UserRole', 'User', 'UserRole')->setEntity(UserRole::class)->onSet(function ($roles) {
             // If not mongo Ids - load roles by slugs
             if (is_array($roles)) {
                 foreach ($roles as $i => $role) {
@@ -83,24 +85,27 @@ class User extends AbstractEntity implements UserInterface
 
             return $roles;
         });
-        $this->attr('roleGroups')->many2many('User2UserRoleGroup')->setEntity(UserRoleGroup::class)->onSet(function ($roleGroups) {
-            // If not mongo Ids - load roles by slugs
-            if (is_array($roleGroups)) {
-                foreach ($roleGroups as $i => $rg) {
-                    if (!$this->wDatabase()->isId($rg)) {
-                        if (is_string($rg)) {
-                            $roleGroups[$i] = UserRoleGroup::findOne(['slug' => $rg]);
-                        } elseif (isset($rg['id'])) {
-                            $roleGroups[$i] = $rg['id'];
-                        } elseif (isset($rg['slug'])) {
-                            $roleGroups[$i] = UserRoleGroup::findOne(['slug' => $rg['slug']]);
-                        }
-                    }
-                }
-            }
+        $this->attr('roleGroups')
+             ->many2many('User2UserRoleGroup', 'User', 'UserRoleGroup')
+             ->setEntity(UserRoleGroup::class)
+             ->onSet(function ($roleGroups) {
+                 // If not mongo Ids - load roles by slugs
+                 if (is_array($roleGroups)) {
+                     foreach ($roleGroups as $i => $rg) {
+                         if (!$this->wDatabase()->isId($rg)) {
+                             if (is_string($rg)) {
+                                 $roleGroups[$i] = UserRoleGroup::findOne(['slug' => $rg]);
+                             } elseif (isset($rg['id'])) {
+                                 $roleGroups[$i] = $rg['id'];
+                             } elseif (isset($rg['slug'])) {
+                                 $roleGroups[$i] = UserRoleGroup::findOne(['slug' => $rg['slug']]);
+                             }
+                         }
+                     }
+                 }
 
-            return $roleGroups;
-        });
+                 return $roleGroups;
+             });
         $this->attr('lastActive')->datetime();
         $this->attr('lastLogin')->datetime();
         $this->attr('meta')->object();
@@ -125,6 +130,7 @@ class User extends AbstractEntity implements UserInterface
     {
         parent::entityIndexes($indexes);
 
+        $indexes->add(new SingleIndex('type', 'type'));
         $indexes->add(new CompoundIndex('email', ['email', 'deletedOn'], false, true));
     }
 
@@ -209,6 +215,8 @@ class User extends AbstractEntity implements UserInterface
          */
         $api->get('me', function () {
             $user = $this->wAuth()->getUser();
+            $this->checkServiceUser($user);
+
             if (!$user) {
                 throw new ApiException('Invalid token', 'WBY-INVALID-TOKEN');
             }
@@ -224,6 +232,7 @@ class User extends AbstractEntity implements UserInterface
         $api->patch('me', function () {
             $data = $this->wRequest()->getRequestData();
             $user = $this->wAuth()->getUser();
+            $this->checkServiceUser($user);
 
             $user->populate($data)->save();
 
@@ -241,10 +250,13 @@ class User extends AbstractEntity implements UserInterface
          */
         $api->post('reset-password', function () {
             $data = $this->wRequest()->getRequestData();
-            $user = self::findOne(['email' => $data['email']]);
+            $user = $this->wUser()->byEmail($data['email']);
+
             if (!$user) {
                 throw new AppException('We could not find a user using this e-mail address!');
             }
+
+            $this->checkServiceUser($user);
 
             $user->passwordRecoveryCode = $this->crypt()->generateRandomString(6, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
             $user->save();
@@ -270,10 +282,12 @@ class User extends AbstractEntity implements UserInterface
          * @api.body.code       string  Password reset code (received via email)
          * @api.body.password   string  New password to set
          */
-        $api->post('/set-password', function () {
+        $api->post('set-password', function () {
             $data = $this->wRequest()->getRequestData();
 
-            $user = self::findOne(['passwordRecoveryCode' => $data['code']]);
+            $user = $this->wUser()->byQuery(['passwordRecoveryCode' => $data['code']]);
+            $this->checkServiceUser($user);
+
             if (!$user) {
                 throw new AppException('Invalid password reset code!');
             }
@@ -289,9 +303,11 @@ class User extends AbstractEntity implements UserInterface
          * @api.name        Get the user 2 factor auth QR code
          * @api.description Returns the data/base64  qr code for the authenticator application.
          */
-        $api->get('/2factor-qr', function () {
+        $api->get('2factor-qr', function () {
             /* @var $user User */
             $user = $this->wAuth()->getUser();
+            $this->checkServiceUser($user);
+
             $tfa = new TwoFactorAuth($user);
 
             return [
@@ -304,10 +320,12 @@ class User extends AbstractEntity implements UserInterface
          * @api.description Processes the given verification code with the authenticator app and returns the result if the code is valid.
          * @api.body.verification       string  Password reset code (received via email)
          */
-        $api->post('/2factor-verify', function () {
+        $api->post('2factor-verify', function () {
             $data = $this->wRequest()->getRequestData();
             /* @var $user User */
             $user = $this->wAuth()->getUser();
+            $this->checkServiceUser($user);
+
             $tfa = new TwoFactorAuth($user);
 
             $result = $tfa->verifyCode($data['verification']);
@@ -325,9 +343,11 @@ class User extends AbstractEntity implements UserInterface
          * @api.name        Get the user 2 factor auth QR code
          * @api.description Returns the data/base64  qr code for the authenticator application.
          */
-        $api->get('/2factor-recovery-codes', function () {
+        $api->get('2factor-recovery-codes', function () {
             /* @var $user User */
             $user = $this->wAuth()->getUser();
+            $this->checkServiceUser($user);
+
             $tfa = new TwoFactorAuth($user);
 
             return [
@@ -346,6 +366,21 @@ class User extends AbstractEntity implements UserInterface
         }
 
         return $res;
+    }
+
+    public static function find(array $conditions = [], array $sort = [], $limit = 0, $page = 0, $options = [])
+    {
+        // We do not want to return service users
+        if (!($options['includeServiceUsers'] ?? false)) {
+            $conditions['type'] = ['$ne' => 'service'];
+        }
+
+        return parent::find($conditions, $sort, $limit, $page, $options);
+    }
+
+    public function isServiceUser()
+    {
+        return $this->type === 'service';
     }
 
     /**
@@ -413,5 +448,12 @@ class User extends AbstractEntity implements UserInterface
     public static function onActivity($callback)
     {
         static::on('onActivity', $callback);
+    }
+
+    private function checkServiceUser($user)
+    {
+        if ($user instanceof AbstractServiceUser) {
+            throw new ApiException('Service users are not accessible.', 'WBY-SERVICE-USER-NOT-ACCESSIBLE');
+        }
     }
 }

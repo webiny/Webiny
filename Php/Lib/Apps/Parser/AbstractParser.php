@@ -91,7 +91,7 @@ abstract class AbstractParser
     protected function parseApi($class)
     {
         $classes = [$class];
-        $classes = array_merge($classes, $this->readClassParents($class));
+        $classes = array_reverse(array_merge($classes, $this->readClassParents($class)));
         foreach ($classes as $c) {
             if ($c === AbstractEntity::class) {
                 break;
@@ -142,7 +142,7 @@ abstract class AbstractParser
                 $description .= $code->trimLeft('*');
                 continue;
             } elseif ($descriptionStarted) {
-                $tmpDoc->key('description', $description);
+                $tmpDoc->key('description', trim($description));
                 $descriptionStarted = false;
             }
 
@@ -155,7 +155,6 @@ abstract class AbstractParser
                 if (!$match) {
                     continue;
                 }
-                // TODO: finish this
                 $httpMethod = strtolower($match->keyNested('1.0'));
                 $methodName = $match->keyNested('2.0');
                 $methodName = $methodName != '/' ? trim($methodName, '/') : '/';
@@ -176,11 +175,6 @@ abstract class AbstractParser
 
                 if ($line->startsWith('name')) {
                     $tmpDoc->keyNested($annotationLine[0], trim($annotationLine[1]));
-                    continue;
-                }
-
-                if ($line == 'custom') {
-                    $tmpDoc->key('custom', true);
                     continue;
                 }
 
@@ -206,7 +200,7 @@ abstract class AbstractParser
                     if (isset($annotationLine[1])) {
                         $paramLine = $this->str($annotationLine[1])->explode(' ', 2);
                         $param['type'] = $paramLine[0];
-                        $param['description'] = $paramLine[1];
+                        $param['description'] = trim($paramLine[1]);
                     }
 
                     $tmpDoc->keyNested($annotationLine[0], $param);

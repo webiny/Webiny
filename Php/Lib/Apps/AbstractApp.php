@@ -245,10 +245,16 @@ abstract class AbstractApp
         /* @var $file \Webiny\Component\Storage\File\File */
         foreach ($dir as $file) {
             $entityClass = 'Apps\\' . $this->str($file->getKey())->replace('.php', '')->replace('/', '\\')->val();
+
+            if (!$entityClass::isDiscoverable()) {
+                continue;
+            }
+
             $entityName = $this->str($file->getKey())->explode('/')->last()->replace('.php', '')->val();
 
             // Check if abstract or trait
             $cls = new \ReflectionClass($entityClass);
+
             if (!$cls->isAbstract() && !$cls->isTrait()) {
                 $entities[$entityName] = [
                     'app'     => $this->getName(),
@@ -401,13 +407,21 @@ abstract class AbstractApp
         }
     }
 
-    protected function addListener($eventName, $callback)
+    /**
+     * Add event listener
+     *
+     * Default priority is 300.
+     *
+     * @param string              $eventName
+     * @param string|ConfigObject $callback
+     * @param int                 $priority
+     */
+    protected function addListener($eventName, $callback, $priority = 300)
     {
         if (is_string($callback)) {
             $callback = $this->str($callback)->replace('/', '\\');
-            $priority = 300;
         } else {
-            $priority = $callback['Priority'] ?? 300;
+            $priority = intval($callback['Priority'] ?? $priority);
             $callback = $this->str($callback['Handler'])->replace('/', '\\');
         }
 

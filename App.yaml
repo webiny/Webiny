@@ -81,7 +81,9 @@ Events:
                 - {Handler: Php/RequestHandlers/ApiHandlers/ServiceHandler}
             After:
                 - {Handler: Php/RequestHandlers/ApiHandlers/ApiCacheHandler::cacheSave}
-
+        User:
+            Provide:
+                - {Handler: Php/Lib/UserProvider/UserProviderEventHandler}
 Services:
     DefaultEntityFlow:
         Class: \Apps\Webiny\Php\RequestHandlers\ApiHandlers\EntityFlows\DefaultEntityFlow

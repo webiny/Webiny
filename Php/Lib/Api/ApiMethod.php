@@ -26,6 +26,7 @@ class ApiMethod
 
     private $httpMethod;
     private $pattern;
+    private $crud = false;
     /**
      * @var null|AbstractEntity|AbstractService
      */
@@ -88,11 +89,11 @@ class ApiMethod
         }
 
         // Sort callbacks so that callbacks registered from events are executed first
-        if(count($this->callbacks) === 0) {
-            foreach($this->eventCallbacks as $cb) {
+        if (count($this->callbacks) === 0) {
+            foreach ($this->eventCallbacks as $cb) {
                 $this->callbacks[] = $cb;
             }
-            foreach($this->entityCallbacks as $cb) {
+            foreach ($this->entityCallbacks as $cb) {
                 $this->callbacks[] = $cb;
             }
         }
@@ -159,6 +160,30 @@ class ApiMethod
     public function getPublic()
     {
         return $this->public;
+    }
+
+    /**
+     * Set CRUD state
+     *
+     * @param bool $crud
+     *
+     * @return $this
+     */
+    public function setCrud($crud = true)
+    {
+        $this->crud = $crud;
+
+        return $this;
+    }
+
+    /**
+     * Is this a CRUD method?
+     *
+     * @return bool
+     */
+    public function getCrud()
+    {
+        return $this->crud;
     }
 
     /**

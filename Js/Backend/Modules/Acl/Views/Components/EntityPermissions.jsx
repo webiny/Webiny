@@ -72,7 +72,7 @@ EntityPermissions.defaultProps = {
                                                 currentlyEditingPermission={this.props.model}
                                                 onTogglePermission={(entity, method) => this.props.onTogglePermission(entity, method)}
                                                 onRemoveEntity={entity => {
-                                                    const index = _.find(this.state.entities, {classId: entity.classId});
+                                                    const index = _.findIndex(this.state.entities, {classId: entity.classId});
                                                     const entities = _.clone(this.state.entities);
                                                     entities.splice(index, 1);
                                                     this.setState({entities}, () => {
