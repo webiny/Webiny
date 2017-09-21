@@ -47,7 +47,7 @@ Downloader.defaultProps = {
                 if (_.isArray(value)) {
                     value.map((v, index) => {
                         params.push(
-                            <input type="hidden" name={name + '[]'} value={v} key={index}/>
+                            <input type="hidden" name={name + '[]'} value={v} key={name + '-' + index}/>
                         );
                     });
                     return;
@@ -68,6 +68,7 @@ Downloader.defaultProps = {
             debug = <input type="hidden" name="XDEBUG_SESSION_START" value={this.props.debugKey}/>;
         }
 
+        console.log(params)
         return (
             <form ref="downloader" action={action} method={this.state.httpMethod} target="_blank">
                 {params}
