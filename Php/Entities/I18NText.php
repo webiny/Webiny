@@ -124,6 +124,22 @@ class I18NText extends AbstractEntity
         })->setBodyValidators(['file' => 'required'])->setPublic();
 
         /**
+         * @api.name        Updates text translation by ID for given language
+         * @api.description Gets a translation by ID and updates the translation in given language
+         */
+        $api->patch('{id}/translations', function () {
+            $data = $this->wRequest()->getRequestData();
+            $locale = I18NLocale::findByKey($data['locale']);
+            if (!$locale) {
+                throw new AppException($this->wI18n('Locale not found.'));
+            }
+
+            $this->setTranslation($locale, $data['text'] ?? '')->save();
+
+            return ['locale' => $locale->key, 'text' => $data['translation']];
+        })->setBodyValidators(['locale' => 'required'])->setPublic();
+
+        /**
          * @api.name        Export translations and download
          * @api.description Exports translations for all given apps in a form of a ZIP archive.
          *
@@ -143,20 +159,23 @@ class I18NText extends AbstractEntity
         ])->setPublic();
 
         /**
-         * @api.name        Updates text translation by ID for given language
-         * @api.description Gets a translation by ID and updates the translation in given language
+         * @api.name        Export translations and download
+         * @api.description Exports translations for all given apps in a form of a ZIP archive.
+         *
+         * @api.body.apps   array   List of apps
          */
-        $api->patch('{id}/translations', function () {
-            $data = $this->wRequest()->getRequestData();
-            $locale = I18NLocale::findByKey($data['locale']);
-            if (!$locale) {
-                throw new AppException($this->wI18n('Locale not found.'));
-            }
+        $api->post('translations/import/json', function () {
+            $apps = $this->wRequest()->getRequestData()['apps'];
+            $groups = $this->wRequest()->getRequestData()['groups'];
+            $locales = $this->wRequest()->getRequestData()['locales'];
 
-            $this->setTranslation($locale, $data['text'] ?? '')->save();
-
-            return ['locale' => $locale->key, 'text' => $data['translation']];
-        })->setBodyValidators(['locale' => 'required'])->setPublic();
+            $export = I18N::getInstance()->exportTranslations($apps, $groups, $locales);
+            $export->downloadJson();
+        })->setBodyValidators([
+            'apps' => 'required',
+            'groups' => 'required',
+            'locales' => 'required'
+        ])->setPublic();
 
         /**********************************************************************************************************
          *                                          !! Entity API !!                                              *

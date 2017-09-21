@@ -10,15 +10,13 @@ use Apps\Webiny\Php\Lib\I18N\I18NTranslationsExport;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 
 
-class ExportTranslations
+class ExportTranslations extends ExportTexts
 {
     use WebinyTrait;
 
     protected static $i18nNamespace = 'Webiny.Lib.ExportTranslations';
 
-    private $apps = [];
-    private $groups = [];
-    private $locales = [];
+    protected $locales = [];
 
     /**
      * ExportTranslations constructor.
@@ -29,36 +27,7 @@ class ExportTranslations
      */
     public function __construct($apps, $groups, $locales)
     {
-        // Normalize list of apps.
-        $this->apps = array_map(function ($app) {
-            if (!$app instanceof App) {
-                $name = $app;
-                $app = $this->wApps()->getApp($name);
-                if (!$app) {
-                    throw new AppException($this->wI18n('Export failed, app {app} not found.', ['app' => $name]));
-                }
-            }
-
-            return $app;
-        }, $apps);
-
-        // Normalize list of groups.
-        $this->groups = array_map(function ($group) {
-            if ($group === 'none') {
-                return null;
-            }
-
-            if (!$group instanceof I18NTextGroup) {
-                $id = $group;
-                $group = I18NTextGroup::findById($id);
-                if (!$group) {
-                    throw new AppException($this->wI18n('Export failed, app with ID {id} not found.', ['id' => $id]));
-                }
-            }
-
-            return $group;
-
-        }, $groups);
+        parent::__construct($apps, $groups);
 
         $this->locales = array_map(function ($locale) {
             if (!$locale instanceof I18NLocale) {
@@ -83,7 +52,7 @@ class ExportTranslations
         }, $this->apps);
 
         $groups = array_map(function ($group) {
-            /* @var I18NTextGroup|null $group  */
+            /* @var I18NTextGroup|null $group */
             return $group ? $group->id : null;
         }, $this->groups);
 
@@ -105,12 +74,12 @@ class ExportTranslations
             $app = $databaseText['app'];
             $group = isset($databaseText['group'][0]) ? $databaseText['group'][0]['name'] : null;
 
-            $appTextsIndex = -1;
-            foreach ($appsTexts as $index => $appTexts) {
-                if ($appTexts['app'] !== $app) {
-                    continue;
-                }
+            if (!isset($appsTexts[$app])) {
+                $appsTexts[$app] = [];
+            }
 
+            $appTextsIndex = -1;
+            foreach ($appsTexts[$app] as $index => $appTexts) {
                 if ($group) {
                     if (isset($appTexts['group']) && $appTexts['group'] === $group) {
                         $appTextsIndex = $index;
@@ -124,16 +93,14 @@ class ExportTranslations
                 }
             }
 
-
             if ($appTextsIndex === -1) {
-                $array = ['app' => $app];
                 if ($group) {
                     $array['group'] = $group;
                 }
                 $array['texts'] = [];
 
-                $appsTexts[] = $array;
-                $appTextsIndex = count($appsTexts) - 1;
+                $appsTexts[$app][] = $array;
+                $appTextsIndex = count($appsTexts[$app]) - 1;
             }
 
             $locales = array_map(function (I18NLocale $locale) {
@@ -147,9 +114,13 @@ class ExportTranslations
                 }
             }
 
-            $appsTexts[$appTextsIndex]['texts'][] = $translations;
+            $appsTexts[$app][$appTextsIndex]['texts'][] = [
+                'key'          => $databaseText['key'],
+                'base'         => $databaseText['base'],
+                'translations' => $translations
+            ];
         }
 
-        return new I18NTranslationsExport($appsTexts, $apps);
+        return new I18NTranslationsExport($appsTexts);
     }
 }

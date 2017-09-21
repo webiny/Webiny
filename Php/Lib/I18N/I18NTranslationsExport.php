@@ -44,7 +44,7 @@ class I18NTranslationsExport
 
     public function toJson($options = null)
     {
-        return json_encode(['apps' => $this->apps, 'texts' => $this->texts], $options);
+        return json_encode($this->texts, $options);
     }
 
     public function downloadJson()
