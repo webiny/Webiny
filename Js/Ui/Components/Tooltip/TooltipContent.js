@@ -19,7 +19,7 @@ class TooltipContent extends Webiny.Ui.Component {
      */
     componentDidMount() {
         super.componentDidMount();
-        this.positioningInterval = setInterval(this.setupPlacement, 200);
+        this.positioningInterval = setInterval(this.setupPlacement, 50);
         setTimeout(() => {
             if (this.isMounted()) {
                 clearInterval(this.positioningInterval);

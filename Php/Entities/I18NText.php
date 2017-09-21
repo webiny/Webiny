@@ -124,6 +124,23 @@ class I18NText extends AbstractEntity
         })->setBodyValidators(['file' => 'required'])->setPublic();
 
         /**
+         * @api.name        Export translations and download
+         * @api.description Exports translations for all given apps in a form of a ZIP archive.
+         *
+         * @api.body.apps   array   List of apps
+         */
+        $api->post('translations/export/zip', function () {
+            $apps = $this->wRequest()->getRequestData()['apps'] ?? [];
+            die(print_r($this->wRequest()->getRequestData()));
+            $export = I18N::getInstance()->exportTranslations($apps);
+
+            $zip = new ZipStream('i18n_' . time() . '.zip', 'application/zip', null, true);
+            $zip->addFile($export->toJson(), 'export');
+
+            return $zip->finalize();
+        })->setBodyValidators(['apps' => 'required,minLength:1'])->setPublic();
+
+        /**
          * @api.name        Updates text translation by ID for given language
          * @api.description Gets a translation by ID and updates the translation in given language
          */

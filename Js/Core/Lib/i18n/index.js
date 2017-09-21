@@ -7,6 +7,7 @@ import BuiltInModifiers from './BuiltInModifiers';
 class I18n {
     constructor() {
         this.locales = {current: null, list: []};
+        this.groups = {list: []};
         this.api = null;
         this.cacheKey = null;
         this.modifiers = BuiltInModifiers;
@@ -141,6 +142,15 @@ class I18n {
     setApiEndpoint(api) {
         this.api = api;
         return this;
+    }
+
+    /**
+     * Returns a list of all available locales.
+     */
+    async getTextGroups(query = {_fields: 'id,app,name,description'}) {
+        const response = await new Webiny.Api.Endpoint('/entities/webiny/i18n-text-groups').get(null, query);
+        this.locales.list = response.getData('list');
+        return this.locales.list;
     }
 
     /**

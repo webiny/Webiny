@@ -39,7 +39,7 @@ class ExportTextsModal extends Webiny.Ui.ModalComponent {
                                     disabled={_.isEmpty(model.apps)}
                                     onClick={() => this.hide()}
                                     method="POST"
-                                    params={{import: model.import, apps: model.apps}}
+                                    params={{apps: model.apps, groups: model.groups}}
                                     type="primary"
                                     download={Webiny.Config.ApiPath + '/entities/webiny/i18n-texts/export/zip'}>
                                     {this.i18n(`Export`)}

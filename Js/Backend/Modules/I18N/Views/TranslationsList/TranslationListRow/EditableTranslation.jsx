@@ -37,7 +37,7 @@ EditableTranslation.defaultProps = {
                 <label>{locale.label}</label>
                 {this.state.edit ? (
                     <Ui.Form
-                        defaultModel={{locale: locale.key, text: translation.text}}
+                        defaultModel={{locale: locale.key, text: _.get(translation, 'text')}}
                         api="/entities/webiny/i18n-texts"
                         onSubmit={async (model, form) => {
                             const response = await form.api.patch(`/${text.id}/translations`, model);

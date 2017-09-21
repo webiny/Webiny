@@ -101,40 +101,70 @@ class I18N
         return $this->saveTextsToDb($texts, $options);
     }
 
-    public function exportTranslations()
-    {
-    }
-
-    public function importTranslations()
-    {
-    }
-
     /**
      * Returns export of all texts and text groups for given list of apps, which can be imported in another environment.
      *
-     * @param array $list
+     * @param array $apps
      *
      * @return I18NTextsExport
      */
-    public function exportTexts(array $list)
+    public function exportTexts($apps, $groups = [])
     {
         // Normalize list of apps.
-        $list = array_map(function ($app) {
+        $apps = array_map(function ($app) {
             return $app instanceof App ? $app->getName() : $app;
-        }, $list);
+        }, $apps);
 
         $texts = self::wDatabase()->find(...[
             'I18NTexts',
-            ['deletedOn' => null, 'app' => ['$in' => $list]],
+            ['deletedOn' => null, 'app' => ['$in' => $apps]],
             [],
             0,
             0,
             ['projection' => ['_id' => 0, 'app' => 1, 'group' => 1, 'key' => 1, 'base' => 1]]
         ]);
 
-        $groups = I18NTextGroup::find(['app' => ['$in' => $list]])->toArray('id,name,app,description');
+        $groups = I18NTextGroup::find(['app' => ['$in' => $apps]])->toArray('id,name,app,description');
 
-        return new I18NTextsExport($texts, $groups, $list);
+        return new I18NTextsExport($texts, $groups, $apps);
+    }
+
+    /**
+     * Returns export of all texts and text groups for given list of apps, which can be imported in another environment.
+     *
+     * @param array $apps
+     *
+     * @param array $groups
+     * @param       $locales
+     *
+     * @return I18NTranslationsExport
+     */
+    public function exportTranslations($apps, $groups = [], $locales = [])
+    {
+        // Normalize list of apps.
+        $apps = array_map(function ($app) {
+            return $app instanceof App ? $app->getName() : $app;
+        }, $apps);
+
+        $groups = array_map(function ($group) {
+            return $group instanceof I18NTextGroup ? $group->id : $group;
+        }, $groups);
+
+        $texts = self::wDatabase()->find(...[
+            'I18NTexts',
+            ['deletedOn' => null, 'app' => ['$in' => $apps], 'group' => ['$in' => $groups]],
+            [],
+            0,
+            0,
+            ['projection' => ['_id' => 0, 'app' => 1, 'translations' => 1, 'key' => 1, 'base' => 1]]
+        ]);
+
+
+        foreach ($texts as $text) {
+            die(print_r($text));
+        }
+
+        return new I18NTranslationsExport($texts, $apps);
     }
 
     /**
