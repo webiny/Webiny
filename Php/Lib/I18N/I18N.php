@@ -7,6 +7,7 @@ use Apps\Webiny\Php\Entities\I18NText;
 use Apps\Webiny\Php\Entities\I18NTextGroup;
 use Apps\Webiny\Php\Lib\Apps\App;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
+use Apps\Webiny\Php\Lib\I18N\I18N\ExportTranslations;
 use Apps\Webiny\Php\Lib\I18N\I18N\JsParser;
 use Apps\Webiny\Php\Lib\I18N\I18N\PhpParser;
 use Apps\Webiny\Php\Lib\WebinyTrait;
@@ -141,30 +142,9 @@ class I18N
      */
     public function exportTranslations($apps, $groups = [], $locales = [])
     {
-        // Normalize list of apps.
-        $apps = array_map(function ($app) {
-            return $app instanceof App ? $app->getName() : $app;
-        }, $apps);
+        $exportTranslations = new ExportTranslations($apps, $groups, $locales);
 
-        $groups = array_map(function ($group) {
-            return $group instanceof I18NTextGroup ? $group->id : $group;
-        }, $groups);
-
-        $texts = self::wDatabase()->find(...[
-            'I18NTexts',
-            ['deletedOn' => null, 'app' => ['$in' => $apps], 'group' => ['$in' => $groups]],
-            [],
-            0,
-            0,
-            ['projection' => ['_id' => 0, 'app' => 1, 'translations' => 1, 'key' => 1, 'base' => 1]]
-        ]);
-
-
-        foreach ($texts as $text) {
-            die(print_r($text));
-        }
-
-        return new I18NTranslationsExport($texts, $apps);
+        return $exportTranslations->execute();
     }
 
     /**

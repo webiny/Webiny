@@ -17,14 +17,13 @@ class ExportTranslationsModal extends Webiny.Ui.ModalComponent {
     }
 
     getAvailableGroups(apps) {
-        const output = [{id: 'withoutGroup', name: 'Texts without group'}];
+        const output = [{id: 'none', name: 'Texts without group'}];
         this.state.groups.forEach(group => {
             if (_.includes(apps, group.app)) {
                 output.push(group);
             }
         });
 
-        console.log(output)
         return output;
     }
 
@@ -76,8 +75,9 @@ class ExportTranslationsModal extends Webiny.Ui.ModalComponent {
                                                 validate="required"
                                                 sort="key"
                                                 name="locales"
-                                                fields="id,label"
+                                                fields="id,label,key"
                                                 textAttr="label"
+                                                valueAttr="key"
                                                 label={this.i18n('Select locales to export')}
                                                 api="/entities/webiny/i18n-locales"/>
                                         </Ui.Grid.Col>
@@ -92,7 +92,7 @@ class ExportTranslationsModal extends Webiny.Ui.ModalComponent {
                                         method="POST"
                                         params={model}
                                         type="primary"
-                                        download={Webiny.Config.ApiPath + '/entities/webiny/i18n-texts/translations/export/zip'}>
+                                        download={Webiny.Config.ApiPath + '/entities/webiny/i18n-texts/translations/export/json'}>
                                         {this.i18n(`Export`)}
                                     </Ui.DownloadLink>
                                 </Ui.Modal.Footer>

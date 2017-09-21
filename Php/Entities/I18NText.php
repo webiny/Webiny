@@ -129,16 +129,18 @@ class I18NText extends AbstractEntity
          *
          * @api.body.apps   array   List of apps
          */
-        $api->post('translations/export/zip', function () {
-            $apps = $this->wRequest()->getRequestData()['apps'] ?? [];
-            die(print_r($this->wRequest()->getRequestData()));
-            $export = I18N::getInstance()->exportTranslations($apps);
+        $api->post('translations/export/json', function () {
+            $apps = $this->wRequest()->getRequestData()['apps'];
+            $groups = $this->wRequest()->getRequestData()['groups'];
+            $locales = $this->wRequest()->getRequestData()['locales'];
 
-            $zip = new ZipStream('i18n_' . time() . '.zip', 'application/zip', null, true);
-            $zip->addFile($export->toJson(), 'export');
-
-            return $zip->finalize();
-        })->setBodyValidators(['apps' => 'required,minLength:1'])->setPublic();
+            $export = I18N::getInstance()->exportTranslations($apps, $groups, $locales);
+            $export->downloadJson();
+        })->setBodyValidators([
+            'apps' => 'required',
+            'groups' => 'required',
+            'locales' => 'required'
+        ])->setPublic();
 
         /**
          * @api.name        Updates text translation by ID for given language

@@ -2,7 +2,6 @@
 
 namespace Apps\Webiny\Php\Lib\I18N;
 
-use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
@@ -22,9 +21,9 @@ class I18NTranslationsExport
     private $texts = [];
     private $apps = [];
 
-    public function __construct($texts = [], $apps = [])
+    public function __construct($translations = [], $apps = [])
     {
-        $this->texts = $texts;
+        $this->texts = $translations;
         $this->apps = $apps;
     }
 
@@ -37,26 +36,21 @@ class I18NTranslationsExport
     {
         $content = json_decode($content, true);
 
-        if (!is_array($content)) {
-            throw new AppException($this->wI18n('Received an invalid JSON file.'));
-        }
-
-        if (!isset($content['texts']) && !is_array($content['texts'])) {
-            throw new AppException($this->wI18n('Received an invalid JSON file (texts missing).'));
-        }
-
-        if (!isset($content['apps']) && !is_array($content['apps'])) {
-            throw new AppException($this->wI18n('Received an invalid JSON file (apps list missing).'));
-        }
-
         $this->texts = $content['texts'] ?? [];
         $this->apps = $content['apps'] ?? [];
 
         return $this;
     }
 
-    public function toJson()
+    public function toJson($options = null)
     {
-        return json_encode(['apps' => $this->apps, 'texts' => $this->texts]);
+        return json_encode(['apps' => $this->apps, 'texts' => $this->texts], $options);
+    }
+
+    public function downloadJson()
+    {
+        header('Content-disposition: attachment; filename=i18n_' . time() . '.json');
+        header('Content-type: application/json');
+        die($this->toJson(JSON_PRETTY_PRINT));
     }
 }
