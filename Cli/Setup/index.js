@@ -134,26 +134,26 @@ class Setup extends Plugin {
 
             const configs = {
                 dockerCompose: Webiny.projectRoot('docker-compose.yaml'),
-                configSets: Webiny.projectRoot('Configs/ConfigSets.yaml'),
+                configSets: Webiny.projectRoot('Configs/Environments.yaml'),
                 base: {
-                    application: Webiny.projectRoot('Configs/Base/Application.yaml'),
+                    application: Webiny.projectRoot('Configs/Base/Webiny.yaml'),
                     database: Webiny.projectRoot('Configs/Base/Database.yaml'),
                     security: Webiny.projectRoot('Configs/Base/Security.yaml')
                 },
                 local: {
-                    application: Webiny.projectRoot('Configs/Local/Application.yaml')
+                    application: Webiny.projectRoot('Configs/Local/Webiny.yaml')
                 }
             };
 
             try {
-                // Populate ConfigSets.yaml
+                // Populate Environments.yaml
                 let config = yaml.safeLoad(Webiny.readFile(configs.configSets));
-                config.ConfigSets.Local = answers.domain;
+                config.Environments.Local = answers.domain;
                 Webiny.writeFile(configs.configSets, yaml.safeDump(config, {indent: 4}));
 
-                // Populate Base/Application.yaml
+                // Populate Base/Webiny.yaml
                 config = yaml.safeLoad(Webiny.readFile(configs.base.application));
-                config.Application.Acl.Token = generatePassword(40, false, /[\dA-Za-z#_\$]/);
+                config.Webiny.Acl.Token = generatePassword(40, false, /[\dA-Za-z#_\$]/);
                 Webiny.writeFile(configs.base.application, yaml.safeDump(config, {indent: 4}));
 
                 // Populate Base/Database.yaml
@@ -170,10 +170,10 @@ class Setup extends Plugin {
                 config.Security.TwoFactorAuth.Key = generatePassword(30, false, /[\dA-Za-z#_\$:\?#]/);
                 Webiny.writeFile(configs.base.security, yaml.safeDump(config, {indent: 4, flowLevel: 5}));
 
-                // Populate Local/Application.yaml
+                // Populate Local/Webiny.yaml
                 config = yaml.safeLoad(Webiny.readFile(configs.local.application));
-                config.Application.WebPath = answers.domain;
-                config.Application.ApiPath = answers.domain + '/api';
+                config.Webiny.WebUrl = answers.domain;
+                config.Webiny.ApiUrl = answers.domain + '/api';
                 Webiny.writeFile(configs.local.application, yaml.safeDump(config, {indent: 4}));
 
                 // Populate docker-compose.yaml

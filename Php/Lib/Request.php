@@ -30,7 +30,7 @@ class Request extends \Webiny\Component\Http\Request
     public function isApi()
     {
         $url = $this->getCurrentUrl();
-        if (!$this->str($url)->startsWith(Config::getInstance()->get('Application.ApiPath'))) {
+        if (!$this->str($url)->startsWith(Config::getInstance()->get('Webiny.ApiUrl'))) {
             return false;
         }
 
@@ -44,7 +44,7 @@ class Request extends \Webiny\Component\Http\Request
             $requestToken = $this->getRequestData()['X-Webiny-Authorization'];
         }
 
-        $systemToken = Config::getInstance()->get('Application.Acl.Token');
+        $systemToken = Config::getInstance()->get('Webiny.Acl.Token');
         if ($systemToken && $systemToken === $requestToken) {
             return true;
         }

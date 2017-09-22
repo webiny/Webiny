@@ -18,7 +18,7 @@ class App extends \Apps\Webiny\Php\Lib\Apps\App
 
         $this->addAppRoute('/^\/welcome/', 'Webiny:Templates/Welcome.tpl');
 
-        $this->addAppRoute('/^\\' . $this->wConfig()->get('Application.Backend') . '/', 'Webiny:Templates/Backend.tpl', 380);
+        $this->addAppRoute('/^\\' . $this->wConfig()->get('Webiny.Backend.Path') . '/', 'Webiny:Templates/Backend.tpl', 380);
 
         User::onActivity(function (User $user) {
             $user->lastActive = new DateTimeObject('now');

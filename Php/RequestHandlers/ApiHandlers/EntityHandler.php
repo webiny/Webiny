@@ -11,6 +11,7 @@ use Apps\Webiny\Php\RequestHandlers\ApiHandlers\EntityFlows\AbstractEntityFlow;
 use Apps\Webiny\Php\Lib\Response\ApiErrorResponse;
 use Apps\Webiny\Php\Lib\Response\ApiResponse;
 use Apps\Webiny\Php\RequestHandlers\ApiEvent;
+use Apps\Webiny\Php\RequestHandlers\ApiHandlers\EntityFlows\DefaultEntityFlow;
 
 /**
  * Class EntityHandler
@@ -37,6 +38,7 @@ class EntityHandler extends AbstractApiHandler
             $entityClass = $plural;
         }
 
+        // Get custom entity flows (if any)
         $flows = $this->wService()->getServicesByTag('entity-flow', AbstractEntityFlow::class);
 
         usort($flows, function (AbstractEntityFlow $flow1, AbstractEntityFlow $flow2) {
@@ -52,6 +54,10 @@ class EntityHandler extends AbstractApiHandler
             }
         }
 
-        return null;
+        // If no custom flows handled the request - proceed with default flow
+        $defaultEntityFlow = new DefaultEntityFlow();
+        $response = $defaultEntityFlow->handle(new $entityClass(), $params);
+
+        return $response instanceof ApiResponse ? $response : new ApiResponse($response);
     }
 }

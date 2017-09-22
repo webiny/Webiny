@@ -38,9 +38,9 @@ class SmartyExtension extends AbstractSmartyExtension
 
     public function webinyInclude($params, $smarty)
     {
-        $env = $this->wConfig()->get('Application.Environment', 'production');
-        $webPath = $this->wConfig()->getConfig()->get('Application.WebPath');
-        $apiPath = $this->wConfig()->getConfig()->get('Application.ApiPath');
+        $env = $this->wConfig()->get('Webiny.EnvironmentType', 'production');
+        $webPath = $this->wConfig()->getConfig()->get('Webiny.WebUrl');
+        $apiPath = $this->wConfig()->getConfig()->get('Webiny.ApiUrl');
         $jsConfig = $this->wConfig()->getConfig()->get('Js', new ConfigObject())->toArray();
 
         try {
@@ -75,7 +75,7 @@ class SmartyExtension extends AbstractSmartyExtension
         if (!$this->wIsProduction()) {
             $bsConfig = file_get_contents($this->wStorage('Root')->getAbsolutePath('webiny.json'));
             $bsConfig = $this->arr(json_decode($bsConfig, true));
-            $webPath = $this->wConfig()->get('Application.WebPath');
+            $webPath = $this->wConfig()->get('Webiny.WebUrl');
             $bsPath = $this->url($webPath)->setPort($bsConfig->keyNested('browserSync.port', 3000, true));
             $browserSync = '<script src="' . $bsPath . '/browser-sync/browser-sync-client.js?v=2.18.6"></script>';
         }
@@ -89,8 +89,8 @@ class SmartyExtension extends AbstractSmartyExtension
         var webinyConfig = {
             apps: {$apps},
             Environment: '{$env}',
-            WebPath: '{$webPath}',
-            ApiPath: '{$apiPath}',
+            WebUrl: '{$webPath}',
+            ApiUrl: '{$apiPath}',
             Js: {$config},
             Meta: {$appsMeta},
         };

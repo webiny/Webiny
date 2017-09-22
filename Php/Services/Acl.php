@@ -19,7 +19,7 @@ class Acl extends AbstractService
          * @api.description Returns a system API token for use with 3rd party requests
          */
         $api->get('/token', function () {
-            return ['token' => $this->wConfig()->get('Application.Acl.Token')];
+            return ['token' => $this->wConfig()->get('Webiny.Acl.Token')];
         });
     }
 }

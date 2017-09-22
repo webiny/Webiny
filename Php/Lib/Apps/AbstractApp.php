@@ -115,9 +115,9 @@ abstract class AbstractApp
     abstract public function getUserPermissions();
 
     /**
-     * Application constructor.
+     * Webiny constructor.
      *
-     * @param ConfigObject $info Application information object.
+     * @param ConfigObject $info Webiny information object.
      * @param string       $path Relative path to the application.
      *
      * @throws \Exception
@@ -231,7 +231,7 @@ abstract class AbstractApp
     public function getPath($absolute = true)
     {
         if ($absolute) {
-            return $this->wConfig()->get('Application.AbsolutePath') . $this->path;
+            return $this->wConfig()->get('Webiny.AbsolutePath') . $this->path;
         }
 
         return $this->path;
@@ -393,17 +393,9 @@ abstract class AbstractApp
     protected function parseStorages(ConfigObject $info)
     {
         // Set global storage config
-        Storage::setConfig($info->get('Storage', new ConfigObject()));
-
-        // Check if there is a per-environment storage defined and append it to the existing config
-        $key = 'Development';
-        if ($this->wIsProduction()) {
-            $key = 'Production';
-        }
-
-        $envStorage = $info->get($key . '.Storage');
-        if ($envStorage) {
-            Storage::appendConfig($envStorage);
+        $storage = $info->get('Storage');
+        if ($storage instanceof ConfigObject && $storage['Services'] instanceof ConfigObject) {
+            Storage::appendConfig($storage);
         }
     }
 
@@ -473,16 +465,6 @@ abstract class AbstractApp
         // Register global services
         $globalServices = $info->get('Services', []);
         foreach ($globalServices as $sName => $sConfig) {
-            $this->wService()->registerService($sName, $sConfig);
-        }
-
-        // Check if there are some per-environment services and register those aswell
-        $key = 'Development';
-        if ($this->wIsProduction()) {
-            $key = 'Production';
-        }
-        $environmentServices = $info->get($key . '.Services', []);
-        foreach ($environmentServices as $sName => $sConfig) {
             $this->wService()->registerService($sName, $sConfig);
         }
     }

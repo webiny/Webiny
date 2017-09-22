@@ -172,7 +172,7 @@ trait WebinyTrait
      */
     static protected function wIsProduction()
     {
-        return self::wConfig()->get('Application.Environment', 'production') == 'production';
+        return self::wConfig()->get('Webiny.EnvironmentType', 'production') == 'production';
     }
 
     /**

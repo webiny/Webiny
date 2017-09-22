@@ -316,7 +316,9 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         });
         $this->attr('modifiedBy')->user()->onToDb(function ($value) {
             if ($this->exists() && !$this->deletedOn) {
-                return $this->wAuth()->getUser()->id;
+                $user = $this->wAuth()->getUser();
+
+                return $user ? $user->id : null;
             }
 
             return $value;
@@ -773,7 +775,10 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     protected function processCallbacks($eventName, ...$params)
     {
         $className = get_called_class();
-        $classes = array_values([$className] + class_parents($className));
+        $classes = array_filter(array_values([$className] + class_parents($className)), function ($t) {
+            return $this->str($t)->startsWith('Apps\\');
+        });
+
         foreach ($classes as $class) {
             $callbacks = static::$classCallbacks[$class][$eventName] ?? [];
             foreach ($callbacks as $callback) {
@@ -824,7 +829,10 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 
         // We need to get the entire inheritance tree and process callbacks for each class in the tree
         $className = get_called_class();
-        $classes = array_values([$className] + class_parents($className));
+        $classes = array_filter(array_values([$className] + class_parents($className)), function ($t) {
+            return static::str($t)->startsWith('Apps\\');
+        });
+
         foreach ($classes as $class) {
             $callbacks = static::$classCallbacks[$class][$eventName] ?? [];
             foreach ($callbacks as $callback) {

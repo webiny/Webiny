@@ -40,8 +40,8 @@ class Apps implements \IteratorAggregate
         $apps = Config::getInstance()->get('Apps');
         $apps = $apps instanceof ConfigObject ? $apps->toArray() : [];
 
-        // Add Webiny app which must always be included in the bootstrap process
-        $apps['Webiny'] = true;
+        // First load Webiny app
+        $this->loadApp('Webiny');
 
         foreach ($apps as $app => $enabled) {
             if (!$enabled) {
@@ -71,7 +71,7 @@ class Apps implements \IteratorAggregate
             return $existingApp;
         }
 
-        $projectRoot = $this->wConfig()->get('Application.AbsolutePath');
+        $projectRoot = $this->wConfig()->get('Webiny.AbsolutePath');
         $configPath = 'Apps/' . $app . '/App.yaml';
         if (!file_exists($projectRoot . '/' . $configPath)) {
             return null;

@@ -64,7 +64,10 @@ abstract class AbstractService
         // Process onExtendApi callbacks
         $api->setEvent('onExtendApi');
         $className = get_called_class();
-        $classes = array_values([$className] + class_parents($className));
+        $classes = array_filter(array_values([$className] + class_parents($className)), function ($t) {
+            return $this->str($t)->startsWith('Apps\\');
+        });
+
         foreach ($classes as $class) {
             $callbacks = static::$classCallbacks[$class] ?? [];
             foreach ($callbacks as $callback) {

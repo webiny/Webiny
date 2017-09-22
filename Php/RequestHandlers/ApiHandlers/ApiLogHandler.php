@@ -26,7 +26,7 @@ class ApiLogHandler extends AbstractApiHandler
         $request = $this->wRequest();
 
         if ($user instanceof SystemApiTokenUser) {
-            if ($this->wConfig()->get('Application.Acl.LogSystemApiTokenRequests', false)) {
+            if ($this->wConfig()->get('Webiny.Acl.LogSystemApiTokenRequests', false)) {
                 $this->saveTokenLog($request, $user);
             }
 
@@ -48,7 +48,7 @@ class ApiLogHandler extends AbstractApiHandler
         }
 
         if ($user instanceof User) {
-            if ($this->wConfig()->get('Application.Acl.LogUserRequests', false)) {
+            if ($this->wConfig()->get('Webiny.Acl.LogUserRequests', false)) {
                 $this->saveTokenLog($request, $user);
             }
 
@@ -56,7 +56,7 @@ class ApiLogHandler extends AbstractApiHandler
         }
 
         if (!$user) {
-            if ($this->wConfig()->get('Application.Acl.LogIncognitoRequests', false)) {
+            if ($this->wConfig()->get('Webiny.Acl.LogIncognitoRequests', false)) {
                 $this->saveTokenLog($request, 'incognito');
             }
 

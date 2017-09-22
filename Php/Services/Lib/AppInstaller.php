@@ -45,7 +45,7 @@ class AppInstaller
         $appData = $this->appData;
         $bsConfig = file_get_contents($this->wStorage('Root')->getAbsolutePath('webiny.json'));
         $bsConfig = $this->arr(json_decode($bsConfig, true));
-        $webPath = $this->wConfig()->get('Application.WebPath');
+        $webPath = $this->wConfig()->get('Webiny.WebUrl');
 
         // If docker, change to dockerhost
         if ($bsConfig['env'] === 'docker') {

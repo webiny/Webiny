@@ -23,8 +23,8 @@ abstract class AbstractCli
     {
         if (!$domain || $domain === 'Local') {
             try {
-                $config = $this->wConfig()->yaml('Configs/Local/Application.yaml');
-                $domain = $config->get('Application.WebPath');
+                $config = $this->wConfig()->yaml('Configs/Local/Webiny.yaml');
+                $domain = $config->get('Webiny.WebUrl');
             } catch (ConfigException $e) {
                 // In case no Local config set is present we abort execution
                 die('[ERROR]: CLI script must be invoked with a domain name or a `Local` config set present in your Configs folder.');

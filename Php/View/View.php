@@ -47,6 +47,6 @@ class View
         $parts = $this->str($app)->explode('.');
         $app = $this->wApps($parts[0]);
 
-        return $this->wConfig()->get('Application.WebPath') . $app->getJsApps($parts[1])->getPublicAssetPath($path);
+        return $this->wConfig()->get('Webiny.WebUrl') . $app->getJsApps($parts[1])->getPublicAssetPath($path);
     }
 }

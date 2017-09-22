@@ -19,7 +19,7 @@ class ApiTokenUser extends AbstractServiceUser
         }
 
         if (!$this->exists()) {
-            $host = $this->url($this->wConfig()->get('Application.WebPath'))->getHost();
+            $host = $this->url($this->wConfig()->get('Webiny.WebUrl'))->getHost();
             $this->email = $this->meta['apiToken'] . '@' . $host;
             $this->password = $this->crypt()->generateHardReadableString(30);
         }

@@ -37,7 +37,7 @@ abstract class AbstractApiHandler
     {
         $parts = $this->str($class)->explode('\\')->filter()->values()->val();
 
-        return file_exists($this->wConfig()->get('Application.AbsolutePath') . join('/', $parts) . '.php');
+        return file_exists($this->wConfig()->get('Webiny.AbsolutePath') . join('/', $parts) . '.php');
     }
 
     protected function toCamelCase($str)

@@ -1,11 +1,11 @@
 Name: Webiny
 Version: dev-master
 Link: https://github.com/Webiny/Webiny
-Description: The Webiny app provides all the necessary platform features to develop new apps
-
-AuthorName: Webiny LTD
-AuthorLink: http://www.webiny.com
-AuthorEmail: info@webiny.com
+Description: The Webiny app provides a platform to develop new apps
+Author:
+    Name: Webiny LTD
+    Email: info@webiny.com
+    Link: https://www.webiny.com
 
 Marketplace:
     Api: https://beta.webiny.com/api
@@ -61,7 +61,7 @@ Storage:
                     ObjectArguments:
                         Config:
                             Directory: __DIR__/../../public_html/uploads
-                            PublicUrl: __Application.WebPath__/uploads
+                            PublicUrl: __Webiny.WebUrl__/uploads
                             DateFolderStructure: true
                             Create: true
 
@@ -80,15 +80,12 @@ Events:
                 - {Handler: Php/RequestHandlers/ApiHandlers/EntityHandler}
                 - {Handler: Php/RequestHandlers/ApiHandlers/ServiceHandler}
             After:
-                - {Handler: Php/RequestHandlers/ApiHandlers/ApiCacheHandler::cacheSave}
+                - {Handler: Php/RequestHandlers/ApiHandlers/ReportHandler, Priority: 301}
+                - {Handler: Php/RequestHandlers/ApiHandlers/ApiCacheHandler::cacheSave, Priority: 300}
         User:
             Provide:
                 - {Handler: Php/Lib/UserProvider/UserProviderEventHandler}
 Services:
-    DefaultEntityFlow:
-        Class: \Apps\Webiny\Php\RequestHandlers\ApiHandlers\EntityFlows\DefaultEntityFlow
-        Tags: [entity-flow]
-
     SmartyExtension:
         Class: \Apps\Webiny\Php\View\SmartyExtension
         Tags: [Smarty.Extension]

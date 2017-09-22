@@ -78,10 +78,10 @@
         ]
     },
     "globals": {
-        "webinyWebPath": false,
+        "webinyWebUrl": false,
         "webinyJsPath": false,
         "webinyCssPath": false,
-        "webinyApiPath": false,
+        "webinyApiUrl": false,
         "webinyConfig": false,
         "webinyEnvironment": false,
         "webinyMeta": false,

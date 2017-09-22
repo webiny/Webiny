@@ -9,7 +9,6 @@ namespace Apps\Webiny\Php\RequestHandlers\ApiHandlers\EntityFlows;
 
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
-use Apps\Webiny\Php\Lib\Reports\ReportInterface;
 use Apps\Webiny\Php\RequestHandlers\ApiException;
 use Webiny\Component\Entity\Attribute\Validation\ValidationException;
 use Webiny\Component\Entity\EntityException;
@@ -41,24 +40,16 @@ class DefaultEntityFlow extends AbstractEntityFlow
 
         $id = $params['id'] ?? null;
 
-        $bindTo = null;
         if ($id) {
             $entity = $entity->findById($id);
             if (!$entity) {
                 throw new ApiException(get_class($entity) . ' with id `' . $id . '` was not found!', 'WBY-ED-EXECUTE_METHOD_FLOW-2');
             }
-            $bindTo = $entity;
         }
 
         $code = 'WBY-ED-EXECUTE_METHOD_FLOW';
         try {
-            $result = $apiMethod($params, $bindTo);
-            if ($result instanceof ReportInterface) {
-                $result->getReport(false);
-                die();
-            }
-
-            return $result;
+            return $apiMethod($params, $entity);
         } catch (ApiException $e) {
             throw $e;
         } catch (AppException $e) {

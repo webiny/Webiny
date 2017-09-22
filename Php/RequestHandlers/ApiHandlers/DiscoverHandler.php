@@ -20,7 +20,7 @@ class DiscoverHandler extends AbstractApiHandler
         $apiUrl = $event->getUrl();
         if ($apiUrl->startsWith('/discover')) {
 
-            if (!$this->wConfig()->get('Application.Acl.CheckUserPermissions', true)) {
+            if (!$this->wConfig()->get('Webiny.Acl.CheckUserPermissions', true)) {
                 return $this->generatePostmanCollections($apiUrl);
             }
 

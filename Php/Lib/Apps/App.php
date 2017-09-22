@@ -36,7 +36,7 @@ class App extends AbstractApp
         $this->createUserRoles();
         $this->createUserRoleGroups();
         $this->installJsDependencies();
-        $this->manageIndexes();
+        $this->updateIndexes();
     }
 
     public function getUserRoles()
@@ -85,7 +85,7 @@ class App extends AbstractApp
     /**
      * Scan app entities and create/drop indexes as needed
      */
-    protected function manageIndexes()
+    protected function updateIndexes()
     {
         foreach ($this->getEntities() as $e) {
             /* @var $entity \Apps\Webiny\Php\Lib\Entity\AbstractEntity */
@@ -93,10 +93,10 @@ class App extends AbstractApp
             $collection = $entity->getCollection();
             $indexes = $entity->getIndexes();
 
-            $dbIndexes = $this->wDatabase()->listIndexes($entity->getCollection());
+            $dbIndexes = $this->wDatabase()->listIndexes($collection);
             $installedIndexes = [];
             foreach ($dbIndexes as $ind) {
-                $installedIndexes[] = $ind['name'];
+                $installedIndexes[$collection][] = $ind['name'];
             }
 
             // Check if any indexes need to be created
@@ -272,7 +272,7 @@ class App extends AbstractApp
                     $this->wDatabase()->createIndex($collection, $index);
                 } catch (RuntimeException $e) {
                     if ($e->getCode() === 85) {
-                        echo "WARNING: Skipping creation of '" . $index->getName() . "' index (index with the same fields already exist).\n";
+                        echo "WARNING: Skipping creation of '" . $index->getName() . ": {$e->getMessage()}\n";
                     }
                 }
             }

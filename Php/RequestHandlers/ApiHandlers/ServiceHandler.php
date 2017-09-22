@@ -60,7 +60,7 @@ class ServiceHandler extends AbstractApiHandler
             }
         }
 
-        $response = $apiMethod($matchedServiceMethod->getParams());
+        $response = $apiMethod($matchedServiceMethod->getParams(), $service);
 
         return $response instanceof ApiResponse ? $response : new ApiResponse($response);
     }

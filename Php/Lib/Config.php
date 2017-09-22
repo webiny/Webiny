@@ -54,14 +54,14 @@ class Config
      *
      * @param string $resource Path to the config file, can be relative to app root or absolute path.
      *
-     * Ex1 - path relative to the app root: Configs/ConfigSets.yaml
-     * Ex2 - absolute path: /my/app/Configs/ConfigSets.yaml
+     * Ex1 - path relative to the app root: Configs/Environments.yaml
+     * Ex2 - absolute path: /my/app/Configs/Environments.yaml
      *
      * @return ConfigObject
      */
     public function yaml($resource)
     {
-        $projectRoot = realpath(self::$config->get('Application.AbsolutePath'));
+        $projectRoot = realpath(self::$config->get('Webiny.AbsolutePath'));
         if (strpos($resource, $projectRoot) === false) {
             $resource = Storage::getInstance()->getPath($resource);
         }

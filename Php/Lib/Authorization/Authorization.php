@@ -220,7 +220,7 @@ class Authorization
      */
     private function checkPermission($class, $permission)
     {
-        if (!$this->wConfig()->get('Application.Acl.CheckUserPermissions', true) || $this->getUser() instanceof SystemApiTokenUser) {
+        if (!$this->wConfig()->get('Webiny.Acl.CheckUserPermissions', true) || $this->getUser() instanceof SystemApiTokenUser) {
             return true;
         }
 

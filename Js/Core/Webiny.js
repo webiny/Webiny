@@ -92,7 +92,7 @@ class Webiny {
         // If we still do not have our config - load app meta from server
         if (_.isString(config) && _.isNull(loadConfig)) {
             const load = {
-                url: this.Config.WebPath + '/build/' + this.Config.Environment + '/' + config.replace('.', '_') + '/meta.json',
+                url: this.Config.WebUrl + '/build/' + this.Config.Environment + '/' + config.replace('.', '_') + '/meta.json',
                 dataType: 'json',
                 contentType: 'application/json;charset=UTF-8',
                 processData: false

@@ -99,7 +99,6 @@ trait ApiExpositionTrait
         ]);
     }
 
-
     /**
      * Get ApiContainer for current object (AbstractEntity or AbstractService)
      * @return ApiContainer

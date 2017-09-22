@@ -54,12 +54,21 @@ class ApiMethod
         return $this->pattern;
     }
 
-    public function getUrl($params = [], $replace = true)
+    /**
+     * Get a URL to current API method using the given $context (entity or service instance)
+     *
+     * @param AbstractEntity|AbstractService $context Entity or Service instance
+     * @param array                          $params Array of params to replace URL placeholders with
+     * @param bool                           $replace Replace URL placeholders or not
+     *
+     * @return string
+     */
+    public function getUrl($context, $params = [], $replace = true)
     {
         // Determine if this method belongs to entity or service
-        $parts = $this->str(get_class($this->context))->explode('\\')->val();
+        $parts = $this->str(get_class($context))->explode('\\')->val();
         $app = $this->str($parts[1])->kebabCase()->val();
-        if ($this->context instanceof AbstractEntity) {
+        if ($context instanceof AbstractEntity) {
             $contextUrl = 'entities/' . $app . '/' . $this->str($parts[4])->pluralize()->kebabCase()->val();
         } else {
             $contextUrl = 'services/' . $app . '/' . $this->str($parts[4])->kebabCase()->val();
@@ -71,18 +80,18 @@ class ApiMethod
                 $url->replace('{' . $k . '}', $v);
             }
 
-            if ($url->startsWith('{id}') && $this->context) {
-                $url->replace('{id}', $this->context->id);
+            if ($context instanceof AbstractEntity && $url->startsWith('{id}')) {
+                $url->replace('{id}', $context->id);
             }
         }
 
 
-        $url = $this->str($this->wConfig()->get('Appli cation.ApiPath') . '/' . $contextUrl . '/' . $url)->trimRight('/');
+        $url = $this->str($this->wConfig()->get('Webiny.ApiUrl') . '/' . $contextUrl . '/' . $url)->trimRight('/');
 
         return $url->val();
     }
 
-    public function __invoke($params, $bindTo = null)
+    public function __invoke($params, $context)
     {
         if (($this->httpMethod === 'post' || $this->httpMethod === 'patch') && count($this->bodyValidators)) {
             $this->validateBody($this->wRequest()->getRequestData());
@@ -98,10 +107,7 @@ class ApiMethod
             }
         }
 
-        $callback = $this->callbacks[0];
-        if ($bindTo) {
-            $callback = $callback->bindTo($bindTo);
-        }
+        $callback = $this->callbacks[0]->bindTo($context);
         $callbackCount = count($this->callbacks);
 
         if (!$params) {
@@ -109,7 +115,7 @@ class ApiMethod
         }
         $params = $this->injectParams($callback, $params);
         if ($callbackCount > 1) {
-            $params[] = $this->createParent(1, $bindTo);
+            $params[] = $this->createParent(1, $context);
         }
 
         return $callback(...$params);
@@ -270,9 +276,7 @@ class ApiMethod
                 $params[] = $this->createParent($index + 1, $bindTo);
             }
 
-            if ($bindTo) {
-                $callback = $callback->bindTo($bindTo);
-            }
+            $callback = $callback->bindTo($bindTo);
 
             return $callback(...$params);
         };

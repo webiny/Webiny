@@ -31,7 +31,7 @@ class ServiceParser extends AbstractParser
                 $definition = [
                     'key'           => $key,
                     'path'          => rtrim($this->url . '/' . ltrim($name, '/'), '/'),
-                    'url'           => $this->wConfig()->get('Application.ApiPath') . rtrim($this->url . '/' . ltrim($name, '/'), '/'),
+                    'url'           => $this->wConfig()->get('Webiny.ApiUrl') . rtrim($this->url . '/' . ltrim($name, '/'), '/'),
                     'name'          => $config->key('name', '', true),
                     'description'   => $config->key('description', '', true),
                     'method'        => strtoupper($httpMethod),

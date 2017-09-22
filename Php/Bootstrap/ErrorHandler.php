@@ -31,13 +31,13 @@ class ErrorHandler
 
     function __construct()
     {
-        if($this->wConfig()->get('Application.Logger.Enabled', true)){
+        if($this->wConfig()->get('Webiny.Logger.Enabled', true)){
             set_error_handler([$this, 'logError'], E_ALL);
             set_exception_handler([$this, 'logException']);
             register_shutdown_function([$this, 'logFatalError']);
         }
 
-        if($this->wConfig()->get('Application.Logger.DisplayErrors', false)){
+        if($this->wConfig()->get('Webiny.Logger.DisplayErrors', false)){
             error_reporting(E_ALL);
             ini_set('display_errors', 1);
         }else{
@@ -127,7 +127,7 @@ class ErrorHandler
             $this->saveErrorsToLogger();
 
             // check if we want to display the errors or not
-            $displayErrors = $this->wConfig()->get('Application.Logger.DisplayErrors', false);
+            $displayErrors = $this->wConfig()->get('Webiny.Logger.DisplayErrors', false);
             if ($displayErrors) {
                 $error['stack'] = $this->lastStackTrace; // we display it as array so when json_encode happens that the output looks nicer
                 $data = $error;

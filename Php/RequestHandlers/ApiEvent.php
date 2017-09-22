@@ -10,7 +10,6 @@ namespace Apps\Webiny\Php\RequestHandlers;
 use Apps\Webiny\Php\Lib\Response\ApiResponse;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\EventManager\Event;
-use Webiny\Component\Http\Request;
 use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
 
 /**
@@ -36,7 +35,7 @@ class ApiEvent extends Event
      */
     public function getUrl(){
         $url = $this->wRequest()->getCurrentUrl(true)->val();
-        $apiPath = $this->wConfig()->getConfig()->get('Application.ApiPath');
+        $apiPath = $this->wConfig()->getConfig()->get('Webiny.ApiUrl');
         return $this->str($url)->replace($apiPath, '')->explode('?')->first();
     }
 

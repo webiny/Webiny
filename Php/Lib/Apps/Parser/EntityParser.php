@@ -152,7 +152,7 @@ class EntityParser extends AbstractParser
                 $definition = [
                     'key'           => $key,
                     'path'          => $this->url . '/' . ltrim($name, '/'),
-                    'url'           => $this->wConfig()->get('Application.ApiPath') . $this->url . '/' . ltrim($name, '/'),
+                    'url'           => $this->wConfig()->get('Webiny.ApiUrl') . $this->url . '/' . ltrim($name, '/'),
                     'name'          => $config->key('name'),
                     'description'   => $config->key('description', '', true),
                     'method'        => strtoupper($httpMethod),

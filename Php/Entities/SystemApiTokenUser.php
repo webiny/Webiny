@@ -7,6 +7,8 @@ use Webiny\Component\Entity\EntityCollection;
 
 /**
  * Class SystemApiTokenUser
+ * This class represents the user of System token.
+ * Whenever a request is made using system api token, this user will be returned as current user.
  */
 final class SystemApiTokenUser extends AbstractServiceUser
 {
@@ -26,7 +28,7 @@ final class SystemApiTokenUser extends AbstractServiceUser
         }
 
         if (!$this->exists()) {
-            $host = $this->url($this->wConfig()->get('Application.WebPath'))->getHost();
+            $host = $this->url($this->wConfig()->get('Webiny.WebUrl'))->getHost();
             $this->meta['apiToken'] = 'system';
             $this->email = $this->meta['apiToken'] . '@' . $host;
             $this->password = $this->crypt()->generateHardReadableString(30);
