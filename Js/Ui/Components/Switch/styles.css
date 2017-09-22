@@ -13,8 +13,8 @@
 	line-height: 20px;
 	text-align: center;
 	background: #ddd;
-	width: 85px;
-	height: 32px;
+	width: 50px;
+	height: 22px;
 	cursor: pointer;
 	transition: 0.3s ease-in-out;
 }
@@ -24,10 +24,10 @@
 	display: block;
 	background: #fff;
 	position: absolute;
-	top: 0px;
-	left: 0px;
-	width: 41px;
-	height: 30px;
+	top: 0;
+	left: 0;
+	width: 20px;
+	height: 20px;
 	padding: 5px;
 	text-align: center;
 	border-radius: 60px;
@@ -52,7 +52,7 @@
 }
 
 .switch input:checked + label:after {
-	left: 42px;
+	left: 28px;
 }
 
 .switch.disabled {
