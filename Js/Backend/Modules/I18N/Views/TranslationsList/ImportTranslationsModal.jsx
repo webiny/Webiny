@@ -13,16 +13,21 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
             <Ui.Modal.Dialog>
                 <Ui.Form
                     api="/entities/webiny/i18n-texts"
-                    url="/import/zip"
-                    onSuccessMessage={model => (
-                        this.i18n(`Inserted {inserted|plural:1:translation:default:translations} ({ignored} ignored).`, {
+                    url="/translations/import"
+                    onSubmit={async (model, form) => {
+                        form.showLoading();
+                        const extension = model.file.name.split('.').pop();
+                        const response = await form.api.post('/translations/import/' + extension, model);
+                        form.hideLoading();
+
+                        if (response.isError()) {
+                            Webiny.Growl.danger(response.getMessage());
+                        }
+
+                        Webiny.Growl.success(this.i18n(`Inserted {inserted|plural:1:translation:default:translations} ({ignored} ignored).`, {
                             inserted: model.inserted,
                             ignored: model.ignored
-                        })
-                    )}
-                    onSubmitSuccess={async () => {
-                        await this.hide();
-                        this.props.onTextsScanned();
+                        }));
                     }}>
                     {(model, form) => (
                         <Ui.Modal.Content>
@@ -34,12 +39,19 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
                                     <Ui.Grid.Col all={12}>
                                         <Ui.File
                                             validate="required"
-                                            placeholder={this.i18n('ZIP or JSON file')}
+                                            placeholder={this.i18n('JSON or YAML file')}
                                             label={this.i18n('Choose File')}
-                                            name="file"
-                                            accept={['application/zip']}/>
+                                            name="file"/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
+
+                                <Ui.Section title="Options"/>
+                                <Ui.Grid.Row>
+                                    <Ui.Grid.Col all={12}>
+                                        <Ui.Checkbox name="overwriteExisting" label={this.i18n('Overwrite existing')}/>
+                                    </Ui.Grid.Col>
+                                </Ui.Grid.Row>
+
                             </Ui.Modal.Body>
                             <Ui.Modal.Footer >
                                 <Ui.Button label={this.i18n(`Cancel`)} onClick={this.hide}/>
@@ -60,7 +72,5 @@ ImportTranslationsModal.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.def
 
 export default Webiny.createComponent(ImportTranslationsModal, {
     modulesProp: 'Ui',
-    modules: [
-        'Modal', 'Form', 'Grid', 'CheckboxGroup', 'Checkbox', 'Button', 'File'
-    ]
+    modules: ['Modal', 'Form', 'Grid', 'Checkbox', 'Button', 'File', 'Section']
 });

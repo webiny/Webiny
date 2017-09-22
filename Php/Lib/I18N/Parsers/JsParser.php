@@ -1,6 +1,6 @@
 <?php
 
-namespace Apps\Webiny\Php\Lib\I18N\I18N;
+namespace Apps\Webiny\Php\Lib\I18N\Parsers;
 
 use Apps\Webiny\Php\Lib\Apps\App;
 use Apps\Webiny\Php\Lib\Apps\JsApp;

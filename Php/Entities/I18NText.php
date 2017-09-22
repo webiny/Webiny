@@ -8,6 +8,7 @@ use Apps\Webiny\Php\Lib\Entity\EntityQuery\EntityQuery;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\Filter;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\QueryContainer;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
+use Apps\Webiny\Php\Lib\I18N\Exports\TranslationsExport;
 use Apps\Webiny\Php\Lib\I18N\I18N;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use PHPZip\Zip\Stream\ZipStream;
@@ -145,16 +146,28 @@ class I18NText extends AbstractEntity
          *
          * @api.body.apps   array   List of apps
          */
-        $api->post('translations/export/json', function () {
+        $api->post('translations/export/{type}', function ($type) {
             $apps = $this->wRequest()->getRequestData()['apps'];
             $groups = $this->wRequest()->getRequestData()['groups'];
             $locales = $this->wRequest()->getRequestData()['locales'];
 
-            $export = I18N::getInstance()->exportTranslations($apps, $groups, $locales);
-            $export->downloadJson();
+            $export = new TranslationsExport();
+            $export->setApps($apps)->setGroups($groups)->setLocales($locales)->fromDb();
+
+            switch ($type) {
+                case 'yaml':
+                    $export->downloadYaml();
+                    break;
+                case 'json':
+                    $export->downloadJson();
+                    break;
+                default:
+                    throw new AppException($this->wI18n('Invalid file type provided.'));
+            }
+
         })->setBodyValidators([
-            'apps' => 'required',
-            'groups' => 'required',
+            'apps'    => 'required',
+            'groups'  => 'required',
             'locales' => 'required'
         ])->setPublic();
 
@@ -164,18 +177,25 @@ class I18NText extends AbstractEntity
          *
          * @api.body.apps   array   List of apps
          */
-        $api->post('translations/import/json', function () {
-            $apps = $this->wRequest()->getRequestData()['apps'];
-            $groups = $this->wRequest()->getRequestData()['groups'];
-            $locales = $this->wRequest()->getRequestData()['locales'];
+        $api->post('translations/import/{type}', function ($type) {
+            $file = $this->wRequest()->getRequestData()['file'];
+            $options = $this->wRequest()->getRequestData()['options'] ?? [];
 
-            $export = I18N::getInstance()->exportTranslations($apps, $groups, $locales);
-            $export->downloadJson();
-        })->setBodyValidators([
-            'apps' => 'required',
-            'groups' => 'required',
-            'locales' => 'required'
-        ])->setPublic();
+            $export = new TranslationsExport();
+
+            switch ($type) {
+                case 'yaml':
+                    $export->fromYamlFile($file);
+                    break;
+                case 'json':
+                    $export->fromJsonFile($file);
+                    break;
+                default:
+                    throw new AppException($this->wI18n('Invalid file type provided.'));
+            }
+
+            $export->toDb($options);
+        })->setBodyValidators(['file' => 'required'])->setPublic();
 
         /**********************************************************************************************************
          *                                          !! Entity API !!                                              *

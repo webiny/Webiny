@@ -32,9 +32,10 @@ class ExportTranslationsModal extends Webiny.Ui.ModalComponent {
 
         return (
             <Ui.Modal.Dialog>
-                <Ui.Form>
-                    {(model, form) => {
+                <Ui.Form defaultModel={{fileType: 'json'}}>
+                    {model => {
                         const availableGroups = this.getAvailableGroups(model.apps);
+                        const downloadUrl = `${Webiny.Config.ApiPath}/entities/webiny/i18n-texts/translations/export/${model.fileType}`;
 
                         return (
                             <Ui.Modal.Content>
@@ -54,7 +55,6 @@ class ExportTranslationsModal extends Webiny.Ui.ModalComponent {
                                                 valueAttr="name"/>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>
-
                                     {!_.isEmpty(availableGroups) && (
                                         <Ui.Grid.Row>
                                             <Ui.Grid.Col all={12}>
@@ -68,7 +68,6 @@ class ExportTranslationsModal extends Webiny.Ui.ModalComponent {
                                             </Ui.Grid.Col>
                                         </Ui.Grid.Row>
                                     )}
-
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={12}>
                                             <Ui.CheckboxGroup
@@ -82,6 +81,14 @@ class ExportTranslationsModal extends Webiny.Ui.ModalComponent {
                                                 api="/entities/webiny/i18n-locales"/>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={12}>
+                                            <Ui.RadioGroup name="fileType" label={this.i18n('Select export file type')}>
+                                                <option value="json">{this.i18n('JSON')}</option>
+                                                <option value="yaml">{this.i18n('YAML')}</option>
+                                            </Ui.RadioGroup>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
                                 </Ui.Modal.Body>
                                 <Ui.Modal.Footer >
                                     <Ui.Button label={this.i18n(`Cancel`)} onClick={this.hide}/>
@@ -92,7 +99,7 @@ class ExportTranslationsModal extends Webiny.Ui.ModalComponent {
                                         method="POST"
                                         params={model}
                                         type="primary"
-                                        download={Webiny.Config.ApiPath + '/entities/webiny/i18n-texts/translations/export/json'}>
+                                        download={downloadUrl}>
                                         {this.i18n(`Export`)}
                                     </Ui.DownloadLink>
                                 </Ui.Modal.Footer>
@@ -110,6 +117,6 @@ ExportTranslationsModal.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.def
 export default Webiny.createComponent(ExportTranslationsModal, {
     modulesProp: 'Ui',
     modules: [
-        'Modal', 'Form', 'Grid', 'CheckboxGroup', 'Checkbox', 'Button', 'DownloadLink'
+        'Modal', 'Form', 'Grid', 'CheckboxGroup', 'Checkbox', 'Button', 'DownloadLink', 'RadioGroup'
     ]
 });

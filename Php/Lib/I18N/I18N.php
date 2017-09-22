@@ -9,8 +9,8 @@ use Apps\Webiny\Php\Lib\Apps\App;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\I18N\I18N\ExportTexts;
 use Apps\Webiny\Php\Lib\I18N\I18N\ExportTranslations;
-use Apps\Webiny\Php\Lib\I18N\I18N\JsParser;
-use Apps\Webiny\Php\Lib\I18N\I18N\PhpParser;
+use Apps\Webiny\Php\Lib\I18N\Parsers\JsParser;
+use Apps\Webiny\Php\Lib\I18N\Parsers\PhpParser;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\StdLib\SingletonTrait;
 use Webiny\Component\StdLib\StdLibTrait;
@@ -101,39 +101,6 @@ class I18N
         $texts = array_merge(PhpParser::getInstance()->parse($app), JsParser::getInstance()->parse($app));
 
         return $this->saveTextsToDb($texts, $options);
-    }
-
-    /**
-     * Returns export of all texts and text groups for given list of apps, which can be imported in another environment.
-     *
-     * @param array $apps
-     *
-     * @param array $groups
-     *
-     * @return I18NTextsExport
-     */
-    public function exportTexts($apps, $groups = [])
-    {
-        $exportTranslations = new ExportTexts($apps, $groups);
-
-        return $exportTranslations->execute();
-    }
-
-    /**
-     * Returns export of all texts and text groups for given list of apps, which can be imported in another environment.
-     *
-     * @param array $apps
-     *
-     * @param array $groups
-     * @param       $locales
-     *
-     * @return I18NTranslationsExport
-     */
-    public function exportTranslations($apps, $groups = [], $locales = [])
-    {
-        $exportTranslations = new ExportTranslations($apps, $groups, $locales);
-
-        return $exportTranslations->execute();
     }
 
     /**
