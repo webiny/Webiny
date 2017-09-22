@@ -137,7 +137,7 @@ class I18NText extends AbstractEntity
 
             $this->setTranslation($locale, $data['text'] ?? '')->save();
 
-            return ['locale' => $locale->key, 'text' => $data['translation']];
+            return ['locale' => $locale->key, 'text' => $data['text']];
         })->setBodyValidators(['locale' => 'required'])->setPublic();
 
         /**

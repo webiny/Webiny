@@ -32,6 +32,11 @@ EditableTranslation.defaultProps = {
         const Ui = this.props.Ui;
         const {text, locale, translation, edit} = this.state;
 
+        let translationText = _.get(translation, 'text');
+        if (_.isEmpty(translationText)) {
+            translationText = <div className={css.noTranslationLabel}>{this.i18n('No translation')}</div>;
+        }
+
         return (
             <div ref={ref => this.ref = ref} className={css.editableTranslation} onClick={edit ? _.noop : this.showForm}>
                 <label>
@@ -64,9 +69,7 @@ EditableTranslation.defaultProps = {
                             );
                         }}
                     </Ui.Form>
-                ) : (
-                    <div>{_.get(translation, 'text', <span className={css.noTranslationLabel}>{this.i18n('No translation')}</span>)}</div>
-                )}
+                ) : translationText}
             </div>
         );
     }
