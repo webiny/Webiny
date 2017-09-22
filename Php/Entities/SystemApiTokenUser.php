@@ -2,7 +2,6 @@
 
 namespace Apps\Webiny\Php\Entities;
 
-use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Webiny\Component\Entity\EntityCollection;
 
 /**
@@ -19,15 +18,20 @@ final class SystemApiTokenUser extends AbstractServiceUser
      */
     private $roles = null;
 
+    public function populate($data)
+    {
+        if (!$this->isDbData($data)) {
+            return $this;
+        }
+
+        return parent::populate($data);
+    }
+
     public function save()
     {
         // Check if another system user already exists
         $systemUser = $this->wDatabase()->findOne(User::getCollection(), ['meta.apiToken' => 'system', 'deletedOn' => null]);
-        if ($systemUser) {
-            throw new AppException('Only one SystemApiTokenUser is allowed in the system!', 'WBY-SYSTEM-USER-EXISTS');
-        }
-
-        if (!$this->exists()) {
+        if (!$this->exists() && !$systemUser) {
             $host = $this->url($this->wConfig()->get('Webiny.WebUrl'))->getHost();
             $this->meta['apiToken'] = 'system';
             $this->email = $this->meta['apiToken'] . '@' . $host;
