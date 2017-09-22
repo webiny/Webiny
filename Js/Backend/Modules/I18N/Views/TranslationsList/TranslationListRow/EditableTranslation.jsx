@@ -35,6 +35,8 @@ EditableTranslation.defaultProps = {
         let translationText = _.get(translation, 'text');
         if (_.isEmpty(translationText)) {
             translationText = <div className={css.noTranslationLabel}>{this.i18n('No translation')}</div>;
+        } else {
+            translationText = <div>{translationText}</div>;
         }
 
         return (
@@ -49,6 +51,7 @@ EditableTranslation.defaultProps = {
                         api="/entities/webiny/i18n-texts"
                         onSubmit={(model, form) => {
                             this.hideForm();
+                            model.text = _.trim(model.text);
                             this.setState({translation: model}, async () => {
                                 const response = await form.api.patch(`/${text.id}/translations`, model);
                                 if (response.isError()) {
