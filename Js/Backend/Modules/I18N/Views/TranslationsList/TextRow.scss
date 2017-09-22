@@ -1,20 +1,22 @@
 .translationListRow {
-  translation-key {
+  code {
+    font-size: 10px;
+    margin-left: 8px;
+  }
+  h1 {
     display: block;
     font-size: 14px;
-    font-weight: bold;
     padding: 0 8px;
-  }
-  translation-base {
-    display: block;
-    font-size: 13px;
-    padding: 0 8px;
+    margin: 5px 0;
+    border: none;
+    font-weight: normal;
   }
   translations {
     display: block;
     border-top: 2px solid red;
     margin-top: 10px;
     ul {
+      margin-bottom: 0;
       li {
         list-style: none;
         font-size: 14px;

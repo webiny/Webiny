@@ -65,6 +65,12 @@ class TranslationsExport extends TextsExport
                 }
             }
 
+            foreach ($locales as $locale) {
+                if (!isset($translations[$locale])) {
+                    $translations[$locale] = '';
+                }
+            }
+
             $appsTexts[$app][$databaseText['key']] = [
                 'Base'         => $databaseText['base'],
                 'Translations' => $translations
@@ -203,29 +209,6 @@ class TranslationsExport extends TextsExport
         header('Content-disposition: attachment; filename=i18n_' . time() . '.yaml');
         header('Content-type: application/x-yaml');
         die($this->toYaml());
-    }
-
-    private function mergeTranslations($translations1, $translations2)
-    {
-        $return = $translations2;
-
-        foreach ($translations1 as $locale => $text) {
-            $existingTranslationIndex = -1;
-            foreach ($return as $index => $translation) {
-                if ($translation['locale'] === $locale) {
-                    $existingTranslationIndex = $index;
-                    break;
-                }
-            }
-
-            if ($existingTranslationIndex >= 0) {
-                $return[$existingTranslationIndex]['text'] = $text;
-            } else {
-                $return[] = ['locale' => $locale, 'text' => $text];
-            }
-        }
-
-        return $return;
     }
 
 }

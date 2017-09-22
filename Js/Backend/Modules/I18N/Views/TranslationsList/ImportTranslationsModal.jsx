@@ -14,10 +14,11 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
                 <Ui.Form
                     api="/entities/webiny/i18n-texts"
                     url="/translations/import"
-                    defaultModel={{options: {}}}
+                    defaultModel={{options: {}, response: null}}
                     onSubmit={async (model, form) => {
-                        const preview = model.options.preview;
                         form.showLoading();
+                        const preview = model.options.preview;
+                        form.setState('model.response', null);
                         const extension = model.file.name.split('.').pop();
                         const response = await form.api.post('/translations/import/' + extension, model);
                         form.hideLoading();
@@ -29,10 +30,11 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
                         if (preview) {
                             console.log('preview')
                         } else {
-                            Webiny.Growl.success(this.i18n(`Inserted {inserted|plural:1:translation:default:translations} ({ignored} ignored).`, {
-                                inserted: model.inserted,
-                                ignored: model.ignored
-                            }));
+                            Webiny.Growl.success(
+                                <div>
+                                    {this.i18n('Import successfully ')}
+                                </div>
+                            );
                         }
 
                     }}>

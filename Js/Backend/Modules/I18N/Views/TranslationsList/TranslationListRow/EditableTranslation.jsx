@@ -34,31 +34,38 @@ EditableTranslation.defaultProps = {
 
         return (
             <div ref={ref => this.ref = ref} className={css.editableTranslation} onClick={edit ? _.noop : this.showForm}>
-                <label>{locale.label}</label>
+                <label>
+                    {!_.isEmpty(_.get(translation, 'text')) && <Ui.Icon icon="icon-check"/>}
+                    {locale.label}
+                </label>
                 {this.state.edit ? (
                     <Ui.Form
                         defaultModel={{locale: locale.key, text: _.get(translation, 'text')}}
                         api="/entities/webiny/i18n-texts"
-                        onSubmit={async (model, form) => {
-                            const response = await form.api.patch(`/${text.id}/translations`, model);
-                            if (response.isError()) {
-                                return Webiny.Growl.danger(response.getMessage());
-                            }
+                        onSubmit={(model, form) => {
+                            this.hideForm();
+                            this.setState({translation: model}, async () => {
+                                const response = await form.api.patch(`/${text.id}/translations`, model);
+                                if (response.isError()) {
+                                    this.showForm();
+                                    return Webiny.Growl.danger(response.getMessage());
+                                }
 
-                            this.setState({translation: model}, () => {
-                                this.hideForm();
                                 Webiny.Growl.success(this.i18n('Translation successfully saved!'));
                             });
                         }}>
-                        {() => (
-                            <Ui.Textarea
-                                placeholder={this.i18n('No translation available...')}
-                                name="text"
-                                onKeyUp={event => event.key === 'Escape' && this.hideForm()}/>
-                        )}
+                        {() => {
+                            const shortcut = navigator.platform === 'MacIntel' ? 'Cmd + Enter' : 'Ctrl + Enter';
+                            return (
+                                <Ui.Textarea
+                                    placeholder={this.i18n('Press {shortcut} to save translation or Esc to cancel', {shortcut})}
+                                    name="text"
+                                    onKeyUp={event => event.key === 'Escape' && this.hideForm()}/>
+                            );
+                        }}
                     </Ui.Form>
                 ) : (
-                    <div>{_.get(translation, 'text', this.i18n('N/A'))}</div>
+                    <div>{_.get(translation, 'text', <span className={css.noTranslationLabel}>{this.i18n('No translation')}</span>)}</div>
                 )}
             </div>
         );
@@ -67,5 +74,5 @@ EditableTranslation.defaultProps = {
 
 export default Webiny.createComponent(EditableTranslation, {
     modulesProp: 'Ui',
-    modules: ['Form', 'Textarea', 'Form']
+    modules: ['Form', 'Textarea', 'Form', 'Icon']
 });

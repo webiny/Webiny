@@ -19,8 +19,8 @@ TextRow.defaultProps = {
             <div className={css.translationListRow}>
                 <div onClick={this.toggle}>
                     <div>
-                        <translation-key className="key">{text.key}</translation-key>
-                        <translation-base className="base">{text.base}</translation-base>
+                        <h1 className="base">{text.base}</h1>
+                        <code className="key">{text.key}</code>
                     </div>
                     <translations>
                         <ul>

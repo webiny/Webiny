@@ -48,7 +48,8 @@ class I18n {
 
         // Check if we have received {value: ..., format: ...} object.
         const output = {value: values[variable], format: null};
-        if (_.isFunction(output.value.format)) {
+
+        if (_.isFunction(_.get(output.value, 'format'))) {
             output.format = output.value.format;
             output.value = output.value.value;
         }

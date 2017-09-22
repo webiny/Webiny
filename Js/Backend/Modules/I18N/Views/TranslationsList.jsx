@@ -24,7 +24,7 @@ TranslationsList.defaultProps = {
     renderer () {
         return (
             <Webiny.Ui.LazyLoad
-                modules={['ViewSwitcher', 'View', 'Button', 'ButtonGroup', 'Icon', 'Textarea', 'List', 'Link', 'Input', 'Link', 'Form', 'Grid', 'Select']}>
+                modules={['ViewSwitcher', 'View', 'Button', 'ButtonGroup', 'Icon', 'List', 'Input', 'Form', 'Grid', 'Select']}>
                 {Ui => (
                     <Ui.ViewSwitcher>
                         <Ui.ViewSwitcher.View view="translationsList" defaultView>
@@ -35,7 +35,7 @@ TranslationsList.defaultProps = {
                                         description={this.i18n('Manage translations for texts in all installed apps.')}>
                                         <Ui.ButtonGroup>
                                             <Ui.Button
-                                                type="secondary"
+                                                type="primary"
                                                 onClick={showView('importTranslationsModal')}
                                                 icon="fa-download"
                                                 label={this.i18n(`Import`)}/>
@@ -51,29 +51,19 @@ TranslationsList.defaultProps = {
                                             connectToRouter
                                             title={this.i18n(`Translations`)}
                                             api="/entities/webiny/i18n-texts"
-                                            searchFields="key,base,app,group.name"
-                                            fields="key,base,app,translations"
+                                            searchFields="key,base,app,translations.text"
+                                            fields="key,base,translations"
                                             sort="-createdOn">
                                             <Ui.List.FormFilters>
                                                 {apply => (
                                                     <Ui.Grid.Row>
-                                                        <Ui.Grid.Col all={3}>
+                                                        <Ui.Grid.Col all={4}>
                                                             <Ui.Input
                                                                 name="_searchQuery"
-                                                                placeholder="Search by key or text"
+                                                                placeholder="Search by key, text or translation"
                                                                 onEnter={apply()}/>
                                                         </Ui.Grid.Col>
-                                                        <Ui.Grid.Col all={3}>
-                                                            <Ui.Select
-                                                                api="/entities/webiny/i18n-locales"
-                                                                name="locale"
-                                                                fields="id,label"
-                                                                textAttr="label"
-                                                                placeholder="Filter by locale"
-                                                                allowClear
-                                                                onChange={apply()}/>
-                                                        </Ui.Grid.Col>
-                                                        <Ui.Grid.Col all={3}>
+                                                        <Ui.Grid.Col all={4}>
                                                             <Ui.Select
                                                                 name="app"
                                                                 api="/services/webiny/apps"
@@ -84,7 +74,7 @@ TranslationsList.defaultProps = {
                                                                 allowClear
                                                                 onChange={apply()}/>
                                                         </Ui.Grid.Col>
-                                                        <Ui.Grid.Col all={3}>
+                                                        <Ui.Grid.Col all={4}>
                                                             <Ui.Select
                                                                 api="/entities/webiny/i18n-text-groups"
                                                                 name="group"
