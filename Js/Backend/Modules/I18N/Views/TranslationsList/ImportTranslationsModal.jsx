@@ -32,19 +32,28 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
                     {(model, form) => {
                         let results = null;
                         if (model.results) {
-                            if (model.preview) {
+                            if (model.results.preview) {
                                 results = (
-                                    <wrapper>
-                                        Export file is valid. After importing, following changes will be made:
+                                    <Ui.Alert>
+                                        {this.i18n('Export file is valid. After importing, following changes will be applied:')}
                                         <ul>
-                                            <li>3 inserted</li>
-                                            <li>2 updated</li>
-                                            <li>1 ignored</li>
+                                            <li>{this.i18n('{num} inserted', {num: <strong>{model.results.data.inserted}</strong>})}</li>
+                                            <li>{this.i18n('{num} updated', {num: <strong>{model.results.data.updated}</strong>})}</li>
+                                            <li>{this.i18n('{num} ignored', {num: <strong>{model.results.data.ignored}</strong>})}</li>
                                         </ul>
-                                    </wrapper>
+                                    </Ui.Alert>
                                 );
                             } else {
-
+                                results = (
+                                    <Ui.Alert type="success">
+                                        {this.i18n('Import successful, following changes were applied:')}
+                                        <ul>
+                                            <li>{this.i18n('{num} inserted', {num: <strong>{model.results.data.inserted}</strong>})}</li>
+                                            <li>{this.i18n('{num} updated', {num: <strong>{model.results.data.updated}</strong>})}</li>
+                                            <li>{this.i18n('{num} ignored', {num: <strong>{model.results.data.ignored}</strong>})}</li>
+                                        </ul>
+                                    </Ui.Alert>
+                                );
                             }
                         }
                         return (
