@@ -78,7 +78,6 @@ class TranslationsExport extends TextsExport
 
     public function toDb($options = null)
     {
-        $options['overwriteExisting'] = $options['overwriteExisting'] ?? true;
         $options['preview'] = $options['preview'] ?? false;
 
         $dbTranslations = [];
@@ -94,13 +93,45 @@ class TranslationsExport extends TextsExport
             }
         }
 
+        $stats = ['inserted' => 0, 'updated' => 0, 'ignored' => 0];
+
         // Let's merge new translations and do updates in database.
         foreach ($this->texts as $app => $appTexts) {
             foreach ($appTexts as $key => $appText) {
-                $translations = $this->mergeTranslations($appText['Translations'], $dbTranslations[$key]);
-                $this->wDatabase()->update('I18NTexts', ['key' => $key], ['$set' => ['translations' => $translations]]);
+
+                // Let's merge newly received translations with the ones in the database
+                foreach ($appText['Translations'] as $locale => $text) {
+                    $existingTranslationIndex = -1;
+                    foreach ($dbTranslations[$key] as $index => $translation) {
+                        if ($translation['locale'] === $locale) {
+                            $existingTranslationIndex = $index;
+                            break;
+                        }
+                    }
+
+                    if ($existingTranslationIndex >= 0) {
+                        if ($dbTranslations[$key][$existingTranslationIndex]['text'] === $text) {
+                            $stats['ignored']++;
+                            continue;
+                        } else {
+                            $dbTranslations[$key][$existingTranslationIndex]['text'] = $text;
+                            $stats['updated']++;
+                        }
+                    } else {
+                        $dbTranslations[$key][] = ['locale' => $locale, 'text' => $text];
+                        $stats['inserted']++;
+                    }
+                }
+
+                if (!$options['preview']) {
+                    $this->wDatabase()->update('I18NTexts', ['key' => $key], ['$set' => ['translations' => $dbTranslations[$key]]]);
+                }
+
+                unset($dbTranslations[$key]);
             }
         }
+
+        return $stats;
     }
 
     public function getLocales()
@@ -132,7 +163,7 @@ class TranslationsExport extends TextsExport
 
     public function fromJson($content)
     {
-        return $this;
+        return json_decode($content, true);
     }
 
     public function fromJsonFile($data)

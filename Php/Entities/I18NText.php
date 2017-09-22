@@ -194,7 +194,7 @@ class I18NText extends AbstractEntity
                     throw new AppException($this->wI18n('Invalid file type provided.'));
             }
 
-            $export->toDb($options);
+            return $export->toDb($options);
         })->setBodyValidators(['file' => 'required'])->setPublic();
 
         /**********************************************************************************************************

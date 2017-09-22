@@ -14,7 +14,9 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
                 <Ui.Form
                     api="/entities/webiny/i18n-texts"
                     url="/translations/import"
+                    defaultModel={{options: {}}}
                     onSubmit={async (model, form) => {
+                        const preview = model.options.preview;
                         form.showLoading();
                         const extension = model.file.name.split('.').pop();
                         const response = await form.api.post('/translations/import/' + extension, model);
@@ -24,15 +26,20 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
                             Webiny.Growl.danger(response.getMessage());
                         }
 
-                        Webiny.Growl.success(this.i18n(`Inserted {inserted|plural:1:translation:default:translations} ({ignored} ignored).`, {
-                            inserted: model.inserted,
-                            ignored: model.ignored
-                        }));
+                        if (preview) {
+                            console.log('preview')
+                        } else {
+                            Webiny.Growl.success(this.i18n(`Inserted {inserted|plural:1:translation:default:translations} ({ignored} ignored).`, {
+                                inserted: model.inserted,
+                                ignored: model.ignored
+                            }));
+                        }
+
                     }}>
                     {(model, form) => (
                         <Ui.Modal.Content>
                             <Ui.Form.Loader/>
-                            <Ui.Modal.Header title={this.i18n(`Import texts`)} onClose={this.hide}/>
+                            <Ui.Modal.Header title={this.i18n(`Import translations`)} onClose={this.hide}/>
                             <Ui.Modal.Body>
                                 <Ui.Form.Error/>
                                 <Ui.Grid.Row>
@@ -48,7 +55,7 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
                                 <Ui.Section title="Options"/>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
-                                        <Ui.Checkbox name="overwriteExisting" label={this.i18n('Overwrite existing')}/>
+                                        <Ui.Checkbox name="options.preview" label={this.i18n('Preview')}/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
 
