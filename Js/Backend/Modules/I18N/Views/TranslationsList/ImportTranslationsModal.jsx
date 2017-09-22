@@ -14,7 +14,7 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
                 <Ui.Form
                     api="/entities/webiny/i18n-texts"
                     url="/translations/import"
-                    defaultModel={{options: {}, response: null}}
+                    defaultModel={{options: {}, results: null}}
                     onSubmit={async (model, form) => {
                         form.showLoading();
                         const preview = model.options.preview;
@@ -27,50 +27,61 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
                             Webiny.Growl.danger(response.getMessage());
                         }
 
-                        if (preview) {
-                            console.log('preview')
-                        } else {
-                            Webiny.Growl.success(
-                                <div>
-                                    {this.i18n('Import successfully ')}
-                                </div>
-                            );
-                        }
-
+                        form.setState('model.results', {preview, data: response.getData()});
                     }}>
-                    {(model, form) => (
-                        <Ui.Modal.Content>
-                            <Ui.Form.Loader/>
-                            <Ui.Modal.Header title={this.i18n(`Import translations`)} onClose={this.hide}/>
-                            <Ui.Modal.Body>
-                                <Ui.Form.Error/>
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={12}>
-                                        <Ui.File
-                                            validate="required"
-                                            placeholder={this.i18n('JSON or YAML file')}
-                                            label={this.i18n('Choose File')}
-                                            name="file"/>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
+                    {(model, form) => {
+                        let results = null;
+                        if (model.results) {
+                            if (model.preview) {
+                                results = (
+                                    <wrapper>
+                                        Export file is valid. After importing, following changes will be made:
+                                        <ul>
+                                            <li>3 inserted</li>
+                                            <li>2 updated</li>
+                                            <li>1 ignored</li>
+                                        </ul>
+                                    </wrapper>
+                                );
+                            } else {
 
-                                <Ui.Section title="Options"/>
-                                <Ui.Grid.Row>
-                                    <Ui.Grid.Col all={12}>
-                                        <Ui.Checkbox name="options.preview" label={this.i18n('Preview')}/>
-                                    </Ui.Grid.Col>
-                                </Ui.Grid.Row>
+                            }
+                        }
+                        return (
+                            <Ui.Modal.Content>
+                                <Ui.Form.Loader/>
+                                <Ui.Modal.Header title={this.i18n(`Import translations`)} onClose={this.hide}/>
+                                <Ui.Modal.Body>
+                                    <Ui.Form.Error/>
+                                    {results}
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={12}>
+                                            <Ui.File
+                                                validate="required"
+                                                placeholder={this.i18n('JSON or YAML file')}
+                                                label={this.i18n('Choose File')}
+                                                name="file"/>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
 
-                            </Ui.Modal.Body>
-                            <Ui.Modal.Footer >
-                                <Ui.Button label={this.i18n(`Cancel`)} onClick={this.hide}/>
-                                <Ui.Button
-                                    type="primary"
-                                    label={this.i18n(`Import`)}
-                                    onClick={form.submit}/>
-                            </Ui.Modal.Footer>
-                        </Ui.Modal.Content>
-                    )}
+                                    <Ui.Section title="Options"/>
+                                    <Ui.Grid.Row>
+                                        <Ui.Grid.Col all={12}>
+                                            <Ui.Checkbox name="options.preview" label={this.i18n('Preview')}/>
+                                        </Ui.Grid.Col>
+                                    </Ui.Grid.Row>
+
+                                </Ui.Modal.Body>
+                                <Ui.Modal.Footer >
+                                    <Ui.Button label={this.i18n(`Cancel`)} onClick={this.hide}/>
+                                    <Ui.Button
+                                        type="primary"
+                                        label={this.i18n(`Import`)}
+                                        onClick={form.submit}/>
+                                </Ui.Modal.Footer>
+                            </Ui.Modal.Content>
+                        );
+                    }}
                 </Ui.Form>
             </Ui.Modal.Dialog>
         );
@@ -81,5 +92,5 @@ ImportTranslationsModal.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.def
 
 export default Webiny.createComponent(ImportTranslationsModal, {
     modulesProp: 'Ui',
-    modules: ['Modal', 'Form', 'Grid', 'Checkbox', 'Button', 'File', 'Section']
+    modules: ['Modal', 'Form', 'Grid', 'Checkbox', 'Button', 'File', 'Section', 'Alert']
 });
