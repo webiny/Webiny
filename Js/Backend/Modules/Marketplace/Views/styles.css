@@ -52,11 +52,11 @@
 	text-align: right;
 }
 
-.loginForm{
+.loginForm {
 	text-align: left;
 }
 
-.cantRemember{
+.cantRemember {
 	position: absolute;
 	right: 0px;
 	z-index: 10;
@@ -89,6 +89,7 @@
 	background-color: #fff;
 	text-align: center;
 	width: auto;
+	border: 1px solid #e7e5e5;
 }
 
 .browse .appBox .logo img, .browse .appBox.empty .logo {
@@ -115,8 +116,34 @@
 	font-size: 32px;
 }
 
+.browse .appBox a.viewDetails{
+	margin: 0;
+	position: absolute;
+	bottom: 80px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.browse .appBox p.shortDescription{
+	padding-bottom: 50px;
+}
+
 .browse .appBox h3 {
 	margin-top: 25px;
+}
+
+.browse .appBox .footer {
+	background-color: #F3F3F3;
+	display: block;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	left: 0;
+}
+
+.browse .appBox .footer p{
+	padding: 10px;
+	margin-bottom: 0;
 }
 
 @media (max-width: 768px) {
@@ -128,6 +155,18 @@
 		padding: 50px 25px;
 		margin: 0 0 75px 0;
 	}
+
+	.browse .appBox p.shortDescription{
+		padding-bottom: 0px;
+	}
+
+	.browse .appBox a.viewDetails{
+		position: relative;
+		left: 0;
+		bottom: 0;
+		transform: none;
+		margin-bottom: 20px;
+	}
 }
 
 /** browse: end **/
@@ -136,8 +175,9 @@
 .appDetails .header {
 	display: flex;
 	flex-direction: row;
-	align-items: end;
+	align-items: center;
 	justify-content: space-between;
+	margin-bottom: 20px;
 }
 
 .appDetails .header .logo {
@@ -150,6 +190,10 @@
 .appDetails .header .titleBlock {
 	float: left;
 	margin-left: 15px;
+}
+
+.appDetails .header .titleBlock p {
+	margin-bottom: 0;
 }
 
 .appDetails .header .title {
