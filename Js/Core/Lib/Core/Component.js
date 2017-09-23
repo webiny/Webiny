@@ -198,8 +198,7 @@ class Component extends React.Component {
 
         if (this.props.renderer) {
             try {
-                // Here we prepare renderer parameters in case any were attached to the function itself using `bindArgs`
-                return this.props.renderer.call(this, this.props, this.state);
+                return this.props.renderer.call(this, {props: this.props, state: this.state});
             } catch (e) {
                 Webiny.Logger && Webiny.Logger.reportError('js', e.message, e.stack);
                 if (DEVELOPMENT) {

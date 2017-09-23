@@ -24,7 +24,7 @@ Form.defaultProps = {
 
         return (
             <Ui.Form {...formProps}>
-                {(model, form) => (
+                {({model, form}) => (
                     <Ui.View.Form>
                         <Ui.View.Header title={model.id ? 'ACL - Edit User' : 'ACL - Create User'}/>
                         <Ui.Form.Error message="Something went wrong during save"/>

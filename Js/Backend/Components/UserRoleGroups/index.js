@@ -43,16 +43,16 @@ UserRoleGroups.defaultProps = {
             <List.Table data={this.state.roles}>
                 <List.Table.Row>
                     <List.Table.Field style={{width: 140}} align="center">
-                        {(role) => {
-                            const checkedIndex = _.findIndex(this.props.value, {id: role.id});
+                        {({data}) => {
+                            const checkedIndex = _.findIndex(this.props.value, {id: data.id});
                             return (
-                                <Switch value={checkedIndex > -1} onChange={enabled => this.onChange(checkedIndex, role, enabled)}/>
+                                <Switch value={checkedIndex > -1} onChange={enabled => this.onChange(checkedIndex, data, enabled)}/>
                             );
                         }}
                     </List.Table.Field>
                     <List.Table.Field label="Role Group">
-                        {(role) => (
-                            <span><strong>{role.name}</strong><br/>{role.slug}</span>
+                        {({data}) => (
+                            <span><strong>{data.name}</strong><br/>{data.slug}</span>
                         )}
                     </List.Table.Field>
                     <List.Table.Field label="Description" name="description"/>

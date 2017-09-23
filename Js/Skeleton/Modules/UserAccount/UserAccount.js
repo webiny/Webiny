@@ -29,7 +29,7 @@ class UserAccount extends Webiny.Ui.View {
         return (
             <Ui.Modal.Dialog>
                 <Ui.Form {...formProps}>
-                    {(model, form) => (
+                    {({model, form}) => (
                         <Ui.Modal.Content>
                             <Ui.Modal.Header title="2 Factor Auth" onClose={cancel}/>
                             <Ui.Modal.Body>
@@ -55,7 +55,7 @@ class UserAccount extends Webiny.Ui.View {
                                         <Ui.Section title="Step 2"/>
                                         <p>Scan the QR code below with the authenticator app</p>
                                         <Ui.Data api="/entities/webiny/user/2factor-qr" waitForData={true}>
-                                            {(data, filter, loader) => {
+                                            {({data, loader}) => {
                                                 if (loader) {
                                                     return loader;
                                                 }
@@ -99,7 +99,7 @@ UserAccount.defaultProps = {
     renderer() {
         const formContainer = {
             api: Webiny.Auth.getApiEndpoint(),
-            loadModel: (form) => {
+            loadModel: ({form}) => {
                 form.showLoading();
                 return form.api.get('/me', {_fields: 'id,firstName,lastName,email,gravatar,twoFactorAuth.status,meta.appNotifications'}).then(res => {
                     form.hideLoading();
@@ -125,7 +125,7 @@ UserAccount.defaultProps = {
 
         return (
             <Ui.Form {...formContainer}>
-                {(model, form) => (
+                {({model, form}) => (
                     <Ui.View.Form>
                         <Ui.View.Header title="Account Settings"/>
                         <Ui.View.Body>
@@ -158,7 +158,7 @@ UserAccount.defaultProps = {
                                         <validator name="eq">Passwords do not match</validator>
                                     </Ui.Password>
                                     <Ui.ChangeConfirm
-                                        message={value => value ? 'Dummy' : null}
+                                        message={({value}) => value ? 'Dummy' : null}
                                         renderDialog={this.twoFactorAuthModal}
                                         onComplete={() => this.twoFactorAuthConfirmation.show()}>
                                         <Ui.Switch label="Enable 2 Factor Authentication" name="twoFactorAuth.status"/>

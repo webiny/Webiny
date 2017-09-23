@@ -14,7 +14,7 @@ class AddServiceModal extends Webiny.Ui.ModalComponent {
 
         return (
             <Modal.Dialog>
-                {dialog => (
+                {({dialog}) => (
                     <Form
                         onSubmit={async (model, form) => {
                             form.showLoading();
@@ -30,7 +30,7 @@ class AddServiceModal extends Webiny.Ui.ModalComponent {
 
                             this.props.onSubmit(apiResponse.getData());
                         }}>
-                        {(model, form) => (
+                        {({form}) => (
                             <Modal.Content>
                                 <Modal.Header title="Add service" onClose={dialog.hide}/>
                                 <Modal.Body>

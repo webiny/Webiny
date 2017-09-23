@@ -40,7 +40,7 @@ EntityPermissions.defaultProps = {
         return (
             <ViewSwitcher>
                 <ViewSwitcher.View view="form" defaultView>
-                    {showView => (
+                    {({showView}) => (
                         <div className={styles.entityPermissionsWrapper}>
                             {this.state.loading && <Loader/>}
                             <Grid.Row className={styles.addAction}>
@@ -91,7 +91,7 @@ EntityPermissions.defaultProps = {
                     )}
                 </ViewSwitcher.View>
                 <ViewSwitcher.View view="addEntityModal" modal>
-                    {(showView, data) => (
+                    {() => (
                         <AddEntityModal
                             exclude={this.state.entities}
                             onSubmit={entity => {

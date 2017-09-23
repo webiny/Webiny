@@ -76,7 +76,7 @@ class LinkPlugin extends Webiny.Draft.EntityPlugin {
                                 <Ui.Dropdown {...props}>
                                     {() => (
                                         <Ui.Form ref={ref => this.form = ref} onSubmit={this.submitForm}>
-                                            {(model, form) => {
+                                            {({form}) => {
                                                 return (
                                                     <div style={{width: 400}}>
                                                         <Ui.Grid.Row>

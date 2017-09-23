@@ -61,7 +61,7 @@ Login.defaultProps = {
         return (
             <sign-in-form class={this.classSet('sign-in', (this.props.overlay && 'overlay'))}>
                 <Form onSubmit={(model, form) => this.onSubmit(model, form)}>
-                    {(model, form) => (
+                    {({form}) => (
                         <div className="container">
                             <div className="sign-in-holder">
                                 <div className="form-signin">

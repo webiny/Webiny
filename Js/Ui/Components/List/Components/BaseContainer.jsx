@@ -382,25 +382,24 @@ class BaseContainer extends Webiny.Ui.Component {
 
     /**
      * Get ApiContainer content
-     * @param params Optional params to pass to content render function
      * @returns {*}
      */
-    getContent(...params) {
+    getContent() {
         const children = this.props.children;
         if (_.isFunction(children)) {
-            if (params.length === 0) {
-                params = [this, this.state.list, this.state.meta, this];
-            } else {
-                params.unshift(this);
-                params.push(this);
-            }
-            const content = children.call(...params);
+            const params = {
+                list: this.state.list,
+                meta: this.state.meta,
+                $this: this
+            };
+
+            const content = children.call(this, params);
 
             // NOTE: The following hacky "if" is needed because React does not yet support returning of multiple elements.
             // And since BaseContainer only parses first level of children, if you return some kind of a wrapper while using a layout
             // we need to get the list elements from the wrapper element (its children).
-            // When layout is not defined (or set to null/false) - this will not be executed!
-            // TODO: add support for returning of Table (currently not working without a wrapper)
+            // NOTE: When layout is not defined (or set to null/false) - this will not be executed!
+            // TODO: add support for returning a Table (currently not working without a wrapper)
             if (this.props.layout && React.Children.count(content) === 1 && _.isString(content.type)) {
                 return content.props.children;
             }

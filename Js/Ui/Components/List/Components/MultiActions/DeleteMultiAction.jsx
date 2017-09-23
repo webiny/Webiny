@@ -11,18 +11,22 @@ class DeleteMultiAction extends Webiny.Ui.Component {
     }
 
     formatMessage() {
+        const {message, data} = this.props;
+        if (_.isFunction(message)) {
+            return message({data});
+        }
         return this.props.message.replace('{count}', this.props.data.length);
     }
 
-    delete(modalActions) {
-        return this.props.actions.api.post('delete', {ids: _.map(this.props.data, 'id')}).then(res => {
+    delete({data, actions, dialog}) {
+        return this.props.actions.api.post('delete', {ids: _.map(data, 'id')}).then(res => {
             if (!res.isError()) {
-                Webiny.Growl.success(this.props.data.length + ' records deleted successfully!');
-                this.props.actions.reload();
+                Webiny.Growl.success(data.length + ' records deleted successfully!');
+                actions.reload();
             } else {
                 Webiny.Growl.danger(res.getError(), 'Delete failed', true);
             }
-            modalActions.hide();
+            return dialog.hide();
         });
     }
 }
@@ -31,20 +35,28 @@ DeleteMultiAction.defaultProps = {
     label: 'Delete',
     title: 'Delete confirmation',
     message: 'Do you really want to delete {count} record(s)?',
+    actions: null,
+    data: [],
+    onConfirm(params) {
+        return this.delete(params);
+    },
     renderer() {
-        const {Modal} = this.props;
+        const {Modal, actions, label, data, children} = this.props;
+
+        const content = _.isFunction(children) ? children : ({data, actions, dialog}) => {
+            const props = {
+                title: this.props.title,
+                message: this.formatMessage(),
+                onConfirm: () => this.props.onConfirm.call(this, {data, actions, dialog})
+            };
+            return (
+                <Modal.Confirmation {...props}/>
+            );
+        };
+
         return (
-            <ModalMultiAction label={this.props.label} data={this.props.data}>
-                {(data, actions, modalActions) => {
-                    const props = {
-                        title: this.props.title,
-                        message: this.formatMessage(),
-                        onConfirm: () => this.delete(modalActions)
-                    };
-                    return (
-                        <Modal.Confirmation {...props}/>
-                    );
-                }}
+            <ModalMultiAction actions={actions} label={label} data={data}>
+                {content}
             </ModalMultiAction>
         );
     }

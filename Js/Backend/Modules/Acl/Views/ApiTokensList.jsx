@@ -51,7 +51,7 @@ ApiTokensList.defaultProps = {
                     return (
                         <Ui.ViewSwitcher>
                             <Ui.ViewSwitcher.View view="tokensListView" defaultView>
-                                {showView => (
+                                {({showView}) => (
                                     <Ui.View.List>
                                         <Ui.View.Header
                                             title="ACL - API Tokens"
@@ -71,18 +71,18 @@ ApiTokensList.defaultProps = {
                                         <Ui.View.Body>
                                             <Ui.List {...listProps}>
                                                 <Ui.List.FormFilters>
-                                                    {(applyFilters) => (
+                                                    {({apply}) => (
                                                         <Ui.Input
                                                             placeholder="Search by owner or token"
                                                             name="_searchQuery"
-                                                            onEnter={applyFilters()}/>
+                                                            onEnter={apply()}/>
                                                     )}
                                                 </Ui.List.FormFilters>
                                                 <Table>
                                                     <Table.Row>
                                                         <Table.Field name="token" align="left" label="Token">
-                                                            {data => (
-                                                                <Ui.Link onClick={() => showView('tokenModalView')(data)}>
+                                                            {({data}) => (
+                                                                <Ui.Link onClick={() => showView('tokenModalView')({data})}>
                                                                     <strong>{data.token}</strong><br/>
                                                                     {data.description}
                                                                 </Ui.Link>
@@ -95,7 +95,7 @@ ApiTokensList.defaultProps = {
                                                             label="Last activity"
                                                             sort="lastActivity"/>
                                                         <Table.Field name="requests" align="center" label="Total Requests" sort="requests">
-                                                            {data => (
+                                                            {({data}) => (
                                                                 <Ui.Link route="ApiLogs.List" params={{token: data.id}}>
                                                                     {data.requests}
                                                                 </Ui.Link>
@@ -111,8 +111,8 @@ ApiTokensList.defaultProps = {
                                                             label="Enabled"
                                                             sort="enabled"
                                                             align="center"
-                                                            message={checked => {
-                                                                if (!checked) {
+                                                            message={({value}) => {
+                                                                if (!value) {
                                                                     return (
                                                                         <span>
                                                                             This will disable API token and prevent it's bearer from using your API!
@@ -135,9 +135,9 @@ ApiTokensList.defaultProps = {
                                 )}
                             </Ui.ViewSwitcher.View>
                             <Ui.ViewSwitcher.View view="tokenModalView" modal>
-                                {(showView, data) => (
+                                {({showView, data: {data}}) => (
                                     <ApiTokenModal
-                                        {...{showView, data}}
+                                        {...{showView,data}}
                                         refreshTokens={() => this.apiTokensList.loadData()}/>
                                 )}
                             </Ui.ViewSwitcher.View>

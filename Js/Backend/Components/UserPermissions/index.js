@@ -39,18 +39,18 @@ UserPermissions.defaultProps = {
             <List.Table data={this.state.permissions}>
                 <List.Table.Row>
                     <List.Table.Field style={{width: 140}}>
-                        {(permission) => {
-                            const checkedIndex = _.findIndex(this.props.value, {id: permission.id});
+                        {({data}) => {
+                            const checkedIndex = _.findIndex(this.props.value, {id: data.id});
                             return (
-                                <Switch value={checkedIndex > -1} onChange={enabled => this.onChange(checkedIndex, permission, enabled)}/>
+                                <Switch value={checkedIndex > -1} onChange={enabled => this.onChange(checkedIndex, data, enabled)}/>
                             );
                         }}
                     </List.Table.Field>
                     <List.Table.Field label="Permission">
-                        {(permission) => (
+                        {({data}) => (
                             <span>
-                                <Link route="UserPermissions.Edit" params={{id: permission.id}}><strong>{permission.name}</strong></Link>
-                                <br/>{permission.slug}
+                                <Link route="UserPermissions.Edit" params={{id: data.id}}><strong>{data.name}</strong></Link>
+                                <br/>{data.slug}
                             </span>
                         )}
                     </List.Table.Field>

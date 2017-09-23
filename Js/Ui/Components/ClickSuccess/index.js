@@ -11,24 +11,24 @@ class ClickSuccess extends Webiny.Ui.Component {
     }
 
     hide() {
-        return this.refs.dialog.hide();
+        return this.dialog.hide();
     }
 
     onClick() {
         return Promise.resolve(this.realOnClick(this)).then(() => {
-            return this.refs.dialog.show();
+            return this.dialog.show();
         });
     }
 
     getContent() {
-        const show = (data) => {
-            this.setState({data});
-            this.refs.dialog.show();
-        };
-
         const content = this.props.children;
         if (_.isFunction(content)) {
-            return content(show);
+            return content({
+                success: (data) => {
+                    this.setState({data});
+                    this.dialog.show();
+                }
+            });
         }
 
         const input = React.Children.toArray(content)[0];
@@ -45,7 +45,7 @@ ClickSuccess.defaultProps = {
     renderDialog: null,
     renderer() {
         const dialogProps = {
-            ref: 'dialog',
+            ref: ref => this.dialog = ref,
             message: () => _.isFunction(this.props.message) ? this.props.message(this.state.data) : this.props.message,
             onClose: () => {
                 this.hide().then(this.props.onClose);

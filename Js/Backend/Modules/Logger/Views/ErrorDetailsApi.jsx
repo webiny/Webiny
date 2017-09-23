@@ -19,11 +19,11 @@ ErrorDetailsApi.defaultProps = {
             <Webiny.Ui.LazyLoad modules={['Data', 'Grid', 'CodeHighlight']}>
                 {(Ui) => (
                     <Ui.Data {...statProps}>
-                        {errorData => (
+                        {({data}) => (
                             <Ui.Grid.Row>
                                 <Ui.Grid.Col all={12}>
                                     <Ui.CodeHighlight language="json">
-                                        {JSON.stringify(errorData.clientData, null, 2)}
+                                        {JSON.stringify(data.clientData, null, 2)}
                                     </Ui.CodeHighlight>
                                 </Ui.Grid.Col>
                             </Ui.Grid.Row>

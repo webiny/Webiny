@@ -49,7 +49,7 @@ ListErrors.defaultProps = {
             <Webiny.Ui.LazyLoad modules={['List', 'Section', 'Grid', 'ExpandableList', 'Filters']}>
                 {(Ui) => (
                     <Ui.List {...jsErrorList}>
-                        {(data, meta, errorList) => {
+                        {({list, meta, $this:errorList}) => {
                             return (
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
@@ -58,11 +58,10 @@ ListErrors.defaultProps = {
                                     </Ui.Grid.Col>
                                     <Ui.Grid.Col all={12}>
                                         <Ui.List.Loader/>
-                                        <Ui.List.Table.Empty renderIf={!data.length}/>
+                                        <Ui.List.Table.Empty renderIf={!list.length}/>
                                         <Ui.ExpandableList>
-                                            {data.map(row => {
+                                            {list.map(row => {
                                                 return (
-
                                                     <Ui.ExpandableList.Row key={row.id}>
                                                         <Ui.ExpandableList.Field width={1} name="Count" className="text-center">
                                                             <ErrorCount count={row.errorCount} ref={ref => this['errorCount-' + row.id] = ref}/>
@@ -82,9 +81,7 @@ ListErrors.defaultProps = {
                                                                 icon="icon-check"
                                                                 onClick={() => this.resolveGroup(row, errorList)}/>
                                                         </Ui.ExpandableList.ActionSet>
-
                                                     </Ui.ExpandableList.Row>
-
                                                 );
                                             })}
                                         </Ui.ExpandableList>

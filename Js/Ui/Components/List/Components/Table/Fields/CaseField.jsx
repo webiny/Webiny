@@ -26,14 +26,14 @@ CaseField.defaultProps = {
         }
 
         if (_.isFunction(content)) {
-            content = content.call(this, this.props.data);
+            content = content.call(this, {data: this.props.data});
         }
 
         const {List, ...props} = this.props;
 
         return (
             <List.Table.Field {..._.omit(props, ['renderer'])}>
-                {() => content}
+                {content}
             </List.Table.Field>
         );
     }

@@ -40,7 +40,7 @@ ServicePermissions.defaultProps = {
         return (
             <ViewSwitcher>
                 <ViewSwitcher.View view="form" defaultView>
-                    {showView => (
+                    {({showView}) => (
                         <div className={styles.servicePermissionsWrapper}>
                             {this.state.loading && <Loader/>}
                             <Grid.Row className={styles.addAction}>
@@ -91,7 +91,7 @@ ServicePermissions.defaultProps = {
                     )}
                 </ViewSwitcher.View>
                 <ViewSwitcher.View view="addServiceModal" modal>
-                    {(showView, data) => (
+                    {() => (
                         <AddServiceModal
                             exclude={this.state.services}
                             onSubmit={service => {

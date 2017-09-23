@@ -72,7 +72,7 @@ class Form extends Webiny.Ui.Component {
         this.setState({model, initialModel: model});
 
         if (this.props.loadModel) {
-            return this.props.loadModel.call(this, this).then(customModel => {
+            return this.props.loadModel.call(this, {form: this}).then(customModel => {
                 const mergedModel = _.merge({}, this.props.defaultModel || {}, customModel);
                 this.setState({model: mergedModel, loading: false, initialModel: _.cloneDeep(mergedModel)});
             });
@@ -240,7 +240,7 @@ class Form extends Webiny.Ui.Component {
      * @returns {Form}
      */
     setModel(key, value = null, callback = null) {
-        if(_.isFunction(key)) {
+        if (_.isFunction(key)) {
             this.setState(key);
             return;
         }
@@ -648,7 +648,7 @@ class Form extends Webiny.Ui.Component {
         if (!_.isFunction(children)) {
             throw new Error('Form must have a function as its only child!');
         }
-        return this.registerComponents(children.call(this, _.cloneDeep(this.state.model), this));
+        return this.registerComponents(children.call(this, {model: _.cloneDeep(this.state.model), form: this}));
     }
 
     __processSubmitResponse(model, apiResponse) {

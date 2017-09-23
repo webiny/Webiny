@@ -16,10 +16,13 @@ class Filters extends Webiny.Ui.Component {
 
 Filters.defaultProps = {
     renderer() {
-        const applyFilters = filters => () => this.applyFilters(filters);
-        const resetFilters = () => () => this.applyFilters({});
+        const callbacks = {
+            apply: filters => () => this.applyFilters(filters),
+            reset: () => () => this.applyFilters({})
+        };
+
         return (
-            <webiny-list-filters>{this.props.children(applyFilters, resetFilters)}</webiny-list-filters>
+            <webiny-list-filters>{this.props.children.call(this, callbacks)}</webiny-list-filters>
         );
     }
 };

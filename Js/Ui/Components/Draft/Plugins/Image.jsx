@@ -216,9 +216,9 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
                 <Webiny.Ui.LazyLoad modules={['Form', 'Input', 'Modal', 'Tabs', 'Image', 'Button']}>
                     {(Ui) => (
                         <Ui.Modal.Dialog ref={ref => this.dialog = ref}>
-                            {dialog => (
+                            {({dialog}) => (
                                 <Ui.Form onSubmit={this.submitModal.bind(this)}>
-                                    {(model, form) => {
+                                    {({model, form}) => {
                                         const urlValidator = model.image ? null : 'required,url';
                                         let uploadTab = null;
                                         if (this.api) {
@@ -235,8 +235,11 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
                                                 <Ui.Modal.Body noPadding>
                                                     <Ui.Tabs>
                                                         <Ui.Tabs.Tab label="URL" icon="fa-link">
-                                                            <Ui.Input name="url" placeholder="Enter an image URL" label="URL"
-                                                                      validate={urlValidator}/>
+                                                            <Ui.Input
+                                                                name="url"
+                                                                placeholder="Enter an image URL"
+                                                                label="URL"
+                                                                validate={urlValidator}/>
                                                         </Ui.Tabs.Tab>
                                                         {uploadTab}
                                                     </Ui.Tabs>

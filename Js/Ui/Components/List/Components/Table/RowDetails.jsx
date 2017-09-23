@@ -10,10 +10,11 @@ RowDetails.defaultProps = {
     fieldsCount: 0,
     className: null,
     renderer() {
+        const css = this.classSet(this.props.className, styles.rowDetails);
         return (
-            <tr className={this.classSet(this.props.className, styles.rowDetails)} style={{display: this.props.expanded ? 'table-row' : 'none'}}>
+            <tr className={css} style={{display: this.props.expanded ? 'table-row' : 'none'}}>
                 <td colSpan={this.props.fieldsCount}>
-                    {this.props.expanded ? this.props.children(this.props.data, this) : null}
+                    {this.props.expanded ? this.props.children({data: this.props.data, $this: this}) : null}
                 </td>
             </tr>
         );

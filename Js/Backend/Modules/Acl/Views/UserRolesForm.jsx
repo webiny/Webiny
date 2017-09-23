@@ -22,7 +22,7 @@ Form.defaultProps = {
 
         return (
             <Ui.Form {...formProps}>
-                {(model, form) => (
+                {({model, form}) => (
                     <Ui.View.Form>
                         <Ui.View.Header title={model.id ? 'ACL - Edit Role' : 'ACL - Create Role'}/>
                         <Ui.View.Body>

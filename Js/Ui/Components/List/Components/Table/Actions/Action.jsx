@@ -11,6 +11,7 @@ Action.defaultProps = {
     onClick: _.noop,
     download: null,
     actions: null,
+    data: null,
     hide: false,
     renderer() {
         if (_.isFunction(this.props.hide) && this.props.hide(this.props.data)) {
@@ -18,7 +19,11 @@ Action.defaultProps = {
         }
 
         if (_.isFunction(this.props.children)) {
-            return this.props.children.call(this, this.props.data, this);
+            return this.props.children.call(this, {
+                data: this.props.data,
+                actions: this.props.actions,
+                $this: this
+            });
         }
 
         const {Icon, Link, DownloadLink} = this.props;
@@ -31,7 +36,13 @@ Action.defaultProps = {
         }
 
         return (
-            <Link data={this.props.data} onClick={() => this.props.onClick.call(this, this.props.data, this.props.actions, this)}>
+            <Link
+                data={this.props.data}
+                onClick={() => this.props.onClick.call(this, {
+                    data: this.props.data,
+                    actions: this.props.actions,
+                    $this: this
+                })}>
                 {icon}
                 {this.props.label}
             </Link>

@@ -27,7 +27,7 @@ List.defaultProps = {
         return (
             <Ui.ViewSwitcher>
                 <Ui.ViewSwitcher.View view="permissionsList" defaultView>
-                    {showView => (
+                    {({showView}) => (
                         <Ui.View.List>
                             <Ui.View.Header
                                 title="ACL - Permissions"
@@ -47,7 +47,7 @@ List.defaultProps = {
                             <Ui.View.Body>
                                 <Ui.List {...listProps}>
                                     <Ui.List.FormFilters>
-                                        {(apply) => (
+                                        {({apply}) => (
                                             <Ui.Grid.Row>
                                                 <Ui.Grid.Col all={12}>
                                                     <Ui.Input
@@ -61,7 +61,7 @@ List.defaultProps = {
                                     <Table>
                                         <Table.Row>
                                             <Table.Field name="name" label="Name" sort="name">
-                                                {data => (
+                                                {({data}) => (
                                                     <span>
                                                         <Ui.Link route="UserPermissions.Edit" params={{id: data.id}}>
                                                             <strong>{data.name}</strong>
@@ -90,7 +90,7 @@ List.defaultProps = {
                 </Ui.ViewSwitcher.View>
 
                 <Ui.ViewSwitcher.View view="exportModal" modal>
-                    {(showView, data) => (
+                    {({data: {data}}) => (
                         <ExportPermissionModal
                             data={data}
                             api="/entities/webiny/user-permissions"
@@ -100,7 +100,7 @@ List.defaultProps = {
                 </Ui.ViewSwitcher.View>
 
                 <Ui.ViewSwitcher.View view="importModal" modal>
-                    {(showView) => (
+                    {() => (
                         <ImportPermissionModal
                             api="/entities/webiny/user-permissions"
                             label="Permission"

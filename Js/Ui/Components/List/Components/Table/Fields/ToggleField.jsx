@@ -27,21 +27,13 @@ ToggleField.defaultProps = {
 
         const {ChangeConfirm, Switch, List, ...tdProps} = this.props;
 
-        if (this.props.message) {
-            return (
-                <List.Table.Field {..._.omit(tdProps, ['renderer'])}>
-                    {() => (
-                        <ChangeConfirm message={this.props.message}>
-                            <Switch {...props}/>
-                        </ChangeConfirm>
-                    )}
-                </List.Table.Field>
-            );
-        }
-
         return (
             <List.Table.Field {..._.omit(tdProps, ['renderer'])}>
-                {() => <Switch {...props}/>}
+                {() => (
+                    <ChangeConfirm message={this.props.message}>
+                        <Switch {...props}/>
+                    </ChangeConfirm>
+                )}
             </List.Table.Field>
         );
     }

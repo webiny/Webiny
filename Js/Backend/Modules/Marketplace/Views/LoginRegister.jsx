@@ -48,7 +48,7 @@ LoginRegister.defaultProps = {
 
         return (
             <Form {...formProps}>
-                {(model, form) => (
+                {({form}) => (
                     <div className={styles.loginRegister}>
                         <div className={styles.message}>
                             <h2><Icon icon="icon-basket_n"/> Webiny Marketplace</h2>
