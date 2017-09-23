@@ -19,7 +19,8 @@ class JsParser
     // With a simple regex, we first find all this.i18n usages in given source.
     const REGEX = [
         'namespace'       => '/@i18n.namespace ([A-Za-z\.0-9]*)?/',
-        'basic'           => '/this\.i18n\([\'\`\"]/mi',
+        'this.i18n'           => '/this\.i18n\([\'\`\"]/m',
+        'Webiny.I18n'           => '/Webiny\.I18n\([\'\`\"]/m',
         'customNamespace' => '/\.i18n\([\'|"|`]{1}.*?[\'|"|`]{1},.*?, ?\{.*?[\'|"|`]?namespace[\'|"|`]? ?: ?[\'|"|`]{1}([A-Za-z0-9\.]*?)[\'|"|`]{1}.*?\}\)/',
     ];
 
@@ -59,7 +60,16 @@ class JsParser
                     $content = trim(preg_replace('/\s+/', ' ', $content));
 
                     $parsed = self::parseTexts($content, $file);
-                    // If we don't have a global i18n namespace, we must ensure each text has it's own namespace in the file.
+                    foreach ($parsed as $text) {
+                        $texts[] = [
+                            'app' => $app->getName(),
+                            'key' => $text['namespace'] . '.' . md5($text['base']),
+                            'group' => null,
+                            'base'  => $text['base']
+                        ];
+                    }
+
+                    $parsed = self::parseTexts($content, $file, 'Webiny.I18n');
                     foreach ($parsed as $text) {
                         $texts[] = [
                             'app' => $app->getName(),
@@ -75,9 +85,9 @@ class JsParser
         return $texts;
     }
 
-    private function parseTexts($content, SplFileInfo $file)
+    private function parseTexts($content, SplFileInfo $file, $type = 'this.i18n')
     {
-        preg_match_all(self::REGEX['basic'], $content, $positions, PREG_OFFSET_CAPTURE);
+        preg_match_all(self::REGEX[$type], $content, $positions, PREG_OFFSET_CAPTURE);
         if (empty($positions)) {
             return [];
         }
@@ -88,15 +98,16 @@ class JsParser
 
 
         $contentLength = strlen($content);
-
         $namespaces = self::parseNamespaces($content);
 
         // Parsing this.i18n usages is hard. We must analyze each use thoroughly, one by one.
-        return array_map(function ($index) use ($content, $contentLength, $file, $namespaces) {
+        return array_map(function ($index) use ($content, $contentLength, $file, $namespaces, $type) {
             // Now let's get the full string, we must look forward until we reach the closing ')'.
             $base = ['part' => null, 'parts' => []];
 
-            for ($i = $index + 10; $i < $contentLength; $i++) {
+            $offset = $type === 'this.i18n' ? 10 : 12;
+
+            for ($i = $index + $offset; $i < $contentLength; $i++) {
                 if (!$base['part']) {
                     // We don't have a part that we are working on.
                     // Did we then reach the end of placeholder ? If the next non-whitespace character is ',' or ')', we are done with matching

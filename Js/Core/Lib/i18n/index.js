@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import md5 from 'blueimp-md5';
 import Webiny from 'webiny';
 import React from 'react';
 import I18nComponent from './I18N';
@@ -14,7 +15,13 @@ class I18n {
         this.translations = {};
         this.component = I18nComponent;
 
-        const translate = (base, variables = {}, key = null) => {
+        const translate = (base, variables = {}, options = {}) => {
+            if (_.isString(base) && _.isString(variables)) {
+                const key = base + md5(variables);
+                return translate(variables, options, key);
+            }
+
+            const key = options.namespace + md5(base);
             return this.translate(base, variables, key);
         };
 

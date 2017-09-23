@@ -53,6 +53,9 @@ TextsList.defaultProps = {
                                         </Ui.ButtonGroup>
                                     </Ui.View.Header>
                                     <Ui.View.Body>
+                                        <span>
+                                            {ext()}
+                                        </span>
                                         <Ui.List
                                             ref={ref => this.ref = ref}
                                             connectToRouter

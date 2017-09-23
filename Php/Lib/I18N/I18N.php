@@ -103,6 +103,7 @@ class I18N
         $texts = array_merge(PhpParser::getInstance()->parse($app), JsParser::getInstance()->parse($app));
 
         $options['overwriteExisting'] = $options['overwriteExisting'] ?? false;
+        $options['preview'] = $options['preview'] ?? false;
         $stats = ['updated' => 0, 'created' => 0, 'ignored' => 0];
 
         // Now we know the data is valid, let's do the import.
@@ -112,7 +113,9 @@ class I18N
             if ($i18nText) {
                 if ($options['overwriteExisting']) {
                     /* @var I18NText $i18nText */
-                    $i18nText->populate($text)->save();
+                    if (!$options['preview']) {
+                        $i18nText->populate($text)->save();
+                    }
                     $stats['updated']++;
                 } else {
                     $stats['ignored']++;
@@ -120,8 +123,10 @@ class I18N
                 continue;
             }
 
-            $i18nText = new I18NText();
-            $i18nText->populate($text)->save();
+            if (!$options['preview']) {
+                $i18nText = new I18NText();
+                $i18nText->populate($text)->save();
+            }
             $stats['created']++;
         }
 

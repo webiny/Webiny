@@ -13,26 +13,30 @@ TranslatedTextPercentages.defaultProps = {
         const {Ui} = this.props;
         return (
             <div className={css.translatedTextPercentages}>
-                <Ui.Section title="Translation Stats"/>
+                <Ui.Section title="Translations"/>
                 <Ui.Data api="/entities/webiny/i18n-texts/stats/translated">
-                    {data => {
-                        return (
-                            <Ui.Grid.Row >
-                                {data.translations.map(item => {
-                                    const percentage = (item.count / data.texts.total * 100).toFixed(0);
-                                    return (
-                                        <Ui.Grid.Col xs="12" sm="6" md="4" lg="3" className={css.translatedTextPercentagesLocaleStats}>
-                                            <strong>{item.locale.label}</strong>
-                                            <progress-bar>
-                                                <bar style={{width: percentage + '%'}}/>
-                                                <label>{item.count} / {data.texts.total} ({percentage}%)</label>
-                                            </progress-bar>
-                                        </Ui.Grid.Col>
-                                    );
-                                })}
-                            </Ui.Grid.Row>
-                        );
-                    }}
+                    {data => (
+                        <Ui.Grid.Row>
+                            {data.translations.map(item => {
+                                const percentage = (item.count / data.texts.total * 100).toFixed(0);
+                                return (
+                                    <Ui.Grid.Col
+                                        key={item.locale.key}
+                                        className={css.translatedTextPercentagesLocaleStats}
+                                        xs="12"
+                                        sm="6"
+                                        md="4"
+                                        lg="3">
+                                        <strong>{item.locale.label}</strong>
+                                        <progress-bar>
+                                            <bar style={{width: percentage + '%'}}/>
+                                            <label>{item.count} / {data.texts.total} ({percentage}%)</label>
+                                        </progress-bar>
+                                    </Ui.Grid.Col>
+                                );
+                            })}
+                        </Ui.Grid.Row>
+                    )}
                 </Ui.Data>
             </div>
 

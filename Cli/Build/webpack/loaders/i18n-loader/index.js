@@ -54,7 +54,7 @@ function getNamespaceOnIndex(index, namespaces) {
 module.exports = function (source) {
     const regex = {
         i18n: /this\.i18n\(['`"]/g,
-        webinyI18n: /Webiny\.i18n\(['`"]/g
+        webinyI18n: /Webiny\.I18n\(['`"]/g
     };
 
     // Let's detect all defined i18n namespaces in source.
@@ -72,9 +72,9 @@ module.exports = function (source) {
     while ((match = regex.webinyI18n.exec(source))) {
         const namespace = getNamespaceOnIndex(match.index, namespaces);
         if (!namespace) {
-            throw Error('Using "Webiny.i18n" but namespace not defined.');
+            throw Error('Using "Webiny.I18n" but namespace not defined.');
         }
-        source = source.slice(0, match.index) + `this._i18n("${namespace}", ` + source.slice(match.index + 10);
+        source = source.slice(0, match.index) + `Webiny.I18n("${namespace}", ` + source.slice(match.index + 12);
     }
 
     return source;
