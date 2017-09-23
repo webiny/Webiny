@@ -102,7 +102,7 @@ class Row extends Webiny.Ui.Component {
         const children = [];
         _.filter(childrenArray).map(fieldChild => {
             // Do not include FieldInfo in Field children
-            if (fieldChild.type !== FieldInfo) {
+            if (!Webiny.isElementOfType(fieldChild, FieldInfo)) {
                 children.push(fieldChild);
             }
         });
