@@ -13,9 +13,9 @@ interface UserInterface
     public function getUserRoles();
 
     /**
-     * Check if user has a given role
+     * Check if user has a given role or one of the given roles
      *
-     * @param $name
+     * @param string|string[] $name Role name or array of role names
      *
      * @return bool
      */
