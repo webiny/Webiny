@@ -392,10 +392,9 @@ abstract class AbstractApp
      */
     protected function parseStorages(ConfigObject $info)
     {
-        // Set global storage config
         $storage = $info->get('Storage');
         if ($storage instanceof ConfigObject && $storage['Services'] instanceof ConfigObject) {
-            Storage::appendConfig($storage);
+            $this->wConfig()->getConfig()->mergeWith(['Storage' => $storage]);
         }
     }
 
@@ -462,11 +461,8 @@ abstract class AbstractApp
      */
     protected function parseServices(ConfigObject $info)
     {
-        // Register global services
         $globalServices = $info->get('Services', []);
-        foreach ($globalServices as $sName => $sConfig) {
-            $this->wService()->registerService($sName, $sConfig);
-        }
+        $this->wConfig()->getConfig()->mergeWith(['Services' => $globalServices]);
     }
 
     /**

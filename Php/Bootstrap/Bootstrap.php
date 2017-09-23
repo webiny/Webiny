@@ -8,6 +8,7 @@
 namespace Apps\Webiny\Php\Bootstrap;
 
 use Apps\Webiny\Php\Lib\Authorization\Authorization;
+use Apps\Webiny\Php\Lib\ConfigLoader;
 use Apps\Webiny\Php\Lib\Request;
 use Apps\Webiny\Php\Lib\Response\ApiResponse;
 use Apps\Webiny\Php\Lib\Response\HtmlResponse;
@@ -21,6 +22,7 @@ use Webiny\Component\Http\Http;
 use Webiny\Component\Http\Response;
 use Webiny\Component\Mongo\Mongo;
 use Webiny\Component\Security\Security;
+use Webiny\Component\ServiceManager\ServiceManager;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\UrlObject\UrlObjectException;
 use Webiny\Component\StdLib\SingletonTrait;
@@ -71,8 +73,17 @@ class Bootstrap
             $this->wConfig()->append($jsConfig);
         }
 
+        // Now that we have the complete global config we need to inject variables
+        ConfigLoader::getInstance()->injectVariables($this->wConfig()->getConfig());
+
         // set error handler
         $this->errorHandler = new ErrorHandler();
+
+        // Register services
+        foreach($this->wConfig()->get('Services') as $name => $config) {
+            /* @var $config ConfigObject */
+            ServiceManager::getInstance()->registerService($name, $config);
+        }
 
         // Set component configs
         $emptyConfig = new ConfigObject();
