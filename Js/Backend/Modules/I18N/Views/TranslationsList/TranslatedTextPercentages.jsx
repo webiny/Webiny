@@ -19,12 +19,12 @@ TranslatedTextPercentages.defaultProps = {
                         return (
                             <Ui.Grid.Row >
                                 {data.translations.map(item => {
-                                    const percentage = (item.count / data.texts.total * 100 * 30).toFixed(2);
+                                    const percentage = (item.count / data.texts.total * 100).toFixed(0);
                                     return (
                                         <Ui.Grid.Col xs="12" sm="6" md="4" lg="3" className={css.translatedTextPercentagesLocaleStats}>
                                             <strong>{item.locale.label}</strong>
                                             <progress-bar>
-                                                <bar style={{width: percentage}}/>
+                                                <bar style={{width: percentage + '%'}}/>
                                                 <label>{item.count} / {data.texts.total} ({percentage}%)</label>
                                             </progress-bar>
                                         </Ui.Grid.Col>
