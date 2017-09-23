@@ -27,6 +27,10 @@ abstract class AbstractExport
 
     abstract public function toDb($options = null);
 
+    public abstract function fromJson($content);
+
+    public abstract function toJson($options = null);
+
     /**
      * Returns contents from a base64 encoded file.
      *
@@ -56,9 +60,13 @@ abstract class AbstractExport
         return $file;
     }
 
-    public abstract function fromJson($content);
+    public function fromJsonFile($data)
+    {
+        $data = $this->fromBase64EncodedFile($data);
+        $this->fromJson($data);
 
-    public abstract function toJson($options = null);
+        return $this;
+    }
 
     public function downloadJson()
     {

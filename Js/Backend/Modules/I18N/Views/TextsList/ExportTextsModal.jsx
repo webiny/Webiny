@@ -33,7 +33,7 @@ class ExportTextsModal extends Webiny.Ui.ModalComponent {
         return (
             <Ui.Modal.Dialog>
                 <Ui.Form>
-                    {(model, form) => {
+                    {model => {
                         const availableGroups = this.getAvailableGroups(model.apps);
 
                         return (
@@ -78,7 +78,7 @@ class ExportTextsModal extends Webiny.Ui.ModalComponent {
                                         method="POST"
                                         params={model}
                                         type="primary"
-                                        download={Webiny.Config.ApiPath + '/entities/webiny/i18n-texts/texts/export/zip'}>
+                                        download={Webiny.Config.ApiPath + '/entities/webiny/i18n-texts/export/json'}>
                                         {this.i18n(`Export`)}
                                     </Ui.DownloadLink>
                                 </Ui.Modal.Footer>

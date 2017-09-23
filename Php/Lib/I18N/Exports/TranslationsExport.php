@@ -169,13 +169,15 @@ class TranslationsExport extends TextsExport
 
     public function fromJson($content)
     {
-        return json_decode($content, true);
+        $this->texts = json_decode($content, true);
+
+        return $this;
     }
 
     public function fromJsonFile($data)
     {
         $data = $this->fromBase64EncodedFile($data);
-        $this->texts = $this->fromJson($data);
+        $this->fromJson($data);
 
         return $this;
     }
@@ -187,13 +189,14 @@ class TranslationsExport extends TextsExport
 
     public function fromYaml($content)
     {
-        return Yaml::parse($content);
+        $this->texts = Yaml::parse($content);
+        return $this;
     }
 
     public function fromYamlFile($data)
     {
         $data = $this->fromBase64EncodedFile($data);
-        $this->texts = $this->fromYaml($data);
+        $this->fromYaml($data);
 
         return $this;
     }

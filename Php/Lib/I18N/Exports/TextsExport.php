@@ -43,20 +43,86 @@ class TextsExport extends AbstractExport
 
     public function toDb($options = null)
     {
-        foreach ($this->texts as $app => $texts) {
-            foreach ($texts as $key => $text) {
-                $entity = I18NText::findByKey($key);
-                if (!$entity) {
+        $options['overwriteExisting'] = $options['overwriteExisting'] ?? false;
+        $options['preview'] = $options['preview'] ?? false;
+        $stats = ['updated' => 0, 'created' => 0, 'ignored' => 0, 'groups' => ['updated' => 0, 'created' => 0, 'ignored' => 0]];
 
+        // First iteration is just to make sure all data is valid.
+        foreach ($this->texts as $text) {
+            if (!$text['key'] ?? null) {
+                throw new AppException($this->wI18n('Invalid export format (text key missing).'));
+            }
+
+            if (!$text['base'] ?? null) {
+                throw new AppException($this->wI18n('Invalid export format (base text missing).'));
+            }
+        }
+
+        foreach ($this->groups as $data) {
+            $id = $data['id'] ?? null;
+            $group = I18NTextGroup::findById($id);
+            if (!$group) {
+                $group = new I18NTextGroup();
+                $group->id = $id;
+                $group->name = $data['name'];
+                $group->description = $data['description'];
+                $group->app = $data['app'];
+
+                if (!$options['preview']) {
+                    $group->save();
+                }
+                $stats['groups']['created']++;
+            } else {
+                if ($options['overwriteExisting']) {
+                    /* @var I18NTextGroup $group */
+                    $group->name = $data['name'];
+                    $group->description = $data['description'];
+                    $group->app = $data['app'];
+                    if (!$options['preview']) {
+                        $group->save();
+                    }
+                    $stats['groups']['updated']++;
+                } else {
+                    $stats['groups']['ignored']++;
                 }
             }
         }
-    }
 
+        // Now we know the data is valid, let's do the import.
+        foreach ($this->texts as $text) {
+            // If text already exists in the database, we only update if overwriteExisting is set to true.
+            $i18nText = I18NText::findOne(['key' => $text['key']]);
+            if ($i18nText) {
+                if ($options['overwriteExisting']) {
+                    /* @var I18NText $i18nText */
+                    if (!$options['preview']) {
+                        $i18nText->populate($text)->save();
+                    }
+                    $stats['updated']++;
+                } else {
+                    $stats['ignored']++;
+                }
+                continue;
+            }
+
+            if (!$options['preview']) {
+                $i18nText = new I18NText();
+                $i18nText->populate($text)->save();
+            }
+
+            $stats['created']++;
+        }
+
+        return $stats;
+    }
 
     public function toJson($options = null)
     {
-        return json_encode(['apps' => $this->apps, 'groups' => $this->groups, 'texts' => $this->texts]);
+        $apps = array_map(function (App $app) {
+            return $app->getName();
+        }, $this->apps);
+
+        return json_encode(['apps' => $apps, 'groups' => $this->groups, 'texts' => $this->texts]);
     }
 
     public function fromJson($content)

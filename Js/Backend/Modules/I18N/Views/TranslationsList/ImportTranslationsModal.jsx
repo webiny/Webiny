@@ -37,7 +37,7 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
                                     <Ui.Alert>
                                         {this.i18n('Export file is valid. After importing, following changes will be applied:')}
                                         <ul>
-                                            <li>{this.i18n('{num} inserted', {num: <strong>{model.results.data.inserted}</strong>})}</li>
+                                            <li>{this.i18n('{num} created', {num: <strong>{model.results.data.created}</strong>})}</li>
                                             <li>{this.i18n('{num} updated', {num: <strong>{model.results.data.updated}</strong>})}</li>
                                             <li>{this.i18n('{num} ignored', {num: <strong>{model.results.data.ignored}</strong>})}</li>
                                         </ul>
@@ -46,9 +46,9 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
                             } else {
                                 results = (
                                     <Ui.Alert type="success">
-                                        {this.i18n('Import successful, following changes were applied:')}
+                                        {this.i18n('Translations were successfully imported! following changes were applied:')}
                                         <ul>
-                                            <li>{this.i18n('{num} inserted', {num: <strong>{model.results.data.inserted}</strong>})}</li>
+                                            <li>{this.i18n('{num} created', {num: <strong>{model.results.data.created}</strong>})}</li>
                                             <li>{this.i18n('{num} updated', {num: <strong>{model.results.data.updated}</strong>})}</li>
                                             <li>{this.i18n('{num} ignored', {num: <strong>{model.results.data.ignored}</strong>})}</li>
                                         </ul>

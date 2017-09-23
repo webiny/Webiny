@@ -8,10 +8,10 @@ use Apps\Webiny\Php\Lib\Entity\EntityQuery\EntityQuery;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\Filter;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\QueryContainer;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
+use Apps\Webiny\Php\Lib\I18N\Exports\TextsExport;
 use Apps\Webiny\Php\Lib\I18N\Exports\TranslationsExport;
 use Apps\Webiny\Php\Lib\I18N\I18N;
 use Apps\Webiny\Php\Lib\WebinyTrait;
-use PHPZip\Zip\Stream\ZipStream;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
 /**
@@ -89,8 +89,9 @@ class I18NText extends AbstractEntity
          */
         $api->post('scan', function () {
             $apps = $this->wRequest()->getRequestData()['apps'] ?? [];
+            $options = $this->wRequest()->getRequestData()['options'] ?? [];
 
-            return I18N::getInstance()->scanApps($apps, ['overwriteExisting' => false]);
+            return I18N::getInstance()->scanApps($apps, $options);
         })->setBodyValidators(['apps' => 'required,minLength:1'])->setPublic();
 
         /**
@@ -101,14 +102,15 @@ class I18NText extends AbstractEntity
          * @api.body.apps   array   Apps to be scanned (min. 1 required)
          * @api.body.import boolean Imports texts into database (optional)
          */
-        $api->post('export/zip', function () {
-            $apps = $this->wRequest()->getRequestData()['apps'] ?? [];
-            $export = I18N::getInstance()->exportTexts($apps);
+        $api->post('export/json', function () {
 
-            $zip = new ZipStream('i18n_' . time() . '.zip', 'application/zip', null, true);
-            $zip->addFile($export->toJson(), 'export');
+            $apps = $this->wRequest()->getRequestData()['apps'];
+            $groups = $this->wRequest()->getRequestData()['groups'];
 
-            return $zip->finalize();
+            $export = new TextsExport();
+            $export->setApps($apps)->setGroups($groups)->fromDb();
+
+            $export->downloadJson();
         })->setBodyValidators(['apps' => 'required,minLength:1'])->setPublic();
 
         /**
@@ -117,11 +119,14 @@ class I18NText extends AbstractEntity
          *
          * @api.body.apps   array  Apps to be exported
          */
-        $api->post('import/zip', function () {
-            $src = $this->wRequest()->getRequestData()['file']['src'] ?? null;
-            $export = I18N::getInstance()->extractExportedTextsZip($src);
+        $api->post('import/json', function () {
+            $file = $this->wRequest()->getRequestData()['file'];
+            $options = $this->wRequest()->getRequestData()['options'] ?? [];
 
-            return I18N::getInstance()->importTexts($export, ['overwriteExisting' => true]);
+            $export = new TextsExport();
+            $export->fromJsonFile($file);
+
+            return $export->toDb($options);
         })->setBodyValidators(['file' => 'required'])->setPublic();
 
         /**

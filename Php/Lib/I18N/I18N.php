@@ -76,13 +76,14 @@ class I18N
             return is_string($app) ? self::wApps($app) : $app;
         }, $list);
 
-        $stats = ['created' => 0, 'updated' => 0];
+        $stats = ['created' => 0, 'updated' => 0, 'ignored' => 0];
 
         // Parse one-by-one.
         foreach ($list as $app) {
             $scan = self::getInstance()->scanApp($app, $options);
             $stats['created'] += $scan['created'];
             $stats['updated'] += $scan['updated'];
+            $stats['ignored'] += $scan['ignored'];
         }
 
         return $stats;
@@ -95,111 +96,14 @@ class I18N
      * @param array $options
      *
      * @return array
+     * @throws AppException
      */
     public function scanApp(App $app, $options = [])
     {
         $texts = array_merge(PhpParser::getInstance()->parse($app), JsParser::getInstance()->parse($app));
 
-        return $this->saveTextsToDb($texts, $options);
-    }
-
-    /**
-     * @param I18NTextsExport $export
-     * @param array           $options
-     *
-     * @return array
-     * @throws AppException
-     */
-    public function importTexts(I18NTextsExport $export, $options = [])
-    {
         $options['overwriteExisting'] = $options['overwriteExisting'] ?? false;
-
-        foreach ($export->getGroups() as $data) {
-            $id = $data['id'] ?? null;
-            $group = I18NTextGroup::findById($id);
-            if (!$group) {
-                $group = new I18NTextGroup();
-                $group->id = $id;
-            }
-
-            /* @var I18NTextGroup $group */
-            $group->name = $data['name'];
-            $group->description = $data['description'];
-            $group->app = $data['app'];
-            $group->save();
-
-        }
-
-        return $this->saveTextsToDb($export->getTexts(), $options);
-    }
-
-    /**
-     * Extracts ZIP archive that contains full texts export.
-     *
-     * @param $base64EncodedZipContent
-     *
-     * @return I18NTextsExport|array
-     * @throws AppException
-     */
-    public function extractExportedTextsZip($base64EncodedZipContent)
-    {
-        if (!$base64EncodedZipContent) {
-            throw new AppException($this->wI18n('Failed to import texts from ZIP archive - empty.'));
-        }
-
-        // Let's decode ZIP content first.
-        $content = base64_decode(str_replace('data:application/zip;base64,', '', $base64EncodedZipContent));
-        if (!$content) {
-            throw new AppException($this->wI18n('Failed to decode received base64 encoded ZIP archive.'));
-        }
-
-        // To unzip, we must first store the file in temporary folder.
-        $storage = $this->wStorage('Temp');
-        $temp = ['folder' => uniqid(), 'file' => uniqid() . '.zip'];
-        $storage->setContents($temp['folder'] . '/' . $temp['file'], $content);
-
-        // Let's extract it and import file by file.
-        $zip = new \ZipArchive;
-        $opened = $zip->open($storage->getAbsolutePath($temp['folder'] . '/' . $temp['file']));
-        if ($opened === true) {
-            $zip->extractTo($storage->getAbsolutePath($temp['folder']));
-            $zip->close();
-
-            $texts = new I18NTextsExport();
-            $texts->fromJson($storage->getContents($temp['folder'] . '/export'));
-
-            // Let's remove the folder completely.
-            exec('rm -rf ' . $storage->getAbsolutePath($temp['folder']));
-
-            return $texts;
-        }
-
-        throw new AppException($this->wI18n('Failed to open received ZIP archive.'));
-    }
-
-    /**
-     * @param mixed $texts
-     *
-     * @param array $options
-     *
-     * @return array
-     * @throws AppException
-     */
-    private function saveTextsToDb(array $texts = [], array $options = [])
-    {
-        // First iteration is just to make sure all data is valid.
-        foreach ($texts as $text) {
-            if (!$text['key'] ?? null) {
-                throw new AppException($this->wI18n('Invalid export format (text key missing).'));
-            }
-
-            if (!$text['base'] ?? null) {
-                throw new AppException($this->wI18n('Invalid export format (base text missing).'));
-            }
-        }
-
-        $options['overwriteExisting'] = $options['overwriteExisting'] ?? false;
-        $stats = ['updated' => 0, 'created' => 0];
+        $stats = ['updated' => 0, 'created' => 0, 'ignored' => 0];
 
         // Now we know the data is valid, let's do the import.
         foreach ($texts as $text) {
@@ -210,6 +114,8 @@ class I18N
                     /* @var I18NText $i18nText */
                     $i18nText->populate($text)->save();
                     $stats['updated']++;
+                } else {
+                    $stats['ignored']++;
                 }
                 continue;
             }
@@ -220,6 +126,7 @@ class I18N
         }
 
         return $stats;
+
     }
 
     /**********************************************************************************************************
