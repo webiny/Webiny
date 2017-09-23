@@ -26,7 +26,7 @@ class ImportTextsModal extends Webiny.Ui.ModalComponent {
                             Webiny.Growl.danger(response.getMessage());
                         }
 
-                        form.setState('model.results', {preview, data: response.getData()});
+                        form.setState('model.results', {preview, data: response.getData()}, () => this.props.onTextsImported());
                     }}>
                     {(model, form) => {
                         let results = null;
@@ -104,7 +104,9 @@ class ImportTextsModal extends Webiny.Ui.ModalComponent {
     }
 }
 
-ImportTextsModal.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps);
+ImportTextsModal.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps, {
+    onTextsImported: _.noop
+});
 
 export default Webiny.createComponent(ImportTextsModal, {
     modulesProp: 'Ui',

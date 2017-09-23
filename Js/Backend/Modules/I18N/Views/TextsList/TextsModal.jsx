@@ -15,7 +15,8 @@ class TranslationModal extends Webiny.Ui.ModalComponent {
                     id={_.get(this.props.data, 'id')}
                     api="/entities/webiny/i18n-texts"
                     fields="*,translations"
-                    onSubmitSuccess={() => this.hide().then(this.props.onSubmitSuccess)}>
+                    onSuccessMessage={() => this.i18n('Text was successfully saved!')}
+                    onSubmitSuccess={() => this.hide().then(this.props.onTextsSaved)}>
                     {(model, form) => (
                         <Ui.Modal.Content>
                             <Ui.Form.Loader/>
@@ -26,13 +27,11 @@ class TranslationModal extends Webiny.Ui.ModalComponent {
                                         <Ui.Input label="Key" name="key" validate="required"/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
-
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
                                         <Ui.Textarea label="Base text" name="base" validate="required"/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
-
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
                                         <Ui.Select
@@ -47,7 +46,6 @@ class TranslationModal extends Webiny.Ui.ModalComponent {
                                             allowClear/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
-
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
                                         <Ui.Select
@@ -77,7 +75,7 @@ class TranslationModal extends Webiny.Ui.ModalComponent {
 
 TranslationModal.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
     data: null,
-    onSubmit: _.noop
+    onTextsSaved: _.noop
 });
 
 export default Webiny.createComponent(TranslationModal, {

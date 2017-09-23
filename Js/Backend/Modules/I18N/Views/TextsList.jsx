@@ -4,6 +4,7 @@ import TextsModal from './TextsList/TextsModal';
 import ScanTextsModal from './TextsList/ScanTextsModal';
 import ImportTextsModal from './TextsList/ImportTextsModal';
 import ExportTextsModal from './TextsList/ExportTextsModal';
+import css from './TextsList.scss';
 
 /**
  * @i18n.namespace Webiny.Backend.I18N.TextsList
@@ -95,10 +96,10 @@ TextsList.defaultProps = {
                                                 <Ui.List.Table.Row>
                                                     <Ui.List.Table.Field label={this.i18n('Text')} align="left">
                                                         {row => (
-                                                            <span>
-                                                                <strong>{row.key}</strong><br/>
-                                                                <small>{row.base}</small>
-                                                            </span>
+                                                            <div className={css.textField}>
+                                                                <h1 className="base">{row.base}</h1>
+                                                                <code className="key">{row.key}</code>
+                                                            </div>
                                                         )}
                                                     </Ui.List.Table.Field>
                                                     <Ui.List.Table.Field name="app" label={this.i18n('App')} align="center"/>
@@ -117,17 +118,17 @@ TextsList.defaultProps = {
                         </Ui.ViewSwitcher.View>
                         <Ui.ViewSwitcher.View view="textsModal" modal>
                             {(showView, data) => (
-                                <TextsModal {...{showView, data}} onSubmitSuccess={() => this.ref.loadData()}/>
+                                <TextsModal {...{showView, data}} onTextsSaved={() => this.ref.loadData()}/>
                             )}
                         </Ui.ViewSwitcher.View>
                         <Ui.ViewSwitcher.View view="scanTextsModal" modal>
                             {(showView, data) => (
-                                <ScanTextsModal {...{showView, data}}/>
+                                <ScanTextsModal {...{showView, data}} onTextsScanned={() => this.ref.loadData()}/>
                             )}
                         </Ui.ViewSwitcher.View>
                         <Ui.ViewSwitcher.View view="importTextsModal" modal>
                             {(showView, data) => (
-                                <ImportTextsModal {...{showView, data}}/>
+                                <ImportTextsModal {...{showView, data}} onTextsImported={() => this.ref.loadData()}/>
                             )}
                         </Ui.ViewSwitcher.View>
                         <Ui.ViewSwitcher.View view="exportTextsModal" modal>

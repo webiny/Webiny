@@ -23,8 +23,7 @@ class ScanTextsModal extends Webiny.Ui.ModalComponent {
                         if (response.isError()) {
                             Webiny.Growl.danger(response.getMessage());
                         }
-
-                        form.setState('model.results', {data: response.getData()});
+                        form.setState('model.results', {data: response.getData()}, () => this.props.onTextsScanned());
                     }}>
                     {(model, form) => {
 
