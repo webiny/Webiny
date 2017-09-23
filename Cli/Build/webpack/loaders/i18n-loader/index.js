@@ -66,7 +66,7 @@ module.exports = function (source) {
         if (!namespace) {
             throw Error('Using "this.i18n" but namespace not defined.');
         }
-        source = source.slice(0, match.index) + `this._i18n("${namespace}", ` + source.slice(match.index + 10);
+        source = source.slice(0, match.index) + `this.i18n("${namespace}", ` + source.slice(match.index + 10);
     }
 
     while ((match = regex.webinyI18n.exec(source))) {

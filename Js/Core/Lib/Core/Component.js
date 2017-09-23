@@ -163,12 +163,13 @@ class Component extends React.Component {
             return Webiny.I18n;
         }
 
+        if (_.isString(base) && _.isString(variables)) {
+            const translationKey = base + md5(variables);
+            return Webiny.I18n.render(translationKey, variables, options);
+        }
+
         const translationKey = _.trimEnd(options.namespace, '.') + '.' + md5(base);
         return Webiny.I18n.render(translationKey, base, variables);
-    }
-
-    _i18n(namespace, base, variables = {}) {
-        return this.i18n(base, variables, {namespace});
     }
 
     /**
