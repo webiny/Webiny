@@ -11,6 +11,7 @@ use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\I18N\Exports\TextsExport;
 use Apps\Webiny\Php\Lib\I18N\Exports\TranslationsExport;
 use Apps\Webiny\Php\Lib\I18N\I18N;
+use Apps\Webiny\Php\Lib\I18N\I18NLocales;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
@@ -201,6 +202,38 @@ class I18NText extends AbstractEntity
 
             return $export->toDb($options);
         })->setBodyValidators(['file' => 'required'])->setPublic();
+
+        $api->get('stats/translated', function () {
+            $translations = $this->wDatabase()->aggregate('I18NTexts', [
+                ['$match' => ['deletedOn' => null]],
+                ['$project' => ['translations' => 1]],
+                ['$unwind' => '$translations'],
+                ['$match' => ['translations.text' => ['$ne' => ""]]],
+                ['$group' => ['_id' => '$translations.locale', 'count' => ['$sum' => 1]]]
+            ]);
+
+            $translations = array_map(function($item) {
+                return ['locale' => ['key' => $item['_id'], 'label' => I18NLocales::getLabel($item['_id'])], 'count' => $item['count']];
+            }, $translations->toArray());
+
+            foreach (I18NLocale::find() as $locale) {
+                /* @var I18NLocale $locale */
+                foreach ($translations as $translation) {
+                    if ($translation['locale']['key'] === $locale->key) {
+                        continue 2;
+                    }
+                }
+                $translations[] = ['locale' => ['key' => $locale->key, 'label' => $locale->label], 'count' => 0];
+            }
+
+            // Finally, let's sort locales alphabetically.
+
+            return [
+                'texts'        => ['total' => I18NText::count()],
+                'translations' => $translations
+            ];
+
+        })->setPublic();
 
         /**********************************************************************************************************
          *                                          !! Entity API !!                                              *

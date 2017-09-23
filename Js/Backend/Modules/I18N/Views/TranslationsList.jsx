@@ -3,6 +3,7 @@ import Webiny from 'webiny';
 import ExportTranslationsModal from './TranslationsList/ExportTranslationsModal';
 import ImportTranslationsModal from './TranslationsList/ImportTranslationsModal';
 import TextRow from './TranslationsList/TextRow';
+import TranslatedTextPercentages from './TranslationsList/TranslatedTextPercentages';
 
 /**
  * @i18n.namespace Webiny.Backend.I18N.TranslationsList
@@ -15,8 +16,8 @@ class TranslationsList extends Webiny.Ui.View {
     }
 
     componentWillMount() {
-    	super.componentWillMount();
-    	Webiny.I18n.getLocales().then(locales => this.setState({locales}));
+        super.componentWillMount();
+        Webiny.I18n.getLocales().then(locales => this.setState({locales}));
     }
 }
 
@@ -47,6 +48,7 @@ TranslationsList.defaultProps = {
                                         </Ui.ButtonGroup>
                                     </Ui.View.Header>
                                     <Ui.View.Body>
+                                        <TranslatedTextPercentages/>
                                         <Ui.List
                                             connectToRouter
                                             title={this.i18n(`Translations`)}
