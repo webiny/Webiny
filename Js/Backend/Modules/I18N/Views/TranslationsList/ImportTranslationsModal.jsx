@@ -35,7 +35,7 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
                             if (model.results.preview) {
                                 results = (
                                     <Ui.Alert>
-                                        {this.i18n('Export file is valid. After importing, following changes will be applied:')}
+                                        {this.i18n('Export file is valid. After importing, Following changes will be applied:')}
                                         <ul>
                                             <li>{this.i18n('{num} created', {num: <strong>{model.results.data.created}</strong>})}</li>
                                             <li>{this.i18n('{num} updated', {num: <strong>{model.results.data.updated}</strong>})}</li>
@@ -46,7 +46,7 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
                             } else {
                                 results = (
                                     <Ui.Alert type="success">
-                                        {this.i18n('Translations were successfully imported! following changes were applied:')}
+                                        {this.i18n('Translations were successfully imported! Following changes were applied:')}
                                         <ul>
                                             <li>{this.i18n('{num} created', {num: <strong>{model.results.data.created}</strong>})}</li>
                                             <li>{this.i18n('{num} updated', {num: <strong>{model.results.data.updated}</strong>})}</li>

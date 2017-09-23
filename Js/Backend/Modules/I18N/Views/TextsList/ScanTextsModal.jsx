@@ -16,6 +16,7 @@ class ScanTextsModal extends Webiny.Ui.ModalComponent {
                     api="/entities/webiny/i18n-texts"
                     onSubmit={async (model, form) => {
                         form.showLoading();
+                        const preview = model.options.preview;
                         form.setState('model.response', null);
                         const response = await form.api.post('/scan', model);
                         form.hideLoading();
@@ -23,22 +24,35 @@ class ScanTextsModal extends Webiny.Ui.ModalComponent {
                         if (response.isError()) {
                             Webiny.Growl.danger(response.getMessage());
                         }
-                        form.setState('model.results', {data: response.getData()}, () => this.props.onTextsScanned());
+
+                        form.setState('model.results', {preview, data: response.getData()});
                     }}>
                     {(model, form) => {
-
                         let results = null;
                         if (model.results) {
-                            results = (
-                                <Ui.Alert type="success">
-                                    {this.i18n('Translations were successfully imported! following changes were applied:')}
-                                    <ul>
-                                        <li>{this.i18n('{num} created', {num: <strong>{model.results.data.created}</strong>})}</li>
-                                        <li>{this.i18n('{num} updated', {num: <strong>{model.results.data.updated}</strong>})}</li>
-                                        <li>{this.i18n('{num} ignored', {num: <strong>{model.results.data.ignored}</strong>})}</li>
-                                    </ul>
-                                </Ui.Alert>
-                            );
+                            if (model.results.preview) {
+                                results = (
+                                    <Ui.Alert>
+                                        {this.i18n('After scan, following changes will be applied:')}
+                                        <ul>
+                                            <li>{this.i18n('{num} created', {num: <strong>{model.results.data.created}</strong>})}</li>
+                                            <li>{this.i18n('{num} updated', {num: <strong>{model.results.data.updated}</strong>})}</li>
+                                            <li>{this.i18n('{num} ignored', {num: <strong>{model.results.data.ignored}</strong>})}</li>
+                                        </ul>
+                                    </Ui.Alert>
+                                );
+                            } else {
+                                results = (
+                                    <Ui.Alert type="success">
+                                        {this.i18n('Texts were successfully scanned! Following changes were applied:')}
+                                        <ul>
+                                            <li>{this.i18n('{num} created', {num: <strong>{model.results.data.created}</strong>})}</li>
+                                            <li>{this.i18n('{num} updated', {num: <strong>{model.results.data.updated}</strong>})}</li>
+                                            <li>{this.i18n('{num} ignored', {num: <strong>{model.results.data.ignored}</strong>})}</li>
+                                        </ul>
+                                    </Ui.Alert>
+                                );
+                            }
                         }
 
                         return (
@@ -68,6 +82,9 @@ class ScanTextsModal extends Webiny.Ui.ModalComponent {
                                                 name="options.overwriteExisting"
                                                 label={this.i18n('Overwrite existing keys')}
                                                 tooltip={this.i18n('Previously scanned texts will be overwritten.')}/>
+                                            <Ui.Checkbox
+                                                name="options.preview"
+                                                label={this.i18n('Preview')}/>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>
 

@@ -40,6 +40,12 @@ class ImportTextsModal extends Webiny.Ui.ModalComponent {
                                             <li>{this.i18n('{num} updated', {num: <strong>{model.results.data.updated}</strong>})}</li>
                                             <li>{this.i18n('{num} ignored', {num: <strong>{model.results.data.ignored}</strong>})}</li>
                                         </ul>
+                                        {this.i18n('The following changes will be applied to text groups:')}
+                                        <ul>
+                                            <li>{this.i18n('{num} created', {num: <strong>{model.results.data.groups.created}</strong>})}</li>
+                                            <li>{this.i18n('{num} updated', {num: <strong>{model.results.data.groups.updated}</strong>})}</li>
+                                            <li>{this.i18n('{num} ignored', {num: <strong>{model.results.data.groups.ignored}</strong>})}</li>
+                                        </ul>
                                     </Ui.Alert>
                                 );
                             } else {
@@ -50,6 +56,12 @@ class ImportTextsModal extends Webiny.Ui.ModalComponent {
                                             <li>{this.i18n('{num} created', {num: <strong>{model.results.data.created}</strong>})}</li>
                                             <li>{this.i18n('{num} updated', {num: <strong>{model.results.data.updated}</strong>})}</li>
                                             <li>{this.i18n('{num} ignored', {num: <strong>{model.results.data.ignored}</strong>})}</li>
+                                        </ul>
+                                        {this.i18n('The following changes were applied to text groups:')}
+                                        <ul>
+                                            <li>{this.i18n('{num} created', {num: <strong>{model.results.data.groups.created}</strong>})}</li>
+                                            <li>{this.i18n('{num} updated', {num: <strong>{model.results.data.groups.updated}</strong>})}</li>
+                                            <li>{this.i18n('{num} ignored', {num: <strong>{model.results.data.groups.ignored}</strong>})}</li>
                                         </ul>
                                     </Ui.Alert>
                                 );
