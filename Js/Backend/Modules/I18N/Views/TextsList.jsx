@@ -13,7 +13,6 @@ class TextsList extends Webiny.Ui.View {
     constructor() {
         super();
         this.ref = null;
-        this.bajo = Webiny.I18n('Bajooo {user}', {user: 12});
     }
 }
 

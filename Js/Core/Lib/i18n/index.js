@@ -56,8 +56,17 @@ class I18n {
         // Check if we have received {value: ..., format: ...} object.
         const output = {value: values[variable], format: null};
 
-        if (_.isFunction(_.get(output.value, 'format'))) {
-            output.format = output.value.format;
+        // If variable value is an object, the it must have 'value' key set.
+        if (_.isPlainObject(output.value)) {
+            if (!_.has(output.value, 'value')) {
+                throw Error(`Key "value" is missing for variable {${variable}}.`);
+            }
+
+            // Before assigning real value, let's check if we have a custom formatter set.
+            if (_.isFunction(output.value.format)) {
+                output.format = output.value.format;
+            }
+
             output.value = output.value.value;
         }
 
