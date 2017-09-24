@@ -9,6 +9,12 @@ import Carousel from '../Components/AppDetails/Carousel';
 import ContentBlock from '../Components/AppDetails/ContentBlock';
 
 class AppDetails extends Webiny.Ui.View {
+    constructor(props) {
+        super(props);
+
+        this.bindMethods('renderCTA');
+    }
+
     componentWillMount() {
         super.componentWillMount();
         this.setState({loading: true});
@@ -16,7 +22,6 @@ class AppDetails extends Webiny.Ui.View {
         new Webiny.Api.Endpoint('/services/webiny/marketplace').get(`apps/${id}`).then(apiResponse => {
             this.setState({loading: false, app: apiResponse.getData('entity')});
         });
-        this.bindMethods('renderCTA');
     }
 
     renderCTA() {
@@ -88,7 +93,17 @@ AppDetails.defaultProps = {
                     <Tabs.Tab label="Installation" icon="fa-hdd-o">
                         <Grid.Row>
                             <Grid.Col all={8}>
-                                <ContentBlock content={app.readme}/>
+                                <ContentBlock title="Installation" content={app.readme}/>
+                            </Grid.Col>
+                            <Grid.Col all={4}>
+                                <Sidebar app={app}/>
+                            </Grid.Col>
+                        </Grid.Row>
+                    </Tabs.Tab>
+                    <Tabs.Tab label="Change Log" icon="fa-pencil">
+                        <Grid.Row>
+                            <Grid.Col all={8}>
+                                <ContentBlock title="Change log" content={app.changeLog}/>
                             </Grid.Col>
                             <Grid.Col all={4}>
                                 <Sidebar app={app}/>
