@@ -9,7 +9,6 @@ class I18n {
     constructor() {
         this.locales = {current: null, list: []};
         this.groups = {list: []};
-        this.api = null;
         this.cacheKey = null;
         this.modifiers = BuiltInModifiers;
         this.translations = {};
@@ -17,11 +16,11 @@ class I18n {
 
         const translate = (base, variables = {}, options = {}) => {
             if (_.isString(base) && _.isString(variables)) {
-                const key = base + md5(variables);
+                const key = base + '.' + md5(variables);
                 return translate(variables, options, key);
             }
 
-            const key = options.namespace + md5(base);
+            const key = options.namespace + '.' + md5(base);
             return this.translate(base, variables, key);
         };
 
@@ -32,6 +31,112 @@ class I18n {
         });
 
         return translate;
+    }
+
+    /**
+     * Initializes i18n with given locale and current locale cache key.
+     * @returns {*}
+     */
+    async initialize() {
+        const i18nCache = await Webiny.IndexedDB.get('Webiny.I18n');
+
+        // If we have the same cache key, that means we have latest translations - we can safely read from local storage.
+        if (i18nCache && i18nCache.cacheKey === this.getCacheKey()) {
+            return this.setTranslations(i18nCache.translations);
+        }
+
+        // If we have a different cache key (or no cache key at all), we must fetch translations from server
+        const api = new Webiny.Api.Endpoint('/entities/webiny/i18n-texts');
+        const response = await api.get('translations/locales/' + this.getLocale());
+        await Webiny.IndexedDB.set('Webiny.I18n', response.getData());
+        this.setTranslations(response.getData('translations'));
+        return response;
+    }
+
+    translate(base, variables = {}, textKey) {
+        let output = this.getTranslation(textKey) || base;
+        return this.replaceVariables(output, variables);
+    }
+
+    setComponent(component) {
+        this.component = component;
+    }
+
+    getTranslation(key) {
+        return this.translations[key] || '';
+    }
+
+    setTranslation(key, translation) {
+        this.translations[key] = translation;
+        return this;
+    }
+
+    /**
+     * Returns all fetched translations.
+     * @returns {*|{}}
+     */
+    getTranslations() {
+        return this.translations;
+    }
+
+    /**
+     * Returns all fetched translations.
+     * @returns {*|{}}
+     */
+    setTranslations(translations) {
+        this.translations = translations;
+        return this;
+    }
+
+    /**
+     * Returns true if given key has a translation for currently selected locale.
+     * @param key
+     */
+    hasTranslation(key) {
+        return _.get(this.translations, key);
+    }
+
+    /**
+     * Returns a list of all available text groups.
+     */
+    async getTextGroups(query = {_fields: 'id,app,name,description'}) {
+        const response = await new Webiny.Api.Endpoint('/entities/webiny/i18n-text-groups').get(null, query);
+        this.locales.list = response.getData('list');
+        return this.locales.list;
+    }
+
+    /**
+     * Returns currently selected locale.
+     * @returns {string|string|*}
+     */
+    getLocale() {
+        return this.locales.current;
+    }
+
+    /**
+     * Returns a list of all available locales.
+     */
+    async getLocales(query = {_fields: 'id,key,label,enabled'}) {
+        const response = await new Webiny.Api.Endpoint('/entities/webiny/i18n-locales').get(null, query);
+        this.locales.list = response.getData('list');
+        return this.locales.list;
+    }
+
+    /**
+     * @returns {string|string|*}
+     */
+    setLocale(locale) {
+        this.locales.current = locale;
+        return this;
+    }
+
+    setCacheKey(cacheKey) {
+        this.cacheKey = cacheKey;
+        return this;
+    }
+
+    getCacheKey(cacheKey) {
+        return this.cacheKey;
     }
 
     /**
@@ -118,89 +223,6 @@ class I18n {
         return parts.map((part, index) => <webiny-i18n-part key={index}>{this.processTextPart(part, values)}</webiny-i18n-part>);
     }
 
-    translate(base, variables = {}, textKey) {
-        let output = this.getTranslation(textKey) || base;
-        return this.replaceVariables(output, variables);
-    }
-
-    setComponent(component) {
-        this.component = component;
-    }
-
-    getTranslation(key) {
-        return this.translations[key] || '';
-    }
-
-    setTranslation(key, translation) {
-        this.translations[key] = translation;
-        return this;
-    }
-
-    /**
-     * Returns all fetched translations.
-     * @returns {*|{}}
-     */
-    getTranslations() {
-        return this.translations;
-    }
-
-    /**
-     * Returns true if given key has a translation for currently selected locale.
-     * @param key
-     */
-    hasTranslation(key) {
-        return _.get(this.translations, key);
-    }
-
-    /**
-     * Sets the API endpoint for fetching translations.
-     * @param api
-     * @returns {i18n}
-     */
-    setApiEndpoint(api) {
-        this.api = api;
-        return this;
-    }
-
-    /**
-     * Returns a list of all available locales.
-     */
-    async getTextGroups(query = {_fields: 'id,app,name,description'}) {
-        const response = await new Webiny.Api.Endpoint('/entities/webiny/i18n-text-groups').get(null, query);
-        this.locales.list = response.getData('list');
-        return this.locales.list;
-    }
-
-    /**
-     * Returns currently selected locale.
-     * @returns {string|string|*}
-     */
-    getLocale() {
-        return this.locales.current;
-    }
-
-    /**
-     * Returns a list of all available locales.
-     */
-    async getLocales(query = {_fields: 'id,key,label,enabled'}) {
-        const response = await new Webiny.Api.Endpoint('/entities/webiny/i18n-locales').get(null, query);
-        this.locales.list = response.getData('list');
-        return this.locales.list;
-    }
-
-    /**
-     * @returns {string|string|*}
-     */
-    setLocale(locale) {
-        this.locales.current = locale;
-        return this;
-    }
-
-    setCacheKey(cacheKey) {
-        this.cacheKey = cacheKey;
-        return this;
-    }
-
     /**
      * Registers single modifier.
      * @param name
@@ -218,7 +240,7 @@ class I18n {
      * @returns {I18n}
      */
     registerModifiers(modifiers) {
-        modifiers.forEach((callback, name) => this.registerModifier(name, callback))
+        modifiers.forEach((callback, name) => this.registerModifier(name, callback));
         return this;
     }
 
@@ -230,26 +252,6 @@ class I18n {
     unregisterModifier(name) {
         delete this.modifiers[name];
         return this;
-    }
-
-    initialize(locale = 'en_GB') {
-        this.setLocale(locale);
-        // TODO: Set moment / accounting locale settings here
-
-        // If we have the same cache key, that means we have latest translations - we can safely read from local storage.
-        if (this.cacheKey === parseInt(Webiny.LocalStorage.get('Webiny.I18n.cacheKey'))) {
-            this.translations = JSON.parse(Webiny.LocalStorage.get('Webiny.I18n.translations'));
-            return Promise.resolve();
-        }
-
-        // If we have a different cache key (or no cache key at all), we must fetch translations from server
-        return this.api.setQuery({key: this.locale}).execute().then(apiResponse => {
-            Webiny.LocalStorage.set('Webiny.I18n.locale', this.locale);
-            Webiny.LocalStorage.set('Webiny.I18n.cacheKey', apiResponse.getData('cacheKey', null));
-            Webiny.LocalStorage.set('Webiny.I18n.translations', JSON.stringify(apiResponse.getData('translations')));
-            this.translations = _.assign(this.translations, apiResponse.getData('translations'));
-            return apiResponse;
-        });
     }
 
     toText(element) {

@@ -89,7 +89,7 @@ class SmartyExtension extends AbstractSmartyExtension
             $i18n = ['locale' => null];
             $locale = $this->wCookie()->get('webiny-i18n-locale');
             if ($locale) {
-                $locale = I18NLocale::findOne(['key' => $locale, 'enabled' => true]);
+                $locale = I18NLocale::findOne(['enabled' => true, 'key' => $locale]);
                 if ($locale) {
                     $i18n['locale'] = $locale->toArray('key,cacheKey');
                 }
@@ -101,9 +101,9 @@ class SmartyExtension extends AbstractSmartyExtension
                     $i18n['locale'] = $locale->toArray('key,cacheKey');
                 }
             }
-
-            $i18n = json_encode($i18n);
         }
+
+        $i18n = json_encode($i18n);
 
         $apps = '[' . join(',', array_map(function ($app) {
                 return "'" . $app . "'";

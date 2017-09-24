@@ -119,6 +119,42 @@ class I18NText extends AbstractEntity
         })->setBodyValidators(['file' => 'required'])->setPublic();
 
         /**
+         * @api.name        Fetch translations
+         * @api.description Fetches all translations for given language
+         *
+         * @api.body.language   string  Language for which the translations will be returned
+         */
+        $api->get('translations/locales/{key}', function ($key) {
+            $locale = I18NLocale::findByKey($key);
+            if (!$locale) {
+                throw new AppException($this->wI18n('Locale "{key}" not found.', ['key' => $key]));
+            }
+
+            $translations = [];
+
+            $params = [
+                'I18NTexts',
+                [
+                    ['$match' => ['deletedOn' => null]],
+                    ['$project' => ['translations' => 1, 'key' => 1]],
+                    ['$unwind' => '$translations'],
+                    ['$match' => ['translations.locale' => $locale->key, 'translations.text' => ['$ne' => ""]]]
+                ]
+            ];
+
+            foreach ($this->wDatabase()->aggregate(...$params) as $translation) {
+                $translations[$translation['key']] = $translation['translations']['text'];
+            };
+
+            return [
+                'locale'       => $locale->key,
+                'cacheKey'     => $locale->cacheKey,
+                'translations' => $translations
+            ];
+
+        })->setPublic();
+
+        /**
          * @api.name        Updates text translation by ID for given locale
          * @api.description Gets a translation by ID and updates the translation in given locale
          */
@@ -209,7 +245,7 @@ class I18NText extends AbstractEntity
                 ['$group' => ['_id' => '$translations.locale', 'count' => ['$sum' => 1]]]
             ]);
 
-            $translations = array_map(function($item) {
+            $translations = array_map(function ($item) {
                 return ['locale' => ['key' => $item['_id'], 'label' => I18NLocales::getLabel($item['_id'])], 'count' => $item['count']];
             }, $translations->toArray());
 
@@ -224,7 +260,7 @@ class I18NText extends AbstractEntity
             }
 
 
-            usort($translations, function($a, $b) {
+            usort($translations, function ($a, $b) {
                 return $a['locale']['label'] > $b['locale']['label'];
             });
 
@@ -235,51 +271,6 @@ class I18NText extends AbstractEntity
 
         })->setPublic();
 
-        /**********************************************************************************************************
-         *                                          !! Entity API !!                                              *
-         **********************************************************************************************************/
-
-        /**
-         * TODO
-         * @api.name        Fetch translations
-         * @api.description Fetches all translations for given language
-         *
-         * @api.body.language   string  Language for which the translations will be returned
-         */
-        $api->get('edited', function () {
-
-            $settings = TranslationSettings::load();
-            $return = [
-                'cacheKey'     => $settings->key('cacheKey'),
-                'translations' => []
-            ];
-
-            $language = $this->wRequest()->query('language');
-            $translations = $this->mongo()->aggregate('Translations', [
-                [
-                    '$match' => [
-                        'deletedOn' => null,
-                        '$and'      => [
-                            ['translations.' . $language => ['$exists' => true]],
-                            ['translations.' . $language => ['$nin' => [null, ""]]]
-                        ]
-                    ]
-                ],
-                [
-                    '$project' => [
-                        '_id'                       => 0,
-                        'key'                       => 1,
-                        'translations.' . $language => 1
-                    ]
-                ]
-            ])->toArray();
-
-            foreach ($translations as $translation) {
-                $return['translations'][Selecto::get($translation, 'key')] = Selecto::get($translation, 'translations.' . $language);
-            }
-
-            return $return;
-        })->setBodyValidators(['language' => 'required']);
     }
 
     /**

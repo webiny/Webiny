@@ -68,6 +68,7 @@ class I18NLocale extends AbstractEntity
          * If this is the first locale created, set it as default immediately.
          */
         $this->onBeforeCreate(function () {
+            $this->updateCacheKey();
             if (I18NLocale::count() === 0) {
                 $this->default = true;
             }
@@ -116,7 +117,7 @@ class I18NLocale extends AbstractEntity
      */
     public static function findDefault()
     {
-        return self::findOne(['default' => true]);
+        return self::findOne(['enabled' => true, 'default' => true]);
     }
 
     /**

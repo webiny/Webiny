@@ -164,7 +164,7 @@ class Component extends React.Component {
         }
 
         if (_.isString(base) && _.isString(variables)) {
-            const textKey = base + md5(variables);
+            const textKey = base + '.' + md5(variables);
             return Webiny.I18n.render(textKey, variables, options);
         }
 
