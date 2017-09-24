@@ -98,6 +98,7 @@ class Image extends File
 
         if ($newContent) {
             $parts = $content->explode(',');
+            /* @var $image \Webiny\Component\Image\ImageInterface*/
             $image = ImageLoader::load($parts->last()->base64Decode()->val());
             $dimensions = $image->getSize();
             $this->width = $dimensions['width'];
