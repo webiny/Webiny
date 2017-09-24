@@ -3,6 +3,8 @@ import md5 from 'blueimp-md5';
 import Webiny from 'webiny';
 import React from 'react';
 import I18nComponent from './I18N';
+import format from 'date-fns/format';
+import fecha from 'fecha';
 
 import modifiers from './Modifiers';
 
@@ -11,17 +13,53 @@ import modifiers from './Modifiers';
  */
 class I18n {
     constructor() {
+        this.groups = {list: []};
         this.locales = {current: null, list: []};
 
+        /**
+         * If we fail to fetch formats for currently selected locale, these default formats will be used.
+         * @type {{date: string, time: string, datetime: string, number: string}}
+         */
+        this.defaultFormats = {
+            date: 'DD/MMM/YY',
+            time: 'HH:mm',
+            datetime: 'DD/MMM/YY HH:mm',
+            number: '%%.%%'
+        };
+
+        /**
+         * Cache key, received from server side.
+         * @type {null}
+         */
+        this.cacheKey = null;
+
+        /**
+         * All currently-loaded translations, for easier (synchronous) access.
+         * @type {{}}
+         */
+        this.translations = {};
+
+        /**
+         * Current React component used to render texts in the UI.
+         * @type {component}
+         */
+        this.component = I18nComponent;
+
+        /**
+         * All registered modifiers.
+         * Default built-in modifiers are registered immediately below.
+         * @type {{}}
+         */
         this.modifiers = {};
         this.registerModifiers(modifiers);
 
-        this.groups = {list: []};
-        this.cacheKey = null;
-        this.translations = {};
-        this.component = I18nComponent;
-
-
+        /**
+         * When users call Webiny.I18n(...), we won't to give them the translate method by default (for convenience sake).
+         * @param base
+         * @param variables
+         * @param options
+         * @returns {*}
+         */
         const translate = (base, variables = {}, options = {}) => {
             if (_.isString(base) && _.isString(variables)) {
                 const key = this.getTextKey(base, variables);
@@ -92,6 +130,53 @@ class I18n {
     translate(base, variables = {}, textKey) {
         let output = this.getTranslation(textKey) || base;
         return this.replaceVariables(output, variables);
+    }
+
+    /**
+     * Formats and outputs date.
+     * It will try to load format from currently selected locale's settings. If not defined, default formats will be used.
+     * @param value
+     * @param format
+     */
+    date(value, format) {
+        if (!format) {
+            format = _.get(this.locales.current, 'formats.date', this.defaultFormats.date);
+        }
+    }
+
+    /**
+     * Formats and outputs time.
+     * It will try to load format from currently selected locale's settings. If not defined, default formats will be used.
+     * @param value
+     * @param format
+     */
+    time(value, format) {
+        if (!format) {
+            format = _.get(this.locales.current, 'formats.time', this.defaultFormats.time);
+        }
+    }
+
+    /**
+     * Formats and outputs date/time.
+     * It will try to load format from currently selected locale's settings. If not defined, default formats will be used.
+     * @param value
+     * @param format
+     */
+    datetime(value, format) {
+        if (!format) {
+            format = _.get(this.locales.current, 'formats.datetime', this.defaultFormats.datetime);
+        }
+    }
+
+    // Following methods are plain-simple for now - let's make them smarter in the near future
+
+    price(value, currency = '£', precision = 2) {
+        const currencySymbols = {gbp: '£', usd: '$', eur: '€'}; // Plain simple for now
+        return accounting.formatMoney(value, _.get(currencySymbols, currency, currency), precision);
+    }
+
+    number(value, decimals = 0) {
+        return accounting.formatNumber(value, decimals);
     }
 
     /**
