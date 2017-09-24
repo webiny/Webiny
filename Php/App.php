@@ -4,10 +4,12 @@ namespace Apps\Webiny\Php;
 
 use Apps\Webiny\Php\Entities\ApiLog;
 use Apps\Webiny\Php\Entities\SystemApiTokenUser;
+use Apps\Webiny\Php\Lib\Entity\Validators\Unique;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\Validators\Password;
 use Apps\Webiny\Php\Entities\User;
 use MongoDB\Driver\Exception\RuntimeException;
+use Webiny\Component\Entity\Entity;
 use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
 
 class App extends \Apps\Webiny\Php\Lib\Apps\App
@@ -35,6 +37,9 @@ class App extends \Apps\Webiny\Php\Lib\Apps\App
         $regex = "/^.{8,}$/";
         $message = "Password must contain at least 8 characters";
         $this->wValidation()->addValidator(new Password($regex, $message));
+
+        // Override default entity `unique` validator to include `deletedOn` attribute
+        Entity::getInstance()->addValidator(new Unique());
     }
 
     public function install()

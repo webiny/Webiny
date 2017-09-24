@@ -474,7 +474,7 @@ class Form extends Webiny.Ui.Component {
                 const inputConfig = this.inputs[input.props.name];
                 const component = inputConfig && inputConfig.component;
 
-                // Bind onChange callback params
+                // Bind onChange callback params (we do it here because later we no longer have access to these values)
                 if (_.isFunction(onAfterChange)) {
                     onAfterChange = onAfterChange.bind(null, newValue, oldValue, component);
                 }

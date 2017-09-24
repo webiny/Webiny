@@ -80,6 +80,11 @@ class User extends AbstractEntity implements UserInterface
                             $roles[$i] = UserRole::findOne(['slug' => $role['slug']]);
                         }
                     }
+
+                    // Make sure there are no empty values
+                    if (empty($roles[$i])) {
+                        unset($roles[$i]);
+                    }
                 }
             }
 
@@ -100,6 +105,11 @@ class User extends AbstractEntity implements UserInterface
                              } elseif (isset($rg['slug'])) {
                                  $roleGroups[$i] = UserRoleGroup::findOne(['slug' => $rg['slug']]);
                              }
+                         }
+
+                         // Make sure there are no empty values
+                         if (empty($roleGroups[$i])) {
+                             unset($roleGroups[$i]);
                          }
                      }
                  }

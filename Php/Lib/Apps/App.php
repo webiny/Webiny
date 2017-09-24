@@ -184,6 +184,7 @@ class App extends AbstractApp
                         try {
                             $p->populate($perm)->save();
                         } catch (EntityException $e) {
+                            // TODO: Add permission name to the output
                             $this->printException($e);
                         }
 
@@ -214,6 +215,7 @@ class App extends AbstractApp
                         try {
                             $r->populate($role)->save();
                         } catch (EntityException $e) {
+                            // TODO: Add role name to the output
                             $this->printException($e);
                         }
 
@@ -244,6 +246,7 @@ class App extends AbstractApp
                         try {
                             $r->populate($roleGroup)->save();
                         } catch (EntityException $e) {
+                            // TODO: Add role group name to the output
                             $this->printException($e);
                         }
 

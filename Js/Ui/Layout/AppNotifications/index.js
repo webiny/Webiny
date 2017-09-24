@@ -10,13 +10,15 @@ class AppNotifications extends Webiny.Ui.Component {
             notifications: []
         };
 
+        this.types = {};
+
         this.bindMethods('loadNotifications');
     }
 
     componentWillMount() {
         super.componentWillMount();
 
-        this.interval = setInterval(() => this.loadNotifications(), this.props.interval);
+        // this.interval = setInterval(() => this.loadNotifications(), this.props.interval);
     }
 
     componentWillUnmount() {
