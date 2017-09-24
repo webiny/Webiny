@@ -70,10 +70,7 @@ class I18NLocale extends AbstractEntity
             'time' => '',
             'datetime' => '',
             'number' => ''
-        ])->onSet(function($value) {
-            // TODO: control of formats
-            return $value;
-        });
+        ]);
 
         $this->attr('cacheKey')->char()->setSkipOnPopulate()->setToArrayDefault();
 

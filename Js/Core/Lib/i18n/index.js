@@ -103,8 +103,8 @@ class I18n {
             this.setTranslations(response.getData('translations'));
         }
 
-        // Finally, let's set i18n cookie
-        Webiny.Cookies.set('webiny-i18n', this.getLocale().key);
+        // Finally, let's set i18n cookie, this constantly prolongs cookie expiration.
+        Webiny.Cookies.set('webiny-i18n', this.getLocale().key, {expires: 30});
         Webiny.Http.addRequestInterceptor(http => {
             http.addHeader('X-Webiny-I18n', this.getLocale().key);
         });
@@ -117,7 +117,7 @@ class I18n {
      * @param locale
      */
     setLocaleAndReload(locale) {
-        Webiny.Cookies.set('webiny-i18n', locale);
+        Webiny.Cookies.set('webiny-i18n', locale, {expires: 30});
         location.reload();
     }
 
