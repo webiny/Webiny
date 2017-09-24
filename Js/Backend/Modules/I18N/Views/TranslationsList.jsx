@@ -51,7 +51,7 @@ TranslationsList.defaultProps = {
                                     <Ui.View.Body>
                                         {_.isEmpty(this.state.locales) ? (
                                             <Ui.Alert>
-                                                {this.i18n('Before editing translations, header over to {locales} section to create them.', {
+                                                {this.i18n('Before editing translations, header over to {locales} section and create a locale.', {
                                                     locales: <Ui.Link route="I18N.Locales.List">{this.i18n('Locales')}</Ui.Link>
                                                 })}
                                             </Ui.Alert>

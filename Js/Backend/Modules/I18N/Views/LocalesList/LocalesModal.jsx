@@ -5,17 +5,18 @@ import Webiny from 'webiny';
 /**
  * @i18n.namespace Webiny.Backend.I18N.TextsList
  */
-class AddLocaleModal extends Webiny.Ui.ModalComponent {
+class LocalesModal extends Webiny.Ui.ModalComponent {
     renderDialog() {
-        const {Button, Modal, Link, Grid, Form, Select} = this.props;
+        const {Button, Modal, Link, Grid, Form, Select, Switch} = this.props;
 
         return (
             <Modal.Dialog>
                 <Form
+                    defaultModel={this.props.data}
                     fields="key,label"
                     api="/entities/webiny/i18n-locales"
-                    onSuccessMessage={this.props.onSuccessMessage}
-                    onSubmitSuccess={apiResponse => this.hide().then(() => this.props.onSubmitSuccess(apiResponse))}>
+                    onSubmitSuccess={apiResponse => this.hide().then(() => this.props.onSubmitSuccess(apiResponse))}
+                    onSuccessMessage={() => Webiny.Growl.success(this.i18n('Locale was saved successfully!'))}>
                     {(model, form) => (
                         <Modal.Content>
                             <Modal.Header title="Add locale"/>
@@ -31,6 +32,7 @@ class AddLocaleModal extends Webiny.Ui.ModalComponent {
                                             validate="required"
                                             api="/entities/webiny/i18n-locales"
                                             url="/available"/>
+                                        <Switch label={this.i18n('Default')} name="default"/>
                                     </Grid.Col>
                                 </Grid.Row>
                             </Modal.Body>
@@ -47,11 +49,10 @@ class AddLocaleModal extends Webiny.Ui.ModalComponent {
     }
 }
 
-AddLocaleModal.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps, {
+LocalesModal.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps, {
     onSubmitSuccess: _.noop,
-    onSuccessMessage: _.noop
 });
 
-export default Webiny.createComponent(AddLocaleModal, {
-    modules: ['Button', 'Modal', 'Link', 'Grid', 'Form', 'Select']
+export default Webiny.createComponent(LocalesModal, {
+    modules: ['Button', 'Modal', 'Link', 'Grid', 'Form', 'Select', 'Switch']
 });
