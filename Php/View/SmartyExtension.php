@@ -84,7 +84,7 @@ class SmartyExtension extends AbstractSmartyExtension
         }
 
         // Loading i18n locale - basic information.
-        $i18n = ['locale' => null];
+        $i18n = ['enabled' => I18N::getInstance()->isEnabled(), 'locale' => null];
         $locale = $this->wCookie()->get('webiny-i18n-locale');
         if ($locale) {
             $locale = I18NLocale::findOne(['key' => $locale, 'enabled' => true]);

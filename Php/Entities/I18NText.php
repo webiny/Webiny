@@ -226,7 +226,10 @@ class I18NText extends AbstractEntity
                 $translations[] = ['locale' => ['key' => $locale->key, 'label' => $locale->label], 'count' => 0];
             }
 
-            // Finally, let's sort locales alphabetically.
+
+            usort($translations, function($a, $b) {
+                return $a['locale']['label'] > $b['locale']['label'];
+            });
 
             return [
                 'texts'        => ['total' => I18NText::count()],
