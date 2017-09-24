@@ -4,6 +4,7 @@ import ExportTranslationsModal from './TranslationsList/ExportTranslationsModal'
 import ImportTranslationsModal from './TranslationsList/ImportTranslationsModal';
 import TextRow from './TranslationsList/TextRow';
 import TranslatedTextPercentages from './TranslationsList/TranslatedTextPercentages';
+import _ from 'lodash';
 
 /**
  * @i18n.namespace Webiny.Backend.I18N.TranslationsList
@@ -25,7 +26,7 @@ TranslationsList.defaultProps = {
     renderer () {
         return (
             <Webiny.Ui.LazyLoad
-                modules={['ViewSwitcher', 'View', 'Button', 'ButtonGroup', 'Icon', 'List', 'Input', 'Form', 'Grid', 'Select']}>
+                modules={['ViewSwitcher', 'View', 'Button', 'ButtonGroup', 'Icon', 'List', 'Input', 'Form', 'Grid', 'Select', 'Alert', 'Link']}>
                 {Ui => (
                     <Ui.ViewSwitcher>
                         <Ui.ViewSwitcher.View view="translationsList" defaultView>
@@ -48,7 +49,13 @@ TranslationsList.defaultProps = {
                                         </Ui.ButtonGroup>
                                     </Ui.View.Header>
                                     <Ui.View.Body>
-                                        <TranslatedTextPercentages/>
+                                        {_.isEmpty(this.state.locales) ? (
+                                            <Ui.Alert>
+                                                {this.i18n('Before editing translations, header over to {locales} section to create them.', {
+                                                    locales: <Ui.Link route="I18N.Locales.List">{this.i18n('Locales')}</Ui.Link>
+                                                })}
+                                            </Ui.Alert>
+                                        ) : <TranslatedTextPercentages/>}
                                         <Ui.List
                                             connectToRouter
                                             title={this.i18n(`Translations`)}
@@ -62,7 +69,7 @@ TranslationsList.defaultProps = {
                                                         <Ui.Grid.Col all={4}>
                                                             <Ui.Input
                                                                 name="_searchQuery"
-                                                                placeholder="Search by key, text or translation"
+                                                                placeholder={this.i18n('Search by key, text or translation')}
                                                                 onEnter={apply()}/>
                                                         </Ui.Grid.Col>
                                                         <Ui.Grid.Col all={4}>
@@ -80,7 +87,7 @@ TranslationsList.defaultProps = {
                                                             <Ui.Select
                                                                 api="/entities/webiny/i18n-text-groups"
                                                                 name="group"
-                                                                placeholder="Filter by text group"
+                                                                placeholder={this.i18n('Filter by text group')}
                                                                 allowClear
                                                                 onChange={apply()}/>
                                                         </Ui.Grid.Col>

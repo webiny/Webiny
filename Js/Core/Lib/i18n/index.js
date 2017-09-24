@@ -3,7 +3,8 @@ import md5 from 'blueimp-md5';
 import Webiny from 'webiny';
 import React from 'react';
 import I18nComponent from './I18N';
-import BuiltInModifiers from './BuiltInModifiers';
+
+import modifiers from './Modifiers';
 
 /**
  * Main class used for all I18n needs.
@@ -11,11 +12,15 @@ import BuiltInModifiers from './BuiltInModifiers';
 class I18n {
     constructor() {
         this.locales = {current: null, list: []};
+
+        this.modifiers = {};
+        this.registerModifiers(modifiers);
+
         this.groups = {list: []};
         this.cacheKey = null;
-        this.modifiers = BuiltInModifiers;
         this.translations = {};
         this.component = I18nComponent;
+
 
         const translate = (base, variables = {}, options = {}) => {
             if (_.isString(base) && _.isString(variables)) {
@@ -204,12 +209,10 @@ class I18n {
 
     /**
      * Registers single modifier.
-     * @param name
-     * @param callback
      * @returns {I18n}
      */
-    registerModifier(name, callback) {
-        this.modifiers[name] = callback;
+    registerModifier(modifier) {
+        this.modifiers[modifier.getName()] = modifier;
         return this;
     }
 
@@ -219,7 +222,7 @@ class I18n {
      * @returns {I18n}
      */
     registerModifiers(modifiers) {
-        modifiers.forEach((callback, name) => this.registerModifier(name, callback));
+        modifiers.forEach(modifier => this.registerModifier(modifier));
         return this;
     }
 
@@ -282,7 +285,8 @@ class I18n {
             let parameters = modifier.split(':');
             let name = parameters.shift();
             if (this.modifiers[name]) {
-                output.value = this.modifiers[name]('' + output.value, parameters);
+                const modifier = this.modifiers[name];
+                output.value = modifier.execute('' + output.value, parameters);
             }
         }
 
