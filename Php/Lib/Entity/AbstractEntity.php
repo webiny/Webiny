@@ -788,8 +788,9 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                     $rf = new \ReflectionFunction($callback);
                     $firstParameter = $rf->getParameters()[0] ?? null;
                     if ($firstParameter) {
-                        // We must only execute the callback if $className matches the parameter class
-                        if ($firstParameter->getClass()->getName() !== $className) {
+                        // We must only execute the callback if $className matches or extends the parameter class
+                        $requiredClassName = $firstParameter->getClass()->getName();
+                        if ($requiredClassName !== $className && !is_subclass_of($className, $requiredClassName)) {
                             continue;
                         }
                         array_unshift($staticParams, $this);
