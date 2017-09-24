@@ -8,6 +8,7 @@
 namespace Apps\Webiny\Php\Bootstrap;
 
 use Apps\Webiny\Php\Lib\Authorization\Authorization;
+use Apps\Webiny\Php\Lib\I18N\I18N;
 use Apps\Webiny\Php\Lib\Request;
 use Apps\Webiny\Php\Lib\Response\ApiResponse;
 use Apps\Webiny\Php\Lib\Response\HtmlResponse;
@@ -62,6 +63,8 @@ class Bootstrap
         // set error handler
         $this->errorHandler = new ErrorHandler();
 
+        I18N::getInstance()->init();
+
         // Set component configs
         $emptyConfig = new ConfigObject();
         Mongo::setConfig($this->wConfig()->get('Mongo', $emptyConfig));
@@ -69,6 +72,7 @@ class Bootstrap
         Security::setConfig($this->wConfig()->get('Security', $emptyConfig));
         Storage::setConfig($this->wConfig()->get('Storage', $emptyConfig));
         Http::setConfig($this->wConfig()->get('Http', $emptyConfig));
+
 
         // scan all components to register routes and event handlers
         $this->wApps()->loadApps();

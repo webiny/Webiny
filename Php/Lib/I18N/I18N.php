@@ -6,6 +6,7 @@ use Apps\Webiny\Php\Entities\I18NLocale;
 use Apps\Webiny\Php\Entities\I18NText;
 use Apps\Webiny\Php\Lib\Apps\App;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
+use Apps\Webiny\Php\Lib\I18N\Modifiers\AbstractModifier;
 use Apps\Webiny\Php\Lib\I18N\Parsers\JsParser;
 use Apps\Webiny\Php\Lib\I18N\Parsers\PhpParser;
 use Apps\Webiny\Php\Lib\WebinyTrait;
@@ -32,40 +33,23 @@ class I18N
 
     public function init()
     {
-        $this->modifiers = [
-            'if'     => function ($value, $parameters) {
-                return $value === $parameters[0] ? $parameters[1] : $parameters[2] || '';
-            },
-            'gender' => function ($value, $parameters) {
-                return $value === 'male' ? $parameters[0] : $parameters[1];
-            },
-            'plural' => function ($value, $parameters) {
-                // Numbers can be single number or ranges.
-                for ($i = 0; $i < count($parameters); $i = $i + 2) {
-                    $current = $parameters[$i];
-                    if ($current === 'default') {
-                        return $value . ' ' . $parameters[$i + 1];
-                    }
+        if (!$this->isEnabled()) {
+            return;
+        }
 
-                    $numbers = explode('|', $current);
+        $locale = $this->wCookie()->get('webiny-i18n');
+        if (!$locale) {
+            $locale = $this->wRequest()->header('webiny-i18n');
+        }
 
-                    // If we are dealing with a numbers range, then let's check if we are in it.
-                    if (count($numbers) === 2) {
-                        if ($value >= $numbers[0] && $value <= $numbers[1]) {
-                            return $value . ' ' . $parameters[$i + 1];
-                        }
-                        continue;
-                    }
-
-                    if ($value === $numbers[0]) {
-                        return $value . ' ' . $parameters[$i + 1];
-                    }
-
-                    // If we didn't match any condition, let's just remove the received value.
-                    return $value;
-                }
+        if ($locale) {
+            $locale = I18NLocale::findByKey($locale);
+            if ($locale) {
+                $this->setLocale($locale);
             }
-        ];
+        }
+
+        $this->registerModifiers([new IfModifier(), new GenderModifier(), new PluralModifier()]);
     }
 
     /**
@@ -120,8 +104,11 @@ class I18N
             if ($modifier) {
                 $parameters = explode(':', $modifier);
                 $name = array_shift($parameters);
-                if (isset($this->modifiers[$name]) && is_callable($this->modifiers[$name])) {
-                    return $carry . $this->modifiers[$name]((string)$value, $parameters);
+                if (isset($this->modifiers[$name]) && $this->modifiers[$name] instanceof AbstractModifier) {
+                    /* @var AbstractModifier $modifierInstance */
+                    $modifierInstance = $this->modifiers[$name];
+
+                    return $carry . $modifierInstance->execute((string)$value, $parameters);
                 } else {
                     throw new AppException($this->wI18n('Invalid or missing text modifier "{name}".', ['name' => $name]));
                 }
@@ -136,14 +123,13 @@ class I18N
     /**
      * Registers single modifier.
      *
-     * @param $name
-     * @param $callback
+     * @param AbstractModifier $modifier
      *
      * @return $this
      */
-    public function registerModifier($name, $callback)
+    public function registerModifier(AbstractModifier $modifier)
     {
-        $this->modifiers[$name] = $callback;
+        $this->modifiers[$modifier->getName()] = $modifier;
 
         return $this;
     }
