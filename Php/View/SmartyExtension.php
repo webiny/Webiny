@@ -24,7 +24,8 @@ class SmartyExtension extends AbstractSmartyExtension
     {
         return [
             new SmartySimplePlugin('webiny', 'function', [$this, 'webinyInclude']),
-            new SmartySimplePlugin('webinyPreload', 'function', [$this, 'webinyPreload'])
+            new SmartySimplePlugin('webinyPreload', 'function', [$this, 'webinyPreload']),
+            new SmartySimplePlugin('i18n', 'function', [$this, 'i18n'])
         ];
     }
 
