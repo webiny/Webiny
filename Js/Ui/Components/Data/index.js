@@ -102,7 +102,12 @@ Data.defaultProps = {
 
         return (
             <webiny-data>
-                {_.isFunction(this.props.children) ? this.props.children.call(this, _.cloneDeep(this.state.data), this.filter, loader, this) : null}
+                {this.props.children.call(this, {
+                    data: _.cloneDeep(this.state.data),
+                    filter: this.filter,
+                    loader: loader,
+                    $this: this
+                })}
             </webiny-data>
         );
     }

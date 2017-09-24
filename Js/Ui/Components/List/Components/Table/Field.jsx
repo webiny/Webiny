@@ -35,12 +35,13 @@ Field.defaultProps = {
     params: null,
     hide: false,
     renderer() {
-        let content = _.get(this.props.data, this.props.name);
-        if (_.isNil(content)) {
-            content = this.props.default;
+        let content = this.props.children;
+        if (!_.isFunction(content) && _.isEmpty(content)) {
+            content = _.get(this.props.data, this.props.name, this.props.default);
         }
-        if (_.isFunction(this.props.children)) {
-            content = this.props.children.call(this, this.props.data, this);
+
+        if (_.isFunction(content)) {
+            content = content.call(this, {data: this.props.data, $this: this});
         }
 
         if (this.props.route) {
@@ -51,7 +52,9 @@ Field.defaultProps = {
             );
         }
 
-        return this.props.includeTd ? <td className={this.getTdClasses()} data-th={Webiny.i18n.toText(this.props.label)}>{content}</td> : content;
+        return this.props.includeTd ?
+            <td className={this.getTdClasses()} data-th={Webiny.i18n.toText(this.props.label)}>{content}</td>
+            : content;
     }
 };
 

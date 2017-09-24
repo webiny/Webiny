@@ -45,7 +45,6 @@ class ClickConfirm extends Webiny.Ui.Component {
      * When calling `confirm` callback - whatever data is passed to it will be passed down to original `onClick` handler.
      * That way you can dynamically handle the different scenarios of the confirmation dialog.
      *
-     * @param data
      * @returns {Promise.<*>}
      */
     onConfirm(data = {}) {
@@ -54,7 +53,7 @@ class ClickConfirm extends Webiny.Ui.Component {
 }
 
 ClickConfirm.defaultProps = {
-    message: null,
+    message: 'We need you to confirm your action.',
     onComplete: _.noop,
     onCancel: _.noop,
     renderDialog: null,
@@ -68,7 +67,7 @@ ClickConfirm.defaultProps = {
 
         const dialogProps = {
             ref: 'dialog',
-            message: () => this.message,
+            message: this.message,
             onConfirm: this.onConfirm,
             onCancel: this.onCancel,
             onComplete: this.props.onComplete

@@ -43,17 +43,17 @@ UserRoles.defaultProps = {
             <List.Table data={this.state.roles}>
                 <List.Table.Row>
                     <List.Table.Field style={{width: 140}} align="center">
-                        {(role) => {
-                            const checkedIndex = _.findIndex(this.props.value, {id: role.id});
+                        {({data}) => {
+                            const checkedIndex = _.findIndex(this.props.value, {id: data.id});
                             return (
-                                <Switch value={checkedIndex > -1} onChange={enabled => this.onChange(checkedIndex, role, enabled)}/>
+                                <Switch value={checkedIndex > -1} onChange={enabled => this.onChange(checkedIndex, data, enabled)}/>
                             );
                         }}
                     </List.Table.Field>
                     <List.Table.Field label="Role">
-                        {(role) => (
+                        {({data}) => (
                             <span>
-                                <Link route="UserRoles.Edit" params={{id: role.id}}><strong>{role.name}</strong></Link><br/>{role.slug}
+                                <Link route="UserRoles.Edit" params={{id: data.id}}><strong>{data.name}</strong></Link><br/>{data.slug}
                             </span>
                         )}
                     </List.Table.Field>

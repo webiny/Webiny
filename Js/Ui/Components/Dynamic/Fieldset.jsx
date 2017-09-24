@@ -142,13 +142,13 @@ Fieldset.defaultProps = {
         if (Object.keys(model).length) {
             return (
                 <div>
-                    {this.headerTemplate(this.actions)}
+                    {this.headerTemplate({actions: this.actions})}
                     {Object.keys(model).map(key => {
                         const record = model[key];
                         this.currentKey = key;
                         return (
                             <webiny-dynamic-fieldset-row key={key}>
-                                {this.registerInputs(this.rowTemplate(record, this.actions))}
+                                {this.registerInputs(this.rowTemplate({data: record, actions: this.actions}))}
                             </webiny-dynamic-fieldset-row>
                         );
                     })}
@@ -158,7 +158,7 @@ Fieldset.defaultProps = {
 
         return (
             <div>
-                {this.registerInputs(this.emptyTemplate(this.actions))}
+                {this.registerInputs(this.emptyTemplate({actions: this.actions}))}
             </div>
         );
     }

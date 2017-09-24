@@ -268,7 +268,7 @@ Dialog.defaultProps = {
         const className = this.classSet(styles.modal, (this.props.wide && styles.wide));
         let content = this.props.children;
         if (_.isFunction(content)) {
-            content = content.call(this, this);
+            content = content.call(this, {dialog: this});
         }
         return (
             <div style={_.merge({}, {display: 'block'}, this.props.style)}>

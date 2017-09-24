@@ -8,7 +8,7 @@ class FormFilters extends Filters {
     constructor(props) {
         super(props);
 
-        this.bindMethods('getFilters,submit');
+        this.bindMethods('getFilters,submit,applyFormFilters,resetFormFilters');
     }
 
     shouldComponentUpdate(nextProps) {
@@ -16,15 +16,23 @@ class FormFilters extends Filters {
     }
 
     getFilters() {
-        return this.refs.form.getModel();
+        return this.form.getModel();
     }
 
     submit(model, form) {
-        if(_.isFunction(this.props.onSubmit)) {
+        if (_.isFunction(this.props.onSubmit)) {
             this.props.onSubmit(model, form, this.applyFilters);
         } else {
             this.applyFilters(model);
         }
+    }
+
+    applyFormFilters() {
+        return (e) => this.form.submit(e);
+    }
+
+    resetFormFilters() {
+        return () => this.applyFilters({});
     }
 }
 
@@ -34,13 +42,11 @@ FormFilters.defaultProps = {
         applyFilters(model);
     },
     renderer() {
-        const applyFilters = () => (e) => this.refs.form.submit(e);
-        const resetFilters = () => () => this.applyFilters({});
         const {Form} = this.props;
 
         return (
-            <Form ref="form" defaultModel={this.props.defaultModel} model={this.props.filters} onSubmit={this.submit}>
-                {() => this.props.children(applyFilters, resetFilters)}
+            <Form ref={ref => this.form = ref} defaultModel={this.props.defaultModel} model={this.props.filters} onSubmit={this.submit}>
+                {() => this.props.children({apply: this.applyFormFilters, reset: this.resetFormFilters})}
             </Form>
         );
     }

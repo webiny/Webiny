@@ -23,9 +23,8 @@ Alert.defaultProps = {
     title: null,
     close: false,
     className: null,
-    renderer() {
-        const props = _.clone(this.props);
-        const {styles, type, Icon} = this.props;
+    renderer({props}) {
+        const {styles, type, Icon} = props;
 
         const typeClasses = {
             info: styles.alertInfo,

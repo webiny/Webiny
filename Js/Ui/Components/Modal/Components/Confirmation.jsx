@@ -56,7 +56,7 @@ class Confirmation extends Webiny.Ui.ModalComponent {
         if (!this.isAnimating() && _.isFunction(this.props.onConfirm)) {
             this.showLoading();
             data = _.isPlainObject(data) ? data : this.props.data;
-            return Promise.resolve(this.props.onConfirm(data, this)).then(result => {
+            return Promise.resolve(this.props.onConfirm({data, dialog: this})).then(result => {
                 if (this.isMounted()) {
                     this.hideLoading();
                 }
@@ -90,13 +90,13 @@ class Confirmation extends Webiny.Ui.ModalComponent {
         }
 
         if (_.isFunction(content)) {
-            content = content();
+            content = content({data: this.props.data});
         }
         return content;
     }
 
     renderDialog() {
-        return this.props.renderDialog.call(this, this.onConfirm, this.onCancel, this);
+        return this.props.renderDialog.call(this, {onConfirm: this.onConfirm, onCancel: this.onCancel, dialog: this});
     }
 }
 
@@ -114,13 +114,13 @@ Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
         const {Loader} = this.props;
         return <Loader/>;
     },
-    renderDialog(confirm, cancel) {
+    renderDialog({onConfirm, onCancel, dialog}) {
         const {Button, styles} = this.props;
         return (
             <Dialog
                 modalContainerTag="confirmation-modal"
                 className={styles.alertModal}
-                onCancel={cancel}
+                onCancel={onCancel}
                 closeOnClick={this.props.closeOnClick}>
                 {this.renderLoader()}
                 <Content>
@@ -132,8 +132,8 @@ Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
                     </div>
                     </Body>
                     <Footer>
-                        <Button type="default" label={this.props.cancel} onClick={cancel}/>
-                        <Button type="primary" label={this.props.confirm} onClick={confirm}/>
+                        <Button type="default" label={this.props.cancel} onClick={onCancel}/>
+                        <Button type="primary" label={this.props.confirm} onClick={onConfirm}/>
                     </Footer>
                 </Content>
             </Dialog>

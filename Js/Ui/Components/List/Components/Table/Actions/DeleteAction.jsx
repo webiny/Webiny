@@ -16,8 +16,8 @@ DeleteAction.defaultProps = {
     cancelButtonLabel: 'No',
     hide: _.noop,
     afterDelete: _.noop,
-    onConfirm(record, actions) {
-        return actions.delete(record.id, false).then(res => {
+    onConfirm({data, actions, dialog}) {
+        return actions.delete(data.id, false).then(res => {
             return Promise.resolve(this.props.afterDelete(res)).then(() => res);
         });
     },
@@ -27,7 +27,7 @@ DeleteAction.defaultProps = {
 
         return (
             <ModalAction {..._.pick(this.props, 'data', 'actions', 'label', 'hide', 'afterDelete', 'icon')}>
-                {function render(record, actions) {
+                {function render({data, actions, dialog}) {
                     const props = {
                         title: $this.props.title,
                         confirm: $this.props.confirmButtonLabel,
@@ -37,7 +37,7 @@ DeleteAction.defaultProps = {
                             actions.reload();
                         },
                         onConfirm: () => {
-                            $this.props.onConfirm.call($this, record, actions);
+                            $this.props.onConfirm.call($this, {data, actions, dialog});
                         }
                     };
                     return (

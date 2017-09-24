@@ -24,6 +24,10 @@ class Checkbox extends Webiny.Ui.FormComponent {
         const {value} = this.props;
         return !_.isNull(value) && value !== false && value !== undefined;
     }
+
+    renderLabel() {
+        return this.props.labelRenderer.call(this, {option: this.props.option, checkbox: this});
+    }
 }
 
 Checkbox.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {

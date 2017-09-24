@@ -93,14 +93,16 @@ class Config
     }
 
     /**
-     * Magic get method, so you don't need to use the defined get method.
+     * Replace current configuration with the new ConfigObject
      *
-     * @param $name
+     * @param ConfigObject $config
      *
-     * @return mixed|ConfigObject
+     * @return $this
      */
-    public function _get($name)
+    public function setConfig(ConfigObject $config)
     {
-        return $this->get($name);
+        self::$config = $config;
+
+        return $this;
     }
 }

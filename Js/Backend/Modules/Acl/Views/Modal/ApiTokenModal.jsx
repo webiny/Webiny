@@ -23,9 +23,9 @@ class ApiTokenModal extends Webiny.Ui.ModalComponent {
 
         return (
             <Modal.Dialog wide={true}>
-                {dialog => (
+                {({dialog}) => (
                     <Form {...formProps}>
-                        {(model, form) => (
+                        {({model, form}) => (
                             <Modal.Content>
                                 <Form.Loader/>
                                 <Modal.Header title="API Token" onClose={dialog.hide}/>

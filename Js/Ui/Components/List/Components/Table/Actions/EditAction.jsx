@@ -16,7 +16,7 @@ EditAction.defaultProps = {
 
         if (this.props.onClick) {
             const icon = props.icon ? <Icon icon={props.icon}/> : null;
-            props.onClick = () => this.props.onClick(this.props.data);
+            props.onClick = () => this.props.onClick({data: this.props.data});
             return (
                 <Link {...props}>
                     {icon}

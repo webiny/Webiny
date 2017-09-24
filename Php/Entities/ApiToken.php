@@ -133,8 +133,12 @@ class ApiToken extends AbstractEntity implements UserInterface
 
     public function hasRole($name)
     {
+        if (is_string($name)) {
+            $name = [$name];
+        }
+
         foreach ($this->getUserRoles() as $role) {
-            if ($role->slug == $name) {
+            if (in_array($role->slug, $name)) {
                 return true;
             }
         }

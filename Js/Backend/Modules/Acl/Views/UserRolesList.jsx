@@ -26,7 +26,7 @@ List.defaultProps = {
         return (
             <Ui.ViewSwitcher>
                 <Ui.ViewSwitcher.View view="listView" defaultView>
-                    {showView => (
+                    {({showView}) => (
                         <Ui.View.List>
                             <Ui.View.Header
                                 title="ACL - Roles"
@@ -49,7 +49,7 @@ List.defaultProps = {
                             <Ui.View.Body>
                                 <Ui.List {...listProps}>
                                     <Ui.List.FormFilters>
-                                        {(apply) => (
+                                        {({apply}) => (
                                             <Ui.Grid.Row>
                                                 <Ui.Grid.Col all={12}>
                                                     <Ui.Input
@@ -63,14 +63,13 @@ List.defaultProps = {
                                     <Table>
                                         <Table.Row>
                                             <Table.Field name="name" label="Name" sort="name">
-                                                {data => (
+                                                {({data}) => (
                                                     <span>
-                                            <Ui.Link route="UserRoles.Edit" params={{id: data.id}}>
-                                                <strong>{data.name}</strong>
-                                            </Ui.Link>
-                                            <br/>
-                                                        {data.description}
-                                        </span>
+                                                        <Ui.Link route="UserRoles.Edit" params={{id: data.id}}>
+                                                            <strong>{data.name}</strong>
+                                                        </Ui.Link>
+                                                        <br/>{data.description}
+                                                    </span>
                                                 )}
                                             </Table.Field>
                                             <Table.Field name="slug" label="Slug" sort="slug"/>
@@ -92,7 +91,7 @@ List.defaultProps = {
                 </Ui.ViewSwitcher.View>
 
                 <Ui.ViewSwitcher.View view="exportModal" modal>
-                    {(showView, data) => (
+                    {({data: {data}}) => (
                         <ExportModal
                             data={data}
                             map="permissions"
@@ -103,7 +102,7 @@ List.defaultProps = {
                 </Ui.ViewSwitcher.View>
 
                 <Ui.ViewSwitcher.View view="importModal" modal>
-                    {(showView) => (
+                    {() => (
                         <ImportModal
                             api="/entities/webiny/user-roles"
                             label="Role"

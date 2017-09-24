@@ -158,12 +158,12 @@ ApiLogsList.defaultProps = {
                     description="Here you can view all API request logs."/>
                 <Ui.View.Body>
                     <Ui.List {...listProps}>
-                        {data => {
+                        {({list}) => {
                             return (
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
                                         <Ui.List.FormFilters>
-                                            {(apply) => (
+                                            {({apply}) => (
                                                 <Ui.Grid.Row>
                                                     <Ui.Grid.Col all={3}>
                                                         <Ui.Input
@@ -206,9 +206,9 @@ ApiLogsList.defaultProps = {
                                     </Ui.Grid.Col>
                                     <Ui.Grid.Col all={12}>
                                         <Ui.List.Loader/>
-                                        <Ui.List.Table.Empty renderIf={!data.length}/>
+                                        <Ui.List.Table.Empty renderIf={!list.length}/>
                                         <Ui.ExpandableList>
-                                            {data.map(row => {
+                                            {list.map(row => {
                                                 return (
                                                     <Ui.ExpandableList.Row key={row.id}>
                                                         <Ui.ExpandableList.Field all={9} name="URL" className="text-left">

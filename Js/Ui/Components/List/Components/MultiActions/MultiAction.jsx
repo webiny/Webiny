@@ -10,7 +10,7 @@ class MultiAction extends Webiny.Ui.Component {
     }
 
     onAction() {
-        this.props.onAction(this.props.data, this.props.actions);
+        this.props.onAction({data: this.props.data, actions: this.props.actions});
     }
 }
 
@@ -18,6 +18,8 @@ MultiAction.defaultProps = {
     allowEmpty: false,
     onAction: _.noop,
     download: null,
+    actions: null,
+    data: [],
     renderer() {
         const {Link, DownloadLink} = this.props;
 

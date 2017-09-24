@@ -28,9 +28,9 @@ ErrorGroup.defaultProps = {
             <Webiny.Ui.LazyLoad modules={['List', 'ExpandableList', 'Filters']}>
                 {(Ui) => (
                     <Ui.List {...statProps}>
-                        {(errorData, meta, list) => (
+                        {({list, meta}) => (
                             <Ui.ExpandableList>
-                                {errorData.map(row => {
+                                {list.map(row => {
                                     return (
                                         <Ui.ExpandableList.Row key={row.id}>
                                             <Ui.ExpandableList.Field width={6}>
@@ -41,9 +41,7 @@ ErrorGroup.defaultProps = {
                                             </Ui.ExpandableList.Field>
 
                                             <Ui.ExpandableList.RowDetailsContent title={row.url}>
-                                                {() => {
-                                                    return React.createElement(ErrorDetails[this.props.errorGroup.type], {errorEntry: row});
-                                                }}
+                                                {React.createElement(ErrorDetails[this.props.errorGroup.type], {errorEntry: row})}
                                             </Ui.ExpandableList.RowDetailsContent>
 
                                             <Ui.ExpandableList.ActionSet>

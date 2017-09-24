@@ -24,7 +24,7 @@ class ForgotPasswordModal extends Webiny.Ui.ModalComponent {
         return (
             <Modal.Dialog onHidden={() => this.setState({success: false})}>
                 <Form {...formProps}>
-                    {(model, form) => (
+                    {({form}) => (
                         <Modal.Content>
                             <Form.Loader/>
                             <Modal.Header onClose={this.hide} title="Forgot Password"/>

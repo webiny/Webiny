@@ -48,7 +48,7 @@ class UserPermissionsForm extends Webiny.Ui.View {
                 onSuccessMessage={(record) => {
                     return <span>Permission <strong>{record.name}</strong> was saved!</span>;
                 }}>
-                {(model, form) => {
+                {({model, form}) => {
                     return (
                         <Ui.View.Form>
                             <Ui.View.Header title={model.id ? 'ACL - Edit permission' : 'ACL - Create permission'}/>

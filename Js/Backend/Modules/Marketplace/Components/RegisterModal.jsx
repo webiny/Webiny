@@ -38,7 +38,7 @@ class ModalForm extends Webiny.Ui.ModalComponent {
         return (
             <Modal.Dialog>
                 <Form {...containerProps}>
-                    {(model, form) => (
+                    {({form}) => (
                         <Modal.Content>
                             <Modal.Header title="Register" onClose={this.hide}/>
                             <Modal.Body>

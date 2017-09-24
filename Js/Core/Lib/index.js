@@ -14,7 +14,6 @@ import Model from './Core/Model';
 import View from './Core/View';
 import Menu from './Core/Menu';
 import Dispatcher from './Core/Dispatcher';
-import UiDispatcher from './Core/UiDispatcher';
 import ViewManager from './Core/ViewManager';
 import Filter from './Core/Filter';
 import Growl from './Core/Growl';
@@ -65,7 +64,6 @@ export default (Webiny) => {
             LazyLoad,
             Placeholder,
             Component,
-            Dispatcher: UiDispatcher,
             FormComponent,
             ModalComponent,
             OptionComponent,

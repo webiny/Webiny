@@ -29,7 +29,7 @@ class UserAccount extends Webiny.Ui.View {
         return (
             <Ui.Modal.Dialog>
                 <Ui.Form {...formProps}>
-                    {(model, form) => (
+                    {({model, form}) => (
                         <Ui.Modal.Content>
                             <Ui.Modal.Header title="2 Factor Auth" onClose={cancel}/>
                             <Ui.Modal.Body>
@@ -55,7 +55,7 @@ class UserAccount extends Webiny.Ui.View {
                                         <Ui.Section title="Step 2"/>
                                         <p>Scan the QR code below with the authenticator app</p>
                                         <Ui.Data api="/entities/webiny/user/2factor-qr" waitForData={true}>
-                                            {(data, filter, loader) => {
+                                            {({data, loader}) => {
                                                 if (loader) {
                                                     return loader;
                                                 }
@@ -72,12 +72,14 @@ class UserAccount extends Webiny.Ui.View {
                                     <Ui.Grid.Col all={12}>
                                         <Ui.Section title="Step 3"/>
                                         <Ui.Grid.Col all={12}>
-                                            <Ui.Input label="Enter the generated code in the field below:" name="verification"
-                                                      validate="required"/>
+                                            <Ui.Input
+                                                label="Enter the generated code in the field below:"
+                                                name="verification"
+                                                validate="required"/>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Col>
-
                                 </Ui.Grid.Row>
+
                             </Ui.Modal.Body>
                             <Ui.Modal.Footer>
                                 <Ui.Button type="default" label="Cancel" onClick={cancel}/>
@@ -97,9 +99,9 @@ UserAccount.defaultProps = {
     renderer() {
         const formContainer = {
             api: Webiny.Auth.getApiEndpoint(),
-            loadModel: (form) => {
+            loadModel: ({form}) => {
                 form.showLoading();
-                return form.api.get('/me', {_fields: 'id,firstName,lastName,email,gravatar,twoFactorAuth.status'}).then(res => {
+                return form.api.get('/me', {_fields: 'id,firstName,lastName,email,gravatar,twoFactorAuth.status,meta.appNotifications'}).then(res => {
                     form.hideLoading();
                     return res.getData();
                 });
@@ -123,7 +125,7 @@ UserAccount.defaultProps = {
 
         return (
             <Ui.Form {...formContainer}>
-                {(model, form) => (
+                {({model, form}) => (
                     <Ui.View.Form>
                         <Ui.View.Header title="Account Settings"/>
                         <Ui.View.Body>
@@ -155,14 +157,27 @@ UserAccount.defaultProps = {
                                         placeholder="Re-type your new password">
                                         <validator name="eq">Passwords do not match</validator>
                                     </Ui.Password>
-
-                                    <Ui.ChangeConfirm message={value => value ? 'Dummy' : null}
-                                                      renderDialog={this.twoFactorAuthModal}
-                                                      onComplete={() => this.twoFactorAuthConfirmation.show()}>
+                                    <Ui.ChangeConfirm
+                                        message={({value}) => value ? 'Dummy' : null}
+                                        renderDialog={this.twoFactorAuthModal}
+                                        onComplete={() => this.twoFactorAuthConfirmation.show()}>
                                         <Ui.Switch label="Enable 2 Factor Authentication" name="twoFactorAuth.status"/>
                                     </Ui.ChangeConfirm>
                                     <TwoFactorAuthConfirmation ref={ref => this.twoFactorAuthConfirmation = ref}/>
-
+                                </Ui.Grid.Col>
+                            </Ui.Grid.Row>
+                            <Ui.Grid.Row>
+                                <Ui.Grid.Col all={6}>
+                                    <Ui.Section title="App Notifications"/>
+                                    <Ui.CheckboxGroup
+                                        api="/services/webiny/app-notifications/types"
+                                        name="meta.appNotifications"
+                                        valueAttr="type"
+                                        textAttr="title"
+                                        checkboxLabelRenderer={({option}) => {
+                                            return <span><strong>{option.text}</strong> ({option.data.description || 'no description'})</span>
+                                        }}
+                                    />
                                 </Ui.Grid.Col>
                             </Ui.Grid.Row>
                         </Ui.View.Body>
@@ -170,7 +185,7 @@ UserAccount.defaultProps = {
                             <Ui.Button type="primary" onClick={form.submit} label="Save account"/>
                         </Ui.View.Footer>
                     </Ui.View.Form>
-                )}
+                    )}
             </Ui.Form>
         );
     }
@@ -178,5 +193,5 @@ UserAccount.defaultProps = {
 
 export default Webiny.createComponent(UserAccount, {
     modulesProp: 'Ui',
-    modules: ['View', 'Form', 'Grid', 'Gravatar', 'Input', 'Password', 'Button', 'Section', 'ChangeConfirm', 'Switch', 'Modal', 'Data', 'Link', 'Icon']
+    modules: ['View', 'Form', 'Grid', 'Gravatar', 'Input', 'Password', 'Button', 'Section', 'ChangeConfirm', 'Switch', 'Modal', 'Data', 'Link', 'Icon', 'CheckboxGroup']
 });
