@@ -57,7 +57,8 @@ class I18n {
         const output = {value: values[variable], format: null};
 
         // If variable value is an object, the it must have 'value' key set.
-        if (_.isPlainObject(output.value)) {
+        // We must also be sure we are not dealing with React component.
+        if (_.isPlainObject(output.value) && !React.isValidElement(output.value)) {
             if (!_.has(output.value, 'value')) {
                 throw Error(`Key "value" is missing for variable {${variable}}.`);
             }

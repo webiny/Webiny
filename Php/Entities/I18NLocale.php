@@ -14,6 +14,7 @@ use Webiny\Component\Entity\Attribute\Validation\ValidationException;
  * @package Apps\Selecto\Php\Entities
  *
  * @property bool   $enabled
+ * @property bool   $default
  * @property string $key
  * @property string $label
  * @property string $cacheKey
@@ -30,6 +31,27 @@ class I18NLocale extends AbstractEntity
         parent::__construct();
 
         $this->attr('enabled')->boolean();
+
+        /**
+         * Default locale that will be used when locale detection (executed on client-side) failed.
+         * Only one locale can be set as default.
+         * Default locale cannot be deleted.
+         */
+        $this->attr('default')->boolean()->onSet(function ($value) {
+            if (!$value !== $this->default && $value) {
+                $oldDefaultLocale = I18NLocale::findOne(['default' => true]);
+                if ($oldDefaultLocale) {
+                    /* @var I18NLocale $oldDefaultLocale */
+                    $this->onAfterSave(function () use ($oldDefaultLocale) {
+                        $oldDefaultLocale->default = false;
+                        $oldDefaultLocale->save();
+                    }, true);
+                }
+            }
+
+            return $value;
+        });
+
         $this->attr('key')->char()->setValidators(function ($value) {
             if (!I18NLocales::isValidLocale($value)) {
                 throw new ValidationException('You must select a valid locale.');
@@ -41,6 +63,15 @@ class I18NLocale extends AbstractEntity
         });
 
         $this->attr('cacheKey')->char()->setSkipOnPopulate()->setToArrayDefault();
+
+        /**
+         * If this is the first locale created, set it as default immediately.
+         */
+        $this->onBeforeCreate(function () {
+            if (I18NLocale::count() === 0) {
+                $this->default = true;
+            }
+        });
     }
 
     protected function entityApi(ApiContainer $api)
