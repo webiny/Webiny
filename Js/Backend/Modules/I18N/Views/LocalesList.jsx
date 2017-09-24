@@ -32,7 +32,7 @@ LocalesList.defaultProps = {
                                         <Ui.List
                                             connectToRouter
                                             api="/entities/webiny/i18n-locales"
-                                            fields="id,enabled,default,label,key"
+                                            fields="id,enabled,default,label,key,createdOn"
                                             searchFields="id,key"
                                             ref={ref => this.localesList = ref}>
                                             <Ui.List.Table>
@@ -47,7 +47,7 @@ LocalesList.defaultProps = {
                                                     </Ui.List.Table.Field>
                                                     <Ui.List.Table.ToggleField name="enabled" label="Enabled" sort="enabled" align="center"/>
                                                     <Ui.List.Table.ToggleField name="default" label="Default" sort="default" align="center"/>
-                                                    <Ui.List.Table.DateField name="createdOn" label="Created On" sort="createdOn"/>
+                                                    <Ui.List.Table.DateField name="createdOn" label="Created On" sort="createdOn" align="center"/>
                                                     <Ui.List.Table.Actions>
                                                         <Ui.List.Table.EditAction onClick={showView('localesModal')}/>
                                                         <Ui.List.Table.DeleteAction/>

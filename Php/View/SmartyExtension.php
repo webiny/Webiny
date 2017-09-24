@@ -83,22 +83,22 @@ class SmartyExtension extends AbstractSmartyExtension
             $browserSync = '<script src="' . $bsPath . '/browser-sync/browser-sync-client.js?v=2.18.6"></script>';
         }
 
-        $i18n = null;
+        $i18n = ['enabled' => false, 'locale' => null];
         if (I18N::getInstance()->isEnabled()) {
             // Loading i18n locale - basic information.
-            $i18n = ['locale' => null];
+            $i18n = ['locale' => null, 'enabled' => true];
             $locale = $this->wCookie()->get('webiny-i18n');
             if ($locale) {
                 $locale = I18NLocale::findOne(['enabled' => true, 'key' => $locale]);
                 if ($locale) {
-                    $i18n['locale'] = $locale->toArray('key,cacheKey');
+                    $i18n['locale'] = $locale->toArray('key,cacheKey,formats');
                 }
             }
 
             if (!$i18n['locale']) {
                 $locale = I18NLocale::findDefault();
                 if ($locale) {
-                    $i18n['locale'] = $locale->toArray('key,cacheKey');
+                    $i18n['locale'] = $locale->toArray('key,cacheKey,formats');
                 }
             }
         }

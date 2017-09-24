@@ -13,19 +13,20 @@ class LocalesModal extends Webiny.Ui.ModalComponent {
         return (
             <Modal.Dialog>
                 <Form
+                    id={this.props.data.id}
                     defaultModel={_.assign({formats: {}}, this.props.data)}
-                    fields="key,label"
+                    fields="key,label,formats"
                     api="/entities/webiny/i18n-locales"
                     onSubmitSuccess={apiResponse => this.hide().then(() => this.props.onSubmitSuccess(apiResponse))}
-                    onSuccessMessage={() => Webiny.Growl.success(this.i18n('Locale was saved successfully!'))}>
+                    onSuccessMessage={null}>
                     {(model, form) => (
                         <Modal.Content>
-                            <Modal.Header title="Add locale"/>
+                            <Form.Error/>
+                            <Form.Loader/>
+                            <Modal.Header title={this.i18n('Locale')} onClose={this.hide}/>
                             <Modal.Body>
                                 <Grid.Row>
                                     <Grid.Col all={12}>
-                                        <Form.Error/>
-                                        <Form.Loader/>
                                         <Select
                                             description={this.i18n(`Locales already added are not shown.`)}
                                             placeholder={this.i18n('Select locale to add...')}
@@ -86,7 +87,7 @@ class LocalesModal extends Webiny.Ui.ModalComponent {
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button label="Cancel" onClick={this.hide}/>
-                                <Button type="primary" label="Add" onClick={form.submit}/>
+                                <Button type="primary" label={this.i18n('Save')} onClick={form.submit}/>
                             </Modal.Footer>
                         </Modal.Content>
                     )}

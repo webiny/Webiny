@@ -4,6 +4,7 @@ namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
+use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\I18N\I18NLocales;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\Entity\Attribute\Validation\ValidationException;
@@ -38,14 +39,16 @@ class I18NLocale extends AbstractEntity
          * Default locale cannot be deleted.
          */
         $this->attr('default')->boolean()->onSet(function ($value) {
-            if ($value !== $this->default && $value) {
-                $oldDefaultLocale = I18NLocale::findOne(['default' => true]);
-                if ($oldDefaultLocale) {
-                    /* @var I18NLocale $oldDefaultLocale */
-                    $this->onAfterSave(function () use ($oldDefaultLocale) {
-                        $oldDefaultLocale->default = false;
-                        $oldDefaultLocale->save();
-                    }, true);
+            if ($value !== $this->default) {
+                if ($value) {
+                    $oldDefaultLocale = I18NLocale::findOne(['default' => true]);
+                    if ($oldDefaultLocale) {
+                        /* @var I18NLocale $oldDefaultLocale */
+                        $this->onAfterSave(function () use ($oldDefaultLocale) {
+                            $oldDefaultLocale->default = false;
+                            $oldDefaultLocale->save();
+                        }, true);
+                    }
                 }
             }
 
@@ -60,6 +63,16 @@ class I18NLocale extends AbstractEntity
 
         $this->attr('label')->dynamic(function () {
             return I18NLocales::getLabel($this->key);
+        });
+
+        $this->attr('formats')->object()->setDefaultValue([
+            'date' => '',
+            'time' => '',
+            'datetime' => '',
+            'number' => ''
+        ])->onSet(function($value) {
+            // TODO: control of formats
+            return $value;
         });
 
         $this->attr('cacheKey')->char()->setSkipOnPopulate()->setToArrayDefault();

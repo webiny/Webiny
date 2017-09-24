@@ -3,7 +3,6 @@ import md5 from 'blueimp-md5';
 import Webiny from 'webiny';
 import React from 'react';
 import I18nComponent from './I18N';
-import format from 'date-fns/format';
 import fecha from 'fecha';
 
 import modifiers from './Modifiers';
@@ -84,28 +83,30 @@ class I18n {
      * @returns {*}
      */
     async init() {
-        if (!this.getLocale() || !this.getCacheKey()) {
-            throw Error('Cannot initialize I18n without locale or cache key.');
+        if (!Webiny.Config.I18n.enabled || !Webiny.Config.I18n.locale) {
+            return this;
         }
+
+        this.setLocale(Webiny.Config.I18n.locale).setCacheKey(Webiny.Config.I18n.locale.cacheKey);
 
         const i18nCache = await Webiny.IndexedDB.get('Webiny.I18n');
 
         let translations;
         // If we have the same cache key, that means we have latest translations - we can safely read from local storage.
-        if (i18nCache && i18nCache.cacheKey === this.getCacheKey() && i18nCache.locale === this.getLocale()) {
+        if (i18nCache && i18nCache.cacheKey === this.getCacheKey() && i18nCache.locale === this.getLocale().key) {
             this.setTranslations(i18nCache.translations);
         } else {
             // If we have a different cache key (or no cache key at all), we must fetch latest translations from server.
             const api = new Webiny.Api.Endpoint('/entities/webiny/i18n-texts');
-            const response = await api.get('translations/locales/' + this.getLocale());
+            const response = await api.get('translations/locales/' + this.getLocale().key);
             await Webiny.IndexedDB.set('Webiny.I18n', response.getData());
             this.setTranslations(response.getData('translations'));
         }
 
         // Finally, let's set i18n cookie
-        Webiny.Cookies.set('webiny-i18n', this.getLocale());
+        Webiny.Cookies.set('webiny-i18n', this.getLocale().key);
         Webiny.Http.addRequestInterceptor(http => {
-            http.addHeader('X-Webiny-I18n', this.getLocale());
+            http.addHeader('X-Webiny-I18n', this.getLocale().key);
         });
 
         return this;
@@ -115,7 +116,7 @@ class I18n {
      * Changes current locale and refreshes the page so that new translations can be immediately loaded.
      * @param locale
      */
-    setLocaleAndRefresh(locale) {
+    setLocaleAndReload(locale) {
         Webiny.Cookies.set('webiny-i18n', locale);
         location.reload();
     }
@@ -136,36 +137,69 @@ class I18n {
      * Formats and outputs date.
      * It will try to load format from currently selected locale's settings. If not defined, default formats will be used.
      * @param value
-     * @param format
+     * @param outputFormat
+     * @param inputFormat
      */
-    date(value, format) {
-        if (!format) {
-            format = _.get(this.locales.current, 'formats.date', this.defaultFormats.date);
+    date(value, outputFormat, inputFormat = 'YYYY-MM-DDTHH:mm:ssZ') {
+        if (!outputFormat) {
+            outputFormat = _.get(this.locales.current, 'formats.date', this.defaultFormats.date);
         }
+
+        if (!_.isDate(value)) {
+            try {
+                value = fecha.parse(value, inputFormat);
+            } catch (e) {
+                value = fecha.parse(value, 'X');
+            }
+        }
+
+        return fecha.format(value, outputFormat);
     }
 
     /**
      * Formats and outputs time.
      * It will try to load format from currently selected locale's settings. If not defined, default formats will be used.
      * @param value
-     * @param format
+     * @param outputFormat
+     * @param inputFormat
      */
-    time(value, format) {
-        if (!format) {
-            format = _.get(this.locales.current, 'formats.time', this.defaultFormats.time);
+    time(value, outputFormat, inputFormat = 'YYYY-MM-DDTHH:mm:ssZ') {
+        if (!outputFormat) {
+            outputFormat = _.get(this.locales.current, 'formats.time', this.defaultFormats.time);
         }
+
+        if (!_.isDate(value)) {
+            try {
+                value = fecha.parse(value, inputFormat);
+            } catch (e) {
+                value = fecha.parse(value, 'X');
+            }
+        }
+
+        return fecha.format(value, outputFormat);
     }
 
     /**
      * Formats and outputs date/time.
      * It will try to load format from currently selected locale's settings. If not defined, default formats will be used.
      * @param value
-     * @param format
+     * @param outputFormat
+     * @param inputFormat
      */
-    datetime(value, format) {
-        if (!format) {
-            format = _.get(this.locales.current, 'formats.datetime', this.defaultFormats.datetime);
+    datetime(value, outputFormat, inputFormat = 'YYYY-MM-DDTHH:mm:ssZ') {
+        if (!outputFormat) {
+            outputFormat = _.get(this.locales.current, 'formats.datetime', this.defaultFormats.datetime);
         }
+
+        if (!_.isDate(value)) {
+            try {
+                value = fecha.parse(value, inputFormat);
+            } catch (e) {
+                value = fecha.parse(value, 'X');
+            }
+        }
+
+        return fecha.format(value, outputFormat);
     }
 
     // Following methods are plain-simple for now - let's make them smarter in the near future
