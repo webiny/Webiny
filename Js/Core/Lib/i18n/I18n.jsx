@@ -14,8 +14,8 @@ I18n.defaultProps = {
         return React.createElement(
             'webiny-i18n',
             {
-                base: this.props.base,
-                'translation-key': this.props.textKey
+                'base': this.props.base,
+                'text-key': this.props.textKey
             },
             Webiny.I18n.translate(this.props.base, this.props.variables, this.props.textKey)
         );

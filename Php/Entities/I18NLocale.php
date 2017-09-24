@@ -38,7 +38,7 @@ class I18NLocale extends AbstractEntity
          * Default locale cannot be deleted.
          */
         $this->attr('default')->boolean()->onSet(function ($value) {
-            if (!$value !== $this->default && $value) {
+            if ($value !== $this->default && $value) {
                 $oldDefaultLocale = I18NLocale::findOne(['default' => true]);
                 if ($oldDefaultLocale) {
                     /* @var I18NLocale $oldDefaultLocale */

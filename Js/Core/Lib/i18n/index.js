@@ -5,6 +5,9 @@ import React from 'react';
 import I18nComponent from './I18N';
 import BuiltInModifiers from './BuiltInModifiers';
 
+/**
+ * Main class used for all I18n needs.
+ */
 class I18n {
     constructor() {
         this.locales = {current: null, list: []};
@@ -16,11 +19,11 @@ class I18n {
 
         const translate = (base, variables = {}, options = {}) => {
             if (_.isString(base) && _.isString(variables)) {
-                const key = base + '.' + md5(variables);
+                const key = this.getTextKey(base, variables);
                 return translate(variables, options, key);
             }
 
-            const key = options.namespace + '.' + md5(base);
+            const key = this.getTextKey(options.namespace, base);
             return this.translate(base, variables, key);
         };
 
@@ -37,42 +40,94 @@ class I18n {
      * Initializes i18n with given locale and current locale cache key.
      * @returns {*}
      */
-    async initialize() {
-        const i18nCache = await Webiny.IndexedDB.get('Webiny.I18n');
-
-        // If we have the same cache key, that means we have latest translations - we can safely read from local storage.
-        if (i18nCache && i18nCache.cacheKey === this.getCacheKey()) {
-            return this.setTranslations(i18nCache.translations);
+    async init() {
+        if (!this.getLocale() || !this.getCacheKey()) {
+            throw Error('Cannot initialize I18n without locale or cache key.');
         }
 
-        // If we have a different cache key (or no cache key at all), we must fetch translations from server
-        const api = new Webiny.Api.Endpoint('/entities/webiny/i18n-texts');
-        const response = await api.get('translations/locales/' + this.getLocale());
-        await Webiny.IndexedDB.set('Webiny.I18n', response.getData());
-        this.setTranslations(response.getData('translations'));
-        return response;
+        const i18nCache = await Webiny.IndexedDB.get('Webiny.I18n');
+
+        let translations;
+        // If we have the same cache key, that means we have latest translations - we can safely read from local storage.
+        if (i18nCache && i18nCache.cacheKey === this.getCacheKey() && i18nCache.locale === this.getLocale()) {
+            this.setTranslations(i18nCache.translations);
+        } else {
+            // If we have a different cache key (or no cache key at all), we must fetch latest translations from server.
+            const api = new Webiny.Api.Endpoint('/entities/webiny/i18n-texts');
+            const response = await api.get('translations/locales/' + this.getLocale());
+            await Webiny.IndexedDB.set('Webiny.I18n', response.getData());
+            this.setTranslations(response.getData('translations'));
+        }
+
+        // Finally, let's set i18n cookie
+        Webiny.Cookies.set('webiny-i18n', this.getLocale());
+        Webiny.Http.addRequestInterceptor(http => {
+            http.addHeader('X-Webiny-I18n', this.getLocale());
+        });
+
+        return this;
     }
 
+    /**
+     * Changes current locale and refreshes the page so that new translations can be immediately loaded.
+     * @param locale
+     */
+    setLocaleAndRefresh(locale) {
+        Webiny.Cookies.set('webiny-i18n', locale);
+        location.reload();
+    }
+
+    /**
+     * Returns full translation for given base text and optionally variables. If text key is not found, base text will be returned.
+     * @param base
+     * @param variables
+     * @param textKey
+     * @returns {*}
+     */
     translate(base, variables = {}, textKey) {
         let output = this.getTranslation(textKey) || base;
         return this.replaceVariables(output, variables);
     }
 
+    /**
+     * Sets I18N component which will be used for rendering texts.
+     * @param component
+     */
     setComponent(component) {
         this.component = component;
     }
 
+    /**
+     * Returns currently set I18N component.
+     * @param component
+     * @returns {component|*}
+     */
+    getComponent(component) {
+        return this.component;
+    }
+
+    /**
+     * Returns translation for given text key.
+     * @param key
+     * @returns {*|string}
+     */
     getTranslation(key) {
         return this.translations[key] || '';
     }
 
+    /**
+     * Sets translation for given text key.
+     * @param key
+     * @param translation
+     * @returns {I18n}
+     */
     setTranslation(key, translation) {
         this.translations[key] = translation;
         return this;
     }
 
     /**
-     * Returns all fetched translations.
+     * Returns all translations for current locale.
      * @returns {*|{}}
      */
     getTranslations() {
@@ -80,7 +135,7 @@ class I18n {
     }
 
     /**
-     * Returns all fetched translations.
+     * Sets translations that will be used.
      * @returns {*|{}}
      */
     setTranslations(translations) {
@@ -89,25 +144,15 @@ class I18n {
     }
 
     /**
-     * Returns true if given key has a translation for currently selected locale.
+     * Returns true if given key has a translation for currently set locale.
      * @param key
      */
     hasTranslation(key) {
-        return _.get(this.translations, key);
+        return !_.isEmpty(this.translations.key);
     }
 
     /**
-     * Returns a list of all available text groups.
-     */
-    async getTextGroups(query = {_fields: 'id,app,name,description'}) {
-        const response = await new Webiny.Api.Endpoint('/entities/webiny/i18n-text-groups').get(null, query);
-        this.locales.list = response.getData('list');
-        return this.locales.list;
-    }
-
-    /**
-     * Returns currently selected locale.
-     * @returns {string|string|*}
+     * Returns currently selected locale (locale's key).
      */
     getLocale() {
         return this.locales.current;
@@ -123,30 +168,87 @@ class I18n {
     }
 
     /**
-     * @returns {string|string|*}
+     * Sets current locale.
      */
     setLocale(locale) {
         this.locales.current = locale;
         return this;
     }
 
+    /**
+     * Returns a list of all available text groups.
+     */
+    async getTextGroups(query = {_fields: 'id,app,name,description'}) {
+        const response = await new Webiny.Api.Endpoint('/entities/webiny/i18n-text-groups').get(null, query);
+        this.locales.list = response.getData('list');
+        return this.locales.list;
+    }
+
+    /**
+     * Sets current cache key (returned from server).
+     * @param cacheKey
+     * @returns {I18n}
+     */
     setCacheKey(cacheKey) {
         this.cacheKey = cacheKey;
         return this;
     }
 
-    getCacheKey(cacheKey) {
+    /**
+     * Returns current cache key (returned from server).
+     * @returns {*|null}
+     */
+    getCacheKey() {
         return this.cacheKey;
     }
 
     /**
-     * Internal methods below.
-     * @param text
+     * Registers single modifier.
+     * @param name
+     * @param callback
+     * @returns {I18n}
      */
-    getTextParts(text) {
-        return text.split(/(\{.*?\})/);
+    registerModifier(name, callback) {
+        this.modifiers[name] = callback;
+        return this;
     }
 
+    /**
+     * Registers all modifiers in given array.
+     * @param modifiers
+     * @returns {I18n}
+     */
+    registerModifiers(modifiers) {
+        modifiers.forEach((callback, name) => this.registerModifier(name, callback));
+        return this;
+    }
+
+    /**
+     * Unregisters given modifier.
+     * @param name
+     * @returns {I18n}
+     */
+    unregisterModifier(name) {
+        delete this.modifiers[name];
+        return this;
+    }
+
+    /**
+     * Returns text key generated from given namespace and base text.
+     * @param namespace
+     * @param base
+     * @returns {string}
+     */
+    getTextKey(namespace, base) {
+        return namespace + '.' + md5(base);
+    }
+
+    /**
+     * Processes text parts (used when translating texts).
+     * @param part
+     * @param values
+     * @returns {*}
+     */
     processTextPart(part, values) {
         // If not a variable, but an ordinary text, just return it, we don't need to do any extra processing with it.
         if (!_.startsWith(part, '{')) {
@@ -192,7 +294,7 @@ class I18n {
     }
 
     /**
-     * This is responsible for replacing given text with given values
+     * This is responsible for replacing given text with given values.
      * It will automatically detect if it needs to return a string or JSX based on given variables
      * (if all variables are strings, then final output will also be returned as string)
      * @param text
@@ -213,7 +315,8 @@ class I18n {
             }
         });
 
-        const parts = this.getTextParts(text);
+        // Get text parts
+        const parts = text.split(/(\{.*?\})/);
 
         if (stringOutput) {
             return parts.reduce((carry, part) => carry + this.processTextPart(part, values), '');
@@ -221,37 +324,6 @@ class I18n {
 
         // Let's create a JSX output
         return parts.map((part, index) => <webiny-i18n-part key={index}>{this.processTextPart(part, values)}</webiny-i18n-part>);
-    }
-
-    /**
-     * Registers single modifier.
-     * @param name
-     * @param callback
-     * @returns {I18n}
-     */
-    registerModifier(name, callback) {
-        this.modifiers[name] = callback;
-        return this;
-    }
-
-    /**
-     * Registers all modifiers in given array.
-     * @param modifiers
-     * @returns {I18n}
-     */
-    registerModifiers(modifiers) {
-        modifiers.forEach((callback, name) => this.registerModifier(name, callback));
-        return this;
-    }
-
-    /**
-     * Unregisters given modifier.
-     * @param name
-     * @returns {I18n}
-     */
-    unregisterModifier(name) {
-        delete this.modifiers[name];
-        return this;
     }
 
     toText(element) {

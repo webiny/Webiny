@@ -20,7 +20,7 @@ class Core extends App {
         const locale = _.get(Webiny.Config, 'I18n.locale');
         if (locale) {
             const locale = Webiny.Config.I18n.locale;
-            Webiny.I18n.setLocale(locale.key).setCacheKey(locale.cacheKey).initialize();
+            Webiny.I18n.setLocale(locale.key).setCacheKey(locale.cacheKey).init();
         }
 
         console.timeStamp('App run: Webiny.Core');
