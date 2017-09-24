@@ -79,21 +79,31 @@ class SmartyExtension extends AbstractSmartyExtension
             $bsConfig = file_get_contents($this->wStorage('Root')->getAbsolutePath('webiny.json'));
             $bsConfig = $this->arr(json_decode($bsConfig, true));
             $webPath = $this->wConfig()->get('Application.WebPath');
-            $bsPath = $this->url($webPath)->setPort($bsConfig->keyNested('browserSync.port', 3000,true));
+            $bsPath = $this->url($webPath)->setPort($bsConfig->keyNested('browserSync.port', 3000, true));
             $browserSync = '<script src="' . $bsPath . '/browser-sync/browser-sync-client.js?v=2.18.6"></script>';
         }
 
-        // Loading i18n locale - basic information.
-        $i18n = ['enabled' => I18N::getInstance()->isEnabled(), 'locale' => null];
-        $locale = $this->wCookie()->get('webiny-i18n-locale');
-        if ($locale) {
-            $locale = I18NLocale::findOne(['key' => $locale, 'enabled' => true]);
+        $i18n = null;
+        if (I18N::getInstance()->isEnabled()) {
+            // Loading i18n locale - basic information.
+            $i18n = ['locale' => null];
+            $locale = $this->wCookie()->get('webiny-i18n-locale');
             if ($locale) {
-                $i18n['locale'] = $locale->toArray('key,cacheKey');
+                $locale = I18NLocale::findOne(['key' => $locale, 'enabled' => true]);
+                if ($locale) {
+                    $i18n['locale'] = $locale->toArray('key,cacheKey');
+                }
             }
-        }
 
-        $i18n = json_encode($i18n);
+            if (!$i18n['locale']) {
+                $locale = I18NLocale::findDefault();
+                if ($locale) {
+                    $i18n['locale'] = $locale->toArray('key,cacheKey');
+                }
+            }
+
+            $i18n = json_encode($i18n);
+        }
 
         $apps = '[' . join(',', array_map(function ($app) {
                 return "'" . $app . "'";
@@ -154,7 +164,7 @@ EOT;
 
         return I18N::getInstance()->translate($params['base'], $params['variables'], $params['key']);
     }
-    
+
 
     private function getMeta($jsApp)
     {

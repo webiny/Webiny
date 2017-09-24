@@ -63,19 +63,7 @@ class I18NText extends AbstractEntity
         $this->attr('key')->char()->setValidators('required,unique')->setToArrayDefault();
         $this->attr('base')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('group')->many2one()->setEntity(I18NTextGroup::class);
-        $this->attr('translations')->arr()->setToArrayDefault()->onSet(function ($texts) {
-            // We must check which locales have changed and update cache keys for them
-            foreach ($texts as $locale => $text) {
-                if ($this->translations->key($locale) !== $text) {
-                    $this->on('onAfterSave', function () use ($locale) {
-                        // TODO I18NLocale::findByKey($locale)->updateCacheKey()->save();
-                    });
-                }
-            }
-
-            return $texts;
-        });
-
+        $this->attr('translations')->arr()->setToArrayDefault();
     }
 
     protected function entityApi(ApiContainer $api)
@@ -131,8 +119,8 @@ class I18NText extends AbstractEntity
         })->setBodyValidators(['file' => 'required'])->setPublic();
 
         /**
-         * @api.name        Updates text translation by ID for given language
-         * @api.description Gets a translation by ID and updates the translation in given language
+         * @api.name        Updates text translation by ID for given locale
+         * @api.description Gets a translation by ID and updates the translation in given locale
          */
         $api->patch('{id}/translations', function () {
             $data = $this->wRequest()->getRequestData();
@@ -142,6 +130,7 @@ class I18NText extends AbstractEntity
             }
 
             $this->setTranslation($locale, $data['text'] ?? '')->save();
+            $locale->updateCacheKey()->save();
 
             return ['locale' => $locale->key, 'text' => $data['text']];
         })->setBodyValidators(['locale' => 'required'])->setPublic();
@@ -200,7 +189,15 @@ class I18NText extends AbstractEntity
                     throw new AppException($this->wI18n('Invalid file type provided.'));
             }
 
-            return $export->toDb($options);
+            $stats = $export->toDb($options);
+
+            // This could be smarter - only update locales that were part of received export.
+            foreach (I18NLocale::find() as $locale) {
+                /* @var I18NLocale $locale */
+                $locale->updateCacheKey()->save();
+            }
+
+            return $stats;
         })->setBodyValidators(['file' => 'required'])->setPublic();
 
         $api->get('stats/translated', function () {
@@ -241,19 +238,6 @@ class I18NText extends AbstractEntity
         /**********************************************************************************************************
          *                                          !! Entity API !!                                              *
          **********************************************************************************************************/
-
-        /**
-         * @api.name        Get translation by key
-         * @api.description Gets a translation by a given key.
-         * @api.path.key    string  Translation key
-         */
-        $api->get('keys/{$key}', function ($key) {
-            if ($translation = I18NText::findByKey($key)) {
-                return $this->apiFormatEntity($translation, $this->wRequest()->getFields());
-            }
-
-            throw new AppException($this->wI18n('Translation not found.'));
-        });
 
         /**
          * TODO

@@ -68,14 +68,13 @@ class I18N
         ];
     }
 
-
     /**
      * Tells us whether I18N is enabled or not.
      * @return bool
      */
     public function isEnabled()
     {
-        return true;
+        return $this->wConfig()->get('Application.I18n.Enabled');
     }
 
     /**

@@ -112,6 +112,14 @@ class I18NLocale extends AbstractEntity
     }
 
     /**
+     * @return I18NLocale|null
+     */
+    public static function findDefault()
+    {
+        return self::findOne(['default' => true]);
+    }
+
+    /**
      * @return $this
      */
     public function updateCacheKey()
