@@ -4,11 +4,8 @@ namespace Apps\Webiny\Php\Lib\I18N;
 
 use Apps\Webiny\Php\Entities\I18NLocale;
 use Apps\Webiny\Php\Entities\I18NText;
-use Apps\Webiny\Php\Entities\I18NTextGroup;
 use Apps\Webiny\Php\Lib\Apps\App;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
-use Apps\Webiny\Php\Lib\I18N\I18N\ExportTexts;
-use Apps\Webiny\Php\Lib\I18N\I18N\ExportTranslations;
 use Apps\Webiny\Php\Lib\I18N\Parsers\JsParser;
 use Apps\Webiny\Php\Lib\I18N\Parsers\PhpParser;
 use Apps\Webiny\Php\Lib\WebinyTrait;
@@ -29,7 +26,137 @@ class I18N
 
     private $locale;
 
+    private $modifiers;
+
     use StdLibTrait, WebinyTrait, SingletonTrait;
+
+    public function __construct()
+    {
+        $this->modifiers = [
+            'if'     => function ($value, $parameters) {
+                // This is intentionally "==", because received parameters are all strings.
+                return $value == $parameters[0] ? $parameters[1] : $parameters[2] || '';
+            },
+            'gender' => function ($value, $parameters) {
+                return $value === 'male' ? $parameters[0] : $parameters[1];
+            }
+        ];
+    }
+
+
+    /**
+     * Tells us whether I18N is enabled or not.
+     * @return bool
+     */
+    public function isEnabled()
+    {
+        return true;
+    }
+
+    /**
+     * @param       $base
+     * @param array $variables
+     * @param array $options
+     *
+     * @return $this|mixed|\Webiny\Component\StdLib\StdObject\StringObject\StringObject
+     * @throws AppException
+     */
+    public function translate($base, $variables = [], $options = [])
+    {
+        $output = $base;
+        $namespace = $options['namespace'] ?? null;
+        if (!$namespace) {
+            throw new AppException('Cannot translate - text namespace missing.');
+        }
+
+        if ($text = I18NText::findByKey($namespace . '.' . md5($base))) {
+            $locale = $this->getLocale();
+            /* @var I18NText $text */
+            if ($text->hasTranslation($locale)) {
+                $output = $text->getTranslation($locale);
+            }
+        }
+
+        // Match variables
+        $parts = preg_split('/(\{.*?\})/', $output, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+
+        return array_reduce($parts, function($carry, $part) use ($variables) {
+            // If not a variable, but an ordinary text, just return it, we don't need to do any extra processing with it.
+            if (strpos($part, '{') !== 0) {
+                return $carry . $part ;
+            }
+
+            $part = trim($part, '{}');
+            $part = explode('|', $part);
+            $variable = $part[0] ?? null;
+            $modifier = $part[1] ?? null;
+
+            if (!isset($variables[$variable])) {
+                throw new AppException($this->wI18n('Value for variable {name} is undefined.', ['name' => $variable]));
+            }
+
+            $value = $variables[$variable];
+
+            if ($modifier) {
+                $parameters = explode(':', $modifier);
+                $name = array_shift($parameters);
+                if (isset($this->modifiers[$name]) && is_callable($this->modifiers[$name])) {
+                    return $carry . $this->modifiers[$name]($value, $parameters);
+                } else {
+                    throw new AppException($this->wI18n('Invalid or missing text modifier "{name}".', ['name' => $name]));
+                }
+            }
+
+            return $carry . $value;
+
+        }, '');
+    }
+
+
+    /**
+     * Registers single modifier.
+     *
+     * @param $name
+     * @param $callback
+     *
+     * @return $this
+     */
+    public function registerModifier($name, $callback)
+    {
+        $this->modifiers[$name] = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Registers all modifiers in given array.
+     *
+     * @param $modifiers    array Associative array, where names are set as keys and modifier functions as values.
+     *
+     * @return $this
+     */
+    public function registerModifiers($modifiers)
+    {
+        foreach ($modifiers as $name => $callback) {
+            $this->registerModifier($name, $callback);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Unregisters given modifier.
+     *
+     * @param $name
+     *
+     * @return $this
+     */
+    public function unregisterModifier($name)
+    {
+        unset($this->modifiers[$name]);
+
+        return $this;
+    }
 
     /**
      * Sets current locale.
@@ -132,55 +259,5 @@ class I18N
 
         return $stats;
 
-    }
-
-    /**********************************************************************************************************
-     *                                                  TEST                                                  *
-     **********************************************************************************************************/
-
-    /**
-     * Tells us whether I18N is enabled or not.
-     * @return bool
-     */
-    public function isEnabled()
-    {
-        return true;
-    }
-
-    /**
-     * @param       $base
-     * @param array $variables
-     * @param array $options
-     *
-     * @return $this|mixed|\Webiny\Component\StdLib\StdObject\StringObject\StringObject
-     * @throws AppException
-     */
-    public function translate($base, $variables = [], $options = [])
-    {
-        $output = $base;
-        $namespace = $options['namespace'] ?? null;
-        if (!$namespace) {
-            throw new AppException('Cannot translate - text namespace missing.');
-        }
-
-        if ($text = I18NText::findByKey($namespace . '.' . md5($base))) {
-            $locale = $this->getLocale();
-            /* @var I18NText $text */
-            if ($text->hasTranslation($locale)) {
-                $output = $text->getTranslation($locale);
-            }
-        }
-
-        // Match variables
-        preg_match_all('/\{(.*?)\}/', $output, $matches);
-        $matches = $matches[1] ?? [];
-        foreach ($matches as $match) {
-            $variableName = '{' . $match . '}';
-            if (isset($variables[$match]) && strpos($output, $variableName) !== -1) {
-                $output = str_replace($variableName, $variables[$match], $output);
-            }
-        }
-
-        return $output;
     }
 }

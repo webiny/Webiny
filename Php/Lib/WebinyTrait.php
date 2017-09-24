@@ -9,6 +9,7 @@ namespace Apps\Webiny\Php\Lib;
 
 use Apps\Webiny\Php\Lib\Authorization\Authorization;
 use Apps\Webiny\Php\Lib\Apps\App;
+use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\I18N\I18N;
 use Webiny\AnalyticsDb\AnalyticsDb;
 use Webiny\Component\Cache\CacheStorage;
@@ -131,6 +132,7 @@ trait WebinyTrait
 
     /**
      * Get Mailer instance
+     *
      * @param string $name
      *
      * @return \Webiny\Component\Mailer\Mailer
@@ -202,10 +204,22 @@ trait WebinyTrait
      * @param array $options
      *
      * @return string
+     * @throws AppException
      */
     static protected function wI18n($base, $variables = [], $options = [])
     {
-        $options['namespace'] = $options['namespace'] ?? static::$i18nNamespace ?? null;
+        $options['namespace'] = $options['namespace'] ?? null;
+        if (!$options['namespace']) {
+            if (!property_exists(static::class, 'i18nNamespace')) {
+                throw new AppException('Trying to output I18N text but no namespace defined.', null, [
+                    'class' => static::class,
+                    'base' => $base
+                ]);
+            } else {
+                $options['namespace'] = static::$i18nNamespace;
+            }
+        }
+
         return I18N::getInstance()->translate($base, $variables, $options);
     }
 
