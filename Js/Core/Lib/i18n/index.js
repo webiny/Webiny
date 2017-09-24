@@ -117,8 +117,8 @@ class I18n {
         return parts.map((part, index) => <webiny-i18n-part key={index}>{this.processTextPart(part, values)}</webiny-i18n-part>);
     }
 
-    translate(base, variables = {}, translationKey = null) {
-        let output = this.getTranslation(translationKey) || base;
+    translate(base, variables = {}, textKey) {
+        let output = this.getTranslation(textKey) || base;
         return this.replaceVariables(output, variables);
     }
 
@@ -258,7 +258,7 @@ class I18n {
 
         if (Webiny.elementHasFlag(element, 'i18n')) {
             const props = element.props;
-            return this.translate(props.base, props.variables, props.translationKey);
+            return this.translate(props.base, props.variables, props.textKey);
         }
 
         return '';
@@ -266,13 +266,13 @@ class I18n {
 
     /**
      * Used for rendering text in DOM
-     * @param translationKey
+     * @param textKey
      * @param base
      * @param variables
      * @returns {XML}
      */
-    render(translationKey, base, variables) {
-        return React.createElement(this.component, {translationKey, base, variables});
+    render(textKey, base, variables) {
+        return React.createElement(this.component, {textKey, base, variables});
     }
 
 }

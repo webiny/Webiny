@@ -220,7 +220,8 @@ trait WebinyTrait
             }
         }
 
-        return I18N::getInstance()->translate($base, $variables, $options);
+        $textKey = $options['namespace'] . '.' . md5($base);
+        return I18N::getInstance()->translate($base, $variables, $textKey);
     }
 
     /**

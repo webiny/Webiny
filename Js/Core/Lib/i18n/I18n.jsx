@@ -7,17 +7,14 @@ class I18n extends Component {
 }
 
 I18n.defaultProps = {
-    translationKey: '',
+    textKey: '',
     base: '',
     variables: {},
     renderer() {
         return React.createElement(
             'webiny-i18n',
-            {
-                base: this.props.base,
-                'translation-key': this.props.translationKey
-            },
-            Webiny.I18n(this.props.base, this.props.variables, this.props.translationKey)
+            null,
+            Webiny.I18n(this.props.base, this.props.variables, this.props.textKey)
         );
     }
 };

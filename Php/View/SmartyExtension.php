@@ -3,6 +3,7 @@
 namespace Apps\Webiny\Php\View;
 
 use Apps\Webiny\Php\Entities\I18NLocale;
+use Apps\Webiny\Php\Lib\I18N\I18N;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Services\Apps;
 use Webiny\Component\Config\ConfigObject;
@@ -142,6 +143,17 @@ EOT;
 
         return join("\n\t", $links);
     }
+
+    public static function i18n($params)
+    {
+        $params['variables'] = $params['variables'] ?? [];
+        $params['base'] = str_replace('[', '{', $params['base']);
+        $params['base'] = str_replace(']', '}', $params['base']);
+        $params['key'] = $params['namespace'] . '.' . md5($params['base']);
+
+        return I18N::getInstance()->translate($params['base'], $params['variables'], $params['key']);
+    }
+    
 
     private function getMeta($jsApp)
     {
