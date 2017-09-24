@@ -24,7 +24,7 @@ class Dashboard extends Webiny.Ui.View {
     getUserName() {
         const user = this.state.user;
         if (_.get(user, 'firstName', '') === '') {
-            return _.get(user, 'email', '');
+            return null;
         }
 
         return _.get(user, 'firstName', '');
