@@ -224,7 +224,10 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
                                         if (this.api) {
                                             uploadTab = (
                                                 <Ui.Tabs.Tab label="Upload" icon="fa-upload">
-                                                    <Ui.Image name="image" cropper={this.cropper}/>
+                                                    <Ui.Image
+                                                        name="image"
+                                                        accept={['image/jpg', 'image/jpeg', 'image/gif', 'image/png', 'image/svg+xml']}
+                                                        cropper={this.cropper}/>
                                                 </Ui.Tabs.Tab>
                                             );
                                         }

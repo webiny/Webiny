@@ -96,9 +96,9 @@ class Image extends File
         $content = $this->str($this->src);
         $newContent = $content->startsWith('data:');
 
-        if ($newContent) {
+        if ($newContent && $this->type !== 'image/svg+xml') {
             $parts = $content->explode(',');
-            /* @var $image \Webiny\Component\Image\ImageInterface*/
+            /* @var $image \Webiny\Component\Image\ImageInterface */
             $image = ImageLoader::load($parts->last()->base64Decode()->val());
             $dimensions = $image->getSize();
             $this->width = $dimensions['width'];
@@ -113,7 +113,7 @@ class Image extends File
                     // Ignore format error - continue as is
                 }
 
-                if ($this->type == 'image/gif') {
+                if ($this->type === 'image/gif') {
                     $this->src = $parts->first() . ',' . $parts->last()->val();
                 } else {
                     $this->src = $parts->first() . ',' . base64_encode($image->getBinary());

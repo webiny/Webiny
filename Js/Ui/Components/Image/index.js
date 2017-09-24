@@ -47,7 +47,7 @@ class Image extends Webiny.Ui.FormComponent {
 
         if (_.has(file, 'src')) {
             file.id = _.get(this.props, 'value.id', this.lastId);
-            if (this.props.cropper) {
+            if (this.props.cropper && file.type !== 'image/svg+xml') {
                 this.setState({cropImage: file});
             } else {
                 this.props.onChange(file);
