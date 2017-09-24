@@ -30,15 +30,40 @@ class I18N
 
     use StdLibTrait, WebinyTrait, SingletonTrait;
 
-    public function __construct()
+    public function init()
     {
         $this->modifiers = [
             'if'     => function ($value, $parameters) {
-                // This is intentionally "==", because received parameters are all strings.
-                return $value == $parameters[0] ? $parameters[1] : $parameters[2] || '';
+                return $value === $parameters[0] ? $parameters[1] : $parameters[2] || '';
             },
             'gender' => function ($value, $parameters) {
                 return $value === 'male' ? $parameters[0] : $parameters[1];
+            },
+            'plural' => function ($value, $parameters) {
+                // Numbers can be single number or ranges.
+                for ($i = 0; $i < count($parameters); $i = $i + 2) {
+                    $current = $parameters[$i];
+                    if ($current === 'default') {
+                        return $value . ' ' . $parameters[$i + 1];
+                    }
+
+                    $numbers = explode('|', $current);
+
+                    // If we are dealing with a numbers range, then let's check if we are in it.
+                    if (count($numbers) === 2) {
+                        if ($value >= $numbers[0] && $value <= $numbers[1]) {
+                            return $value . ' ' . $parameters[$i + 1];
+                        }
+                        continue;
+                    }
+
+                    if ($value === $numbers[0]) {
+                        return $value . ' ' . $parameters[$i + 1];
+                    }
+
+                    // If we didn't match any condition, let's just remove the received value.
+                    return $value;
+                }
             }
         ];
     }
@@ -80,10 +105,10 @@ class I18N
         // Match variables
         $parts = preg_split('/(\{.*?\})/', $output, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
-        return array_reduce($parts, function($carry, $part) use ($variables) {
+        return array_reduce($parts, function ($carry, $part) use ($variables) {
             // If not a variable, but an ordinary text, just return it, we don't need to do any extra processing with it.
             if (strpos($part, '{') !== 0) {
-                return $carry . $part ;
+                return $carry . $part;
             }
 
             $part = trim($part, '{}');
@@ -101,7 +126,7 @@ class I18N
                 $parameters = explode(':', $modifier);
                 $name = array_shift($parameters);
                 if (isset($this->modifiers[$name]) && is_callable($this->modifiers[$name])) {
-                    return $carry . $this->modifiers[$name]($value, $parameters);
+                    return $carry . $this->modifiers[$name]((string)$value, $parameters);
                 } else {
                     throw new AppException($this->wI18n('Invalid or missing text modifier "{name}".', ['name' => $name]));
                 }

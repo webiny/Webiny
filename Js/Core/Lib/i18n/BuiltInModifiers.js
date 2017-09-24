@@ -3,8 +3,7 @@
  */
 export default {
     if: (value, parameters) => {
-        // This is intentionally "==", because received parameters are all strings.
-        return value == parameters[0] ? parameters[1] : parameters[2] || '';
+        return value === parameters[0] ? parameters[1] : parameters[2] || '';
     },
     gender: (value, parameters) => {
         return value === 'male' ? parameters[0] : parameters[1];
@@ -27,8 +26,7 @@ export default {
                 continue;
             }
 
-            // This is intentionally "==", because received parameters are all strings.
-            if (value == numbers[0]) {
+            if (value === numbers[0]) {
                 return value + ' ' + parameters[i + 1];
             }
         }
@@ -54,8 +52,7 @@ export default {
                 continue;
             }
 
-            // This is intentionally "==", because received parameters are all strings.
-            if (value == numbers[0]) {
+            if (value === numbers[0]) {
                 return parameters[i + 1];
             }
         }

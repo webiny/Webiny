@@ -74,7 +74,7 @@ class I18n {
             let parameters = modifier.split(':');
             let name = parameters.shift();
             if (this.modifiers[name]) {
-                output.value = this.modifiers[name](output.value, parameters);
+                output.value = this.modifiers[name]('' + output.value, parameters);
             }
         }
 
