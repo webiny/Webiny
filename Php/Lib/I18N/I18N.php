@@ -7,6 +7,9 @@ use Apps\Webiny\Php\Entities\I18NText;
 use Apps\Webiny\Php\Lib\Apps\App;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\I18N\Modifiers\AbstractModifier;
+use Apps\Webiny\Php\Lib\I18N\Modifiers\GenderModifier;
+use Apps\Webiny\Php\Lib\I18N\Modifiers\IfModifier;
+use Apps\Webiny\Php\Lib\I18N\Modifiers\PluralModifier;
 use Apps\Webiny\Php\Lib\I18N\Parsers\JsParser;
 use Apps\Webiny\Php\Lib\I18N\Parsers\PhpParser;
 use Apps\Webiny\Php\Lib\WebinyTrait;
@@ -33,6 +36,13 @@ class I18N
 
     public function init()
     {
+        // Let's register basic built in modifiers.
+        $this->registerModifiers([
+            new IfModifier(),
+            new GenderModifier(),
+            new PluralModifier()
+        ]);
+
         if (!$this->isEnabled()) {
             return;
         }
@@ -49,7 +59,9 @@ class I18N
             }
         }
 
-        $this->registerModifiers([new IfModifier(), new GenderModifier(), new PluralModifier()]);
+        if (!$locale) {
+            $this->setLocale(I18NLocale::findDefault());
+        }
     }
 
     /**
@@ -73,11 +85,15 @@ class I18N
     {
         $output = $base;
 
-        if ($text = I18NText::findByKey($textKey)) {
-            $locale = $this->getLocale();
-            /* @var I18NText $text */
-            if ($text->hasTranslation($locale)) {
-                $output = $text->getTranslation($locale);
+        if ($this->isEnabled()) {
+            if ($text = I18NText::findByKey($textKey)) {
+                $locale = $this->getLocale();
+                if ($locale) {
+                    /* @var I18NText $text */
+                    if ($text->hasTranslation($locale)) {
+                        $output = $text->getTranslation($locale);
+                    }
+                }
             }
         }
 
@@ -143,8 +159,8 @@ class I18N
      */
     public function registerModifiers($modifiers)
     {
-        foreach ($modifiers as $name => $callback) {
-            $this->registerModifier($name, $callback);
+        foreach ($modifiers as $modifier) {
+            $this->registerModifier($modifier);
         }
 
         return $this;

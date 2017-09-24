@@ -14,6 +14,7 @@ use Apps\Webiny\Php\Lib\Services\AbstractService;
 class Apps extends AbstractService
 {
     protected static $classId = 'Webiny.Services.Apps';
+    protected static $i18nNamespace = 'Webiny.Services.Apps';
 
     protected function serviceApi(ApiContainer $api)
     {

@@ -1,8 +1,6 @@
 <?php
 
-namespace Apps\Webiny\Php\Lib\I18N;
-
-use Apps\Webiny\Php\Lib\I18N\Modifiers\AbstractModifier;
+namespace Apps\Webiny\Php\Lib\I18N\Modifiers;
 
 class PluralModifier extends AbstractModifier
 {

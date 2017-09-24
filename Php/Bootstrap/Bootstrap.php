@@ -63,8 +63,6 @@ class Bootstrap
         // set error handler
         $this->errorHandler = new ErrorHandler();
 
-        I18N::getInstance()->init();
-
         // Set component configs
         $emptyConfig = new ConfigObject();
         Mongo::setConfig($this->wConfig()->get('Mongo', $emptyConfig));
@@ -73,6 +71,8 @@ class Bootstrap
         Storage::setConfig($this->wConfig()->get('Storage', $emptyConfig));
         Http::setConfig($this->wConfig()->get('Http', $emptyConfig));
 
+        // I18n will be loaded only if it's enabled in YAML config files.
+        I18N::getInstance()->init();
 
         // scan all components to register routes and event handlers
         $this->wApps()->loadApps();
