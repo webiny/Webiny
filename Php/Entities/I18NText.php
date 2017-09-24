@@ -237,11 +237,26 @@ class I18NText extends AbstractEntity
         })->setBodyValidators(['file' => 'required'])->setPublic();
 
         $api->get('stats/translated', function () {
+            $return = ['locales' => ['total' => 0], 'texts' => ['total' => I18NText::count()], 'translations' => []];
+
+            $localesCount = I18NLocale::count();
+            if (!$localesCount) {
+                return $return;
+            }
+
+            $return['locales']['total'] = $localesCount;
+
+            $locales = I18NLocale::find();
+
+            $keys = array_map(function ($item) {
+                return $item['key'];
+            }, $locales->toArray('id,key'));
+
             $translations = $this->wDatabase()->aggregate('I18NTexts', [
                 ['$match' => ['deletedOn' => null]],
                 ['$project' => ['translations' => 1]],
                 ['$unwind' => '$translations'],
-                ['$match' => ['translations.text' => ['$ne' => ""]]],
+                ['$match' => ['translations.locale' => ['$in' => $keys], 'translations.text' => ['$ne' => ""]]],
                 ['$group' => ['_id' => '$translations.locale', 'count' => ['$sum' => 1]]]
             ]);
 
@@ -249,7 +264,8 @@ class I18NText extends AbstractEntity
                 return ['locale' => ['key' => $item['_id'], 'label' => I18NLocales::getLabel($item['_id'])], 'count' => $item['count']];
             }, $translations->toArray());
 
-            foreach (I18NLocale::find() as $locale) {
+            // Let's check if we have a locale that didn't have any translations and therefore wasn't listed in previous aggregate.
+            foreach ($locales as $locale) {
                 /* @var I18NLocale $locale */
                 foreach ($translations as $translation) {
                     if ($translation['locale']['key'] === $locale->key) {
@@ -259,16 +275,14 @@ class I18NText extends AbstractEntity
                 $translations[] = ['locale' => ['key' => $locale->key, 'label' => $locale->label], 'count' => 0];
             }
 
-
+            // Sort alphabetically.
             usort($translations, function ($a, $b) {
                 return $a['locale']['label'] > $b['locale']['label'];
             });
 
-            return [
-                'texts'        => ['total' => I18NText::count()],
-                'translations' => $translations
-            ];
+            $return['translations'] = $translations;
 
+            return $return;
         })->setPublic();
 
     }

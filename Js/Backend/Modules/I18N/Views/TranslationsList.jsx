@@ -13,7 +13,7 @@ class TranslationsList extends Webiny.Ui.View {
     constructor() {
         super();
         this.ref = null;
-        this.state = {locales: []};
+        this.state = {locales: null};
     }
 
     componentWillMount() {
@@ -49,7 +49,7 @@ TranslationsList.defaultProps = {
                                         </Ui.ButtonGroup>
                                     </Ui.View.Header>
                                     <Ui.View.Body>
-                                        {_.isEmpty(this.state.locales) ? (
+                                        {_.isArray(this.state.locales) && _.isEmpty(this.state.locales) ? (
                                             <Ui.Alert>
                                                 {this.i18n('Before editing translations, header over to {locales} section and create a locale.', {
                                                     locales: <Ui.Link route="I18N.Locales.List">{this.i18n('Locales')}</Ui.Link>
