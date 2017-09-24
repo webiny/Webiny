@@ -81,20 +81,16 @@ class I18N
     /**
      * @param       $base
      * @param array $variables
-     * @param array $options
+     * @param null  $textKey
      *
      * @return $this|mixed|\Webiny\Component\StdLib\StdObject\StringObject\StringObject
      * @throws AppException
      */
-    public function translate($base, $variables = [], $options = [])
+    public function translate($base, $variables = [], $textKey)
     {
         $output = $base;
-        $namespace = $options['namespace'] ?? null;
-        if (!$namespace) {
-            throw new AppException('Cannot translate - text namespace missing.');
-        }
 
-        if ($text = I18NText::findByKey($namespace . '.' . md5($base))) {
+        if ($text = I18NText::findByKey($textKey)) {
             $locale = $this->getLocale();
             /* @var I18NText $text */
             if ($text->hasTranslation($locale)) {
