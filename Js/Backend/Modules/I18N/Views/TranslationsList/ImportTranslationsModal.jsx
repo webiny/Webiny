@@ -27,7 +27,7 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
                             Webiny.Growl.danger(response.getMessage());
                         }
 
-                        form.setState('model.results', {preview, data: response.getData()});
+                        form.setState('model.results', {preview, data: response.getData()}, () => !preview && this.props.onTranslationsImported());
                     }}>
                     {({model, form}) => {
                         let results = null;
@@ -97,7 +97,9 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
     }
 }
 
-ImportTranslationsModal.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps);
+ImportTranslationsModal.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps, {
+    onTranslationsImported: _.noop
+});
 
 export default Webiny.createComponent(ImportTranslationsModal, {
     modulesProp: 'Ui',

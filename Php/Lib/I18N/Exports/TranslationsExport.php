@@ -3,7 +3,6 @@
 namespace Apps\Webiny\Php\Lib\I18N\Exports;
 
 use Apps\Webiny\Php\Entities\I18NLocale;
-use Apps\Webiny\Php\Entities\I18NText;
 use Apps\Webiny\Php\Entities\I18NTextGroup;
 use Apps\Webiny\Php\Lib\Apps\App;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
@@ -99,7 +98,7 @@ class TranslationsExport extends TextsExport
             }
         }
 
-        $stats = ['inserted' => 0, 'updated' => 0, 'ignored' => 0];
+        $stats = ['created' => 0, 'updated' => 0, 'ignored' => 0];
 
         // Let's merge new translations and do updates in database.
         foreach ($this->texts as $app => $appTexts) {
@@ -125,7 +124,7 @@ class TranslationsExport extends TextsExport
                         }
                     } else {
                         $dbTranslations[$key][] = ['locale' => $locale, 'text' => $text];
-                        $stats['inserted']++;
+                        $stats['created']++;
                     }
                 }
 

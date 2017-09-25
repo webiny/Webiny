@@ -57,6 +57,7 @@ TranslationsList.defaultProps = {
                                             </Ui.Alert>
                                         ) : <TranslatedTextPercentages/>}
                                         <Ui.List
+                                            ref={ref => this.ref = ref}
                                             connectToRouter
                                             title={this.i18n(`Translations`)}
                                             api="/entities/webiny/i18n-texts"
@@ -115,7 +116,7 @@ TranslationsList.defaultProps = {
                         </Ui.ViewSwitcher.View>
                         <Ui.ViewSwitcher.View view="importTranslationsModal" modal>
                             {({showView, data: {data}}) => (
-                                <ImportTranslationsModal {...{showView, data}}/>
+                                <ImportTranslationsModal {...{showView, data}} onTranslationsImported={() => this.ref.loadData()}/>
                             )}
                         </Ui.ViewSwitcher.View>
                     </Ui.ViewSwitcher>

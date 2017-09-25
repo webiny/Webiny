@@ -62,7 +62,6 @@ class I18NText extends AbstractEntity
          * @api.body.import boolean Imports texts into database (optional)
          */
         $api->post('export/json', function () {
-
             $apps = $this->wRequest()->getRequestData()['apps'];
             $groups = $this->wRequest()->getRequestData()['groups'];
 

@@ -26,7 +26,7 @@ class ImportTextsModal extends Webiny.Ui.ModalComponent {
                             Webiny.Growl.danger(response.getMessage());
                         }
 
-                        form.setState('model.results', {preview, data: response.getData()}, () => this.props.onTextsImported());
+                        form.setState('model.results', {preview, data: response.getData()}, () => !preview && this.props.onTextsImported());
                     }}>
                     {({model, form}) => {
                         let results = null;

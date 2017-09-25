@@ -33,9 +33,8 @@ class ExportTextsModal extends Webiny.Ui.ModalComponent {
         return (
             <Ui.Modal.Dialog>
                 <Ui.Form>
-                    {model => {
+                    {({model}) => {
                         const availableGroups = this.getAvailableGroups(model.apps);
-
                         return (
                             <Ui.Modal.Content>
                                 <Ui.Form.Loader/>
@@ -54,7 +53,6 @@ class ExportTextsModal extends Webiny.Ui.ModalComponent {
                                                 valueAttr="name"/>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>
-
                                     {!_.isEmpty(availableGroups) && (
                                         <Ui.Grid.Row>
                                             <Ui.Grid.Col all={12}>
@@ -78,7 +76,7 @@ class ExportTextsModal extends Webiny.Ui.ModalComponent {
                                         method="POST"
                                         params={model}
                                         type="primary"
-                                        download={Webiny.Config.ApiPath + '/entities/webiny/i18n-texts/export/json'}>
+                                        download={Webiny.Config.ApiUrl + '/entities/webiny/i18n-texts/export/json'}>
                                         {this.i18n(`Export`)}
                                     </Ui.DownloadLink>
                                 </Ui.Modal.Footer>

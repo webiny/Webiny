@@ -24,14 +24,17 @@ TextRow.defaultProps = {
                     </div>
                     <translations>
                         <ul>
-                            {this.props.locales.map(locale => (
-                                <li key={locale.key}>
-                                    <EditableTranslation
-                                        locale={locale}
-                                        text={text}
-                                        translation={_.find(text.translations, {locale: locale.key})}/>
-                                </li>
-                            ))}
+                            {this.props.locales.map(locale => {
+                                const translation = _.find(text.translations, {locale: locale.key});
+                                return (
+                                    <li key={_.uniqueId()}>
+                                        <EditableTranslation
+                                            locale={locale}
+                                            text={text}
+                                            translation={translation}/>
+                                    </li>
+                                );
+                            })}
                         </ul>
                     </translations>
                 </div>
