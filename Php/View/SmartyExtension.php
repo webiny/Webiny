@@ -83,23 +83,15 @@ class SmartyExtension extends AbstractSmartyExtension
             $browserSync = '<script src="' . $bsPath . '/browser-sync/browser-sync-client.js?v=2.18.6"></script>';
         }
 
-        $i18n = ['enabled' => false, 'locale' => null];
-        if (I18N::getInstance()->isEnabled()) {
-            // Loading i18n locale - basic information.
-            $i18n = ['locale' => null, 'enabled' => true];
-            $locale = $this->wCookie()->get('webiny-i18n');
+        $i18n = ['enabled' => I18N::getInstance()->isEnabled(), 'locale' => null];
+        if ($i18n['enabled']) {
+            $locale = I18N::getInstance()->getLocale();
             if ($locale) {
-                $locale = I18NLocale::findOne(['enabled' => true, 'key' => $locale]);
-                if ($locale) {
-                    $i18n['locale'] = $locale->toArray('key,cacheKey,formats');
-                }
-            }
-
-            if (!$i18n['locale']) {
-                $locale = I18NLocale::findDefault();
-                if ($locale) {
-                    $i18n['locale'] = $locale->toArray('key,cacheKey,formats');
-                }
+                $i18n['locale'] = [
+                    'key' => $locale->key,
+                    'cacheKey' => $locale->cacheKey,
+                    'formats' => $locale->formats->val()
+                ];
             }
         }
 

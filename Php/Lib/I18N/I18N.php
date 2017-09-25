@@ -60,8 +60,39 @@ class I18N
         }
 
         if (!$locale) {
-            $this->setLocale(I18NLocale::findDefault());
+            $this->setLocale($this->getDefaultLocale());
         }
+    }
+
+    /**
+     * Tries to read default locale to be used if detection is enabled
+     * @return I18NLocale|null
+     */
+    public function getDefaultLocale()
+    {
+        /* @var I18NLocale $locale */
+        if ($this->wConfig()->get('Application.I18n.Detect.Locale')) {
+            if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+                $preferredLocales = array_reduce(explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']), function ($res, $el) {
+                    list($l, $q) = array_merge(explode(';q=', $el), [1]);
+                    $res[$l] = (float)$q;
+
+                    return $res;
+                }, []);
+                arsort($preferredLocales);
+
+                foreach ($preferredLocales as $key => $priority) {
+                    if ($locale = I18NLocale::findByKey($key)) {
+                        if ($locale->enabled) {
+                            return $locale;
+                        }
+                    }
+                }
+            }
+
+        }
+
+        return I18NLocale::findDefault();
     }
 
     /**
@@ -183,13 +214,13 @@ class I18N
     /**
      * Sets current locale.
      *
-     * @param string $language
+     * @param string $locale
      *
      * @return $this
      */
-    public function setLocale($language)
+    public function setLocale($locale)
     {
-        $this->locale = $language;
+        $this->locale = $locale;
 
         return $this;
     }

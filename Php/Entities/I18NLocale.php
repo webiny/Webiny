@@ -7,6 +7,7 @@ use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Apps\Webiny\Php\Lib\I18N\I18NLocales;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\Entity\Attribute\Validation\ValidationException;
+use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
 /**
  * Class I18NLocale
@@ -18,6 +19,7 @@ use Webiny\Component\Entity\Attribute\Validation\ValidationException;
  * @property string $key
  * @property string $label
  * @property string $cacheKey
+ * @property ArrayObject $formats
  */
 class I18NLocale extends AbstractEntity
 {
