@@ -5,7 +5,6 @@ namespace Apps\Webiny\Php\Entities;
 use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
 use Apps\Webiny\Php\Lib\I18N\I18NLocales;
-use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\Entity\Attribute\Validation\ValidationException;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
@@ -14,11 +13,11 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  *
  * @package Apps\Selecto\Php\Entities
  *
- * @property bool   $enabled
- * @property bool   $default
- * @property string $key
- * @property string $label
- * @property string $cacheKey
+ * @property bool        $enabled
+ * @property bool        $default
+ * @property string      $key
+ * @property string      $label
+ * @property string      $cacheKey
  * @property ArrayObject $formats
  */
 class I18NLocale extends AbstractEntity
@@ -65,19 +64,19 @@ class I18NLocale extends AbstractEntity
         });
 
         $this->attr('formats')->object()->setDefaultValue([
-            'date' => '',
-            'time' => '',
+            'date'     => '',
+            'time'     => '',
             'datetime' => '',
-            'money' => [
-                'symbol' => '',
-                'format' => '',
-                'decimal' => '',
-                'thousand' => '',
+            'money'    => [
+                'symbol'    => '',
+                'format'    => '',
+                'decimal'   => '',
+                'thousand'  => '',
                 'precision' => 2
             ],
-            'number' => [
-                'decimal' => '',
-                'thousand' => '',
+            'number'   => [
+                'decimal'   => '',
+                'thousand'  => '',
                 'precision' => 2
             ]
         ]);
@@ -119,7 +118,29 @@ class I18NLocale extends AbstractEntity
             }, $exclude);
 
             return I18NLocales::getLocales($exclude);
-        });
+        })->setPublic();
+
+        /**
+         * @api.name        List available locales
+         * @api.description Lists locales that were not already added.
+         */
+        $api->get('/available/{locale}', function (I18NLocale $locale) {
+            $params = [
+                'I18NLocales',
+                ['deletedOn' => null, 'id' => ['$ne' => $locale->id]],
+                [],
+                0,
+                0,
+                ['projection' => ['_id' => 0, 'key' => 1]]
+            ];
+            $exclude = $this->wDatabase()->find(...$params);
+            $exclude = array_map(function ($item) {
+                return $item['key'];
+            }, $exclude);
+
+            return I18NLocales::getLocales($exclude);
+        })->setPublic();
+
     }
 
     /**

@@ -14,7 +14,8 @@ class TextGroupModal extends Webiny.Ui.ModalComponent {
                 <Ui.Form
                     id={_.get(this.props, 'data.id')}
                     api="/entities/webiny/i18n-text-groups"
-                    fields="name,description"
+                    fields="name,description,app"
+                    onSuccessMessage={() => {this.i18n('Text group saved successfully.')}}
                     onSubmitSuccess={() => this.hide().then(this.props.onSubmitSuccess)}>
                     {({model, form}) => (
                         <Ui.Modal.Content>
