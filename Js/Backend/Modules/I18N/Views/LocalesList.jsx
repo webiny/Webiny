@@ -20,12 +20,12 @@ LocalesList.defaultProps = {
                 {Ui => (
                     <Ui.ViewSwitcher>
                         <Ui.ViewSwitcher.View view="translationsList" defaultView>
-                            {showView => (
+                            {({showView}) => (
                                 <Ui.View.List>
                                     <Ui.View.Header title="I18N - Locales">
                                         <Ui.Button type="primary" align="right" onClick={showView('localesModal')}>
                                             <Ui.Icon icon="icon-plus-circled"/>
-                                            Add Locale
+                                            {this.i18n('Add Locale')}
                                         </Ui.Button>
                                     </Ui.View.Header>
                                     <Ui.View.Body>
@@ -62,7 +62,7 @@ LocalesList.defaultProps = {
                             )}
                         </Ui.ViewSwitcher.View>
                         <Ui.ViewSwitcher.View view="localesModal" modal>
-                            {(showView, data) => (
+                            {({showView, data: {data}}) => (
                                 <LocalesModal {...{showView, data}} onSubmitSuccess={() => this.localesList.loadData()}/>
                             )}
                         </Ui.ViewSwitcher.View>

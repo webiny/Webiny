@@ -16,9 +16,7 @@ use Apps\Webiny\Php\Lib\WebinyTrait;
  */
 class I18NTextGroup extends AbstractEntity
 {
-    use WebinyTrait;
-
-    protected static $entityCollection = 'I18NTextGroups';
+    protected static $collection = 'I18NTextGroups';
     protected static $i18nNamespace = 'Webiny.Entities.I18NTextGroup';
     protected static $classId = 'Webiny.Entities.I18NTextGroup';
 

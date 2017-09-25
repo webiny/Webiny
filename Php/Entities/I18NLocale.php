@@ -23,9 +23,7 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  */
 class I18NLocale extends AbstractEntity
 {
-    use WebinyTrait;
-
-    protected static $entityCollection = 'I18NLocales';
+    protected static $collection = 'I18NLocales';
     protected static $classId = 'Webiny.Entities.I18NLocale';
 
     public function __construct()

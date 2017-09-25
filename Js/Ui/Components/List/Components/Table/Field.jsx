@@ -53,7 +53,7 @@ Field.defaultProps = {
         }
 
         return this.props.includeTd ?
-            <td className={this.getTdClasses()} data-th={Webiny.i18n.toText(this.props.label)}>{content}</td>
+            <td className={this.getTdClasses()} data-th={Webiny.I18n.toText(this.props.label)}>{content}</td>
             : content;
     }
 };

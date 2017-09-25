@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import React from 'react';
-import md5 from 'blueimp-md5';
 import isMobile from 'ismobilejs';
 import classNames from 'classnames';
 import Webiny from 'webiny';
@@ -20,26 +19,24 @@ class Component extends React.Component {
 
     /**
      * Method for a more convenient use of i18n module - this will automatically generate a complete namespace for the label
-     * If this method is called without parameters, it will return Webiny.i18n module, from which you can use other functions as well
-     * @param label
+     * If this method is called without parameters, it will return Webiny.I18n module, from which you can use other functions as well
+     * @param base
      * @param variables
      * @param options
      * @returns {*}
      */
-    i18n(label, variables, options = {}) {
-        if (!label) {
-            return Webiny.i18n;
+    i18n(base, variables, options = {}) {
+        if (!base) {
+            return Webiny.I18n;
         }
 
-        let key = options.key || _.get(this.props, 'i18nKey', this.i18n.key);
-        if (!key) {
-            const app = _.get(Webiny.Router.getActiveRoute(), 'module.app.name');
-            const module = _.get(Webiny.Router.getActiveRoute(), 'module.name');
-            key = `${app}.${module}.${this.getClassName()}`;
+        if (_.isString(base) && _.isString(variables)) {
+            const textKey = Webiny.I18n.getTextKey(base, variables);
+            return Webiny.I18n.render(textKey, variables, options);
         }
 
-        key = _.trimEnd(key, '.') + '.' + md5(label);
-        return Webiny.i18n.render(key, label, variables, options);
+        const textKey = Webiny.I18n.getTextKey(options.namespace, base);
+        return Webiny.I18n.render(textKey, base, variables);
     }
 
     componentWillMount() {

@@ -12,7 +12,6 @@ use Apps\Webiny\Php\Lib\I18N\Exports\TextsExport;
 use Apps\Webiny\Php\Lib\I18N\Exports\TranslationsExport;
 use Apps\Webiny\Php\Lib\I18N\I18N;
 use Apps\Webiny\Php\Lib\I18N\I18NLocales;
-use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
 /**
@@ -25,35 +24,9 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
  */
 class I18NText extends AbstractEntity
 {
-    use WebinyTrait;
-
-    protected static $entityCollection = 'I18NTexts';
+    protected static $collection = 'I18NTexts';
     protected static $i18nNamespace = 'Webiny.Entities.I18NText';
     protected static $classId = 'Webiny.Entities.I18NText';
-
-    protected static function entityQuery(QueryContainer $query)
-    {
-        $query->add(new Filter('edited', function (EntityQuery $query, $flag) {
-            $query->removeCondition('edited');
-            $flag = filter_var($flag, FILTER_VALIDATE_BOOLEAN);
-
-            if ($flag) {
-                $query->setConditions([
-                    '$and' => [
-                        ['translations.en_GB' => ['$exists' => true]],
-                        ['translations.en_GB' => ['$nin' => [null, ""]]],
-                    ]
-                ]);
-            } else {
-                $query->setConditions([
-                    '$or' => [
-                        ['translations.en_GB' => ['$exists' => false]],
-                        ['translations.en_GB' => ['$in' => [null, ""]]],
-                    ]
-                ]);
-            }
-        }));
-    }
 
     public function __construct()
     {
