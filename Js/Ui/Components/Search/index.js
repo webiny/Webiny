@@ -356,7 +356,7 @@ class Search extends Webiny.Ui.FormComponent {
         if (!item) {
             return null;
         }
-        return this.props.selectedRenderer.call(this, item);
+        return this.props.selectedRenderer.call(this, {option: item});
     }
 }
 
@@ -374,13 +374,13 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     placeholder: 'Type to search',
     useDataAsValue: false,
     allowFreeInput: false,
-    optionRenderer(item) {
-        const value = this.fetchValue(item);
+    optionRenderer({option}) {
+        const value = this.fetchValue(option);
         const content = {__html: value.replace(/\s+/g, '&nbsp;')};
         return <div dangerouslySetInnerHTML={content}/>;
     },
-    selectedRenderer(item) {
-        return this.fetchValue(item);
+    selectedRenderer({option}) {
+        return this.fetchValue(option);
     },
     renderOption(item, index) {
         const {styles} = this.props;
@@ -396,7 +396,7 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         return (
             <li key={index} className={this.classSet(itemClasses)} {...linkProps}>
                 <a href="javascript:void(0)">
-                    {this.props.optionRenderer.call(this, item)}
+                    {this.props.optionRenderer.call(this, {option: item})}
                 </a>
             </li>
         );

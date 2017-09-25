@@ -208,7 +208,7 @@ class OptionComponent extends FormComponent {
 
     renderOptionText(props, option) {
         if (props.optionRenderer) {
-            return props.optionRenderer({data: option});
+            return props.optionRenderer({option: {data: option}});
         } else if (_.isPlainObject(option) && !React.isValidElement(option)) {
             return _.get(option, props.textAttr);
         } else if (_.isString(option)) {

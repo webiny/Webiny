@@ -473,29 +473,29 @@ class Form extends Webiny.Ui.Component {
             const formatValue = _.get(input.props, 'formatValue');
 
             // Input changed callback, triggered on each input change
-            const changeCallback = function inputChanged(newValue, oldValue) {
+            const changeCallback = (value, oldValue) => {
                 const inputConfig = this.inputs[input.props.name];
                 const component = inputConfig && inputConfig.component;
 
                 // Bind onChange callback params (we do it here because later we no longer have access to these values)
                 if (_.isFunction(onAfterChange)) {
-                    onAfterChange = onAfterChange.bind(null, newValue, oldValue, component);
+                    onAfterChange = onAfterChange.bind(null, {value, oldValue, component});
                 }
 
                 // Format value
                 if (component && _.isFunction(formatValue)) {
                     // If component formatValue returns a value we will use that as our new value
-                    const cbValue = formatValue(newValue, oldValue, component);
+                    const cbValue = formatValue({value, oldValue, component});
                     if (isValidModelType(cbValue)) {
-                        newValue = cbValue;
+                        value = cbValue;
                     }
                 }
 
-                return newValue;
+                return value;
             };
 
             // Assign value and onChange props
-            const linkState = super.bindTo('model.' + input.props.name, changeCallback.bind(this), input.props.defaultValue);
+            const linkState = super.bindTo('model.' + input.props.name, changeCallback, input.props.defaultValue);
             _.assign(newProps, {
                 value: linkState.value,
                 onChange: (newValue, cb) => {
