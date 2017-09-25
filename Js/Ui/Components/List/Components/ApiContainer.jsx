@@ -24,7 +24,7 @@ class ApiContainer extends BaseContainer {
                         return;
                     }
                     this.setState({initiallyLoaded: true});
-                    this.props.onInitialLoad(_.get(data, 'list'), _.get(data, 'meta'));
+                    this.props.onInitialLoad({list: _.get(data, 'list'), meta: _.get(data, 'meta')});
                 });
             }
         });
@@ -69,7 +69,7 @@ class ApiContainer extends BaseContainer {
         if (this.props.autoLoad && shouldLoad) {
             this.prepare(props).then(() => {
                 this.loadData(props).then(data => {
-                    this.props.onLoad(_.get(data, 'list'), _.get(data, 'meta'));
+                    this.props.onLoad({list: _.get(data, 'list'), meta: _.get(data, 'meta')});
                 });
             });
         }
@@ -101,7 +101,7 @@ class ApiContainer extends BaseContainer {
             const data = apiResponse.getData();
             if (!apiResponse.isError() && !apiResponse.isAborted()) {
                 if (this.props.prepareLoadedData) {
-                    data.list = this.props.prepareLoadedData(data.list);
+                    data.list = this.props.prepareLoadedData({list: data.list, meta: data.meta, $this: this});
                 }
             }
 

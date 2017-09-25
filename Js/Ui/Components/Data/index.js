@@ -13,7 +13,7 @@ class Data extends Webiny.Ui.Component {
             initiallyLoaded: false
         };
 
-        this.bindMethods('setData,filter');
+        this.bindMethods('setData,load');
         Webiny.Mixins.ApiComponent.extend(this);
     }
 
@@ -66,10 +66,10 @@ class Data extends Webiny.Ui.Component {
             Webiny.Growl.info(response.getError(), 'Could not fetch data', true);
             return;
         }
-        this.setState({data: this.props.prepareLoadedData(response.getData()), loading: false});
+        this.setState({data: this.props.prepareLoadedData({data: response.getData()}), loading: false});
     }
 
-    filter(filters = {}) {
+    load(filters = {}) {
         this.setState({loading: true});
         this.request = this.api.setQuery(filters).execute().then(apiResponse => {
             if (!this.isMounted()) {
@@ -87,7 +87,7 @@ Data.defaultProps = {
     autoRefresh: null,
     onLoad: _.noop,
     onInitialLoad: _.noop,
-    prepareLoadedData: data => data,
+    prepareLoadedData: ({data}) => data,
     renderer() {
         if (!_.isFunction(this.props.children)) {
             throw new Error('Warning: Data component only accepts a function as its child element!');
@@ -104,7 +104,7 @@ Data.defaultProps = {
             <webiny-data>
                 {this.props.children.call(this, {
                     data: _.cloneDeep(this.state.data),
-                    filter: this.filter,
+                    load: this.load,
                     loader: loader,
                     $this: this
                 })}

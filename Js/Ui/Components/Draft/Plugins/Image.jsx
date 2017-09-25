@@ -108,6 +108,7 @@ ImageEditComponent.defaultProps = {
                                 <span className="resize-handle br" {...draggable}/>
                             </div>
                         </div>
+
                         <Ui.Grid.Row>
                             <Ui.Grid.Col xs={12} className="text-center">
                                 <input
@@ -152,6 +153,7 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
         this.validate = _.get(config, 'validate', 'required');
         this.name = 'image';
         this.api = null;
+        this.accept = ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'];
         this.cropper = {
             inline: true,
             title: 'Crop your image',
@@ -172,12 +174,16 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
         if (config.cropper) {
             _.assign(this.cropper, config.cropper);
         }
+
+        if (config.accept) {
+            this.accept = config.accept;
+        }
     }
 
-    submitModal(model, form) {
+    submitModal({model, form}) {
         if (model.image) {
             form.showLoading();
-            this.api.post('/', model.image).then(apiResponse => {
+            return this.api.post('/', model.image).then(apiResponse => {
                 form.hideLoading();
                 delete model.image;
                 const file = apiResponse.getData('entity');
@@ -186,9 +192,9 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
                 model.fromFile = true;
                 this.createImageBlock(model);
             });
-        } else {
-            this.createImageBlock(model);
         }
+
+        return this.createImageBlock(model);
     }
 
     createBlock() {
@@ -203,7 +209,8 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
             text: ' ',
             data: model
         };
-        this.dialog.hide().then(() => {
+
+        return this.dialog.hide().then(() => {
             const editorState = this.insertDataBlock(this.editor.getEditorState(), insert);
             this.editor.setEditorState(editorState);
         });
@@ -226,7 +233,7 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
                                                 <Ui.Tabs.Tab label="Upload" icon="fa-upload">
                                                     <Ui.Image
                                                         name="image"
-                                                        accept={['image/jpg', 'image/jpeg', 'image/gif', 'image/png', 'image/svg+xml']}
+                                                        accept={this.accept}
                                                         cropper={this.cropper}/>
                                                 </Ui.Tabs.Tab>
                                             );

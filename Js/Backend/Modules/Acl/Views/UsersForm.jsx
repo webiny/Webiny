@@ -15,8 +15,8 @@ Form.defaultProps = {
                 Webiny.Router.goToRoute('Users.List');
             },
             onCancel: 'Users.List',
-            onSuccessMessage: (record) => {
-                return <span>User <strong>{record.firstName}</strong> was saved successfully!</span>;
+            onSuccessMessage: ({model}) => {
+                return <span>User <strong>{model.firstName}</strong> was saved successfully!</span>;
             }
         };
 

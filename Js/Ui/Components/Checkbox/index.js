@@ -11,9 +11,9 @@ class Checkbox extends Webiny.Ui.FormComponent {
         this.bindMethods('onChange,isChecked');
     }
 
-    onChange(e) {
+    onChange(e, value = e.target.checked) {
         if (this.props.optionIndex !== null) {
-            this.props.onChange(this.props.optionIndex, e.target.checked);
+            this.props.onChange(this.props.optionIndex, value);
         } else {
             const callback = this.props.validate ? this.validate : _.noop;
             this.props.onChange(e.target.checked, callback);

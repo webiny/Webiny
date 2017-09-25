@@ -13,8 +13,9 @@ ContainerError.defaultProps = {
     message: null,
     className: null,
     close: true,
+    onClose: _.noop,
     renderer() {
-        const {error, close, title, type, className, message} = this.props;
+        const {error, onClose, close, title, type, className, message} = this.props;
         if (!error) {
             return null;
         }
@@ -39,6 +40,7 @@ ContainerError.defaultProps = {
                 title={title}
                 type={type}
                 close={close}
+                onClose={onClose}
                 className={className}>
                 {message || error.getMessage()}
                 {data.length > 0 && <ul>{data}</ul>}

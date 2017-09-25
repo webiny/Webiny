@@ -45,8 +45,8 @@ class UserPermissionsForm extends Webiny.Ui.View {
                 onSubmitSuccess="UserPermissions.List"
                 onCancel="UserPermissions.List"
                 defaultModel={{permissions: []}}
-                onSuccessMessage={(record) => {
-                    return <span>Permission <strong>{record.name}</strong> was saved!</span>;
+                onSuccessMessage={({model}) => {
+                    return <span>Permission <strong>{model.name}</strong> was saved!</span>;
                 }}>
                 {({model, form}) => {
                     return (

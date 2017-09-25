@@ -69,7 +69,7 @@ class Confirmation extends Webiny.Ui.ModalComponent {
                             // The result of the function will be passed to `onComplete` and not the function itself
                             result = result();
                         }
-                        this.props.onComplete(result);
+                        this.props.onComplete({data: result});
                     });
                 }
             });

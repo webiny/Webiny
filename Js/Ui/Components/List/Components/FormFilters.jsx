@@ -19,9 +19,9 @@ class FormFilters extends Filters {
         return this.form.getModel();
     }
 
-    submit(model, form) {
+    submit({model, form}) {
         if (_.isFunction(this.props.onSubmit)) {
-            this.props.onSubmit(model, form, this.applyFilters);
+            this.props.onSubmit({model, form, apply: this.applyFilters});
         } else {
             this.applyFilters(model);
         }
@@ -38,8 +38,8 @@ class FormFilters extends Filters {
 
 FormFilters.defaultProps = {
     defaultModel: null,
-    onSubmit: (model, form, applyFilters) => {
-        applyFilters(model);
+    onSubmit: ({model, form, apply}) => {
+        apply(model);
     },
     renderer() {
         const {Form} = this.props;

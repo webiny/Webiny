@@ -18,9 +18,8 @@ class App extends \Apps\Webiny\Php\Lib\Apps\App
     {
         parent::bootstrap();
 
-        $this->addAppRoute('/^\/welcome/', 'Webiny:Templates/Welcome.tpl');
-
-        $this->addAppRoute('/^\\' . $this->wConfig()->get('Webiny.Backend.Path') . '/', 'Webiny:Templates/Backend.tpl', 380);
+        $this->addAppRoute('/^\/$/', 'Webiny:Templates/Welcome.tpl', 400);
+        $this->addAppRoute('/^\\' . $this->wConfig()->get('Webiny.Backend.Path') . '/', 'Webiny:Templates/Backend.tpl', 450);
 
         User::onActivity(function (User $user) {
             $user->lastActive = new DateTimeObject('now');

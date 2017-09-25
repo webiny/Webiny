@@ -251,7 +251,7 @@ class VideoPlugin extends Webiny.Draft.AtomicPlugin {
         this.editor.setEditorState(editorState);
     }
 
-    submitForm(model) {
+    submitForm({model}) {
         // Parse URL and detect type
         const data = _.clone(model);
 

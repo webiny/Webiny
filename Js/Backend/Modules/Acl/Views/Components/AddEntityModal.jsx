@@ -16,7 +16,7 @@ class AddEntityModal extends Webiny.Ui.ModalComponent {
             <Modal.Dialog>
                 {({dialog}) => (
                     <Form
-                        onSubmit={async (model, form) => {
+                        onSubmit={async ({model, form}) => {
                             form.showLoading();
                             const query = {
                                 details: 'methods',

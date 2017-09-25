@@ -24,9 +24,8 @@ class ClickSuccess extends Webiny.Ui.Component {
         const content = this.props.children;
         if (_.isFunction(content)) {
             return content({
-                success: (data) => {
-                    this.setState({data});
-                    this.dialog.show();
+                success: ({data}) => {
+                    this.setState({data}, () => this.dialog.show());
                 }
             });
         }
@@ -53,7 +52,7 @@ ClickSuccess.defaultProps = {
         };
 
         if (_.isFunction(this.props.renderDialog)) {
-            dialogProps['renderDialog'] = this.props.renderDialog.bind(this, this.state.data, dialogProps.onClose);
+            dialogProps['renderDialog'] = this.props.renderDialog.bind(this, {data: this.state.data, close: dialogProps.onClose});
         }
 
         const {Modal} = this.props;

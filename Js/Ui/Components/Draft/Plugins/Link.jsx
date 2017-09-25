@@ -38,7 +38,7 @@ class LinkPlugin extends Webiny.Draft.EntityPlugin {
         }
     }
 
-    submitForm(model) {
+    submitForm({model}) {
         const editorState = this.editor.getEditorState();
         if (this.newLink) {
             const newContentState = editorState.getCurrentContent().createEntity(this.entity, 'MUTABLE', model);

@@ -69,7 +69,7 @@ Events:
     Webiny:
         Bootstrap:
             Request:
-                - {Handler: Php/RequestHandlers/Api, Priority: 400}
+                - {Handler: Php/RequestHandlers/Api, Priority: 600}
                 - {Handler: Php/RequestHandlers/Routes, Priority: 390}
         Api:
             Before:

@@ -13,8 +13,8 @@ Form.defaultProps = {
             connectToRouter: true,
             onSubmitSuccess: 'UserRoleGroups.List',
             onCancel: 'UserRoleGroups.List',
-            onSuccessMessage: (record) => {
-                return <span>Role group <strong>{record.name}</strong> was saved successfully!</span>;
+            onSuccessMessage: ({model}) => {
+                return <span>Role group <strong>{model.name}</strong> was saved successfully!</span>;
             }
         };
 

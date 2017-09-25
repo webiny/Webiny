@@ -1,20 +1,11 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import Webiny from 'webiny';
+import AlertContainer from './Container';
 import styles from './styles.css';
 
 class Alert extends Webiny.Ui.Component {
 
-    constructor(props) {
-        super(props);
-
-        this.bindMethods('close');
-    }
-
-    close() {
-        ReactDOM.findDOMNode(this).remove();
-    }
 }
 
 Alert.defaultProps = {
@@ -22,9 +13,10 @@ Alert.defaultProps = {
     icon: null,
     title: null,
     close: false,
+    onClose: _.noop,
     className: null,
     renderer({props}) {
-        const {styles, type, Icon} = props;
+        const {styles, type, Icon, onClose} = props;
 
         const typeClasses = {
             info: styles.alertInfo,
@@ -51,27 +43,26 @@ Alert.defaultProps = {
         let icon = null;
         if (this.props.icon) {
             icon = <Icon icon={this.props.icon}/>;
-        }else{
+        } else {
             icon = <Icon icon={iconClasses[type]}/>;
-        }
-
-        let close = null;
-        if (props.close) {
-            close = (
-                <button type="button" className={styles.close} onClick={this.close}>
-                    <span aria-hidden="true">×</span>
-                </button>
-            );
         }
 
         const title = props.title ? <strong>{_.trimEnd(props.title, ':')}:</strong> : null;
 
         return (
-            <div className={classes}>
-                {icon}
-                {close}
-                {title} {props.children}
-            </div>
+            <AlertContainer onClose={onClose}>
+                {close => (
+                    <div className={classes}>
+                        {icon}
+                        {props.close && (
+                            <button type="button" className={styles.close} onClick={close}>
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        )}
+                        {title} {props.children}
+                    </div>
+                )}
+            </AlertContainer>
         );
     }
 };

@@ -14,7 +14,7 @@ class Login extends Webiny.Ui.View {
 
     }
 
-    onSubmit(model, form) {
+    onSubmit({model, form}) {
         form.setState({error: null});
         form.showLoading();
 
@@ -60,7 +60,7 @@ Login.defaultProps = {
 
         return (
             <sign-in-form class={this.classSet('sign-in', (this.props.overlay && 'overlay'))}>
-                <Form onSubmit={(model, form) => this.onSubmit(model, form)}>
+                <Form onSubmit={params => this.onSubmit(params)}>
                     {({form}) => (
                         <div className="container">
                             <div className="sign-in-holder">

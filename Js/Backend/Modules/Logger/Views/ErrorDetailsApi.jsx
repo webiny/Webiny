@@ -12,7 +12,7 @@ ErrorDetailsApi.defaultProps = {
             api: '/entities/webiny/logger-entry',
             url: this.props.errorEntry.id,
             fields: 'id,stack,clientData',
-            prepareLoadedData: data => data.entity
+            prepareLoadedData: ({data}) => data.entity
         };
 
         return (

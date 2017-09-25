@@ -18,7 +18,7 @@ class Header extends Webiny.Ui.Component {
                     </button>
                     {logo && (isValidElement(logo) ? logo : createElement(logo))}
                     {userMenu && (isValidElement(userMenu) ? userMenu : createElement(userMenu))}
-                    {appNotifications && (isValidElement(appNotifications) ? appNotifications : createElement(appNotifications))}
+                    {/* appNotifications && (isValidElement(appNotifications) ? appNotifications : createElement(appNotifications)) */}
                 </div>
             </div>
         );

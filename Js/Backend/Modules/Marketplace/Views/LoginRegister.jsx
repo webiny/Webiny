@@ -38,7 +38,7 @@ LoginRegister.defaultProps = {
         const formProps = {
             api: '/services/webiny/marketplace',
             url: 'login',
-            onSubmitSuccess: apiResponse => this.props.onUser(apiResponse.getData()),
+            onSubmitSuccess: ({apiResponse}) => this.props.onUser(apiResponse.getData()),
             onSuccessMessage: null
         };
 

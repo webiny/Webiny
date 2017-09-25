@@ -17,7 +17,7 @@ class UserAccount extends Webiny.Ui.View {
             api: '/entities/webiny/user/2factor-verify',
             fields: 'id,title',
             onSuccessMessage: null,
-            onSubmitSuccess: (apiResponse) => {
+            onSubmitSuccess: ({apiResponse}) => {
                 if (apiResponse.getData().result) {
                     confirm();
                 } else {
@@ -106,7 +106,7 @@ UserAccount.defaultProps = {
                     return res.getData();
                 });
             },
-            onSubmit: (model, form) => {
+            onSubmit: ({model, form}) => {
                 form.showLoading();
                 return form.api.patch('/me', model).then(apiResponse => {
                     form.hideLoading();
