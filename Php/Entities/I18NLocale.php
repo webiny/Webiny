@@ -69,7 +69,18 @@ class I18NLocale extends AbstractEntity
             'date' => '',
             'time' => '',
             'datetime' => '',
-            'number' => ''
+            'money' => [
+                'symbol' => '',
+                'format' => '',
+                'decimal' => '',
+                'thousand' => '',
+                'precision' => 2
+            ],
+            'number' => [
+                'decimal' => '',
+                'thousand' => '',
+                'precision' => 2
+            ]
         ]);
 
         $this->attr('cacheKey')->char()->setSkipOnPopulate()->setToArrayDefault();

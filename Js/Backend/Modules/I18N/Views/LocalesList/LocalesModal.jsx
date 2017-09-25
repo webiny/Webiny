@@ -1,7 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
-import format from 'date-fns/format';
 
 /**
  * @i18n.namespace Webiny.Backend.I18N.TextsList
@@ -11,10 +10,28 @@ class LocalesModal extends Webiny.Ui.ModalComponent {
         const {Button, Modal, Link, Grid, Form, Select, Switch, Section, Input} = this.props;
 
         return (
-            <Modal.Dialog>
+            <Modal.Dialog wide>
                 <Form
-                    id={this.props.data.id}
-                    defaultModel={_.assign({formats: {}}, this.props.data)}
+                    id={_.get(this.props, 'data.id')}
+                    defaultModel={{
+                        formats: {
+                            datetime: 'DD/MM/YYYY HH:mm:ss',
+                            time: 'HH:mm:ss',
+                            date: 'DD/MM/YYYY',
+                            money: {
+                                symbol: '$',
+                                format: '%s%v',
+                                precision: 0,
+                                decimal: '.',
+                                thousand: ','
+                            },
+                            number: {
+                                precision: 2,
+                                decimal: '.',
+                                thousand: ','
+                            }
+                        }
+                    }}
                     fields="key,label,formats"
                     api="/entities/webiny/i18n-locales"
                     onSubmitSuccess={apiResponse => this.hide().then(() => this.props.onSubmitSuccess(apiResponse))}
@@ -28,6 +45,7 @@ class LocalesModal extends Webiny.Ui.ModalComponent {
                                 <Grid.Row>
                                     <Grid.Col all={12}>
                                         <Select
+                                            label={this.i18n('Locale')}
                                             description={this.i18n(`Locales already added are not shown.`)}
                                             placeholder={this.i18n('Select locale to add...')}
                                             name="key"
@@ -40,50 +58,113 @@ class LocalesModal extends Webiny.Ui.ModalComponent {
                                 <Section title="Dates"/>
                                 <Grid.Row>
                                     <Grid.Col all={7}>
-                                        <Input label="Date" name="formats.date" placeholder={this.i18n('eg. DD/MM/YYYY')}/>
+                                        <Input label={this.i18n('Date')} name="formats.date" placeholder={this.i18n('eg. DD/MM/YYYY')}/>
                                     </Grid.Col>
                                     <Grid.Col all={5}>
                                         <Input
                                             readyOnly
                                             label={this.i18n('Preview')}
-                                            value={format(new Date(), model.formats.date)}
+                                            value={Webiny.I18n.date(new Date(), model.formats.date)}
                                             placeholder={this.i18n('Type format to see example.')}/>
                                     </Grid.Col>
                                 </Grid.Row>
                                 <Grid.Row>
                                     <Grid.Col all={7}>
-                                        <Input label="Time" name="formats.time" placeholder={this.i18n('eg. HH:mm:ss')}/>
+                                        <Input label={this.i18n('Time')} name="formats.time" placeholder={this.i18n('eg. HH:mm:ss')}/>
                                     </Grid.Col>
                                     <Grid.Col all={5}>
                                         <Input
                                             readyOnly
                                             label={this.i18n('Preview')}
-                                            value={format(new Date(), model.formats.time)}
+                                            value={Webiny.I18n.time(new Date(), model.formats.time)}
                                             placeholder={this.i18n('Type format to see example.')}/>
                                     </Grid.Col>
                                 </Grid.Row>
                                 <Grid.Row>
                                     <Grid.Col all={7}>
-                                        <Input label="Date/Time" name="formats.datetime"
+                                        <Input
+                                            label={this.i18n('Date/Time')}
+                                               name="formats.datetime"
                                                placeholder={this.i18n('eg. DD/MM/YYYY HH:mm:ss')}/>
                                     </Grid.Col>
                                     <Grid.Col all={5}>
                                         <Input
                                             readyOnly
                                             label={this.i18n('Preview')}
-                                            value={format(new Date(), model.formats.datetime)}
+                                            value={Webiny.I18n.datetime(new Date(), model.formats.datetime)}
                                             placeholder={this.i18n('Type format to see example.')}/>
                                     </Grid.Col>
                                 </Grid.Row>
-                                <Section title="Numbers"/>
+                                <Section title={this.i18n('Prices')}/>
                                 <Grid.Row>
-                                    <Grid.Col all={6}>
-                                        <Input label="Price" name="formats.price" placeholder={this.i18n('eg. DD/MM/YYYY')}/>
+                                    <Grid.Col all={2}>
+                                        <Input
+                                            label={this.i18n('Format')}
+                                            name="formats.money.format"
+                                            placeholder="%v %s"/>
                                     </Grid.Col>
-                                    <Grid.Col all={6}>
-                                        <Input label="Number" name="formats.number" placeholder={this.i18n('eg. HH:mm:ss')}/>
+                                    <Grid.Col all={2}>
+                                        <Input
+                                            label={this.i18n('Symbol')}
+                                            name="formats.money.symbol"
+                                            placeholder="EUR"/>
+                                    </Grid.Col>
+                                    <Grid.Col all={2}>
+                                        <Input
+                                            label={this.i18n('Decimal')}
+                                            name="formats.money.decimal"
+                                            placeholder=","/>
+                                    </Grid.Col>
+                                    <Grid.Col all={2}>
+                                        <Input
+                                            label={this.i18n('Thousand')}
+                                            name="formats.money.thousand"
+                                            placeholder=","/>
+                                    </Grid.Col>
+                                    <Grid.Col all={2}>
+                                        <Input
+                                            label={this.i18n('Precision')}
+                                            name="formats.money.precision"
+                                            placeholder="2"/>
+                                    </Grid.Col>
+                                    <Grid.Col all={2}>
+                                        <Input
+                                            readyOnly
+                                            label={this.i18n('Preview')}
+                                            value={Webiny.I18n.money(12345.67, model.formats.money)}
+                                            placeholder={this.i18n('Type format to see example.')}/>
                                     </Grid.Col>
                                 </Grid.Row>
+
+                                <Section title={this.i18n('Numbers')}/>
+                                <Grid.Row>
+                                    <Grid.Col all={2}>
+                                        <Input
+                                            label={this.i18n('Decimal')}
+                                            name="formats.number.decimal"
+                                            placeholder=","/>
+                                    </Grid.Col>
+                                    <Grid.Col all={2}>
+                                        <Input
+                                            label={this.i18n('Thousand')}
+                                            name="formats.number.thousand"
+                                            placeholder=","/>
+                                    </Grid.Col>
+                                    <Grid.Col all={2}>
+                                        <Input
+                                            label={this.i18n('Precision')}
+                                            name="formats.number.precision"
+                                            placeholder="2"/>
+                                    </Grid.Col>
+                                    <Grid.Col all={4}>
+                                        <Input
+                                            readyOnly
+                                            label={this.i18n('Preview')}
+                                            value={Webiny.I18n.number(12345.67, model.formats.number)}
+                                            placeholder={this.i18n('Type format to see example.')}/>
+                                    </Grid.Col>
+                                </Grid.Row>
+
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button label="Cancel" onClick={this.hide}/>

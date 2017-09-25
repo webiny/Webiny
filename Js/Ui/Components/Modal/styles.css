@@ -82,14 +82,20 @@
 	padding: 15px;
 }
 
+/* Wide dialog */
 .wide .dialog {
+	width: 75%;
+}
+
+/* Full-screen dialog */
+.fullScreen .dialog {
 	width: 100%;
 	height: 100vh;
 	transform: none !important;
-	top: 0px !important;
+	top: 0 !important;
 	margin: 0;
 }
-.wide .dialog .content {
+.fullScreen .dialog .content {
 	height: auto;
 	min-height: 100%;
 	display: flex;
@@ -100,7 +106,7 @@
 	align-content: stretch;
 }
 
-.wide .dialog .content .body {
+.fullScreen .dialog .content .body {
 	overflow: scroll;
 	padding: 25px;
 	flex-grow: 1;

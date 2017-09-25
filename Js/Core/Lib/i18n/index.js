@@ -4,6 +4,7 @@ import Webiny from 'webiny';
 import React from 'react';
 import I18nComponent from './I18N';
 import fecha from 'fecha';
+import accounting from 'accounting';
 
 import modifiers from './Modifiers';
 
@@ -23,7 +24,18 @@ class I18n {
             date: 'DD/MMM/YY',
             time: 'HH:mm',
             datetime: 'DD/MMM/YY HH:mm',
-            number: '%%.%%'
+            money: {
+                symbol: '',
+                format: '',
+                decimal: '',
+                thousand: '',
+                precision: 2
+            },
+            number: {
+                decimal: '',
+                thousand: '',
+                precision: 2
+            }
         };
 
         /**
@@ -202,15 +214,23 @@ class I18n {
         return fecha.format(value, outputFormat);
     }
 
-    // Following methods are plain-simple for now - let's make them smarter in the near future
+    money(value, outputFormat) {
+        if (!outputFormat) {
+            outputFormat = this.defaultFormats.money;
+        } else {
+            outputFormat = _.assign({}, this.defaultFormats, outputFormat);
+        }
 
-    price(value, currency = '£', precision = 2) {
-        const currencySymbols = {gbp: '£', usd: '$', eur: '€'}; // Plain simple for now
-        return accounting.formatMoney(value, _.get(currencySymbols, currency, currency), precision);
+        return accounting.formatMoney(value, outputFormat.symbol, outputFormat.precision, outputFormat.thousand, outputFormat.decimal, outputFormat.format);
     }
 
-    number(value, decimals = 0) {
-        return accounting.formatNumber(value, decimals);
+    number(value, outputFormat) {
+        if (!outputFormat) {
+            outputFormat = this.defaultFormats.money;
+        } else {
+            outputFormat = _.assign({}, this.defaultFormats, outputFormat);
+        }
+        return accounting.formatNumber(value, outputFormat.precision, outputFormat.thousand, outputFormat.decimal);
     }
 
     /**
