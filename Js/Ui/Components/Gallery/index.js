@@ -94,7 +94,7 @@ class Gallery extends Webiny.Ui.FormComponent {
             state.images.push(image);
         }
         this.props.onChange(state.images);
-        this.props.onSaveImage(image);
+        this.props.onSaveImage({image});
     }
 
     applyCropping(newImage) {

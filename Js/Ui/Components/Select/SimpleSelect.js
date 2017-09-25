@@ -169,7 +169,7 @@ class SimpleSelect extends Webiny.Ui.Component {
     itemRenderer(item, type) {
         let text = item.text;
         if (_.isFunction(this.props[type]) && item.id) {
-            text = this.props[type](item || {});
+            text = this.props[type]({option: item || {}});
         }
 
         if (text && !_.isString(text)) {

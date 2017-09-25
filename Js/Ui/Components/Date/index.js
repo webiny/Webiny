@@ -83,7 +83,7 @@ class Date extends Webiny.Ui.FormComponent {
 
 Date.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     debug: false,
-    inputFormat: 'DD/MM/YYYY',
+    inputFormat: 'YYYY-MM-DD',
     modelFormat: 'YYYY-MM-DD',
     positionHorizontal: 'auto',
     positionVertical: 'bottom',

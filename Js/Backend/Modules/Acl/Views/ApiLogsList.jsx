@@ -118,12 +118,12 @@ class ApiLogsList extends Webiny.Ui.View {
         );
     }
 
-    renderTokenOption(item) {
-        let option = item.data.description;
-        if (item.data.owner) {
-            option += ` (${item.data.owner})`;
+    renderTokenOption({option}) {
+        let desc = option.data.description;
+        if (option.data.owner) {
+            desc += ` (${option.data.owner})`;
         }
-        return option;
+        return desc;
     }
 }
 
@@ -194,8 +194,8 @@ ApiLogsList.defaultProps = {
                                                             api="/entities/webiny/users"
                                                             fields="id,firstName,lastName,email"
                                                             searchFields="firstName,lastName,email"
-                                                            optionRenderer={(item) => `${item.firstName} ${item.lastName} (${item.email})`}
-                                                            selectedRenderer={(item) => `${item.firstName} ${item.lastName} (${item.email})`}
+                                                            optionRenderer={({option: item}) => `${item.firstName} ${item.lastName} (${item.email})`}
+                                                            selectedRenderer={({option: item}) => `${item.firstName} ${item.lastName} (${item.email})`}
                                                             name="createdBy"
                                                             placeholder="Filter by user"
                                                             onChange={apply()}/>

@@ -21,7 +21,7 @@ ContainerError.defaultProps = {
         }
 
         if (_.isFunction(this.props.children)) {
-            return this.props.children(error);
+            return this.props.children({error});
         }
 
         const {Alert} = this.props;

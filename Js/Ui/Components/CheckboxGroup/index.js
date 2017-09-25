@@ -14,7 +14,7 @@ class CheckboxGroup extends Webiny.Ui.OptionComponent {
         const option = this.state.options[key];
         const newState = this.props.value || [];
         if (newValue) {
-            newValue = this.props.formatOptionValue(this.props.useDataAsValue ? option.data : option.id);
+            newValue = this.props.formatOptionValue({value: this.props.useDataAsValue ? option.data : option.id});
             newState.push(newValue);
         } else {
             const currentIndex = _.findIndex(newState, opt => {
@@ -75,7 +75,7 @@ class CheckboxGroup extends Webiny.Ui.OptionComponent {
 CheckboxGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
     checkboxRenderer: null,
     checkboxLabelRenderer: null,
-    formatOptionValue: value => value,
+    formatOptionValue: ({value}) => value,
     renderer() {
         const {FormGroup, styles} = this.props;
 
