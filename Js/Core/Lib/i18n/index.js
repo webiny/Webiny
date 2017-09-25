@@ -402,6 +402,10 @@ class I18n {
 
         let [variable, modifier] = part;
 
+        if (!_.has(values, variable)) {
+            return `{${variable}}`;
+        }
+
         // Check if we have received {value: ..., format: ...} object.
         const output = {value: values[variable], format: null};
 

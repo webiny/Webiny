@@ -148,7 +148,7 @@ class I18N
             $modifier = $part[1] ?? null;
 
             if (!isset($variables[$variable])) {
-                throw new AppException($this->wI18n('Value for variable {name} is undefined.', ['name' => $variable]));
+                return $carry . $options['delimiters'][0] . $variable . $options['delimiters'][1];
             }
 
             $value = $variables[$variable];
@@ -167,7 +167,6 @@ class I18N
             }
 
             return $carry . $value;
-
         }, '');
     }
 
