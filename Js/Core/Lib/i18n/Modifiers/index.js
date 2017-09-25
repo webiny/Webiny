@@ -6,6 +6,8 @@ import PluralModifier from './PluralModifier';
 import DateModifier from './DateModifier';
 import DateTimeModifier from './DateTimeModifier';
 import TimeModifier from './TimeModifier';
+import NumberModifier from './NumberModifier';
+import MoneyModifier from './MoneyModifier';
 
 export default [
     new CountModifiers(),
@@ -14,5 +16,7 @@ export default [
     new PluralModifier(),
     new DateModifier(),
     new DateTimeModifier(),
-    new TimeModifier()
+    new TimeModifier(),
+    new NumberModifier(),
+    new MoneyModifier()
 ];

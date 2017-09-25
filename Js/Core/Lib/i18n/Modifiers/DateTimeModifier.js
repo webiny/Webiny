@@ -1,9 +1,12 @@
+import Webiny from 'webiny';
+
 class DateTimeModifier {
     getName() {
         return 'datetime';
     }
 
-    execute(value, parameters) {
+    execute(value) {
+        return Webiny.I18n.datetime(value)
     }
 }
 

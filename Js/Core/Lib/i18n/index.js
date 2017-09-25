@@ -216,7 +216,7 @@ class I18n {
 
     money(value, outputFormat) {
         if (!outputFormat) {
-            outputFormat = this.defaultFormats.money;
+            outputFormat = _.assign({}, this.defaultFormats.money, _.get(this.locales.current, 'formats.money', {}))
         } else {
             outputFormat = _.assign({}, this.defaultFormats, outputFormat);
         }
@@ -226,7 +226,7 @@ class I18n {
 
     number(value, outputFormat) {
         if (!outputFormat) {
-            outputFormat = this.defaultFormats.money;
+            outputFormat = _.assign({}, this.defaultFormats.number, _.get(this.locales.current, 'formats.number', {}))
         } else {
             outputFormat = _.assign({}, this.defaultFormats, outputFormat);
         }

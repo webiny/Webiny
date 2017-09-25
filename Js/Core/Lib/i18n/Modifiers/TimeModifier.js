@@ -1,9 +1,12 @@
+import Webiny from 'webiny';
+
 class TimeModifier {
     getName() {
         return 'time';
     }
 
-    execute(value, parameters) {
+    execute(value) {
+        return Webiny.I18n.time(value)
     }
 }
 
