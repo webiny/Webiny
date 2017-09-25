@@ -32,7 +32,7 @@ class LocalesModal extends Webiny.Ui.ModalComponent {
                             }
                         }
                     }}
-                    fields="key,label,formats"
+                    fields="key,label,formats,default,enabled"
                     api="/entities/webiny/i18n-locales"
                     onSubmitSuccess={apiResponse => this.hide().then(() => this.props.onSubmitSuccess(apiResponse))}
                     onSuccessMessage={null}>
@@ -52,7 +52,18 @@ class LocalesModal extends Webiny.Ui.ModalComponent {
                                             validate="required"
                                             api="/entities/webiny/i18n-locales"
                                             url="/available"/>
-                                        <Switch label={this.i18n('Default')} name="default"/>
+                                    </Grid.Col>
+                                    <Grid.Col all={5}>
+                                        <Switch
+                                            description={this.i18n('Only one locale can be set as default.')}
+                                            label={this.i18n('Default')}
+                                            name="default"/>
+                                    </Grid.Col>
+                                    <Grid.Col all={5}>
+                                        <Switch
+                                            description={this.i18n('Set whether or not this locale is available publicly for user.')}
+                                            label={this.i18n('Enabled')}
+                                            name="enabled"/>
                                     </Grid.Col>
                                 </Grid.Row>
                                 <Section title={this.i18n('Dates')}/>

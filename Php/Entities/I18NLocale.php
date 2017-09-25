@@ -114,10 +114,10 @@ class I18NLocale extends AbstractEntity
          * @api.description Lists locales that were not already added.
          */
         $api->get('/available', function () {
-            $params = ['I18NLanguages', ['deletedOn' => null], [], 0, 0, ['projection' => ['_id' => 0, 'locale' => 1]]];
+            $params = ['I18NLocales', ['deletedOn' => null], [], 0, 0, ['projection' => ['_id' => 0, 'key' => 1]]];
             $exclude = $this->wDatabase()->find(...$params);
             $exclude = array_map(function ($item) {
-                return $item['locale'];
+                return $item['key'];
             }, $exclude);
 
             return I18NLocales::getLocales($exclude);
