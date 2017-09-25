@@ -17,19 +17,19 @@ class TranslationModal extends Webiny.Ui.ModalComponent {
                     fields="*,translations"
                     onSuccessMessage={() => this.i18n('Text was successfully saved!')}
                     onSubmitSuccess={() => this.hide().then(this.props.onTextsSaved)}>
-                    {(model, form) => (
+                    {({model, form}) => (
                         <Ui.Modal.Content>
                             <Ui.Form.Loader/>
                             <Ui.Modal.Header title={this.i18n(`Text`)} onClose={this.hide}/>
                             <Ui.Modal.Body>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
-                                        <Ui.Input label="Key" name="key" validate="required"/>
+                                        <Ui.Input label={this.i18n('Key')} name="key" validate="required"/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
-                                        <Ui.Textarea label="Base text" name="base" validate="required"/>
+                                        <Ui.Textarea label={this.i18n('Base text')} name="base" validate="required"/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                                 <Ui.Grid.Row>

@@ -33,7 +33,7 @@ class ExportTranslationsModal extends Webiny.Ui.ModalComponent {
         return (
             <Ui.Modal.Dialog>
                 <Ui.Form defaultModel={{fileType: 'json'}}>
-                    {model => {
+                    {({model}) => {
                         const availableGroups = this.getAvailableGroups(model.apps);
                         const downloadUrl = `${Webiny.Config.ApiPath}/entities/webiny/i18n-texts/translations/export/${model.fileType}`;
 

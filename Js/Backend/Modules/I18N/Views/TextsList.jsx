@@ -24,7 +24,7 @@ TextsList.defaultProps = {
                 {Ui => (
                     <Ui.ViewSwitcher>
                         <Ui.ViewSwitcher.View view="translationsList" defaultView>
-                            {showView => (
+                            {({showView}) => (
                                 <Ui.View.List>
                                     <Ui.View.Header
                                         title={this.i18n(`Texts`)}
@@ -62,7 +62,7 @@ TextsList.defaultProps = {
                                             fields="key,base,app,translations,group,createdOn"
                                             sort="-createdOn">
                                             <Ui.List.FormFilters>
-                                                {(apply) => (
+                                                {({apply}) => (
                                                     <Ui.Grid.Row>
                                                         <Ui.Grid.Col all={4}>
                                                             <Ui.Input
@@ -95,10 +95,10 @@ TextsList.defaultProps = {
                                             <Ui.List.Table>
                                                 <Ui.List.Table.Row>
                                                     <Ui.List.Table.Field label={this.i18n('Text')} align="left">
-                                                        {row => (
+                                                        {({data}) => (
                                                             <div className={css.textField}>
-                                                                <h1 className="base">{row.base}</h1>
-                                                                <code className="key">{row.key}</code>
+                                                                <h1 className="base">{data.base}</h1>
+                                                                <code className="key">{data.key}</code>
                                                             </div>
                                                         )}
                                                     </Ui.List.Table.Field>
@@ -117,22 +117,22 @@ TextsList.defaultProps = {
                             )}
                         </Ui.ViewSwitcher.View>
                         <Ui.ViewSwitcher.View view="textsModal" modal>
-                            {(showView, data) => (
+                            {({showView, data: {data}}) => (
                                 <TextsModal {...{showView, data}} onTextsSaved={() => this.ref.loadData()}/>
                             )}
                         </Ui.ViewSwitcher.View>
                         <Ui.ViewSwitcher.View view="scanTextsModal" modal>
-                            {(showView, data) => (
+                            {({showView, data: {data}}) => (
                                 <ScanTextsModal {...{showView, data}} onTextsScanned={() => this.ref.loadData()}/>
                             )}
                         </Ui.ViewSwitcher.View>
                         <Ui.ViewSwitcher.View view="importTextsModal" modal>
-                            {(showView, data) => (
+                            {({showView, data: {data}}) => (
                                 <ImportTextsModal {...{showView, data}} onTextsImported={() => this.ref.loadData()}/>
                             )}
                         </Ui.ViewSwitcher.View>
                         <Ui.ViewSwitcher.View view="exportTextsModal" modal>
-                            {(showView, data) => (
+                            {({showView, data: {data}}) => (
                                 <ExportTextsModal {...{showView, data}}/>
                             )}
                         </Ui.ViewSwitcher.View>

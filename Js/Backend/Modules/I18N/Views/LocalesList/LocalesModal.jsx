@@ -36,7 +36,7 @@ class LocalesModal extends Webiny.Ui.ModalComponent {
                     api="/entities/webiny/i18n-locales"
                     onSubmitSuccess={apiResponse => this.hide().then(() => this.props.onSubmitSuccess(apiResponse))}
                     onSuccessMessage={null}>
-                    {(model, form) => (
+                    {({model, form}) => (
                         <Modal.Content>
                             <Form.Error/>
                             <Form.Loader/>

@@ -2,6 +2,10 @@ Webiny:
     AbsolutePath: __DIR__/../../
     Backend:
         Path: /admin
+    I18n:
+        Enabled: true
+        Detect:
+            Locale: true
     Acl:
         Token: ''
         CheckUserPermissions: true

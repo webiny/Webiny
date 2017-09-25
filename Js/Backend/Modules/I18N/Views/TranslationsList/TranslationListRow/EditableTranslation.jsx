@@ -49,7 +49,7 @@ EditableTranslation.defaultProps = {
                     <Ui.Form
                         defaultModel={{locale: locale.key, text: _.get(translation, 'text')}}
                         api="/entities/webiny/i18n-texts"
-                        onSubmit={(model, form) => {
+                        onSubmit={({model, form}) => {
                             this.hideForm();
                             model.text = _.trim(model.text);
                             this.setState({translation: model}, async () => {

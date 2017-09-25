@@ -30,7 +30,7 @@ TranslationsList.defaultProps = {
                 {Ui => (
                     <Ui.ViewSwitcher>
                         <Ui.ViewSwitcher.View view="translationsList" defaultView>
-                            {showView => (
+                            {({showView}) => (
                                 <Ui.View.List>
                                     <Ui.View.Header
                                         title={this.i18n(`Translations`)}
@@ -64,7 +64,7 @@ TranslationsList.defaultProps = {
                                             fields="key,base,translations"
                                             sort="-createdOn">
                                             <Ui.List.FormFilters>
-                                                {apply => (
+                                                {({apply}) => (
                                                     <Ui.Grid.Row>
                                                         <Ui.Grid.Col all={4}>
                                                             <Ui.Input
@@ -97,7 +97,7 @@ TranslationsList.defaultProps = {
                                             <Ui.List.Table>
                                                 <Ui.List.Table.Row>
                                                     <Ui.List.Table.Field label={this.i18n('Text')} align="left">
-                                                        {row => <TextRow locales={this.state.locales} text={row}/>}
+                                                        {({data}) => <TextRow locales={this.state.locales} text={data}/>}
                                                     </Ui.List.Table.Field>
                                                 </Ui.List.Table.Row>
                                                 <Ui.List.Table.Footer/>
@@ -109,12 +109,12 @@ TranslationsList.defaultProps = {
                             )}
                         </Ui.ViewSwitcher.View>
                         <Ui.ViewSwitcher.View view="exportTranslationsModal" modal>
-                            {(showView, data) => (
+                            {({showView, data: {data}}) => (
                                 <ExportTranslationsModal {...{showView, data}}/>
                             )}
                         </Ui.ViewSwitcher.View>
                         <Ui.ViewSwitcher.View view="importTranslationsModal" modal>
-                            {(showView, data) => (
+                            {({showView, data: {data}}) => (
                                 <ImportTranslationsModal {...{showView, data}}/>
                             )}
                         </Ui.ViewSwitcher.View>

@@ -19,7 +19,7 @@ TextGroupsList.defaultProps = {
                 {Ui => (
                     <Ui.ViewSwitcher>
                         <Ui.ViewSwitcher.View view="groupsList" defaultView>
-                            {showView => (
+                            {({showView}) => (
                                 <Ui.View.List>
                                     <Ui.View.Header title={this.i18n(`Text Groups`)}>
                                         <Ui.Button
@@ -56,7 +56,7 @@ TextGroupsList.defaultProps = {
                             )}
                         </Ui.ViewSwitcher.View>
                         <Ui.ViewSwitcher.View view="groupsModal" modal>
-                            {(showView, data) => (
+                            {({showView, data: {data}}) => (
                                 <TextGroupsModal {...{showView, data}} onSubmitSuccess={() => this.ref.loadData()}/>
                             )}
                         </Ui.ViewSwitcher.View>

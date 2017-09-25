@@ -14,7 +14,7 @@ class ScanTextsModal extends Webiny.Ui.ModalComponent {
                 <Ui.Form
                     defaultModel={{apps: [], options: {overwriteExisting: true}}}
                     api="/entities/webiny/i18n-texts"
-                    onSubmit={async (model, form) => {
+                    onSubmit={async ({model, form}) => {
                         form.showLoading();
                         const preview = model.options.preview;
                         form.setState('model.response', null);
@@ -28,7 +28,7 @@ class ScanTextsModal extends Webiny.Ui.ModalComponent {
 
                         form.setState('model.results', {preview, data: response.getData()}, () => this.props.onTextsScanned());
                     }}>
-                    {(model, form) => {
+                    {({model, form}) => {
                         let results = null;
                         if (model.results) {
                             if (model.results.preview) {

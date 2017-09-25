@@ -37,17 +37,33 @@ LocalesList.defaultProps = {
                                             ref={ref => this.localesList = ref}>
                                             <Ui.List.Table>
                                                 <Ui.List.Table.Row>
-                                                    <Ui.List.Table.Field label="Locale" sort="key">
-                                                        {row => (
-                                                            <div>
-                                                                <div>{row.label}</div>
-                                                                <code>{row.key}</code>
-                                                            </div>
-                                                        )}
+                                                    <Ui.List.Table.Field label={this.i18n('Locale')} sort="key">
+                                                        {({data}) => {
+                                                            return (
+                                                                (
+                                                                    <div>
+                                                                        <div>{data.label}</div>
+                                                                        <code>{data.key}</code>
+                                                                    </div>
+                                                                )
+                                                            );
+                                                        }}
                                                     </Ui.List.Table.Field>
-                                                    <Ui.List.Table.ToggleField name="enabled" label="Enabled" sort="enabled" align="center"/>
-                                                    <Ui.List.Table.ToggleField name="default" label="Default" sort="default" align="center"/>
-                                                    <Ui.List.Table.DateField name="createdOn" label="Created On" sort="createdOn" align="center"/>
+                                                    <Ui.List.Table.ToggleField
+                                                        name="enabled"
+                                                        label={this.i18n('Enabled')}
+                                                        sort="enabled"
+                                                        align="center"/>
+                                                    <Ui.List.Table.ToggleField
+                                                        name="default"
+                                                        label={this.i18n('Default')}
+                                                        sort="default"
+                                                        align="center"/>
+                                                    <Ui.List.Table.DateField
+                                                        name="createdOn"
+                                                        label={this.i18n('Created On')}
+                                                        sort="createdOn"
+                                                        align="center"/>
                                                     <Ui.List.Table.Actions>
                                                         <Ui.List.Table.EditAction onClick={showView('localesModal')}/>
                                                         <Ui.List.Table.DeleteAction/>

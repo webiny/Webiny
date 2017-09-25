@@ -15,7 +15,7 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
                     api="/entities/webiny/i18n-texts"
                     url="/translations/import"
                     defaultModel={{options: {}, results: null}}
-                    onSubmit={async (model, form) => {
+                    onSubmit={async ({model, form}) => {
                         form.showLoading();
                         const preview = model.options.preview;
                         form.setState('model.response', null);
@@ -29,7 +29,7 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
 
                         form.setState('model.results', {preview, data: response.getData()});
                     }}>
-                    {(model, form) => {
+                    {({model, form}) => {
                         let results = null;
                         if (model.results) {
                             if (model.results.preview) {

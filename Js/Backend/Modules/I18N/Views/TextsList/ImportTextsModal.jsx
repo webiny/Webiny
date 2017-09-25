@@ -15,7 +15,7 @@ class ImportTextsModal extends Webiny.Ui.ModalComponent {
                     api="/entities/webiny/i18n-texts"
                     url="/import/zip"
                     defaultModel={{options: {overwriteExisting: true}}}
-                    onSubmit={async (model, form) => {
+                    onSubmit={async ({model, form}) => {
                         form.showLoading();
                         const preview = model.options.preview;
                         form.setState('model.response', null);
@@ -28,7 +28,7 @@ class ImportTextsModal extends Webiny.Ui.ModalComponent {
 
                         form.setState('model.results', {preview, data: response.getData()}, () => this.props.onTextsImported());
                     }}>
-                    {(model, form) => {
+                    {({model, form}) => {
                         let results = null;
                         if (model.results) {
                             if (model.results.preview) {

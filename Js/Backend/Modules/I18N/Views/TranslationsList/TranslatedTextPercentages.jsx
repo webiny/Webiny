@@ -30,7 +30,7 @@ TranslatedTextPercentages.defaultProps = {
             <div className={css.translatedTextPercentages}>
                 <Ui.Section title="Translations"/>
                 <Ui.Data api="/entities/webiny/i18n-texts/stats/translated">
-                    {data => (
+                    {({data}) => (
                         <Ui.Grid.Row>
                             {data.translations.map(item => (
                                 <Ui.Grid.Col
