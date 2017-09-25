@@ -22,7 +22,6 @@ class I18NTextGroup extends AbstractEntity
     public function __construct()
     {
         parent::__construct();
-
         $this->attr('app')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('name')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('description')->char()->setToArrayDefault();
