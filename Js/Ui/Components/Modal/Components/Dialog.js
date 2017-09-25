@@ -269,7 +269,7 @@ Dialog.defaultProps = {
         const className = this.classSet(styles.modal, {[styles.wide]: this.props.wide, [styles.fullScreen]: this.props.fullScreen});
         let content = this.props.children;
         if (_.isFunction(content)) {
-            content = content.call(this, this);
+            content = content.call(this, {dialog: this});
         }
 
         return (

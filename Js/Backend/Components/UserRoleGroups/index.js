@@ -3,7 +3,7 @@ import _ from 'lodash';
 import Webiny from 'webiny';
 
 class UserRoleGroups extends Webiny.Ui.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -38,21 +38,24 @@ UserRoleGroups.defaultProps = {
     value: [],
     onChange: _.noop,
     renderer() {
-        const {List, Switch} = this.props;
+        const {List, Switch, Link} = this.props;
         return (
             <List.Table data={this.state.roles}>
                 <List.Table.Row>
                     <List.Table.Field style={{width: 140}} align="center">
-                        {(role) => {
-                            const checkedIndex = _.findIndex(this.props.value, {id: role.id});
+                        {({data}) => {
+                            const checkedIndex = _.findIndex(this.props.value, {id: data.id});
                             return (
-                                <Switch value={checkedIndex > -1} onChange={enabled => this.onChange(checkedIndex, role, enabled)}/>
+                                <Switch value={checkedIndex > -1} onChange={enabled => this.onChange(checkedIndex, data, enabled)}/>
                             );
                         }}
                     </List.Table.Field>
                     <List.Table.Field label="Role Group">
-                        {(role) => (
-                            <span><strong>{role.name}</strong><br/>{role.slug}</span>
+                        {({data}) => (
+                            <span>
+                            <Link route="UserRoleGroups.Edit" params={{id: data.id}}><strong>{data.name}</strong></Link>
+                            <br/>{data.slug}
+                            </span>
                         )}
                     </List.Table.Field>
                     <List.Table.Field label="Description" name="description"/>
@@ -62,4 +65,4 @@ UserRoleGroups.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(UserRoleGroups, {modules: ['List', 'Switch']});
+export default Webiny.createComponent(UserRoleGroups, {modules: ['List', 'Switch', 'Link']});

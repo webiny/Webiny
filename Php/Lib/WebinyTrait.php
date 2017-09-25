@@ -7,6 +7,7 @@
 
 namespace Apps\Webiny\Php\Lib;
 
+use Apps\Webiny\Php\Lib\AppNotifications\AppNotifications;
 use Apps\Webiny\Php\Lib\Authorization\Authorization;
 use Apps\Webiny\Php\Lib\Apps\App;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
@@ -24,6 +25,16 @@ use Webiny\Component\Validation\Validation;
  */
 trait WebinyTrait
 {
+    /**
+     * Get access to AppNotifications
+     *
+     * @return AppNotifications
+     */
+    static protected function wAppNotifications()
+    {
+        return AppNotifications::getInstance();
+    }
+
     /**
      * Get access to AnalyticsDb
      *
@@ -175,7 +186,7 @@ trait WebinyTrait
      */
     static protected function wIsProduction()
     {
-        return self::wConfig()->get('Application.Environment', 'production') == 'production';
+        return self::wConfig()->get('Webiny.EnvironmentType', 'production') == 'production';
     }
 
     /**
@@ -248,5 +259,15 @@ trait WebinyTrait
     static protected function wApiCache()
     {
         return ApiCache::getInstance();
+    }
+
+    /**
+     * Get UserProvider instance.
+     *
+     * @return UserProvider
+     */
+    static protected function wUser()
+    {
+        return UserProvider::getInstance();
     }
 }

@@ -13,8 +13,8 @@ Form.defaultProps = {
             connectToRouter: true,
             onSubmitSuccess: 'UserRoleGroups.List',
             onCancel: 'UserRoleGroups.List',
-            onSuccessMessage: (record) => {
-                return <span>Role group <strong>{record.name}</strong> was saved successfully!</span>;
+            onSuccessMessage: ({model}) => {
+                return <span>Role group <strong>{model.name}</strong> was saved successfully!</span>;
             }
         };
 
@@ -22,7 +22,7 @@ Form.defaultProps = {
 
         return (
             <Ui.Form {...formProps}>
-                {(model, form) => (
+                {({model, form}) => (
                     <Ui.View.Form>
                         <Ui.View.Header title={model.id ? 'ACL - Edit Role Group' : 'ACL - Create Role Group'}/>
                         <Ui.View.Body>

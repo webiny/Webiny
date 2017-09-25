@@ -1,9 +1,4 @@
 <?php
-/**
- * Webiny Framework (http://www.webiny.com/framework)
- *
- * @copyright Copyright Webiny LTD
- */
 
 namespace Apps\Webiny\Php\Lib\Entity\Attributes;
 
@@ -11,7 +6,6 @@ use Apps\Webiny\Php\Entities\Image;
 
 /**
  * File ImageAttribute
- * @package Apps\Webiny\Php\Lib\Entity\Attributes
  */
 class ImageAttribute extends FileAttribute
 {

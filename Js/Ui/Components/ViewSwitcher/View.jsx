@@ -9,7 +9,7 @@ class View extends Webiny.Ui.Component {
 
         this.state = {
             show: false,
-            params: []
+            data: null
         };
 
         this.bindMethods('show');
@@ -34,10 +34,10 @@ class View extends Webiny.Ui.Component {
         return this.state.show;
     }
 
-    show(params = []) {
+    show(data) {
         return new Promise(resolve => {
             this.showResolve = resolve;
-            this.setState({show: true, params});
+            this.setState({show: true, data});
         });
     }
 
@@ -47,7 +47,7 @@ class View extends Webiny.Ui.Component {
         }
 
         if (this.state.show) {
-            this.setState({show: false, params: []});
+            this.setState({show: false, data: null});
         }
 
         return Promise.resolve(true);
@@ -60,7 +60,16 @@ View.defaultProps = {
     modal: false,
     renderer() {
         if (this.state.show) {
-            const view = this.props.children(this.props.container.showView, ...this.state.params);
+            const params = {
+                showView: this.props.container.showView,
+                data: this.state.data
+            };
+
+            const view = this.props.children(params);
+            if (!view) {
+                return null;
+            }
+
             const props = {ref: ref => this.view = ref};
             if (this.props.modal) {
                 // onComponentDidMount is a special callback that will be executed once the actual component is mounted
@@ -69,7 +78,7 @@ View.defaultProps = {
                     instance.show().then(this.showResolve || _.noop);
                 };
                 props.onHidden = () => {
-                    this.setState({show: false, params: []});
+                    this.setState({show: false, data: null});
                 };
             }
             return React.cloneElement(view, props);

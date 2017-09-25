@@ -21,9 +21,9 @@ export default (router, a, e) => {
     }
 
     // Push state and let the Router process the rest
-    if (url.startsWith(Webiny.Config.WebPath) || url.startsWith('file://')) {
+    if (url.startsWith(Webiny.Config.WebUrl) || url.startsWith('file://')) {
         e.preventDefault();
-        url = url.replace(Webiny.Config.WebPath, '').replace('file://', '');
+        url = url.replace(Webiny.Config.WebUrl, '').replace('file://', '');
         router.history.push(url, {
             title: a.getAttribute('data-document-title') || null,
             prevTitle: window.document.title,

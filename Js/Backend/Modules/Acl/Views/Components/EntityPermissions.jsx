@@ -42,7 +42,7 @@ EntityPermissions.defaultProps = {
         return (
             <ViewSwitcher>
                 <ViewSwitcher.View view="form" defaultView>
-                    {showView => (
+                    {({showView}) => (
                         <div className={styles.entityPermissionsWrapper}>
                             {this.state.loading && <Loader/>}
                             <Grid.Row className={styles.addAction}>
@@ -74,7 +74,7 @@ EntityPermissions.defaultProps = {
                                                 currentlyEditingPermission={this.props.model}
                                                 onTogglePermission={(entity, method) => this.props.onTogglePermission(entity, method)}
                                                 onRemoveEntity={entity => {
-                                                    const index = _.find(this.state.entities, {classId: entity.classId});
+                                                    const index = _.findIndex(this.state.entities, {classId: entity.classId});
                                                     const entities = _.clone(this.state.entities);
                                                     entities.splice(index, 1);
                                                     this.setState({entities}, () => {
@@ -93,7 +93,7 @@ EntityPermissions.defaultProps = {
                     )}
                 </ViewSwitcher.View>
                 <ViewSwitcher.View view="addEntityModal" modal>
-                    {(showView, data) => (
+                    {() => (
                         <AddEntityModal
                             exclude={this.state.entities}
                             onSubmit={entity => {

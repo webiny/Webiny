@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {createElement, isValidElement} from 'react';
 import $ from 'jquery';
 import Webiny from 'webiny';
 
@@ -9,15 +9,16 @@ class Header extends Webiny.Ui.Component {
     }
 
     render() {
-        const {userMenu, logo} = this.props;
+        const {userMenu, appNotifications, logo} = this.props;
         return (
             <div className="navbar navbar-inverse" role="navigation">
                 <div className="navbar-header">
                     <button type="button" className="nav" onClick={this.toggleMobile}>
                         <span/><span/><span/>
                     </button>
-                    {logo && (React.isValidElement(logo) ? logo : React.createElement(logo))}
-                    {userMenu && (React.isValidElement(userMenu) ? userMenu : React.createElement(userMenu))}
+                    {logo && (isValidElement(logo) ? logo : createElement(logo))}
+                    {userMenu && (isValidElement(userMenu) ? userMenu : createElement(userMenu))}
+                    {/* appNotifications && (isValidElement(appNotifications) ? appNotifications : createElement(appNotifications)) */}
                 </div>
             </div>
         );
@@ -26,6 +27,7 @@ class Header extends Webiny.Ui.Component {
 
 export default Webiny.createComponent(Header, {
     modules: [{
+        appNotifications: 'Webiny/Layout/AppNotifications',
         userMenu: 'Webiny/Layout/UserMenu',
         logo: 'Webiny/Layout/Logo'
     }]

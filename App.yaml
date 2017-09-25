@@ -1,11 +1,11 @@
 Name: Webiny
 Version: dev-master
 Link: https://github.com/Webiny/Webiny
-Description: The Webiny app provides all the necessary platform features to develop new apps
-
-AuthorName: Webiny LTD
-AuthorLink: http://www.webiny.com
-AuthorEmail: info@webiny.com
+Description: The Webiny app provides a platform to develop new apps
+Author:
+    Name: Webiny LTD
+    Email: info@webiny.com
+    Link: https://www.webiny.com
 
 Marketplace:
     Api: https://beta.webiny.com/api
@@ -37,7 +37,7 @@ Storage:
                         Config:
                             Directory: __DIR__/../../Temp
                             Create: true
-        DevBuild:
+        DevelopmentBuild:
             Class: \Webiny\Component\Storage\Storage
             Arguments:
                 Driver:
@@ -61,7 +61,7 @@ Storage:
                     ObjectArguments:
                         Config:
                             Directory: __DIR__/../../public_html/uploads
-                            PublicUrl: __Application.WebPath__/uploads
+                            PublicUrl: __Webiny.WebUrl__/uploads
                             DateFolderStructure: true
                             Create: true
 
@@ -69,24 +69,23 @@ Events:
     Webiny:
         Bootstrap:
             Request:
-                - {Handler: Php/RequestHandlers/Api, Priority: 400}
+                - {Handler: Php/RequestHandlers/Api, Priority: 600}
                 - {Handler: Php/RequestHandlers/Routes, Priority: 390}
         Api:
             Before:
-                - {Handler: Php/Dispatchers/ApiLogger, Priority: 500}
-                - {Handler: Php/Dispatchers/ApiCache::cacheRead}
+                - {Handler: Php/RequestHandlers/ApiHandlers/ApiLogHandler, Priority: 500}
+                - {Handler: Php/RequestHandlers/ApiHandlers/ApiCacheHandler::cacheRead}
             Request:
-                - {Handler: Php/Dispatchers/DiscoverDispatcher}
-                - {Handler: Php/Dispatchers/EntityDispatcher}
-                - {Handler: Php/Dispatchers/ServiceDispatcher}
+                - {Handler: Php/RequestHandlers/ApiHandlers/DiscoverHandler}
+                - {Handler: Php/RequestHandlers/ApiHandlers/EntityHandler}
+                - {Handler: Php/RequestHandlers/ApiHandlers/ServiceHandler}
             After:
-                - {Handler: Php/Dispatchers/ApiCache::cacheSave}
-
+                - {Handler: Php/RequestHandlers/ApiHandlers/ReportHandler, Priority: 301}
+                - {Handler: Php/RequestHandlers/ApiHandlers/ApiCacheHandler::cacheSave, Priority: 300}
+        User:
+            Provide:
+                - {Handler: Php/Lib/UserProvider/UserProviderEventHandler}
 Services:
-    ExecuteEntityMethodFlow:
-        Class: \Apps\Webiny\Php\Dispatchers\Flows\ExecuteEntityMethodFlow
-        Tags: [entity-dispatcher-flow]
-
     SmartyExtension:
         Class: \Apps\Webiny\Php\View\SmartyExtension
         Tags: [Smarty.Extension]

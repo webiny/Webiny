@@ -18,7 +18,7 @@ class TwoFactorAuthConfirmation extends Webiny.Ui.ModalComponent {
                             <Grid.Col all={4}>
                                 <Section title="Recovery codes" icon="fa-lock"/>
                                 <Data api="/entities/webiny/user/2factor-recovery-codes" waitForData={true}>
-                                    {(data, filter, loader) => {
+                                    {({data, loader}) => {
                                         if (loader) {
                                             return loader;
                                         }

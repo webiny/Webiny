@@ -2,13 +2,11 @@
 
 namespace Apps\Webiny\Php\Lib\Authorization;
 
+use Apps\Webiny\Php\Entities\SystemApiTokenUser;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\Interfaces\PublicApiInterface;
-use Apps\Webiny\Php\Lib\Interfaces\UserInterface;
 use Apps\Webiny\Php\Lib\Services\AbstractService;
 use Apps\Webiny\Php\Lib\WebinyTrait;
-use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
-use Apps\Webiny\Php\Entities\ApiToken;
 use Apps\Webiny\Php\Entities\User;
 use Apps\Webiny\Php\Entities\UserRole;
 use Apps\Webiny\Php\RequestHandlers\ApiException;
@@ -46,11 +44,6 @@ class Authorization
      * @var
      */
     private $initialized = false;
-
-    /**
-     * @var string
-     */
-    private $userClass = User::class;
 
     /**
      * @var Security
@@ -118,7 +111,7 @@ class Authorization
     /**
      * Get an instance of the user identified by X-Webiny-Authorization token.
      * A user can be a regular user, System token or API token - but they all implement `UserInterface`.
-     * @return UserInterface
+     * @return User
      * @throws ApiException
      */
     public function getUser()
@@ -131,13 +124,11 @@ class Authorization
                 $requestToken = $request->getRequestData()[$this->tokenHeaderName] ?? null;
             }
 
-            /* @var $class AbstractEntity */
-            $class = $this->userClass;
             if ($requestToken) {
                 try {
                     /* @var $user \Webiny\Component\Security\User\AbstractUser */
                     $user = $this->login->getUser($requestToken);
-                    $this->user = $class::findOne(['email' => $user->getUsername()]);
+                    $this->user = $this->wUser()->byEmail($user->getUsername());
 
                     if ($this->user) {
                         $this->user->trigger('onActivity');
@@ -159,12 +150,7 @@ class Authorization
 
             // API tokens may contain special characters and will be urlencoded when sent through curl
             $requestToken = urldecode($requestToken);
-            $systemToken = $this->wConfig()->getConfig()->get('Application.Acl.Token');
-            if ($systemToken && $systemToken == $requestToken) {
-                $this->user = new SystemApiToken();
-            } else {
-                $this->user = ApiToken::findOne(['token' => $requestToken]);
-            }
+            $this->user = $this->wUser()->byToken($requestToken);
         }
 
         return $this->user;
@@ -176,18 +162,19 @@ class Authorization
         $username = strtolower($username);
         try {
             $this->login->processLogin($username);
-            // if login is successful, return device and auth tokens
-            $authToken = $this->login->getAuthToken();
 
-            /* @var $class AbstractEntity */
-            $class = $this->userClass;
-            $this->user = $class::findOne(['email' => $username]);
+            $this->user = $this->wUser()->byEmail($username);
+
+            if ($this->user && $this->user->type === 'service') {
+                throw new ApiException('Login is disabled for service users.', 'WBY-LOGIN-DISABLED', 401);
+            }
 
             if ($this->user && $this->user->enabled) {
                 $this->user->trigger('onLoginSuccess');
 
+                // if login is successful, return authentication token
                 return [
-                    'authToken' => $authToken
+                    'authToken' => $this->login->getAuthToken()
                 ];
             }
         } catch (LoginException $le) {
@@ -197,18 +184,6 @@ class Authorization
         }
 
         return null;
-    }
-
-    public function setUserClass(User $entity)
-    {
-        $this->userClass = get_class($entity);
-
-        return $this;
-    }
-
-    public function getUserClass()
-    {
-        return $this->userClass;
     }
 
     public function canCreate($class)
@@ -245,7 +220,7 @@ class Authorization
      */
     private function checkPermission($class, $permission)
     {
-        if (!$this->wConfig()->get('Application.Acl.CheckUserPermissions', true) || $this->getUser() instanceof SystemApiToken) {
+        if (!$this->wConfig()->get('Webiny.Acl.CheckUserPermissions', true) || $this->getUser() instanceof SystemApiTokenUser) {
             return true;
         }
 

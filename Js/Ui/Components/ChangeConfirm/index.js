@@ -35,7 +35,7 @@ class ChangeConfirm extends Webiny.Ui.Component {
 
         let msg = this.props.message;
         if (_.isFunction(msg)) {
-            msg = msg(value, input.props.value, component);
+            msg = msg({value, component});
         }
 
         if (!msg) {

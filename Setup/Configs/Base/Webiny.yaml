@@ -1,6 +1,7 @@
-Application:
+Webiny:
     AbsolutePath: __DIR__/../../
-    Backend: /admin
+    Backend:
+        Path: /admin
     Acl:
         Token: ''
         CheckUserPermissions: true

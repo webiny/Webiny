@@ -9,12 +9,12 @@ import React from 'react';
     </Ui.Download.Element>
     <Ui.Download.Dialog>
         {({download}) => {
-            const submit = filters => download('GET', '/entities/demo/records/report/summary', null, filters);
+            const submit = ({model: filters}) => download('GET', '/entities/demo/records/report/summary', null, filters);
             return (
                 <Ui.Modal.Dialog>
-                    {dialog => (
+                    {({dialog}) => (
                         <Ui.Form onSubmit={submit}>
-                            {form => (
+                            {({form}) => (
                                 <Ui.Modal.Content>
                                     <Ui.Modal.Header title="Export summary"/>
                                     <Ui.Modal.Body>

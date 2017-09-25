@@ -36,18 +36,18 @@ UsersList.defaultProps = {
                 <View.Body>
                     <List {...listProps}>
                         <List.FormFilters>
-                            {(applyFilters) => (
+                            {({apply}) => (
                                 <Input
                                     name="_searchQuery"
                                     placeholder="Search by name or email"
-                                    onEnter={applyFilters()}/>
+                                    onEnter={apply()}/>
                             )}
                         </List.FormFilters>
                         <Table>
                             <Table.Row>
                                 <Table.GravatarField name="gravatar"/>
                                 <Table.Field name="firstName" label="First Name" sort="firstName" route="Users.Edit">
-                                    {data => (
+                                    {({data}) => (
                                         <span>
                                             <strong>{data.firstName} {data.lastName}</strong><br/>{data.id}
                                         </span>
@@ -59,8 +59,11 @@ UsersList.defaultProps = {
                                     label="Status"
                                     sort="enabled"
                                     align="center"
-                                    message={() => {
-                                        this.i18n('This will disable user\'s account and prevent him from logging in!');
+                                    message={({value}) => {
+                                        if (!value) {
+                                            return this.i18n('This will disable user\'s account and prevent him from logging in!')
+                                        }
+                                        return false;
                                     }}/>
                                 <Table.DateField name="createdOn" label="Created On" sort="createdOn"/>
                                 <Table.Actions>

@@ -63,15 +63,13 @@ class Events
     }
 
     /**
-     * Listen for an event and register a handler that will be triggered when the event is fired.
+     * Register an event handler.
      *
      * @param string          $event Event name.
      * @param string|callable $handler Handler, must be a valid callable.
      * @param int             $priority
-     *
-     * @throws \Exception
      */
-    public function listen($event, $handler, $priority)
+    public function listen($event, $handler, $priority = 300)
     {
         $this->listeners[$event][] = ['handler' => $handler, 'priority' => $priority];
     }
@@ -84,7 +82,7 @@ class Events
      * @param null     $resultType If specified, the event results will be filtered using given class/interface name
      * @param null|int $limit Limit to a number of valid results
      *
-     * @return array Returns array of event results
+     * @return mixed Returns array of event results
      */
     public function fire($event, $eventData = [], $resultType = null, $limit = null)
     {

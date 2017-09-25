@@ -12,18 +12,18 @@ ErrorDetailsPhp.defaultProps = {
             api: '/entities/webiny/logger-entry',
             url: this.props.errorEntry.id,
             fields: 'id,stack',
-            prepareLoadedData: data => data.entity
+            prepareLoadedData: ({data}) => data.entity
         };
 
         return (
             <Webiny.Ui.LazyLoad modules={['Data', 'Grid', 'CodeHighlight']}>
                 {(Ui) => (
                     <Ui.Data {...statProps}>
-                        {errorData => (
+                        {({data}) => (
                             <Ui.Grid.Row>
                                 <Ui.Grid.Col all={12}>
                                     <Ui.CodeHighlight language="php">
-                                        {errorData.stack}
+                                        {data.stack}
                                     </Ui.CodeHighlight>
                                 </Ui.Grid.Col>
                             </Ui.Grid.Row>

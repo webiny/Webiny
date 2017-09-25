@@ -102,7 +102,7 @@ class Row extends Webiny.Ui.Component {
         const children = [];
         _.filter(childrenArray).map(fieldChild => {
             // Do not include FieldInfo in Field children
-            if (fieldChild.type !== FieldInfo) {
+            if (!Webiny.isElementOfType(fieldChild, FieldInfo)) {
                 children.push(fieldChild);
             }
         });
@@ -115,7 +115,7 @@ class Row extends Webiny.Ui.Component {
         if (_.isString(onClick) && onClick === 'toggleRowDetails') {
             this.props.actions.toggleRowDetails(this.props.index)();
         } else if (_.isFunction(onClick)) {
-            onClick.call(this, this.data, this);
+            onClick.call(this, {data: this.data, $this: this});
         }
     }
 }

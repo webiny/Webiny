@@ -5,14 +5,14 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Webiny\Php\Dispatchers;
+namespace Apps\Webiny\Php\RequestHandlers\ApiHandlers;
 
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Lib\Response\ApiErrorResponse;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\StringObject\StringObject;
 
-abstract class AbstractApiDispatcher
+abstract class AbstractApiHandler
 {
     use WebinyTrait, StdLibTrait;
 
@@ -37,7 +37,7 @@ abstract class AbstractApiDispatcher
     {
         $parts = $this->str($class)->explode('\\')->filter()->values()->val();
 
-        return file_exists($this->wConfig()->get('Application.AbsolutePath') . join('/', $parts) . '.php');
+        return file_exists($this->wConfig()->get('Webiny.AbsolutePath') . join('/', $parts) . '.php');
     }
 
     protected function toCamelCase($str)

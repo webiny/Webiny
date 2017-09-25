@@ -14,7 +14,7 @@ use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Webiny\Component\StdLib\StdLibTrait;
 
 /**
- * @package Apps\Webiny\Php\Lib\Entity
+ * Class EntityQueryManipulator
  */
 class EntityQueryManipulator
 {

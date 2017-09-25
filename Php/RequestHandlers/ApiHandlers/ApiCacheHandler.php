@@ -5,24 +5,22 @@
  * @copyright Copyright Webiny LTD
  */
 
-namespace Apps\Webiny\Php\Dispatchers;
+namespace Apps\Webiny\Php\RequestHandlers\ApiHandlers;
 
 use Apps\Webiny\Php\Lib\Response\ApiCacheResponse;
 use Apps\Webiny\Php\RequestHandlers\ApiEvent;
 
 
 /**
- * Class ApiCache
+ * Class ApiCacheHandler
  *
- * Api cache listens on Webiny.Api.Before and Webiny.Api.After events.
+ * Api cache handler listens on Webiny.Api.Before and Webiny.Api.After events.
  * The first it to check if we have the response cached, and if we do, we deliver that response directly from cache.
  * In case the response is not cached, on the After event, we store the response, if it matches any of the defined cache rules.
  *
  * @link: https://github.com/Webiny/Hrc/
- *
- * @package Apps\Webiny\Php\Dispatchers
  */
-class ApiCache extends AbstractApiDispatcher
+class ApiCacheHandler extends AbstractApiHandler
 {
     private $cacheStatus = false;
 
@@ -49,7 +47,7 @@ class ApiCache extends AbstractApiDispatcher
         }
 
         // we need to flush the current HRC request because of the aggregated API requests
-        self::wApiCache()->hrc()->flushRequest();
+        $this->wApiCache()->hrc()->flushRequest();
 
         // read cache
         $response = self::wApiCache()->hrc()->read('response');
@@ -83,7 +81,7 @@ class ApiCache extends AbstractApiDispatcher
         // extract the data
         $data = $response->getData(false);
         // save cache
-        self::wApiCache()->hrc()->save('response', json_encode(['data' => $data]));
+        $this->wApiCache()->hrc()->save('response', json_encode(['data' => $data]));
     }
 
 }

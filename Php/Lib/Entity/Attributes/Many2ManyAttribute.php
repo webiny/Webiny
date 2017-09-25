@@ -1,9 +1,4 @@
 <?php
-/**
- * Webiny Framework (http://www.webiny.com/framework)
- *
- * @copyright Copyright Webiny LTD
- */
 
 namespace Apps\Webiny\Php\Lib\Entity\Attributes;
 
@@ -12,11 +7,9 @@ use MongoDB\Driver\Exception\BulkWriteException;
 use Webiny\Component\Entity\AbstractEntity;
 use Webiny\Component\Entity\Entity;
 use Webiny\Component\Entity\EntityCollection;
-use Webiny\Component\Mongo\Index\CompoundIndex;
 
 /**
  * Many2ManyAttribute
- * @package Apps\Webiny\Php\Lib\Entity\Attributes
  */
 class Many2ManyAttribute extends \Webiny\Component\Entity\Attribute\Many2ManyAttribute
 {
@@ -25,19 +18,6 @@ class Many2ManyAttribute extends \Webiny\Component\Entity\Attribute\Many2ManyAtt
     public function save()
     {
         $collectionName = $this->intermediateCollection;
-        $firstClassName = $this->extractClassName($this->getParentEntity());
-        $secondClassName = $this->extractClassName($this->getEntity());
-
-        // Make sure indexes exist
-        $indexOrder = [$firstClassName, $secondClassName];
-        list($indexKey1, $indexKey2) = $this->arr($indexOrder)->sort()->val();
-
-        $index = new CompoundIndex($collectionName, [
-            $indexKey1 => 1,
-            $indexKey2 => 1
-        ], false, true);
-
-        Entity::getInstance()->getDatabase()->createIndex($collectionName, $index, ['background' => true]);
 
         /**
          * Insert values
@@ -62,8 +42,8 @@ class Many2ManyAttribute extends \Webiny\Component\Entity\Attribute\Many2ManyAtt
                 'createdBy'      => $user ? $user->id : null,
                 'deletedOn'      => null,
                 'deletedBy'      => null,
-                $firstClassName  => $firstEntityId,
-                $secondClassName => $secondEntityId
+                $this->thisField  => $firstEntityId,
+                $this->refField => $secondEntityId
             ];
 
             try {
@@ -78,8 +58,8 @@ class Many2ManyAttribute extends \Webiny\Component\Entity\Attribute\Many2ManyAtt
          * Remove old links
          */
         $removeQuery = [
-            $firstClassName  => $firstEntityId,
-            $secondClassName => [
+            $this->thisField  => $firstEntityId,
+            $this->refField => [
                 '$nin' => $existingIds
             ],
             'deletedOn'      => null
@@ -119,22 +99,19 @@ class Many2ManyAttribute extends \Webiny\Component\Entity\Attribute\Many2ManyAtt
 
     protected function load()
     {
-        $firstClassName = $this->extractClassName($this->getParentEntity());
-        $secondClassName = $this->extractClassName($this->getEntity());
-
         // Select related IDs from aggregation table
         $query = [
-            $firstClassName => $this->getParentEntity()->id
+            $this->thisField => $this->getParentEntity()->id
         ];
 
         if ($this->getParentEntity()->deletedOn === null) {
             $query['deletedOn'] = null;
         }
 
-        $relatedObjects = Entity::getInstance()->getDatabase()->find($this->intermediateCollection, $query, [$secondClassName => 1]);
+        $relatedObjects = Entity::getInstance()->getDatabase()->find($this->intermediateCollection, $query, [$this->refField => 1]);
         $relatedIds = [];
         foreach ($relatedObjects as $rObject) {
-            $relatedIds[] = $rObject[$secondClassName];
+            $relatedIds[] = $rObject[$this->refField];
         }
 
         // Find all related entities using $relatedIds
@@ -159,11 +136,9 @@ class Many2ManyAttribute extends \Webiny\Component\Entity\Attribute\Many2ManyAtt
             return false;
         }
 
-        $firstClassName = $this->extractClassName($this->getParentEntity());
-        $secondClassName = $this->extractClassName($this->getEntity());
         $query = $this->arr([
-            $firstClassName  => $sourceEntityId,
-            $secondClassName => $item
+            $this->thisField  => $sourceEntityId,
+            $this->refField => $item
         ])->sortKey()->val();
 
         $user = $this->wAuth()->getUser();

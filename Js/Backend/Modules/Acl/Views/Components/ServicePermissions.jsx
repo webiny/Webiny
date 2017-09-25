@@ -42,7 +42,7 @@ ServicePermissions.defaultProps = {
         return (
             <ViewSwitcher>
                 <ViewSwitcher.View view="form" defaultView>
-                    {showView => (
+                    {({showView}) => (
                         <div className={styles.servicePermissionsWrapper}>
                             {this.state.loading && <Loader/>}
                             <Grid.Row className={styles.addAction}>
@@ -74,7 +74,7 @@ ServicePermissions.defaultProps = {
                                                 currentlyEditingPermission={this.props.model}
                                                 onTogglePermission={(service, method) => this.props.onTogglePermission(service, method)}
                                                 onRemoveService={service => {
-                                                    const index = _.find(this.state.services, {classId: service.classId});
+                                                    const index = _.findIndex(this.state.services, {classId: service.classId});
                                                     const services = _.clone(this.state.services);
                                                     services.splice(index, 1);
                                                     this.setState({services}, () => {
@@ -93,7 +93,7 @@ ServicePermissions.defaultProps = {
                     )}
                 </ViewSwitcher.View>
                 <ViewSwitcher.View view="addServiceModal" modal>
-                    {(showView, data) => (
+                    {() => (
                         <AddServiceModal
                             exclude={this.state.services}
                             onSubmit={service => {

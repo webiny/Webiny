@@ -8,5 +8,5 @@
 # All other configurations will overwrite the properties from "Production".
 #####################################################################################################
 
-ConfigSets:
+Environments:
   Local: ''

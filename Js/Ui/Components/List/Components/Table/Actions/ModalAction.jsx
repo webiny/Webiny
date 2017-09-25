@@ -6,6 +6,8 @@ class ModalAction extends Webiny.Ui.Component {
 }
 
 ModalAction.defaultProps = {
+    data: null,
+    actions: null,
     hide: _.noop,
     download: false,
     renderer() {
@@ -15,29 +17,33 @@ ModalAction.defaultProps = {
 
         const {Icon, Link, Downloader} = this.props;
 
-        const modalActions = {
-            hide: () => {
-                if (this.refs.dialog) {
-                    return this.refs.dialog.hide();
-                }
-                return Promise.resolve(true);
-            }
+        const download = (httpMethod, url, params = null) => {
+            this.downloader.download(httpMethod, url, params);
+            this.dialog.hide();
         };
 
-        const download = (httpMethod, url, params = null) => {
-            this.refs.downloader.download(httpMethod, url, params);
-            this.refs.dialog.hide();
-        };
-        const modal = this.props.children.call(this, this.props.data, this.props.actions, modalActions, download);
+        const modal = this.props.children.call(this, {
+            data: this.props.data,
+            actions: this.props.actions,
+            download,
+            dialog: {
+                hide: () => {
+                    if (this.dialog) {
+                        return this.dialog.hide();
+                    }
+                    return Promise.resolve(true);
+                }
+            }
+        });
 
         const icon = this.props.icon ? <Icon icon={this.props.icon}/> : null;
 
         return (
-            <Link onClick={() => this.refs.dialog.show()}>
+            <Link onClick={() => this.dialog.show()}>
                 {icon}
                 {this.props.label}
-                {React.cloneElement(modal, {ref: 'dialog'})}
-                <Downloader ref="downloader"/>
+                {React.cloneElement(modal, {ref: ref => this.dialog = ref})}
+                <Downloader ref={ref => this.downloader = ref}/>
             </Link>
         );
     }

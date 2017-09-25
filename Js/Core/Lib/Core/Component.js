@@ -6,22 +6,51 @@ import classNames from 'classnames';
 import Webiny from 'webiny';
 import LinkState from './LinkState';
 import Dispatcher from './Dispatcher';
-import UiDispatcher from './UiDispatcher';
 
 class Component extends React.Component {
+
     constructor(props) {
         super(props);
+
         this.__listeners = [];
         this.__cursors = [];
         this.__mounted = true;
         this.bindMethods('bindTo', 'isRendered', 'i18n');
+
+
+        /**
+         * If set, it will be used in the component instead of dynamically created key
+         * @type {null}
+         */
+        this.i18n.key = null;
+    }
+
+    /**
+     * Method for a more convenient use of i18n module - this will automatically generate a complete namespace for the label
+     * If this method is called without parameters, it will return Webiny.i18n module, from which you can use other functions as well
+     * @param label
+     * @param variables
+     * @param options
+     * @returns {*}
+     */
+    i18n(label, variables, options = {}) {
+        if (!label) {
+            return Webiny.i18n;
+        }
+
+        let key = options.key || _.get(this.props, 'i18nKey', this.i18n.key);
+        if (!key) {
+            const app = _.get(Webiny.Router.getActiveRoute(), 'module.app.name');
+            const module = _.get(Webiny.Router.getActiveRoute(), 'module.name');
+            key = `${app}.${module}.${this.getClassName()}`;
+        }
+
+        key = _.trimEnd(key, '.') + '.' + md5(label);
+        return Webiny.i18n.render(key, label, variables, options);
     }
 
     componentWillMount() {
-        // This is deprecated and will be removed in the next release
-        if (this.props.ui) {
-            UiDispatcher.register(this.props.ui, this);
-        }
+        // Reserved for future system-wide functionality
     }
 
     componentDidMount() {
@@ -33,11 +62,7 @@ class Component extends React.Component {
 
     /* eslint-disable */
     componentWillReceiveProps(nextProps) {
-        // This is deprecated and will be removed in the next release
-        if (nextProps.ui !== this.props.ui) {
-            UiDispatcher.unregister(this.props.ui);
-            UiDispatcher.register(nextProps.ui, this);
-        }
+        // Reserved for future system-wide functionality
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -70,9 +95,6 @@ class Component extends React.Component {
         });
         this.__cursors = [];
 
-        if (this.props.ui) {
-            UiDispatcher.unregister(this.props.ui);
-        }
         this.__mounted = false;
     }
 
@@ -150,44 +172,6 @@ class Component extends React.Component {
         });
     }
 
-    /**
-     * Method for a more convenient use of i18n module - this will automatically generate a complete namespace for the label
-     * If this method is called without parameters, it will return Webiny.I18n module, from which you can use other functions as well
-     * @param base
-     * @param variables
-     * @param options
-     * @returns {*}
-     */
-    i18n(base, variables, options = {}) {
-        if (!base) {
-            return Webiny.I18n;
-        }
-
-        if (_.isString(base) && _.isString(variables)) {
-            const textKey = Webiny.I18n.getTextKey(base, variables);
-            return Webiny.I18n.render(textKey, variables, options);
-        }
-
-        const textKey = Webiny.I18n.getTextKey(options.namespace, base);
-        return Webiny.I18n.render(textKey, base, variables);
-    }
-
-    /**
-     * This method is DEPRECATED.
-     * For current release it will remain here to support projects that were developed in the meantime.
-     * However, future use of this method will not be supported and it will be removed.
-     *
-     * @param call
-     * @param params
-     * @returns {*}
-     */
-    ui(call, ...params) {
-        if (call.indexOf(':') < 0) {
-            return UiDispatcher.get(call);
-        }
-        return UiDispatcher.createSignal(this, call, params);
-    }
-
     watch(key, func) {
         let cursor = null;
         if (_.isFunction(key)) {
@@ -214,13 +198,7 @@ class Component extends React.Component {
 
         if (this.props.renderer) {
             try {
-                // Here we prepare renderer parameters in case any were attached to the function itself using `bindArgs`
-                let params = [this];
-                if (this.props.renderer.bindArgs) {
-                    params = params.concat(this.props.renderer.bindArgs);
-                }
-                params.push(this);
-                return this.props.renderer.call(...params);
+                return this.props.renderer.call(this, {props: this.props, state: this.state});
             } catch (e) {
                 Webiny.Logger && Webiny.Logger.reportError('js', e.message, e.stack);
                 if (DEVELOPMENT) {

@@ -84,7 +84,7 @@ function sendAggregatedRequest() {
         };
     });
     const request = new HttpRequest();
-    request.setUrl(Webiny.Config.ApiPath);
+    request.setUrl(Webiny.Config.ApiUrl);
     request.setMethod('POST');
     request.setBody({requests: body});
     execute(request, {headers: {'X-Webiny-Api-Aggregate': true}}, false).then(response => {

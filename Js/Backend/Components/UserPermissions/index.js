@@ -34,21 +34,24 @@ UserPermissions.defaultProps = {
     value: [],
     onChange: _.noop,
     renderer() {
-        const {List, Switch} = this.props;
+        const {List, Switch, Link} = this.props;
         return (
             <List.Table data={this.state.permissions}>
                 <List.Table.Row>
                     <List.Table.Field style={{width: 140}}>
-                        {(permission) => {
-                            const checkedIndex = _.findIndex(this.props.value, {id: permission.id});
+                        {({data}) => {
+                            const checkedIndex = _.findIndex(this.props.value, {id: data.id});
                             return (
-                                <Switch value={checkedIndex > -1} onChange={enabled => this.onChange(checkedIndex, permission, enabled)}/>
+                                <Switch value={checkedIndex > -1} onChange={enabled => this.onChange(checkedIndex, data, enabled)}/>
                             );
                         }}
                     </List.Table.Field>
                     <List.Table.Field label="Permission">
-                        {(permission) => (
-                            <span><strong>{permission.name}</strong><br/>{permission.slug}</span>
+                        {({data}) => (
+                            <span>
+                                <Link route="UserPermissions.Edit" params={{id: data.id}}><strong>{data.name}</strong></Link>
+                                <br/>{data.slug}
+                            </span>
                         )}
                     </List.Table.Field>
                     <List.Table.Field label="Description" name="description"/>
@@ -58,4 +61,4 @@ UserPermissions.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(UserPermissions, {modules: ['List', 'Switch']});
+export default Webiny.createComponent(UserPermissions, {modules: ['List', 'Switch', 'Link']});

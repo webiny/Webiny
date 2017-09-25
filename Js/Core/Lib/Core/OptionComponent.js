@@ -167,7 +167,7 @@ class OptionComponent extends FormComponent {
                 }
 
                 if (this.props.prepareLoadedData) {
-                    data = this.props.prepareLoadedData(data);
+                    data = this.props.prepareLoadedData({data});
                 }
 
                 this.setState({options: this.normalizeOptions(props, data), loading: false});
@@ -223,7 +223,8 @@ OptionComponent.defaultProps = _.merge({}, FormComponent.defaultProps, {
     textAttr: 'name', // Attribute to use as option text (when option is a an object, usually used with API)
     useDataAsValue: false, // Will assign selected/checked value in form of data (usually from API)
     valueKey: null, // used only for rendering to map complex options to model values (only used when component value is an object)
-    filterBy: null
+    filterBy: null,
+    prepareLoadedData: null
 });
 
 export default OptionComponent;

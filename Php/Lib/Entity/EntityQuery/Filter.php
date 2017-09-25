@@ -9,7 +9,7 @@
 namespace Apps\Webiny\Php\Lib\Entity\EntityQuery;
 
 /**
- * @package Apps\Webiny\Php\Lib\Entity
+ * Class Filter
  */
 class Filter extends EntityQueryManipulator
 {

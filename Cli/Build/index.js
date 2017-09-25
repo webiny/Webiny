@@ -49,8 +49,8 @@ class Build extends Plugin {
         const inquirer = require('inquirer');
         const yaml = require('js-yaml');
 
-        const configSets = yaml.safeLoad(Webiny.readFile(Webiny.projectRoot('Configs/ConfigSets.yaml')));
-        const choices = Object.keys(configSets.ConfigSets);
+        const configSets = yaml.safeLoad(Webiny.readFile(Webiny.projectRoot('Configs/Environments.yaml')));
+        const choices = Object.keys(configSets.Environments);
 
         return inquirer.prompt([{
             type: 'list',

@@ -38,7 +38,7 @@ class EntityBox extends Webiny.Ui.Component {
 
         const buttons = [];
         _.each(existingOperations, (method, key) => {
-            if (method) {
+            if (method && !method.custom) {
                 buttons.push(
                     <Tooltip interactive placement="top" key={key} target={(
                         <ToggleAccessButton

@@ -20,8 +20,8 @@ use Webiny\Component\Mongo\Index\CompoundIndex;
 class UserRole extends AbstractEntity
 {
     protected static $classId = 'Webiny.Entities.UserRole';
-    protected static $entityCollection = 'UserRoles';
-    protected static $entityMask = '{name}';
+    protected static $collection = 'UserRoles';
+    protected static $mask = '{name}';
 
     public function __construct()
     {
@@ -45,26 +45,34 @@ class UserRole extends AbstractEntity
 
         $this->attr('description')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('isAdminRole')->boolean()->setDefaultValue(false);
-        $this->attr('users')->many2many('User2UserRole')->setEntity(User::class);
-        $this->attr('apiTokens')->many2many('ApiToken2UserRole')->setEntity(ApiToken::class);
-        $this->attr('permissions')->many2many('UserRole2UserPermission')->setEntity(UserPermission::class)->onSet(function ($permissions) {
-                // If not mongo Ids - load permissions by slugs
-                if (is_array($permissions)) {
-                    foreach ($permissions as $i => $perm) {
-                        if (!$this->wDatabase()->isId($perm)) {
-                            if (is_string($perm)) {
-                                $permissions[$i] = UserPermission::findOne(['slug' => $perm]);
-                            } elseif (isset($perm['id'])) {
-                                $permissions[$i] = $perm['id'];
-                            } elseif (isset($perm['slug'])) {
-                                $permissions[$i] = UserPermission::findOne(['slug' => $perm['slug']]);
-                            }
-                        }
-                    }
-                }
+        $this->attr('users')->many2many('User2UserRole', 'UserRole', 'User')->setEntity(User::class);
+        $this->attr('apiTokens')->many2many('ApiToken2UserRole', 'UserRole', 'ApiToken')->setEntity(ApiToken::class);
+        $this->attr('permissions')
+             ->many2many('UserRole2UserPermission', 'UserRole', 'UserPermission')
+             ->setEntity(UserPermission::class)
+             ->onSet(function ($permissions) {
+                 // If not mongo Ids - load permissions by slugs
+                 if (is_array($permissions)) {
+                     foreach ($permissions as $i => $perm) {
+                         if (!$this->wDatabase()->isId($perm)) {
+                             if (is_string($perm)) {
+                                 $permissions[$i] = UserPermission::findOne(['slug' => $perm]);
+                             } elseif (isset($perm['id'])) {
+                                 $permissions[$i] = $perm['id'];
+                             } elseif (isset($perm['slug'])) {
+                                 $permissions[$i] = UserPermission::findOne(['slug' => $perm['slug']]);
+                             }
+                         }
 
-                return $permissions;
-            });
+                         // Make sure there are no empty values
+                         if (empty($permissions[$i])) {
+                             unset($permissions[$i]);
+                         }
+                     }
+                 }
+
+                 return $permissions;
+             });
     }
 
     protected static function entityIndexes(IndexContainer $indexes)

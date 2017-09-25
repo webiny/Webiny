@@ -110,16 +110,9 @@ class EntityParser extends AbstractParser
      *
      * @return array
      * @throws AppException
-    */
+     */
     private function getMethods($includeCrudMethods)
     {
-        $crudPatterns = [
-            '/.get',
-            '{id}.get',
-            '/.post',
-            '{id}.patch',
-            '{id}.delete'
-        ];
         $apiDocs = $this->parseApi($this->class);
 
         // Parse dynamic methods (appended via onExtendApi callback)
@@ -150,8 +143,7 @@ class EntityParser extends AbstractParser
                     continue;
                 }
 
-                $crudMethod = in_array($key, $crudPatterns);
-                if (!$includeCrudMethods && $crudMethod && !$config->key('custom', false, true)) {
+                if (!$includeCrudMethods && $entityMethod->getCrud()) {
                     continue;
                 }
 
@@ -160,13 +152,13 @@ class EntityParser extends AbstractParser
                 $definition = [
                     'key'           => $key,
                     'path'          => $this->url . '/' . ltrim($name, '/'),
-                    'url'           => $this->wConfig()->get('Application.ApiPath') . $this->url . '/' . ltrim($name, '/'),
+                    'url'           => $this->wConfig()->get('Webiny.ApiUrl') . $this->url . '/' . ltrim($name, '/'),
                     'name'          => $config->key('name'),
                     'description'   => $config->key('description', '', true),
                     'method'        => strtoupper($httpMethod),
                     'public'        => false,
                     'authorization' => true,
-                    'custom'        => !$crudMethod || $config->key('custom', false, true),
+                    'custom'        => !$entityMethod->getCrud(),
                     'headers'       => []
                 ];
 

@@ -19,7 +19,7 @@ use Webiny\Component\Mongo\Index\SingleIndex;
 class LoggerEntry extends AbstractEntity
 {
     protected static $classId = 'Webiny.Entities.LoggerEntry';
-    protected static $entityCollection = 'LoggerEntry';
+    protected static $collection = 'LoggerEntry';
 
     public function __construct()
     {

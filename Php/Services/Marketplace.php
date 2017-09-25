@@ -28,7 +28,7 @@ class Marketplace extends AbstractService
         }
 
         $api->get('me', function () {
-            $response = $this->server('/entities/webiny/users/me');
+            $response = $this->server('/entities/the-hub/users/me');
             $resData = json_decode($response, true);
 
             if (array_key_exists('code', $resData)) {
@@ -114,7 +114,7 @@ class Marketplace extends AbstractService
             $data = $this->wRequest()->getRequestData();
             $data['rememberme'] = true;
 
-            $response = $this->server('/entities/webiny/users/login', 'POST', $data);
+            $response = $this->server('/entities/the-hub/users/login', 'POST', $data);
 
             $response = json_decode($response, true);
             if (!isset($response['code'])) {
@@ -129,7 +129,7 @@ class Marketplace extends AbstractService
 
         $api->post('reset-password', function () {
             $data = $this->wRequest()->getRequestData();
-            $response = $this->server('/entities/webiny/users/reset-password', 'POST', $data);
+            $response = $this->server('/entities/the-hub/users/reset-password', 'POST', $data);
 
             return new ApiRawResponse($response);
         });

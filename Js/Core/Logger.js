@@ -95,7 +95,7 @@ class Logger {
             this.stopInterval();
             $.ajax({
                 method: 'POST',
-                url: Webiny.Config.ApiPath + '/entities/webiny/logger-error-group/save-report',
+                url: Webiny.Config.ApiUrl + '/entities/webiny/logger-error-group/save-report',
                 data: {errors: this.errors, client: this.clientInfo}
             }).done(() => {
                 this.errors = [];

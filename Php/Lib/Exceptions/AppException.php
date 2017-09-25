@@ -10,9 +10,7 @@ namespace Apps\Webiny\Php\Lib\Exceptions;
 use Webiny\Component\StdLib\Exception\AbstractException;
 
 /**
- * AppException can be used by any developer from any app to throw an exception
- *
- * @package         Apps\Webiny\Php\Lib\Exceptions
+ * Class AppException can be used by any developer from any app to throw an exception
  */
 class AppException extends AbstractException
 {

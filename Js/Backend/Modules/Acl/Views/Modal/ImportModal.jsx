@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 class ImportModal extends Webiny.Ui.ModalComponent {
 
-    submit(model, form) {
+    submit({model, form}) {
         const data = JSON.parse(model.data);
         return form.onSubmit(data);
     }
@@ -14,7 +14,7 @@ class ImportModal extends Webiny.Ui.ModalComponent {
 
         const formProps = {
             api,
-            onSuccessMessage: model => <span>{label} <strong>{model.name}</strong> was imported!</span>,
+            onSuccessMessage: ({model}) => <span>{label} <strong>{model.name}</strong> was imported!</span>,
             onSubmit: this.submit,
             onSubmitSuccess: () => this.hide().then(this.props.onImported)
         };
@@ -22,7 +22,7 @@ class ImportModal extends Webiny.Ui.ModalComponent {
         return (
             <Modal.Dialog>
                 <Form {...formProps}>
-                    {(model, form) => (
+                    {({form}) => (
                         <Modal.Content>
                             <Form.Loader/>
                             <Modal.Header title={`Import ${label}`} onClose={this.hide}/>

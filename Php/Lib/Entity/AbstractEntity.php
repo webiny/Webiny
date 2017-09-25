@@ -57,7 +57,6 @@ use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
  * @method static void onAfterSave (\Closure $callback)
  * @method static void onBeforeDelete (\Closure $callback)
  * @method static void onAfterDelete (\Closure $callback)
- * @package Apps\Webiny\Php\Lib\Entity
  */
 abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 {
@@ -124,7 +123,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             return null;
         }
 
-        $data = $mongo->findOne(static::$entityCollection, $query->getConditions());
+        $data = $mongo->findOne(static::$collection, $query->getConditions());
         if (!$data) {
             return null;
         }
@@ -203,7 +202,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         // If we don't have joins to execute, just use the simple find() method.
         if (empty($joins)) {
             $find = array_values($parameters);
-            $data = self::entity()->getDatabase()->find(static::$entityCollection, ...$find);
+            $data = self::entity()->getDatabase()->find(static::$collection, ...$find);
 
             return new EntityCollection(get_called_class(), $data, $parameters);
 
@@ -228,7 +227,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         $pipeline[] = ['$limit' => $parameters['limit']];
         $pipeline[] = ['$project' => ['_id' => 0, 'id' => 1]];
 
-        $data = self::entity()->getDatabase()->aggregate(static::$entityCollection, $pipeline);
+        $data = self::entity()->getDatabase()->aggregate(static::$collection, $pipeline);
 
         $collection = new EntityCollection(get_called_class(), $data, $parameters);
 
@@ -236,7 +235,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         $collection->setTotalCountCalculation(function () use ($basePipeline) {
             $basePipeline[] = ['$group' => ['_id' => null, 'total' => ['$sum' => 1], 'results' => ['$push' => '$$ROOT']]];
             $basePipeline[] = ['$project' => ['_id' => 0, 'total' => 1]];
-            $count = self::entity()->getDatabase()->aggregate(static::$entityCollection, $basePipeline)->toArray();
+            $count = self::entity()->getDatabase()->aggregate(static::$collection, $basePipeline)->toArray();
 
             return $count[0]['total'] ?? 0;
         });
@@ -279,6 +278,19 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         return $indexContainer;
     }
 
+    /**
+     * Create attribute
+     * This method is overridden because we need to set the correct return type for better autocomplete
+     *
+     * @param string $attribute
+     *
+     * @return EntityAttributeContainer
+     */
+    public function attr($attribute)
+    {
+        return parent::attr($attribute);
+    }
+
     public function __construct()
     {
         parent::__construct();
@@ -287,12 +299,13 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
          * Add the following built-in system attributes:
          * createdOn, modifiedOn, deletedOn, deleted and user
          */
-        $userClass = $this->wAuth()->getUserClass();
         $this->attr('createdOn')->datetime()->setDefaultValue('now')->setToArrayDefault();
-        $this->attr('createdBy')->many2one()->setEntity($userClass)->setDefaultValue(function () {
-            $user = $this->wAuth()->getUser();
+        $this->attr('createdBy')->user()->onGet(function ($value) {
+            if (!$this->exists() && !$value) {
+                return $this->wAuth()->getUser();
+            }
 
-            return $user instanceof AbstractEntity ? $user : null;
+            return $value;
         });
         $this->attr('modifiedOn')->datetime()->onToDb(function ($value) {
             if ($this->exists() && !$this->deletedOn) {
@@ -301,21 +314,17 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 
             return $value;
         });
-        $this->attr('modifiedBy')->many2one()->setEntity($userClass)->onToDb(function ($value) {
-            $user = $this->wAuth()->getUser();
+        $this->attr('modifiedBy')->user()->onToDb(function ($value) {
+            if ($this->exists() && !$this->deletedOn) {
+                $user = $this->wAuth()->getUser();
 
-            if ($this->exists() && !$this->deletedOn && $user) {
-                if ($user instanceof AbstractEntity) {
-                    return $user->id;
-                }
-
-                return null;
+                return $user ? $user->id : null;
             }
 
             return $value;
         });
         $this->attr('deletedOn')->datetime();
-        $this->attr('deletedBy')->many2one()->setEntity($userClass);
+        $this->attr('deletedBy')->user();
 
         /**
          * Fire event for registering extra attributes
@@ -326,10 +335,13 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     /**
      * This will be called before trying to delete an entity. Here you can define your own business rules to allow/prevent deletion.
      * If you want to prevent deletion - throw an AppException
+     *
+     * @return bool
      * @throws AppException
      */
     public function canDelete()
     {
+        return true;
     }
 
     public function delete($permanent = false)
@@ -347,9 +359,8 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         $this->processDelete($permanent);
 
         if (!$permanent) {
-            $user = $this->wAuth()->getUser();
             $this->deletedOn = $this->datetime()->getMongoDate();
-            $this->deletedBy = $user instanceof AbstractEntity ? $user : null;
+            $this->deletedBy = $this->wAuth()->getUser();
             $this->save();
         }
 
@@ -430,14 +441,14 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             $entities = $this->find($filters, $sorter, $this->wRequest()->getPerPage(), $this->wRequest()->getPage());
 
             return $this->apiFormatList($entities, $this->wRequest()->getFields());
-        });
+        })->setCrud();
 
         /**
          * @api.name Get a record by ID
          */
         $api->get('{id}', function () {
             return $this->apiFormatEntity($this, $this->wRequest()->getFields());
-        });
+        })->setCrud();
 
         /**
          * @api.name Create a new record
@@ -463,7 +474,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             }
 
             return $this->apiFormatEntity($this, $this->wRequest()->getFields());
-        });
+        })->setCrud();
 
         /**
          * @api.name Update a record by ID
@@ -485,7 +496,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                 }
                 throw new ApiException($e->getMessage(), $code, 422);
             }
-        });
+        })->setCrud();
 
         /**
          * @api.name Delete a record by ID
@@ -498,7 +509,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
             } catch (EntityException $e) {
                 throw new ApiException('Failed to delete entity! ' . $e->getMessage(), $e->getCode(), 400);
             }
-        });
+        })->setCrud();
     }
 
     /**
@@ -512,6 +523,11 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         $api->setEvent('onExtendApi');
         $this->processCallbacks('onExtendApi', $api);
         $api->setEvent(null);
+    }
+
+    protected function createEntityAttributeContainer()
+    {
+        return new EntityAttributeContainer($this);
     }
 
     /**
@@ -672,7 +688,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                 $attrName = $pathPrefix ? $pathPrefix . '.' . $attrName : $attrName;
                 if (!isset($neededJoins[$attrName])) {
                     $neededJoins[$attrName] = [
-                        'from'         => $class::getEntityCollection(),
+                        'from'         => $class::getCollection(),
                         'localField'   => $attrName,
                         'as'           => $attrName,
                         'foreignField' => 'id'
@@ -759,7 +775,10 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
     protected function processCallbacks($eventName, ...$params)
     {
         $className = get_called_class();
-        $classes = array_values([$className] + class_parents($className));
+        $classes = array_filter(array_values([$className] + class_parents($className)), function ($t) {
+            return $this->str($t)->startsWith('Apps\\');
+        });
+
         foreach ($classes as $class) {
             $callbacks = static::$classCallbacks[$class][$eventName] ?? [];
             foreach ($callbacks as $callback) {
@@ -768,7 +787,12 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
                     // Check if callback requires an instance of entity that triggered the event
                     $rf = new \ReflectionFunction($callback);
                     $firstParameter = $rf->getParameters()[0] ?? null;
-                    if ($firstParameter && $firstParameter->getClass()->getName() === $className) {
+                    if ($firstParameter) {
+                        // We must only execute the callback if $className matches or extends the parameter class
+                        $requiredClassName = $firstParameter->getClass()->getName();
+                        if ($requiredClassName !== $className && !is_subclass_of($className, $requiredClassName)) {
+                            continue;
+                        }
                         array_unshift($staticParams, $this);
                     }
                     // Execute callback
@@ -806,7 +830,10 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
 
         // We need to get the entire inheritance tree and process callbacks for each class in the tree
         $className = get_called_class();
-        $classes = array_values([$className] + class_parents($className));
+        $classes = array_filter(array_values([$className] + class_parents($className)), function ($t) {
+            return static::str($t)->startsWith('Apps\\');
+        });
+
         foreach ($classes as $class) {
             $callbacks = static::$classCallbacks[$class][$eventName] ?? [];
             foreach ($callbacks as $callback) {
@@ -910,7 +937,7 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
          * Delete $this if it is a permanent delete
          */
         if ($permanent) {
-            $this->entity()->getDatabase()->delete(static::$entityCollection, ['_id' => $this->entity()->getDatabase()->id($this->id)]);
+            $this->entity()->getDatabase()->delete(static::$collection, ['_id' => $this->entity()->getDatabase()->id($this->id)]);
 
             static::entity()->remove($this);
         }

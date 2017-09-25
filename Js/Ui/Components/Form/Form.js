@@ -72,7 +72,7 @@ class Form extends Webiny.Ui.Component {
         this.setState({model, initialModel: model});
 
         if (this.props.loadModel) {
-            return this.props.loadModel.call(this, this).then(customModel => {
+            return this.props.loadModel.call(this, {form: this}).then(customModel => {
                 const mergedModel = _.merge({}, this.props.defaultModel || {}, customModel);
                 this.setState({model: mergedModel, loading: false, initialModel: _.cloneDeep(mergedModel)});
             });
@@ -155,7 +155,7 @@ class Form extends Webiny.Ui.Component {
      */
 
     showLoading() {
-        this.setState({loading: true, error: null});
+        this.setState({loading: true, error: null, showError: false});
         return this;
     }
 
@@ -179,7 +179,7 @@ class Form extends Webiny.Ui.Component {
                 // If total size is larger than 500Kb...
                 if (pe.total > 500000) {
                     pe.progress = Math.round(pe.loaded / pe.total * 100);
-                    this.props.onProgress.call(this, pe, this);
+                    this.props.onProgress.call(this, {event: pe, form: this});
                 }
             }
         };
@@ -240,7 +240,7 @@ class Form extends Webiny.Ui.Component {
      * @returns {Form}
      */
     setModel(key, value = null, callback = null) {
-        if(_.isFunction(key)) {
+        if (_.isFunction(key)) {
             this.setState(key);
             return;
         }
@@ -293,14 +293,14 @@ class Form extends Webiny.Ui.Component {
 
                 if (apiResponse.isError()) {
                     if (this.props.onFailure) {
-                        this.props.onFailure(apiResponse, this);
+                        this.props.onFailure({apiResponse, form: this});
                     }
                     return;
                 }
 
                 let newModel;
                 if (_.isFunction(this.props.prepareLoadedData) && this.props.prepareLoadedData !== _.noop) {
-                    newModel = _.merge({}, this.props.defaultModel || {}, this.props.prepareLoadedData(apiResponse.getData('entity')));
+                    newModel = _.merge({}, this.props.defaultModel || {}, this.props.prepareLoadedData({data: apiResponse.getData('entity')}));
                 } else {
                     newModel = _.merge({}, this.props.defaultModel || {}, apiResponse.getData('entity'))
                 }
@@ -308,7 +308,7 @@ class Form extends Webiny.Ui.Component {
                 this.setState({model: newModel, initialModel: _.cloneDeep(newModel), loading: false}, () => {
                     // Execute optional `onLoad` callback
                     if (_.isFunction(this.props.onLoad)) {
-                        this.props.onLoad(this.getModel(), this);
+                        this.props.onLoad({model: this.getModel(), form: this});
                     }
                     this.__processWatches();
                 });
@@ -354,7 +354,7 @@ class Form extends Webiny.Ui.Component {
                 // If onSubmit was passed through props, execute it. Otherwise proceed with default behaviour.
                 if (this.props.onSubmit) {
                     // Make sure whatever is returned from `onSubmit` handler is a Promise and then enable form submit
-                    return Promise.resolve(this.props.onSubmit(model, this)).catch(e => {
+                    return Promise.resolve(this.props.onSubmit({model, form: this})).catch(e => {
                         Webiny.Growl.danger('' + e);
                     }).finally(() => {
                         this.enableSubmit();
@@ -371,7 +371,7 @@ class Form extends Webiny.Ui.Component {
         if (_.isString(this.props.onCancel)) {
             Webiny.Router.goToRoute(this.props.onCancel);
         } else if (_.isFunction(this.props.onCancel)) {
-            this.props.onCancel(this);
+            this.props.onCancel({form: this});
         }
     }
 
@@ -442,7 +442,10 @@ class Form extends Webiny.Ui.Component {
         }
 
         if (Webiny.isElementOfType(input, Error)) {
-            input = React.cloneElement(input, {error: this.getError()});
+            if (!this.state.showError) {
+                return null;
+            }
+            input = React.cloneElement(input, {onClose: () => this.setState({showError: false}), error: this.getError()});
         }
 
         if (input.props && input.props.name) {
@@ -458,7 +461,7 @@ class Form extends Webiny.Ui.Component {
 
             // If Form has a `disabled` prop we must evaluate it to see if form input needs to be disabled
             if (this.props.disabled) {
-                const inputDisabledByForm = _.isFunction(this.props.disabled) ? this.props.disabled(this.getModel()) : this.props.disabled;
+                const inputDisabledByForm = _.isFunction(this.props.disabled) ? this.props.disabled({model: this.getModel()}) : this.props.disabled;
                 // Only override the input prop if the entire Form is disabled
                 if (inputDisabledByForm) {
                     newProps['disabled'] = true;
@@ -474,7 +477,7 @@ class Form extends Webiny.Ui.Component {
                 const inputConfig = this.inputs[input.props.name];
                 const component = inputConfig && inputConfig.component;
 
-                // Bind onChange callback params
+                // Bind onChange callback params (we do it here because later we no longer have access to these values)
                 if (_.isFunction(onAfterChange)) {
                     onAfterChange = onAfterChange.bind(null, newValue, oldValue, component);
                 }
@@ -616,9 +619,9 @@ class Form extends Webiny.Ui.Component {
     }
 
     handleApiError(apiResponse) {
-        this.setState({error: apiResponse}, () => {
+        this.setState({error: apiResponse, showError: true}, () => {
             // error callback
-            this.props.onSubmitError.call(this, apiResponse, this);
+            this.props.onSubmitError.call(this, {apiResponse, form: this});
 
             // Check error data and if validation error - try highlighting invalid fields
             const data = apiResponse.getData();
@@ -648,7 +651,7 @@ class Form extends Webiny.Ui.Component {
         if (!_.isFunction(children)) {
             throw new Error('Form must have a function as its only child!');
         }
-        return this.registerComponents(children.call(this, _.cloneDeep(this.state.model), this));
+        return this.registerComponents(children.call(this, {model: _.cloneDeep(this.state.model), form: this}));
     }
 
     __processSubmitResponse(model, apiResponse) {
@@ -662,14 +665,14 @@ class Form extends Webiny.Ui.Component {
 
         const responseData = apiResponse.getData();
         const newModel = _.has(responseData, 'entity') ? responseData.entity : responseData;
-        this.setState({model: newModel, initialModel: _.cloneDeep(newModel), error: null});
+        this.setState({model: newModel, initialModel: _.cloneDeep(newModel), error: null, showError: false});
         if (_.isFunction(this.props.onSuccessMessage)) {
-            Webiny.Growl.success(this.props.onSuccessMessage(model));
+            Webiny.Growl.success(this.props.onSuccessMessage({model}));
         }
 
         const onSubmitSuccess = this.props.onSubmitSuccess;
         if (_.isFunction(onSubmitSuccess)) {
-            return onSubmitSuccess.call(this, apiResponse, this);
+            return onSubmitSuccess.call(this, {apiResponse, form: this});
         }
 
         if (_.isString(onSubmitSuccess)) {
@@ -728,9 +731,9 @@ Form.defaultProps = {
     onFailure: _.noop,
     onLoad: _.noop,
     prepareLoadedData: null,
-    onProgress(pe) {
+    onProgress({event}) {
         Webiny.import(['Growl', 'Progress']).then(({Growl, Progress}) => {
-            const cmp = <div>Your data is being uploaded...<Progress value={pe.progress}/></div>;
+            const cmp = <div>Your data is being uploaded...<Progress value={event.progress}/></div>;
             Webiny.Growl(<Growl.Info id={this.growlId} title="Please be patient" sticky={true}>{cmp}</Growl.Info>);
         });
     },

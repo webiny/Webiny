@@ -23,7 +23,6 @@ class DownloadLink extends Webiny.Ui.Component {
 
     getDialog() {
         const result = this.props.download(this.downloader.download, this.props.params || null);
-        // TODO: add check if the returned result is actually a Dialog component
         // At this point we do not want to import Modal component to perform the check so we assume it is a Dialog if it is not null
         if (result) {
             this.dialog = result;

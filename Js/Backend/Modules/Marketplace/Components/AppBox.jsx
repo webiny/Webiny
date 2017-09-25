@@ -15,11 +15,14 @@ AppBox.defaultProps = {
                     <img src={app.logo.src}/>
                 </div>
                 <h3>{app.name.toUpperCase()}</h3>
-                {app.installedVersion ? <p>Installed version: <strong>{app.installedVersion}</strong></p> : null}
-                <p>{app.shortDescription}</p>
-                <Link route="Marketplace.AppDetails" type="default" params={{id: app.id}}>
+
+                <p className={styles.shortDescription}>{app.shortDescription}</p>
+                <Link route="Marketplace.AppDetails" type="default" params={{id: app.id}} className={styles.viewDetails}>
                     view details
                 </Link>
+                {app.installedVersion && (<div className={styles.footer}>
+                    <p>Installed version: <strong>{app.installedVersion}</strong></p>
+                </div>)}
             </div>
         );
     }

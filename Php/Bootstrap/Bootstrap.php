@@ -8,7 +8,7 @@
 namespace Apps\Webiny\Php\Bootstrap;
 
 use Apps\Webiny\Php\Lib\Authorization\Authorization;
-use Apps\Webiny\Php\Lib\I18N\I18N;
+use Apps\Webiny\Php\Lib\ConfigLoader;
 use Apps\Webiny\Php\Lib\Request;
 use Apps\Webiny\Php\Lib\Response\ApiResponse;
 use Apps\Webiny\Php\Lib\Response\HtmlResponse;
@@ -22,6 +22,7 @@ use Webiny\Component\Http\Http;
 use Webiny\Component\Http\Response;
 use Webiny\Component\Mongo\Mongo;
 use Webiny\Component\Security\Security;
+use Webiny\Component\ServiceManager\ServiceManager;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\StdLib\StdObject\UrlObject\UrlObjectException;
 use Webiny\Component\StdLib\SingletonTrait;
@@ -29,7 +30,7 @@ use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\Storage\Storage;
 
 /**
- * This class is included in the index.php and it responsible to bootstrap the application.
+ * This class is included in the index.php and is responsible for bootstrapping the platform
  */
 class Bootstrap
 {
@@ -46,13 +47,25 @@ class Bootstrap
 
     protected function init()
     {
-        // read production configs
+        // Load Base environment configuration
         $this->buildConfiguration('Base');
 
-        // get additional config set
-        $configSet = $this->getConfigSet();
-        if ($configSet) {
-            $this->buildConfiguration($configSet);
+        // Load apps
+        /* @var $app App */
+        foreach ($this->wApps()->loadApps() as $app) {
+            // Webiny app needs to be merged because of the app name key which already exists in the global config
+            if ($app instanceof \Apps\Webiny\Php\App) {
+                $this->wConfig()->getConfig()->mergeWith($app->getConfig());
+                continue;
+            }
+            // Add app config into the global config by app name
+            $this->wConfig()->getConfig()->set($app->getName(), $app->getConfig());
+        }
+
+        // Get environment-specific config
+        $environment = $this->getEnvironment();
+        if ($environment) {
+            $this->buildConfiguration($environment);
         }
 
         // Append Js configs (these need to be loaded at the very end to inject proper values)
@@ -60,8 +73,17 @@ class Bootstrap
             $this->wConfig()->append($jsConfig);
         }
 
+        // Now that we have the complete global config we need to inject variables
+        ConfigLoader::getInstance()->injectVariables($this->wConfig()->getConfig());
+
         // set error handler
         $this->errorHandler = new ErrorHandler();
+
+        // Register services
+        foreach($this->wConfig()->get('Services') as $name => $config) {
+            /* @var $config ConfigObject */
+            ServiceManager::getInstance()->registerService($name, $config);
+        }
 
         // Set component configs
         $emptyConfig = new ConfigObject();
@@ -70,12 +92,6 @@ class Bootstrap
         Security::setConfig($this->wConfig()->get('Security', $emptyConfig));
         Storage::setConfig($this->wConfig()->get('Storage', $emptyConfig));
         Http::setConfig($this->wConfig()->get('Http', $emptyConfig));
-
-        // I18n will be loaded only if it's enabled in YAML config files.
-        I18N::getInstance()->init();
-
-        // scan all components to register routes and event handlers
-        $this->wApps()->loadApps();
 
         /* @var $app App */
         foreach ($this->wApps() as $app) {
@@ -155,11 +171,11 @@ class Bootstrap
         return $response->send();
     }
 
-    private function buildConfiguration($configSet)
+    private function buildConfiguration($environment)
     {
         try {
             // get the configuration files
-            $dir = $this->wStorage()->readDir('Configs/' . $configSet)->filter('*.yaml');
+            $dir = $this->wStorage()->readDir('Configs/' . $environment)->filter('*.yaml');
 
             // insert them into the global configuration object
             foreach ($dir as &$file) {
@@ -176,41 +192,41 @@ class Bootstrap
             }
 
             // append config sets
-            $this->wConfig()->append('Configs/ConfigSets.yaml');
+            $this->wConfig()->append('Configs/Environments.yaml');
         } catch (\Exception $e) {
-            throw new \Exception('Unable to build config set ' . $configSet . '. ' . $e->getMessage());
+            throw new \Exception('Unable to build config set ' . $environment . '. ' . $e->getMessage());
         }
     }
 
-    private function getConfigSet()
+    private function getEnvironment()
     {
-        $configSets = $this->wConfig()->get('ConfigSets', []);
+        $environments = $this->wConfig()->get('Environments', []);
         try {
             $url = $this->wRequest()->getCurrentUrl(true)->getDomain();
             $currentDomain = $this->str($url)->caseLower()->trimRight('/')->val();
 
-            $configSet = false;
-            foreach ($configSets as $name => $domain) {
+            $environment = false;
+            foreach ($environments as $name => $domain) {
                 if ($domain instanceof ConfigObject) {
                     foreach ($domain as $d) {
                         if ($currentDomain == $this->url($d)->getDomain()) {
-                            $configSet = $name;
+                            $environment = $name;
                             break 2;
                         }
                     }
                 } elseif ($currentDomain == $this->url($domain)->getDomain()) {
-                    $configSet = $name;
+                    $environment = $name;
                     break;
                 }
             }
-            if (!$configSet) {
-                $configSet = 'Production';
+            if (!$environment) {
+                $environment = 'Production';
             }
         } catch (UrlObjectException $e) {
-            $configSet = 'Production';
+            $environment = 'Production';
         }
 
-        return $configSet;
+        return $environment;
     }
 
     /**

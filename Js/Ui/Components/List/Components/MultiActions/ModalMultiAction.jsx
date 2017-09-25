@@ -13,23 +13,29 @@ class ModalMultiAction extends Webiny.Ui.Component {
 }
 
 ModalMultiAction.defaultProps = {
+    actions: null,
+    label: null,
+    data: null,
     hide: _.noop,
     renderer() {
         if (_.isFunction(this.props.hide) && this.props.hide(this.props.data)) {
             return null;
         }
 
-        const modalActions = {
-            hide: () => {
-                if (this.dialog) {
-                    setTimeout(this.dialog.hide, 10);
-                }
-            }
-        };
-
         const onAction = () => {
             if (this.props.data.length) {
-                const modal = this.props.children.call(this, this.props.data, this.props.actions, modalActions);
+                const modal = this.props.children.call(this, {
+                    data: this.props.data,
+                    actions: this.props.actions,
+                    dialog: {
+                        hide: () => {
+                            if (this.dialog) {
+                                return this.dialog.hide();
+                            }
+                            return Promise.resolve(true);
+                        }
+                    }
+                });
                 this.setState({modal});
             }
         };
@@ -38,6 +44,7 @@ ModalMultiAction.defaultProps = {
 
         const dialogProps = {
             ref: ref => this.dialog = ref,
+            // `dialog` is passed from Component.js as `this` of the mounted dialog itself
             onComponentDidMount: dialog => dialog.show(),
             onHidden: () => {
                 this.dialog = null;

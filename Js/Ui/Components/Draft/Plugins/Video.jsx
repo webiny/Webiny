@@ -251,7 +251,7 @@ class VideoPlugin extends Webiny.Draft.AtomicPlugin {
         this.editor.setEditorState(editorState);
     }
 
-    submitForm(model) {
+    submitForm({model}) {
         // Parse URL and detect type
         const data = _.clone(model);
 
@@ -289,7 +289,7 @@ class VideoPlugin extends Webiny.Draft.AtomicPlugin {
                                 <Ui.Dropdown {...props}>
                                     {() => (
                                         <Ui.Form ref={ref => this.form = ref} onSubmit={this.submitForm}>
-                                            {(model, form) => (
+                                            {({form}) => (
                                                 <div style={{width: 400}}>
                                                     <Ui.Grid.Row>
                                                         <Ui.Grid.Col xs={10}>

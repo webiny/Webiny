@@ -10,7 +10,7 @@ RowDetailsContent.defaultProps = {
     renderer() {
         let content = this.props.children;
         if (_.isFunction(this.props.children)) {
-            content = this.props.children.call(this, this.props.data, this);
+            content = this.props.children.call(this);
         }
 
         return <div>{content}</div>;

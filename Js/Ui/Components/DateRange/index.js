@@ -4,7 +4,7 @@ import _ from 'lodash';
 import $ from 'jquery';
 import Webiny from 'webiny';
 import 'bootstrap-daterangepicker';
-import './styles.scss';
+import './styles.scss?extract';
 
 class DateRange extends Webiny.Ui.FormComponent {
 

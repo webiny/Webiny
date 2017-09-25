@@ -15,8 +15,8 @@ UsersForm.defaultProps = {
                 Webiny.Router.goToRoute('Users.List');
             },
             onCancel: 'Users.List',
-            onSuccessMessage: (record) => {
-                return <span>User <strong>{record.firstName}</strong> was saved successfully!</span>;
+            onSuccessMessage: ({model}) => {
+                return <span>User <strong>{model.firstName}</strong> was saved successfully!</span>;
             }
         };
 
@@ -24,7 +24,7 @@ UsersForm.defaultProps = {
 
         return (
             <Ui.Form {...formProps}>
-                {(model, form) => (
+                {({model, form}) => (
                     <Ui.View.Form>
                         <Ui.View.Header title={model.id ? 'ACL - Edit User' : 'ACL - Create User'}/>
                         <Ui.Form.Error message="Something went wrong during save"/>

@@ -104,15 +104,15 @@ class FormComponent extends Component {
     }
 
     isDisabled(props = this.props) {
-        let disabled = props.disabledBy;
-        if (_.isFunction(disabled)) {
-            return disabled(props.form.getModel());
+        let disabledBy = props.disabledBy;
+        if (_.isFunction(disabledBy)) {
+            return disabledBy({model: props.form.getModel()});
         }
 
-        if (_.isString(disabled)) {
-            const falsy = disabled.startsWith('!');
-            disabled = _.trimStart(disabled, '!');
-            const value = !!props.form.getModel(disabled);
+        if (_.isString(disabledBy)) {
+            const falsy = disabledBy.startsWith('!');
+            disabledBy = _.trimStart(disabledBy, '!');
+            const value = !!props.form.getModel(disabledBy);
             return falsy ? value === false : value === true;
         }
 
