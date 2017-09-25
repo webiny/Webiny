@@ -41,10 +41,10 @@ class LocalesModal extends Webiny.Ui.ModalComponent {
                         const url = id ? `/available/${id}` : '/available';
                         return (
                             <Modal.Content>
-                                <Form.Error/>
                                 <Form.Loader/>
                                 <Modal.Header title={id ? this.i18n('Edit Locale') : this.i18n('Create Locale')} onClose={this.hide}/>
                                 <Modal.Body>
+                                    <Form.Error/>
                                     <Grid.Row>
                                         <Grid.Col all={12}>
                                             <Select
