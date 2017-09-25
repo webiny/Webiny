@@ -16,13 +16,6 @@ class Component extends React.Component {
         this.__cursors = [];
         this.__mounted = true;
         this.bindMethods('bindTo', 'isRendered', 'i18n');
-
-
-        /**
-         * If set, it will be used in the component instead of dynamically created key
-         * @type {null}
-         */
-        this.i18n.key = null;
     }
 
     /**
