@@ -16,28 +16,21 @@ use Apps\Webiny\Php\Lib\I18N\Parsers\SmartyParser;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\StdLib\SingletonTrait;
 use Webiny\Component\StdLib\StdLibTrait;
-use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
-/**
- * Class I18N
- *
- * @property string      $key
- * @property string      $placeholder
- * @property ArrayObject $translations
- */
 class I18N
 {
     protected static $i18nNamespace = 'Webiny.Lib.I18N';
-
     private $locale;
-
     private $modifiers;
 
     use StdLibTrait, WebinyTrait, SingletonTrait;
 
+    /**
+     * Initializes I18N if it's enabled - registers basic built-in modifiers and detects locale if enabled.
+     */
     public function init()
     {
-        // Let's register basic built in modifiers.
+        // We register basic built in modifiers.
         $this->registerModifiers([
             new IfModifier(),
             new GenderModifier(),
@@ -66,13 +59,14 @@ class I18N
     }
 
     /**
-     * Tries to read default locale to be used if detection is enabled
+     * Tries to read default locale to be used if detection is enabled. Currently it only reads HTTP_ACCEPT_LANGUAGE
+     * but can probably be upgraded to maybe do the check by user's IP address.
      * @return I18NLocale|null
      */
     public function getDefaultLocale()
     {
         /* @var I18NLocale $locale */
-        if ($this->wConfig()->get('Application.I18n.Detect.Locale')) {
+        if ($this->wConfig()->get('Webiny.I18n.Detect.Locale')) {
             if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
                 $preferredLocales = array_reduce(explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']), function ($res, $el) {
                     list($l, $q) = array_merge(explode(';q=', $el), [1]);
@@ -102,17 +96,19 @@ class I18N
      */
     public function isEnabled()
     {
-        return $this->wConfig()->get('Application.I18n.Enabled');
+        return $this->wConfig()->get('Webiny.I18n.Enabled');
     }
 
     /**
+     * Main method for translating - tries to fetch translation by using textKey, if nothing was found, it will return passed
+     * base text.
+     *
      * @param       $base
      * @param array $variables
      * @param null  $textKey
-     *
      * @param array $options
      *
-     * @return $this|mixed|\Webiny\Component\StdLib\StdObject\StringObject\StringObject
+     * @return string
      */
     public function translate($base, $variables = [], $textKey, $options = [])
     {
@@ -132,7 +128,7 @@ class I18N
             }
         }
 
-        // Match variables
+        // Match variables by using passed delimiters.
         $regex = '/(\\' . $options['delimiters'][0] . '.*?\\' . $options['delimiters'][1] . ')/';
         $parts = preg_split($regex, $output, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
@@ -235,18 +231,12 @@ class I18N
      */
     public function getLocale()
     {
-        if ($this->locale) {
-            return $this->locale;
-        }
-
-        $this->locale = I18NLocale::findByKey($this->locale);
-
         return $this->locale;
     }
 
     /**
-     * Scans given apps for i18n usages (both PHP and JS code).
-     *
+     * Scans given apps for i18n usages (PHP, Smarty template sand JS code included).
+     * Returns scan stats - how many entries were created, update and ignored.
      * @param array $list
      *
      * @param array $options
@@ -274,7 +264,8 @@ class I18N
     }
 
     /**
-     * Scans given app for i18n usages (both PHP and JS code).
+     * Scans single app for i18n usages (PHP, Smarty template sand JS code included).
+     * Returns scan stats - how many entries were created, update and ignored.
      *
      * @param App   $app
      * @param array $options

@@ -6,6 +6,11 @@ use Apps\Webiny\Php\Lib\Apps\App;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 
+/**
+ * Base class for all export classes.
+ * Class AbstractExport
+ * @package Apps\Webiny\Php\Lib\I18N\Exports
+ */
 abstract class AbstractExport
 {
     use WebinyTrait;
@@ -60,6 +65,12 @@ abstract class AbstractExport
         return $file;
     }
 
+    /**
+     * Fetches data from received JSON file.
+     * @param $data
+     *
+     * @return $this
+     */
     public function fromJsonFile($data)
     {
         $data = $this->fromBase64EncodedFile($data);
@@ -68,6 +79,9 @@ abstract class AbstractExport
         return $this;
     }
 
+    /**
+     * Starts to download the JSON file on client side.
+     */
     public function downloadJson()
     {
         header('Content-disposition: attachment; filename=i18n_' . time() . '.json');
@@ -76,6 +90,7 @@ abstract class AbstractExport
     }
 
     /**
+     * Returns apps that were written in export.
      * @return array
      */
     public function getApps()
@@ -84,6 +99,7 @@ abstract class AbstractExport
     }
 
     /**
+     * Sets apps to the export.
      * @param array $apps
      *
      * @return $this

@@ -19,6 +19,7 @@ class TranslationsExport extends TextsExport
     protected $locales = [];
 
     /**
+     * Fetches all translations currently stored in database.
      * @return $this
      */
     public function fromDb()
@@ -81,6 +82,14 @@ class TranslationsExport extends TextsExport
         return $this;
     }
 
+    /**
+     * Stores translations in export to database.
+     *
+     * @param null $options
+     *
+     * @return array
+     * @throws AppException
+     */
     public function toDb($options = null)
     {
         $options['preview'] = $options['preview'] ?? false;
@@ -166,6 +175,14 @@ class TranslationsExport extends TextsExport
         return $this;
     }
 
+    /**
+     * Populates this export from given JSON string.
+     *
+     * @param $content
+     *
+     * @return $this
+     * @throws AppException
+     */
     public function fromJson($content)
     {
         $this->texts = json_decode($content, true);
@@ -173,6 +190,13 @@ class TranslationsExport extends TextsExport
         return $this;
     }
 
+    /**
+     * Fetches data from received JSON file.
+     *
+     * @param $data
+     *
+     * @return $this
+     */
     public function fromJsonFile($data)
     {
         $data = $this->fromBase64EncodedFile($data);
@@ -181,17 +205,40 @@ class TranslationsExport extends TextsExport
         return $this;
     }
 
+    /**
+     * Produces a JSON representation of current export.
+     *
+     * @param null $options
+     *
+     * @return string
+     */
     public function toJson($options = null)
     {
         return json_encode($this->texts, $options);
     }
 
+    /**
+     * Populates this export from given YAML string.
+     *
+     * @param $content
+     *
+     * @return $this
+     * @throws AppException
+     */
     public function fromYaml($content)
     {
         $this->texts = Yaml::parse($content);
+
         return $this;
     }
 
+    /**
+     * Fetches data from received YAML file.
+     *
+     * @param $data
+     *
+     * @return $this
+     */
     public function fromYamlFile($data)
     {
         $data = $this->fromBase64EncodedFile($data);
@@ -200,9 +247,12 @@ class TranslationsExport extends TextsExport
         return $this;
     }
 
+    /**
+     * Produces a YAML representation of current export.
+     * @return string
+     */
     public function toYaml()
     {
-
         return Yaml::dump($this->texts, 4);
     }
 

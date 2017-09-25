@@ -12,11 +12,14 @@ use SplFileInfo;
 use Webiny\Component\StdLib\SingletonTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 
+/**
+ * Class JsParser
+ * @package Apps\Webiny\Php\Lib\I18N\Parsers
+ */
 class JsParser extends AbstractParser
 {
     use StdLibTrait, WebinyTrait, SingletonTrait;
 
-    // With a simple regex, we first find all this.i18n usages in given source.
     const REGEX = [
         'namespace'       => '/@i18n.namespace ([' . self::NAMESPACE_ALLOWED_CHARS . ']*)?/',
         'this.i18n'           => '/this\.i18n\([\'\`\"]/m',
@@ -25,16 +28,11 @@ class JsParser extends AbstractParser
     ];
 
     /**
-     * When matching code for usage of i18n, it's possible to have three types (ordered by most used):
+     * When matching code for usage of i18n, it's possible to have many cases (ordered by most used):
      * 1) this.i18n('Some text')
      * 2) this.i18n('Some text and a {variable}', {variable: 'Variable Value'})
-     * 3) this.i18n('Some text and a {variable}', {variable: 'Variable Value'}, {key: 'App.CustomNamespace', xyz: 'asd'})
-     * 4) same as above, except instead of this.i18n, we have Webiny.I18n, which has a 'key' as a first parameter, so total of 4 parameters here.
-     *
-     * So these are the method definitions:
-     *
-     * this.i18n(base, variables, options)
-     * Webiny.I18n(key, base, variables, options)
+     * 3) this.i18n('Some text and a {variable}', {variable: 'Variable Value'}, {namespace: 'App.CustomNamespace'})
+     * 4) same as all above, except instead of this.i18n, we have Webiny.I18n
      *
      * Parsing is hard because user can type anything as a base, delimiters could be ', ` or ", and inside the text developer
      * could've used an escaped version of the same character too. We could also have a combination of strings, like 'string1' + `string2`,
@@ -85,6 +83,14 @@ class JsParser extends AbstractParser
         return $texts;
     }
 
+    /**
+     * Parses each JS i18n usage. We could not get it working with a regex, so we unfortunately had to manually go over the contents.
+     * @param             $content
+     * @param SplFileInfo $file
+     * @param string      $type
+     *
+     * @return array
+     */
     private function parseTexts($content, SplFileInfo $file, $type = 'this.i18n')
     {
         preg_match_all(self::REGEX[$type], $content, $positions, PREG_OFFSET_CAPTURE);
@@ -175,7 +181,8 @@ class JsParser extends AbstractParser
      * Returns an array with all detected namespaces in current file. Each namespace will have opening and closing tag positions.
      *
      * @param source
-     * @returns {Array}
+     *
+     * @return array
      */
     private static function parseNamespaces($source)
     {

@@ -11,11 +11,14 @@ use SplFileInfo;
 use Webiny\Component\StdLib\SingletonTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 
+/**
+ * Class PhpParser
+ * @package Apps\Webiny\Php\Lib\I18N\Parsers
+ */
 class PhpParser
 {
     use StdLibTrait, WebinyTrait, SingletonTrait;
 
-    // With a simple regex, we first find all this.i18n usages in given source.
     const REGEX = [
         'namespace'       => '/i18nNamespace\s{0,}=\s{0,}[\'|"]([a-zA-Z0-9\.-_:]+)[\'|"|`]/',
         'basic'           => '/wI18n\([\'|"]/mi',
@@ -23,6 +26,9 @@ class PhpParser
     ];
 
     /**
+     * Parsing i18n in PHP is a bit easier, we only have to parse wI18n method which can be called statically or as an instance method.
+     * Also, namespace is only read from the static "i18nNamespace" property (as opposed to JS where multiple namespaces could be defined
+     * within file).
      * @param App $app
      *
      * @return array
@@ -64,6 +70,11 @@ class PhpParser
         return $texts;
     }
 
+    /**
+     * @param $content
+     *
+     * @return string
+     */
     private function parseNamespace($content)
     {
         preg_match_all(self::REGEX['namespace'], $content, $namespace);
@@ -71,6 +82,12 @@ class PhpParser
         return self::arr($namespace)->keyNested('1.0');
     }
 
+    /**
+     * Parses each PHP wI18n usage. We could not get it working with a regex, so we unfortunately had to manually go over the contents.
+     * @param $content
+     *
+     * @return array
+     */
     private function parseTexts($content)
     {
         preg_match_all(self::REGEX['basic'], $content, $positions, PREG_OFFSET_CAPTURE);

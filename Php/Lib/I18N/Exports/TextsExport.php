@@ -8,16 +8,23 @@ use Apps\Webiny\Php\Lib\Apps\App;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 
-
+/**
+ * Used for exporting / importing texts.
+ * Class TextsExport
+ * @package Apps\Webiny\Php\Lib\I18N\Exports
+ */
 class TextsExport extends AbstractExport
 {
     use WebinyTrait;
 
     protected static $i18nNamespace = 'Webiny.Lib.TextsExport';
 
-    protected $apps = [];
     protected $groups = [];
 
+    /**
+     * Fetches all texts currently stored in database.
+     * @return $this
+     */
     public function fromDb()
     {
         $apps = array_map(function (App $app) {
@@ -39,8 +46,17 @@ class TextsExport extends AbstractExport
         ]);
 
         $this->groups = I18NTextGroup::find(['app' => ['$in' => $apps]])->toArray('id,name,app,description');
+
+        return $this;
     }
 
+    /**
+     * Stores texts in export to database.
+     * @param null $options
+     *
+     * @return array
+     * @throws AppException
+     */
     public function toDb($options = null)
     {
         $options['overwriteExisting'] = $options['overwriteExisting'] ?? false;
@@ -116,6 +132,12 @@ class TextsExport extends AbstractExport
         return $stats;
     }
 
+    /**
+     * Produces a JSON representation of current export.
+     * @param null $options
+     *
+     * @return string
+     */
     public function toJson($options = null)
     {
         $apps = array_map(function (App $app) {
@@ -125,6 +147,13 @@ class TextsExport extends AbstractExport
         return json_encode(['apps' => $apps, 'groups' => $this->groups, 'texts' => $this->texts]);
     }
 
+    /**
+     * Populates this export from given JSON string.
+     * @param $content
+     *
+     * @return $this
+     * @throws AppException
+     */
     public function fromJson($content)
     {
         $content = json_decode($content, true);

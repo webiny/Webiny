@@ -3,11 +3,17 @@
 namespace Apps\Webiny\Php\Lib\I18N;
 
 /**
- * Class I18NLanguageLocale
- * @package Apps\Webiny\Php\Entities
+ * Class I18NLocales
+ * @package Apps\Webiny\Php\Lib\I18N
  */
 class I18NLocales
 {
+    /**
+     * Returns list of all locales, with the possibility to exclude one or more.
+     * @param array $exclude
+     *
+     * @return array
+     */
     static function getLocales($exclude = [])
     {
         if (empty($exclude)) {
@@ -25,16 +31,32 @@ class I18NLocales
         return $return;
     }
 
+    /**
+     * Returns label for given locale key, eg. "en-GB" equals to "English (United Kingdom)".
+     * @param $key
+     *
+     * @return mixed|string
+     */
     static function getLabel($key)
     {
         return self::$list[$key] ?? '';
     }
 
+    /**
+     * Tells us if given locale key is valid or not.
+     * @param $locale
+     *
+     * @return bool
+     */
     static function isValidLocale($locale)
     {
         return isset(self::$list[$locale]);
     }
 
+    /**
+     * List of all locales.
+     * @var array
+     */
     private static $list = [
         'af-NA'       => "Afrikaans (Namibia)",
         'af-ZA'       => "Afrikaans (South Africa)",

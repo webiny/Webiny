@@ -11,6 +11,10 @@ use SplFileInfo;
 use Webiny\Component\StdLib\SingletonTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 
+/**
+ * Class SmartyParser
+ * @package Apps\Webiny\Php\Lib\I18N\Parsers
+ */
 class SmartyParser extends AbstractParser
 {
     use StdLibTrait, WebinyTrait, SingletonTrait;
@@ -21,6 +25,8 @@ class SmartyParser extends AbstractParser
     ];
 
     /**
+     * Parses Smarty templates located in /Templates folder, where i18n is used with a Smarty extension - function. It's not too hard,
+     * but there is a difference when defining variables, delimiters are not { } but [ ], because Smarty complains.
      * @param App $app
      *
      * @return array
@@ -52,6 +58,12 @@ class SmartyParser extends AbstractParser
         return $texts;
     }
 
+    /**
+     * @param             $content
+     * @param SplFileInfo $file
+     *
+     * @return array
+     */
     private function parseTexts($content, SplFileInfo $file)
     {
         preg_match_all(self::REGEX['basic'], $content, $positions, PREG_OFFSET_CAPTURE);

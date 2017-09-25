@@ -2,6 +2,11 @@
 
 namespace Apps\Webiny\Php\Lib\I18N\Modifiers;
 
+/**
+ * Depending on given number, can return different variations of text, eg. "1 char" or "5 chairs".
+ * Class PluralModifier
+ * @package Apps\Webiny\Php\Lib\I18N\Modifiers
+ */
 class PluralModifier extends AbstractModifier
 {
     public function getName()
