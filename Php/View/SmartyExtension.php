@@ -150,13 +150,10 @@ EOT;
     public static function i18n($params)
     {
         $params['variables'] = $params['variables'] ?? [];
-        $params['base'] = str_replace('[', '{', $params['base']);
-        $params['base'] = str_replace(']', '}', $params['base']);
         $params['key'] = $params['namespace'] . '.' . md5($params['base']);
 
-        return I18N::getInstance()->translate($params['base'], $params['variables'], $params['key']);
+        return I18N::getInstance()->translate($params['base'], $params['variables'], $params['key'], ['delimiters' => ['[', ']']]);
     }
-
 
     private function getMeta($jsApp)
     {

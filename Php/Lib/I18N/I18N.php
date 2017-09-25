@@ -12,6 +12,7 @@ use Apps\Webiny\Php\Lib\I18N\Modifiers\IfModifier;
 use Apps\Webiny\Php\Lib\I18N\Modifiers\PluralModifier;
 use Apps\Webiny\Php\Lib\I18N\Parsers\JsParser;
 use Apps\Webiny\Php\Lib\I18N\Parsers\PhpParser;
+use Apps\Webiny\Php\Lib\I18N\Parsers\SmartyParser;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\StdLib\SingletonTrait;
 use Webiny\Component\StdLib\StdLibTrait;
@@ -109,11 +110,14 @@ class I18N
      * @param array $variables
      * @param null  $textKey
      *
+     * @param array $options
+     *
      * @return $this|mixed|\Webiny\Component\StdLib\StdObject\StringObject\StringObject
-     * @throws AppException
      */
-    public function translate($base, $variables = [], $textKey)
+    public function translate($base, $variables = [], $textKey, $options = [])
     {
+        $options['delimiters'] = $options['delimiters'] ?? ['{', '}'];
+
         $output = $base;
 
         if ($this->isEnabled()) {
@@ -129,15 +133,16 @@ class I18N
         }
 
         // Match variables
-        $parts = preg_split('/(\{.*?\})/', $output, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $regex = '/(\\' . $options['delimiters'][0] . '.*?\\' . $options['delimiters'][1] . ')/';
+        $parts = preg_split($regex, $output, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
-        return array_reduce($parts, function ($carry, $part) use ($variables) {
+        return array_reduce($parts, function ($carry, $part) use ($variables, $options) {
             // If not a variable, but an ordinary text, just return it, we don't need to do any extra processing with it.
-            if (strpos($part, '{') !== 0) {
+            if (strpos($part, $options['delimiters'][0]) !== 0) {
                 return $carry . $part;
             }
 
-            $part = trim($part, '{}');
+            $part = trim($part, $options['delimiters'][0] . $options['delimiters'][1]);
             $part = explode('|', $part);
             $variable = $part[0] ?? null;
             $modifier = $part[1] ?? null;
@@ -280,7 +285,11 @@ class I18N
      */
     public function scanApp(App $app, $options = [])
     {
-        $texts = array_merge(PhpParser::getInstance()->parse($app), JsParser::getInstance()->parse($app));
+        $texts = array_merge(...[
+            SmartyParser::getInstance()->parse($app),
+            PhpParser::getInstance()->parse($app),
+            JsParser::getInstance()->parse($app),
+        ]);
 
         $options['overwriteExisting'] = $options['overwriteExisting'] ?? false;
         $options['preview'] = $options['preview'] ?? false;

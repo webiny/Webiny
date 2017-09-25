@@ -46,7 +46,7 @@ class LocalesModal extends Webiny.Ui.ModalComponent {
                                     <Grid.Col all={12}>
                                         <Select
                                             label={this.i18n('Locale')}
-                                            description={this.i18n(`Locales already added are not shown.`)}
+                                            description={this.i18n(`Already added locales are not listed.`)}
                                             placeholder={this.i18n('Select locale to add...')}
                                             name="key"
                                             validate="required"
@@ -61,7 +61,7 @@ class LocalesModal extends Webiny.Ui.ModalComponent {
                                     </Grid.Col>
                                     <Grid.Col all={5}>
                                         <Switch
-                                            description={this.i18n('Set whether or not this locale is available publicly for user.')}
+                                            description={this.i18n('Set whether or not this locale is available for the public.')}
                                             label={this.i18n('Enabled')}
                                             name="enabled"/>
                                     </Grid.Col>
@@ -106,7 +106,7 @@ class LocalesModal extends Webiny.Ui.ModalComponent {
                                             placeholder={this.i18n('Type format to see example.')}/>
                                     </Grid.Col>
                                 </Grid.Row>
-                                <Section title={this.i18n('Prices')}/>
+                                <Section title={this.i18n('Money')}/>
                                 <Grid.Row>
                                     <Grid.Col all={2}>
                                         <Input

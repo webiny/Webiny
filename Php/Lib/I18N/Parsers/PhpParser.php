@@ -17,8 +17,8 @@ class PhpParser
 
     // With a simple regex, we first find all this.i18n usages in given source.
     const REGEX = [
-        'namespace'         => '/i18nNamespace\s{0,}=\s{0,}[\'|"]([a-zA-Z0-9\.-_:]+)[\'|"|`]/',
-        'basic'       => '/wI18n\([\'|"]/mi',
+        'namespace'       => '/i18nNamespace\s{0,}=\s{0,}[\'|"]([a-zA-Z0-9\.-_:]+)[\'|"|`]/',
+        'basic'           => '/wI18n\([\'|"]/mi',
         'customNamespace' => '/wI18n\([\'|"]{1}.*?[\'|"]{1},.*?, ?\[.*?[\'|"]namespace[\'|"] ?=> ?[\'|"]{1}([A-Za-z\.]*?)[\'|"]{1}.*?\]\)/'
     ];
 
@@ -53,9 +53,8 @@ class PhpParser
                     }
 
                     $texts[] = [
-                        'app' => $app->getName(),
-                        'key' => $namespace . '.' . md5($text['base']),
-                        'group' => null,
+                        'app'  => $app->getName(),
+                        'key'  => $namespace . '.' . md5($text['base']),
                         'base' => $text['base']
                     ];
                 }
@@ -136,8 +135,11 @@ class PhpParser
                     continue;
                 }
 
-                // Okay, now we are at the end of the part, so let's add it to the parts.
-                $base['parts'][] = substr($content, $base['part']['start'] + 1, $i - $base['part']['start'] - 1);
+                // Let's extract the part and remove "\" characters in there.
+                $part = substr($content, $base['part']['start'] + 1, $i - $base['part']['start'] - 1);
+                $part = str_replace('\\', '', $part);
+
+                $base['parts'][] = $part;
                 $base['part'] = null;
             }
 

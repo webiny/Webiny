@@ -12,16 +12,16 @@ use SplFileInfo;
 use Webiny\Component\StdLib\SingletonTrait;
 use Webiny\Component\StdLib\StdLibTrait;
 
-class JsParser
+class JsParser extends AbstractParser
 {
     use StdLibTrait, WebinyTrait, SingletonTrait;
 
     // With a simple regex, we first find all this.i18n usages in given source.
     const REGEX = [
-        'namespace'       => '/@i18n.namespace ([A-Za-z\.0-9]*)?/',
+        'namespace'       => '/@i18n.namespace ([' . self::NAMESPACE_ALLOWED_CHARS . ']*)?/',
         'this.i18n'           => '/this\.i18n\([\'\`\"]/m',
         'Webiny.I18n'           => '/Webiny\.I18n\([\'\`\"]/m',
-        'customNamespace' => '/\.i18n\([\'|"|`]{1}.*?[\'|"|`]{1},.*?, ?\{.*?[\'|"|`]?namespace[\'|"|`]? ?: ?[\'|"|`]{1}([A-Za-z0-9\.]*?)[\'|"|`]{1}.*?\}\)/',
+        'customNamespace' => '/\.i18n\([\'|"|`]{1}.*?[\'|"|`]{1},.*?, ?\{.*?[\'|"|`]?namespace[\'|"|`]? ?: ?[\'|"|`]{1}([' . self::NAMESPACE_ALLOWED_CHARS . ']*?)[\'|"|`]{1}.*?\}\)/',
     ];
 
     /**
@@ -160,8 +160,12 @@ class JsParser
                     continue;
                 }
 
+                // Let's extract the part and remove "\" characters in there.
+                $part = substr($content, $base['part']['start'] + 1, $i - $base['part']['start'] - 1);
+                $part = str_replace('\\', '', $part);
+
                 // Okay, now we are at the end of the part, so let's add it to the parts.
-                $base['parts'][] = substr($content, $base['part']['start'] + 1, $i - $base['part']['start'] - 1);
+                $base['parts'][] = $part;
                 $base['part'] = null;
             }
         }, $positions);
