@@ -83,6 +83,10 @@ class Link extends Webiny.Ui.Component {
             classes[this.props.className] = true;
         }
 
+        if (this.props.disabled) {
+            classes[styles.disabled] = true;
+        }
+
         props.className = this.classSet(classes);
 
         if (props.preventScroll) {
@@ -99,8 +103,6 @@ class Link extends Webiny.Ui.Component {
                 finalProps[prop] = value;
             }
         });
-
-
 
         return finalProps;
     }
