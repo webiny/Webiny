@@ -33,8 +33,7 @@ class I18NLocale extends AbstractEntity
 
         /**
          * Default locale that will be used when locale detection (executed on client-side) failed.
-         * Only one locale can be set as default.
-         * Default locale cannot be deleted.
+         * Only one locale can be set as default. Default locale cannot be deleted.
          */
         $this->attr('default')->boolean()->onSet(function ($value) {
             if ($value !== $this->default) {
@@ -81,6 +80,9 @@ class I18NLocale extends AbstractEntity
             ]
         ]);
 
+        /**
+         * Cache key for current locale, changes whenever a locale, text or a translation changes.
+         */
         $this->attr('cacheKey')->char()->setSkipOnPopulate()->setToArrayDefault();
 
         /**
@@ -99,8 +101,8 @@ class I18NLocale extends AbstractEntity
         parent::entityApi($api);
 
         /**
-         * @api.name        List locales
-         * @api.description Lists all available locales.
+         * @api.name        List all locales
+         * @api.description Lists all locales, excludes ones that were already added.
          */
         $api->get('locales', function () {
             return I18NLocales::getLocales();
@@ -118,11 +120,11 @@ class I18NLocale extends AbstractEntity
             }, $exclude);
 
             return I18NLocales::getLocales($exclude);
-        })->setPublic();
+        });
 
         /**
          * @api.name        List available locales
-         * @api.description Lists locales that were not already added.
+         * @api.description Lists all locales, excludes ones that were already added.
          */
         $api->get('/available/{locale}', function (I18NLocale $locale) {
             $params = [
@@ -139,11 +141,12 @@ class I18NLocale extends AbstractEntity
             }, $exclude);
 
             return I18NLocales::getLocales($exclude);
-        })->setPublic();
+        });
 
     }
 
     /**
+     * Returns locale by key (eg. "en-GB").
      * @param $locale
      *
      * @return I18NLocale|null
@@ -154,6 +157,7 @@ class I18NLocale extends AbstractEntity
     }
 
     /**
+     * Returns locale that was set as default.
      * @return I18NLocale|null
      */
     public static function findDefault()
@@ -162,6 +166,8 @@ class I18NLocale extends AbstractEntity
     }
 
     /**
+     * Updates cache key for current locale. Updated when translations, text or locale settings were changed. Used
+     * on client-side, to determine whether or not new fetch of translations is needed.
      * @return $this
      */
     public function updateCacheKey()

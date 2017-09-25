@@ -30,6 +30,10 @@ class I18NText extends AbstractEntity
         parent::__construct();
 
         $this->attr('app')->char()->setValidators('required')->setToArrayDefault();
+
+        /**
+         * Keys can only consist of letters, numbers and dots ".".
+         */
         $this->attr('key')->char()->setValidators('required,unique')->setToArrayDefault()->onSet(function ($value) {
             if ($value != $this->key) {
                 // Let's check if we received a valid format. Only letters, numbers and dot "." allowed.
@@ -40,6 +44,7 @@ class I18NText extends AbstractEntity
 
             return $value;
         });
+
         $this->attr('base')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('group')->many2one()->setEntity(I18NTextGroup::class);
         $this->attr('translations')->arr()->setToArrayDefault();
@@ -50,7 +55,7 @@ class I18NText extends AbstractEntity
         parent::entityApi($api);
 
         /**
-         * @api.name        Import texts
+         * @api.name        Scan texts
          * @api.description Finds i18n texts in given apps and imports them to local database.
          *
          * @api.body.apps   array  Apps to be exported
@@ -60,15 +65,14 @@ class I18NText extends AbstractEntity
             $options = $this->wRequest()->getRequestData()['options'] ?? [];
 
             return I18N::getInstance()->scanApps($apps, $options);
-        })->setBodyValidators(['apps' => 'required,minLength:1'])->setPublic();
+        })->setBodyValidators(['apps' => 'required,minLength:1']);
 
         /**
          * @api.name        Export texts and download
-         * @api.description Finds i18n texts in given apps and exports them as a ZIP file which can then be imported on a
-         *                  different environment. Optionally, import to local database can also be made.
+         * @api.description Exports all texts within given apps and groups to a JSON file and starts download.
          *
          * @api.body.apps   array   Apps to be scanned (min. 1 required)
-         * @api.body.import boolean Imports texts into database (optional)
+         * @api.body.groups array   Groups to be scanned
          */
         $api->post('export/json', function () {
             $apps = $this->wRequest()->getRequestData()['apps'];
@@ -78,13 +82,14 @@ class I18NText extends AbstractEntity
             $export->setApps($apps)->setGroups($groups)->fromDb();
 
             $export->downloadJson();
-        })->setBodyValidators(['apps' => 'required,minLength:1'])->setPublic();
+        })->setBodyValidators(['apps' => 'required,minLength:1']);
 
         /**
          * @api.name        Import texts
-         * @api.description Finds i18n texts in given apps and imports them to local database.
+         * @api.description Imports all texts in received JSON file.
          *
-         * @api.body.apps   array  Apps to be exported
+         * @api.body.file    array  JSON file - base64 encoded content
+         * @api.body.options array  Import options (eg. "preview" or "overwriteExisting")
          */
         $api->post('import/json', function () {
             $file = $this->wRequest()->getRequestData()['file'];
@@ -94,13 +99,13 @@ class I18NText extends AbstractEntity
             $export->fromJsonFile($file);
 
             return $export->toDb($options);
-        })->setBodyValidators(['file' => 'required'])->setPublic();
+        })->setBodyValidators(['file' => 'required']);
 
         /**
          * @api.name        Fetch translations
-         * @api.description Fetches all translations for given language
+         * @api.description Fetches all translations for given locale.
          *
-         * @api.body.language   string  Language for which the translations will be returned
+         * @api.path.key   string  Locale for which the translations will be returned
          */
         $api->get('translations/locales/{key}', function ($key) {
             $locale = I18NLocale::findByKey($key);
@@ -129,12 +134,11 @@ class I18NText extends AbstractEntity
                 'cacheKey'     => $locale->cacheKey,
                 'translations' => $translations
             ];
-
-        })->setPublic();
+        });
 
         /**
-         * @api.name        Updates text translation by ID for given locale
-         * @api.description Gets a translation by ID and updates the translation in given locale
+         * @api.name        Update translation
+         * @api.description Gets text by ID and updates the translation in given locale.
          */
         $api->patch('{id}/translations', function () {
             $data = $this->wRequest()->getRequestData();
@@ -147,13 +151,16 @@ class I18NText extends AbstractEntity
             $locale->updateCacheKey()->save();
 
             return ['locale' => $locale->key, 'text' => $data['text']];
-        })->setBodyValidators(['locale' => 'required'])->setPublic();
+        })->setBodyValidators(['locale' => 'required']);
 
         /**
          * @api.name        Export translations and download
-         * @api.description Exports translations for all given apps in a form of a ZIP archive.
+         * @api.description Exports translations for all given apps
          *
-         * @api.body.apps   array   List of apps
+         * @api.body.apps       array   List of apps (required)
+         * @api.body.groups     array   List of groups (required)
+         * @api.body.locales    array   List of locales (required)
+         * @api.path.tyoe       string  Type of export ("json" or "yaml")
          */
         $api->post('translations/export/{type}', function ($type) {
             $apps = $this->wRequest()->getRequestData()['apps'];
@@ -178,13 +185,15 @@ class I18NText extends AbstractEntity
             'apps'    => 'required',
             'groups'  => 'required',
             'locales' => 'required'
-        ])->setPublic();
+        ]);
 
         /**
-         * @api.name        Export translations and download
-         * @api.description Exports translations for all given apps in a form of a ZIP archive.
+         * @api.name        Import translations
+         * @api.description Imports all translations in received JSON or YAML file.
          *
-         * @api.body.apps   array   List of apps
+         * @api.body.file       array  JSON or YAML file - base64 encoded content
+         * @api.body.options    array  Import options (eg. "preview" or "overwriteExisting")
+         * @api.path.type       string Type of export ("json" or "yaml")
          */
         $api->post('translations/import/{type}', function ($type) {
             $file = $this->wRequest()->getRequestData()['file'];
@@ -212,8 +221,12 @@ class I18NText extends AbstractEntity
             }
 
             return $stats;
-        })->setBodyValidators(['file' => 'required'])->setPublic();
+        })->setBodyValidators(['file' => 'required']);
 
+        /**
+         * @api.name        Translation stats
+         * @api.description Returns stats for all locales - how many translations were done and how many are still missing.
+         */
         $api->get('stats/translated', function () {
             $return = ['locales' => ['total' => 0], 'texts' => ['total' => I18NText::count()], 'translations' => []];
 
@@ -261,12 +274,12 @@ class I18NText extends AbstractEntity
             $return['translations'] = $translations;
 
             return $return;
-        })->setPublic();
+        });
 
     }
 
     /**
-     * Finds a translation by given key
+     * Returns text by given key.
      *
      * @param $key
      *
@@ -278,6 +291,7 @@ class I18NText extends AbstractEntity
     }
 
     /**
+     * Sets translation for given locale.
      * @param I18NLocale $locale
      * @param            $text
      *
@@ -302,6 +316,7 @@ class I18NText extends AbstractEntity
     }
 
     /**
+     * Returns translation for given locale.
      * @param I18NLocale $locale
      *
      * @return mixed
@@ -316,6 +331,7 @@ class I18NText extends AbstractEntity
     }
 
     /**
+     * Checks if translation exists for given locale.
      * @param I18NLocale $locale
      *
      * @return bool

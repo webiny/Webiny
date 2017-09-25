@@ -33,6 +33,10 @@ class I18NTextGroup extends AbstractEntity
 
     }
 
+    /**
+     * Group cannot be deleted if there are texts already in it.
+     * @throws AppException
+     */
     public function canDelete()
     {
         if ($this->totalTexts > 0) {
