@@ -105,7 +105,8 @@ TextsList.defaultProps = {
                                                     <Ui.List.Table.Field name="app" label={this.i18n('App')} align="center"/>
                                                     <Ui.List.Table.Field name="group.name" label={this.i18n('Group')} align="center"/>
                                                     <Ui.List.Table.Actions>
-                                                        <Ui.List.Table.Action label="Edit" onClick={showView('textsModal')}/>
+                                                        <Ui.List.Table.EditAction onClick={showView('textsModal')}/>
+                                                        <Ui.List.Table.DeleteAction/>
                                                     </Ui.List.Table.Actions>
                                                 </Ui.List.Table.Row>
                                                 <Ui.List.Table.Footer/>

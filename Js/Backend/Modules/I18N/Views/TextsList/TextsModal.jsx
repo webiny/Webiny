@@ -24,6 +24,7 @@ class TranslationModal extends Webiny.Ui.ModalComponent {
                                 <Ui.Form.Loader/>
                                 <Ui.Modal.Header title={id ? this.i18n('Edit Text') : this.i18n(`Create Text`)} onClose={this.hide}/>
                                 <Ui.Modal.Body>
+                                    <Ui.Form.Error/>
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={12}>
                                             <Ui.Input label={this.i18n('Key')} name="key" validate="required"/>

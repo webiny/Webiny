@@ -30,7 +30,16 @@ class I18NText extends AbstractEntity
         parent::__construct();
 
         $this->attr('app')->char()->setValidators('required')->setToArrayDefault();
-        $this->attr('key')->char()->setValidators('required,unique')->setToArrayDefault();
+        $this->attr('key')->char()->setValidators('required,unique')->setToArrayDefault()->onSet(function ($value) {
+            if ($value != $this->key) {
+                // Let's check if we received a valid format. Only letters, numbers and dot "." allowed.
+                if (preg_match('/[^A-Za-z0-9\.]/', $value)) {
+                    throw new AppException($this->wI18n('Key can contain only letters, numbers and a dot ".".'));
+                }
+            }
+
+            return $value;
+        });
         $this->attr('base')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('group')->many2one()->setEntity(I18NTextGroup::class);
         $this->attr('translations')->arr()->setToArrayDefault();
