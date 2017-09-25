@@ -94,7 +94,7 @@ class ExportTranslationsModal extends Webiny.Ui.ModalComponent {
                                     <Ui.Button label={this.i18n(`Cancel`)} onClick={this.hide}/>
                                     <Ui.DownloadLink
                                         separate
-                                        disabled={_.isEmpty(model.apps)}
+                                        disabled={_.isEmpty(model.apps) || _.isEmpty(model.groups) || _.isEmpty(model.locales)}
                                         onClick={() => this.hide()}
                                         method="POST"
                                         params={model}

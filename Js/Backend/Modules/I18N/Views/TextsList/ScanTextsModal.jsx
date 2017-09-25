@@ -93,6 +93,7 @@ class ScanTextsModal extends Webiny.Ui.ModalComponent {
                                 <Ui.Modal.Footer >
                                     <Ui.Button label={this.i18n(`Cancel`)} onClick={this.hide}/>
                                     <Ui.Button
+                                        disabled={_.isEmpty(model.apps)}
                                         type="primary"
                                         label={this.i18n(`Scan`)}
                                         onClick={form.submit}/>
