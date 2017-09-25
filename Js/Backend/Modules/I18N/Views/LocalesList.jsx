@@ -40,10 +40,6 @@ LocalesList.defaultProps = {
                                                     <Ui.List.Table.Field label="Locale" sort="key">
                                                         {row => (
                                                             <div>
-                                                                <div>{this.i18n().money(12345.78)}</div>
-                                                                <div>{this.i18n().number(12345.78)}</div>
-                                                                <div>{this.i18n('{broj|number}', {broj: 5699.99})}</div>
-                                                                <div>{this.i18n('{pare|money}', {pare: 5699.99})}</div>
                                                                 <div>{row.label}</div>
                                                                 <code>{row.key}</code>
                                                             </div>

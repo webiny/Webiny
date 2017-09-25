@@ -74,7 +74,7 @@ class I18n {
         const translate = (base, variables = {}, options = {}) => {
             if (_.isString(base) && _.isString(variables)) {
                 const key = this.getTextKey(base, variables);
-                return translate(variables, options, key);
+                return this.translate(variables, options, key);
             }
 
             const key = this.getTextKey(options.namespace, base);
