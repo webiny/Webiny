@@ -99,8 +99,7 @@ class Search extends Webiny.Ui.FormComponent {
         const newState = {
             options: [],
             selectedOption: -1,
-            query: '',
-            preview: ''
+            query: ''
         };
 
         // Try to extract ID
@@ -124,7 +123,6 @@ class Search extends Webiny.Ui.FormComponent {
         }
 
         this.currentValueIsId = !!id;
-
         this.setState(newState);
     }
 
@@ -163,7 +161,7 @@ class Search extends Webiny.Ui.FormComponent {
                 this.api.setQuery(_.merge({_searchQuery: this.state.query}, this.filters)).execute().then(apiResponse => {
                     const data = apiResponse.getData();
                     this.setState({options: _.get(data, 'list', data), loading: false}, () => {
-                        this.props.onLoadOptions(this.state.options);
+                        this.props.onLoadOptions({options: this.state.options});
                     });
                 });
             }
@@ -220,7 +218,7 @@ class Search extends Webiny.Ui.FormComponent {
                 } else if (this.props.allowFreeInput) {
                     this.applyFreeInput();
                 } else {
-                    this.props.onEnter(e);
+                    this.props.onEnter({event: e});
                 }
                 break;
             case 'Escape':
@@ -339,15 +337,17 @@ class Search extends Webiny.Ui.FormComponent {
         });
     }
 
-    fetchValue(item) {
+    fetchValue({data: item}) {
         let value = _.get(item, this.props.textAttr);
-        if (!value) {
-            if (!this.warned) {
-                console.warn(`Warning: Item attribute '${this.props.textAttr}' was not found in the results of '${this.props.name}'
+        if (DEVELOPMENT) {
+            if (!value) {
+                if (!this.warned) {
+                    console.warn(`Warning: Item attribute '${this.props.textAttr}' was not found in the results of '${this.props.name}'
                 component.\nMissing or misspelled 'fields' parameter?`);
-                this.warned = true;
+                    this.warned = true;
+                }
+                value = item.id;
             }
-            value = item.id;
         }
         return value;
     }
@@ -356,7 +356,7 @@ class Search extends Webiny.Ui.FormComponent {
         if (!item) {
             return null;
         }
-        return this.props.selectedRenderer.call(this, {option: item});
+        return this.props.selectedRenderer.call(this, {option: {data: item}});
     }
 }
 
@@ -382,7 +382,7 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     selectedRenderer({option}) {
         return this.fetchValue(option);
     },
-    renderOption(item, index) {
+    renderOption({item, index}) {
         const {styles} = this.props;
         const itemClasses = {
             [styles.selected]: index === this.state.selectedOption
@@ -396,7 +396,7 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         return (
             <li key={index} className={this.classSet(itemClasses)} {...linkProps}>
                 <a href="javascript:void(0)">
-                    {this.props.optionRenderer.call(this, {option: item})}
+                    {this.props.optionRenderer.call(this, {option: {data: item}})}
                 </a>
             </li>
         );
@@ -417,7 +417,7 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         };
 
         // Render option
-        const options = this.state.options.map(this.props.renderOption.bind(this));
+        const options = this.state.options.map((item, index) => this.props.renderOption.call(this, {item, index}));
 
         let dropdownMenu = null;
         const {styles} = this.props;
@@ -452,7 +452,7 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                 {this.renderInfo()}
 
                 <div className="inputGroup">
-                    {this.props.renderSearchInput.call(this)}
+                    {this.props.renderSearchInput.call(this, {$this: this})}
                 </div>
                 {this.renderDescription()}
                 {this.renderValidationMessage()}

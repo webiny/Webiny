@@ -12,16 +12,16 @@ class Input extends Webiny.Ui.FormComponent {
         this.bindMethods('focus,renderValidationIcon');
     }
 
-    onKeyDown(e) {
-        if (e.metaKey || e.ctrlKey) {
+    onKeyDown({event}) {
+        if (event.metaKey || event.ctrlKey) {
             return;
         }
 
-        switch (e.key) {
+        switch (event.key) {
             case 'Enter':
                 if (this.props.onEnter && this.props.onEnter !== _.noop) {
-                    e.preventDefault();
-                    this.props.onEnter(e, this);
+                    event.preventDefault();
+                    this.props.onEnter({event, component: this});
                 }
                 break;
             default:
@@ -77,8 +77,8 @@ Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             className: styles.input,
             value: this.getValue() || '',
             placeholder: this.getPlaceholder(),
-            onKeyUp: this.props.onKeyUp,
-            onKeyDown: this.props.onKeyDown !== _.noop ? this.props.onKeyDown : this.onKeyDown.bind(this),
+            onKeyUp: event => this.props.onKeyUp({event, component: this}),
+            onKeyDown: event => (this.props.onKeyDown !== _.noop ? this.props.onKeyDown : this.onKeyDown.bind(this))({event, component: this}),
             onChange: this.props.onChange,
             autoFocus: this.props.autoFocus
         };

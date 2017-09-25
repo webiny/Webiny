@@ -6,7 +6,7 @@ import styles from './styles.css';
 
 // TODO: https://www.npmjs.com/package/react-google-maps
 
-class GoogleMap extends Webiny.Ui.Component {
+class GoogleMap extends Webiny.Ui.FormComponent {
 
     constructor(props) {
         super(props);

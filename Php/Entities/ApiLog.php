@@ -4,7 +4,6 @@ namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
-use Apps\Webiny\Php\Lib\Entity\Attributes\UserAttribute;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\EntityQuery;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\Filter;
 use Apps\Webiny\Php\Lib\Entity\EntityQuery\QueryContainer;
