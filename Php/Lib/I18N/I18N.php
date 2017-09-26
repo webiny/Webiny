@@ -7,9 +7,14 @@ use Apps\Webiny\Php\Entities\I18NText;
 use Apps\Webiny\Php\Lib\Apps\App;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\I18N\Modifiers\AbstractModifier;
+use Apps\Webiny\Php\Lib\I18N\Modifiers\DateModifier;
+use Apps\Webiny\Php\Lib\I18N\Modifiers\DateTimeModifier;
 use Apps\Webiny\Php\Lib\I18N\Modifiers\GenderModifier;
 use Apps\Webiny\Php\Lib\I18N\Modifiers\IfModifier;
+use Apps\Webiny\Php\Lib\I18N\Modifiers\MoneyModifier;
+use Apps\Webiny\Php\Lib\I18N\Modifiers\NumberModifier;
 use Apps\Webiny\Php\Lib\I18N\Modifiers\PluralModifier;
+use Apps\Webiny\Php\Lib\I18N\Modifiers\TimeModifier;
 use Apps\Webiny\Php\Lib\I18N\Parsers\JsParser;
 use Apps\Webiny\Php\Lib\I18N\Parsers\PhpParser;
 use Apps\Webiny\Php\Lib\I18N\Parsers\SmartyParser;
@@ -23,6 +28,28 @@ class I18N
     private $locale;
     private $modifiers;
 
+    /**
+     * If we fail to fetch formats for currently selected locale, these default formats will be used.
+     * @type {{date: string, time: string, datetime: string, number: string}}
+     */
+    private static $defaultFormats = [
+        'date'     => 'd/m/Y',
+        'time'     => 'h:i',
+        'datetime' => 'd/m/Y H:i',
+        'money'    => [
+            'symbol'    => '',
+            'format'    => '{symbol}{amount}',
+            'decimal'   => '.',
+            'thousand'  => ',',
+            'precision' => 2
+        ],
+        'number'   => [
+            'decimal'   => '.',
+            'thousand'  => ',',
+            'precision' => 2
+        ]
+    ];
+
     use StdLibTrait, WebinyTrait, SingletonTrait;
 
     /**
@@ -34,7 +61,12 @@ class I18N
         $this->registerModifiers([
             new IfModifier(),
             new GenderModifier(),
-            new PluralModifier()
+            new PluralModifier(),
+            new DateTimeModifier(),
+            new DateModifier(),
+            new TimeModifier(),
+            new MoneyModifier(),
+            new NumberModifier(),
         ]);
 
         if (!$this->isEnabled()) {
@@ -166,6 +198,127 @@ class I18N
         }, '');
     }
 
+    /**
+     * Formats datetime as defined in I18NLocale settings. Can also receive a custom output formatting rules if needed.
+     *
+     * @param      $value
+     * @param null $outputFormat
+     *
+     * @return false|string
+     */
+    public function datetime($value, $outputFormat = null)
+    {
+        $format = $outputFormat;
+        if (!$format) {
+            $format = self::$defaultFormats['datetime'];
+            $locale = $this->getLocale();
+            if ($locale && $locale->formats->key('datetime')) {
+                $format = $locale->formats->key('datetime');
+            }
+        }
+        $value = strtotime($value);
+
+        return date($format, $value);
+    }
+
+    /**
+     * Formats time as defined in I18NLocale settings. Can also receive a custom output formatting rules if needed.
+     *
+     * @param      $value
+     * @param null $outputFormat
+     *
+     * @return false|string
+     */
+    public function time($value, $outputFormat = null)
+    {
+        $format = $outputFormat;
+        if (!$format) {
+            $format = self::$defaultFormats['time'];
+            $locale = $this->getLocale();
+            if ($locale && $locale->formats->key('time')) {
+                $format = $locale->formats->key('time');
+            }
+        }
+        $value = strtotime($value);
+
+        return date($format, $value);
+    }
+
+    /**
+     * Formats date as defined in I18NLocale settings. Can also receive a custom output formatting rules if needed.
+     *
+     * @param      $value
+     * @param null $outputFormat
+     *
+     * @return false|string
+     */
+    public function date($value, $outputFormat = null)
+    {
+        $format = $outputFormat;
+        if (!$format) {
+            $format = self::$defaultFormats['date'];
+            $locale = $this->getLocale();
+            if ($locale && $locale->formats->key('date')) {
+                $format = $locale->formats->key('date');
+            }
+        }
+        $value = strtotime($value);
+
+        return date($format, $value);
+    }
+
+    /**
+     * Formats money as defined in I18N Locale settings. Can also receive a custom output formatting rules if needed.
+     *
+     * @param       $value
+     * @param array $outputFormat
+     *
+     * @return string
+     */
+    public function money($value, $outputFormat = [])
+    {
+        $format = self::$defaultFormats['money'];
+        $locale = $this->getLocale();
+        if ($locale) {
+            $format = array_merge($format, $locale->formats->key('money'));
+        }
+
+        if (!empty($outputFormat)) {
+            $format = array_merge($format, $outputFormat);
+        }
+
+        $amount = number_format($value, $format['precision'], $format['thousand'], $format['decimal']);
+        $symbol = $format['symbol'];
+
+        $output = $format['format'];
+        $output = str_replace('{symbol}', $symbol, $output);
+        $output = str_replace('{amount}', $amount, $output);
+
+        return $output;
+    }
+
+    /**
+     * Formats number as defined in I18N Locale settings. Can also receive a custom output formatting rules if needed.
+     *
+     * @param            $value
+     * @param array      $outputFormat
+     *
+     * @return string
+     */
+    public function number($value, $outputFormat = [])
+    {
+        $format = self::$defaultFormats['number'];
+        $locale = $this->getLocale();
+        if ($locale) {
+            $format = array_merge($format, $locale->formats->key('number'));
+        }
+
+        if (!empty($outputFormat)) {
+            $format = array_merge($format, $outputFormat);
+        }
+
+        return number_format($value, $format['precision'], $format['thousand'], $format['decimal']);
+    }
 
     /**
      * Registers single modifier.
@@ -237,6 +390,7 @@ class I18N
     /**
      * Scans given apps for i18n usages (PHP, Smarty template sand JS code included).
      * Returns scan stats - how many entries were created, update and ignored.
+     *
      * @param array $list
      *
      * @param array $options
@@ -312,4 +466,5 @@ class I18N
         return $stats;
 
     }
+
 }

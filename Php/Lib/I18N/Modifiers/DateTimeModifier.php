@@ -2,20 +2,22 @@
 
 namespace Apps\Webiny\Php\Lib\I18N\Modifiers;
 
+use Apps\Webiny\Php\Lib\I18N\I18N;
+
 /**
- * Can return different text depending on given value.
- * Class IfModifier
+ * Formats datetime.
+ * Class DateTimeModifier
  * @package Apps\Webiny\Php\Lib\I18N\Modifiers
  */
-class IfModifier extends AbstractModifier
+class DateTimeModifier extends AbstractModifier
 {
     public function getName()
     {
-        return 'if';
+        return 'datetime';
     }
 
     public function execute($value, $parameters = null)
     {
-        return $value === $parameters[0] ? $parameters[1] : $parameters[2] || '';
+        return I18n::getInstance()->datetime($value);
     }
 }

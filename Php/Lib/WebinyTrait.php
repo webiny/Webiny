@@ -210,6 +210,8 @@ trait WebinyTrait
     }
 
     /**
+     * Main use is to make it easier to wrap texts into I18N. Secondary use is if base text was not passed, then this method will return
+     * an instance (singleton) of I18N which can then be used to maybe call formatting methods like dates / numbers.
      * @param       $base
      * @param array $variables
      * @param array $options
@@ -217,8 +219,12 @@ trait WebinyTrait
      * @return string
      * @throws AppException
      */
-    static protected function wI18n($base, $variables = [], $options = [])
+    static protected function wI18n($base = null, $variables = [], $options = [])
     {
+        if (!$base) {
+            return I18N::getInstance();
+        }
+
         $options['namespace'] = $options['namespace'] ?? null;
         if (!$options['namespace']) {
             if (!property_exists(static::class, 'i18nNamespace')) {

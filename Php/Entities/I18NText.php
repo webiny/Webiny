@@ -136,7 +136,7 @@ class I18NText extends AbstractEntity
                 'cacheKey'     => $locale->cacheKey,
                 'translations' => $translations
             ];
-        });
+        })->setPublic();
 
         /**
          * @api.name        Update translation

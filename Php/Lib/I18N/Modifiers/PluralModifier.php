@@ -14,7 +14,7 @@ class PluralModifier extends AbstractModifier
         return 'plural';
     }
 
-    public function execute($value, $parameters)
+    public function execute($value, $parameters = null)
     {
         // Numbers can be single number or ranges.
         for ($i = 0; $i < count($parameters); $i = $i + 2) {

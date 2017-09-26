@@ -13,25 +13,7 @@ class LocalesModal extends Webiny.Ui.ModalComponent {
             <Modal.Dialog wide>
                 <Form
                     id={_.get(this.props, 'data.id')}
-                    defaultModel={{
-                        formats: {
-                            datetime: 'DD/MM/YYYY HH:mm:ss',
-                            time: 'HH:mm:ss',
-                            date: 'DD/MM/YYYY',
-                            money: {
-                                symbol: '$',
-                                format: '%s%v',
-                                precision: 2,
-                                decimal: '.',
-                                thousand: ','
-                            },
-                            number: {
-                                precision: 2,
-                                decimal: '.',
-                                thousand: ','
-                            }
-                        }
-                    }}
+                    defaultModel={{formats: Webiny.I18n.getDefaultFormats()}}
                     fields="key,label,formats,default,enabled"
                     api="/entities/webiny/i18n-locales"
                     onSubmitSuccess={apiResponse => this.hide().then(() => this.props.onSubmitSuccess(apiResponse))}
@@ -72,7 +54,7 @@ class LocalesModal extends Webiny.Ui.ModalComponent {
                                     <Section title={this.i18n('Dates')}/>
                                     <Grid.Row>
                                         <Grid.Col all={7}>
-                                            <Input label={this.i18n('Date')} name="formats.date" placeholder={this.i18n('eg. DD/MM/YYYY')}/>
+                                            <Input label={this.i18n('Date')} name="formats.date" placeholder={this.i18n('eg. d/m/Y')}/>
                                         </Grid.Col>
                                         <Grid.Col all={5}>
                                             <Input
@@ -84,7 +66,7 @@ class LocalesModal extends Webiny.Ui.ModalComponent {
                                     </Grid.Row>
                                     <Grid.Row>
                                         <Grid.Col all={7}>
-                                            <Input label={this.i18n('Time')} name="formats.time" placeholder={this.i18n('eg. HH:mm:ss')}/>
+                                            <Input label={this.i18n('Time')} name="formats.time" placeholder={this.i18n('eg. h:i')}/>
                                         </Grid.Col>
                                         <Grid.Col all={5}>
                                             <Input
@@ -99,7 +81,7 @@ class LocalesModal extends Webiny.Ui.ModalComponent {
                                             <Input
                                                 label={this.i18n('Date/Time')}
                                                 name="formats.datetime"
-                                                placeholder={this.i18n('eg. DD/MM/YYYY HH:mm:ss')}/>
+                                                placeholder={this.i18n('eg. d/m/Y h:i')}/>
                                         </Grid.Col>
                                         <Grid.Col all={5}>
                                             <Input
@@ -114,7 +96,7 @@ class LocalesModal extends Webiny.Ui.ModalComponent {
                                         <Grid.Col all={2}>
                                             <Input
                                                 label={this.i18n('Format')}
-                                                placeholder={this.i18n('eg. "%v %s"')}
+                                                placeholder={this.i18n('eg. "{value}{symbol}"')}
                                                 name="formats.money.format"/>
                                         </Grid.Col>
                                         <Grid.Col all={2}>

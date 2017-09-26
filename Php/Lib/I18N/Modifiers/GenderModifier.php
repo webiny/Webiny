@@ -14,7 +14,7 @@ class GenderModifier extends AbstractModifier
         return 'gender';
     }
 
-    public function execute($value, $parameters)
+    public function execute($value, $parameters = null)
     {
         return $value === 'male' ? $parameters[0] : $parameters[1];
     }

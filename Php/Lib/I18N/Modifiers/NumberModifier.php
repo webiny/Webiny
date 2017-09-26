@@ -2,20 +2,22 @@
 
 namespace Apps\Webiny\Php\Lib\I18N\Modifiers;
 
+use Apps\Webiny\Php\Lib\I18N\I18N;
+
 /**
- * Can return different text depending on given value.
- * Class IfModifier
+ * Formats number.
+ * Class NumberModifier
  * @package Apps\Webiny\Php\Lib\I18N\Modifiers
  */
-class IfModifier extends AbstractModifier
+class NumberModifier extends AbstractModifier
 {
     public function getName()
     {
-        return 'if';
+        return 'number';
     }
 
     public function execute($value, $parameters = null)
     {
-        return $value === $parameters[0] ? $parameters[1] : $parameters[2] || '';
+        return I18n::getInstance()->number($value);
     }
 }

@@ -7,6 +7,24 @@ import fecha from 'fecha';
 import accounting from 'accounting';
 
 import modifiers from './Modifiers';
+import PhpJsMap from './PhpJsMap';
+
+/**
+ * Converts PHP formatting definition into JS (suitable for date/time plugin - fecha).
+ * Check PhpJsMap.js for more information.
+ * @param format
+ * @returns {string}
+ */
+const convertPhpJsFormat = function (format) {
+    let output = '';
+    for (let i = 0; i < format.length; i++) {
+        const current = format[i];
+        output += PhpJsMap[current] && PhpJsMap[current][0] ? PhpJsMap[current][0] : current;
+    }
+
+    return output;
+};
+
 
 /**
  * Main class used for all I18n needs.
@@ -21,19 +39,19 @@ class I18n {
          * @type {{date: string, time: string, datetime: string, number: string}}
          */
         this.defaultFormats = {
-            date: 'DD/MMM/YY',
-            time: 'HH:mm',
-            datetime: 'DD/MMM/YY HH:mm',
+            date: 'd/m/Y',
+            time: 'h:i',
+            datetime: 'd/m/Y H:i',
             money: {
                 symbol: '',
-                format: '',
-                decimal: '',
-                thousand: '',
+                format: '{symbol}{amount}',
+                decimal: '.',
+                thousand: ',',
                 precision: 2
             },
             number: {
-                decimal: '',
-                thousand: '',
+                decimal: '.',
+                thousand: ', ',
                 precision: 2
             }
         };
@@ -125,10 +143,11 @@ class I18n {
     }
 
     /**
-     * Changes current locale and refreshes the page so that new translations can be immediately loaded.
+     * Changes current locale and refreshes the page so that I18N can be reinitialized and new translations immediately loaded.
      * @param locale
      */
     setLocaleAndReload(locale) {
+        Webiny.IndexedDB.remove('Webiny.I18n');
         Webiny.Cookies.set('webiny-i18n', locale, {expires: 30});
         location.reload();
     }
@@ -152,20 +171,20 @@ class I18n {
      * @param outputFormat
      * @param inputFormat
      */
-    date(value, outputFormat, inputFormat = 'YYYY-MM-DDTHH:mm:ssZ') {
+    date(value, outputFormat, inputFormat = 'Y-m-dTH:i:sO') {
         if (!outputFormat) {
             outputFormat = _.get(this.locales.current, 'formats.date', this.defaultFormats.date);
         }
 
         if (!_.isDate(value)) {
             try {
-                value = fecha.parse(value, inputFormat);
+                value = fecha.parse(value, convertPhpJsFormat(inputFormat));
             } catch (e) {
                 value = fecha.parse(value, 'X');
             }
         }
 
-        return fecha.format(value, outputFormat);
+        return fecha.format(value, convertPhpJsFormat(outputFormat));
     }
 
     /**
@@ -175,20 +194,20 @@ class I18n {
      * @param outputFormat
      * @param inputFormat
      */
-    time(value, outputFormat, inputFormat = 'YYYY-MM-DDTHH:mm:ssZ') {
+    time(value, outputFormat, inputFormat = 'Y-m-dTH:i:sO') {
         if (!outputFormat) {
             outputFormat = _.get(this.locales.current, 'formats.time', this.defaultFormats.time);
         }
 
         if (!_.isDate(value)) {
             try {
-                value = fecha.parse(value, inputFormat);
+                value = fecha.parse(value, convertPhpJsFormat(inputFormat));
             } catch (e) {
                 value = fecha.parse(value, 'X');
             }
         }
 
-        return fecha.format(value, outputFormat);
+        return fecha.format(value, convertPhpJsFormat(outputFormat));
     }
 
     /**
@@ -198,22 +217,27 @@ class I18n {
      * @param outputFormat
      * @param inputFormat
      */
-    datetime(value, outputFormat, inputFormat = 'YYYY-MM-DDTHH:mm:ssZ') {
+    datetime(value, outputFormat, inputFormat = 'Y-m-dTH:i:sO') {
         if (!outputFormat) {
             outputFormat = _.get(this.locales.current, 'formats.datetime', this.defaultFormats.datetime);
         }
 
         if (!_.isDate(value)) {
             try {
-                value = fecha.parse(value, inputFormat);
+                value = fecha.parse(value, convertPhpJsFormat(inputFormat));
             } catch (e) {
                 value = fecha.parse(value, 'X');
             }
         }
 
-        return fecha.format(value, outputFormat);
+        return fecha.format(value, convertPhpJsFormat(outputFormat));
     }
 
+    /**
+     * Outputs formatted number as amount of money.
+     * @param value
+     * @param outputFormat
+     */
     money(value, outputFormat) {
         if (!outputFormat) {
             outputFormat = _.assign({}, this.defaultFormats.money, _.get(this.locales.current, 'formats.money', {}))
@@ -221,9 +245,18 @@ class I18n {
             outputFormat = _.assign({}, this.defaultFormats, outputFormat);
         }
 
+        // Let's convert Webiny format to accounting.
+        outputFormat.symbol = outputFormat.symbol.replace('{symbol}', '%s');
+        outputFormat.symbol = outputFormat.symbol.replace('{amount}', '%v');
+
         return accounting.formatMoney(value, outputFormat.symbol, outputFormat.precision, outputFormat.thousand, outputFormat.decimal, outputFormat.format);
     }
 
+    /**
+     * Outputs formatted number.
+     * @param value
+     * @param outputFormat
+     */
     number(value, outputFormat) {
         if (!outputFormat) {
             outputFormat = _.assign({}, this.defaultFormats.number, _.get(this.locales.current, 'formats.number', {}))
@@ -373,6 +406,14 @@ class I18n {
     unregisterModifier(name) {
         delete this.modifiers[name];
         return this;
+    }
+
+    /**
+     * Returns default formats
+     * @returns {{date: string, time: string, datetime: string, number: string}}
+     */
+    getDefaultFormats() {
+        return this.defaultFormats;
     }
 
     /**
