@@ -10,6 +10,7 @@ use Apps\Webiny\Php\Entities\Image;
 class ImagesAttribute extends FilesAttribute
 {
     protected $dimensions = [];
+    protected $quality = 90;
 
     /**
      * @inheritDoc
@@ -20,9 +21,30 @@ class ImagesAttribute extends FilesAttribute
         $this->setEntity(Image::class)->setSorter('order');
     }
 
+    /**
+     * Set dimensions of images
+     *
+     * @param array $dimensions
+     *
+     * @return $this
+     */
     public function setDimensions(array $dimensions)
     {
         $this->dimensions = $dimensions;
+
+        return $this;
+    }
+
+    /**
+     * Set quality of images
+     *
+     * @param int $quality
+     *
+     * @return $this
+     */
+    public function setQuality($quality)
+    {
+        $this->quality = $quality;
 
         return $this;
     }
@@ -34,6 +56,7 @@ class ImagesAttribute extends FilesAttribute
         /* @var Image $value */
         foreach ($values as $value) {
             $value->setDimensions($this->dimensions);
+            $value->setQuality($this->quality);
         }
 
         return $processCallbacks ? $this->processGetValue($values, $params) : $values;

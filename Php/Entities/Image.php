@@ -25,6 +25,7 @@ class Image extends File
 
     protected static $classId = 'Webiny.Entities.Image';
     protected $dimensions = [];
+    protected $quality = 90;
 
     public function __construct()
     {
@@ -116,7 +117,7 @@ class Image extends File
                 if ($this->type === 'image/gif') {
                     $this->src = $parts->first() . ',' . $parts->last()->val();
                 } else {
-                    $this->src = $parts->first() . ',' . base64_encode($image->getBinary());
+                    $this->src = $parts->first() . ',' . base64_encode($image->getBinary(['quality' => $this->quality]));
                 }
             }
         }
@@ -159,6 +160,20 @@ class Image extends File
     public function setDimensions(array $dimensions)
     {
         $this->dimensions = $dimensions;
+
+        return $this;
+    }
+
+    /**
+     * Set image quality
+     *
+     * @param int $quality
+     *
+     * @return $this
+     */
+    public function setQuality($quality)
+    {
+        $this->quality = $quality;
 
         return $this;
     }

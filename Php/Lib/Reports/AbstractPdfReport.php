@@ -57,19 +57,10 @@ abstract class AbstractPdfReport extends AbstractReport
         $html = $this->wTemplateEngine()->fetch($template, $data);
         $storage = $this->wStorage('Temp');
 
-        // This way we do not need to worry about where the binary is installed
-        $result = [];
-        exec('whereis -b wkhtmltopdf', $result);
-        $binary = $this->str($result[0])->explode(' ')->removeFirst()->first()->val();
-
-        if (!$binary) {
-            throw new AppException('Unable to locate "wkhtmltopdf" binary. Make sure the library is installed and visible using "whereis -b wkhtmltopdf" command.');
-        }
-
         // Convert to PDF
         $pdf = new Pdf([
             'tmpDir' => $storage->getAbsolutePath(),
-            'binary' => $binary,
+            'binary' => $this->getPdfBinary(),
             'print-media-type'
         ]);
         $pdf->addPage($html);
@@ -88,6 +79,29 @@ abstract class AbstractPdfReport extends AbstractReport
 
         // Send output to browser
         $this->sendToBrowser($file, $filename);
+    }
+
+    /**
+     * Get path to PDF converter binary
+     *
+     * @return mixed|\Webiny\Component\Config\ConfigObject
+     * @throws AppException
+     */
+    private function getPdfBinary()
+    {
+        // Get binary
+        $binary = $this->wConfig()->get('Reports.Wkhtmltopdf');
+        if (!$binary || $binary === 'autodetect') {
+            $result = [];
+            exec('whereis -b wkhtmltopdf', $result);
+            $binary = $this->str($result[0])->explode(' ')->removeFirst()->first()->val();
+
+            if (!$binary) {
+                throw new AppException('Unable to locate "wkhtmltopdf" binary. Make sure the library is installed and visible using "whereis -b wkhtmltopdf" command.');
+            }
+        }
+
+        return $binary;
     }
 
     private function sendToBrowser(File $file, $filename)
