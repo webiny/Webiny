@@ -25,12 +25,6 @@ class BasePlugin {
         let currentContentState = editorState.getCurrentContent();
         let currentSelectionState = editorState.getSelection();
 
-        if (!currentSelectionState.getHasFocus()) {
-            // Focus last line
-            editorState = Draft.EditorState.moveFocusToEnd(editorState);
-            currentSelectionState = editorState.getSelection();
-        }
-
         // in case text is selected it is removed and then the block is appended
         const afterRemovalContentState = Draft.Modifier.removeRange(currentContentState, currentSelectionState, 'backward');
 

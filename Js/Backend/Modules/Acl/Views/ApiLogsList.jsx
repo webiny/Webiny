@@ -194,8 +194,8 @@ ApiLogsList.defaultProps = {
                                                             api="/entities/webiny/users"
                                                             fields="id,firstName,lastName,email"
                                                             searchFields="firstName,lastName,email"
-                                                            optionRenderer={({option: item}) => `${item.firstName} ${item.lastName} (${item.email})`}
-                                                            selectedRenderer={({option: item}) => `${item.firstName} ${item.lastName} (${item.email})`}
+                                                            optionRenderer={({option: {data:item}}) => `${item.firstName} ${item.lastName} (${item.email})`}
+                                                            selectedRenderer={({option: {data:item}}) => `${item.firstName} ${item.lastName} (${item.email})`}
                                                             name="createdBy"
                                                             placeholder="Filter by user"
                                                             onChange={apply()}/>

@@ -118,11 +118,13 @@ class App extends AbstractApp
             }
 
             // Check of any indexes need to be dropped
-            foreach ($installedIndexes as $index) {
-                $removed = !$indexes->exists($index);
-                if ($removed && $index !== '_id_') {
-                    echo "Dropping '" . $index . "' index from '" . $collection . "' collection...\n";
-                    $this->wDatabase()->dropIndex($collection, $index);
+            foreach ($installedIndexes as $collection => $cIndexes) {
+                foreach($cIndexes as $name) {
+                    $removed = !$indexes->exists($name);
+                    if ($removed && $index !== '_id_') {
+                        echo "Dropping '" . $index . "' index from '" . $collection . "' collection...\n";
+                        $this->wDatabase()->dropIndex($collection, $index);
+                    }
                 }
             }
         }

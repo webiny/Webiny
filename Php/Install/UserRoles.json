@@ -9,7 +9,7 @@
         "name": "Public",
         "slug": "public",
         "description": "This role is assumed for all public (anonymous) requests. Whatever is allowed here is becoming publicly accessible so be careful with it!",
-        "permissions": ["webiny-acl-user-profile", "webiny-logger-log-errors", "webiny-access-apps"]
+        "permissions": ["webiny-acl-user-profile", "webiny-logger-log-errors", "webiny-access-apps", "public"]
     },
     {
         "name": "User Manager",

@@ -28,7 +28,7 @@ class FormFilters extends Filters {
     }
 
     applyFormFilters() {
-        return (e) => this.form.submit(e);
+        return (e) => this.form.submit({event: e});
     }
 
     resetFormFilters() {
@@ -38,7 +38,7 @@ class FormFilters extends Filters {
 
 FormFilters.defaultProps = {
     defaultModel: null,
-    onSubmit: ({model, form, apply}) => {
+    onSubmit({model, form, apply}) {
         apply(model);
     },
     renderer() {

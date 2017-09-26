@@ -1,5 +1,11 @@
 [
     {
+        "name": "Public",
+        "slug": "public",
+        "description": "Public permissions",
+        "permissions": []
+    },
+    {
         "name": "User profile",
         "slug": "webiny-acl-user-profile",
         "permissions": [

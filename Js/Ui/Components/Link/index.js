@@ -104,6 +104,9 @@ class Link extends Webiny.Ui.Component {
             }
         });
 
+        if (props.onClick) {
+            props.onClick = e => this.props.onClick({event: e});
+        }
         return finalProps;
     }
 }

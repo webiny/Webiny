@@ -52,6 +52,10 @@ class RadioGroup extends Webiny.Ui.OptionComponent {
                 props.renderer = this.props.radioRenderer;
             }
 
+            if (this.props.radioLabelRenderer) {
+                props.labelRenderer = this.props.radioLabelRenderer;
+            }
+
             const radio = <Radio {...props}/>;
 
             if (callback) {
@@ -66,6 +70,7 @@ class RadioGroup extends Webiny.Ui.OptionComponent {
 RadioGroup.Radio = Radio;
 
 RadioGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
+    radioLabelRenderer: null,
     radioRenderer: null,
     renderer() {
         const {FormGroup, styles} = this.props;

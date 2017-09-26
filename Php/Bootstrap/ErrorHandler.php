@@ -1,4 +1,5 @@
 <?php
+
 namespace Apps\Webiny\Php\Bootstrap;
 
 use Apps\Webiny\Php\Lib\Response\ApiErrorResponse;
@@ -31,16 +32,16 @@ class ErrorHandler
 
     function __construct()
     {
-        if($this->wConfig()->get('Webiny.Logger.Enabled', true)){
+        if ($this->wConfig()->get('Webiny.Logger.Enabled', true)) {
             set_error_handler([$this, 'logError'], E_ALL);
             set_exception_handler([$this, 'logException']);
             register_shutdown_function([$this, 'logFatalError']);
         }
 
-        if($this->wConfig()->get('Webiny.Logger.DisplayErrors', false)){
+        if ($this->wConfig()->get('Webiny.Logger.DisplayErrors', false)) {
             error_reporting(E_ALL);
             ini_set('display_errors', 1);
-        }else{
+        } else {
             error_reporting(0);
             ini_set('display_errors', 0);
         }
@@ -136,10 +137,10 @@ class ErrorHandler
             }
 
             // create the error response
-            if(php_sapi_name() === 'cli'){
+            if (php_sapi_name() === 'cli') {
                 $response = new CliResponse($data);
                 $response = $response->output();
-            }else{
+            } else {
                 $response = new ApiErrorResponse($data, 'An error occurred on URL: ' . $this->wRequest()->getCurrentUrl(), 'W1');
                 $response = $response->output(JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
             }
@@ -158,10 +159,10 @@ class ErrorHandler
             return;
         }
 
-        try{
+        try {
             $loggerErrorGroup = new LoggerErrorGroup();
             $loggerErrorGroup->saveReport($this->errors, []);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             // show the error in case the connection to database is failing
             die(print_r($this->errors));
         }

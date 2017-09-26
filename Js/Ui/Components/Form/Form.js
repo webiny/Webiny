@@ -335,9 +335,10 @@ class Form extends Webiny.Ui.Component {
      * MAIN FORM ACTION METHODS
      */
 
-    submit(e) {
-        if (e && e.preventDefault) {
-            e.preventDefault();
+    submit({event} = {}) {
+        // If event is present - prevent default behaviour
+        if (event && event.preventDefault) {
+            event.preventDefault();
         }
 
         if (this.state.submitDisabled !== false) {

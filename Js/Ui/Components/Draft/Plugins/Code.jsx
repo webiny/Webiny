@@ -33,7 +33,7 @@ class CodePlugin extends Webiny.Draft.EntityPlugin {
                     strategy: this.entity,
                     component: (props) => {
                         return (
-                            <code>{props.children}</code>
+                            <code style={style}>{props.children}</code>
                         );
                     }
                 }

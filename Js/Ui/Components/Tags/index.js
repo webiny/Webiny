@@ -70,7 +70,7 @@ class Tags extends Webiny.Ui.FormComponent {
             this.props.onChange(tags);
             this.setState({tag: ''});
         }).catch(e => {
-            this.props.onInvalidTag(input.value, e);
+            this.props.onInvalidTag({value: input.value, event: e});
         });
     }
 
@@ -84,11 +84,11 @@ Tags.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     validateTags: null,
     placeholder: 'Type and hit ENTER',
     onInvalidTag: _.noop,
-    renderTag(tag, index) {
+    renderTag({value, index}) {
         const {Icon, styles} = this.props;
         return (
-            <div key={tag} className={styles.block}>
-                <p>{tag}</p>
+            <div key={value} className={styles.block}>
+                <p>{value}</p>
                 <Icon icon="icon-cancel" onClick={() => this.removeTag(index)}/>
             </div>
         );
@@ -111,7 +111,9 @@ Tags.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                 {this.renderLabel()}
                 <div className={styles.container} onClick={this.focusTagInput}>
                     <div className={styles.tag}>
-                        {_.isArray(this.props.value) && this.props.value.map((tag, index) => this.props.renderTag.call(this, tag, index))}
+                        {_.isArray(this.props.value) && this.props.value.map((value, index) => (
+                            this.props.renderTag.call(this, {value, index})
+                        ))}
                         <input {...input}/>
                     </div>
                 </div>
