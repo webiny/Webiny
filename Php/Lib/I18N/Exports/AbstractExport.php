@@ -15,7 +15,7 @@ abstract class AbstractExport
 {
     use WebinyTrait;
 
-    protected static $i18nNamespace = 'Webiny.Lib.AbstractExport';
+    protected static $i18nNamespace = 'Webiny.Lib.I18n.Exports.AbstractExport';
 
     /**
      * Holds current data, whether it came from db, yaml, json or another source.

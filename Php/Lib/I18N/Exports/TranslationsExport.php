@@ -14,7 +14,7 @@ class TranslationsExport extends TextsExport
 {
     use WebinyTrait;
 
-    protected static $i18nNamespace = 'Webiny.Lib.TranslationsExport';
+    protected static $i18nNamespace = 'Webiny.Lib.I18n.Exports.TranslationsExport';
 
     protected $locales = [];
 

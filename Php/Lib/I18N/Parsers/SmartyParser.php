@@ -60,11 +60,10 @@ class SmartyParser extends AbstractParser
 
     /**
      * @param             $content
-     * @param SplFileInfo $file
      *
      * @return array
      */
-    private function parseTexts($content, SplFileInfo $file)
+    private function parseTexts($content)
     {
         preg_match_all(self::REGEX['basic'], $content, $positions, PREG_OFFSET_CAPTURE);
         if (empty($positions)) {

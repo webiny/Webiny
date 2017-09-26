@@ -17,7 +17,7 @@ class TextsExport extends AbstractExport
 {
     use WebinyTrait;
 
-    protected static $i18nNamespace = 'Webiny.Lib.TextsExport';
+    protected static $i18nNamespace = 'Webiny.Lib.I18n.Exports.TextsExport';
 
     protected $groups = [];
 
