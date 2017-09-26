@@ -2,6 +2,8 @@
 
 namespace Apps\Webiny\Php\View;
 
+use Apps\Webiny\Php\Entities\I18NLocale;
+use Apps\Webiny\Php\Lib\I18N\I18N;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Services\Apps;
 use Webiny\Component\Config\ConfigObject;
@@ -9,8 +11,6 @@ use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Storage\StorageException;
 use Webiny\Component\TemplateEngine\Drivers\Smarty\AbstractSmartyExtension;
 use Webiny\Component\TemplateEngine\Drivers\Smarty\SmartySimplePlugin;
-
-setlocale(LC_MONETARY, 'en_GB.UTF-8');
 
 class SmartyExtension extends AbstractSmartyExtension
 {
@@ -22,7 +22,8 @@ class SmartyExtension extends AbstractSmartyExtension
     {
         return [
             new SmartySimplePlugin('webiny', 'function', [$this, 'webinyInclude']),
-            new SmartySimplePlugin('webinyPreload', 'function', [$this, 'webinyPreload'])
+            new SmartySimplePlugin('webinyPreload', 'function', [$this, 'webinyPreload']),
+            new SmartySimplePlugin('i18n', 'function', [$this, 'i18n'])
         ];
     }
 
@@ -80,6 +81,20 @@ class SmartyExtension extends AbstractSmartyExtension
             $browserSync = '<script src="' . $bsPath . '/browser-sync/browser-sync-client.js?v=2.18.6"></script>';
         }
 
+        $i18n = ['enabled' => I18N::getInstance()->isEnabled(), 'locale' => null];
+        if ($i18n['enabled']) {
+            $locale = I18N::getInstance()->getLocale();
+            if ($locale) {
+                $i18n['locale'] = [
+                    'key' => $locale->key,
+                    'cacheKey' => $locale->cacheKey,
+                    'formats' => $locale->formats->val()
+                ];
+            }
+        }
+
+        $i18n = json_encode($i18n);
+
         $apps = '[' . join(',', array_map(function ($app) {
                 return "'" . $app . "'";
             }, $apps)) . ']';
@@ -93,6 +108,7 @@ class SmartyExtension extends AbstractSmartyExtension
             ApiUrl: '{$apiPath}',
             Js: {$config},
             Meta: {$appsMeta},
+            I18n: {$i18n}
         };
     </script>
     <script src="{$meta['vendor']}" async></script> 
@@ -130,6 +146,14 @@ EOT;
         }, $preload);
 
         return join("\n\t", $links);
+    }
+
+    public static function i18n($params)
+    {
+        $params['variables'] = $params['variables'] ?? [];
+        $params['key'] = $params['namespace'] . '.' . md5($params['base']);
+
+        return I18N::getInstance()->translate($params['base'], $params['variables'], $params['key'], ['delimiters' => ['[', ']']]);
     }
 
     private function getMeta($jsApp)

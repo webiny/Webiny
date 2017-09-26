@@ -10,8 +10,11 @@ namespace Apps\Webiny\Php\Lib;
 use Apps\Webiny\Php\Lib\AppNotifications\AppNotifications;
 use Apps\Webiny\Php\Lib\Authorization\Authorization;
 use Apps\Webiny\Php\Lib\Apps\App;
+use Apps\Webiny\Php\Lib\Exceptions\AppException;
+use Apps\Webiny\Php\Lib\I18N\I18N;
 use Webiny\AnalyticsDb\AnalyticsDb;
 use Webiny\Component\Cache\CacheStorage;
+use Webiny\Component\Http\Cookie;
 use Webiny\Component\Mongo\Mongo;
 use Webiny\Component\ServiceManager\ServiceManager;
 use Webiny\Component\Storage\Storage as WebinyStorage;
@@ -111,6 +114,16 @@ trait WebinyTrait
     }
 
     /**
+     * Get current cookies
+     *
+     * @return Cookie
+     */
+    static protected function wCookie()
+    {
+        return Cookie::getInstance();
+    }
+
+    /**
      * Get access to event manager
      *
      * @return Events
@@ -130,6 +143,7 @@ trait WebinyTrait
 
     /**
      * Get Mailer instance
+     *
      * @param string $name
      *
      * @return \Webiny\Component\Mailer\Mailer
@@ -193,6 +207,38 @@ trait WebinyTrait
     static protected function wAuth()
     {
         return Authorization::getInstance();
+    }
+
+    /**
+     * Main use is to make it easier to wrap texts into I18N. Secondary use is if base text was not passed, then this method will return
+     * an instance (singleton) of I18N which can then be used to maybe call formatting methods like dates / numbers.
+     * @param       $base
+     * @param array $variables
+     * @param array $options
+     *
+     * @return string
+     * @throws AppException
+     */
+    static protected function wI18n($base = null, $variables = [], $options = [])
+    {
+        if (!$base) {
+            return I18N::getInstance();
+        }
+
+        $options['namespace'] = $options['namespace'] ?? null;
+        if (!$options['namespace']) {
+            if (!property_exists(static::class, 'i18nNamespace')) {
+                throw new AppException('Trying to output I18N text but no namespace defined.', null, [
+                    'class' => static::class,
+                    'base' => $base
+                ]);
+            } else {
+                $options['namespace'] = static::$i18nNamespace;
+            }
+        }
+
+        $textKey = $options['namespace'] . '.' . md5($base);
+        return I18N::getInstance()->translate($base, $variables, $textKey);
     }
 
     /**

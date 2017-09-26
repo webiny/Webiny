@@ -100,5 +100,8 @@
     },
     "optionalDependencies": {
         "fsevents": "^1.0.17"
+    },
+    "dependencies": {
+        "fecha": "^2.3.1"
     }
 }

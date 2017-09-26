@@ -47,7 +47,7 @@ Downloader.defaultProps = {
                 if (_.isArray(value)) {
                     value.map((v, index) => {
                         params.push(
-                            <input type="hidden" name={name + '[]'} value={v} key={index}/>
+                            <input type="hidden" name={name + '[]'} value={v} key={name + '-' + index}/>
                         );
                     });
                     return;

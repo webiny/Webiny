@@ -34,10 +34,14 @@ DownloadLink.defaultProps = {
     download: null,
     method: 'GET',
     params: null,
+    disabled: false,
     renderer() {
         const {Downloader, Link, ...props} = this.props;
         const downloader = <Downloader ref={downloader => this.downloader = downloader}/>;
         props.onClick = () => {
+            if (this.props.disabled) {
+                return;
+            }
             if (_.isString(this.props.download)) {
                 this.downloader.download(this.props.method, this.props.download, this.props.params);
             } else {

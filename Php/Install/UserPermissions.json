@@ -213,7 +213,7 @@
                 }
             }
         ]
-    }
+    },
     {
         "name": "Manage permissions",
         "slug": "webiny-acl-manage-permissions",
@@ -314,6 +314,87 @@
                     },
                     "apps/{id}/install": {
                         "get": true
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "name" : "Manage I18N",
+        "slug" : "webiny-i18n-manager",
+        "description" : "Allow user to manage languages and translations.",
+        "permissions" : [
+            {
+                "classId" : "Webiny.Entities.I18NText",
+                "rules" : {
+                    "c" : true,
+                    "r" : true,
+                    "u" : true,
+                    "d" : true,
+                    "keys" : {
+                        "post" : true
+                    },
+                    "edited" : {
+                        "get" : true
+                    },
+                    "scan" : {
+                        "post" : true
+                    },
+                    "export/json" : {
+                        "post" : true
+                    },
+                    "stats/translated" : {
+                        "get" : true
+                    },
+                    "translations/import/{type}" : {
+                        "post" : true
+                    },
+                    "translations/export/{type}" : {
+                        "post" : true
+                    },
+                    "{id}/translations" : {
+                        "patch" : true
+                    },
+                    "translations/locales/{key}" : {
+                        "get" : true
+                    },
+                    "import/json" : {
+                        "post" : true
+                    }
+                }
+            },
+            {
+                "classId" : "Webiny.Entities.I18NLocale",
+                "rules" : {
+                    "d" : true,
+                    "u" : true,
+                    "c" : true,
+                    "r" : true,
+                    "locales" : {
+                        "get" : true
+                    },
+                    "available" : {
+                        "get" : true
+                    },
+                    "available/{locale}" : {
+                        "get" : true
+                    }
+                }
+            },
+            {
+                "classId" : "Webiny.Entities.I18NTextGroup",
+                "rules" : {
+                    "c" : true,
+                    "r" : true,
+                    "u" : true,
+                    "d" : true
+                }
+            },
+            {
+                "classId" : "Webiny.Services.Apps",
+                "rules" : {
+                    "installed" : {
+                        "get" : true
                     }
                 }
             }

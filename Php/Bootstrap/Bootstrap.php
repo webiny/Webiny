@@ -9,6 +9,7 @@ namespace Apps\Webiny\Php\Bootstrap;
 
 use Apps\Webiny\Php\Lib\Authorization\Authorization;
 use Apps\Webiny\Php\Lib\ConfigLoader;
+use Apps\Webiny\Php\Lib\I18N\I18N;
 use Apps\Webiny\Php\Lib\Request;
 use Apps\Webiny\Php\Lib\Response\ApiResponse;
 use Apps\Webiny\Php\Lib\Response\HtmlResponse;
@@ -92,6 +93,10 @@ class Bootstrap
         Security::setConfig($this->wConfig()->get('Security', $emptyConfig));
         Storage::setConfig($this->wConfig()->get('Storage', $emptyConfig));
         Http::setConfig($this->wConfig()->get('Http', $emptyConfig));
+
+
+        // I18n will be loaded only if it's enabled in YAML config files.
+        I18N::getInstance()->init();
 
         /* @var $app App */
         foreach ($this->wApps() as $app) {

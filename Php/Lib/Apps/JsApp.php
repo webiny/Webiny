@@ -58,6 +58,11 @@ class JsApp
         return $this->app;
     }
 
+    public function getDirectory()
+    {
+        return $this->directory;
+    }
+
     /**
      * Get absolute path to this JS app build folder
      *

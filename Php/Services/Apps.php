@@ -14,6 +14,7 @@ use Apps\Webiny\Php\Lib\Services\AbstractService;
 class Apps extends AbstractService
 {
     protected static $classId = 'Webiny.Services.Apps';
+    protected static $i18nNamespace = 'Webiny.Services.Apps';
 
     protected function serviceApi(ApiContainer $api)
     {
@@ -23,6 +24,23 @@ class Apps extends AbstractService
          */
         $api->get('/', function () {
             return $this->getAppsMeta();
+        });
+
+        /**
+         * @api.name Lists all installed apps
+         * @api.description Lists all installed apps
+         */
+        $api->get('/installed', function () {
+            $list = [];
+            foreach ($this->wApps() as $appObj) {
+                /* @var App $appObj */
+                $list[] = [
+                    'version' => $appObj->getVersion(),
+                    'name'    => $appObj->getName(),
+                ];
+            }
+
+            return $list;
         });
 
         /**

@@ -7,7 +7,6 @@ const Visualizer = require('webpack-visualizer-plugin');
 
 // Custom libs
 const AssetsPlugin = require('./plugins/Assets');
-const i18nPlugin = require('./plugins/i18n');
 const ModuleIdsPlugin = require('./plugins/ModuleIds');
 const ChunkIdsPlugin = require('./plugins/ChunkIds');
 const Webiny = require('webiny-cli/lib/webiny');
@@ -18,7 +17,6 @@ module.exports = function (app, config) {
     const context = Webiny.projectRoot(app.getSourceDir());
     const outputPath = path.resolve(Webiny.projectRoot(), 'public_html/build/production', app.getPath());
 
-    const i18nPluginInstance = new i18nPlugin();
     const assetsPlugin = new AssetsPlugin({
         assetRules: config.assetRules,
         manifestVariable: 'window["webinyConfig"]["Meta"]["' + name + '"].chunks'
@@ -39,8 +37,6 @@ module.exports = function (app, config) {
         // To generate module ids that are preserved between builds
         new webpack.HashedModuleIdsPlugin(),
         new ExtractTextPlugin('app.css'),
-        // Parse i18n strings and generate external file with translations
-        i18nPluginInstance,
         // Generate meta.json to use for app bootstrap based on generated assets
         assetsPlugin,
         new webpack.optimize.UglifyJsPlugin({mangle: true, sourceMap: false}),
@@ -148,7 +144,7 @@ module.exports = function (app, config) {
                     test: /\.(js|jsx)$/,
                     exclude: /node_modules/,
                     include: Webiny.projectRoot(),
-                    use: [i18nPluginInstance.getLoader()]
+                    use: 'i18n-loader'
                 },
                 stylesRule,
                 {

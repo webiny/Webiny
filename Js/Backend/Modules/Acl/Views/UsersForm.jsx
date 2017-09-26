@@ -1,10 +1,10 @@
 import React from 'react';
 import Webiny from 'webiny';
 
-class Form extends Webiny.Ui.View {
+class UsersForm extends Webiny.Ui.View {
 }
 
-Form.defaultProps = {
+UsersForm.defaultProps = {
     renderer() {
         const formProps = {
             api: Webiny.Auth.getApiEndpoint(),
@@ -92,7 +92,7 @@ Form.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(Form, {
+export default Webiny.createComponent(UsersForm, {
     modulesProp: 'Ui',
     modules: ['View', 'Form', 'Grid', 'Tabs', 'Input', 'Password', 'Switch', 'Button', 'Section', {
         UserRoles: 'Webiny/Backend/UserRoles',

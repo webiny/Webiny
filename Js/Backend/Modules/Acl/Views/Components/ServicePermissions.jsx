@@ -5,8 +5,10 @@ import styles from './styles.css';
 import ServiceBox from './AccessBox/ServiceBox';
 import AddServiceModal from './AddServiceModal';
 
+/**
+ * @i18n.namespace Webiny.Backend.Acl.ServicePermissions
+ */
 class ServicePermissions extends Webiny.Ui.Component {
-
     constructor() {
         super();
         this.state = {

@@ -2,8 +2,10 @@ import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Backend.Acl.AddServiceModal
+ */
 class AddServiceModal extends Webiny.Ui.ModalComponent {
-
     constructor() {
         super();
         this.api = new Webiny.Api.Endpoint('/services/webiny/services');
@@ -66,7 +68,7 @@ class AddServiceModal extends Webiny.Ui.ModalComponent {
 
 AddServiceModal.defaultProps = _.assign({}, Webiny.Ui.ModalComponent.defaultProps, {
     onSubmit: _.noop,
-    exclude: []
+    exclude: [],
 });
 
 export default Webiny.createComponent(AddServiceModal, {

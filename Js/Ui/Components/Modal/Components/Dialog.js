@@ -255,6 +255,7 @@ class Dialog extends Webiny.Ui.Component {
 
 Dialog.defaultProps = {
     wide: false,
+    fullScreen: false,
     onHide: _.noop,
     onHidden: _.noop,
     onShow: _.noop,
@@ -265,34 +266,33 @@ Dialog.defaultProps = {
     style: {},
     renderDialog() {
         const {Animate, styles} = this.props;
-        const className = this.classSet(styles.modal, (this.props.wide && styles.wide));
+        const className = this.classSet(styles.modal, {[styles.wide]: this.props.wide, [styles.fullScreen]: this.props.fullScreen});
         let content = this.props.children;
         if (_.isFunction(content)) {
             content = content.call(this, {dialog: this});
         }
+
         return (
             <div style={_.merge({}, {display: 'block'}, this.props.style)}>
-
                 <Animate
                     trigger={this.state.isDialogShown}
                     show={{opacity: 0.8, duration: this.backdropShowDuration, ease: 'easeIn'}}
                     hide={{opacity: 0, duration: this.backdropHideDuration, ease: 'easeOut'}}>
                     <div className={styles.backdrop} style={{opacity: 0}} data-role="backdrop"/>
                 </Animate>
-
                 <div className={className} tabIndex="-1" style={{display: 'block'}} data-role="modal">
                     <Animate
                         trigger={this.state.isDialogShown}
                         onFinish={this.animationFinish}
                         show={{translateY: 50, ease: 'spring', duration: this.modalShowDuration, frequency: 50, friction: 300}}
                         hide={{translateY: -100, ease: 'easeOut', opacity: 0, duration: this.modalHideDuration}}>
-                        <div className={this.classSet(styles.dialog, styles.show, this.props.className)} style={{top: -50}} data-role="dialog">
+                        <div className={this.classSet(styles.dialog, styles.show, this.props.className)} style={{top: -50}}
+                             data-role="dialog">
                             {this.prepareChildren(content)}
                         </div>
                     </Animate>
                 </div>
             </div>
-
         );
     },
     renderer() {

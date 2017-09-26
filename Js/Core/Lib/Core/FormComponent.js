@@ -120,7 +120,7 @@ class FormComponent extends Component {
     }
 
     getPlaceholder() {
-        return Webiny.i18n.toText(this.props.placeholder);
+        return Webiny.I18n.toText(this.props.placeholder);
     }
 
     renderLabel() {

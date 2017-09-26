@@ -6,6 +6,9 @@ import styles from './styles.css';
 class MethodTooltip extends Webiny.Ui.Component {
 }
 
+/**
+ * @i18n.namespace Webiny.Backend.Acl.MethodTooltip
+ */
 MethodTooltip.defaultProps = {
     method: null,
     renderer() {
