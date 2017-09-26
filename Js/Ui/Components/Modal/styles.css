@@ -84,7 +84,7 @@
 
 /* Wide dialog */
 .wide .dialog {
-	width: 80%;
+	width: 75%;
 }
 
 /* Full-screen dialog */
@@ -95,6 +95,7 @@
 	top: 0 !important;
 	margin: 0;
 }
+
 .fullScreen .dialog .content {
 	height: auto;
 	min-height: 100%;

@@ -95,6 +95,7 @@ class LocalesModal extends Webiny.Ui.ModalComponent {
                                     <Grid.Row>
                                         <Grid.Col all={2}>
                                             <Input
+                                                tooltip={this.i18n('Use {value} and {symbol} placeholders to define output.')}
                                                 label={this.i18n('Format')}
                                                 placeholder={this.i18n('eg. "{value}{symbol}"')}
                                                 name="formats.money.format"/>
