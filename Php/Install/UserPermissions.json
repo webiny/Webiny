@@ -213,7 +213,7 @@
                 }
             }
         ]
-    }
+    },
     {
         "name": "Manage permissions",
         "slug": "webiny-acl-manage-permissions",
