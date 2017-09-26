@@ -30,6 +30,7 @@ function setupVirtualHost(answers) {
         Webiny.writeFile(Webiny.projectRoot('vhost.conf'), hostFile);
         Webiny.success(white('Your nginx virtual host config was saved to ') + magenta('vhost.conf') + white(' file in your project root.'));
         Webiny.info('NOTE: you need to manually activate vhost config to finish the nginx setup.');
+        Webiny.info('EXAMPLE: ' + magenta('sudo ln -s ' + Webiny.projectRoot('vhost.conf') + ' /etc/nginx/sites-enabled/' + server));
     } catch (err) {
         Webiny.failure(err);
     }

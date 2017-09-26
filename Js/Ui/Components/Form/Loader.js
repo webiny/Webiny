@@ -19,7 +19,7 @@ FormContainerLoader.defaultProps = {
 
         const {Loader} = this.props;
 
-        return <Loader/>;
+        return <Loader>{this.props.children}</Loader>;
     }
 };
 
