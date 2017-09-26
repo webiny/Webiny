@@ -242,14 +242,15 @@ class I18n {
         if (!outputFormat) {
             outputFormat = _.assign({}, this.defaultFormats.money, _.get(this.locales.current, 'formats.money', {}))
         } else {
-            outputFormat = _.assign({}, this.defaultFormats, outputFormat);
+            outputFormat = _.assign({}, this.defaultFormats.money, outputFormat);
         }
 
         // Let's convert Webiny format to accounting.
-        outputFormat.symbol = outputFormat.symbol.replace('{symbol}', '%s');
-        outputFormat.symbol = outputFormat.symbol.replace('{amount}', '%v');
+        let format = outputFormat.format;
+        format = format.replace('{symbol}', '%s');
+        format = format.replace('{amount}', '%v');
 
-        return accounting.formatMoney(value, outputFormat.symbol, outputFormat.precision, outputFormat.thousand, outputFormat.decimal, outputFormat.format);
+        return accounting.formatMoney(value, outputFormat.symbol, outputFormat.precision, outputFormat.thousand, outputFormat.decimal, format);
     }
 
     /**
@@ -261,7 +262,7 @@ class I18n {
         if (!outputFormat) {
             outputFormat = _.assign({}, this.defaultFormats.number, _.get(this.locales.current, 'formats.number', {}))
         } else {
-            outputFormat = _.assign({}, this.defaultFormats, outputFormat);
+            outputFormat = _.assign({}, this.defaultFormats.number, outputFormat);
         }
         return accounting.formatNumber(value, outputFormat.precision, outputFormat.thousand, outputFormat.decimal);
     }
