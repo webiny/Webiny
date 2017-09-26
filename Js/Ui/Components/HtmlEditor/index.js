@@ -99,13 +99,16 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
     }
 
     uploadImage(data) {
-        this.uploader.upload(data, (percentage) => {
+        this.uploader.upload(data, ({percentage}) => {
             this.setState({uploadPercentage: percentage});
-        }, file => {
+        }, ({file}) => {
             this.editor.insertEmbed(this.index, 'image', file.entity.src);
             // reposition index to previous position
             this.setState({uploadPercentage: null});
             this.editor.setSelection({index: this.index, length: 0});
+        }, ({apiResponse}) => {
+            Webiny.Growl.danger(apiResponse.getError(), 'Upload failed');
+            this.setState({uploadPercentage: null});
         });
     }
 

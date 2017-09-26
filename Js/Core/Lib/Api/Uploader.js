@@ -44,7 +44,7 @@ class Uploader {
         const image = this.inProgress.file;
         const progressHandler = (pe) => {
             const percentage = Math.round(pe.loaded / pe.total * 100);
-            this.inProgress.progress(percentage, pe);
+            this.inProgress.progress({event: pe, percentage});
         };
         const done = this.inProgress.done;
         const error = this.inProgress.error || _.noop;
@@ -53,9 +53,9 @@ class Uploader {
             const jobId = this.inProgress.id;
             this.inProgress = null;
             if (!apiResponse.isError() && !apiResponse.isAborted()) {
-                done(apiResponse.getData());
+                done({file: apiResponse.getData(), apiResponse});
             } else {
-                error(apiResponse, image, jobId);
+                error({apiResponse, image, jobId});
             }
             this.process();
         };
