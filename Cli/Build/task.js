@@ -13,7 +13,7 @@ class Build {
         this.baseVendorConfig = require('./webpack/vendor');
 
         if (process.env.NODE_ENV === 'production') {
-            const appConfig = yaml.load(Webiny.readFile(Webiny.projectRoot('Configs/' + this.config.configSet + '/Webiny.yaml')));
+            const appConfig = yaml.load(Webiny.readFile(Webiny.projectRoot('Configs/' + this.config.environment + '/Webiny.yaml')));
             this.config.assetRules = _.get(appConfig, 'Webiny.AssetRules', []);
         }
     }

@@ -7,11 +7,11 @@ class Build extends Plugin {
     constructor(program) {
         super(program);
 
-        const command = program.command('build <configSet>');
-        command.description('Build apps using given config set.');
+        const command = program.command('build <environment>');
+        command.description('Build apps using given environment.');
         this.addAppOptions(command);
-        command.action((configSet, cmd) => {
-            const config = _.assign({}, cmd.parent.opts(), cmd.opts(), {configSet});
+        command.action((environment, cmd) => {
+            const config = _.assign({}, cmd.parent.opts(), cmd.opts(), {environment});
             Webiny.runTask('build', config);
         }).on('--help', () => {
             console.log();
@@ -49,16 +49,16 @@ class Build extends Plugin {
         const inquirer = require('inquirer');
         const yaml = require('js-yaml');
 
-        const configSets = yaml.safeLoad(Webiny.readFile(Webiny.projectRoot('Configs/Environments.yaml')));
-        const choices = Object.keys(configSets.Environments);
+        const environments = yaml.safeLoad(Webiny.readFile(Webiny.projectRoot('Configs/Environments.yaml')));
+        const choices = Object.keys(environments.Environments);
 
         return inquirer.prompt([{
             type: 'list',
-            name: 'configSet',
-            message: 'Select a config set to build',
+            name: 'environment',
+            message: 'Select an environment to build',
             choices
         }]).then(answers => {
-            config.configSet = answers.configSet;
+            config.environment = answers.environment;
             return this.runTask(config);
         });
     }

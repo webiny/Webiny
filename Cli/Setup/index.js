@@ -134,7 +134,7 @@ class Setup extends Plugin {
 
             const configs = {
                 dockerCompose: Webiny.projectRoot('docker-compose.yaml'),
-                configSets: Webiny.projectRoot('Configs/Environments.yaml'),
+                environments: Webiny.projectRoot('Configs/Environments.yaml'),
                 base: {
                     application: Webiny.projectRoot('Configs/Base/Webiny.yaml'),
                     database: Webiny.projectRoot('Configs/Base/Database.yaml'),
@@ -147,9 +147,9 @@ class Setup extends Plugin {
 
             try {
                 // Populate Environments.yaml
-                let config = yaml.safeLoad(Webiny.readFile(configs.configSets));
+                let config = yaml.safeLoad(Webiny.readFile(configs.environments));
                 config.Environments.Local = answers.domain;
-                Webiny.writeFile(configs.configSets, yaml.safeDump(config, {indent: 4}));
+                Webiny.writeFile(configs.environments, yaml.safeDump(config, {indent: 4}));
 
                 // Populate Base/Webiny.yaml
                 config = yaml.safeLoad(Webiny.readFile(configs.base.application));
