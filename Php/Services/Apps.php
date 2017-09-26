@@ -27,7 +27,7 @@ class Apps extends AbstractService
         });
 
         /**
-         * @api.name List installed apps
+         * @api.name Lists all installed apps
          * @api.description Lists all installed apps
          */
         $api->get('/installed', function () {
@@ -41,7 +41,7 @@ class Apps extends AbstractService
             }
 
             return $list;
-        })->setPublic();
+        });
 
         /**
          * @api.name Get single app/spa meta
