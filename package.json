@@ -46,6 +46,7 @@
         "enzyme": "^2.9.1",
         "eonasdan-bootstrap-datetimepicker": "^4.17.45",
         "extract-text-webpack-plugin": "^2.1.2",
+        "fecha": "^2.3.1",
         "file-loader": "^0.11.2",
         "filesize": "^3.4.3",
         "font-awesome": "^4.7.0",
@@ -100,8 +101,5 @@
     },
     "optionalDependencies": {
         "fsevents": "^1.0.17"
-    },
-    "dependencies": {
-        "fecha": "^2.3.1"
     }
 }
