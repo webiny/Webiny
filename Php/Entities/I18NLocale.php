@@ -4,8 +4,10 @@ namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
+use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
 use Apps\Webiny\Php\Lib\I18N\I18NLocales;
 use Webiny\Component\Entity\Attribute\Validation\ValidationException;
+use Webiny\Component\Mongo\Index\SingleIndex;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
 /**
@@ -94,6 +96,15 @@ class I18NLocale extends AbstractEntity
                 $this->default = true;
             }
         });
+    }
+
+    protected static function entityIndexes(IndexContainer $indexes)
+    {
+        parent::entityIndexes($indexes);
+
+        $indexes->add(new SingleIndex('enabled', 'enabled'));
+        $indexes->add(new SingleIndex('default', 'default'));
+        $indexes->add(new SingleIndex('key', 'key'));
     }
 
     protected function entityApi(ApiContainer $api)

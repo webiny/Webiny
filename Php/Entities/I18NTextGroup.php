@@ -3,7 +3,9 @@
 namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
+use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
+use Webiny\Component\Mongo\Index\SingleIndex;
 
 /**
  * Class I18NTextGroup
@@ -30,6 +32,13 @@ class I18NTextGroup extends AbstractEntity
             return I18NText::count(['group' => $this->id]);
         });
 
+    }
+
+    protected static function entityIndexes(IndexContainer $indexes)
+    {
+        parent::entityIndexes($indexes);
+
+        $indexes->add(new SingleIndex('app', 'app'));
     }
 
     /**

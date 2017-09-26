@@ -4,11 +4,13 @@ namespace Apps\Webiny\Php\Entities;
 
 use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
+use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\I18N\Exports\TextsExport;
 use Apps\Webiny\Php\Lib\I18N\Exports\TranslationsExport;
 use Apps\Webiny\Php\Lib\I18N\I18N;
 use Apps\Webiny\Php\Lib\I18N\I18NLocales;
+use Webiny\Component\Mongo\Index\SingleIndex;
 use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 
 /**
@@ -278,6 +280,17 @@ class I18NText extends AbstractEntity
 
     }
 
+    protected static function entityIndexes(IndexContainer $indexes)
+    {
+        parent::entityIndexes($indexes);
+
+        $indexes->add(new SingleIndex('group', 'group'));
+        $indexes->add(new SingleIndex('translations', 'translations'));
+        $indexes->add(new SingleIndex('app', 'app'));
+        $indexes->add(new SingleIndex('key', 'key'));
+        $indexes->add(new SingleIndex('base', 'base'));
+    }
+
     /**
      * Returns text by given key.
      *
@@ -292,6 +305,7 @@ class I18NText extends AbstractEntity
 
     /**
      * Sets translation for given locale.
+     *
      * @param I18NLocale $locale
      * @param            $text
      *
@@ -317,6 +331,7 @@ class I18NText extends AbstractEntity
 
     /**
      * Returns translation for given locale.
+     *
      * @param I18NLocale $locale
      *
      * @return mixed
@@ -332,6 +347,7 @@ class I18NText extends AbstractEntity
 
     /**
      * Checks if translation exists for given locale.
+     *
      * @param I18NLocale $locale
      *
      * @return bool
