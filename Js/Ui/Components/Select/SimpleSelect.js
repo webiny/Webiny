@@ -190,6 +190,16 @@ class SimpleSelect extends Webiny.Ui.Component {
             templateSelection: item => this.itemRenderer(item, 'selectedRenderer')
         };
 
+        if (_.isFunction(this.props.matcher)) {
+            config.matcher = (params, data) => {
+                const term = (params.term || '').trim();
+                if (!term || term.length === 0) {
+                    return data;
+                }
+                return this.props.matcher({term, option: data});
+            };
+        }
+
         if (this.props.dropdownParent) {
             config['dropdownParent'] = $(ReactDOM.findDOMNode(this)).find(props.dropdownParent);
         }
@@ -223,6 +233,7 @@ SimpleSelect.defaultProps = {
     dropdownClassName: null,
     optionRenderer: null,
     selectedRenderer: null,
+    matcher: null,
     renderer() {
         return (
             <div className="inputGroup">

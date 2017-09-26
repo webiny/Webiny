@@ -1,7 +1,7 @@
 import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
-
+import matchOption from './matchOption';
 /**
  * @i18n.namespace Webiny.Backend.Acl.AddEntityModal
  */
@@ -49,7 +49,14 @@ class AddEntityModal extends Webiny.Ui.ModalComponent {
                                                 api="/services/webiny/entities"
                                                 query={{exclude: this.props.exclude.map(item => item.classId)}}
                                                 valueAttr="classId"
-                                                textAttr="class"
+                                                textAttr="classId"
+                                                matcher={matchOption}
+                                                optionRenderer={({option}) => (
+                                                    <div>
+                                                        <strong>{option.data.classId}</strong><br/>{option.data.class}
+                                                    </div>
+                                                )}
+                                                selectedRenderer={({option}) => option.data.classId}
                                                 minimumResultsForSearch={5}/>
                                         </Grid.Col>
                                     </Grid.Row>

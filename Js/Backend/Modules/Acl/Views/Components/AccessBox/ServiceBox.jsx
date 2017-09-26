@@ -110,7 +110,7 @@ ServiceBox.defaultProps = {
                         <ClickConfirm
                             onComplete={() => this.props.onRemoveService(this.props.service)}
                             message={this.i18n('Are you sure you want to remove {service}?', {
-                                service: <strong>{this.props.service.class}</strong>
+                                service: <strong>{this.props.service.classId}</strong>
                             })}>
                             <span onClick={_.noop} className={styles.removeButton}>×</span>
                         </ClickConfirm>
