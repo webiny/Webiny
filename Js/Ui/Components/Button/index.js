@@ -72,7 +72,8 @@ Button.defaultProps = {
             content = <span>{content}</span>;
         }
 
-        const buttonProps = _.pick(props, ['style', 'onClick', 'disabled']);
+        const buttonProps = _.pick(props, ['style', 'disabled']);
+        buttonProps.onClick = e => this.props.onClick({event: e});
         _.assign(buttonProps, {
             type: 'button',
             className: classes,

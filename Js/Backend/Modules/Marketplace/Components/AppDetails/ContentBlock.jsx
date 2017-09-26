@@ -21,10 +21,13 @@ class ContentBlock extends Webiny.Ui.View {
             new Draft.Plugins.UnorderedList(),
             new Draft.Plugins.OrderedList(),
             new Draft.Plugins.Alignment(),
-            new Draft.Plugins.Link({validate: 'required'}),
+            new Draft.Plugins.Table(),
+            new Draft.Plugins.Link(),
+            new Draft.Plugins.Image(),
+            new Draft.Plugins.Video(),
             new Draft.Plugins.Blockquote(),
             new Draft.Plugins.Code(),
-            new Draft.Plugins.ToJSON()
+            new Draft.Plugins.CodeBlock()
         ];
     }
 }

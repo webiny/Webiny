@@ -8,7 +8,7 @@ Author:
     Link: https://www.webiny.com
 
 Marketplace:
-    Api: https://beta.webiny.com/api
+    Api: http://thehub.app:8001/api
 
 Storage:
     Services:

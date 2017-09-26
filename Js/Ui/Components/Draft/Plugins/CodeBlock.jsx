@@ -95,7 +95,7 @@ class CodeBlockPlugin extends Webiny.Draft.AtomicPlugin {
         this.name = 'code-block';
     }
 
-    async createBlock() {
+    createBlock() {
         const insert = {
             type: 'atomic',
             text: ' ',
@@ -107,7 +107,7 @@ class CodeBlockPlugin extends Webiny.Draft.AtomicPlugin {
                 mutability: 'IMMUTABLE'
             }
         };
-        const editorState = await this.insertDataBlock(this.editor.getEditorState(), insert);
+        const editorState = this.insertDataBlock(this.editor.getEditorState(), insert);
         this.editor.setEditorState(editorState);
     }
 

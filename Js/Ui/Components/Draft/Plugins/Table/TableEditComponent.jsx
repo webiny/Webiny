@@ -264,8 +264,13 @@ TableEditComponent.defaultProps = {
                                                 readOnly = !_.isEqual(this.state.focusedEditor, key);
                                             }
 
+                                            const dataTh = _.get(headers[colI], 'data.blocks[0].text', '');
+
                                             return (
-                                                <td key={row.columns[colI].key} onMouseDown={() => this.setFocus('body', rowI, colI)} data-th={headers[colI].data.blocks[0].text}>
+                                                <td
+                                                    key={row.columns[colI].key}
+                                                    onMouseDown={() => this.setFocus('body', rowI, colI)}
+                                                    data-th={dataTh}>
                                                     <Editor
                                                         stripPastedStyles={true}
                                                         ref={row.columns[colI].key}

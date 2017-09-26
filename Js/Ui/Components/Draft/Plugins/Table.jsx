@@ -14,25 +14,19 @@ class TablePlugin extends Webiny.Draft.AtomicPlugin {
             type: 'atomic',
             text: ' ',
             data: {
-                plugin: this.name
-            },
-            entity: {
-                type: this.name,
-                mutability: 'IMMUTABLE',
-                data: {
-                    headers: [
-                        {key: this.Draft.genKey(), data: null}
-                    ],
-                    rows: [
-                        {
-                            key: this.Draft.genKey(),
-                            columns: [
-                                {key: this.Draft.genKey(), data: null}
-                            ]
-                        }
-                    ],
-                    numberOfColumns: 1
-                }
+                plugin: this.name,
+                headers: [
+                    {key: this.Draft.genKey(), data: null}
+                ],
+                rows: [
+                    {
+                        key: this.Draft.genKey(),
+                        columns: [
+                            {key: this.Draft.genKey(), data: null}
+                        ]
+                    }
+                ],
+                numberOfColumns: 1
             }
         };
         const editorState = this.insertDataBlock(this.editor.getEditorState(), insert);

@@ -240,14 +240,14 @@ class VideoPlugin extends Webiny.Draft.AtomicPlugin {
         this.editor.setReadOnly(true);
     }
 
-    async createVideoBlock(model) {
+    createVideoBlock(model) {
         model.plugin = this.name;
         const insert = {
             type: 'atomic',
             text: ' ',
             data: model
         };
-        const editorState = await this.insertDataBlock(this.editor.getEditorState(), insert);
+        const editorState = this.insertDataBlock(this.editor.getEditorState(), insert);
         this.editor.setEditorState(editorState);
     }
 
