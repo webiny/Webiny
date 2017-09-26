@@ -42,7 +42,7 @@ class Revert extends Plugin {
                 type: 'input',
                 name: 'website',
                 message: 'Enter the domain of the website you are reverting:',
-                validate: Webiny.validate.url,
+                validate: Webiny.validate.domain,
                 default: lastRun.website || null
             }, {
                 type: 'input',
