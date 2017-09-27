@@ -2,6 +2,9 @@ import Webiny from 'webiny';
 import React from 'react';
 import Views from './Views/Views';
 
+/**
+ * @i18n.namespace Webiny.Backend.Acl
+ */
 class Module extends Webiny.App.Module {
 
     init() {
@@ -12,16 +15,16 @@ class Module extends Webiny.App.Module {
         const aclApiTokens = 'webiny-acl-api-token-manager';
 
         this.registerMenus(
-            <Menu label="ACL" icon="icon-users">
-                <Menu label="User Management" role={aclManageUsers}>
-                    <Menu label="Permissions" route="UserPermissions.List" order={1}/>
-                    <Menu label="Roles" route="UserRoles.List" order={2}/>
-                    <Menu label="Role Groups" route="UserRoleGroups.List" order={3}/>
-                    <Menu label="Users" route="Users.List" order={4}/>
+            <Menu label={this.i18n('ACL')} icon="icon-users">
+                <Menu label={this.i18n('User Management')} role={aclManageUsers}>
+                    <Menu label={this.i18n('Permissions')} route="UserPermissions.List" order={1}/>
+                    <Menu label={this.i18n('Roles')} route="UserRoles.List" order={2}/>
+                    <Menu label={this.i18n('Role Groups')} route="UserRoleGroups.List" order={3}/>
+                    <Menu label={this.i18n('Users')} route="Users.List" order={4}/>
                 </Menu>
-                <Menu label="API" role={aclApiTokens}>
-                    <Menu label="Request Logs" route="ApiLogs.List"/>
-                    <Menu label="Tokens" route="ApiTokens.List"/>
+                <Menu label={this.i18n('API')} role={aclApiTokens}>
+                    <Menu label={this.i18n('Request Logs')} route="ApiLogs.List"/>
+                    <Menu label={this.i18n('Tokens')} route="ApiTokens.List"/>
                 </Menu>
             </Menu>
         );

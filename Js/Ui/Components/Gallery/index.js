@@ -10,6 +10,9 @@ const placeholder = document.createElement('div');
 placeholder.className = styles.placeholder;
 placeholder.textContent = 'Drop here';
 
+/**
+ * @i18n.namespace Webiny.Ui.Gallery
+ */
 class Gallery extends Webiny.Ui.FormComponent {
     constructor(props) {
         super(props);
@@ -337,7 +340,7 @@ Gallery.defaultProps = {
             });
 
             errors = (
-                <Alert title="Some files could not be added to the gallery" type="error">
+                <Alert title={this.i18n('Some files could not be added to the gallery')} type="error">
                     {data && <ul>{data}</ul>}
                 </Alert>
             );
@@ -372,7 +375,7 @@ Gallery.defaultProps = {
                             sizeLimit={this.props.sizeLimit}
                             onChange={this.filesChanged}/>
                         {this.getCropper(
-                            <Input label="Title" placeholder="Type in an image title" {...this.bindTo('cropImage.title')}/>
+                            <Input label={this.i18n('Title')} placeholder={this.i18n('Type in an image title')} {...this.bindTo('cropImage.title')}/>
                         )}
                     </div>
                     <div className={styles.uploadAction}>

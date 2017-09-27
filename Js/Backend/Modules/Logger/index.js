@@ -2,6 +2,9 @@ import React from 'react';
 import Webiny from 'webiny';
 import Views from './Views/Views';
 
+/**
+ * @i18n.namespace Webiny.Backend.Logger
+ */
 class Logger extends Webiny.App.Module {
 
     init() {
@@ -10,8 +13,8 @@ class Logger extends Webiny.App.Module {
         const role = 'webiny-logger-manager';
 
         this.registerMenus(
-            <Menu label="System" icon="icon-tools">
-                <Menu label="Error Logger" route="Logger.ListErrors" role={role}/>
+            <Menu label={this.i18n('System')} icon="icon-tools">
+                <Menu label={this.i18n('Error Logger')} route="Logger.ListErrors" role={role}/>
             </Menu>
         );
 

@@ -3,6 +3,9 @@ import _ from 'lodash';
 import Webiny from 'webiny';
 import styles from './styles.css';
 
+/**
+ * @i18n.namespace Webiny.Ui.File
+ */
 class SimpleFile extends Webiny.Ui.FormComponent {
 
     constructor(props) {
@@ -58,7 +61,7 @@ SimpleFile.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     renderError() {
         const {Alert} = this.props;
         return (
-            <Alert title="A file could not be selected" type="error" close>
+            <Alert title={this.i18n('A file could not be selected')} type="error" close>
                 <ul>
                     <li><strong>{this.state.error.name}</strong>: {this.state.error.message}</li>
                 </ul>
@@ -73,7 +76,7 @@ SimpleFile.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         });
 
         return (
-            <Alert title="Some files could not be selected" type="error" close>
+            <Alert title={this.i18n('Some files could not be selected')} type="error" close>
                 {data && <ul>{data}</ul>}
             </Alert>
         );

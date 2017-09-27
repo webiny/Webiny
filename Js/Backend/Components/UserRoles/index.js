@@ -2,6 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Backend.UserRoles
+ */
 class UserRoles extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
@@ -50,14 +53,14 @@ UserRoles.defaultProps = {
                             );
                         }}
                     </List.Table.Field>
-                    <List.Table.Field label="Role">
+                    <List.Table.Field label={this.i18n('Role')}>
                         {({data}) => (
                             <span>
                                 <Link route="UserRoles.Edit" params={{id: data.id}}><strong>{data.name}</strong></Link><br/>{data.slug}
                             </span>
                         )}
                     </List.Table.Field>
-                    <List.Table.Field label="Description" name="description"/>
+                    <List.Table.Field label={this.i18n('Description')} name="description"/>
                 </List.Table.Row>
             </List.Table>
         );
