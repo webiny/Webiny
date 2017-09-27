@@ -53,16 +53,19 @@ AppDetails.defaultProps = {
         const {styles, Link, View, Grid, Button, Tabs, Loader, Alert} = this.props;
 
         if (loading) {
-            return <Loader>Fetching app details...</Loader>;
+            return <Loader>{this.i18n('Fetching app details...')}</Loader>;
         }
 
         return (
             <div className={styles.appDetails}>
                 {!app.canInstall && (
                     <Alert type="warning">
-                        This app requires Webiny <strong>{app.webinyVersion}</strong>. Your current Webiny is
-                        &nbsp;<strong>{app.installedWebinyVersion}</strong>.
-                        <br/>Please update Webiny before attempting to install this app.
+                        {this.i18n(`This app requires Webiny {appWebinyVersion}. Your current Webiny is {currentVersion}.`, {
+                            appWebinyVersion: <strong>{app.webinyVersion}</strong>,
+                            currentVersion: <strong>{app.installedWebinyVersion}</strong>
+                        })}
+                        <br/>
+                        {this.i18n('Please update Webiny before attempting to install this app.')}
                     </Alert>
                 )}
                 <div className={styles.header}>

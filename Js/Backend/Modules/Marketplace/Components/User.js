@@ -18,7 +18,9 @@ const User = (props) => {
                     </span>
                 </div>
             </div>
-            <h3 className="user-welcome__message">Hi {_.get(props.user, 'firstName', _.get(props.user, 'email'))}!</h3>
+            <h3 className="user-welcome__message">
+                {this.i18n('Hi {user}!', {user: _.get(props.user, 'firstName', _.get(props.user, 'email'))})}
+            </h3>
         </div>
     );
 };

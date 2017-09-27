@@ -36,7 +36,7 @@ class ForgotPasswordModal extends Webiny.Ui.ModalComponent {
                                     <Grid.Row>
                                         <Grid.Col all={12}>
                                             <Alert type="success" title={this.i18n('Instructions sent')}>
-                                                Please check your inbox for the reset password link.
+                                                {this.i18n('Please check your inbox for the reset password link.')}
                                             </Alert>
                                         </Grid.Col>
                                     </Grid.Row>
@@ -45,7 +45,7 @@ class ForgotPasswordModal extends Webiny.Ui.ModalComponent {
                                     <Grid.Row>
                                         <Grid.Col all={12}>
                                             <p className="text-center">
-                                                Enter an email address you used to register at webiny.com.
+                                                {this.i18n('Enter an email address you used to register at webiny.com.')}
                                             </p>
                                             <Form.Error/>
                                             <Input

@@ -24,9 +24,10 @@ class UpdateSuccessModal extends Webiny.Ui.ModalComponent {
 
         return (
             <Modal.Success closeBtn={this.getButton} onClose={() => window.location.reload()}>
-                <strong>{app.name}</strong> was updated successfully!<br/><br/>
-                To see the changes you need to reload this browser window.<br/>
-                Click the button below to reload.
+                {this.i18n(`{appName} was updated successfully!`, {appName: <strong>{app.name}</strong>})}
+                <br/><br/>
+                {this.i18n('To see the changes you need to reload this browser window.')}<br/>
+                {this.i18n('Click the button below to reload.')}
             </Modal.Success>
         );
     }

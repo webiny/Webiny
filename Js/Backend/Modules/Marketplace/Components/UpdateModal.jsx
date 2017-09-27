@@ -111,7 +111,7 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                     <Modal.Body>
                         <Logic.Hide if={this.state.started}>
                             <Alert type="warning" title={this.i18n('Notice')}>
-                                Make sure your watch process is running before updating the app.
+                                {this.i18n('Make sure your watch process is running before updating the app.')}
                             </Alert>
                             <div className="text-center">
                                 <Button type="primary" label={this.i18n('Begin Update')} onClick={this.startUpdate}/>
@@ -120,7 +120,7 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                         <Logic.Hide if={!this.state.started}>
                             <Logic.Show if={this.state.finished}>
                                 <Alert type="success" title={this.i18n('Done')}>
-                                    Your app is updated!
+                                    {this.i18n('Your app is updated!')}
                                 </Alert>
                             </Logic.Show>
                             <pre style={{height: 500, overflow: 'scroll', fontSize: 12}} ref={ref => this.logger = ref}>

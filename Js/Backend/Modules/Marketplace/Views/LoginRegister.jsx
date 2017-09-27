@@ -54,10 +54,12 @@ LoginRegister.defaultProps = {
                 {({form}) => (
                     <div className={styles.loginRegister}>
                         <div className={styles.message}>
-                            <h2><Icon icon="icon-basket_n"/> Webiny Marketplace</h2>
-                            <h3>Find and Install Apps for Webiny</h3>
-                            <p>Access to the markeplace requires a Webiny.com profile.<br/>If you already have a profile, please sign-in,
-                                otherwise please register.</p>
+                            <h2><Icon icon="icon-basket_n"/> {this.i18n('Webiny Marketplace')}</h2>
+                            <h3>{this.i18n('Find and Install Apps for Webiny')}</h3>
+                            <p>
+                                {this.i18n('Access to the marketplace requires a Webiny.com profile.')}<br/>
+                                {this.i18n('If you already have a profile, please sign-in, otherwise please register.')}
+                            </p>
                             <div className={styles.loginForm}>
                                 <Grid.Row>
                                     <Form.Loader/>
@@ -91,7 +93,9 @@ LoginRegister.defaultProps = {
                             </div>
                             <div className={styles.actions}>
                                 <div className="text-center">
-                                    Not a member? <Link onClick={this.showRegister}><br/>Sign up here</Link>
+                                    {this.i18n('Not a member? {signupLink}', {
+                                        signupLink: <Link onClick={this.showRegister}><br/>Sign up here</Link>
+                                    })}
                                 </div>
                             </div>
                         </div>

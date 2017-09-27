@@ -113,9 +113,13 @@ class RegisterModal extends Webiny.Ui.ModalComponent {
                         <div className="text-center">
                             <br/>
                             <Icon type="success" size="4x" icon="fa-check-circle" element="div"/><br/>
-                            <h4>Done</h4>
-                            <p>Thanks for registering!</p>
-                            <p>Your profile is ready, <Link className="text-link" onClick={this.close}>back to login page.</Link></p>
+                            <h4>{this.i18n('Done')}</h4>
+                            <p>{this.i18n('Thanks for registering!')}</p>
+                            <p>
+                                {this.i18n('Your profile is ready, {backLink}', {
+                                    backLink: <Link className="text-link" onClick={this.close}>{this.i18n('back to login page.')}</Link>
+                                })}
+                            </p>
                         </div>
                     </Modal.Body>
                 </Modal.Content>
