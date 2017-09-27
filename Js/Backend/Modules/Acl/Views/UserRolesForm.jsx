@@ -17,7 +17,7 @@ UserRolesForm.defaultProps = {
             onSubmitSuccess: 'UserRoles.List',
             onCancel: 'UserRoles.List',
             onSuccessMessage: ({model}) => {
-                return <span>Role <strong>{model.name}</strong> was saved successfully!</span>;
+                return <span>{this.i18n('Role {role} was saved successfully!', {role: <strong>{model.name}</strong>})}</span>;
             }
         };
 
@@ -27,7 +27,7 @@ UserRolesForm.defaultProps = {
             <Ui.Form {...formProps}>
                 {({model, form}) => (
                     <Ui.View.Form>
-                        <Ui.View.Header title={model.id ? 'ACL - Edit Role' : 'ACL - Create Role'}/>
+                        <Ui.View.Header title={model.id ? this.i18n('ACL - Edit Role') : this.i18n('ACL - Create Role')}/>
                         <Ui.View.Body>
                             <Ui.Section title={this.i18n('General')}/>
                             <Ui.Grid.Row>

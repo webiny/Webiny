@@ -49,12 +49,13 @@ class UserPermissionsForm extends Webiny.Ui.View {
                 onCancel="UserPermissions.List"
                 defaultModel={{permissions: []}}
                 onSuccessMessage={({model}) => {
-                    return <span>Permission <strong>{model.name}</strong> was saved!</span>;
+                    return <span>{this.i18n('Permission {permission} was saved successfully!', {permission: <strong>{model.name}</strong>})}</span>;
+
                 }}>
                 {({model, form}) => {
                     return (
                         <Ui.View.Form>
-                            <Ui.View.Header title={model.id ? 'ACL - Edit permission' : 'ACL - Create permission'}/>
+                            <Ui.View.Header title={model.id ? this.i18n('ACL - Edit permission') : this.i18n('ACL - Create permission')}/>
                             <Ui.View.Body>
                                 <Ui.Section title={this.i18n('General')}/>
                                 <Ui.Grid.Row>

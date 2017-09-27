@@ -19,15 +19,18 @@ UsersList.defaultProps = {
         const {View, List, Link, Icon, Input} = this.props;
         const Table = List.Table;
 
-        const roles = <Link route="UserRoles.List">Roles</Link>;
-        const permissions = <Link route="UserPermissions.List">Permissions</Link>;
+        const roles = <Link route="UserRoles.List">{this.i18n('Roles')}</Link>;
+        const permissions = <Link route="UserPermissions.List">{this.i18n('Permissions')}</Link>;
 
         return (
             <View.List>
                 <View.Header
                     title={this.i18n('ACL - Users')}
-                    description={<span>Once your system {permissions} and {roles}&nbsp;are defined,
-                        you can create your system users here.</span>}>
+                    description={
+                        <span>
+                            {this.i18n(`Once your system {permissions} and {roles} are defined,
+                                        you can create your system users here.`, {permissions, roles})}
+                        </span>}>
                     <Link type="primary" route="Users.Create" align="right">
                         <Icon icon="icon-plus-circled"/>
                         {this.i18n('Create user')}

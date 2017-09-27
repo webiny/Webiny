@@ -25,7 +25,7 @@ UserPermissionsList.defaultProps = {
             perPage: 25
         };
 
-        const rolesLink = <Ui.Link route="UserRoles.List">Roles</Ui.Link>;
+        const rolesLink = <Ui.Link route="UserRoles.List">{this.i18n('Roles')}</Ui.Link>;
 
         return (
             <Ui.ViewSwitcher>
@@ -34,11 +34,16 @@ UserPermissionsList.defaultProps = {
                         <Ui.View.List>
                             <Ui.View.Header
                                 title={this.i18n('ACL - Permissions')}
-                                description={<span>Permissions define what a user is allowed to do with entities and services. Define permissions and then group them into {rolesLink}.</span>}>
+                                description={
+                                    <span>
+                                        {this.i18n(`Permissions define what a user is allowed to do with entities and services.
+                                                    Define permissions and then group them into {rolesLink}.`, {rolesLink})}
+                                    </span>
+                                }>
                                 <Ui.ButtonGroup>
                                     <Ui.Link type="primary" route="UserPermissions.Create">
                                         <Ui.Icon icon="icon-plus-circled"/>
-                                        Create
+                                        {this.i18n('Create')}
                                     </Ui.Link>
                                     <Ui.Button
                                         type="secondary"

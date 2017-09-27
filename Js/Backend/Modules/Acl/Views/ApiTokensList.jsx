@@ -118,8 +118,8 @@ ApiTokensList.defaultProps = {
                                                                 if (!value) {
                                                                     return (
                                                                         <span>
-                                                                            This will disable API token and prevent it's bearer from using your API!
-                                                                            <br/>Are you sure you want to disable it?
+                                                                            {this.i18n(`This will disable API token and prevent it's bearer from using your API!`)}
+                                                                            <br/>{this.i18n('Are you sure you want to disable it?')}
                                                                         </span>
                                                                     );
                                                                 }

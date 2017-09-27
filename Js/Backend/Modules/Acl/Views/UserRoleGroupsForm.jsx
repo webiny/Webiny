@@ -17,7 +17,7 @@ UserRoleGroupsForm.defaultProps = {
             onSubmitSuccess: 'UserRoleGroups.List',
             onCancel: 'UserRoleGroups.List',
             onSuccessMessage: ({model}) => {
-                return <span>Role group <strong>{model.name}</strong> was saved successfully!</span>;
+                return <span>{this.i18n('Role group {group} was saved successfully!', {group: <strong>{model.name}</strong>})}</span>;
             }
         };
 
@@ -27,7 +27,7 @@ UserRoleGroupsForm.defaultProps = {
             <Ui.Form {...formProps}>
                 {({model, form}) => (
                     <Ui.View.Form>
-                        <Ui.View.Header title={model.id ? 'ACL - Edit Role Group' : 'ACL - Create Role Group'}/>
+                        <Ui.View.Header title={model.id ? this.i18n('ACL - Edit Role Group') : this.i18n('ACL - Create Role Group')}/>
                         <Ui.View.Body>
                             <Ui.Section title={this.i18n('General')}/>
                             <Ui.Grid.Row>

@@ -19,7 +19,7 @@ UsersForm.defaultProps = {
             },
             onCancel: 'Users.List',
             onSuccessMessage: ({model}) => {
-                return <span>User <strong>{model.firstName}</strong> was saved successfully!</span>;
+                return <span>{this.i18n('User {user} was saved successfully!', {user: <strong>{model.firstName}</strong>})}</span>;
             }
         };
 
@@ -29,7 +29,7 @@ UsersForm.defaultProps = {
             <Ui.Form {...formProps}>
                 {({model, form}) => (
                     <Ui.View.Form>
-                        <Ui.View.Header title={model.id ? 'ACL - Edit User' : 'ACL - Create User'}/>
+                        <Ui.View.Header title={model.id ? this.i18n('ACL - Edit User') : this.i18n('ACL - Create User')}/>
                         <Ui.Form.Error message={this.i18n('Something went wrong during save')}/>
                         <Ui.View.Body>
                             <Ui.Grid.Row>
@@ -60,7 +60,7 @@ UsersForm.defaultProps = {
                                                 name="confirmPassword"
                                                 validate="eq:@password"
                                                 placeholder={this.i18n('Retype the new password')}>
-                                                <validator name="eq">Passwords do not match</validator>
+                                                <validator name="eq">{this.i18n('Passwords do not match')}</validator>
                                             </Ui.Password>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>

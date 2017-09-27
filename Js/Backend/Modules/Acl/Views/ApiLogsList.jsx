@@ -157,7 +157,7 @@ ApiLogsList.defaultProps = {
         return (
             <Ui.View.List>
                 <Ui.View.Header
-                    title={this.state.token ? `ACL - API Logs: ${title}` : 'ACL - API Logs'}
+                    title={this.state.token ? this.i18n(`ACL - API Logs: {title}`, {title}) : this.i18n('ACL - API Logs')}
                     description={this.i18n('Here you can view all API request logs.')}/>
                 <Ui.View.Body>
                     <Ui.List {...listProps}>
@@ -179,7 +179,7 @@ ApiLogsList.defaultProps = {
                                                             api="/entities/webiny/api-logs/methods"
                                                             name="method"
                                                             placeholder={this.i18n('Filter by HTTP method')}
-                                                            allowClear={true}
+                                                            allowClear
                                                             onChange={apply()}/>
                                                     </Ui.Grid.Col>
                                                     <Ui.Grid.Col all={3}>
@@ -189,7 +189,7 @@ ApiLogsList.defaultProps = {
                                                             selectedRenderer={this.renderTokenOption}
                                                             name="token"
                                                             placeholder={this.i18n('Filter by token')}
-                                                            allowClear={true}
+                                                            allowClear
                                                             onChange={apply()}/>
                                                     </Ui.Grid.Col>
                                                     <Ui.Grid.Col all={3}>

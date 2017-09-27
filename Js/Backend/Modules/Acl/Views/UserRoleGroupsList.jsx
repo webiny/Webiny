@@ -24,8 +24,8 @@ UserRoleGroupsList.defaultProps = {
         const {Ui} = this.props;
         const Table = Ui.List.Table;
 
-        const users = <Ui.Link route="Users.List">Users</Ui.Link>;
-        const roles = <Ui.Link route="UserRoles.List">Roles</Ui.Link>;
+        const users = <Ui.Link route="Users.List">{this.i18n('Users')}</Ui.Link>;
+        const roles = <Ui.Link route="UserRoles.List">{this.i18n('Roles')}</Ui.Link>;
         return (
             <Ui.ViewSwitcher>
                 <Ui.ViewSwitcher.View view="listView" defaultView>
@@ -34,13 +34,15 @@ UserRoleGroupsList.defaultProps = {
                             <Ui.View.Header
                                 title={this.i18n('ACL - Role Groups')}
                                 description={(
-                                    <span>Role Groups are a simple way to control what set of roles certain users have. Create a role group with a set
-                                        of {roles} and then assign role groups to {users}.</span>
+                                    <span>
+                                        {this.i18n(`Role Groups are a simple way to control what set of roles certain users have.
+                                                    Create a role group with a set of {roles} and then assign role groups to {users}.`, {roles, users})}
+                                    </span>
                                 )}>
                                 <Ui.ButtonGroup>
                                     <Ui.Link type="primary" route="UserRoleGroups.Create">
                                         <Ui.Icon icon="icon-plus-circled"/>
-                                        Create
+                                        {this.i18n('Create')}
                                     </Ui.Link>
                                     <Ui.Button
                                         type="secondary"

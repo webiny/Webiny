@@ -39,7 +39,7 @@ class ExportModal extends Webiny.Ui.ModalComponent {
         return (
             <Modal.Dialog>
                 <Modal.Content>
-                    <Modal.Header title={`Export ${label}`}/>
+                    <Modal.Header title={this.i18n('Export {label}', {label})}/>
                     <Modal.Body style={this.state.loading ? {height: 200} : {}}>
                         {this.state.loading ? <Loader/> : <CodeHighlight language="json">{this.state.content}</CodeHighlight>}
                     </Modal.Body>

@@ -28,7 +28,7 @@ class ImportModal extends Webiny.Ui.ModalComponent {
                     {({form}) => (
                         <Modal.Content>
                             <Form.Loader/>
-                            <Modal.Header title={`Import ${label}`} onClose={this.hide}/>
+                            <Modal.Header title={this.i18n(`Import {label}`, {label})} onClose={this.hide}/>
                             <Modal.Body>
                                 <Form.Error/>
                                 <CodeEditor mode="text/javascript" name="data" validate="required,json"/>
