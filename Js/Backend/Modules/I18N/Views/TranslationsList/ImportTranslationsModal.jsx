@@ -18,13 +18,13 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
                     onSubmit={async ({model, form}) => {
                         form.showLoading();
                         const preview = model.options.preview;
-                        form.setState('model.response', null);
+                        form.setState('model.results', null);
                         const extension = model.file.name.split('.').pop();
                         const response = await form.api.post('/translations/import/' + extension, model);
                         form.hideLoading();
 
                         if (response.isError()) {
-                            Webiny.Growl.danger(response.getMessage());
+                            return form.handleApiError(response);
                         }
 
                         form.setState('model.results', {preview, data: response.getData()}, () => !preview && this.props.onTranslationsImported());
@@ -73,7 +73,7 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>
 
-                                    <Ui.Section title="Options"/>
+                                    <Ui.Section title={this.i18n('Options')}/>
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={12}>
                                             <Ui.Checkbox name="options.preview" label={this.i18n('Preview')}/>

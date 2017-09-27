@@ -86,7 +86,7 @@ class EntityBox extends Webiny.Ui.Component {
         header = (
             <span>
                 <h2 className={styles.customMethodsTitle}>{this.i18n(`Custom methods`)}</h2>
-                <Input placeholder="Filter methods..." {...this.bindTo('entityFilter')} delay={0}/>
+                <Input placeholder={this.i18n('Filter methods...')} {...this.bindTo('entityFilter')} delay={0}/>
             </span>
         );
 

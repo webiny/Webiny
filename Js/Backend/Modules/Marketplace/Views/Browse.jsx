@@ -6,6 +6,9 @@ import SubmitAppBox from './../Components/SubmitAppBox';
 import LoginRegister from './LoginRegister';
 import User from './../Components/User';
 
+/**
+ * @i18n.namespace Webiny.Backend.Marketplace.Browse
+ */
 class Browse extends Webiny.Ui.View {
     constructor(props) {
         super(props);
@@ -71,7 +74,7 @@ class Browse extends Webiny.Ui.View {
         return (
             <div className={styles.browse}>
                 <View.Dashboard>
-                    <View.Header title="Marketplace">
+                    <View.Header title={this.i18n('Marketplace')}>
                         <View.Header.Center>
                             <User user={this.state.user}/>
                         </View.Header.Center>

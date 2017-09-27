@@ -67,7 +67,7 @@ TextsList.defaultProps = {
                                                         <Ui.Grid.Col all={4}>
                                                             <Ui.Input
                                                                 name="_searchQuery"
-                                                                placeholder="Search by key or base text"
+                                                                placeholder={this.i18n('Search by key or base text')}
                                                                 onEnter={apply()}/>
                                                         </Ui.Grid.Col>
                                                         <Ui.Grid.Col all={4}>
@@ -77,7 +77,7 @@ TextsList.defaultProps = {
                                                                 url="/installed"
                                                                 textAttr="name"
                                                                 valueAttr="name"
-                                                                placeholder="Filter by app"
+                                                                placeholder={this.i18n('Filter by app')}
                                                                 allowClear
                                                                 onChange={apply()}/>
                                                         </Ui.Grid.Col>
@@ -85,7 +85,7 @@ TextsList.defaultProps = {
                                                             <Ui.Select
                                                                 api="/entities/webiny/i18n-text-groups"
                                                                 name="group"
-                                                                placeholder="Filter by text group"
+                                                                placeholder={this.i18n('Filter by text group')}
                                                                 allowClear
                                                                 onChange={apply()}/>
                                                         </Ui.Grid.Col>

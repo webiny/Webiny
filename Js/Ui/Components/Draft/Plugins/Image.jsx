@@ -3,6 +3,9 @@ import _ from 'lodash';
 import Webiny from 'webiny';
 import Atomic from './../Toolbar/Atomic';
 
+/**
+ * @i18n.namespace Webiny.Ui.Draft.Plugins.ImageEditComponent
+ */
 class ImageEditComponent extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
@@ -95,9 +98,9 @@ ImageEditComponent.defaultProps = {
                         <Ui.Grid.Row>
                             <Ui.Grid.Col xs={12} className="text-center">
                                 <Ui.ButtonGroup>
-                                    <Ui.Button {...this.btnProps('left')} label="Left"/>
-                                    <Ui.Button {...this.btnProps('center')} label="Center"/>
-                                    <Ui.Button {...this.btnProps('right')} label="Right"/>
+                                    <Ui.Button {...this.btnProps('left')} label={this.i18n('Left')}/>
+                                    <Ui.Button {...this.btnProps('center')} label={this.i18n('Center')}/>
+                                    <Ui.Button {...this.btnProps('right')} label={this.i18n('Right')}/>
                                 </Ui.ButtonGroup>
                             </Ui.Grid.Col>
                         </Ui.Grid.Row>
@@ -115,7 +118,7 @@ ImageEditComponent.defaultProps = {
                                     className="caption"
                                     value={this.props.data.caption || ''}
                                     onChange={captionChange}
-                                    placeholder="Enter a caption for this image"/>
+                                    placeholder={this.i18n('Enter a caption for this image')}/>
                             </Ui.Grid.Col>
                         </Ui.Grid.Row>
                     </div>
@@ -125,6 +128,9 @@ ImageEditComponent.defaultProps = {
     }
 };
 
+/**
+ * @i18n.namespace Webiny.Ui.Draft.Plugins.ImageComponent
+ */
 class ImageComponent extends Webiny.Ui.Component {
     getSize(offset = 0) {
         return {
@@ -147,6 +153,9 @@ ImageComponent.defaultProps = {
     }
 };
 
+/**
+ * @i18n.namespace Webiny.Ui.Draft.Plugins.ImagePlugin
+ */
 class ImagePlugin extends Webiny.Draft.AtomicPlugin {
     constructor(config = {}) {
         super(config);
@@ -230,7 +239,7 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
                                         let uploadTab = null;
                                         if (this.api) {
                                             uploadTab = (
-                                                <Ui.Tabs.Tab label="Upload" icon="fa-upload">
+                                                <Ui.Tabs.Tab label={this.i18n('Upload')} icon="fa-upload">
                                                     <Ui.Image
                                                         name="image"
                                                         accept={this.accept}
@@ -241,22 +250,22 @@ class ImagePlugin extends Webiny.Draft.AtomicPlugin {
                                         return (
                                             <Ui.Modal.Content>
                                                 <Ui.Form.Loader/>
-                                                <Ui.Modal.Header title="Insert image" onClose={dialog.hide}/>
+                                                <Ui.Modal.Header title={this.i18n('Insert image')} onClose={dialog.hide}/>
                                                 <Ui.Modal.Body noPadding>
                                                     <Ui.Tabs>
-                                                        <Ui.Tabs.Tab label="URL" icon="fa-link">
+                                                        <Ui.Tabs.Tab label={this.i18n('URL')} icon="fa-link">
                                                             <Ui.Input
                                                                 name="url"
-                                                                placeholder="Enter an image URL"
-                                                                label="URL"
+                                                                placeholder={this.i18n('Enter an image URL')}
+                                                                label={this.i18n('URL')}
                                                                 validate={urlValidator}/>
                                                         </Ui.Tabs.Tab>
                                                         {uploadTab}
                                                     </Ui.Tabs>
                                                 </Ui.Modal.Body>
                                                 <Ui.Modal.Footer>
-                                                    <Ui.Button type="default" key="cancel" label="Cancel" onClick={dialog.hide}/>
-                                                    <Ui.Button type="primary" key="submit" label="Insert" onClick={form.submit}/>
+                                                    <Ui.Button type="default" key="cancel" label={this.i18n('Cancel')} onClick={dialog.hide}/>
+                                                    <Ui.Button type="primary" key="submit" label={this.i18n('Insert')} onClick={form.submit}/>
                                                 </Ui.Modal.Footer>
                                             </Ui.Modal.Content>
                                         );

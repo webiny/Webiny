@@ -60,6 +60,8 @@ module.exports = function (source) {
     // Let's detect all defined i18n namespaces in source.
     const namespaces = getNamespaces(source);
 
+    let occurrencesCount = 0;
+
     let match;
     while ((match = regex.i18n.exec(source))) {
         const namespace = getNamespaceOnIndex(match.index, namespaces);
@@ -67,6 +69,7 @@ module.exports = function (source) {
             throw Error('Using "this.i18n" but namespace not defined.');
         }
         source = source.slice(0, match.index) + `this.i18n("${namespace}", ` + source.slice(match.index + 10);
+        occurrencesCount++;
     }
 
     while ((match = regex.webinyI18n.exec(source))) {
@@ -75,6 +78,11 @@ module.exports = function (source) {
             throw Error('Using "Webiny.I18n" but namespace not defined.');
         }
         source = source.slice(0, match.index) + `Webiny.I18n("${namespace}", ` + source.slice(match.index + 12);
+        occurrencesCount++;
+    }
+
+    if (namespaces.length > 0 && occurrencesCount === 0) {
+        throw Error('I18n namespace was defined but no usages found.');
     }
 
     return source;

@@ -4,9 +4,6 @@ import css from './TextRow.scss';
 import EditableTranslation from './TranslationListRow/EditableTranslation';
 import _ from 'lodash';
 
-/**
- * @i18n.namespace  Webiny.Backend.I18N.TranslationListRow
- */
 class TextRow extends Webiny.Ui.Component {
 }
 

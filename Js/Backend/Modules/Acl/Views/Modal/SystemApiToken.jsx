@@ -1,6 +1,9 @@
 import React from 'react';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Backend.Acl.Modal.SystemApiTokenModal
+ */
 class SystemApiTokenModal extends Webiny.Ui.ModalComponent {
 
     constructor(props) {
@@ -16,7 +19,7 @@ class SystemApiTokenModal extends Webiny.Ui.ModalComponent {
         let showToken = (
             <Button
                 type="primary"
-                label="I'm well aware of possible consequences of sharing this token. Reveal it!"
+                label={this.i18n("I'm well aware of possible consequences of sharing this token. Reveal it!")}
                 onClick={() => this.setState({confirmed: true})}/>
         );
 
@@ -27,7 +30,7 @@ class SystemApiTokenModal extends Webiny.Ui.ModalComponent {
         return (
             <Modal.Dialog>
                 <Modal.Content>
-                    <Modal.Header title="System API token"/>
+                    <Modal.Header title={this.i18n('System API token')}/>
                     <Modal.Body>
                         <Alert type="info">
                             To grant access to your API to 3rd party clients,&nbsp;
@@ -51,7 +54,7 @@ class SystemApiTokenModal extends Webiny.Ui.ModalComponent {
                     </Modal.Body>
                     <Modal.Footer>
                         <Link type="default" align="left" route="ApiLogs.List" params={{token: 'system'}}>View logs</Link>
-                        <Button label="Close" onClick={this.hide}/>
+                        <Button label={this.i18n('Close')} onClick={this.hide}/>
                     </Modal.Footer>
                 </Modal.Content>
             </Modal.Dialog>

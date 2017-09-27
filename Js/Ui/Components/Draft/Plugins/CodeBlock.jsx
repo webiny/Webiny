@@ -12,6 +12,9 @@ const languageMap = {
     'yaml': 'text/x-yaml'
 };
 
+/**
+ * @i18n.namespace Webiny.Ui.Draft.Plugins.CodeBlockEditComponent
+ */
 class CodeBlockEditComponent extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
@@ -46,14 +49,14 @@ CodeBlockEditComponent.defaultProps = {
                         <Ui.Grid.Col all={12} className="code-block">
                             <div style={{position: 'absolute', right: 20, top: 5}}>
                                 <Ui.Dropdown title={this.props.data.language || 'jsx'} type="balloon">
-                                    <Ui.Dropdown.Header title="Language"/>
-                                    <Ui.Dropdown.Link title="HTML" onClick={() => this.switchLanguage('html')}/>
-                                    <Ui.Dropdown.Link title="JSON" onClick={() => this.switchLanguage('json')}/>
-                                    <Ui.Dropdown.Link title="JSX" onClick={() => this.switchLanguage('jsx')}/>
-                                    <Ui.Dropdown.Link title="JAVASCRIPT" onClick={() => this.switchLanguage('javascript')}/>
-                                    <Ui.Dropdown.Link title="PHP" onClick={() => this.switchLanguage('php')}/>
-                                    <Ui.Dropdown.Link title="SHELL" onClick={() => this.switchLanguage('shell')}/>
-                                    <Ui.Dropdown.Link title="YAML" onClick={() => this.switchLanguage('yaml')}/>
+                                    <Ui.Dropdown.Header title={this.i18n('Language')}/>
+                                    <Ui.Dropdown.Link title={this.i18n('HTML')} onClick={() => this.switchLanguage('html')}/>
+                                    <Ui.Dropdown.Link title={this.i18n('JSON')} onClick={() => this.switchLanguage('json')}/>
+                                    <Ui.Dropdown.Link title={this.i18n('JSX')} onClick={() => this.switchLanguage('jsx')}/>
+                                    <Ui.Dropdown.Link title={this.i18n('JAVASCRIPT')} onClick={() => this.switchLanguage('javascript')}/>
+                                    <Ui.Dropdown.Link title={this.i18n('PHP')} onClick={() => this.switchLanguage('php')}/>
+                                    <Ui.Dropdown.Link title={this.i18n('SHELL')} onClick={() => this.switchLanguage('shell')}/>
+                                    <Ui.Dropdown.Link title={this.i18n('YAML')} onClick={() => this.switchLanguage('yaml')}/>
                                 </Ui.Dropdown>
                             </div>
                             <Ui.CodeEditor {...editorProps}/>
@@ -65,6 +68,9 @@ CodeBlockEditComponent.defaultProps = {
     }
 };
 
+/**
+ * @i18n.namespace Webiny.Ui.Draft.Plugins.CodeBlockPreviewComponent
+ */
 class CodeBlockPreviewComponent extends Webiny.Ui.Component {
 }
 
@@ -89,6 +95,9 @@ CodeBlockPreviewComponent.defaultProps = {
     }
 };
 
+/**
+ * @i18n.namespace Webiny.Ui.Draft.Plugins.CodeBlockPlugin
+ */
 class CodeBlockPlugin extends Webiny.Draft.AtomicPlugin {
     constructor(config) {
         super(config);

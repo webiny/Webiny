@@ -80,7 +80,7 @@ TranslationsList.defaultProps = {
                                                                 url="/installed"
                                                                 textAttr="name"
                                                                 valueAttr="name"
-                                                                placeholder="Filter by app"
+                                                                placeholder={this.i18n('Filter by app')}
                                                                 allowClear
                                                                 onChange={apply()}/>
                                                         </Ui.Grid.Col>

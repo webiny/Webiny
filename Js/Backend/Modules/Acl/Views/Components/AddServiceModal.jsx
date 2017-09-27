@@ -35,7 +35,7 @@ class AddServiceModal extends Webiny.Ui.ModalComponent {
                         }}>
                         {({form}) => (
                             <Modal.Content>
-                                <Modal.Header title="Add service" onClose={dialog.hide}/>
+                                <Modal.Header title={this.i18n('Add service')} onClose={dialog.hide}/>
                                 <Modal.Body>
                                     <Grid.Row>
                                         <Grid.Col all={12}>
@@ -62,8 +62,8 @@ class AddServiceModal extends Webiny.Ui.ModalComponent {
                                     </Grid.Row>
                                 </Modal.Body>
                                 <Modal.Footer>
-                                    <Button label="Cancel" onClick={this.hide}/>
-                                    <Button type="primary" label="Add" onClick={form.submit}/>
+                                    <Button label={this.i18n('Cancel')} onClick={this.hide}/>
+                                    <Button type="primary" label={this.i18n('Add')} onClick={form.submit}/>
                                 </Modal.Footer>
                             </Modal.Content>
                         )}

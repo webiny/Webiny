@@ -3,6 +3,9 @@ import Webiny from 'webiny';
 import logoOrange from 'Webiny/Ui/Assets/images/logo_orange.png';
 import styles from './styles/Login.css';
 
+/**
+ * @i18n.namespace Webiny.Ui.Auth.Login
+ */
 class Login extends Webiny.Ui.View {
     constructor(props) {
         super(props);
@@ -79,8 +82,8 @@ Login.defaultProps = {
 
                                     {this.state.twoFactorAuth && ( <Input
                                         name="twoFactorAuthCode"
-                                        placeholder="Enter your verification code"
-                                        label="Verification code"
+                                        placeholder={this.i18n('Enter your verification code')}
+                                        label={this.i18n('Verification code')}
                                         validate="required"
                                         onEnter={form.submit}
                                         autoFocus={true}/>)}
@@ -89,16 +92,16 @@ Login.defaultProps = {
                                     {!this.state.twoFactorAuth && (<div>
                                         <Email
                                             name="username"
-                                            placeholder="Enter email"
-                                            label="Email address"
+                                            placeholder={this.i18n('Enter email')}
+                                            label={this.i18n('Email address')}
                                             validate="required"
                                             onEnter={form.submit}
                                             autoFocus={true}/>
 
                                         <Password
                                             name="password"
-                                            placeholder="Password"
-                                            label="Password"
+                                            placeholder={this.i18n('Password')}
+                                            label={this.i18n('Password')}
                                             validate="required"
                                             onEnter={form.submit}/>
                                     </div>)}

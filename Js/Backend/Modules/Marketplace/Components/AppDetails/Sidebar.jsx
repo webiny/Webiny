@@ -2,6 +2,9 @@ import React from 'react';
 import Webiny from 'webiny';
 import styles from './../../Views/styles.css';
 
+/**
+ * @i18n.namespace Webiny.Backend.Marketplace.AppDetails.Sidebar
+ */
 class Sidebar extends Webiny.Ui.View {
 
 }
@@ -13,7 +16,7 @@ Sidebar.defaultProps = {
 
         return (
             <div className={styles.sidebar}>
-                <Section title="Details"/>
+                <Section title={this.i18n('Details')}/>
 
                 <ul className={styles.detailsList}>
                     <li>

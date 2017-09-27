@@ -1,6 +1,9 @@
 import React from 'react';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Backend.Acl.UsersForm
+ */
 class UsersForm extends Webiny.Ui.View {
 }
 
@@ -27,17 +30,17 @@ UsersForm.defaultProps = {
                 {({model, form}) => (
                     <Ui.View.Form>
                         <Ui.View.Header title={model.id ? 'ACL - Edit User' : 'ACL - Create User'}/>
-                        <Ui.Form.Error message="Something went wrong during save"/>
+                        <Ui.Form.Error message={this.i18n('Something went wrong during save')}/>
                         <Ui.View.Body>
                             <Ui.Grid.Row>
                                 <Ui.Grid.Col all={6}>
-                                    <Ui.Section title="Info"/>
+                                    <Ui.Section title={this.i18n('Info')}/>
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={12}>
-                                            <Ui.Input label="First name" name="firstName" validate="required"/>
-                                            <Ui.Input label="Last name" name="lastName" validate="required"/>
+                                            <Ui.Input label={this.i18n('First name')} name="firstName" validate="required"/>
+                                            <Ui.Input label={this.i18n('Last name')} name="lastName" validate="required"/>
                                             <Ui.Input
-                                                label="Email"
+                                                label={this.i18n('Email')}
                                                 name="email"
                                                 description="Your email"
                                                 validate="required,email"/>
@@ -45,18 +48,18 @@ UsersForm.defaultProps = {
                                     </Ui.Grid.Row>
                                 </Ui.Grid.Col>
                                 <Ui.Grid.Col all={6}>
-                                    <Ui.Section title="Password"/>
+                                    <Ui.Section title={this.i18n('Password')}/>
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={12}>
                                             <Ui.Password
-                                                label="New password"
+                                                label={this.i18n('New password')}
                                                 name="password"
-                                                placeholder="Type a new password"/>
+                                                placeholder={this.i18n('Type a new password')}/>
                                             <Ui.Password
-                                                label="Confirm password"
+                                                label={this.i18n('Confirm password')}
                                                 name="confirmPassword"
                                                 validate="eq:@password"
-                                                placeholder="Retype the new password">
+                                                placeholder={this.i18n('Retype the new password')}>
                                                 <validator name="eq">Passwords do not match</validator>
                                             </Ui.Password>
                                         </Ui.Grid.Col>
@@ -65,16 +68,16 @@ UsersForm.defaultProps = {
                             </Ui.Grid.Row>
                             <Ui.Grid.Row>
                                 <Ui.Grid.Col all={12}>
-                                    <Ui.Switch label="Enabled" name="enabled"/>
+                                    <Ui.Switch label={this.i18n('Enabled')} name="enabled"/>
                                 </Ui.Grid.Col>
                             </Ui.Grid.Row>
                             <Ui.Grid.Row>
                                 <Ui.Grid.Col all={12}>
                                     <Ui.Tabs>
-                                        <Ui.Tabs.Tab label="Roles" icon="fa-user">
+                                        <Ui.Tabs.Tab label={this.i18n('Roles')} icon="fa-user">
                                             <Ui.UserRoles name="roles"/>
                                         </Ui.Tabs.Tab>
-                                        <Ui.Tabs.Tab label="Role Groups" icon="fa-users">
+                                        <Ui.Tabs.Tab label={this.i18n('Role Groups')} icon="fa-users">
                                             <Ui.UserRoleGroups name="roleGroups"/>
                                         </Ui.Tabs.Tab>
                                     </Ui.Tabs>
@@ -82,8 +85,8 @@ UsersForm.defaultProps = {
                             </Ui.Grid.Row>
                         </Ui.View.Body>
                         <Ui.View.Footer>
-                            <Ui.Button type="default" onClick={form.cancel} label="Go back"/>
-                            <Ui.Button type="primary" onClick={form.submit} label="Save user" align="right"/>
+                            <Ui.Button type="default" onClick={form.cancel} label={this.i18n('Go back')}/>
+                            <Ui.Button type="primary" onClick={form.submit} label={this.i18n('Save user')} align="right"/>
                         </Ui.View.Footer>
                     </Ui.View.Form>
                 )}

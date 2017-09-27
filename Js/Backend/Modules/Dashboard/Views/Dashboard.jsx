@@ -5,6 +5,9 @@ import './style.scss'
 import imgInfinify from 'Assets/images/infinity.png';
 import Updates from './Components/Updates';
 
+/**
+ * @i18n.namespace Webiny.Backend.Dashboard.Dashboard
+ */
 class Dashboard extends Webiny.Ui.View {
     constructor(props) {
         super(props);
@@ -39,7 +42,7 @@ Dashboard.defaultProps = {
 
         return (
             <View.Dashboard>
-                <View.Header title="Dashboard">
+                <View.Header title={this.i18n('Dashboard')}>
                     <View.Header.Center>
                         <div className="user-welcome">
                             <div className="user-welcome__avatar">
@@ -60,7 +63,7 @@ Dashboard.defaultProps = {
                     
                     <Grid.Row>
                         <Grid.Col all={4}>
-                            <View.InfoBlock title="GET STARTED">
+                            <View.InfoBlock title={this.i18n('GET STARTED')}>
                                 <ul>
                                     <li>
                                         <div className="block-list__item-image">
@@ -96,7 +99,7 @@ Dashboard.defaultProps = {
                         </Grid.Col>
 
                         <Grid.Col all={4}>
-                            <View.InfoBlock title="THE HUB">
+                            <View.InfoBlock title={this.i18n('THE HUB')}>
                                 <div className="text-center dashboard--block--the-hub">
                                     <div className="title-icon">
                                         <img src={imgInfinify} alt="Webiny Infinity"/>
@@ -115,7 +118,7 @@ Dashboard.defaultProps = {
                         </Grid.Col>
 
                         <Grid.Col all={4}>
-                            <View.InfoBlock title="SOCIALIZE">
+                            <View.InfoBlock title={this.i18n('SOCIALIZE')}>
                                 <div>
                                     <ul>
                                         <li>

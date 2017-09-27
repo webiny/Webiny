@@ -1,6 +1,9 @@
 import React from 'react';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Ui.List.Table.FieldInfo
+ */
 class FieldInfo extends Webiny.Ui.Component {
 
     constructor(props) {
@@ -34,7 +37,7 @@ FieldInfo.defaultProps = {
                     <Modal.Header title={this.props.title}/>
                     <Modal.Body children={this.props.children}/>
                     <Modal.Footer>
-                        <Button label="Close" onClick={this.hideInfo}/>
+                        <Button label={this.i18n('Close')} onClick={this.hideInfo}/>
                     </Modal.Footer>
                 </Modal.Content>
             </Modal.Dialog>

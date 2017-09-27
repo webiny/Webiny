@@ -17,13 +17,13 @@ class ScanTextsModal extends Webiny.Ui.ModalComponent {
                     onSubmit={async ({model, form}) => {
                         form.showLoading();
                         const preview = model.options.preview;
-                        form.setState('model.response', null);
+                        form.setState('model.results', null);
                         const response = await form.api.post('/scan', {apps: model.apps, options: model.options});
 
                         form.hideLoading();
 
                         if (response.isError()) {
-                            Webiny.Growl.danger(response.getMessage());
+                            return form.handleApiError(response);
                         }
 
                         form.setState('model.results', {preview, data: response.getData()}, () => !preview && this.props.onTextsScanned());
@@ -76,7 +76,7 @@ class ScanTextsModal extends Webiny.Ui.ModalComponent {
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>
 
-                                    <Ui.Section title="Options"/>
+                                    <Ui.Section title={this.i18n('Options')}/>
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={12}>
                                             <Ui.Checkbox

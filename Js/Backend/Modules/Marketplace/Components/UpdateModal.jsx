@@ -2,6 +2,9 @@ import React from 'react';
 import Webiny from 'webiny';
 import styles from './../Views/styles.css';
 
+/**
+ * @i18n.namespace Webiny.Backend.Marketplace.InstallModal
+ */
 class InstallModal extends Webiny.Ui.ModalComponent {
     constructor(props) {
         super(props);
@@ -104,19 +107,19 @@ class InstallModal extends Webiny.Ui.ModalComponent {
         return (
             <Modal.Dialog closeOnClick={!this.state.started || this.state.ended} onClose={this.onClose}>
                 <Modal.Content>
-                    <Modal.Header onClose={this.onClose} title="Update"/>
+                    <Modal.Header onClose={this.onClose} title={this.i18n('Update')}/>
                     <Modal.Body>
                         <Logic.Hide if={this.state.started}>
-                            <Alert type="warning" title="Notice">
+                            <Alert type="warning" title={this.i18n('Notice')}>
                                 Make sure your watch process is running before updating the app.
                             </Alert>
                             <div className="text-center">
-                                <Button type="primary" label="Begin Update" onClick={this.startUpdate}/>
+                                <Button type="primary" label={this.i18n('Begin Update')} onClick={this.startUpdate}/>
                             </div>
                         </Logic.Hide>
                         <Logic.Hide if={!this.state.started}>
                             <Logic.Show if={this.state.finished}>
-                                <Alert type="success" title="Done">
+                                <Alert type="success" title={this.i18n('Done')}>
                                     Your app is updated!
                                 </Alert>
                             </Logic.Show>
@@ -129,7 +132,7 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                     </Modal.Body>
                     {(!this.state.finished && this.state.ended) && (
                         <Modal.Footer>
-                            <Button align="right" label="Close" onClick={this.hide}/>
+                            <Button align="right" label={this.i18n('Close')} onClick={this.hide}/>
                         </Modal.Footer>
                     )}
                 </Modal.Content>

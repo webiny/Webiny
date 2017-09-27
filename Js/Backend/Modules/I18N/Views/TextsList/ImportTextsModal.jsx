@@ -18,12 +18,12 @@ class ImportTextsModal extends Webiny.Ui.ModalComponent {
                     onSubmit={async ({model, form}) => {
                         form.showLoading();
                         const preview = model.options.preview;
-                        form.setState('model.response', null);
+                        form.setState('model.results', null);
                         const response = await form.api.post('/import/json', model);
                         form.hideLoading();
 
                         if (response.isError()) {
-                            Webiny.Growl.danger(response.getMessage());
+                            return form.handleApiError(response);
                         }
 
                         form.setState('model.results', {preview, data: response.getData()}, () => !preview && this.props.onTextsImported());
@@ -86,7 +86,7 @@ class ImportTextsModal extends Webiny.Ui.ModalComponent {
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>
 
-                                    <Ui.Section title="Options"/>
+                                    <Ui.Section title={this.i18n('Options')}/>
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={12}>
                                             <Ui.Checkbox

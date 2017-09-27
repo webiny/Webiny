@@ -3,6 +3,9 @@ import Webiny from 'webiny';
 import ExportPermissionModal from './Modal/ExportModal';
 import ImportPermissionModal from './Modal/ImportModal';
 
+/**
+ * @i18n.namespace Webiny.Backend.Acl.UserPermissionsList
+ */
 class UserPermissionsList extends Webiny.Ui.View {
 
 }
@@ -30,7 +33,7 @@ UserPermissionsList.defaultProps = {
                     {({showView}) => (
                         <Ui.View.List>
                             <Ui.View.Header
-                                title="ACL - Permissions"
+                                title={this.i18n('ACL - Permissions')}
                                 description={<span>Permissions define what a user is allowed to do with entities and services. Define permissions and then group them into {rolesLink}.</span>}>
                                 <Ui.ButtonGroup>
                                     <Ui.Link type="primary" route="UserPermissions.Create">
@@ -41,7 +44,7 @@ UserPermissionsList.defaultProps = {
                                         type="secondary"
                                         onClick={showView('importModal')}
                                         icon="fa-upload"
-                                        label="Import"/>
+                                        label={this.i18n('Import')}/>
                                 </Ui.ButtonGroup>
                             </Ui.View.Header>
                             <Ui.View.Body>
@@ -52,7 +55,7 @@ UserPermissionsList.defaultProps = {
                                                 <Ui.Grid.Col all={12}>
                                                     <Ui.Input
                                                         name="_searchQuery"
-                                                        placeholder="Search by name or slug"
+                                                        placeholder={this.i18n('Search by name or slug')}
                                                         onEnter={apply()}/>
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
@@ -60,7 +63,7 @@ UserPermissionsList.defaultProps = {
                                     </Ui.List.FormFilters>
                                     <Table>
                                         <Table.Row>
-                                            <Table.Field name="name" label="Name" sort="name">
+                                            <Table.Field name="name" label={this.i18n('Name')} sort="name">
                                                 {({data}) => (
                                                     <span>
                                                         <Ui.Link route="UserPermissions.Edit" params={{id: data.id}}>
@@ -71,11 +74,11 @@ UserPermissionsList.defaultProps = {
                                                     </span>
                                                 )}
                                             </Table.Field>
-                                            <Table.Field name="slug" label="Slug" sort="slug"/>
+                                            <Table.Field name="slug" label={this.i18n('Slug')} sort="slug"/>
                                             <Table.Actions>
                                                 <Table.EditAction route="UserPermissions.Edit"/>
                                                 <Table.Action
-                                                    label="Export"
+                                                    label={this.i18n('Export')}
                                                     icon="fa-download"
                                                     onClick={showView('exportModal')}/>
                                                 <Table.DeleteAction/>
@@ -95,7 +98,7 @@ UserPermissionsList.defaultProps = {
                             data={data}
                             api="/entities/webiny/user-permissions"
                             fields="name,slug,description,permissions"
-                            label="Permission"/>
+                            label={this.i18n('Permission')}/>
                     )}
                 </Ui.ViewSwitcher.View>
 
@@ -103,7 +106,7 @@ UserPermissionsList.defaultProps = {
                     {() => (
                         <ImportPermissionModal
                             api="/entities/webiny/user-permissions"
-                            label="Permission"
+                            label={this.i18n('Permission')}
                             onImported={() => this.list.loadData()}/>
                     )}
                 </Ui.ViewSwitcher.View>

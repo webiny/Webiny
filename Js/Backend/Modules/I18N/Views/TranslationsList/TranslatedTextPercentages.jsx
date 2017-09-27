@@ -3,7 +3,7 @@ import Webiny from 'webiny';
 import css from './TranslatedTextPercentages.scss';
 
 /**
- * @i18n.namespace  Webiny.Backend.I18N.TranslatedTextPercentages
+ * @i18n.namespace Webiny.Backend.I18n.TranslationsList.TranslatedTextPercentages
  */
 class TranslatedTextPercentages extends Webiny.Ui.Component {
     renderProgressBar(locale, data) {
@@ -28,7 +28,7 @@ TranslatedTextPercentages.defaultProps = {
         const {Ui} = this.props;
         return (
             <div className={css.translatedTextPercentages}>
-                <Ui.Section title="Translations"/>
+                <Ui.Section title={this.i18n('Translations')}/>
                 <Ui.Data api="/entities/webiny/i18n-texts/stats/translated">
                     {({data}) => (
                         <Ui.Grid.Row>

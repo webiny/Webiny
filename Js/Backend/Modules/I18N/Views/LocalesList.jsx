@@ -22,7 +22,7 @@ LocalesList.defaultProps = {
                         <Ui.ViewSwitcher.View view="translationsList" defaultView>
                             {({showView}) => (
                                 <Ui.View.List>
-                                    <Ui.View.Header title="I18N - Locales">
+                                    <Ui.View.Header title={this.i18n('I18N - Locales')}>
                                         <Ui.Button type="primary" align="right" onClick={showView('localesModal')}>
                                             <Ui.Icon icon="icon-plus-circled"/>
                                             {this.i18n('Add Locale')}

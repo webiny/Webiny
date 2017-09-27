@@ -1,4 +1,7 @@
 import React from 'react';
+/**
+ * @i18n.namespace Webiny.Ui.Downloader.Ideas.Example
+ */
 <Ui.Download>
     <Ui.Download.Element>
         {({download}) => (
@@ -16,15 +19,15 @@ import React from 'react';
                         <Ui.Form onSubmit={submit}>
                             {({form}) => (
                                 <Ui.Modal.Content>
-                                    <Ui.Modal.Header title="Export summary"/>
+                                    <Ui.Modal.Header title={this.i18n('Export summary')}/>
                                     <Ui.Modal.Body>
                                         <Ui.Grid.Row>
                                             <Ui.Grid.Col all={12}>
                                                 <Ui.Select
                                                     name="enabled"
                                                     validate="required"
-                                                    label="Filter by status"
-                                                    placeholder="All records"
+                                                    label={this.i18n('Filter by status')}
+                                                    placeholder={this.i18n('All records')}
                                                     allowClear
                                                     description="Records will be filtered based on your selection">
                                                     <option value="true">Enabled</option>
@@ -34,8 +37,8 @@ import React from 'react';
                                         </Ui.Grid.Row>
                                     </Ui.Modal.Body>
                                     <Ui.Modal.Footer>
-                                        <Ui.Button type="default" label="Cancel" onClick={dialog.hide}/>
-                                        <Ui.Button type="primary" label="Export" onClick={form.submit}/>
+                                        <Ui.Button type="default" label={this.i18n('Cancel')} onClick={dialog.hide}/>
+                                        <Ui.Button type="primary" label={this.i18n('Export')} onClick={form.submit}/>
                                     </Ui.Modal.Footer>
                                 </Ui.Modal.Content>
                             )}

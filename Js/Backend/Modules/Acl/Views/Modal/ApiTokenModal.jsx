@@ -2,6 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Backend.Acl.Modal.ApiTokenModal
+ */
 class ApiTokenModal extends Webiny.Ui.ModalComponent {
 
     renderDialog() {
@@ -28,31 +31,31 @@ class ApiTokenModal extends Webiny.Ui.ModalComponent {
                         {({model, form}) => (
                             <Modal.Content>
                                 <Form.Loader/>
-                                <Modal.Header title="API Token" onClose={dialog.hide}/>
+                                <Modal.Header title={this.i18n('API Token')} onClose={dialog.hide}/>
                                 <Modal.Body>
                                     <Grid.Row>
                                         <Grid.Col all={12}>
                                             <Form.Error/>
-                                            <Input readOnly label="Token" name="token" renderIf={() => model.id}/>
-                                            <Input label="Owner" name="owner" validate="required" placeholder="Eg: webiny.com"/>
+                                            <Input readOnly label={this.i18n('Token')} name="token" renderIf={() => model.id}/>
+                                            <Input label={this.i18n('Owner')} name="owner" validate="required" placeholder={this.i18n('Eg: webiny.com')}/>
                                             <Input
-                                                label="Description"
+                                                label={this.i18n('Description')}
                                                 name="description"
                                                 validate="required"
                                                 description={<span>Try to keep it short, for example: <strong>Project X - Issue tracker</strong></span>}
-                                                placeholder="Short description of usage"/>
-                                            <Switch label="Enabled" name="enabled"/>
-                                            <Switch label="Log requests" name="logRequests"/>
+                                                placeholder={this.i18n('Short description of usage')}/>
+                                            <Switch label={this.i18n('Enabled')} name="enabled"/>
+                                            <Switch label={this.i18n('Log requests')} name="logRequests"/>
                                         </Grid.Col>
                                     </Grid.Row>
                                     <br/>
                                     <Grid.Row>
                                         <Grid.Col all={12}>
                                             <Tabs>
-                                                <Tabs.Tab label="Roles" icon="fa-user">
+                                                <Tabs.Tab label={this.i18n('Roles')} icon="fa-user">
                                                     <UserRoles name="roles"/>
                                                 </Tabs.Tab>
-                                                <Tabs.Tab label="Role Groups" icon="fa-users">
+                                                <Tabs.Tab label={this.i18n('Role Groups')} icon="fa-users">
                                                     <UserRoleGroups name="roleGroups"/>
                                                 </Tabs.Tab>
                                             </Tabs>
@@ -60,8 +63,8 @@ class ApiTokenModal extends Webiny.Ui.ModalComponent {
                                     </Grid.Row>
                                 </Modal.Body>
                                 <Modal.Footer>
-                                    <Button label="Cancel" onClick={this.hide}/>
-                                    <Button type="primary" label="Save token" onClick={form.submit}/>
+                                    <Button label={this.i18n('Cancel')} onClick={this.hide}/>
+                                    <Button type="primary" label={this.i18n('Save token')} onClick={form.submit}/>
                                 </Modal.Footer>
                             </Modal.Content>
                         )}

@@ -3,6 +3,9 @@ import Webiny from 'webiny';
 import ErrorGroup from './ErrorGroup';
 import ErrorCount from './ErrorCount';
 
+/**
+ * @i18n.namespace Webiny.Backend.Logger.ListErrors
+ */
 class ListErrors extends Webiny.Ui.View {
 
     constructor(props) {
@@ -77,7 +80,7 @@ ListErrors.defaultProps = {
 
                                                         <Ui.ExpandableList.ActionSet>
                                                             <Ui.ExpandableList.Action
-                                                                label="Resolve Group"
+                                                                label={this.i18n('Resolve Group')}
                                                                 icon="icon-check"
                                                                 onClick={() => this.resolveGroup(row, errorList)}/>
                                                         </Ui.ExpandableList.ActionSet>

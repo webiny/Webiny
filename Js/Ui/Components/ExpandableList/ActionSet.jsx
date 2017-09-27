@@ -1,6 +1,9 @@
 import React from 'react';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Ui.ExpandableList.ActionSet
+ */
 class ActionSet extends Webiny.Ui.Component {
 
 }
@@ -11,7 +14,7 @@ ActionSet.defaultProps = {
         const {Dropdown} = this.props;
         return (
             <Dropdown title={this.props.label} type="balloon" className="expandable-list__action-set">
-                <Dropdown.Header title="Actions"/>
+                <Dropdown.Header title={this.i18n('Actions')}/>
                 {React.Children.map(this.props.children, child => {
                     if (Webiny.isElementOfType(child, Dropdown.Divider) || Webiny.isElementOfType(child, Dropdown.Header)) {
                         return child;
