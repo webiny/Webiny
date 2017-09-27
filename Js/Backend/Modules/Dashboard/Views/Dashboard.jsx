@@ -55,7 +55,7 @@ Dashboard.defaultProps = {
                             <h3 className="user-welcome__message">Hi {this.getUserName()}</h3>
                         </div>
                     </View.Header.Center>
-                    <Button onClick={() => Webiny.Router.goToRoute('Users.Account')}>Manage Account</Button>
+                    <Button onClick={() => Webiny.Router.goToRoute('Users.Account')}>{this.i18n('Manage Account')}</Button>
                 </View.Header>
 
                 <View.Body>
@@ -71,7 +71,8 @@ Dashboard.defaultProps = {
                                         </div>
                                         <a href="https://www.webiny.com/docs/current/components/must-know"
                                            className="block-list__item-text" target="_blank">
-                                            <strong>React Components</strong> - Learn what they do and how to implement them.
+                                            <strong>{this.i18n('React Components')}</strong>
+                                            {this.i18n(' - Learn what they do and how to implement them.')}
 
                                         </a>
                                     </li>
@@ -81,7 +82,8 @@ Dashboard.defaultProps = {
                                         </div>
                                         <a href="https://www.webiny.com/the-hub/tutorials" className="block-list__item-text"
                                            target="_blank">
-                                            <strong>Tutorials</strong> - How to setup Webiny and other applications.
+                                            <strong>{this.i18n('Tutorials')}</strong>
+                                            {this.i18n(' - How to setup Webiny and other applications.')}
                                         </a>
                                     </li>
                                     <li>
@@ -90,8 +92,8 @@ Dashboard.defaultProps = {
                                         </div>
                                         <a href="https://www.webiny.com/docs/current/reference-manual/environments"
                                            className="block-list__item-text" target="_blank">
-                                            <strong>Reference Manual</strong> - The nitty-gritty details of how the internal
-                                            components work.
+                                            <strong>{this.i18n('Reference Manual')}</strong>
+                                            {this.i18n(' - The nitty-gritty details of how the internal components work.')}
                                         </a>
                                     </li>
                                 </ul>
@@ -105,13 +107,13 @@ Dashboard.defaultProps = {
                                         <img src={imgInfinify} alt="Webiny Infinity"/>
                                     </div>
 
-                                    <h3>The Hub</h3>
+                                    <h3>{this.i18n('The Hub')}</h3>
                                     <div className="block-list__item-text">
-                                        Ask questions, present your work, start or join a discussion, view or contribute a tutorial.
+                                        {this.i18n('Ask questions, present your work, start or join a discussion, view or contribute a tutorial.')}
                                     </div>
                                     <br/>
                                     <div className="text-center">
-                                        <Link url="https://www.webiny.com/the-hub" newTab={true} type="primary">JOIN</Link>
+                                        <Link url="https://www.webiny.com/the-hub" newTab={true} type="primary">{this.i18n('JOIN')}</Link>
                                     </div>
                                 </div>
                             </View.InfoBlock>
@@ -123,47 +125,47 @@ Dashboard.defaultProps = {
                                     <ul>
                                         <li>
                                             <div className="block-list__item-image">
-                                                <span className="icon icon-github icon-3x"></span>
+                                                <span className="icon icon-github icon-3x"/>
                                             </div>
                                             <a href="https://github.com/Webiny/Webiny" className="block-list__item-text" target="_blank">
-                                                <Icon icon="fa-github"/> GitHub
+                                                <Icon icon="fa-github"/> {this.i18n('GitHub')}
                                             </a>
                                         </li>
                                         <li>
                                             <div className="block-list__item-image">
-                                                <span className="icon icon-twitter icon-3x"></span>
+                                                <span className="icon icon-twitter icon-3x"/>
                                             </div>
                                             <a href="https://twitter.com/WebinyPlatform" className="block-list__item-text" target="_blank">
-                                                <Icon icon="fa-twitter"/> Twitter
+                                                <Icon icon="fa-twitter"/> {this.i18n('Twitter')}
                                             </a>
                                         </li>
                                         <li>
                                             <div className="block-list__item-image">
-                                                <span className="icon icon-medium icon-3x"></span>
+                                                <span className="icon icon-medium icon-3x"/>
                                             </div>
                                             <a href="https://blog.webiny.com"
                                                className="block-list__item-text" target="_blank">
-                                                <Icon icon="fa-medium"/> Blog
+                                                <Icon icon="fa-medium"/> {this.i18n('Blog')}
                                             </a>
                                         </li>
 
                                         <li>
                                             <div className="block-list__item-image">
-                                                <span className="icon icon-youtube icon-3x"></span>
+                                                <span className="icon icon-youtube icon-3x"/>
                                             </div>
                                             <a href="https://video.webiny.com"
                                                className="block-list__item-text" target="_blank">
-                                                <Icon icon="fa-youtube"/> YouTube
+                                                <Icon icon="fa-youtube"/> {this.i18n('YouTube')}
                                             </a>
                                         </li>
 
                                         <li>
                                             <div className="block-list__item-image">
-                                                <span className="icon icon-youtube icon-3x"></span>
+                                                <span className="icon icon-youtube icon-3x"/>
                                             </div>
                                             <a href="https://chat.webiny.com"
                                                className="block-list__item-text" target="_blank">
-                                                <Icon icon="fa-commenting-o"/> Chat
+                                                <Icon icon="fa-commenting-o"/> {this.i18n('Chat')}
                                             </a>
                                         </li>
 
