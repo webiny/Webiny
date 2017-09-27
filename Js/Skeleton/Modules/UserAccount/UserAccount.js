@@ -24,7 +24,7 @@ class UserAccount extends Webiny.Ui.View {
                 if (apiResponse.getData().result) {
                     confirm();
                 } else {
-                    Webiny.Growl.danger('The code doesn\'t match');
+                    Webiny.Growl.danger(this.i18n(`The code doesn't match`));
                 }
             }
         };
@@ -40,23 +40,23 @@ class UserAccount extends Webiny.Ui.View {
                                     <Ui.Grid.Col all={6}>
                                         <Ui.Section title={this.i18n('Step 1')}/>
                                         <p>
-                                            Install the Google Authenticator iOS or Android app: <br/>
+                                            {this.i18n('Install the Google Authenticator iOS or Android app:')} <br/>
                                         </p>
                                         <p>
                                             <Ui.Link url="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">
-                                                <Ui.Icon icon="fa-apple"/> iOS download
+                                                <Ui.Icon icon="fa-apple"/> {this.i18n('iOS download')}
                                             </Ui.Link>
                                             <br/>
                                             <Ui.Link
                                                 url="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en">
-                                                <Ui.Icon icon="fa-android"/> Android download
+                                                <Ui.Icon icon="fa-android"/> {this.i18n('Android download')}
                                             </Ui.Link>
                                         </p>
                                     </Ui.Grid.Col>
 
                                     <Ui.Grid.Col all={6}>
                                         <Ui.Section title={this.i18n('Step 2')}/>
-                                        <p>Scan the QR code below with the authenticator app</p>
+                                        <p>{this.i18n('Scan the QR code below with the authenticator app')}</p>
                                         <Ui.Data api="/entities/webiny/user/2factor-qr" waitForData={true}>
                                             {({data, loader}) => {
                                                 if (loader) {
@@ -140,7 +140,7 @@ UserAccount.defaultProps = {
                                     <Ui.Input label={this.i18n('Email')} name="email" validate="required,email"/>
 
                                     <div className="form-group">
-                                        <label className="control-label">Gravatar</label>
+                                        <label className="control-label">{this.i18n('Gravatar')}</label>
 
                                         <div className="input-group">
                                             <Ui.Gravatar hash={model.gravatar} size={100}/>
@@ -158,7 +158,7 @@ UserAccount.defaultProps = {
                                         name="confirmPassword"
                                         validate="eq:@password"
                                         placeholder={this.i18n('Re-type your new password')}>
-                                        <validator name="eq">Passwords do not match</validator>
+                                        <validator name="eq">{this.i18n('Passwords do not match')}</validator>
                                     </Ui.Password>
                                     <Ui.ChangeConfirm
                                         message={({value}) => value ? 'Dummy' : null}
