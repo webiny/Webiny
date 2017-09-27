@@ -1,4 +1,16 @@
-.appDetails .description {
+.appDetails {
+
+  :global{
+    .rich-editor__root{
+      border: none;
+      padding: 0;
+      .public-DraftEditor-content{
+        padding: 0;
+        margin: 0;
+      }
+    }
+  }
+
   .plugin-block-wrapper.preview {
     .image-plugin-wrapper {
       padding: 0;

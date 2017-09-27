@@ -1,6 +1,7 @@
 import React from 'react';
 import Webiny from 'webiny';
 import styles from './styles.css';
+import './draft.scss';
 import InstallModal from '../Components/InstallModal';
 import UpdateModal from '../Components/UpdateModal';
 import UpdateSuccessModal from '../Components/UpdateSuccessModal';
