@@ -16,7 +16,7 @@ Dashboard.defaultProps = {
                     <Ui.View.Dashboard>
                         <Ui.View.Header
                             title={this.i18n('Welcome to Webiny!')}
-                            description="This is a demo dashboard! From here you can start developing your almighty app."/>
+                            description={this.i18n('This is a demo dashboard! From here you can start developing your almighty app.')}/>
                     </Ui.View.Dashboard>
                 )}
             </Webiny.Ui.LazyLoad>

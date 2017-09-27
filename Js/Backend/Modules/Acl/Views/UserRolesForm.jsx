@@ -44,7 +44,7 @@ UserRolesForm.defaultProps = {
                                 </Ui.Grid.Col>
                                 <Ui.Grid.Col all={12}>
                                     <Ui.Switch label={this.i18n('Is admin role?')} name="isAdminRole"
-                                               description="If enabled, this role will be assigned to the admin user who is installing the corresponding app"/>
+                                               description={this.i18n('If enabled, this role will be assigned to the admin user who is installing the corresponding app')}/>
                                 </Ui.Grid.Col>
                             </Ui.Grid.Row>
                             <Ui.UserPermissions name="permissions"/>

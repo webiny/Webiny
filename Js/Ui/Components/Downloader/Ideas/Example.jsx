@@ -29,7 +29,7 @@ import React from 'react';
                                                     label={this.i18n('Filter by status')}
                                                     placeholder={this.i18n('All records')}
                                                     allowClear
-                                                    description="Records will be filtered based on your selection">
+                                                    description={this.i18n('Records will be filtered based on your selection')}>
                                                     <option value="true">Enabled</option>
                                                     <option value="false">Disabled</option>
                                                 </Ui.Select>

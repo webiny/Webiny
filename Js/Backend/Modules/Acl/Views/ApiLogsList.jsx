@@ -158,7 +158,7 @@ ApiLogsList.defaultProps = {
             <Ui.View.List>
                 <Ui.View.Header
                     title={this.state.token ? `ACL - API Logs: ${title}` : 'ACL - API Logs'}
-                    description="Here you can view all API request logs."/>
+                    description={this.i18n('Here you can view all API request logs.')}/>
                 <Ui.View.Body>
                     <Ui.List {...listProps}>
                         {({list}) => {

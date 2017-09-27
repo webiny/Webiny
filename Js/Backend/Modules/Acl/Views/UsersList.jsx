@@ -30,7 +30,7 @@ UsersList.defaultProps = {
                         you can create your system users here.</span>}>
                     <Link type="primary" route="Users.Create" align="right">
                         <Icon icon="icon-plus-circled"/>
-                        Create user
+                        {this.i18n('Create user')}
                     </Link>
                 </View.Header>
                 <View.Body>

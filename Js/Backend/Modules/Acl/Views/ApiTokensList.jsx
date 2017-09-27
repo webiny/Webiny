@@ -58,7 +58,7 @@ ApiTokensList.defaultProps = {
                                     <Ui.View.List>
                                         <Ui.View.Header
                                             title={this.i18n('ACL - API Tokens')}
-                                            description="If you want to grant access to your API to 3rd party clients, create an API token for them.">
+                                            description={this.i18n('If you want to grant access to your API to 3rd party clients, create an API token for them.')}>
                                             <Ui.Button
                                                 type="primary"
                                                 align="right"

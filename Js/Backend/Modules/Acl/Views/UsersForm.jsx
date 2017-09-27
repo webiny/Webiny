@@ -42,7 +42,7 @@ UsersForm.defaultProps = {
                                             <Ui.Input
                                                 label={this.i18n('Email')}
                                                 name="email"
-                                                description="Your email"
+                                                description={this.i18n('Your email')}
                                                 validate="required,email"/>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>
