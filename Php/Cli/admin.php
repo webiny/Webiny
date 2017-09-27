@@ -29,6 +29,7 @@ class Admin extends \Apps\Webiny\Php\Lib\AbstractCli
                 'webiny-acl-api-token-manager',
                 'webiny-logger-manager',
                 'webiny-acl-user-manager',
+                'webiny-i18n-manager',
                 'webiny-dashboard',
                 'webiny-api-discoverer'
             ];
