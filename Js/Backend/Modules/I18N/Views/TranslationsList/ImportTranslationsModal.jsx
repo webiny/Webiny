@@ -18,7 +18,7 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
                     onSubmit={async ({model, form}) => {
                         form.showLoading();
                         const preview = model.options.preview;
-                        form.setState('model.results', null);
+                        form.setModel({response: null});
                         const extension = model.file.name.split('.').pop();
                         const response = await form.api.post('/translations/import/' + extension, model);
                         form.hideLoading();
@@ -27,7 +27,7 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
                             return form.handleApiError(response);
                         }
 
-                        form.setState('model.results', {preview, data: response.getData()}, () => !preview && this.props.onTranslationsImported());
+                        form.setModel({results: {preview, data: response.getData()}}, () => !preview && this.props.onTranslationsImported());
                     }}>
                     {({model, form}) => {
                         let results = null;

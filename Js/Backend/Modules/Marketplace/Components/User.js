@@ -22,7 +22,7 @@ const User = (props) => {
                 </div>
             </div>
             <h3 className="user-welcome__message">
-                {this.i18n('Hi {user}!', {user: _.get(props.user, 'firstName', _.get(props.user, 'email'))})}
+                {Webiny.I18n('Hi {user}!', {user: _.get(props.user, 'firstName', _.get(props.user, 'email'))})}
             </h3>
         </div>
     );

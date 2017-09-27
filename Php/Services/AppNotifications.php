@@ -36,7 +36,15 @@ class AppNotifications extends AbstractService
             $notifications = AppNotification::find($query, ['-createdOn'], $perPage, $page);
 
             $fields = 'id,createdOn,type,read,subject,text,template,data';
-            return $this->apiFormatList($notifications, $this->wRequest()->getFields($fields));
+            $listResponse = $this->apiFormatList($notifications, $this->wRequest()->getFields($fields));
+            $responseData = $listResponse->getData();
+
+            // Add unread notifications count
+            $query['read'] = false;
+            $responseData['meta']['unread'] = AppNotification::count($query);
+            $listResponse->setData($responseData);
+
+            return $listResponse;
         });
 
         /**
@@ -59,6 +67,32 @@ class AppNotifications extends AbstractService
             }
 
             return $types;
+        });
+
+        /**
+         * @api.name Mark notification as read
+         * @api.description Mark notification as read
+         */
+        $api->post('{notification}/mark-read', function (AppNotification $notification) {
+            $notification->read = true;
+            $notification->save();
+
+            return true;
+        });
+
+        /**
+         * @api.name Mark all notifications as read
+         * @api.description Mark all notifications as read
+         */
+        $api->post('mark-read', function () {
+            $user = $this->wAuth()->getUser();
+
+            AppNotification::find(['read' => false, 'user' => $user->id])->map(function (AppNotification $n) {
+                $n->read = true;
+                $n->save();
+            });
+
+            return true;
         });
     }
 }

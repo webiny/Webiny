@@ -97,6 +97,7 @@ module.exports = function (app, config) {
         name: name,
         cache: true,
         watch: false,
+        bail: true,
         devtool: 'cheap-module-source-map',
         context,
         entry: {

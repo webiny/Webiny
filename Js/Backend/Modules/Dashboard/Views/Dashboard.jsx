@@ -55,7 +55,7 @@ Dashboard.defaultProps = {
                             <h3 className="user-welcome__message">Hi {this.getUserName()}</h3>
                         </div>
                     </View.Header.Center>
-                    <Button onClick={() => Webiny.Router.goToRoute('Users.Account')}>{this.i18n('Manage Account')}</Button>
+                    <Button onClick={() => Webiny.Router.goToRoute('Me.Account')}>{this.i18n('Manage Account')}</Button>
                 </View.Header>
 
                 <View.Body>
@@ -80,7 +80,7 @@ Dashboard.defaultProps = {
                                         <div className="block-list__item-image">
                                             <Icon icon="fa-book " size="2x"/>
                                         </div>
-                                        <a href="https://www.webiny.com/the-hub/tutorials" className="block-list__item-text"
+                                        <a href="https://www.webiny.com/hub/tutorials" className="block-list__item-text"
                                            target="_blank">
                                             <strong>{this.i18n('Tutorials')}</strong>
                                             {this.i18n(' - How to setup Webiny and other applications.')}
@@ -113,7 +113,7 @@ Dashboard.defaultProps = {
                                     </div>
                                     <br/>
                                     <div className="text-center">
-                                        <Link url="https://www.webiny.com/the-hub" newTab={true} type="primary">{this.i18n('JOIN')}</Link>
+                                        <Link url="https://www.webiny.com/hub" newTab={true} type="primary">{this.i18n('JOIN')}</Link>
                                     </div>
                                 </div>
                             </View.InfoBlock>

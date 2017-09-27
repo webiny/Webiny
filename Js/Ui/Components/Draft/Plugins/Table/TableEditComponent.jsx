@@ -108,7 +108,9 @@ class TableEditComponent extends Webiny.Ui.Component {
     }
 
     updateHeaderData(editorState, colI) {
-        this.setState('headers.' + colI + '.data', editorState, () => {
+        const state = _.clone(this.state);
+        _.set(state, 'headers.' + colI + '.data', editorState);
+        this.setState(state, () => {
             const blockData = this.props.data;
             blockData.headers[colI].data = this.Draft.convertToRaw(editorState.getCurrentContent());
             this.props.updateBlockData(blockData);

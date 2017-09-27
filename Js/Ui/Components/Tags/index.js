@@ -83,7 +83,7 @@ class Tags extends Webiny.Ui.FormComponent {
 }
 
 Tags.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
-    autoFocus: true,
+    autoFocus: false,
     validateTags: null,
     placeholder: Webiny.I18n('Type and hit ENTER'),
     onInvalidTag: _.noop,

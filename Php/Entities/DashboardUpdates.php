@@ -74,7 +74,7 @@ class DashboardUpdates extends AbstractEntity
     // @todo: make this more bullet proof so in case of problems we fail gracefully
     private function populateUpdates(User $user)
     {
-        // request the latest updates from webiny hub$ctx = stream_context_create(array('http'=>
+        // request the latest updates from webiny hub
         // suppress errors and set timeout to 3s
         $context = stream_context_create(['http' => ['timeout' => 3]]);
         $updates = @file_get_contents('https://api.webiny.com/entities/the-hub/updates/latest', false, $context);

@@ -8,8 +8,8 @@ const AccountPreferencesMenu = (props) => {
     const {Link} = props;
     return (
         <user-menu-item>
-            <Link route="Users.Account">{Webiny.I18n('Account preferences')}</Link>
-            <span>{Webiny.I18n('Set your account and user preferences')} </span>
+            <Link route="Me.Account">{Webiny.I18n('Account preferences')}</Link>
+            <span>{Webiny.I18n('Set your account and user preferences')}</span>
         </user-menu-item>
     );
 };
