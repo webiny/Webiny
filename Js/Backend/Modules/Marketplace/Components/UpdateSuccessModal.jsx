@@ -1,6 +1,9 @@
 import React from 'react';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Backend.Marketplace.UpdateSuccessModal
+ */
 class UpdateSuccessModal extends Webiny.Ui.ModalComponent {
 
     constructor(props){
@@ -12,7 +15,7 @@ class UpdateSuccessModal extends Webiny.Ui.ModalComponent {
     getButton(dialog) {
         const {Button} = this.props;
         return (
-            <Button type="secondary" label="Reload window" icon="fa-reload" onClick={() => dialog.hide().then(() => window.location.reload())}/>
+            <Button type="secondary" label={this.i18n('Reload window')} icon="fa-reload" onClick={() => dialog.hide().then(() => window.location.reload())}/>
         );
     }
 
@@ -21,9 +24,10 @@ class UpdateSuccessModal extends Webiny.Ui.ModalComponent {
 
         return (
             <Modal.Success closeBtn={this.getButton} onClose={() => window.location.reload()}>
-                <strong>{app.name}</strong> was updated successfully!<br/><br/>
-                To see the changes you need to reload this browser window.<br/>
-                Click the button below to reload.
+                {this.i18n(`{appName} was updated successfully!`, {appName: <strong>{app.name}</strong>})}
+                <br/><br/>
+                {this.i18n('To see the changes you need to reload this browser window.')}<br/>
+                {this.i18n('Click the button below to reload.')}
             </Modal.Success>
         );
     }

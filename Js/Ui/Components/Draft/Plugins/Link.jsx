@@ -2,6 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Ui.Draft.Plugins.LinkPlugin
+ */
 class LinkPlugin extends Webiny.Draft.EntityPlugin {
     constructor(config) {
         super(config);
@@ -83,21 +86,21 @@ class LinkPlugin extends Webiny.Draft.EntityPlugin {
                                                             <Ui.Grid.Col xs={12}>
                                                                 <Ui.Input
                                                                     name="url"
-                                                                    placeholder="Enter a URL"
+                                                                    placeholder={this.i18n('Enter a URL')}
                                                                     validate={this.validate}
                                                                     showValidationIcon={false}/>
                                                             </Ui.Grid.Col>
                                                         </Ui.Grid.Row>
                                                         <Ui.Grid.Row>
                                                             <Ui.Grid.Col xs={6}>
-                                                                <Ui.Checkbox name="newTab" label="Open in new tab"/>
+                                                                <Ui.Checkbox name="newTab" label={this.i18n('Open in new tab')}/>
                                                             </Ui.Grid.Col>
                                                             <Ui.Grid.Col xs={3} className="no-padding">
                                                                 <Ui.Logic.Hide if={() => this.newLink}>
                                                                     <Ui.Button
                                                                         type="secondary"
                                                                         align="right"
-                                                                        label="Remove link"
+                                                                        label={this.i18n('Remove link')}
                                                                         onClick={this.removeEntity}/>
                                                                 </Ui.Logic.Hide>
                                                             </Ui.Grid.Col>

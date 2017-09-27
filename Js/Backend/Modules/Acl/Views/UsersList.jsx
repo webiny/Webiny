@@ -19,18 +19,21 @@ UsersList.defaultProps = {
         const {View, List, Link, Icon, Input} = this.props;
         const Table = List.Table;
 
-        const roles = <Link route="UserRoles.List">Roles</Link>;
-        const permissions = <Link route="UserPermissions.List">Permissions</Link>;
+        const roles = <Link route="UserRoles.List">{this.i18n('Roles')}</Link>;
+        const permissions = <Link route="UserPermissions.List">{this.i18n('Permissions')}</Link>;
 
         return (
             <View.List>
                 <View.Header
-                    title="ACL - Users"
-                    description={<span>Once your system {permissions} and {roles}&nbsp;are defined,
-                        you can create your system users here.</span>}>
+                    title={this.i18n('ACL - Users')}
+                    description={
+                        <span>
+                            {this.i18n(`Once your system {permissions} and {roles} are defined,
+                                        you can create your system users here.`, {permissions, roles})}
+                        </span>}>
                     <Link type="primary" route="Users.Create" align="right">
                         <Icon icon="icon-plus-circled"/>
-                        Create user
+                        {this.i18n('Create user')}
                     </Link>
                 </View.Header>
                 <View.Body>
@@ -39,24 +42,24 @@ UsersList.defaultProps = {
                             {({apply}) => (
                                 <Input
                                     name="_searchQuery"
-                                    placeholder="Search by name or email"
+                                    placeholder={this.i18n('Search by name or email')}
                                     onEnter={apply()}/>
                             )}
                         </List.FormFilters>
                         <Table>
                             <Table.Row>
                                 <Table.GravatarField name="gravatar"/>
-                                <Table.Field name="firstName" label="First Name" sort="firstName" route="Users.Edit">
+                                <Table.Field name="firstName" label={this.i18n('First Name')} sort="firstName" route="Users.Edit">
                                     {({data}) => (
                                         <span>
                                             <strong>{data.firstName} {data.lastName}</strong><br/>{data.id}
                                         </span>
                                     )}
                                 </Table.Field>
-                                <Table.Field name="email" sort="email" label="Email"/>
+                                <Table.Field name="email" sort="email" label={this.i18n('Email')}/>
                                 <Table.ToggleField
                                     name="enabled"
-                                    label="Status"
+                                    label={this.i18n('Status')}
                                     sort="enabled"
                                     align="center"
                                     message={({value}) => {
@@ -65,7 +68,7 @@ UsersList.defaultProps = {
                                         }
                                         return false;
                                     }}/>
-                                <Table.DateField name="createdOn" label="Created On" sort="createdOn"/>
+                                <Table.DateField name="createdOn" label={this.i18n('Created On')} sort="createdOn"/>
                                 <Table.Actions>
                                     <Table.EditAction route="Users.Edit"/>
                                     <Table.DeleteAction/>

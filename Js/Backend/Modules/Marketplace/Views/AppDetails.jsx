@@ -1,6 +1,7 @@
 import React from 'react';
 import Webiny from 'webiny';
 import styles from './styles.css';
+import './draft.scss';
 import InstallModal from '../Components/InstallModal';
 import UpdateModal from '../Components/UpdateModal';
 import UpdateSuccessModal from '../Components/UpdateSuccessModal';
@@ -8,6 +9,9 @@ import Sidebar from '../Components/AppDetails/Sidebar';
 import Carousel from '../Components/AppDetails/Carousel';
 import ContentBlock from '../Components/AppDetails/ContentBlock';
 
+/**
+ * @i18n.namespace Webiny.Backend.Marketplace.AppDetails
+ */
 class AppDetails extends Webiny.Ui.View {
     constructor(props) {
         super(props);
@@ -39,7 +43,7 @@ class AppDetails extends Webiny.Ui.View {
         }
 
         return (
-            <Button type="secondary" icon="fa-download" label="Install" onClick={() => this.installModal.show()}/>
+            <Button type="secondary" icon="fa-download" label={this.i18n('Install')} onClick={() => this.installModal.show()}/>
         );
     }
 }
@@ -50,16 +54,19 @@ AppDetails.defaultProps = {
         const {styles, Link, View, Grid, Button, Tabs, Loader, Alert} = this.props;
 
         if (loading) {
-            return <Loader>Fetching app details...</Loader>;
+            return <Loader>{this.i18n('Fetching app details...')}</Loader>;
         }
 
         return (
             <div className={styles.appDetails}>
                 {!app.canInstall && (
                     <Alert type="warning">
-                        This app requires Webiny <strong>{app.webinyVersion}</strong>. Your current Webiny is
-                        &nbsp;<strong>{app.installedWebinyVersion}</strong>.
-                        <br/>Please update Webiny before attempting to install this app.
+                        {this.i18n(`This app requires Webiny {appWebinyVersion}. Your current Webiny is {currentVersion}.`, {
+                            appWebinyVersion: <strong>{app.webinyVersion}</strong>,
+                            currentVersion: <strong>{app.installedWebinyVersion}</strong>
+                        })}
+                        <br/>
+                        {this.i18n('Please update Webiny before attempting to install this app.')}
                     </Alert>
                 )}
                 <div className={styles.header}>
@@ -79,31 +86,31 @@ AppDetails.defaultProps = {
                     </div>
                 </div>
                 <Tabs>
-                    <Tabs.Tab label="Details" icon="fa-home">
+                    <Tabs.Tab label={this.i18n('Details')} icon="fa-home">
                         <Grid.Row>
                             <Grid.Col all={8}>
                                 <Carousel images={app.images.map(a => a.src)}/>
-                                <ContentBlock title="About" content={app.longDescription}/>
+                                <ContentBlock title={this.i18n('About')} content={app.longDescription}/>
                             </Grid.Col>
                             <Grid.Col all={4}>
                                 <Sidebar app={app}/>
                             </Grid.Col>
                         </Grid.Row>
                     </Tabs.Tab>
-                    <Tabs.Tab label="Installation" icon="fa-hdd-o">
+                    <Tabs.Tab label={this.i18n('Installation')} icon="fa-hdd-o">
                         <Grid.Row>
                             <Grid.Col all={8}>
-                                <ContentBlock title="Installation" content={app.readme}/>
+                                <ContentBlock title={this.i18n('Installation')} content={app.readme}/>
                             </Grid.Col>
                             <Grid.Col all={4}>
                                 <Sidebar app={app}/>
                             </Grid.Col>
                         </Grid.Row>
                     </Tabs.Tab>
-                    <Tabs.Tab label="Change Log" icon="fa-pencil">
+                    <Tabs.Tab label={this.i18n('Change Log')} icon="fa-pencil">
                         <Grid.Row>
                             <Grid.Col all={8}>
-                                <ContentBlock title="Change log" content={app.changeLog}/>
+                                <ContentBlock title={this.i18n('Change log')} content={app.changeLog}/>
                             </Grid.Col>
                             <Grid.Col all={4}>
                                 <Sidebar app={app}/>

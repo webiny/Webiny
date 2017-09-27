@@ -1,6 +1,9 @@
 import React from 'react';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Ui.Draft.Plugins.ToJSONPlugin
+ */
 class ToJSONPlugin extends Webiny.Draft.BasePlugin {
     constructor(config) {
         super(config);
@@ -17,7 +20,7 @@ class ToJSONPlugin extends Webiny.Draft.BasePlugin {
             toolbar: (
                 <Webiny.Ui.LazyLoad modules={['Button']}>
                     {({Button}) => (
-                        <Button onClick={() => this.toJSON()} label="JSON" tooltip="Log editor content"/>
+                        <Button onClick={() => this.toJSON()} label={this.i18n('JSON')} tooltip="Log editor content"/>
                     )}
                 </Webiny.Ui.LazyLoad>
             )

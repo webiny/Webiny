@@ -2,6 +2,9 @@ import React from 'react';
 import Webiny from 'webiny';
 import _ from 'lodash';
 
+/**
+ * @i18n.namespace Webiny.Backend.Dashboard
+ */
 class Updates extends Webiny.Ui.View {
     constructor(props) {
         super(props);
@@ -63,7 +66,7 @@ Updates.defaultProps = {
         const {Grid, Loader, Carousel, Link, Icon, View} = this.props;
 
         if (!this.state.loaded) {
-            return (<Loader><span>Loading your updates...</span></Loader>);
+            return (<Loader><span>{this.i18n('Loading your updates...')}</span></Loader>);
         }
 
         if (this.state.updates.length < 1) {
@@ -80,13 +83,13 @@ Updates.defaultProps = {
             <div className="block block--slider">
 
                 <div className="block-header">
-                    <h4 className="block-title-light pull-left">Updates from webiny.com</h4>
+                    <h4 className="block-title-light pull-left">{this.i18n('Updates from webiny.com')}</h4>
                 </div>
 
                 <div className="block-content block-content--dynamic-height">
                     <div className="slider">
                         <div className="slides">
-                            {this.state.dismissing && <Loader><span>Loading your updates...</span></Loader>}
+                            {this.state.dismissing && <Loader><span>{this.i18n('Loading your updates...')}</span></Loader>}
 
                             <Carousel items={1} dots={true}>
                                 {_.get(this.state, 'updates') && this.state.updates.map(post => {
@@ -106,11 +109,11 @@ Updates.defaultProps = {
                                                 <div className="slide__excerpt">{post.content}</div>
                                             </div>
                                             <div className="slide__button">
-                                                {post.hasLink && (<Link type="primary" url={link} newTab={true}>Learn more</Link>)}
+                                                {post.hasLink && (<Link type="primary" url={link} newTab={true}>{this.i18n('Learn more')}</Link>)}
                                                 <br/>
                                                 <Link className="dismiss" onClick={() => {
                                                     this.dismissUpdate(post.id)
-                                                }}>Dismiss</Link>
+                                                }}>{this.i18n('Dismiss')}</Link>
                                             </div>
                                         </div>
                                     );

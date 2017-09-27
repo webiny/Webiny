@@ -4,6 +4,9 @@ import Webiny from 'webiny';
 import BaseContainer from './BaseContainer';
 import styles from './../styles.css';
 
+/**
+ * @i18n.namespace Webiny.Ui.List.ApiContainer
+ */
 class ApiContainer extends BaseContainer {
 
     constructor(props) {
@@ -106,7 +109,7 @@ class ApiContainer extends BaseContainer {
             }
 
             if (apiResponse.isError()) {
-                Webiny.Growl.danger(apiResponse.getMessage(), 'That didn\'t go as expected...', true);
+                Webiny.Growl.danger(apiResponse.getMessage(), this.i18n('That didn\'t go as expected...'), true);
             }
 
             if (this.isMounted()) {
@@ -130,7 +133,7 @@ class ApiContainer extends BaseContainer {
             if (!apiResponse.isError()) {
                 this.loadData();
             } else {
-                Webiny.Growl.danger(apiResponse.getMessage(), 'That didn\'t go as expected...', true);
+                Webiny.Growl.danger(apiResponse.getMessage(), this.i18n('That didn\'t go as expected...'), true);
             }
             return apiResponse;
         });

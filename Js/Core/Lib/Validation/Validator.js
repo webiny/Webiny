@@ -2,6 +2,9 @@ import _ from 'lodash';
 import Webiny from 'webiny';
 import ValidationError from './ValidationError';
 
+/**
+ * @i18n.namespace Webiny.Core.Validators
+ */
 class Validator {
 
     constructor() {
@@ -137,14 +140,14 @@ formValidator.addValidator('required', (value) => {
     if (!(!value || value === '' || value === 0 || (_.isArray(value) && value.length === 0))) {
         return true;
     }
-    throw new ValidationError('This field is required');
+    throw new ValidationError(Webiny.I18n('This field is required'));
 });
 
 formValidator.addValidator('eq', (value, equalTo) => {
     if (value === equalTo) {
         return true;
     }
-    throw new ValidationError('This field must be equal to ' + equalTo);
+    throw new ValidationError(Webiny.I18n('This field must be equal to {equalTo}', {equalTo}));
 });
 
 formValidator.addValidator('minLength', (value, length) => {
@@ -154,7 +157,7 @@ formValidator.addValidator('minLength', (value, length) => {
     if (!value || (value.length && value.length >= length)) {
         return true;
     }
-    throw new ValidationError('This field requires at least ' + length + ' characters');
+    throw new ValidationError(Webiny.I18n('This field requires at least {length} characters', {length}));
 });
 
 formValidator.addValidator('maxLength', (value, length) => {
@@ -165,14 +168,14 @@ formValidator.addValidator('maxLength', (value, length) => {
     if (!value || (value.length && value.length <= length)) {
         return true;
     }
-    throw new ValidationError('This field requires ' + length + ' characters at most');
+    throw new ValidationError(Webiny.I18n('This field requires {length} characters at most', {length}));
 });
 
 formValidator.addValidator('gt', (value, min) => {
     if (!value || parseFloat(value) > parseFloat(min)) {
         return true;
     }
-    throw new ValidationError('This field needs to be greater than ' + min);
+    throw new ValidationError(Webiny.I18n('This field needs to be greater than', {min}));
 });
 
 formValidator.addValidator('lt', (value, max) => {
@@ -180,14 +183,14 @@ formValidator.addValidator('lt', (value, max) => {
         return true;
     }
 
-    throw new ValidationError('This field needs to be less than ' + max);
+    throw new ValidationError(Webiny.I18n('This field needs to be less than', {max}));
 });
 
 formValidator.addValidator('gte', (value, min) => {
     if (!value || parseFloat(value) >= parseFloat(min)) {
         return true;
     }
-    throw new ValidationError('This field needs to be greater than or equal to ' + min);
+    throw new ValidationError(Webiny.I18n('This field needs to be greater than or equal to', {min}));
 });
 
 formValidator.addValidator('lte', (value, max) => {
@@ -195,7 +198,7 @@ formValidator.addValidator('lte', (value, max) => {
         return true;
     }
 
-    throw new ValidationError('This field needs to be less than or equal to ' + max);
+    throw new ValidationError(Webiny.I18n('This field needs to be less than or equal to', {max}));
 });
 
 formValidator.addValidator('number', (value) => {
@@ -203,7 +206,7 @@ formValidator.addValidator('number', (value) => {
     if (!value || (re.test(value))) {
         return true;
     }
-    throw new ValidationError('This field needs to be a number');
+    throw new ValidationError(Webiny.I18n('This field needs to be a number'));
 });
 
 formValidator.addValidator('integer', (value) => {
@@ -211,7 +214,7 @@ formValidator.addValidator('integer', (value) => {
     if (!value || (re.test(value))) {
         return true;
     }
-    throw new ValidationError('This field needs to be an integer');
+    throw new ValidationError(Webiny.I18n('This field needs to be an integer'));
 });
 
 formValidator.addValidator('email', (value) => {
@@ -219,7 +222,7 @@ formValidator.addValidator('email', (value) => {
     if (!value || (value.length && re.test(value))) {
         return true;
     }
-    throw new ValidationError('Please enter a valid email address');
+    throw new ValidationError(Webiny.I18n('Please enter a valid email address'));
 });
 
 formValidator.addValidator('password', (value) => {
@@ -237,7 +240,7 @@ formValidator.addValidator('password', (value) => {
 
     const test = value.match(/^.{8,}$/);
     if (test === null) {
-        throw new ValidationError('Password must contain at least 8 characters');
+        throw new ValidationError(Webiny.I18n('Password must contain at least 8 characters'));
     }
     return true;
 });
@@ -246,7 +249,7 @@ formValidator.addValidator('phone', (value) => {
     if (!value || value.match(/^[-+0-9()\s]+$/)) {
         return true;
     }
-    throw new ValidationError('Please enter a valid phone number');
+    throw new ValidationError(Webiny.I18n('Please enter a valid phone number'));
 });
 
 formValidator.addValidator('json', (value) => {
@@ -257,7 +260,7 @@ formValidator.addValidator('json', (value) => {
     try {
         JSON.parse(value);
     } catch (e) {
-        throw new ValidationError('Please enter a valid JSON string');
+        throw new ValidationError(Webiny.I18n('Please enter a valid JSON string'));
     }
 
     return true;
@@ -270,7 +273,7 @@ formValidator.addValidator('url', (value) => {
         return true;
     }
 
-    throw new ValidationError('Please enter a valid URL');
+    throw new ValidationError(Webiny.I18n('Please enter a valid URL'));
 });
 
 formValidator.addValidator('creditCard', (value) => {
@@ -279,10 +282,10 @@ formValidator.addValidator('creditCard', (value) => {
     }
 
     if (value.length < 12) {
-        throw new ValidationError('Credit card number too short');
+        throw new ValidationError(Webiny.I18n('Credit card number too short'));
     }
 
-    if (/[^0-9-\s]+/.test(value)) return 'Credit card number invalid';
+    if (/[^0-9-\s]+/.test(value)) throw new ValidationError(Webiny.I18n('Credit card number invalid'));
 
     let nCheck = 0;
     let nDigit = 0;
@@ -310,7 +313,7 @@ formValidator.addValidator('creditCard', (value) => {
         return true;
     }
 
-    throw new ValidationError('Credit card number invalid');
+    throw new ValidationError(Webiny.I18n('Credit card number invalid'));
 });
 
 formValidator.addValidator('creditCardExpiration', (value) => {
@@ -318,7 +321,7 @@ formValidator.addValidator('creditCardExpiration', (value) => {
         return true;
     }
 
-    throw new ValidationError('Please select month and year');
+    throw new ValidationError(Webiny.I18n('Please select month and year'));
 });
 
 export default formValidator;

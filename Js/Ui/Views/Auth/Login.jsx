@@ -3,6 +3,9 @@ import Webiny from 'webiny';
 import logoOrange from 'Webiny/Ui/Assets/images/logo_orange.png';
 import styles from './styles/Login.css';
 
+/**
+ * @i18n.namespace Webiny.Ui.Auth.Login
+ */
 class Login extends Webiny.Ui.View {
     constructor(props) {
         super(props);
@@ -70,7 +73,7 @@ Login.defaultProps = {
                                         <img src={logoOrange} width="180" height="58"/>
                                     </a>
 
-                                    <h2 className="form-signin-heading"><span/>Sign in to your Account</h2>
+                                    <h2 className="form-signin-heading"><span/>{this.i18n('Sign in to your Account')}</h2>
 
                                     <div className="clear"/>
                                     <Form.Error/>
@@ -79,26 +82,25 @@ Login.defaultProps = {
 
                                     {this.state.twoFactorAuth && ( <Input
                                         name="twoFactorAuthCode"
-                                        placeholder="Enter your verification code"
-                                        label="Verification code"
+                                        placeholder={this.i18n('Enter your verification code')}
+                                        label={this.i18n('Verification code')}
                                         validate="required"
                                         onEnter={form.submit}
                                         autoFocus={true}/>)}
 
-
                                     {!this.state.twoFactorAuth && (<div>
                                         <Email
                                             name="username"
-                                            placeholder="Enter email"
-                                            label="Email address"
+                                            placeholder={this.i18n('Enter email')}
+                                            label={this.i18n('Email address')}
                                             validate="required"
                                             onEnter={form.submit}
                                             autoFocus={true}/>
 
                                         <Password
                                             name="password"
-                                            placeholder="Password"
-                                            label="Password"
+                                            placeholder={this.i18n('Password')}
+                                            label={this.i18n('Password')}
                                             validate="required"
                                             onEnter={form.submit}/>
                                     </div>)}
@@ -111,12 +113,12 @@ Login.defaultProps = {
                                             onClick={form.submit}
                                             icon="icon-next"
                                             className={styles.btnLogin}>
-                                            <span>Submit</span>
+                                            <span>{this.i18n('Submit')}</span>
                                         </Button>
                                     </div>
                                 </div>
 
-                                <p className="copyright">powered by</p>
+                                <p className="copyright">{this.i18n('powered by')}</p>
                                 <a href="https://www.webiny.com/" className="site">www.webiny.com</a>
                             </div>
                         </div>

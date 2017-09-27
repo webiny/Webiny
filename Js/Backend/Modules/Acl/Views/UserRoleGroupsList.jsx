@@ -3,10 +3,13 @@ import Webiny from 'webiny';
 import ExportModal from './Modal/ExportModal';
 import ImportModal from './Modal/ImportModal';
 
-class List extends Webiny.Ui.View {
+/**
+ * @i18n.namespace Webiny.Backend.Acl.UserRoleGroupsList
+ */
+class UserRoleGroupsList extends Webiny.Ui.View {
 }
 
-List.defaultProps = {
+UserRoleGroupsList.defaultProps = {
     renderer() {
         const listProps = {
             ref: ref => this.list = ref,
@@ -21,29 +24,31 @@ List.defaultProps = {
         const {Ui} = this.props;
         const Table = Ui.List.Table;
 
-        const users = <Ui.Link route="Users.List">Users</Ui.Link>;
-        const roles = <Ui.Link route="UserRoles.List">Roles</Ui.Link>;
+        const users = <Ui.Link route="Users.List">{this.i18n('Users')}</Ui.Link>;
+        const roles = <Ui.Link route="UserRoles.List">{this.i18n('Roles')}</Ui.Link>;
         return (
             <Ui.ViewSwitcher>
                 <Ui.ViewSwitcher.View view="listView" defaultView>
                     {({showView}) => (
                         <Ui.View.List>
                             <Ui.View.Header
-                                title="ACL - Role Groups"
+                                title={this.i18n('ACL - Role Groups')}
                                 description={(
-                                    <span>Role Groups are a simple way to control what set of roles certain users have. Create a role group with a set
-                                        of {roles} and then assign role groups to {users}.</span>
+                                    <span>
+                                        {this.i18n(`Role Groups are a simple way to control what set of roles certain users have.
+                                                    Create a role group with a set of {roles} and then assign role groups to {users}.`, {roles, users})}
+                                    </span>
                                 )}>
                                 <Ui.ButtonGroup>
                                     <Ui.Link type="primary" route="UserRoleGroups.Create">
                                         <Ui.Icon icon="icon-plus-circled"/>
-                                        Create
+                                        {this.i18n('Create')}
                                     </Ui.Link>
                                     <Ui.Button
                                         type="secondary"
                                         onClick={showView('importModal')}
                                         icon="fa-upload"
-                                        label="Import"/>
+                                        label={this.i18n('Import')}/>
                                 </Ui.ButtonGroup>
                             </Ui.View.Header>
                             <Ui.View.Body>
@@ -54,7 +59,7 @@ List.defaultProps = {
                                                 <Ui.Grid.Col all={12}>
                                                     <Ui.Input
                                                         name="_searchQuery"
-                                                        placeholder="Search by name, description or slug"
+                                                        placeholder={this.i18n('Search by name, description or slug')}
                                                         onEnter={apply()}/>
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
@@ -62,7 +67,7 @@ List.defaultProps = {
                                     </Ui.List.FormFilters>
                                     <Table>
                                         <Table.Row>
-                                            <Table.Field name="name" label="Name" sort="name">
+                                            <Table.Field name="name" label={this.i18n('Name')} sort="name">
                                                 {({data}) => (
                                                     <span>
                                                         <Ui.Link route="UserRoleGroups.Edit" params={{id: data.id}}>
@@ -73,11 +78,11 @@ List.defaultProps = {
                                                     </span>
                                                 )}
                                             </Table.Field>
-                                            <Table.Field name="slug" label="Slug" sort="slug"/>
+                                            <Table.Field name="slug" label={this.i18n('Slug')} sort="slug"/>
                                             <Table.Actions>
                                                 <Table.EditAction route="UserRoleGroups.Edit"/>
                                                 <Table.Action
-                                                    label="Export"
+                                                    label={this.i18n('Export')}
                                                     icon="fa-download"
                                                     onClick={showView('exportModal')}/>
                                                 <Table.DeleteAction/>
@@ -98,7 +103,7 @@ List.defaultProps = {
                             map="roles"
                             api="/entities/webiny/user-role-groups"
                             fields="name,slug,description,roles"
-                            label="Role Group"/>
+                            label={this.i18n('Role Group')}/>
                     )}
                 </Ui.ViewSwitcher.View>
 
@@ -106,7 +111,7 @@ List.defaultProps = {
                     {() => (
                         <ImportModal
                             api="/entities/webiny/user-role-groups"
-                            label="Role Group"
+                            label={this.i18n('Role Group')}
                             onImported={() => this.list.loadData()}/>
                     )}
                 </Ui.ViewSwitcher.View>
@@ -115,7 +120,7 @@ List.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(List, {
+export default Webiny.createComponent(UserRoleGroupsList, {
     modulesProp: 'Ui',
     modules: ['ViewSwitcher', 'View', 'Link', 'Icon', 'Grid', 'Input', 'List', 'Button', 'ButtonGroup']
 });

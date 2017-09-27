@@ -45,7 +45,7 @@ class TranslationModal extends Webiny.Ui.ModalComponent {
                                                 url="/installed"
                                                 textAttr="name"
                                                 valueAttr="name"
-                                                placeholder="Select an app..."
+                                                placeholder={this.i18n('Select an app...')}
                                                 allowClear/>
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>
@@ -65,8 +65,8 @@ class TranslationModal extends Webiny.Ui.ModalComponent {
                                     </Ui.Grid.Row>
                                 </Ui.Modal.Body>
                                 <Ui.Modal.Footer >
-                                    <Ui.Button label="Cancel" onClick={this.hide}/>
-                                    <Ui.Button type="primary" label="Save" onClick={form.submit}/>
+                                    <Ui.Button label={this.i18n('Cancel')} onClick={this.hide}/>
+                                    <Ui.Button type="primary" label={this.i18n('Save')} onClick={form.submit}/>
                                 </Ui.Modal.Footer>
                             </Ui.Modal.Content>
                         )

@@ -2,6 +2,9 @@ import React from 'react';
 import Webiny from 'webiny';
 import styles from './../Views/styles.css';
 
+/**
+ * @i18n.namespace Webiny.Backend.Marketplace.ForgotPasswordModal
+ */
 class ForgotPasswordModal extends Webiny.Ui.ModalComponent {
     constructor(props) {
         super(props);
@@ -27,13 +30,13 @@ class ForgotPasswordModal extends Webiny.Ui.ModalComponent {
                     {({form}) => (
                         <Modal.Content>
                             <Form.Loader/>
-                            <Modal.Header onClose={this.hide} title="Forgot Password"/>
+                            <Modal.Header onClose={this.hide} title={this.i18n('Forgot Password')}/>
                             <Modal.Body>
                                 {this.state.success && (
                                     <Grid.Row>
                                         <Grid.Col all={12}>
-                                            <Alert type="success" title="Instructions sent">
-                                                Please check your inbox for the reset password link.
+                                            <Alert type="success" title={this.i18n('Instructions sent')}>
+                                                {this.i18n('Please check your inbox for the reset password link.')}
                                             </Alert>
                                         </Grid.Col>
                                     </Grid.Row>
@@ -42,12 +45,12 @@ class ForgotPasswordModal extends Webiny.Ui.ModalComponent {
                                     <Grid.Row>
                                         <Grid.Col all={12}>
                                             <p className="text-center">
-                                                Enter an email address you used to register at webiny.com.
+                                                {this.i18n('Enter an email address you used to register at webiny.com.')}
                                             </p>
                                             <Form.Error/>
                                             <Input
-                                                placeholder="Email"
-                                                label="Email"
+                                                placeholder={this.i18n('Email')}
+                                                label={this.i18n('Email')}
                                                 name="email"
                                                 validate="required, email"
                                                 onEnter={form.submit}/>
@@ -62,7 +65,7 @@ class ForgotPasswordModal extends Webiny.Ui.ModalComponent {
                                         onClick={form.submit}
                                         size="large"
                                         icon="icon-next"
-                                        label="Send me a reset link"/>
+                                        label={this.i18n('Send me a reset link')}/>
                                 </Modal.Footer>
                             )}
                         </Modal.Content>

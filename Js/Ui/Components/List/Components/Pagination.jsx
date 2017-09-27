@@ -3,6 +3,9 @@ import _ from 'lodash';
 import Webiny from 'webiny';
 import styles from '../styles.css';
 
+/**
+ * @i18n.namespace Webiny.Ui.List.Pagination
+ */
 class Pagination extends Webiny.Ui.Component {
 
     constructor(props) {
@@ -89,7 +92,7 @@ Pagination.defaultProps = {
         const {Dropdown, perPageOptions} = this.props;
         return (
             <Dropdown title={<span><strong>{this.props.perPage}</strong> per page</span>} type="balloon">
-                <Dropdown.Header title="Results per page"/>
+                <Dropdown.Header title={this.i18n('Results per page')}/>
                 {perPageOptions.map(option => (
                     <Dropdown.Link key={option} title={option} onClick={() => this.props.onPerPageChange(option)}/>
                 ))}
@@ -128,13 +131,13 @@ Pagination.defaultProps = {
                             <li className={previousClasses} onClick={previousPage}>
                                 <a href="javascript:void(0)">
                                     <span className="icon icon-caret-down"/>
-                                    <span>PREVIOUS</span>
+                                    <span>{this.i18n('PREVIOUS')}</span>
                                 </a>
                             </li>
                             {this.renderPages()}
                             <li className={nextClasses} onClick={nextPage}>
                                 <a href="javascript:void(0)">
-                                    <span>NEXT</span>
+                                    <span>{this.i18n('NEXT')}</span>
                                     <span className="icon icon-caret-down"/>
                                 </a>
                             </li>

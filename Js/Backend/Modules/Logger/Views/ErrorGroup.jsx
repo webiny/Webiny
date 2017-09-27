@@ -4,12 +4,14 @@ import ErrorDetailsJs from './ErrorDetailsJs';
 import ErrorDetailsApi from './ErrorDetailsApi';
 import ErrorDetailsPhp from './ErrorDetailsPhp';
 
+/**
+ * @i18n.namespace Webiny.Backend.Logger.ErrorGroup
+ */
 class ErrorGroup extends Webiny.Ui.View {
 
 }
 
 ErrorGroup.defaultProps = {
-
     renderer() {
         const statProps = {
             api: '/entities/webiny/logger-entry',
@@ -46,7 +48,7 @@ ErrorGroup.defaultProps = {
 
                                             <Ui.ExpandableList.ActionSet>
                                                 <Ui.ExpandableList.Action
-                                                    label="Resolve Item"
+                                                    label={this.i18n('Resolve Item')}
                                                     icon="icon-check"
                                                     onClick={() => this.props.resolveError(row, list, this.props.parentList)}/>
                                             </Ui.ExpandableList.ActionSet>

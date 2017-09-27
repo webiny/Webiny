@@ -2,6 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Backend.Acl.Modal.ExportModal
+ */
 class ExportModal extends Webiny.Ui.ModalComponent {
 
     constructor(props) {
@@ -36,12 +39,12 @@ class ExportModal extends Webiny.Ui.ModalComponent {
         return (
             <Modal.Dialog>
                 <Modal.Content>
-                    <Modal.Header title={`Export ${label}`}/>
+                    <Modal.Header title={this.i18n('Export {label}', {label})}/>
                     <Modal.Body style={this.state.loading ? {height: 200} : {}}>
                         {this.state.loading ? <Loader/> : <CodeHighlight language="json">{this.state.content}</CodeHighlight>}
                     </Modal.Body>
                     <Modal.Footer>
-                        <Copy.Button label="Copy" type="primary" value={this.state.content} renderIf={this.state.content}/>
+                        <Copy.Button label={this.i18n('Copy')} type="primary" value={this.state.content} renderIf={this.state.content}/>
                     </Modal.Footer>
                 </Modal.Content>
             </Modal.Dialog>

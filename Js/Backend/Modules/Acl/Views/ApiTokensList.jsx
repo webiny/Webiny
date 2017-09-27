@@ -3,6 +3,9 @@ import Webiny from 'webiny';
 import ApiTokenModal from './Modal/ApiTokenModal';
 import SystemApiTokenModal from './Modal/SystemApiToken';
 
+/**
+ * @i18n.namespace Webiny.Backend.Acl.ApiTokensList
+ */
 class ApiTokensList extends Webiny.Ui.View {
     constructor(props) {
         super(props);
@@ -54,14 +57,14 @@ ApiTokensList.defaultProps = {
                                 {({showView}) => (
                                     <Ui.View.List>
                                         <Ui.View.Header
-                                            title="ACL - API Tokens"
-                                            description="If you want to grant access to your API to 3rd party clients, create an API token for them.">
+                                            title={this.i18n('ACL - API Tokens')}
+                                            description={this.i18n('If you want to grant access to your API to 3rd party clients, create an API token for them.')}>
                                             <Ui.Button
                                                 type="primary"
                                                 align="right"
                                                 onClick={showView('tokenModalView')}
                                                 icon="icon-plus-circled"
-                                                label="Create new token"/>
+                                                label={this.i18n('Create new token')}/>
                                             {systemApiToken}
                                             <SystemApiTokenModal
                                                 ref={ref => this.systemApiToken = ref}
@@ -73,14 +76,14 @@ ApiTokensList.defaultProps = {
                                                 <Ui.List.FormFilters>
                                                     {({apply}) => (
                                                         <Ui.Input
-                                                            placeholder="Search by owner or token"
+                                                            placeholder={this.i18n('Search by owner or token')}
                                                             name="_searchQuery"
                                                             onEnter={apply()}/>
                                                     )}
                                                 </Ui.List.FormFilters>
                                                 <Table>
                                                     <Table.Row>
-                                                        <Table.Field name="token" align="left" label="Token">
+                                                        <Table.Field name="token" align="left" label={this.i18n('Token')}>
                                                             {({data}) => (
                                                                 <Ui.Link onClick={() => showView('tokenModalView')({data})}>
                                                                     <strong>{data.token}</strong><br/>
@@ -88,13 +91,13 @@ ApiTokensList.defaultProps = {
                                                                 </Ui.Link>
                                                             )}
                                                         </Table.Field>
-                                                        <Table.Field name="owner" align="left" label="Owner" sort="owner"/>
+                                                        <Table.Field name="owner" align="left" label={this.i18n('Owner')} sort="owner"/>
                                                         <Table.TimeAgoField
                                                             name="lastActivity"
                                                             align="center"
-                                                            label="Last activity"
+                                                            label={this.i18n('Last activity')}
                                                             sort="lastActivity"/>
-                                                        <Table.Field name="requests" align="center" label="Total Requests" sort="requests">
+                                                        <Table.Field name="requests" align="center" label={this.i18n('Total Requests')} sort="requests">
                                                             {({data}) => (
                                                                 <Ui.Link route="ApiLogs.List" params={{token: data.id}}>
                                                                     {data.requests}
@@ -104,25 +107,25 @@ ApiTokensList.defaultProps = {
                                                         <Table.TimeAgoField
                                                             name="createdOn"
                                                             align="center"
-                                                            label="Created On"
+                                                            label={this.i18n('Created On')}
                                                             sort="createdOn"/>
                                                         <Table.ToggleField
                                                             name="enabled"
-                                                            label="Enabled"
+                                                            label={this.i18n('Enabled')}
                                                             sort="enabled"
                                                             align="center"
                                                             message={({value}) => {
                                                                 if (!value) {
                                                                     return (
                                                                         <span>
-                                                                            This will disable API token and prevent it's bearer from using your API!
-                                                                            <br/>Are you sure you want to disable it?
+                                                                            {this.i18n(`This will disable API token and prevent it's bearer from using your API!`)}
+                                                                            <br/>{this.i18n('Are you sure you want to disable it?')}
                                                                         </span>
                                                                     );
                                                                 }
                                                             }}/>
                                                         <Table.Actions>
-                                                            <Table.EditAction label="Edit" onClick={showView('tokenModalView')}/>
+                                                            <Table.EditAction label={this.i18n('Edit')} onClick={showView('tokenModalView')}/>
                                                             <Table.DeleteAction/>
                                                         </Table.Actions>
                                                     </Table.Row>

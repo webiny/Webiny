@@ -181,6 +181,11 @@ class Setup extends Plugin {
                 if (docker) {
                     config = yaml.safeLoad(Webiny.readFile(configs.dockerCompose));
                     config.services.nginx.ports.push(nginxPort + ':80');
+
+                    let alias = answers.domain;
+                    alias = alias.replace('http://', '').replace('https://', '').split(':')[0];
+                    config.services.nginx.networks.default.aliases.push(alias);
+
                     config.services.php.extra_hosts.push('dockerhost:' + answers.hostIp);
                     config.services.php.environment.XDEBUG_CONFIG = `remote_enable=0 remote_host=${answers.hostIp}`;
                     config.services.mongodb.ports.push(answers.databasePort + ':27017');

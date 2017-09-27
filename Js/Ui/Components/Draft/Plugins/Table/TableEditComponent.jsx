@@ -12,6 +12,9 @@ import Alignment from './../Alignment';
 import Link from './../Link';
 import Code from './../Code';
 
+/**
+ * @i18n.namespace Webiny.Ui.Draft.Plugins.Table.TableEditComponent
+ */
 class TableEditComponent extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
@@ -217,15 +220,15 @@ TableEditComponent.defaultProps = {
             <Webiny.Ui.LazyLoad modules={['Dropdown']}>
                 {(Ui) => (
                     <div className="table-wrapper">
-                        <Ui.Dropdown title="Actions" type="balloon" align="right" renderIf={!this.props.editor.getPreview()}>
-                            <Ui.Dropdown.Header title="Column"/>
-                            <Ui.Dropdown.Link onClick={this.insertColumnBefore} icon="fa-plus" title="Insert before"/>
-                            <Ui.Dropdown.Link onClick={this.insertColumnAfter} icon="fa-plus" title="Insert after"/>
-                            <Ui.Dropdown.Link onClick={this.deleteColumn} icon="fa-remove" title="Delete" renderIf={headers.length > 1}/>
-                            <Ui.Dropdown.Header title="Row" renderIf={isBody}/>
-                            <Ui.Dropdown.Link onClick={this.insertRowBefore} icon="fa-plus" title="Insert before" renderIf={isBody}/>
-                            <Ui.Dropdown.Link onClick={this.insertRowAfter} icon="fa-plus" title="Insert after" renderIf={isBody}/>
-                            <Ui.Dropdown.Link onClick={this.deleteRow} icon="fa-remove" title="Delete"
+                        <Ui.Dropdown title={this.i18n('Actions')} type="balloon" align="right" renderIf={!this.props.editor.getPreview()}>
+                            <Ui.Dropdown.Header title={this.i18n('Column')}/>
+                            <Ui.Dropdown.Link onClick={this.insertColumnBefore} icon="fa-plus" title={this.i18n('Insert before')}/>
+                            <Ui.Dropdown.Link onClick={this.insertColumnAfter} icon="fa-plus" title={this.i18n('Insert after')}/>
+                            <Ui.Dropdown.Link onClick={this.deleteColumn} icon="fa-remove" title={this.i18n('Delete')} renderIf={headers.length > 1}/>
+                            <Ui.Dropdown.Header title={this.i18n('Row')} renderIf={isBody}/>
+                            <Ui.Dropdown.Link onClick={this.insertRowBefore} icon="fa-plus" title={this.i18n('Insert before')} renderIf={isBody}/>
+                            <Ui.Dropdown.Link onClick={this.insertRowAfter} icon="fa-plus" title={this.i18n('Insert after')} renderIf={isBody}/>
+                            <Ui.Dropdown.Link onClick={this.deleteRow} icon="fa-remove" title={this.i18n('Delete')}
                                               renderIf={isBody && rows.length > 1}/>
                         </Ui.Dropdown>
                         <table className="Webiny_Ui_List_table">

@@ -2,6 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Ui.Data
+ */
 class Data extends Webiny.Ui.Component {
 
     constructor(props) {
@@ -63,7 +66,7 @@ class Data extends Webiny.Ui.Component {
 
         if (response.isError()) {
             this.setState({loading: false});
-            Webiny.Growl.info(response.getError(), 'Could not fetch data', true);
+            Webiny.Growl.info(response.getError(), this.i18n('Could not fetch data'), true);
             return;
         }
         this.setState({data: this.props.prepareLoadedData({data: response.getData()}), loading: false});

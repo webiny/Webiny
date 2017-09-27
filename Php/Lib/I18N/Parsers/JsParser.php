@@ -128,7 +128,7 @@ class JsParser extends AbstractParser
                         ];
 
                         if (!$output['namespace']) {
-                            throw new AppException('Missing text namespace for text "' . $output['text'] . '", in ' . $file->getPathname());
+                            throw new AppException('Missing text namespace for text "' . $output['base'] . '", in ' . $file->getPathname());
                         }
 
                         if ($firstCharacterAfterLastlyProcessedPlaceholderPart === ')') {

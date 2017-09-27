@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Ui.HtmlEditor
+ */
 class HtmlEditor extends Webiny.Ui.FormComponent {
     constructor(props) {
         super(props);
@@ -107,7 +110,7 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
             this.setState({uploadPercentage: null});
             this.editor.setSelection({index: this.index, length: 0});
         }, ({apiResponse}) => {
-            Webiny.Growl.danger(apiResponse.getError(), 'Upload failed');
+            Webiny.Growl.danger(apiResponse.getError(), this.i18n('Upload failed'));
             this.setState({uploadPercentage: null});
         });
     }
@@ -220,7 +223,7 @@ HtmlEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                         ref="reader"
                         sizeLimit={this.props.sizeLimit}
                         onChange={this.fileChanged}/>
-                    {this.getCropper(<Alert type="info" title="Hint">Scroll to zoom in/out</Alert>)}
+                    {this.getCropper(<Alert type="info" title={this.i18n('Hint')}>{this.i18n('Scroll to zoom in/out')}</Alert>)}
                 </div>
                 {this.renderDescription()}
             </FormGroup>

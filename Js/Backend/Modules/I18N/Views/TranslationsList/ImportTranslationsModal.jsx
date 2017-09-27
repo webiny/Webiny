@@ -24,7 +24,7 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
                         form.hideLoading();
 
                         if (response.isError()) {
-                            Webiny.Growl.danger(response.getMessage());
+                            return form.handleApiError(response);
                         }
 
                         form.setModel({results: {preview, data: response.getData()}}, () => !preview && this.props.onTranslationsImported());
@@ -73,7 +73,7 @@ class ImportTranslationsModal extends Webiny.Ui.ModalComponent {
                                         </Ui.Grid.Col>
                                     </Ui.Grid.Row>
 
-                                    <Ui.Section title="Options"/>
+                                    <Ui.Section title={this.i18n('Options')}/>
                                     <Ui.Grid.Row>
                                         <Ui.Grid.Col all={12}>
                                             <Ui.Checkbox name="options.preview" label={this.i18n('Preview')}/>

@@ -2,6 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Ui.ExpandableList.Empty
+ */
 class Empty extends Webiny.Ui.Component {
 
 }
@@ -10,9 +13,9 @@ Empty.defaultProps = {
     message: (
         <div className="porlet">
             <div className="porlet-body text-center">
-                <h2>Sorry, but no records matched your query.</h2>
+                <h2>{Webiny.I18n('Sorry, but no records matched your query.')}</h2>
 
-                <p>Try changing your search parameters.</p>
+                <p>{Webiny.I18n('Try changing your search parameters.')}</p>
             </div>
         </div>
     ),

@@ -4,13 +4,16 @@ import LoginRegister from './Views/LoginRegister';
 import Browse from './Views/Browse';
 import AppDetails from './Views/AppDetails';
 
+/**
+ * @i18n.namespace Webiny.Backend.Marketplace
+ */
 class Project extends Webiny.App.Module {
 
     init() {
         this.name = 'Marketplace';
 
         this.registerMenus(
-            <Webiny.Ui.Menu label="Marketplace" icon="icon-basket_n" route="Marketplace.Browse"/>
+            <Webiny.Ui.Menu label={Webiny.I18n('Marketplace')} icon="icon-basket_n" route="Marketplace.Browse"/>
         );
 
         this.registerRoutes(

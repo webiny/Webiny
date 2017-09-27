@@ -2,6 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Ui.List.Table.Actions
+ */
 class Actions extends Webiny.Ui.Component {
 
     constructor(props) {
@@ -37,7 +40,7 @@ Actions.defaultProps = {
 
         return (
             <Dropdown title={this.props.label} type="balloon">
-                <Dropdown.Header title="Actions"/>
+                <Dropdown.Header title={this.i18n('Actions')}/>
                 {React.Children.map(this.props.children, child => {
                     if (this.shouldHideItem(child)) {
                         return null;

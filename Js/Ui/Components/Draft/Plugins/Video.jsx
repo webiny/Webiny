@@ -2,6 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Ui.Draft.Plugins.VideoEditComponent
+ */
 class VideoEditComponent extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
@@ -125,9 +128,9 @@ VideoEditComponent.defaultProps = {
                         <Ui.Grid.Row>
                             <Ui.Grid.Col xs={12} className="text-center">
                                 <Ui.ButtonGroup>
-                                    <Ui.Button {...this.btnProps('left')} label="Left"/>
-                                    <Ui.Button {...this.btnProps('center')} label="Center"/>
-                                    <Ui.Button {...this.btnProps('right')} label="Right"/>
+                                    <Ui.Button {...this.btnProps('left')} label={this.i18n('Left')}/>
+                                    <Ui.Button {...this.btnProps('center')} label={this.i18n('Center')}/>
+                                    <Ui.Button {...this.btnProps('right')} label={this.i18n('Right')}/>
                                 </Ui.ButtonGroup>
                             </Ui.Grid.Col>
                         </Ui.Grid.Row>
@@ -145,7 +148,7 @@ VideoEditComponent.defaultProps = {
                                     className="caption"
                                     value={this.props.data.caption || ''}
                                     onChange={captionChange}
-                                    placeholder="Enter a caption for this video"/>
+                                    placeholder={this.i18n('Enter a caption for this video')}/>
                             </Ui.Grid.Col>
                         </Ui.Grid.Row>
                     </div>
@@ -155,6 +158,9 @@ VideoEditComponent.defaultProps = {
     }
 };
 
+/**
+ * @i18n.namespace Webiny.Ui.Draft.Plugins.VideoComponent
+ */
 class VideoComponent extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
@@ -205,6 +211,9 @@ VideoComponent.defaultProps = {
     }
 };
 
+/**
+ * @i18n.namespace Webiny.Ui.Draft.Plugins.VideoPlugin
+ */
 class VideoPlugin extends Webiny.Draft.AtomicPlugin {
     constructor(config = {}) {
         super(config);
@@ -295,7 +304,7 @@ class VideoPlugin extends Webiny.Draft.AtomicPlugin {
                                                         <Ui.Grid.Col xs={10}>
                                                             <Ui.Input
                                                                 name="url"
-                                                                placeholder="Enter a video URL"
+                                                                placeholder={this.i18n('Enter a video URL')}
                                                                 validate={this.validate}
                                                                 showValidationIcon={false}/>
                                                         </Ui.Grid.Col>
@@ -303,7 +312,7 @@ class VideoPlugin extends Webiny.Draft.AtomicPlugin {
                                                             <Ui.Button
                                                                 type="primary"
                                                                 align="right"
-                                                                label="Insert"
+                                                                label={this.i18n('Insert')}
                                                                 onClick={form.submit}/>
                                                         </Ui.Grid.Col>
                                                     </Ui.Grid.Row>

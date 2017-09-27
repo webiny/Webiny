@@ -3,6 +3,9 @@ import Webiny from 'webiny';
 import ExportModal from './Modal/ExportModal';
 import ImportModal from './Modal/ImportModal';
 
+/**
+ * @i18n.namespace Webiny.Backend.Acl.UserRolesList
+ */
 class UserRolesList extends Webiny.Ui.View {
 }
 
@@ -21,29 +24,33 @@ UserRolesList.defaultProps = {
         const {Ui} = this.props;
         const Table = Ui.List.Table;
 
-        const users = <Ui.Link route="Users.List">Users</Ui.Link>;
-        const permissions = <Ui.Link route="UserPermissions.List">Permissions</Ui.Link>;
+        const users = <Ui.Link route="Users.List">{this.i18n('Users')}</Ui.Link>;
+        const permissions = <Ui.Link route="UserPermissions.List">{this.i18n('Permissions')}</Ui.Link>;
+
         return (
             <Ui.ViewSwitcher>
                 <Ui.ViewSwitcher.View view="listView" defaultView>
                     {({showView}) => (
                         <Ui.View.List>
                             <Ui.View.Header
-                                title="ACL - Roles"
+                                title={this.i18n('ACL - Roles')}
                                 description={(
-                                    <span>Roles are a simple way to control what permissions certain users have. Create a role with a set
-                                        of {permissions} and then assign roles to {users}.</span>
+                                    <span>
+                                        {this.i18n(`Roles are a simple way to control what permissions certain users have.
+                                                    Create a role with a set of {permissions} and then assign roles to
+                                                    {users}.`, {permissions, users})}
+                                    </span>
                                 )}>
                                 <Ui.ButtonGroup>
                                     <Ui.Link type="primary" route="UserRoles.Create">
                                         <Ui.Icon icon="icon-plus-circled"/>
-                                        Create
+                                        {this.i18n('Create')}
                                     </Ui.Link>
                                     <Ui.Button
                                         type="secondary"
                                         onClick={showView('importModal')}
                                         icon="fa-upload"
-                                        label="Import"/>
+                                        label={this.i18n('Import')}/>
                                 </Ui.ButtonGroup>
                             </Ui.View.Header>
                             <Ui.View.Body>
@@ -54,7 +61,7 @@ UserRolesList.defaultProps = {
                                                 <Ui.Grid.Col all={12}>
                                                     <Ui.Input
                                                         name="_searchQuery"
-                                                        placeholder="Search by name, description or slug"
+                                                        placeholder={this.i18n('Search by name, description or slug')}
                                                         onEnter={apply()}/>
                                                 </Ui.Grid.Col>
                                             </Ui.Grid.Row>
@@ -62,7 +69,7 @@ UserRolesList.defaultProps = {
                                     </Ui.List.FormFilters>
                                     <Table>
                                         <Table.Row>
-                                            <Table.Field name="name" label="Name" sort="name">
+                                            <Table.Field name="name" label={this.i18n('Name')} sort="name">
                                                 {({data}) => (
                                                     <span>
                                                         <Ui.Link route="UserRoles.Edit" params={{id: data.id}}>
@@ -72,11 +79,11 @@ UserRolesList.defaultProps = {
                                                     </span>
                                                 )}
                                             </Table.Field>
-                                            <Table.Field name="slug" label="Slug" sort="slug"/>
+                                            <Table.Field name="slug" label={this.i18n('Slug')} sort="slug"/>
                                             <Table.Actions>
                                                 <Table.EditAction route="UserRoles.Edit"/>
                                                 <Table.Action
-                                                    label="Export"
+                                                    label={this.i18n('Export')}
                                                     icon="fa-download"
                                                     onClick={showView('exportModal')}/>
                                                 <Table.DeleteAction/>
@@ -97,7 +104,7 @@ UserRolesList.defaultProps = {
                             map="permissions"
                             api="/entities/webiny/user-roles"
                             fields="name,slug,description,permissions.slug"
-                            label="Role"/>
+                            label={this.i18n('Role')}/>
                     )}
                 </Ui.ViewSwitcher.View>
 
@@ -105,7 +112,7 @@ UserRolesList.defaultProps = {
                     {() => (
                         <ImportModal
                             api="/entities/webiny/user-roles"
-                            label="Role"
+                            label={this.i18n('Role')}
                             onImported={() => this.list.loadData()}/>
                     )}
                 </Ui.ViewSwitcher.View>

@@ -4,6 +4,9 @@ import styles from './styles.css';
 import RegisterModal from './../Components/RegisterModal'
 import ForgotPasswordModal from './../Components/ForgotPasswordModal'
 
+/**
+ * @i18n.namespace Webiny.Backend.Marketplace.LoginRegister
+ */
 class LoginRegister extends Webiny.Ui.View {
     constructor(props) {
         super(props);
@@ -51,26 +54,28 @@ LoginRegister.defaultProps = {
                 {({form}) => (
                     <div className={styles.loginRegister}>
                         <div className={styles.message}>
-                            <h2><Icon icon="icon-basket_n"/> Webiny Marketplace</h2>
-                            <h3>Find and Install Apps for Webiny</h3>
-                            <p>Access to the markeplace requires a Webiny.com profile.<br/>If you already have a profile, please sign-in,
-                                otherwise please register.</p>
+                            <h2><Icon icon="icon-basket_n"/> {this.i18n('Webiny Marketplace')}</h2>
+                            <h3>{this.i18n('Find and Install Apps for Webiny')}</h3>
+                            <p>
+                                {this.i18n('Access to the marketplace requires a Webiny.com profile.')}<br/>
+                                {this.i18n('If you already have a profile, please sign-in, otherwise please register.')}
+                            </p>
                             <div className={styles.loginForm}>
                                 <Grid.Row>
                                     <Form.Loader/>
                                     <Grid.Col all={12}>
                                         <Form.Error/>
                                         <Input
-                                            placeholder="Email"
-                                            label="Email"
+                                            placeholder={this.i18n('Email')}
+                                            label={this.i18n('Email')}
                                             name="username"
                                             validate="required, email"
                                             onEnter={form.submit}/>
                                     </Grid.Col>
                                     <Grid.Col all={12}>
                                         <Password
-                                            label="Password"
-                                            placeholder="Password"
+                                            label={this.i18n('Password')}
+                                            placeholder={this.i18n('Password')}
                                             name="password"
                                             validate="required"
                                             onEnter={form.submit}
@@ -82,13 +87,15 @@ LoginRegister.defaultProps = {
                                             onClick={form.submit}
                                             size="large"
                                             icon="icon-next"
-                                            label="Sign In"/>
+                                            label={this.i18n('Sign In')}/>
                                     </Grid.Col>
                                 </Grid.Row>
                             </div>
                             <div className={styles.actions}>
                                 <div className="text-center">
-                                    Not a member? <Link onClick={this.showRegister}><br/>Sign up here</Link>
+                                    {this.i18n('Not a member? {signupLink}', {
+                                        signupLink: <Link onClick={this.showRegister}><br/>Sign up here</Link>
+                                    })}
                                 </div>
                             </div>
                         </div>

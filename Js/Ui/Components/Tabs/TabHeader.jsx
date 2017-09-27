@@ -3,6 +3,9 @@ import _ from 'lodash';
 import Webiny from 'webiny';
 import styles from './styles.css';
 
+/**
+ * @i18n.namespace Webiny.Ui.Tabs
+ */
 class TabHeader extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
@@ -16,7 +19,7 @@ class TabHeader extends Webiny.Ui.Component {
 }
 
 TabHeader.defaultProps = {
-    label: 'Tab',
+    label: Webiny.I18n('Tab'),
     onClick: _.noop,
     icon: null,
     disabled: false, // "private" prop passed by Tabs component
@@ -27,7 +30,7 @@ TabHeader.defaultProps = {
         let label = this.props.label;
         const styles = this.props.styles;
 
-        const i18n = React.isValidElement(label) && Webiny.isElementOfType(label, Webiny.Ui.Components.I18N);
+        const i18n = React.isValidElement(label) && Webiny.isElementOfType(label, Webiny.I18n.getComponent());
         if (_.isString(this.props.label) || i18n) {
             const {Icon} = this.props;
             label = (

@@ -164,7 +164,7 @@ class LocalesModal extends Webiny.Ui.ModalComponent {
 
                                 </Modal.Body>
                                 <Modal.Footer>
-                                    <Button label="Cancel" onClick={this.hide}/>
+                                    <Button label={this.i18n('Cancel')} onClick={this.hide}/>
                                     <Button type="primary" label={this.i18n('Save')} onClick={form.submit}/>
                                 </Modal.Footer>
                             </Modal.Content>

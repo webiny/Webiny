@@ -4,6 +4,9 @@ import Webiny from 'webiny';
 import EntityPermissions from './Components/EntityPermissions';
 import ServicePermissions from './Components/ServicePermissions';
 
+/**
+ * @i18n.namespace Webiny.Backend.Acl.UserPermissionsForm
+ */
 class UserPermissionsForm extends Webiny.Ui.View {
     constructor(props) {
         super(props);
@@ -46,27 +49,28 @@ class UserPermissionsForm extends Webiny.Ui.View {
                 onCancel="UserPermissions.List"
                 defaultModel={{permissions: []}}
                 onSuccessMessage={({model}) => {
-                    return <span>Permission <strong>{model.name}</strong> was saved!</span>;
+                    return <span>{this.i18n('Permission {permission} was saved successfully!', {permission: <strong>{model.name}</strong>})}</span>;
+
                 }}>
                 {({model, form}) => {
                     return (
                         <Ui.View.Form>
-                            <Ui.View.Header title={model.id ? 'ACL - Edit permission' : 'ACL - Create permission'}/>
+                            <Ui.View.Header title={model.id ? this.i18n('ACL - Edit permission') : this.i18n('ACL - Create permission')}/>
                             <Ui.View.Body>
-                                <Ui.Section title="General"/>
+                                <Ui.Section title={this.i18n('General')}/>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>
-                                        <Ui.Input label="Name" name="name" validate="required"/>
+                                        <Ui.Input label={this.i18n('Name')} name="name" validate="required"/>
                                     </Ui.Grid.Col>
                                     <Ui.Grid.Col all={6}>
-                                        <Ui.Input label="Slug" name="slug"/>
+                                        <Ui.Input label={this.i18n('Slug')} name="slug"/>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
-                                        <Ui.Input label="Description" name="description" validate="required"/>
+                                        <Ui.Input label={this.i18n('Description')} name="description" validate="required"/>
                                         <Ui.Tabs>
-                                            <Ui.Tabs.Tab label="Entities">
+                                            <Ui.Tabs.Tab label={this.i18n('Entities')}>
                                                 {(newUserPermission || model.id) && (
                                                     <EntityPermissions
                                                         model={model}
@@ -75,7 +79,7 @@ class UserPermissionsForm extends Webiny.Ui.View {
                                                         onRemoveEntity={resource => this.onRemove(model, form, resource)}/>
                                                 )}
                                             </Ui.Tabs.Tab>
-                                            <Ui.Tabs.Tab label="Services">
+                                            <Ui.Tabs.Tab label={this.i18n('Services')}>
                                                 {(newUserPermission || model.id) && (
                                                     <ServicePermissions
                                                         model={model}
@@ -89,8 +93,8 @@ class UserPermissionsForm extends Webiny.Ui.View {
                                 </Ui.Grid.Row>
                             </Ui.View.Body>
                             <Ui.View.Footer>
-                                <Ui.Button type="default" onClick={form.cancel} label="Go back"/>
-                                <Ui.Button type="primary" onClick={form.submit} label="Save permission" align="right"/>
+                                <Ui.Button type="default" onClick={form.cancel} label={this.i18n('Go back')}/>
+                                <Ui.Button type="primary" onClick={form.submit} label={this.i18n('Save permission')} align="right"/>
                             </Ui.View.Footer>
                         </Ui.View.Form>
                     );

@@ -1,12 +1,15 @@
 import React from 'react';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Skeleton.Layout.UserMenu.AccountPreferencesMenu
+ */
 const AccountPreferencesMenu = (props) => {
     const {Link} = props;
     return (
         <user-menu-item>
-            <Link route="Me.Account">Account preferences</Link>
-            <span>Set your account and user preferences </span>
+            <Link route="Me.Account">{Webiny.I18n('Account preferences')}</Link>
+            <span>{Webiny.I18n('Set your account and user preferences')}</span>
         </user-menu-item>
     );
 };

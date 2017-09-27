@@ -2,54 +2,52 @@ import React from 'react';
 import Webiny from 'webiny';
 import styles from './../../Views/styles.css';
 
+/**
+ * @i18n.namespace Webiny.Backend.Marketplace.AppDetails.Sidebar
+ */
 class Sidebar extends Webiny.Ui.View {
-
 }
 
 Sidebar.defaultProps = {
-
     renderer() {
         const {styles, Link, Icon, Section, app} = this.props;
-
         return (
             <div className={styles.sidebar}>
-                <Section title="Details"/>
+                <Section title={this.i18n('Details')}/>
 
                 <ul className={styles.detailsList}>
                     <li>
-                        Version:
+                        {this.i18n('Version:')}
                         <span>{app.version}</span>
                     </li>
 
                     {app.localName !== 'Webiny' && (
                         <li>
-                            Installations:
+                            {this.i18n('Installations:')}
                             <span>{app.installations}</span>
                         </li>
                     )}
 
                     {app.localName !== 'Webiny' && (
                         <li>
-                            Required Webiny version:
+                            {this.i18n('Required Webiny version:')}
                             <span>{app.webinyVersion}</span>
                         </li>
                     )}
 
                     <li>
-                        Repository:
-                        <span><Link url={app.repository} newTab>Visit GitHub</Link></span>
+                        {this.i18n('Repository:')}
+                        <span><Link url={app.repository} newTab>{this.i18n('Visit GitHub')}</Link></span>
                     </li>
-
                     <li>
-                        Tags:
+                        {this.i18n('Tags:')}
                         <div className={styles.tags}>
                             {app.tags.map(tag => <span key={tag}>#{tag}</span>)}
                         </div>
                     </li>
                 </ul>
-
                 <div className={styles.reportIssue}>
-                    <Link type="default" url={`${app.repository}/issues`} newTab><Icon icon="fa-bug"/>Report an Issue</Link>
+                    <Link type="default" url={`${app.repository}/issues`} newTab><Icon icon="fa-bug"/>{this.i18n('Report an Issue')}</Link>
                 </div>
 
             </div>

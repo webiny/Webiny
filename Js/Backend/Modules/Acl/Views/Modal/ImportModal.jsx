@@ -2,6 +2,9 @@ import React from 'react';
 import Webiny from 'webiny';
 import _ from 'lodash';
 
+/**
+ * @i18n.namespace Webiny.Backend.Acl.Modal.ImportModal
+ */
 class ImportModal extends Webiny.Ui.ModalComponent {
 
     submit({model, form}) {
@@ -25,13 +28,13 @@ class ImportModal extends Webiny.Ui.ModalComponent {
                     {({form}) => (
                         <Modal.Content>
                             <Form.Loader/>
-                            <Modal.Header title={`Import ${label}`} onClose={this.hide}/>
+                            <Modal.Header title={this.i18n(`Import {label}`, {label})} onClose={this.hide}/>
                             <Modal.Body>
                                 <Form.Error/>
                                 <CodeEditor mode="text/javascript" name="data" validate="required,json"/>
                             </Modal.Body>
                             <Modal.Footer>
-                                <Button label="Import" type="primary" onClick={form.submit}/>
+                                <Button label={this.i18n('Import')} type="primary" onClick={form.submit}/>
                             </Modal.Footer>
                         </Modal.Content>
                     )}

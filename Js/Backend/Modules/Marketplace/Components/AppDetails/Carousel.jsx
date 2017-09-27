@@ -7,11 +7,8 @@ class Carousel extends Webiny.Ui.View {
 }
 
 Carousel.defaultProps = {
-
     renderer() {
-
         const {Carousel} = this.props;
-
         return (
             <div className={styles.carousel}>
                 <Carousel nav={true} lazyLoad={true} items={1} dots={true} mouseDrag={true}>

@@ -2,6 +2,9 @@ import Webiny from 'webiny';
 import React from 'react';
 import Dashboard from './Views/Dashboard';
 
+/**
+ * @i18n.namespace Webiny.Backend.Dashboard
+ */
 class Module extends Webiny.App.Module {
 
     init() {
@@ -9,7 +12,7 @@ class Module extends Webiny.App.Module {
         const role = 'webiny-dashboard';
 
         this.registerMenus(
-            <Webiny.Ui.Menu order="0" label="Dashboard" route="Dashboard" icon="fa-home" role={role}/>
+            <Webiny.Ui.Menu order="0" label={Webiny.I18n('Dashboard')} route="Dashboard" icon="fa-home" role={role}/>
         );
 
         this.registerRoutes(

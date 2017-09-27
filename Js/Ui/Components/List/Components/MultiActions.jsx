@@ -1,17 +1,20 @@
 import React from 'react';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Ui.List.Table.MultiActions
+ */
 class MultiActions extends Webiny.Ui.Component {
 
 }
 
 MultiActions.defaultProps = {
-    label: 'With selected...',
+    label: Webiny.I18n('With selected...'),
     renderer() {
         const {Dropdown} = this.props;
         return (
             <Dropdown title={this.props.label}>
-                <Dropdown.Header title="Actions"/>
+                <Dropdown.Header title={this.i18n('Actions')}/>
                 {React.Children.map(this.props.children, child => {
                     if (Webiny.isElementOfType(child, Dropdown.Divider) || Webiny.isElementOfType(child, Dropdown.Header)) {
                         return child;

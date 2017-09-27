@@ -2,7 +2,10 @@ import React from 'react';
 import Webiny from 'webiny';
 import styles from './../Views/styles.css';
 
-class ModalForm extends Webiny.Ui.ModalComponent {
+/**
+ * @i18n.namespace Webiny.Backend.Marketplace.RegisterModal
+ */
+class RegisterModal extends Webiny.Ui.ModalComponent {
     constructor(props) {
         super(props);
 
@@ -40,7 +43,7 @@ class ModalForm extends Webiny.Ui.ModalComponent {
                 <Form {...containerProps}>
                     {({form}) => (
                         <Modal.Content>
-                            <Modal.Header title="Register" onClose={this.hide}/>
+                            <Modal.Header title={this.i18n('Register')} onClose={this.hide}/>
                             <Modal.Body>
 
                                 <Grid.Row>
@@ -49,8 +52,8 @@ class ModalForm extends Webiny.Ui.ModalComponent {
                                     </Grid.Col>
                                     <Grid.Col all={6}>
                                         <Input
-                                            placeholder="First Name"
-                                            label="First Name"
+                                            placeholder={this.i18n('First Name')}
+                                            label={this.i18n('First Name')}
                                             name="firstName"
                                             validate="required"
                                             onEnter={form.submit}/>
@@ -58,8 +61,8 @@ class ModalForm extends Webiny.Ui.ModalComponent {
 
                                     <Grid.Col all={6}>
                                         <Input
-                                            placeholder="Last Name"
-                                            label="Last Name"
+                                            placeholder={this.i18n('Last Name')}
+                                            label={this.i18n('Last Name')}
                                             name="lastName"
                                             validate="required"
                                             onEnter={form.submit}/>
@@ -67,16 +70,16 @@ class ModalForm extends Webiny.Ui.ModalComponent {
 
                                     <Grid.Col all={12}>
                                         <Input
-                                            placeholder="Email"
-                                            label="Email"
+                                            placeholder={this.i18n('Email')}
+                                            label={this.i18n('Email')}
                                             name="email"
                                             validate="required, email"
                                             onEnter={form.submit}/>
                                     </Grid.Col>
                                     <Grid.Col all={12}>
                                         <Password
-                                            label="Password"
-                                            placeholder="Password"
+                                            label={this.i18n('Password')}
+                                            placeholder={this.i18n('Password')}
                                             name="password"
                                             validate="required"
                                             onEnter={form.submit}
@@ -90,7 +93,7 @@ class ModalForm extends Webiny.Ui.ModalComponent {
                                     onClick={form.submit}
                                     size="large"
                                     icon="icon-next"
-                                    label="Register"/>
+                                    label={this.i18n('Register')}/>
                             </Modal.Footer>
                         </Modal.Content>
                     )}
@@ -110,9 +113,13 @@ class ModalForm extends Webiny.Ui.ModalComponent {
                         <div className="text-center">
                             <br/>
                             <Icon type="success" size="4x" icon="fa-check-circle" element="div"/><br/>
-                            <h4>Done</h4>
-                            <p>Thanks for registering!</p>
-                            <p>Your profile is ready, <Link className="text-link" onClick={this.close}>back to login page.</Link></p>
+                            <h4>{this.i18n('Done')}</h4>
+                            <p>{this.i18n('Thanks for registering!')}</p>
+                            <p>
+                                {this.i18n('Your profile is ready, {backLink}', {
+                                    backLink: <Link className="text-link" onClick={this.close}>{this.i18n('back to login page.')}</Link>
+                                })}
+                            </p>
                         </div>
                     </Modal.Body>
                 </Modal.Content>
@@ -125,7 +132,7 @@ class ModalForm extends Webiny.Ui.ModalComponent {
     }
 }
 
-export default Webiny.createComponent(ModalForm, {
+export default Webiny.createComponent(RegisterModal, {
     styles,
     modules: ['Modal', 'Form', 'Input', 'Password', 'Button', 'Link', 'Icon', 'Grid', 'Link']
 });

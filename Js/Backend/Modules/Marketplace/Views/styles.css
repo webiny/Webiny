@@ -79,6 +79,11 @@
 	margin-top: 50px;
 	display: flex;
 	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.browse .appList > div {
+	margin-bottom: 80px;
 }
 
 .browse .appBox {
@@ -116,15 +121,15 @@
 	font-size: 32px;
 }
 
-.browse .appBox a.viewDetails{
+.browse .appBox a.viewDetails {
 	margin: 0;
 	position: absolute;
-	bottom: 80px;
+	bottom: 65px;
 	left: 50%;
 	transform: translateX(-50%);
 }
 
-.browse .appBox p.shortDescription{
+.browse .appBox p.shortDescription {
 	padding-bottom: 50px;
 }
 
@@ -141,7 +146,7 @@
 	left: 0;
 }
 
-.browse .appBox .footer p{
+.browse .appBox .footer p {
 	padding: 10px;
 	margin-bottom: 0;
 }
@@ -151,16 +156,20 @@
 		flex-direction: column;
 	}
 
+	.browse .appList > div {
+		margin-bottom: 0px;
+	}
+
 	.browse .appBox {
 		padding: 50px 25px;
 		margin: 0 0 75px 0;
 	}
 
-	.browse .appBox p.shortDescription{
+	.browse .appBox p.shortDescription {
 		padding-bottom: 0px;
 	}
 
-	.browse .appBox a.viewDetails{
+	.browse .appBox a.viewDetails {
 		position: relative;
 		left: 0;
 		bottom: 0;
@@ -180,15 +189,17 @@
 	margin-bottom: 20px;
 }
 
+.appDetails .header .title {
+	display: flex;
+}
+
 .appDetails .header .logo {
 	width: 70px;
 	height: 70px;
 	border-radius: 50%;
-	float: left;
 }
 
 .appDetails .header .titleBlock {
-	float: left;
 	margin-left: 15px;
 }
 
@@ -262,6 +273,11 @@
 	.appDetails .header {
 		flex-direction: column;
 		text-align: center;
+	}
+
+	.appDetails .header .title {
+		display: block;
+		margin-bottom: 15px;
 	}
 
 	.appDetails .header .logo, .appDetails .header .titleBlock {

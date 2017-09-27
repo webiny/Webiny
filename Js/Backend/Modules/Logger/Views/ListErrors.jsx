@@ -3,6 +3,9 @@ import Webiny from 'webiny';
 import ErrorGroup from './ErrorGroup';
 import ErrorCount from './ErrorCount';
 
+/**
+ * @i18n.namespace Webiny.Backend.Logger.ListErrors
+ */
 class ListErrors extends Webiny.Ui.View {
 
     constructor(props) {
@@ -49,12 +52,15 @@ ListErrors.defaultProps = {
             <Webiny.Ui.LazyLoad modules={['List', 'Section', 'Grid', 'ExpandableList', 'Filters']}>
                 {(Ui) => (
                     <Ui.List {...jsErrorList}>
-                        {({list, meta, $this:errorList}) => {
+                        {({list, meta, $this: errorList}) => {
                             return (
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={12}>
                                         <Ui.Section
-                                            title={`Found a total of ${meta.totalCount} records (showing ${meta.perPage} per page)`}/>
+                                            title={this.i18n(`Found a total of {total} records (showing {perPage} per page)`, {
+                                                total: meta.totalCount,
+                                                perPage: meta.perPage
+                                            })}/>
                                     </Ui.Grid.Col>
                                     <Ui.Grid.Col all={12}>
                                         <Ui.List.Loader/>
@@ -64,20 +70,26 @@ ListErrors.defaultProps = {
                                                 return (
                                                     <Ui.ExpandableList.Row key={row.id}>
                                                         <Ui.ExpandableList.Field width={1} name="Count" className="text-center">
-                                                            <ErrorCount count={row.errorCount} ref={ref => this['errorCount-' + row.id] = ref}/>
+                                                            <ErrorCount
+                                                                count={row.errorCount}
+                                                                ref={ref => this['errorCount-' + row.id] = ref}/>
                                                         </Ui.ExpandableList.Field>
-                                                        <Ui.ExpandableList.Field width={5} name="Error">{row.error}</Ui.ExpandableList.Field>
+                                                        <Ui.ExpandableList.Field
+                                                            width={5}
+                                                            name="Error">{row.error}</Ui.ExpandableList.Field>
                                                         <Ui.ExpandableList.Field width={4} name="Last Entry">
                                                             <Ui.Filters.DateTime value={row.lastEntry}/>
                                                         </Ui.ExpandableList.Field>
 
                                                         <Ui.ExpandableList.RowDetailsList title={row.error}>
-                                                            <ErrorGroup errorGroup={row} resolveError={this.resolveError} parentList={errorList}/>
+                                                            <ErrorGroup
+                                                                errorGroup={row} resolveError={this.resolveError}
+                                                                parentList={errorList}/>
                                                         </Ui.ExpandableList.RowDetailsList>
 
                                                         <Ui.ExpandableList.ActionSet>
                                                             <Ui.ExpandableList.Action
-                                                                label="Resolve Group"
+                                                                label={this.i18n('Resolve Group')}
                                                                 icon="icon-check"
                                                                 onClick={() => this.resolveGroup(row, errorList)}/>
                                                         </Ui.ExpandableList.ActionSet>

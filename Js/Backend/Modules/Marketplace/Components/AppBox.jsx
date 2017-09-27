@@ -2,6 +2,9 @@ import React from 'react';
 import Webiny from 'webiny';
 import styles from './../Views/styles.css';
 
+/**
+ * @i18n.namespace Webiny.Backend.Marketplace.AppBox
+ */
 class AppBox extends Webiny.Ui.View {
 }
 
@@ -18,10 +21,10 @@ AppBox.defaultProps = {
 
                 <p className={styles.shortDescription}>{app.shortDescription}</p>
                 <Link route="Marketplace.AppDetails" type="default" params={{id: app.id}} className={styles.viewDetails}>
-                    view details
+                    {this.i18n('view details')}
                 </Link>
                 {app.installedVersion && (<div className={styles.footer}>
-                    <p>Installed version: <strong>{app.installedVersion}</strong></p>
+                    <p>{this.i18n('Installed version: {version}', {version: <strong>{app.installedVersion}</strong>})}</p>
                 </div>)}
             </div>
         );

@@ -7,6 +7,9 @@ import Body from './Body';
 import Footer from './Footer';
 import styles from '../styles.css';
 
+/**
+ * @i18n.namespace Webiny.Ui.Modal.Success
+ */
 class Success extends Webiny.Ui.ModalComponent {
 
     constructor(props) {
@@ -50,8 +53,8 @@ class Success extends Webiny.Ui.ModalComponent {
 }
 
 Success.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
-    title: 'Awesome!',
-    closeBtn: 'Close',
+    title: Webiny.I18n('Awesome!'),
+    closeBtn: Webiny.I18n('Close'),
     onClose: _.noop,
     onShown: _.noop,
     renderDialog() {

@@ -13,6 +13,9 @@ function isValidModelType(value) {
     return _.isArray(value) || _.isPlainObject(value) || /boolean|number|string/.test(type);
 }
 
+/**
+ * @i18n.namespace Webiny.Ui.Form
+ */
 class Form extends Webiny.Ui.Component {
 
     constructor(props) {
@@ -330,7 +333,7 @@ class Form extends Webiny.Ui.Component {
         }
 
         if (this.state.submitDisabled !== false) {
-            Webiny.Growl.info(this.state.submitDisabled, 'Please wait! Your data is being processed...');
+            Webiny.Growl.info(this.state.submitDisabled, this.i18n('Please wait! Your data is being processed...'));
             return false;
         }
 
@@ -723,11 +726,11 @@ Form.defaultProps = {
     onProgress({event}) {
         Webiny.import(['Growl', 'Progress']).then(({Growl, Progress}) => {
             const cmp = <div>Your data is being uploaded...<Progress value={event.progress}/></div>;
-            Webiny.Growl(<Growl.Info id={this.growlId} title="Please be patient" sticky={true}>{cmp}</Growl.Info>);
+            Webiny.Growl(<Growl.Info id={this.growlId} title={this.i18n('Please be patient')} sticky={true}>{cmp}</Growl.Info>);
         });
     },
     onSuccessMessage: () => {
-        return 'Your record was saved successfully!';
+        return this.i18n('Your record was saved successfully!');
     },
     renderer() {
         return (

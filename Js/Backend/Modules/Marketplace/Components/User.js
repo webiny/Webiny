@@ -2,6 +2,9 @@ import React from 'react';
 import Webiny from 'webiny';
 import _ from 'lodash';
 
+/**
+ * @i18n.namespace Webiny.Backend.Marketplace.User
+ */
 const User = (props) => {
     if (!props.user) {
         return null;
@@ -18,7 +21,9 @@ const User = (props) => {
                     </span>
                 </div>
             </div>
-            <h3 className="user-welcome__message">Hi {_.get(props.user, 'firstName', _.get(props.user, 'email'))}!</h3>
+            <h3 className="user-welcome__message">
+                {Webiny.I18n('Hi {user}!', {user: _.get(props.user, 'firstName', _.get(props.user, 'email'))})}
+            </h3>
         </div>
     );
 };

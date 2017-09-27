@@ -6,6 +6,9 @@ import SubmitAppBox from './../Components/SubmitAppBox';
 import LoginRegister from './LoginRegister';
 import User from './../Components/User';
 
+/**
+ * @i18n.namespace Webiny.Backend.Marketplace.Browse
+ */
 class Browse extends Webiny.Ui.View {
     constructor(props) {
         super(props);
@@ -53,11 +56,11 @@ class Browse extends Webiny.Ui.View {
     renderBody() {
         const {Loader} = this.props;
         if (this.state.loadingUser) {
-            return <Loader>Logging in...</Loader>;
+            return <Loader>{this.i18n('Logging in...')}</Loader>;
         }
 
         if (this.state.loadingApps) {
-            return <Loader>Fetching Webiny apps...</Loader>;
+            return <Loader>{this.i18n('Fetching Webiny apps...')}</Loader>;
         }
 
         if (!this.state.user) {
@@ -71,17 +74,17 @@ class Browse extends Webiny.Ui.View {
         return (
             <div className={styles.browse}>
                 <View.Dashboard>
-                    <View.Header title="Marketplace">
+                    <View.Header title={this.i18n('Marketplace')}>
                         <View.Header.Center>
                             <User user={this.state.user}/>
                         </View.Header.Center>
                         {this.props.appDetails ?
-                            <Link type="default" route="Marketplace.Browse">Go Back</Link> :
+                            <Link type="default" route="Marketplace.Browse">{this.i18n('Go Back')}</Link> :
                             <Link
                                 newTab
                                 type="default"
                                 url={`/token/${this.state.authToken}`}>
-                                <Icon icon="fa-cog"/> Manage Account
+                                <Icon icon="fa-cog"/> {this.i18n('Manage Account')}
                             </Link>
                         }
                     </View.Header>

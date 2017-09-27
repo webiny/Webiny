@@ -2,19 +2,22 @@ import Webiny from 'webiny';
 import Views from './Views/Views';
 import React from 'react';
 
+/**
+ * @i18n.namespace Webiny.Backend.I18n
+ */
 class Module extends Webiny.App.Module {
     init() {
         this.name = 'I18N';
         const Menu = Webiny.Ui.Menu;
 
         this.registerMenus(
-            <Menu label="I18N" icon="icon-earth" role="webiny-i18n-manager">
-                <Menu label="Texts" order={100}>
-                    <Menu label="Translations" route="I18N.Translations.List" order={100}/>
-                    <Menu label="Texts" route="I18N.Texts.List" order={101}/>
-                    <Menu label="Text Groups" route="I18N.TextGroups.List" order={102}/>
+            <Menu label={Webiny.I18n('I18N')} icon="icon-earth" role="webiny-i18n-manager">
+                <Menu label={Webiny.I18n('Texts')} order={100}>
+                    <Menu label={Webiny.I18n('Translations')} route="I18N.Translations.List" order={100}/>
+                    <Menu label={Webiny.I18n('Texts')} route="I18N.Texts.List" order={101}/>
+                    <Menu label={Webiny.I18n('Text Groups')} route="I18N.TextGroups.List" order={102}/>
                 </Menu>
-                <Menu label="Locales" route="I18N.Locales.List" order={101}/>
+                <Menu label={Webiny.I18n('Locales')} route="I18N.Locales.List" order={101}/>
             </Menu>
         );
 

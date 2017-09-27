@@ -2,6 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Backend.Acl.ApiLogsList
+ */
 class ApiLogsList extends Webiny.Ui.View {
     constructor(props) {
         super(props);
@@ -154,8 +157,8 @@ ApiLogsList.defaultProps = {
         return (
             <Ui.View.List>
                 <Ui.View.Header
-                    title={this.state.token ? `ACL - API Logs: ${title}` : 'ACL - API Logs'}
-                    description="Here you can view all API request logs."/>
+                    title={this.state.token ? this.i18n(`ACL - API Logs: {title}`, {title}) : this.i18n('ACL - API Logs')}
+                    description={this.i18n('Here you can view all API request logs.')}/>
                 <Ui.View.Body>
                     <Ui.List {...listProps}>
                         {({list}) => {
@@ -168,15 +171,15 @@ ApiLogsList.defaultProps = {
                                                     <Ui.Grid.Col all={3}>
                                                         <Ui.Input
                                                             name="_searchQuery"
-                                                            placeholder="Search by method or URL"
+                                                            placeholder={this.i18n('Search by method or URL')}
                                                             onEnter={apply()}/>
                                                     </Ui.Grid.Col>
                                                     <Ui.Grid.Col all={3}>
                                                         <Ui.Select
                                                             api="/entities/webiny/api-logs/methods"
                                                             name="method"
-                                                            placeholder="Filter by HTTP method"
-                                                            allowClear={true}
+                                                            placeholder={this.i18n('Filter by HTTP method')}
+                                                            allowClear
                                                             onChange={apply()}/>
                                                     </Ui.Grid.Col>
                                                     <Ui.Grid.Col all={3}>
@@ -185,8 +188,8 @@ ApiLogsList.defaultProps = {
                                                             optionRenderer={this.renderTokenOption}
                                                             selectedRenderer={this.renderTokenOption}
                                                             name="token"
-                                                            placeholder="Filter by token"
-                                                            allowClear={true}
+                                                            placeholder={this.i18n('Filter by token')}
+                                                            allowClear
                                                             onChange={apply()}/>
                                                     </Ui.Grid.Col>
                                                     <Ui.Grid.Col all={3}>
@@ -197,7 +200,7 @@ ApiLogsList.defaultProps = {
                                                             optionRenderer={({option: {data:item}}) => `${item.firstName} ${item.lastName} (${item.email})`}
                                                             selectedRenderer={({option: {data:item}}) => `${item.firstName} ${item.lastName} (${item.email})`}
                                                             name="createdBy"
-                                                            placeholder="Filter by user"
+                                                            placeholder={this.i18n('Filter by user')}
                                                             onChange={apply()}/>
                                                     </Ui.Grid.Col>
                                                 </Ui.Grid.Row>

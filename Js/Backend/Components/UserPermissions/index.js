@@ -2,6 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Backend.UserPermissions
+ */
 class UserPermissions extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
@@ -46,7 +49,7 @@ UserPermissions.defaultProps = {
                             );
                         }}
                     </List.Table.Field>
-                    <List.Table.Field label="Permission">
+                    <List.Table.Field label={this.i18n('Permission')}>
                         {({data}) => (
                             <span>
                                 <Link route="UserPermissions.Edit" params={{id: data.id}}><strong>{data.name}</strong></Link>
@@ -54,7 +57,7 @@ UserPermissions.defaultProps = {
                             </span>
                         )}
                     </List.Table.Field>
-                    <List.Table.Field label="Description" name="description"/>
+                    <List.Table.Field label={this.i18n('Description')} name="description"/>
                 </List.Table.Row>
             </List.Table>
         );
