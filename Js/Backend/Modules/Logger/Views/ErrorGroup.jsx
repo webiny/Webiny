@@ -12,7 +12,6 @@ class ErrorGroup extends Webiny.Ui.View {
 }
 
 ErrorGroup.defaultProps = {
-
     renderer() {
         const statProps = {
             api: '/entities/webiny/logger-entry',
