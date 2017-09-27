@@ -1,6 +1,9 @@
 import React from 'react';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Ui.Auth.Forbidden
+ */
 class Forbidden extends Webiny.Ui.View {
 
 }
@@ -11,11 +14,11 @@ Forbidden.defaultProps = {
         return (
             <View.List>
                 <View.Body>
-                    <h3><Icon icon="icon-cancel"/>Access Forbidden</h3>
+                    <h3><Icon icon="icon-cancel"/>{this.i18n('Access Forbidden')}</h3>
 
                     <p>
-                        Unfortunately, you are not allowed to see this page.<br/>
-                        If you think this is a mistake, please contact your system administrator.
+                        {this.i18n('Unfortunately, you are not allowed to see this page.')}<br/>
+                        {this.i18n('If you think this is a mistake, please contact your system administrator.')}
                     </p>
                 </View.Body>
             </View.List>

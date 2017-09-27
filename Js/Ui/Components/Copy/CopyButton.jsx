@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Ui.Copy.CopyButton
+ */
 class CopyButton extends Webiny.Ui.Component {
     componentDidMount() {
         super.componentDidMount();
@@ -40,8 +43,8 @@ class CopyButton extends Webiny.Ui.Component {
 }
 
 CopyButton.defaultProps = {
-    label: 'Copy',
-    onSuccessMessage: 'Copied to clipboard!',
+    label: Webiny.I18n('Copy'),
+    onSuccessMessage: Webiny.I18n('Copied to clipboard!'),
     onCopy: _.noop,
     style: null,
     value: null,

@@ -3,6 +3,9 @@ import _ from 'lodash';
 import Webiny from 'webiny';
 import styles from './styles.css';
 
+/**
+ * @i18n.namespace Webiny.Ui.Tags
+ */
 class Tags extends Webiny.Ui.FormComponent {
     constructor(props) {
         super(props);
@@ -82,7 +85,7 @@ class Tags extends Webiny.Ui.FormComponent {
 Tags.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     autoFocus: true,
     validateTags: null,
-    placeholder: 'Type and hit ENTER',
+    placeholder: Webiny.I18n('Type and hit ENTER'),
     onInvalidTag: _.noop,
     renderTag({value, index}) {
         const {Icon, styles} = this.props;

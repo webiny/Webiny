@@ -3,6 +3,9 @@ import _ from 'lodash';
 import Webiny from 'webiny';
 import BaseCropper from './BaseCropper';
 
+/**
+ * @i18n.namespace Webiny.Ui.Cropper.ModalCropper
+ */
 class ModalCropper extends BaseCropper {
 
     constructor(props) {
@@ -43,7 +46,7 @@ class ModalCropper extends BaseCropper {
 
 ModalCropper.defaultProps = _.merge({}, BaseCropper.defaultProps, {
     config: {},
-    title: 'Crop image',
+    title: Webiny.I18n('Crop image'),
     closeOnClick: false,
     onCrop: _.noop,
     onShown: _.noop,
@@ -75,7 +78,7 @@ ModalCropper.defaultProps = _.merge({}, BaseCropper.defaultProps, {
                                 src={props.image && props.image.src + this.getCacheBust()}
                                 style={{maxWidth: '100%'}}/>
                             <div className="clearfix"/>
-                            Cropped image size: <strong>{this.state.width}x{this.state.height}</strong>
+                            {this.i18n('Cropped image size: {size}', {size: <strong>{this.state.width}x{this.state.height}</strong>})}
                         </div>
                     </Modal.Body>
                     <Modal.Footer>

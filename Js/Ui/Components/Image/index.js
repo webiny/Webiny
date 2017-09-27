@@ -4,6 +4,9 @@ import Webiny from 'webiny';
 import ImagePreview from './Preview';
 import styles from './styles.css';
 
+/**
+ * @i18n.namespace Webiny.Ui.Image
+ */
 class Image extends Webiny.Ui.FormComponent {
     constructor(props) {
         super(props);
@@ -162,7 +165,7 @@ Image.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
         if (!this.props.value) {
             message = (
                 <div>
-                    <span className={styles.mainText}>DRAG FILES HERE</span>
+                    <span className={styles.mainText}>{this.i18n('DRAG FILES HERE')}</span>
                 </div>
             );
         }
@@ -213,8 +216,8 @@ Image.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                             onChange={this.fileChanged}/>
                     </div>
                     <div className={styles.uploadAction}>
-                        <span>Dragging not convenient?</span>&nbsp;
-                        <a href="#" onClick={this.getFiles}>SELECT FILES HERE</a>
+                        <span>{this.i18n('Dragging not convenient?')}</span>&nbsp;
+                        <a href="#" onClick={this.getFiles}>{this.i18n('SELECT FILES HERE')}</a>
                     </div>
                 </div>
                 {this.getCropper()}

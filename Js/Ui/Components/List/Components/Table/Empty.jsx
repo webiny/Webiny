@@ -3,6 +3,9 @@ import _ from 'lodash';
 import Webiny from 'webiny';
 import styles from '../../styles.css';
 
+/**
+ * @i18n.namespace Webiny.Ui.List.Table.Empty
+ */
 class Empty extends Webiny.Ui.Component {
 
 }
@@ -11,9 +14,9 @@ Empty.defaultProps = {
     message: (
         <div className={styles.emptyContainer}>
             <div className={styles.content}>
-                <h2>Sorry, but no records matched your query.</h2>
+                <h2>{Webiny.I18n('Sorry, but no records matched your query.')}</h2>
 
-                <p>Try changing your search parameters.</p>
+                <p>{Webiny.I18n('Try changing your search parameters.')}</p>
             </div>
         </div>
     ),

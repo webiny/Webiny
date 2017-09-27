@@ -73,7 +73,7 @@ Login.defaultProps = {
                                         <img src={logoOrange} width="180" height="58"/>
                                     </a>
 
-                                    <h2 className="form-signin-heading"><span/>Sign in to your Account</h2>
+                                    <h2 className="form-signin-heading"><span/>{this.i18n('Sign in to your Account')}</h2>
 
                                     <div className="clear"/>
                                     <Form.Error/>
@@ -87,7 +87,6 @@ Login.defaultProps = {
                                         validate="required"
                                         onEnter={form.submit}
                                         autoFocus={true}/>)}
-
 
                                     {!this.state.twoFactorAuth && (<div>
                                         <Email
@@ -114,12 +113,12 @@ Login.defaultProps = {
                                             onClick={form.submit}
                                             icon="icon-next"
                                             className={styles.btnLogin}>
-                                            <span>Submit</span>
+                                            <span>{this.i18n('Submit')}</span>
                                         </Button>
                                     </div>
                                 </div>
 
-                                <p className="copyright">powered by</p>
+                                <p className="copyright">{this.i18n('powered by')}</p>
                                 <a href="https://www.webiny.com/" className="site">www.webiny.com</a>
                             </div>
                         </div>

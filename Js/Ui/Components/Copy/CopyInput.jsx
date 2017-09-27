@@ -4,6 +4,9 @@ import _ from 'lodash';
 import Webiny from 'webiny';
 import styles from './styles.css';
 
+/**
+ * @i18n.namespace Webiny.Ui.Copy.CopyInput
+ */
 class CopyInput extends Webiny.Ui.FormComponent {
     componentDidMount() {
         super.componentDidMount();
@@ -44,8 +47,8 @@ class CopyInput extends Webiny.Ui.FormComponent {
 }
 
 CopyInput.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
-    actionLabel: 'Copy',
-    onSuccessMessage: 'Copied to clipboard!',
+    actionLabel: Webiny.I18n('Copy'),
+    onSuccessMessage: Webiny.I18n('Copied to clipboard!'),
     onCopy: _.noop,
     renderer() {
         const {Button, FormGroup, styles} = this.props;

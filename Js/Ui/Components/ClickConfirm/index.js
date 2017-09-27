@@ -7,6 +7,9 @@ import Webiny from 'webiny';
  * This will prevent unwanted unmounts and execution of code on unmounted components.
  */
 
+/**
+ * @i18n.namespace Webiny.Ui.ClickConfirm
+ */
 class ClickConfirm extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
@@ -53,7 +56,7 @@ class ClickConfirm extends Webiny.Ui.Component {
 }
 
 ClickConfirm.defaultProps = {
-    message: 'We need you to confirm your action.',
+    message: Webiny.I18n('We need you to confirm your action.'),
     onComplete: _.noop,
     onCancel: _.noop,
     renderDialog: null,

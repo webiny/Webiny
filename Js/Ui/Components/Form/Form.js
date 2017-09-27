@@ -333,7 +333,7 @@ class Form extends Webiny.Ui.Component {
         }
 
         if (this.state.submitDisabled !== false) {
-            Webiny.Growl.info(this.state.submitDisabled, 'Please wait! Your data is being processed...');
+            Webiny.Growl.info(this.state.submitDisabled, this.i18n('Please wait! Your data is being processed...'));
             return false;
         }
 
@@ -730,7 +730,7 @@ Form.defaultProps = {
         });
     },
     onSuccessMessage: () => {
-        return 'Your record was saved successfully!';
+        return this.i18n('Your record was saved successfully!');
     },
     renderer() {
         return (

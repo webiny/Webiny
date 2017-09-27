@@ -3,6 +3,9 @@ import _ from 'lodash';
 import Webiny from 'webiny';
 import styles from './styles.css';
 
+/**
+ * @i18n.namespace Webiny.Ui.Avatar
+ */
 class Avatar extends Webiny.Ui.FormComponent {
     constructor(props) {
         super(props);
@@ -168,7 +171,7 @@ Avatar.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                 icon="fa-upload"
                 onClick={this.getFiles}
                 className={styles.uploadBtn}>
-                Upload
+                {this.i18n('Upload')}
             </Button>
         );
 
@@ -188,7 +191,7 @@ Avatar.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
                         {imageSrc ? <img src={imageSrc} className={styles.image} height="157" width="157"/> : this.props.empty}
                     </span>
                     {imageAction}
-                    <span className={styles.smallText}>JPG, PNG, GIF</span>
+                    <span className={styles.smallText}>{this.i18n('JPG, PNG, GIF')}</span>
                     <FileReader
                         ref="reader"
                         sizeLimit={this.props.sizeLimit}

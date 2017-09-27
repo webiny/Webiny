@@ -9,7 +9,7 @@ class MultiActions extends Webiny.Ui.Component {
 }
 
 MultiActions.defaultProps = {
-    label: 'With selected...',
+    label: Webiny.I18n('With selected...'),
     renderer() {
         const {Dropdown} = this.props;
         return (

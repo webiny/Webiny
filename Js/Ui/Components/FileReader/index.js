@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Ui.FileReader
+ */
 class FileReader extends Webiny.Ui.Component {
 
     constructor(props) {
@@ -46,9 +49,9 @@ class FileReader extends Webiny.Ui.Component {
 
                     let errorMessage = null;
                     if (this.props.accept.length && this.props.accept.indexOf(file.type) === -1) {
-                        errorMessage = 'Unsupported file type (' + file.type + ')';
+                        errorMessage = this.i18n('Unsupported file type ({type})', {type: file.type});
                     } else if (this.props.sizeLimit < file.size) {
-                        errorMessage = 'File is too big';
+                        errorMessage = this.i18n('File is too big');
                     }
 
                     if (!errorMessage) {

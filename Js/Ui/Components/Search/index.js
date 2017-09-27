@@ -3,6 +3,9 @@ import _ from 'lodash';
 import Webiny from 'webiny';
 import styles from './styles.css';
 
+/**
+ * @i18n.namespace Webiny.Ui.Search
+ */
 class Search extends Webiny.Ui.FormComponent {
 
     constructor(props) {
@@ -371,7 +374,7 @@ Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     onLoadOptions: _.noop,
     inputIcon: 'icon-search',
     loadingIcon: 'icon-search',
-    placeholder: 'Type to search',
+    placeholder: Webiny.I18n('Type to search'),
     useDataAsValue: false,
     allowFreeInput: false,
     optionRenderer({option}) {

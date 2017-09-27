@@ -1,6 +1,9 @@
 import _ from 'lodash';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Ui.Cropper.BaseCropper
+ */
 class BaseCropper extends Webiny.Ui.Component {
 
     constructor(props) {
@@ -180,7 +183,7 @@ class BaseCropper extends Webiny.Ui.Component {
 BaseCropper.defaultProps = {
     config: {},
     onCrop: _.noop,
-    action: 'Apply cropping'
+    action: Webiny.I18n('Apply cropping')
 };
 
 export default BaseCropper;
