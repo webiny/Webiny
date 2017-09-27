@@ -17,7 +17,7 @@ class ScanTextsModal extends Webiny.Ui.ModalComponent {
                     onSubmit={async ({model, form}) => {
                         form.showLoading();
                         const preview = model.options.preview;
-                        form.setState('model.response', null);
+                        form.setModel({response: null});
                         const response = await form.api.post('/scan', {apps: model.apps, options: model.options});
 
                         form.hideLoading();
@@ -26,7 +26,7 @@ class ScanTextsModal extends Webiny.Ui.ModalComponent {
                             Webiny.Growl.danger(response.getMessage());
                         }
 
-                        form.setState('model.results', {preview, data: response.getData()}, () => !preview && this.props.onTextsScanned());
+                        form.setModel({results: {preview, data: response.getData()}}, () => !preview && this.props.onTextsScanned());
                     }}>
                     {({model, form}) => {
                         let results = null;

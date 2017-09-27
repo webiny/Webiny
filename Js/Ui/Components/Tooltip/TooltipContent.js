@@ -85,7 +85,7 @@ class TooltipContent extends Webiny.Ui.Component {
                 style.left = target.left + target.width;
         }
 
-        this.setState('style', style);
+        this.setState({style});
     }
 
     /**

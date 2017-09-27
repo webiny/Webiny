@@ -88,20 +88,12 @@ class Component extends React.Component {
         this.__mounted = false;
     }
 
-    setState(key, value = null, callback = null) {
+    setState(state = {}, callback = null) {
         if (!this.isMounted()) {
             return;
         }
 
-        if (_.isObject(key)) {
-            return super.setState(key, value);
-        }
-
-        if (_.isString(key)) {
-            const state = this.state;
-            _.set(state, key, value);
-            return super.setState(state, callback);
-        }
+        return super.setState(state, callback);
     }
 
     isMounted() {

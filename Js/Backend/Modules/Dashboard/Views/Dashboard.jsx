@@ -76,7 +76,7 @@ Dashboard.defaultProps = {
                                         <div className="block-list__item-image">
                                             <Icon icon="fa-book " size="2x"/>
                                         </div>
-                                        <a href="https://www.webiny.com/the-hub/tutorials" className="block-list__item-text"
+                                        <a href="https://www.webiny.com/hub/tutorials" className="block-list__item-text"
                                            target="_blank">
                                             <strong>Tutorials</strong> - How to setup Webiny and other applications.
                                         </a>
@@ -108,7 +108,7 @@ Dashboard.defaultProps = {
                                     </div>
                                     <br/>
                                     <div className="text-center">
-                                        <Link url="https://www.webiny.com/the-hub" newTab={true} type="primary">JOIN</Link>
+                                        <Link url="https://www.webiny.com/hub" newTab={true} type="primary">JOIN</Link>
                                     </div>
                                 </div>
                             </View.InfoBlock>

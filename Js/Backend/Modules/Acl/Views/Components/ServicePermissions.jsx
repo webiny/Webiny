@@ -97,7 +97,7 @@ ServicePermissions.defaultProps = {
                         <AddServiceModal
                             exclude={this.state.services}
                             onSubmit={service => {
-                                this.setState('services', _.clone(this.state.services).concat([service]), () => {
+                                this.setState({services: _.clone(this.state.services).concat([service])}, () => {
                                     this.props.onAddService(service);
                                     Webiny.Growl.success(this.i18n('Service was added successfully!'));
                                 });

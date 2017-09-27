@@ -29,7 +29,7 @@ class Data extends Webiny.Ui.Component {
                 return null;
             }
             this.setData(apiResponse);
-            this.setState('initiallyLoaded', true);
+            this.setState({initiallyLoaded: true});
             this.props.onInitialLoad(apiResponse);
             return apiResponse.getData();
         });

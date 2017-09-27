@@ -18,7 +18,7 @@ class ImportTextsModal extends Webiny.Ui.ModalComponent {
                     onSubmit={async ({model, form}) => {
                         form.showLoading();
                         const preview = model.options.preview;
-                        form.setState('model.response', null);
+                        form.setModel({response: null});
                         const response = await form.api.post('/import/json', model);
                         form.hideLoading();
 
@@ -26,7 +26,7 @@ class ImportTextsModal extends Webiny.Ui.ModalComponent {
                             Webiny.Growl.danger(response.getMessage());
                         }
 
-                        form.setState('model.results', {preview, data: response.getData()}, () => !preview && this.props.onTextsImported());
+                        form.setModel({results: {preview, data: response.getData()}}, () => !preview && this.props.onTextsImported());
                     }}>
                     {({model, form}) => {
                         let results = null;

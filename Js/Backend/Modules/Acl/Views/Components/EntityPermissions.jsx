@@ -97,11 +97,11 @@ EntityPermissions.defaultProps = {
                         <AddEntityModal
                             exclude={this.state.entities}
                             onSubmit={entity => {
-                                this.setState('entities', _.clone(this.state.entities).concat([entity]), () => {
+                                this.setState({entities: _.clone(this.state.entities).concat([entity])}, () => {
                                     this.props.onAddEntity(entity);
                                     Webiny.Growl.success(this.i18n('Entity was added successfully!'));
                                 });
-                        }}/>
+                            }}/>
                     )}
                 </ViewSwitcher.View>
             </ViewSwitcher>

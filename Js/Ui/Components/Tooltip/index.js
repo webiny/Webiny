@@ -16,7 +16,7 @@ class Tooltip extends Webiny.Ui.Component {
                 content: false
             }
         };
-        this.bindMethods('onClick,onMouseEnter,onMouseLeave');
+        this.bindMethods('onClick,onMouseEnter,onMouseLeave,onContentEnter,onContentLeave');
     }
 
     componentDidMount() {
@@ -38,15 +38,43 @@ class Tooltip extends Webiny.Ui.Component {
     }
 
     onClick() {
-        this.setState('click.target', !this.state.click.target);
+        this.setState(state => {
+            const click = state.click;
+            click.target = !click.target;
+            return {click};
+        });
     }
 
     onMouseEnter() {
-        this.setState('hover.target', true);
+        this.setState(state => {
+            const hover = state.hover;
+            hover.target = true;
+            return {hover};
+        });
     }
 
     onMouseLeave() {
-        this.setState('hover.target', false);
+        this.setState(state => {
+            const hover = state.hover;
+            hover.target = false;
+            return {hover};
+        });
+    }
+
+    onContentEnter() {
+        this.setState(state => {
+            const hover = state.hover;
+            hover.content = true;
+            return {hover};
+        });
+    }
+
+    onContentLeave() {
+        this.setState(state => {
+            const hover = state.hover;
+            hover.content = false;
+            return {hover};
+        });
     }
 
     /**
@@ -76,8 +104,8 @@ Tooltip.defaultProps = {
                     <TooltipContent
                         trigger={this.props.trigger}
                         onOutsideClick={this.onClick}
-                        onMouseEnter={() => this.setState('hover.content', true)}
-                        onMouseLeave={() => this.setState('hover.content', false)}
+                        onMouseEnter={this.onContentEnter}
+                        onMouseLeave={this.onContentLeave}
                         content={this.props.children}
                         placement={this.props.placement}
                         targetFirstChildElement={this.ref.firstChild}/>
