@@ -24,7 +24,7 @@ class Apps extends AbstractService
          */
         $api->get('/', function () {
             return $this->getAppsMeta();
-        });
+        })->setPublic();
 
         /**
          * @api.name Lists all installed apps
@@ -61,7 +61,7 @@ class Apps extends AbstractService
             }
 
             return $this->getAppsMeta($appName);
-        });
+        })->setPublic();
     }
 
 
