@@ -2,13 +2,16 @@ import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Ui.Form.Error
+ */
 class ContainerError extends Webiny.Ui.Component {
 
 }
 
 ContainerError.defaultProps = {
     error: null,
-    title: 'Oops',
+    title: Webiny.I18n('Oops'),
     type: 'error',
     message: null,
     className: null,

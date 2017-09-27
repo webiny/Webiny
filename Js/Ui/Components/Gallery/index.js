@@ -300,7 +300,7 @@ Gallery.defaultProps = {
     accept: ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'],
     sizeLimit: 10000000,
     maxImages: null,
-    maxImagesMessage: 'Maximum number of images reached!',
+    maxImagesMessage: Webiny.I18n('Maximum number of images reached!'),
     newCropper: {},
     editCropper: {},
     onSaveImage: _.noop,
@@ -311,7 +311,7 @@ Gallery.defaultProps = {
         if (this.state.images.length === 0) {
             message = (
                 <div>
-                    <span className={styles.mainText}>DRAG FILES HERE</span>
+                    <span className={styles.mainText}>{this.i18n('DRAG FILES HERE')}</span>
                 </div>
             );
         }
@@ -379,8 +379,8 @@ Gallery.defaultProps = {
                         )}
                     </div>
                     <div className={styles.uploadAction}>
-                        <span>Dragging not convenient?</span>&nbsp;
-                        <a href="#" onClick={this.getFiles}>SELECT FILES HERE</a>
+                        <span>{this.i18n('Dragging not convenient?')}</span>&nbsp;
+                        <a href="#" onClick={this.getFiles}>{this.i18n('SELECT FILES HERE')}</a>
                     </div>
                 </div>
             </FormGroup>

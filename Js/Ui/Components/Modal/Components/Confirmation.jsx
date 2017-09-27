@@ -6,6 +6,9 @@ import Content from './Content';
 import Body from './Body';
 import Footer from './Footer';
 
+/**
+ * @i18n.namespace Webiny.Ui.Modal.Confirmation
+ */
 class Confirmation extends Webiny.Ui.ModalComponent {
 
     constructor(props) {
@@ -101,9 +104,9 @@ class Confirmation extends Webiny.Ui.ModalComponent {
 }
 
 Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
-    title: 'Confirmation dialog',
-    confirm: 'Yes',
-    cancel: 'No',
+    title: Webiny.I18n('Confirmation dialog'),
+    confirm: Webiny.I18n('Yes'),
+    cancel: Webiny.I18n('No'),
     onConfirm: _.noop,
     onComplete: _.noop,
     onCancel: null,

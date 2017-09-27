@@ -2,6 +2,9 @@ import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Ui.Password
+ */
 class Password extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
@@ -9,7 +12,7 @@ class Password extends Webiny.Ui.Component {
         this.state = {
             showPassword: false,
             icon: 'fa-eye',
-            msg: 'Show content'
+            msg: this.i18n('Show content')
         };
 
         this.bindMethods('togglePassword');
@@ -20,13 +23,13 @@ class Password extends Webiny.Ui.Component {
             this.setState({
                 showPassword: false,
                 icon: 'fa-eye',
-                msg: 'Show content'
+                msg: this.i18n('Show content')
             });
         } else {
             this.setState({
                 showPassword: true,
                 icon: 'fa-eye-slash',
-                msg: 'Hide content'
+                msg: this.i18n('Hide content')
             });
         }
     }

@@ -6,6 +6,9 @@ import Webiny from 'webiny';
 import 'bootstrap-daterangepicker';
 import './styles.scss?extract';
 
+/**
+ * TODO: complete I18N support needed.
+ */
 class DateRange extends Webiny.Ui.FormComponent {
 
     constructor(props) {

@@ -4,6 +4,9 @@ import $ from 'jquery';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Ui.Carousel
+ */
 class Carousel extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
@@ -50,7 +53,7 @@ Carousel.defaultProps = {
     autoWidth: false,
     URLhashListener: false,
     navRewind: false,
-    navText: ['prev', 'next'],
+    navText: [Webiny.I18n('prev'), Webiny.I18n('next')],
     dots: true,
     lazyLoad: false,
     autoplay: false,

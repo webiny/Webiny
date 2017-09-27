@@ -46,7 +46,7 @@ class SimpleFile extends Webiny.Ui.FormComponent {
 
     renderValue() {
         if (this.props.multiple) {
-            return this.props.value ? _.get(this.props.value, 'length', 0) + ' file(s) selected' : '';
+            return this.props.value ? Webiny.I18n('{files|count:1:file:default:files} selected', {files: _.get(this.props.value, 'length', 0)}) : '';
         }
 
         return _.get(this.props.value, 'name', '');

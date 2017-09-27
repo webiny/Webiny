@@ -131,13 +131,13 @@ Pagination.defaultProps = {
                             <li className={previousClasses} onClick={previousPage}>
                                 <a href="javascript:void(0)">
                                     <span className="icon icon-caret-down"/>
-                                    <span>PREVIOUS</span>
+                                    <span>{this.i18n('PREVIOUS')}</span>
                                 </a>
                             </li>
                             {this.renderPages()}
                             <li className={nextClasses} onClick={nextPage}>
                                 <a href="javascript:void(0)">
-                                    <span>NEXT</span>
+                                    <span>{this.i18n('NEXT')}</span>
                                     <span className="icon icon-caret-down"/>
                                 </a>
                             </li>
