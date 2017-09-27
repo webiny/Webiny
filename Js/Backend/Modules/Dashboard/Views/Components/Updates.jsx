@@ -2,6 +2,9 @@ import React from 'react';
 import Webiny from 'webiny';
 import _ from 'lodash';
 
+/**
+ * @i18n.namespace Webiny.Backend.Dashboard
+ */
 class Updates extends Webiny.Ui.View {
     constructor(props) {
         super(props);

@@ -7,7 +7,7 @@ import css from './TranslatedTextPercentages.scss';
  */
 class TranslatedTextPercentages extends Webiny.Ui.Component {
     renderProgressBar(locale, data) {
-        let label = 'N/A';
+        let label = this.i18n('N/A');
         let percentage = 0;
         if (data.texts.total) {
             percentage = (locale.count / data.texts.total * 100).toFixed(0);
