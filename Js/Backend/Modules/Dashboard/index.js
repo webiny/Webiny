@@ -12,7 +12,7 @@ class Module extends Webiny.App.Module {
         const role = 'webiny-dashboard';
 
         this.registerMenus(
-            <Webiny.Ui.Menu order="0" label={this.i18n('Dashboard')} route="Dashboard" icon="fa-home" role={role}/>
+            <Webiny.Ui.Menu order="0" label={Webiny.I18n('Dashboard')} route="Dashboard" icon="fa-home" role={role}/>
         );
 
         this.registerRoutes(

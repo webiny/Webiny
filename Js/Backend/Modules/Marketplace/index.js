@@ -13,7 +13,7 @@ class Project extends Webiny.App.Module {
         this.name = 'Marketplace';
 
         this.registerMenus(
-            <Webiny.Ui.Menu label={this.i18n('Marketplace')} icon="icon-basket_n" route="Marketplace.Browse"/>
+            <Webiny.Ui.Menu label={Webiny.I18n('Marketplace')} icon="icon-basket_n" route="Marketplace.Browse"/>
         );
 
         this.registerRoutes(

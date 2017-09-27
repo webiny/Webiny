@@ -11,13 +11,13 @@ class Module extends Webiny.App.Module {
         const Menu = Webiny.Ui.Menu;
 
         this.registerMenus(
-            <Menu label={this.i18n('I18N')} icon="icon-earth" role="webiny-i18n-manager">
-                <Menu label={this.i18n('Texts')} order={100}>
-                    <Menu label={this.i18n('Translations')} route="I18N.Translations.List" order={100}/>
-                    <Menu label={this.i18n('Texts')} route="I18N.Texts.List" order={101}/>
-                    <Menu label={this.i18n('Text Groups')} route="I18N.TextGroups.List" order={102}/>
+            <Menu label={Webiny.I18n('I18N')} icon="icon-earth" role="webiny-i18n-manager">
+                <Menu label={Webiny.I18n('Texts')} order={100}>
+                    <Menu label={Webiny.I18n('Translations')} route="I18N.Translations.List" order={100}/>
+                    <Menu label={Webiny.I18n('Texts')} route="I18N.Texts.List" order={101}/>
+                    <Menu label={Webiny.I18n('Text Groups')} route="I18N.TextGroups.List" order={102}/>
                 </Menu>
-                <Menu label={this.i18n('Locales')} route="I18N.Locales.List" order={101}/>
+                <Menu label={Webiny.I18n('Locales')} route="I18N.Locales.List" order={101}/>
             </Menu>
         );
 

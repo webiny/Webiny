@@ -9,7 +9,7 @@ const Logout = (props) => {
         <div className="drop-footer">
             <a href="javascript:void(0);" className="logout" onClick={props.logout}>
                 <span className="icon-sign-out icon-bell icon"/>
-                <span>{this.i18n('Log out')}</span>
+                <span>{Webiny.I18n('Log out')}</span>
             </a>
         </div>
     );

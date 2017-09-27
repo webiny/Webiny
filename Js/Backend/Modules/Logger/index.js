@@ -13,8 +13,8 @@ class Logger extends Webiny.App.Module {
         const role = 'webiny-logger-manager';
 
         this.registerMenus(
-            <Menu label={this.i18n('System')} icon="icon-tools">
-                <Menu label={this.i18n('Error Logger')} route="Logger.ListErrors" role={role}/>
+            <Menu label={Webiny.I18n('System')} icon="icon-tools">
+                <Menu label={Webiny.I18n('Error Logger')} route="Logger.ListErrors" role={role}/>
             </Menu>
         );
 
