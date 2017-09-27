@@ -182,7 +182,8 @@ class Setup extends Plugin {
                     config = yaml.safeLoad(Webiny.readFile(configs.dockerCompose));
                     config.services.nginx.ports.push(nginxPort + ':80');
 
-                    const alias = answers.domain.replace('http://', '').replace('https://', '').split(':')[0];
+                    let alias = answers.domain;
+                    alias = alias.replace('http://', '').replace('https://', '').split(':')[0];
                     config.services.nginx.networks.default.aliases.push(alias);
 
                     config.services.php.extra_hosts.push('dockerhost:' + answers.hostIp);
