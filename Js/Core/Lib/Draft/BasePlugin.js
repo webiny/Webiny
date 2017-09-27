@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import Webiny from 'webiny';
 import Immutable from 'immutable';
 
 function filterKey(contentState, entityKey) {
@@ -71,7 +70,7 @@ class BasePlugin {
                     type,
                     text,
                     data,
-                    characterList // eslint-disable-line new-cap
+                    characterList
                 })
             );
         }
@@ -82,7 +81,7 @@ class BasePlugin {
                 key: Draft.genKey(),
                 type: 'unstyled',
                 text: '',
-                characterList: Immutable.List() // eslint-disable-line new-cap
+                characterList: Immutable.List()
             })
         );
 
