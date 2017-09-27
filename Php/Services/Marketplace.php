@@ -193,7 +193,7 @@ class Marketplace extends AbstractService
      */
     private function getEndpoint($path)
     {
-        $api = $this->wApps('Webiny')->getConfig()->get('Marketplace.Api', false);
+        $api = $this->wConfig()->get('Webiny.Marketplace.Api', false);
         if (!$api) {
             throw new AppException('Marketplace.Api is not configured.');
         }

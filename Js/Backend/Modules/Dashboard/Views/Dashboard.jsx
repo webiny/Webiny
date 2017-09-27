@@ -52,7 +52,7 @@ Dashboard.defaultProps = {
                             <h3 className="user-welcome__message">Hi {this.getUserName()}</h3>
                         </div>
                     </View.Header.Center>
-                    <Button onClick={() => Webiny.Router.goToRoute('Users.Account')}>Manage Account</Button>
+                    <Button onClick={() => Webiny.Router.goToRoute('Me.Account')}>Manage Account</Button>
                 </View.Header>
 
                 <View.Body>

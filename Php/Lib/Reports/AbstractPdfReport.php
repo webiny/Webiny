@@ -90,7 +90,7 @@ abstract class AbstractPdfReport extends AbstractReport
     private function getPdfBinary()
     {
         // Get binary
-        $binary = $this->wConfig()->get('Reports.Wkhtmltopdf');
+        $binary = $this->wConfig()->get('Webiny.Reports.Wkhtmltopdf');
         if (!$binary || $binary === 'autodetect') {
             $result = [];
             exec('whereis -b wkhtmltopdf', $result);

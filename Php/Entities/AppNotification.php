@@ -10,6 +10,8 @@ use Webiny\Component\Mongo\Index\SingleIndex;
  * Class AppNotification
  *
  * @property string $type
+ * @property bool   $read
+ * @property string $readOn
  * @property User   $user
  * @property array  $data
  * @property string $template
@@ -31,7 +33,14 @@ class AppNotification extends AbstractEntity
         $this->attr('template')->char();
         $this->attr('subject')->char();
         $this->attr('text')->char();
-        $this->attr('read')->boolean()->setDefaultValue(false);
+        $this->attr('read')->boolean()->setDefaultValue(false)->onSet(function ($value) {
+            if ($value) {
+                $this->readOn = $this->datetime();
+            }
+
+            return $value;
+        });
+        $this->attr('readOn')->datetime();
     }
 
     protected static function entityIndexes(IndexContainer $indexes)
@@ -39,5 +48,7 @@ class AppNotification extends AbstractEntity
         parent::entityIndexes($indexes);
 
         $indexes->add(new SingleIndex('type', 'type'));
+        // Delete notification 30 days after it has been read
+        $indexes->add(new SingleIndex('readOn', 'readOn', false, false, false, 2592000));
     }
 }
