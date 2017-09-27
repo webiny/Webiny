@@ -118,7 +118,7 @@ UserAccount.defaultProps = {
                     }
 
                     form.setModel({password: null, confirmPassword: null});
-                    Webiny.Growl.success('Account settings were saved!');
+                    Webiny.Growl.success(this.i18n('Account settings were saved!'));
                     Webiny.Auth.refresh();
                 });
             }

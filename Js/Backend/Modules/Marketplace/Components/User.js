@@ -2,6 +2,9 @@ import React from 'react';
 import Webiny from 'webiny';
 import _ from 'lodash';
 
+/**
+ * @i18n.namespace Webiny.Backend.Marketplace.User
+ */
 const User = (props) => {
     if (!props.user) {
         return null;

@@ -2,6 +2,9 @@ import React from 'react';
 import Webiny from 'webiny';
 import styles from './../Views/styles.css';
 
+/**
+ * @i18n.namespace Webiny.Backend.Marketplace.SubmitAppBox
+ */
 class SubmitAppBox extends Webiny.Ui.View {
 }
 
