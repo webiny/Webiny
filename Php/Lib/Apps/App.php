@@ -32,11 +32,11 @@ class App extends AbstractApp
 
     public function release()
     {
-        $this->createUserPermissions();
-        $this->createUserRoles();
-        $this->createUserRoleGroups();
+        //$this->createUserPermissions();
+        //$this->createUserRoles();
+        //$this->createUserRoleGroups();
         $this->installJsDependencies();
-        $this->updateIndexes();
+        //$this->updateIndexes();
     }
 
     public function getUserRoles()

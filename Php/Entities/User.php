@@ -216,7 +216,7 @@ class User extends AbstractEntity implements UserInterface
                 throw new AppException('Unable to process login request. Data is not correctly formatted.');
             }
 
-        });
+        })->setPublic();
 
         /**
          * @api.name        My profile
@@ -284,7 +284,7 @@ class User extends AbstractEntity implements UserInterface
             }
 
             throw new AppException('Failed to send password recovery code!');
-        })->setBodyValidators(['email' => 'email']);
+        })->setBodyValidators(['email' => 'email'])->setPublic();
 
         /**
          * @api.name        Set new password
@@ -307,7 +307,7 @@ class User extends AbstractEntity implements UserInterface
             $user->save();
 
             return true;
-        })->setBodyValidators(['code' => 'required', 'password' => 'required']);
+        })->setBodyValidators(['code' => 'required', 'password' => 'required'])->setPublic();
 
         /**
          * @api.name        Get the user 2 factor auth QR code
