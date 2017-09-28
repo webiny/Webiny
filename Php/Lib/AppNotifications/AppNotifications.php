@@ -20,7 +20,7 @@ class AppNotifications
     public function publish(AbstractAppNotification $notification)
     {
         $data = [
-            'type'     => $notification::SLUG,
+            'type'     => $notification::getTypeSlug(),
             'data'     => $notification->getData(),
             'template' => $notification->getTemplate(),
             'subject'  => $notification->getSubject(),
@@ -35,7 +35,7 @@ class AppNotifications
         } else {
             // Find user IDs that should receive this notification
             $users = User::find(['meta.appNotifications' => $data['type']])->filter(function (User $user) use ($notification) {
-                return $user->hasRole($notification::ROLES);
+                return $user->hasRole($notification::getTypeRoles());
             });
         }
 
@@ -56,16 +56,9 @@ class AppNotifications
     public function getTypes()
     {
         $classes = [];
-        $const = ['TITLE', 'DESCRIPTION', 'SLUG', 'ROLES'];
         /* @var $app App */
         foreach ($this->wApps() as $app) {
             foreach ($app->getAppNotificationTypes() as $class) {
-                // Validate class constants
-                foreach ($const as $c) {
-                    if (!@constant($class . '::' . $c)) {
-                        throw new AppException($class . ' must define a ' . $c . ' constant', 'WBY-INVALID-APP-NOTIFICATION-CLASS');
-                    }
-                }
                 $classes[] = $class;
             }
         }
@@ -84,7 +77,7 @@ class AppNotifications
     {
         foreach ($this->wApps() as $app) {
             foreach ($app->getAppNotificationTypes() as $class) {
-                if ($class::SLUG === $type) {
+                if ($class::getTypeSlug() === $type) {
                     return $class;
                 }
             }

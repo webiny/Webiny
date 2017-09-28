@@ -4,14 +4,25 @@ namespace Apps\Webiny\Php\Entities;
 
 /**
  * Class Settings
- *
- * This class serves for demo purposes in Docs sandboxes
  */
 class Settings extends AbstractSettings
 {
     protected static $classId = 'Webiny.Entities.Settings';
     protected static $isDiscoverable = false;
     protected static $key = 'webiny';
+
+    public function getUpdateInProgress()
+    {
+        return $this->settings->key('updateInProgress');
+    }
+
+
+    public function setUpdateInProgress($flag)
+    {
+        $this->settings->key('updateInProgress', $flag);
+
+        return $this;
+    }
 
     /**
      * Get timestamp of last marketplace app versions check
@@ -20,7 +31,7 @@ class Settings extends AbstractSettings
      */
     public function getLastVersionCheck()
     {
-        return $this->settings->keyNested('marketplace.lastVersionCheck');
+        return $this->settings->keyNested('marketplace.lastVersionCheck', 0, true);
     }
 
     /**
@@ -30,7 +41,7 @@ class Settings extends AbstractSettings
      *
      * @return $this
      */
-    public function setLastVersionCheck($timestamp)
+    public function setLastVersionsCheck($timestamp)
     {
         $this->settings->keyNested('marketplace.lastVersionCheck', $timestamp);
 
@@ -44,7 +55,7 @@ class Settings extends AbstractSettings
      */
     public function getLastNotificationsCheck()
     {
-        return $this->settings->keyNested('marketplace.lastVersionCheck');
+        return $this->settings->keyNested('webiny.lastNotificationsCheck', 0, true);
     }
 
     /**
@@ -57,6 +68,30 @@ class Settings extends AbstractSettings
     public function setLastNotificationsCheck($timestamp)
     {
         $this->settings->keyNested('webiny.lastNotificationsCheck', $timestamp);
+
+        return $this;
+    }
+
+    /**
+     * Get last checked app versions
+     *
+     * @return array
+     */
+    public function getNotifiedVersions()
+    {
+        return $this->settings->keyNested('marketplace.notifiedVersions', [], true);
+    }
+
+    /**
+     * Set last checked app versions
+     *
+     * @param array $versions
+     *
+     * @return $this
+     */
+    public function setNotifiedVersions($versions)
+    {
+        $this->settings->keyNested('marketplace.notifiedVersions', $versions);
 
         return $this;
     }

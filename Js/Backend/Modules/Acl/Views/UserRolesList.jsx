@@ -103,7 +103,7 @@ UserRolesList.defaultProps = {
                             data={data}
                             map="permissions"
                             api="/entities/webiny/user-roles"
-                            fields="name,slug,description,permissions.slug"
+                            fields="name,slug,description,isAdminRole,permissions.slug"
                             label={this.i18n('Role')}/>
                     )}
                 </Ui.ViewSwitcher.View>

@@ -3,14 +3,16 @@
 namespace Apps\Webiny\Php\Lib\AppNotifications;
 
 use Apps\Webiny\Php\Entities\User;
+use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\StdLib\StdLibTrait;
+use Webiny\Component\StdLib\StdObject\DateTimeObject\DateTimeObject;
 
 /**
  * Class used to create app notification classes
  */
 abstract class AbstractAppNotification
 {
-    use StdLibTrait;
+    use WebinyTrait, StdLibTrait;
 
     /**
      * @var User
@@ -21,6 +23,14 @@ abstract class AbstractAppNotification
      * @var array
      */
     protected $data = [];
+
+    abstract public static function getTypeName();
+
+    abstract public static function getTypeDescription();
+
+    abstract public static function getTypeSlug();
+
+    abstract public static function getTypeRoles();
 
     abstract public function getSubject();
 
@@ -67,5 +77,13 @@ abstract class AbstractAppNotification
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @return DateTimeObject
+     */
+    public function getCreatedOn()
+    {
+        return $this->datetime();
     }
 }

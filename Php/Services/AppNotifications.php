@@ -3,14 +3,11 @@
 namespace Apps\Webiny\Php\Services;
 
 use Apps\Webiny\Php\Entities\AppNotification;
-use Apps\Webiny\Php\Entities\Settings;
 use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\AppNotifications\AbstractAppNotification;
-use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\Response\ListResponse;
 use Apps\Webiny\Php\Lib\Services\AbstractService;
-use Apps\Webiny\Php\Lib\WebinyNotification;
-use Webiny\Component\Entity\EntityCollection;
+use Apps\Webiny\Php\Services\Lib\RemoteNotifications;
 
 /**
  * Class AppNotifications
@@ -47,13 +44,14 @@ class AppNotifications extends AbstractService
             }
 
             // Get remote notifications
-            $this->getRemoteNotifications();
+            $remote = new RemoteNotifications();
+            $remote->fetch();
 
             // Filter types to only the ones user is subscribed to and is allowed to see
             $types = $this->arr($this->wAppNotifications()->getTypes())->filter(function ($type) use ($user) {
-                return in_array($type::SLUG, $user->meta['appNotifications']) && $user->hasRole($type::ROLES);
+                return in_array($type::getTypeSlug(), $user->meta['appNotifications']) && $user->hasRole($type::getTypeRoles());
             })->map(function ($type) {
-                return $type::SLUG;
+                return $type::getTypeSlug();
             })->values()->val();
 
             $query = ['type' => $types];
@@ -80,11 +78,11 @@ class AppNotifications extends AbstractService
 
             /* @var $class AbstractAppNotification */
             foreach ($this->wAppNotifications()->getTypes() as $class) {
-                if ($user->hasRole($class::ROLES)) {
+                if ($user->hasRole($class::getTypeRoles())) {
                     $types[] = [
-                        'title'       => $class::TITLE,
-                        'description' => $class::DESCRIPTION,
-                        'type'        => $class::SLUG
+                        'title'       => $class::getTypeName(),
+                        'description' => $class::getTypeDescription(),
+                        'type'        => $class::getTypeSlug()
                     ];
                 }
             }
@@ -117,32 +115,5 @@ class AppNotifications extends AbstractService
 
             return true;
         });
-    }
-
-    private function getRemoteNotifications()
-    {
-        $settings = Settings::load(true);
-        // Get Webiny notifications if necessary
-        $lastNotificationsCheck = $settings->getLastNotificationsCheck();
-        $interval = $this->wConfig()->get('Webiny.Notifications.Intervals.WebinyNotifications', 60) * 60;
-        if (!$lastNotificationsCheck || ($lastNotificationsCheck + $interval) < time()) {
-            $notificationsApi = $this->wConfig()->get('Webiny.Notifications.Api');
-            if (!$notificationsApi) {
-                throw new AppException('Webiny.Notifications.Api config is not present!');
-            }
-
-            $curl = new \Curl\Curl();
-            $curl->get($notificationsApi . '/entities/the-hub/notifications/latest/' . $lastNotificationsCheck);
-            if (!$curl->error) {
-                $data = json_decode($curl->rawResponse, true);
-                if (is_array($data) && $data['list']) {
-                    foreach($data['list'] as $notification) {
-                        $wn = new WebinyNotification();
-                    }
-                }
-            }
-        }
-
-        // Get latest app versions if necessary
     }
 }

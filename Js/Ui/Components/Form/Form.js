@@ -726,11 +726,11 @@ Form.defaultProps = {
     onProgress({event}) {
         Webiny.import(['Growl', 'Progress']).then(({Growl, Progress}) => {
             const cmp = <div>Your data is being uploaded...<Progress value={event.progress}/></div>;
-            Webiny.Growl(<Growl.Info id={this.growlId} title={this.i18n('Please be patient')} sticky={true}>{cmp}</Growl.Info>);
+            Webiny.Growl(<Growl.Info id={this.growlId} title={Webiny.i18n('Please be patient')} sticky={true}>{cmp}</Growl.Info>);
         });
     },
-    onSuccessMessage: () => {
-        return this.i18n('Your record was saved successfully!');
+    onSuccessMessage() {
+        return Webiny.i18n('Your record was saved successfully!');
     },
     renderer() {
         return (

@@ -6,6 +6,8 @@ use Apps\Webiny\Php\Entities\ApiLog;
 use Apps\Webiny\Php\Entities\SystemApiTokenUser;
 use Apps\Webiny\Php\Lib\Entity\Validators\Unique;
 use Apps\Webiny\Php\Lib\Exceptions\AppException;
+use Apps\Webiny\Php\Lib\Notifications\MarketplaceNotification;
+use Apps\Webiny\Php\Lib\Notifications\WebinyNotification;
 use Apps\Webiny\Php\Lib\Validators\Password;
 use Apps\Webiny\Php\Entities\User;
 use MongoDB\Driver\Exception\RuntimeException;
@@ -69,5 +71,13 @@ class App extends \Apps\Webiny\Php\Lib\Apps\App
                 'max'             => 2000
             ]);
         }
+    }
+
+    public function getAppNotificationTypes()
+    {
+        return [
+            WebinyNotification::class,
+            MarketplaceNotification::class
+        ];
     }
 }

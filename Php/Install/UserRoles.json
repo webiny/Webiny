@@ -3,13 +3,25 @@
         "name": "Administrator",
         "slug": "administrator",
         "description": "This is the main administrative role which serves for identifying a user as an administrator. It carries no permissions.",
-        "permissions": ["webiny-marketplace"]
+        "permissions": []
     },
     {
         "name": "Public",
         "slug": "public",
         "description": "This role is assumed for all public (anonymous) requests. Whatever is allowed here is becoming publicly accessible so be careful with it!",
         "permissions": ["webiny-acl-user-profile", "webiny-logger-log-errors", "webiny-access-apps", "public"]
+    },
+    {
+        "name": "Webiny Administrator",
+        "slug": "webiny-administrator",
+        "description": "This role tells the system that its owner manages Webiny installation. It carries no permissions.",
+        "permissions": []
+    },
+    {
+        "name": "Webiny Marketplace",
+        "slug": "webiny-marketplace",
+        "description": "This role tells the system that its owner is allowed to use Webiny Marketplace.",
+        "permissions": ["webiny-marketplace"]
     },
     {
         "name": "User Manager",
