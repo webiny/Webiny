@@ -38,6 +38,7 @@ class User extends AbstractEntity implements UserInterface
     use CryptTrait, MailerTrait;
 
     protected static $classId = 'Webiny.Entities.User';
+    protected static $i18nNamespace = 'Webiny.Entities.User';
     protected static $collection = 'Users';
     protected static $mask = '{email}';
 
@@ -191,20 +192,20 @@ class User extends AbstractEntity implements UserInterface
                 // load user via username
                 $user = self::findOne(['email' => $data['username']]);
                 if (!$user) {
-                    throw new AppException('Verification code is incorrect.');
+                    throw new AppException($this->wI18n('Verification code is incorrect.'));
                 }
 
                 // get auth token for the given verification token
                 $tfa = new TwoFactorAuth($user);
                 $authToken = $tfa->getAuthToken($data['verificationToken']);
                 if (!$authToken) {
-                    throw new AppException('Verification code is incorrect.');
+                    throw new AppException($this->wI18n('Verification code is incorrect.'));
                 }
 
                 // validate the 2 factor auth code
                 $result = $tfa->verifyCode($data['twoFactorAuthCode']);
                 if (!$result) {
-                    throw new AppException('Verification code is incorrect.');
+                    throw new AppException($this->wI18n('Verification code is incorrect.'));
                 }
 
                 // if everything is valid, we return the auth token and the user data
@@ -213,7 +214,7 @@ class User extends AbstractEntity implements UserInterface
                     'user'      => $user->toArray($this->wRequest()->getFields('*,!password'))
                 ];
             } else {
-                throw new AppException('Unable to process login request. Data is not correctly formatted.');
+                throw new AppException($this->wI18n('Unable to process login request. Data is not correctly formatted.'));
             }
 
         })->setPublic();

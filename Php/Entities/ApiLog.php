@@ -23,6 +23,7 @@ use Webiny\Component\Mongo\Index\SingleIndex;
 class ApiLog extends AbstractEntity
 {
     protected static $classId = 'Webiny.Entities.ApiLog';
+    protected static $i18nNamespace = 'Webiny.Entities.ApiLog';
     protected static $collection = 'ApiLogs';
 
     public function __construct()

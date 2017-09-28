@@ -56,7 +56,7 @@ class I18NLocale extends AbstractEntity
 
         $this->attr('key')->char()->setValidators(function ($value) {
             if (!I18NLocales::isValidLocale($value)) {
-                throw new ValidationException('You must select a valid locale.');
+                throw new ValidationException($this->wI18n('You must select a valid locale.'));
             }
         })->setToArrayDefault();
 

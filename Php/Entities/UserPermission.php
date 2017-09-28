@@ -22,6 +22,7 @@ use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
 class UserPermission extends AbstractEntity
 {
     protected static $classId = 'Webiny.Entities.UserPermission';
+    protected static $i18nNamespace = 'Webiny.Entities.UserPermission';
     protected static $collection = 'UserPermissions';
     protected static $mask = '{name}';
 

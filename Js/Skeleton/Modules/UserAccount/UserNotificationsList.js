@@ -1,6 +1,9 @@
 import React from 'react';
 import Webiny from 'webiny';
 
+/**
+ * @i18n.namespace Webiny.Skeleton.UserAccount
+ */
 class Notifications extends Webiny.Ui.View {
 
 }
@@ -23,7 +26,7 @@ Notifications.defaultProps = {
                     <List {...listProps}>
                         <Table>
                             <Table.Row>
-                                <Table.Field label="Notification">
+                                <Table.Field label={this.i18n('Notification')}>
                                     {({data}) => (
                                         <Container notification={data} onMarkedRead={() => this.list.loadData()}/>
                                     )}

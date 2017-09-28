@@ -47,7 +47,7 @@ Alert.defaultProps = {
             icon = <Icon icon={iconClasses[type]}/>;
         }
 
-        const title = props.title ? <strong>{_.trimEnd(props.title, ':')}:</strong> : null;
+        const title = props.title ? <strong>{props.title}:</strong> : null;
 
         return (
             <AlertContainer onClose={onClose}>

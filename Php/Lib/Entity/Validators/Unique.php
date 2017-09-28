@@ -7,12 +7,16 @@
 
 namespace Apps\Webiny\Php\Lib\Entity\Validators;
 
+use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\Entity\Attribute\AbstractAttribute;
 use Webiny\Component\Entity\Attribute\Validation\ValidationException;
 use Webiny\Component\Entity\Attribute\Validation\ValidatorInterface;
 
 class Unique implements ValidatorInterface
 {
+    use WebinyTrait;
+
+    protected static $i18nNamespace = 'Webiny.Lib.Entity.Validators.Unique';
     /**
      * @inheritDoc
      */
@@ -45,7 +49,7 @@ class Unique implements ValidatorInterface
 
         $exists = call_user_func_array([$attribute->getParent(), 'findOne'], [$query]);
         if ($exists) {
-            throw new ValidationException('A record with this attribute value already exists.');
+            throw new ValidationException($this->wI18n('A record with this attribute value already exists.'));
         }
     }
 }

@@ -20,6 +20,7 @@ use Webiny\Component\Mongo\Index\CompoundIndex;
 class UserRoleGroup extends AbstractEntity
 {
     protected static $classId = 'Webiny.Entities.UserRoleGroup';
+    protected static $i18nNamespace = 'Webiny.Entities.UserRoleGroup';
     protected static $collection = 'UserRoleGroups';
     protected static $mask = '{name}';
 

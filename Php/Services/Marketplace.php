@@ -86,7 +86,7 @@ class Marketplace extends AbstractService
             $app = $this->arr(json_decode($response, true));
 
             if (!$app->keyExistsNested('data.entity.id')) {
-                throw new AppException('Requested app was not found');
+                throw new AppException($this->wI18n('Requested app was not found'));
             }
 
 
@@ -195,7 +195,7 @@ class Marketplace extends AbstractService
     {
         $api = $this->wConfig()->get('Webiny.Marketplace.Api', false);
         if (!$api) {
-            throw new AppException('Marketplace.Api is not configured.');
+            throw new AppException($this->wI18n('Marketplace.Api is not configured.'));
         }
 
         if (strpos($path, '?') === false && $this->wRequest()->server()->queryString() != '') {

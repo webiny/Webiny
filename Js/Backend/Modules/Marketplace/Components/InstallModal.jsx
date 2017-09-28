@@ -84,9 +84,9 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                     Webiny.Router.start();
                     setTimeout(() => {
                         const message = (
-                            <span><strong>{this.props.app.name}</strong> was installed successfully!</span>
+                            <span>{this.i18n('{app} was installed successfully!', {app: <strong>{this.props.app.name}</strong>})}</span>
                         );
-                        this.hide().then(() => Webiny.Growl.success(message, 'Installation finished!', false, 4000));
+                        this.hide().then(() => Webiny.Growl.success(message, this.i18n('Installation finished!'), false, 4000));
                     }, 2000);
                 });
             }
@@ -125,7 +125,7 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                     <Modal.Body>
                         <Logic.Hide if={this.state.started}>
                             <Alert type="warning" title={this.i18n('Notice')}>
-                                Make sure your watch process is running before installing the app.
+                                {this.i18n('Make sure your watch process is running before installing the app.')}
                             </Alert>
                             <div className="text-center">
                                 <Button type="primary" label={this.i18n('Begin Installation')} onClick={this.startInstallation}/>
@@ -134,7 +134,7 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                         <Logic.Hide if={!this.state.started}>
                             <Logic.Show if={this.state.finished}>
                                 <Alert type="success" title={this.i18n('Done')}>
-                                    Your app is installed and ready to use!
+                                    {this.i18n('Your app is installed and ready to use!')}
                                 </Alert>
                             </Logic.Show>
                             <pre style={{height: 500, overflow: 'scroll', fontSize: 12}} ref={ref => this.logger = ref}>
