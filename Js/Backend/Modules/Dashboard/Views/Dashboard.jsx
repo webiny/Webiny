@@ -69,7 +69,7 @@ Dashboard.defaultProps = {
                                         <div className="block-list__item-image">
                                             <Icon icon="icon-keys" size="2x"/>
                                         </div>
-                                        <a href="https://www.webiny.com/docs/current/components/must-know"
+                                        <a href="https://www.webiny.com/docs/current/guides/components"
                                            className="block-list__item-text" target="_blank">
                                             <strong>{this.i18n('React Components')}</strong>
                                             {this.i18n(' - Learn what they do and how to implement them.')}
