@@ -50,12 +50,13 @@ class SmartyParser extends AbstractParser
                 $content = file_get_contents($file->getPathname());
                 $content = trim(preg_replace('/\s+/', ' ', $content));
 
-                $parsed = self::parseTexts($content, $file);
+                $parsed = self::parseTexts($content);
                 foreach ($parsed as $text) {
                     $texts[] = [
                         'app'  => $app->getName(),
                         'key'  => $text['namespace'] . '.' . md5($text['base']),
-                        'base' => $text['base']
+                        'base' => $text['base'],
+                        'meta' => ['scanned' => true]
                     ];
                 }
             }

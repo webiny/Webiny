@@ -50,6 +50,7 @@ class I18NText extends AbstractEntity
         $this->attr('base')->char()->setValidators('required')->setToArrayDefault();
         $this->attr('group')->many2one()->setEntity(I18NTextGroup::class);
         $this->attr('translations')->arr()->setToArrayDefault();
+        $this->attr('meta')->object()->setToArrayDefault();
     }
 
     protected function entityApi(ApiContainer $api)
@@ -107,7 +108,10 @@ class I18NText extends AbstractEntity
          * @api.name        Fetch translations
          * @api.description Fetches all translations for given locale.
          *
-         * @api.path.key   string  Locale for which the translations will be returned
+         * @api.path.key        string  Locale for which the translations will be returned
+         * @api.query.groups    array   List translations only from specific groups
+         * @api.query.apps      array   List translations only from specific apps
+         * @api.query.jsApps    array   List translations only from specific JS apps (for Web apps)
          */
         $api->get('translations/locales/{key}', function ($key) {
             $locale = I18NLocale::findByKey($key);
@@ -115,26 +119,74 @@ class I18NText extends AbstractEntity
                 throw new AppException($this->wI18n('Locale "{key}" not found.', ['key' => $key]));
             }
 
-            $translations = [];
+            $match = ['deletedOn' => null];
+
+            // Let's apply additional filters if specified.
+            // 1. Filter by I18NTextGroup.
+            $groups = $this->wRequest()->query('groups') ?? [];
+            if (is_array($groups) && !empty($groups)) {
+                $match['group'] = array_map(function ($item) {
+                    if ($this->wDatabase()->isId($item)) {
+                        return $item;
+                    }
+                    // Then it's a group slug, let's try to load entity by it and get the ID.
+                    $textGroup = I18NTextGroup::findBySlug($item);
+
+                    return $textGroup ? $textGroup->id : null;
+                }, $groups);
+
+                $match['group'] = ['$in' => array_filter($match['group'])];
+            }
+
+            // 2. Filter by Webiny Apps.
+            $apps = $this->wRequest()->query('apps') ?? [];
+            if (is_array($apps) && !empty($apps)) {
+                $match['app'] = ['$in' => $apps];
+            }
+
+            // 3. Filter by Webiny JS Apps (mainly for Web apps).
+            $jsApps = $this->wRequest()->query('jsApps') ?? [];
+            if (is_array($jsApps) && !empty($jsApps)) {
+                $match['meta.jsApp.fullName'] = ['$in' => $jsApps];
+            }
 
             $params = [
                 'I18NTexts',
                 [
-                    ['$match' => ['deletedOn' => null]],
-                    ['$project' => ['translations' => 1, 'key' => 1]],
+                    ['$match' => $match],
+                    ['$project' => ['translations' => 1, 'key' => 1, 'app' => 1]],
                     ['$unwind' => '$translations'],
                     ['$match' => ['translations.locale' => $locale->key, 'translations.text' => ['$ne' => ""]]]
                 ]
             ];
 
+            $appsTranslations = [];
             foreach ($this->wDatabase()->aggregate(...$params) as $translation) {
-                $translations[$translation['key']] = $translation['translations']['text'];
+                $appIndex = -1;
+
+                // We append translation to existing entry in $appsTranslations, that's why we need another foreach unfortunately.
+                foreach ($appsTranslations as $index => $appTranslations) {
+                    if ($appTranslations['app'] === $translation['app']) {
+                        $appIndex = $index;
+                        break;
+                    }
+                }
+
+                if ($appIndex === -1) {
+                    $appsTranslations[] = [
+                        'app' => $translation['app'],
+                        'translations' => []
+                    ];
+                    $appIndex = count($appsTranslations) - 1;
+                }
+
+                $appsTranslations[$appIndex]['translations'][$translation['key']] = $translation['translations']['text'];
             };
 
             return [
                 'locale'       => $locale->key,
                 'cacheKey'     => $locale->cacheKey,
-                'translations' => $translations
+                'translations' => $appsTranslations
             ];
         })->setPublic();
 
@@ -289,6 +341,7 @@ class I18NText extends AbstractEntity
         $indexes->add(new SingleIndex('app', 'app'));
         $indexes->add(new SingleIndex('key', 'key'));
         $indexes->add(new SingleIndex('base', 'base'));
+        $indexes->add(new SingleIndex('jsAppFullName', 'meta.jsApp.fullName'));
     }
 
     /**

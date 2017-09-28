@@ -121,16 +121,19 @@ class I18n {
 
         const i18nCache = await Webiny.IndexedDB.get('Webiny.I18n');
 
-        let translations;
         // If we have the same cache key, that means we have latest translations - we can safely read from local storage.
         if (i18nCache && i18nCache.cacheKey === this.getCacheKey() && i18nCache.locale === this.getLocale().key) {
             this.setTranslations(i18nCache.translations);
         } else {
             // If we have a different cache key (or no cache key at all), we must fetch latest translations from server.
             const api = new Webiny.Api.Endpoint('/entities/webiny/i18n-texts');
-            const response = await api.get('translations/locales/' + this.getLocale().key);
-            await Webiny.IndexedDB.set('Webiny.I18n', response.getData());
-            this.setTranslations(response.getData('translations'));
+            const response = await api.get('translations/locales/' + this.getLocale().key, {jsApps: _.keys(Webiny.Apps)});
+
+            let translations = {};
+            response.getData('translations').forEach(app => translations = _.assign(translations, app.translations));
+
+            await Webiny.IndexedDB.set('Webiny.I18n', translations);
+            this.setTranslations(translations);
         }
 
         // Finally, let's set i18n cookie, this constantly prolongs cookie expiration.

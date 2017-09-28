@@ -22,8 +22,8 @@ class JsParser extends AbstractParser
 
     const REGEX = [
         'namespace'       => '/@i18n.namespace ([' . self::NAMESPACE_ALLOWED_CHARS . ']*)?/',
-        'this.i18n'           => '/this\.i18n\([\'\`\"]/m',
-        'Webiny.I18n'           => '/Webiny\.I18n\([\'\`\"]/m',
+        'this.i18n'       => '/this\.i18n\([\'\`\"]/m',
+        'Webiny.I18n'     => '/Webiny\.I18n\([\'\`\"]/m',
         'customNamespace' => '/\.i18n\([\'|"|`]{1}.*?[\'|"|`]{1},.*?, ?\{.*?[\'|"|`]?namespace[\'|"|`]? ?: ?[\'|"|`]{1}([' . self::NAMESPACE_ALLOWED_CHARS . ']*?)[\'|"|`]{1}.*?\}\)/',
     ];
 
@@ -60,20 +60,23 @@ class JsParser extends AbstractParser
                     $parsed = self::parseTexts($content, $file);
                     foreach ($parsed as $text) {
                         $texts[] = [
-                            'app' => $app->getName(),
-                            'key' => $text['namespace'] . '.' . md5($text['base']),
+                            'app'   => $app->getName(),
+                            'key'   => $text['namespace'] . '.' . md5($text['base']),
                             'group' => null,
-                            'base'  => $text['base']
+                            'base'  => $text['base'],
+                            'meta'  => ['jsApp' => ['name' => $jsApp->getName(), 'fullName' => $jsApp->getFullName()], 'scanned' => true]
+
                         ];
                     }
 
                     $parsed = self::parseTexts($content, $file, 'Webiny.I18n');
                     foreach ($parsed as $text) {
                         $texts[] = [
-                            'app' => $app->getName(),
-                            'key' => $text['namespace'] . '.' . md5($text['base']),
+                            'app'   => $app->getName(),
+                            'key'   => $text['namespace'] . '.' . md5($text['base']),
                             'group' => null,
-                            'base'  => $text['base']
+                            'base'  => $text['base'],
+                            'meta'  => ['jsApp' => ['name' => $jsApp->getName(), 'fullName' => $jsApp->getFullName()], 'scanned' => true]
                         ];
                     }
                 }
@@ -85,6 +88,7 @@ class JsParser extends AbstractParser
 
     /**
      * Parses each JS i18n usage. We could not get it working with a regex, so we unfortunately had to manually go over the contents.
+     *
      * @param             $content
      * @param SplFileInfo $file
      * @param string      $type
