@@ -76,17 +76,22 @@
       left: 87%;
     }
     ul {
-      padding: 15px 25px 0 25px;
+      padding: 0;
       margin-bottom: 0;
       li {
         border-bottom: 1px solid #F0F0F0;
-        padding: 10px 0;
+        padding: 15px 25px 15px 25px;
         overflow: hidden;
         list-style: none;
+        cursor: pointer;
+        &:hover{
+          background-color: #F3F3F3;
+        }
       }
     }
     .drop-txt {
       float: left;
+      line-height: 120%;
     }
     ul li {
       a {
@@ -99,9 +104,13 @@
         }
       }
       span {
-        font-weight: 600;
-        font-size: 12px;
-        float: left;
+        font-size: 14px;
+        &.timestamp > span {
+          font-size: 80%;
+          color: #666;
+          font-weight: normal;
+          display: block;
+        }
       }
     }
   }
@@ -154,6 +163,7 @@
     }
     .drop-txt {
       float: left;
+      line-height: 120%;
     }
     ul li a {
       font-weight: 600;
@@ -171,9 +181,12 @@
         span.icon {
           font-size: 16px;
           float: left;
-          color: #ccc;
+          color: #FA541D;
           margin-right: 5px;
           margin-top: 3px;
+          &.read {
+            color: #ccc;
+          }
         }
         &:hover span.icon {
           color: #FA541D;
@@ -238,6 +251,49 @@
   .notification-holder {
     float: right;
     position: relative;
+  }
+}
+
+.notification-list {
+  .notification-block {
+    border-bottom: 1px solid #F0F0F0;
+    padding: 15px 25px 15px 25px;
+    overflow: hidden;
+    list-style: none;
+    cursor: pointer;
+    .drop-txt{
+      padding-left: 30px;
+      line-height: 120%;
+    }
+    a{
+      font-weight: 600;
+      color: #333;
+      font-size: 16px;
+      display: block;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    span {
+      color: #333;
+      font-size: 14px;
+      &.timestamp > span {
+        font-size: 80%;
+        color: #666;
+        font-weight: normal;
+        display: block;
+      }
+      &.icon {
+        font-size: 16px;
+        float: left;
+        color: #FA541D;
+        margin-right: 5px;
+        margin-top: 3px;
+        &.read {
+          color: #ccc;
+        }
+      }
+    }
   }
 }
 

@@ -15,18 +15,22 @@ class WebinyNotification extends Webiny.Ui.Component {
 }
 
 WebinyNotification.defaultProps = {
+    icon: 'icon-exclamation-circle',
     renderer() {
-        const {Filters, Label, notification} = this.props;
+        const {Filters, Label, notification, icon} = this.props;
         return (
-            <div onClick={this.onClick}>
+            <div onClick={this.onClick} className="notification-block">
+                <span className={icon + ' ' + 'icon' + (notification.read ? ' read' : '')}></span>
                 <span>
-                    {!notification.read && (
+                    {/*!notification.read && (
                         <Label type="success">New</Label>
-                    )}
-                    <strong>{notification.subject}</strong>
-                </span><br/>
-                <span>{notification.text}</span><br/>
-                <span><Filters.TimeAgo value={notification.createdOn}/></span>
+                    )*/}
+                </span>
+                <div className="drop-txt">
+                    <a href="#">{notification.subject}</a>
+                    <span className="content">{notification.text}</span>
+                    <span className="timestamp"><Filters.TimeAgo className="test" value={notification.createdOn}/></span>
+                </div>
                 <NotificationModal notification={notification} ref={ref => this.dialog = ref}/>
             </div>
         );
