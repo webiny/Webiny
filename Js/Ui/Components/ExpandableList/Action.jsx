@@ -12,7 +12,7 @@ Action.defaultProps = {
     download: null,
     renderer() {
         if (_.isFunction(this.props.children)) {
-            return this.props.children.call(this, this.props.data, this);
+            return this.props.children.call(this, {data: this.props.data, $this: this});
         }
 
         const {Link, Icon, DownloadLink} = this.props;
@@ -28,7 +28,7 @@ Action.defaultProps = {
         return (
             <Link
                 data={this.props.data}
-                onClick={() => this.props.onClick.call(this, this.props.data, this)}>
+                onClick={() => this.props.onClick.call(this, {data: this.props.data, $this: this})}>
                 {icon} {this.props.label}
             </Link>
         );

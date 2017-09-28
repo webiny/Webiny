@@ -14,7 +14,7 @@ Field.defaultProps = {
         const className = this.classSet(this.props.className, 'expandable-list__row__fields__field flex-cell flex-width-' + this.props.width);
         let content = this.props.children;
         if (_.isFunction(content)) {
-            content = content.call(this, this.props.data, this);
+            content = content.call(this, {data: this.props.data, $this: this});
         }
         return (
             <div className={className} onClick={this.props.onClick}>{content}</div>

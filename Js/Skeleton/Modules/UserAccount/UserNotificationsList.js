@@ -21,18 +21,20 @@ Notifications.defaultProps = {
                 <View.Header title="My Notifications"/>
                 <View.Body>
                     <div className="notification-list">
-                            <Data {...listProps}>
-                                {({data, load, loader}) => {
-                                    return (
-                                        <div>
-                                            {data.list.map(r => (
-                                                <Container key={r.id} notification={r}/>
-                                            ))}
-                                        </div>
-                                    );
-                                }}
-                            </Data>
-                        </div>
+                        <Data {...listProps} waitForData={false}>
+                            {({data, loader}) => {
+                                if (loader) {
+                                    return React.cloneElement(loader, {}, 'Fetching notifications...');
+                                }
+
+                                return (
+                                    <div>
+                                        {data.list.map(r => <Container key={r.id} notification={r}/>)}
+                                    </div>
+                                );
+                            }}
+                        </Data>
+                    </div>
                 </View.Body>
             </View.List>
         );
