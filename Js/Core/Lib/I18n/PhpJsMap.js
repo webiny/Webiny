@@ -28,7 +28,7 @@ export default {
     n: ['M', 'Numeric representation of a month, without leading zeros', '1 through 12'],
     t: [undefined, 'Number of days in the given month	', '28 through 31'],
 // Year	---	---
-    L: [undefined, 'Whether it\'s a leap year	', '1 if it is a leap year, 0 otherwise.'],
+    L: [undefined, 'Whether it\'s a leap year', '1 if it is a leap year, 0 otherwise.'],
     o: [undefined, 'ISO-8601 week-numbering year. This has the same value as Y, except that if the ISO week number (W) belongs to the previous or next year, that year is used instead. (added in PHP 5.1.0)', 'Examples: 1999 or 2003'],
     Y: ['YYYY', 'A full numeric representation of a year, 4 digits', 'Examples: 1999 or 2003'],
     y: ['YY', 'A two digit representation of a ', 'Examples: 99 or 03'],
@@ -40,8 +40,8 @@ export default {
     G: ['H', '24-hour format of an hour without leading zeros', '0 through 23'],
     h: ['hh', '12-hour format of an hour with leading zeros', '01 through 12'],
     H: ['HH', '24-hour format of an hour with leading zeros', '00 through 23'],
-    i: ['m', 'Minutes with leading zeros', '00 to 59'],
-    s: ['mm', 'Seconds, with leading zeros', '00 through 59'],
+    i: ['mm', 'Minutes with leading zeros', '00 to 59'],
+    s: ['ss', 'Seconds, with leading zeros', '00 through 59'],
     u: [undefined, 'Microseconds (added in PHP 5.2.2). Note that date() will always generate 000000 since it takes an integer parameter, whereas DateTime::format() does support microseconds if DateTime was created with microseconds.', 'Example: 654321'],
     v: [undefined, 'Milliseconds (added in PHP 7.0.0). Same note applies as for u.', 'Example: 654'],
 // Timezone	---	---

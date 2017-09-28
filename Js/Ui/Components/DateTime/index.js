@@ -10,7 +10,7 @@ class DateTime extends Webiny.Ui.FormComponent {
         super(props);
         this.valueChanged = false;
 
-        this.bindMethods('setup');
+        this.bindMethods('setup,onChange');
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -39,8 +39,11 @@ class DateTime extends Webiny.Ui.FormComponent {
         const dom = ReactDOM.findDOMNode(this);
         this.element = $(dom.querySelector('input'));
 
+        let format = this.props.inputFormat || Webiny.I18n.getDatetimeFormat();
+        format = Webiny.I18n.convertPhpToJsDateTimeFormat(format);
+
         this.element.datetimepicker({
-            format: this.props.inputFormat,
+            format,
             stepping: this.props.stepping,
             keepOpen: false,
             debug: this.props.debug || false,
@@ -62,8 +65,7 @@ class DateTime extends Webiny.Ui.FormComponent {
 
     onChange(newValue) {
         if (newValue) {
-            const {moment} = this.props;
-            newValue = moment(newValue, this.props.inputFormat).format(this.props.modelFormat);
+            newValue = Webiny.I18n.datetime(newValue, this.props.modelFormat, this.props.inputFormat || Webiny.I18n.getDatetimeFormat());
         }
 
         if (newValue !== this.props.value) {
@@ -73,9 +75,7 @@ class DateTime extends Webiny.Ui.FormComponent {
 
     renderPreview() {
         if (!_.isEmpty(this.props.value)) {
-            const {moment} = this.props;
-            const value = moment(this.props.value, this.props.modelFormat);
-            return value.isValid() ? value.format(this.props.inputFormat) : '';
+            return Webiny.I18n.datetime(this.props.value, this.props.inputFormat, this.props.modelFormat);
         }
 
         return this.getPlaceholder();
@@ -84,8 +84,8 @@ class DateTime extends Webiny.Ui.FormComponent {
 
 DateTime.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     debug: false,
-    inputFormat: 'YYYY-MM-DD HH:mm:ss',
-    modelFormat: 'YYYY-MM-DDTHH:mm:ssZ',
+    inputFormat: null,
+    modelFormat: 'Y-m-d H:i:s',
     positionHorizontal: 'auto',
     positionVertical: 'bottom',
     viewMode: 'days',
@@ -105,5 +105,5 @@ DateTime.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
 });
 
 export default Webiny.createComponent(DateTime, {
-    modules: ['Icon', 'Input', 'Webiny/Vendors/DateTimePicker', {moment: 'Webiny/Vendors/Moment'}]
+    modules: ['Icon', 'Input', 'Webiny/Vendors/DateTimePicker']
 });

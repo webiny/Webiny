@@ -30,6 +30,7 @@ LocalesList.defaultProps = {
                                     </Ui.View.Header>
                                     <Ui.View.Body>
                                         <Ui.List
+                                            sort="-createdOn"
                                             connectToRouter
                                             api="/entities/webiny/i18n-locales"
                                             fields="id,enabled,default,label,key,createdOn"

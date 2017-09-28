@@ -9,7 +9,7 @@ class Date extends Webiny.Ui.FormComponent {
         super(props);
         this.valueChanged = false;
 
-        this.bindMethods('setup');
+        this.bindMethods('setup,onChange');
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -37,8 +37,12 @@ class Date extends Webiny.Ui.FormComponent {
     setup() {
         const dom = ReactDOM.findDOMNode(this);
         this.element = $(dom.querySelector('input'));
+
+        let format = this.props.inputFormat || Webiny.I18n.getDateFormat();
+        format = Webiny.I18n.convertPhpToJsDateTimeFormat(format);
+
         this.element.datetimepicker({
-            format: this.props.inputFormat,
+            format: format,
             stepping: this.props.stepping,
             keepOpen: false,
             debug: this.props.debug || false,
@@ -60,9 +64,8 @@ class Date extends Webiny.Ui.FormComponent {
 
     onChange(newValue) {
         if (newValue) {
-            const {moment} = this.props;
-            const format = this.props.withTimezone ? 'YYYY-MM-DDTHH:mm:ssZ' : this.props.modelFormat;
-            newValue = moment(newValue, this.props.inputFormat).format(format);
+            const modelFormat = this.props.withTimezone ? 'Y-m-dTH:i:sO' : this.props.modelFormat;
+            newValue = Webiny.I18n.datetime(newValue, modelFormat, this.props.inputFormat || Webiny.I18n.getDateFormat());
         }
 
         if (newValue !== this.props.value) {
@@ -72,9 +75,7 @@ class Date extends Webiny.Ui.FormComponent {
 
     renderPreview() {
         if (!_.isEmpty(this.props.value)) {
-            const {moment} = this.props;
-            const value = moment(this.props.value, this.props.modelFormat);
-            return value.isValid() ? value.format(this.props.inputFormat) : '';
+            return Webiny.I18n.date(this.props.value, this.props.inputFormat, this.props.modelFormat);
         }
 
         return this.getPlaceholder();
@@ -83,8 +84,9 @@ class Date extends Webiny.Ui.FormComponent {
 
 Date.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     debug: false,
-    inputFormat: 'YYYY-MM-DD',
-    modelFormat: 'YYYY-MM-DD',
+    inputFormat: null,
+    modelFormat: 'Y-m-d',
+    withTimezone: false,
     positionHorizontal: 'auto',
     positionVertical: 'bottom',
     viewMode: 'days',
@@ -104,5 +106,5 @@ Date.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
 });
 
 export default Webiny.createComponent(Date, {
-    modules: ['Icon', 'Input', 'Webiny/Vendors/DateTimePicker', {moment: 'Webiny/Vendors/Moment'}]
+    modules: ['Icon', 'Input', 'Webiny/Vendors/DateTimePicker']
 });

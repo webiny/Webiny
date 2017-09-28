@@ -10,23 +10,6 @@ import modifiers from './Modifiers';
 import PhpJsMap from './PhpJsMap';
 
 /**
- * Converts PHP formatting definition into JS (suitable for date/time plugin - fecha).
- * Check PhpJsMap.js for more information.
- * @param format
- * @returns {string}
- */
-const convertPhpJsFormat = function (format) {
-    let output = '';
-    for (let i = 0; i < format.length; i++) {
-        const current = format[i];
-        output += PhpJsMap[current] && PhpJsMap[current][0] ? PhpJsMap[current][0] : current;
-    }
-
-    return output;
-};
-
-
-/**
  * Main class used for all I18n needs.
  */
 class I18n {
@@ -207,20 +190,20 @@ class I18n {
      * @param outputFormat
      * @param inputFormat
      */
-    date(value, outputFormat, inputFormat = 'Y-m-dTH:i:sO') {
+    date(value, outputFormat = null, inputFormat = 'Y-m-dTH:i:sO') {
         if (!outputFormat) {
-            outputFormat = _.get(this.locales.current, 'formats.date', this.defaultFormats.date);
+            outputFormat = this.getDateFormat();
         }
 
         if (!_.isDate(value)) {
             try {
-                value = fecha.parse(value, convertPhpJsFormat(inputFormat));
+                value = fecha.parse(value, this.convertPhpToJsDateTimeFormat(inputFormat));
             } catch (e) {
                 value = fecha.parse(value, 'X');
             }
         }
 
-        return fecha.format(value, convertPhpJsFormat(outputFormat));
+        return fecha.format(value, this.convertPhpToJsDateTimeFormat(outputFormat));
     }
 
     /**
@@ -230,20 +213,20 @@ class I18n {
      * @param outputFormat
      * @param inputFormat
      */
-    time(value, outputFormat, inputFormat = 'Y-m-dTH:i:sO') {
+    time(value, outputFormat = null, inputFormat = 'Y-m-dTH:i:sO') {
         if (!outputFormat) {
-            outputFormat = _.get(this.locales.current, 'formats.time', this.defaultFormats.time);
+            outputFormat = this.getTimeFormat();
         }
 
         if (!_.isDate(value)) {
             try {
-                value = fecha.parse(value, convertPhpJsFormat(inputFormat));
+                value = fecha.parse(value, this.convertPhpToJsDateTimeFormat(inputFormat));
             } catch (e) {
                 value = fecha.parse(value, 'X');
             }
         }
 
-        return fecha.format(value, convertPhpJsFormat(outputFormat));
+        return fecha.format(value, this.convertPhpToJsDateTimeFormat(outputFormat));
     }
 
     /**
@@ -253,20 +236,20 @@ class I18n {
      * @param outputFormat
      * @param inputFormat
      */
-    datetime(value, outputFormat, inputFormat = 'Y-m-dTH:i:sO') {
+    datetime(value, outputFormat = null, inputFormat = 'Y-m-dTH:i:sO') {
         if (!outputFormat) {
-            outputFormat = _.get(this.locales.current, 'formats.datetime', this.defaultFormats.datetime);
+            outputFormat = this.getDatetimeFormat();
         }
 
         if (!_.isDate(value)) {
             try {
-                value = fecha.parse(value, convertPhpJsFormat(inputFormat));
+                value = fecha.parse(value, this.convertPhpToJsDateTimeFormat(inputFormat));
             } catch (e) {
                 value = fecha.parse(value, 'X');
             }
         }
 
-        return fecha.format(value, convertPhpJsFormat(outputFormat));
+        return fecha.format(value, this.convertPhpToJsDateTimeFormat(outputFormat));
     }
 
     /**
@@ -274,9 +257,9 @@ class I18n {
      * @param value
      * @param outputFormat
      */
-    price(value, outputFormat) {
+    price(value, outputFormat = null) {
         if (!outputFormat) {
-            outputFormat = _.assign({}, this.defaultFormats.price, _.get(this.locales.current, 'formats.price', {}))
+            outputFormat = this.getPriceFormat();
         } else {
             outputFormat = _.assign({}, this.defaultFormats.price, outputFormat);
         }
@@ -294,9 +277,9 @@ class I18n {
      * @param value
      * @param outputFormat
      */
-    number(value, outputFormat) {
+    number(value, outputFormat = null) {
         if (!outputFormat) {
-            outputFormat = _.assign({}, this.defaultFormats.number, _.get(this.locales.current, 'formats.number', {}))
+            outputFormat = this.getNumberFormat();
         } else {
             outputFormat = _.assign({}, this.defaultFormats.number, outputFormat);
         }
@@ -462,6 +445,41 @@ class I18n {
     }
 
     /**
+     * Returns current format to be used when outputting dates.
+     */
+    getDateFormat() {
+        return _.get(this.locales.current, 'formats.date', this.defaultFormats.date);
+    }
+
+    /**
+     * Returns current format to be used when outputting time.
+     */
+    getTimeFormat() {
+        return _.get(this.locales.current, 'formats.time', this.defaultFormats.time);
+    }
+
+    /**
+     * Returns current format to be used when outputting date/time.
+     */
+    getDatetimeFormat() {
+        return _.get(this.locales.current, 'formats.datetime', this.defaultFormats.datetime);
+    }
+
+    /**
+     * Returns current format to be used when outputting prices.
+     */
+    getPriceFormat() {
+        return _.assign({}, this.defaultFormats.price, _.get(this.locales.current, 'formats.price', {}));
+    }
+
+    /**
+     * Returns current format to be used when outputting numbers.
+     */
+    getNumberFormat() {
+        return _.assign({}, this.defaultFormats.number, _.get(this.locales.current, 'formats.number', {}));
+    }
+
+    /**
      * Returns text key generated from given namespace and base text.
      * @param namespace
      * @param base
@@ -469,6 +487,22 @@ class I18n {
      */
     getTextKey(namespace, base) {
         return namespace + '.' + md5(base);
+    }
+
+    /**
+     * Converts PHP formatting definition into JS (suitable for date/time plugin - fecha).
+     * Check PhpJsMap.js for more information.
+     * @param format
+     * @returns {string}
+     */
+    convertPhpToJsDateTimeFormat(format) {
+        let output = '';
+        for (let i = 0; i < format.length; i++) {
+            const current = format[i];
+            output += PhpJsMap[current] && PhpJsMap[current][0] ? PhpJsMap[current][0] : current;
+        }
+
+        return output;
     }
 
     /**
