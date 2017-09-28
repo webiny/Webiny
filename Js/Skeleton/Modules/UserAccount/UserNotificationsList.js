@@ -1,21 +1,18 @@
 import React from 'react';
 import Webiny from 'webiny';
 
-/**
- * @i18n.namespace Webiny.Skeleton.UserAccount
- */
 class Notifications extends Webiny.Ui.View {
 
 }
 
 Notifications.defaultProps = {
     renderer() {
-        const {View, List, List: {Table}, Container} = this.props;
+        const {View, Data, List, List: {Table}, Container} = this.props;
 
         const listProps = {
             ref: ref => this.list = ref,
             api: '/services/webiny/app-notifications/',
-            perPage: 10,
+            perPage: 100,
             connectToRouter: true
         };
 
@@ -23,18 +20,19 @@ Notifications.defaultProps = {
             <View.List>
                 <View.Header title="My Notifications"/>
                 <View.Body>
-                    <List {...listProps}>
-                        <Table>
-                            <Table.Row>
-                                <Table.Field label={this.i18n('Notification')}>
-                                    {({data}) => (
-                                        <Container notification={data} onMarkedRead={() => this.list.loadData()}/>
-                                    )}
-                                </Table.Field>
-                            </Table.Row>
-                        </Table>
-                        <List.Pagination/>
-                    </List>
+                    <div className="notification-list">
+                            <Data {...listProps}>
+                                {({data, load, loader}) => {
+                                    return (
+                                        <div>
+                                            {data.list.map(r => (
+                                                <Container key={r.id} notification={r}/>
+                                            ))}
+                                        </div>
+                                    );
+                                }}
+                            </Data>
+                        </div>
                 </View.Body>
             </View.List>
         );
@@ -42,5 +40,5 @@ Notifications.defaultProps = {
 };
 
 export default Webiny.createComponent(Notifications, {
-    modules: ['View', 'List', {Container: 'Webiny/Skeleton/Notifications/Container'}]
+    modules: ['View', 'List', 'Data', {Container: 'Webiny/Skeleton/Notifications/Container'}]
 });
