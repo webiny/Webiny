@@ -15,6 +15,16 @@ class Many2ManyAttribute extends \Webiny\Component\Entity\Attribute\Many2ManyAtt
 {
     use WebinyTrait;
 
+    /**
+     * Get name of the aggregation collection
+     *
+     * @return string
+     */
+    public function getIntermediateCollection()
+    {
+        return $this->intermediateCollection;
+    }
+
     public function save()
     {
         $collectionName = $this->intermediateCollection;
@@ -42,8 +52,8 @@ class Many2ManyAttribute extends \Webiny\Component\Entity\Attribute\Many2ManyAtt
                 'createdBy'      => $user ? $user->id : null,
                 'deletedOn'      => null,
                 'deletedBy'      => null,
-                $this->thisField  => $firstEntityId,
-                $this->refField => $secondEntityId
+                $this->thisField => $firstEntityId,
+                $this->refField  => $secondEntityId
             ];
 
             try {
@@ -58,8 +68,8 @@ class Many2ManyAttribute extends \Webiny\Component\Entity\Attribute\Many2ManyAtt
          * Remove old links
          */
         $removeQuery = [
-            $this->thisField  => $firstEntityId,
-            $this->refField => [
+            $this->thisField => $firstEntityId,
+            $this->refField  => [
                 '$nin' => $existingIds
             ],
             'deletedOn'      => null
@@ -137,8 +147,8 @@ class Many2ManyAttribute extends \Webiny\Component\Entity\Attribute\Many2ManyAtt
         }
 
         $query = $this->arr([
-            $this->thisField  => $sourceEntityId,
-            $this->refField => $item
+            $this->thisField => $sourceEntityId,
+            $this->refField  => $item
         ])->sortKey()->val();
 
         $user = $this->wAuth()->getUser();

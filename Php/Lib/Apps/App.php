@@ -5,12 +5,12 @@ namespace Apps\Webiny\Php\Lib\Apps;
 use Apps\Webiny\Php\Entities\UserPermission;
 use Apps\Webiny\Php\Entities\UserRole;
 use Apps\Webiny\Php\Entities\UserRoleGroup;
-use Apps\Webiny\Php\Lib\Response\ApiErrorResponse;
+use Apps\Webiny\Php\Lib\Entity\Attributes\Many2ManyAttribute;
 use Apps\Webiny\Php\Lib\Response\HtmlResponse;
 use Closure;
-use MongoDB\Driver\Exception\BulkWriteException;
 use MongoDB\Driver\Exception\RuntimeException;
 use Webiny\Component\Entity\EntityException;
+use Webiny\Component\Mongo\Index\CompoundIndex;
 
 /**
  * Class that holds information about an application.
@@ -32,11 +32,10 @@ class App extends AbstractApp
 
     public function release()
     {
-        //$this->createUserPermissions();
-        //$this->createUserRoles();
-        //$this->createUserRoleGroups();
+        $this->createUserPermissions();
+        $this->createUserRoles();
+        $this->createUserRoleGroups();
         $this->installJsDependencies();
-        //$this->updateIndexes();
     }
 
     public function getUserRoles()
@@ -83,54 +82,6 @@ class App extends AbstractApp
     }
 
     /**
-     * Scan app entities and create/drop indexes as needed
-     */
-    protected function updateIndexes()
-    {
-        foreach ($this->getEntities() as $e) {
-            /* @var $entity \Apps\Webiny\Php\Lib\Entity\AbstractEntity */
-            $entity = new $e['class'];
-            $collection = $entity->getCollection();
-            $indexes = $entity->getIndexes();
-
-            $dbIndexes = $this->wDatabase()->listIndexes($collection);
-            $installedIndexes = [];
-            foreach ($dbIndexes as $ind) {
-                $installedIndexes[$collection][] = $ind['name'];
-            }
-
-            // Check if any indexes need to be created
-            /* @var $index \Webiny\Component\Mongo\Index\AbstractIndex */
-            foreach ($indexes as $index) {
-                $installed = in_array($index->getName(), $installedIndexes);
-                if (!$installed) {
-                    echo "Creating '" . $index->getName() . "' index in '" . $collection . "' collection...\n";
-                    try {
-                        $this->wDatabase()->createIndex($collection, $index);
-                    } catch (RuntimeException $e) {
-                        if ($e->getCode() === 85) {
-                            echo "WARNING: another index with same fields already exists. Skipping creation of '" . $index->getName() . "' index.\n";
-                        } else {
-                            echo $e->getMessage() . "\n";
-                        }
-                    }
-                }
-            }
-
-            // Check of any indexes need to be dropped
-            foreach ($installedIndexes as $collection => $cIndexes) {
-                foreach($cIndexes as $name) {
-                    $removed = !$indexes->exists($name);
-                    if ($removed && $index !== '_id_') {
-                        echo "Dropping '" . $index . "' index from '" . $collection . "' collection...\n";
-                        $this->wDatabase()->dropIndex($collection, $index);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * Install production JS dependencies
      * Default: `yarn install --production` is executed in the root of the app
      * TODO: move this to Deploy CLI plugin
@@ -172,28 +123,17 @@ class App extends AbstractApp
      */
     protected function createUserPermissions()
     {
-        foreach ($this->getUserPermissions() as $perm) {
+        foreach ($this->getUserPermissions() as $data) {
             $p = new UserPermission();
             try {
-                $p->populate($perm)->save();
-            } catch (BulkWriteException $e) {
-                $this->printException($e->getMessage());
-            } catch (EntityException $e) {
-                $invalidAttributes = $e->getInvalidAttributes();
-                if (array_key_exists('slug', $invalidAttributes)) {
-                    $p = UserPermission::findOne(['slug' => $perm['slug']]);
-                    if ($p) {
-                        try {
-                            $p->populate($perm)->save();
-                        } catch (EntityException $e) {
-                            // TODO: Add permission name to the output
-                            $this->printException($e);
-                        }
-
-                        continue;
-                    }
+                $p->populate($data)->save();
+            } catch (\Exception $e) {
+                $message = $e->getMessage();
+                if ($e instanceof EntityException && $e->getCode() === EntityException::VALIDATION_FAILED) {
+                    $message = 'Record already exists. You can only update existing records manually.';
                 }
-                $this->printException($e);
+
+                echo "SKIPPING PERMISSION: '{$data['name']}' ({$data['slug']})\n{$message}\n\n";
             }
         }
     }
@@ -203,28 +143,17 @@ class App extends AbstractApp
      */
     protected function createUserRoles()
     {
-        foreach ($this->getUserRoles() as $role) {
+        foreach ($this->getUserRoles() as $data) {
             $r = new UserRole();
             try {
-                $r->populate($role)->save();
-            } catch (BulkWriteException $e) {
-                $this->printException($e->getMessage());
-            } catch (EntityException $e) {
-                $invalidAttributes = $e->getInvalidAttributes();
-                if (array_key_exists('slug', $invalidAttributes)) {
-                    $r = UserRole::findOne(['slug' => $role['slug']]);
-                    if ($r) {
-                        try {
-                            $r->populate($role)->save();
-                        } catch (EntityException $e) {
-                            // TODO: Add role name to the output
-                            $this->printException($e);
-                        }
-
-                        continue;
-                    }
+                $r->populate($data)->save();
+            } catch (\Exception $e) {
+                $message = $e->getMessage();
+                if ($e instanceof EntityException && $e->getCode() === EntityException::VALIDATION_FAILED) {
+                    $message = 'Record already exists. You can only update existing records manually.';
                 }
-                $this->printException($e);
+
+                echo "SKIPPING ROLE: '{$data['name']}' ({$data['slug']})\n{$message}\n\n";
             }
         }
     }
@@ -234,28 +163,17 @@ class App extends AbstractApp
      */
     protected function createUserRoleGroups()
     {
-        foreach ($this->getUserRoleGroups() as $roleGroup) {
+        foreach ($this->getUserRoleGroups() as $data) {
             $r = new UserRoleGroup();
             try {
-                $r->populate($roleGroup)->save();
-            } catch (BulkWriteException $e) {
-                $this->printException($e->getMessage());
-            } catch (EntityException $e) {
-                $invalidAttributes = $e->getInvalidAttributes();
-                if (array_key_exists('slug', $invalidAttributes)) {
-                    $r = UserRoleGroup::findOne(['slug' => $roleGroup['slug']]);
-                    if ($r) {
-                        try {
-                            $r->populate($roleGroup)->save();
-                        } catch (EntityException $e) {
-                            // TODO: Add role group name to the output
-                            $this->printException($e);
-                        }
-
-                        continue;
-                    }
+                $r->populate($data)->save();
+            } catch (\Exception $e) {
+                $message = $e->getMessage();
+                if ($e instanceof EntityException && $e->getCode() === EntityException::VALIDATION_FAILED) {
+                    $message = 'Record already exists. You can only update existing records manually.';
                 }
-                $this->printException($e);
+
+                echo "SKIPPING ROLE GROUP: '{$data['name']}' ({$data['slug']})\n{$message}\n\n";
             }
         }
     }
@@ -265,6 +183,8 @@ class App extends AbstractApp
      */
     protected function createIndexes()
     {
+        $many2ManyUnique = [];
+
         foreach ($this->getEntities() as $e) {
             /* @var $entity \Apps\Webiny\Php\Lib\Entity\AbstractEntity */
             $entity = new $e['class'];
@@ -274,10 +194,34 @@ class App extends AbstractApp
             /* @var $index \Webiny\Component\Mongo\Index\AbstractIndex */
             foreach ($indexes as $index) {
                 try {
-                    $this->wDatabase()->createIndex($collection, $index);
+                    $this->wDatabase()->createIndex($collection, $index, ['background' => true]);
                 } catch (RuntimeException $e) {
                     if ($e->getCode() === 85) {
-                        echo "WARNING: Skipping creation of '" . $index->getName() . ": {$e->getMessage()}\n";
+                        echo "SKIPPING INDEX: '{$index->getName()}' in collection '{$collection}'\n{$e->getMessage()}\n\n";
+                    }
+                }
+            }
+
+            // Check if many2many attributes exist and create indexes for them automatically
+            foreach ($entity->getAttributes() as $attr) {
+                if ($attr instanceof Many2ManyAttribute) {
+                    $aCollection = $attr->getIntermediateCollection();
+
+                    // Many2Many attributes are specific in that the referenced entity will attempt to create this same index
+                    // We store current collection name further in code, to skip creation of the same index again
+                    if (in_array($aCollection, $many2ManyUnique)) {
+                        continue;
+                    }
+
+                    $aField1 = $attr->getThisField();
+                    $aField2 = $attr->getRefField();
+                    $fields = [$aField1, $aField2, 'deletedOn'];
+                    $index = new CompoundIndex('unique', $fields, false, true);
+                    try {
+                        $this->wDatabase()->createIndex($aCollection, $index, ['background' => true]);
+                        $many2ManyUnique[] = $aCollection;
+                    } catch (\Exception $e) {
+                        echo "SKIPPING INDEX: '{$index->getName()}' in collection '{$aCollection}'\n{$e->getMessage()}\n\n";
                     }
                 }
             }
@@ -301,22 +245,5 @@ class App extends AbstractApp
         $html = $this->wTemplateEngine()->fetch($template, $data);
 
         return new HtmlResponse($html);
-    }
-
-    /**
-     * Print exception in form of ApiErrorResponse.
-     * This is printing directly because it is always run as a CLI script
-     *
-     * @param $e
-     */
-    private function printException($e)
-    {
-        $message = $e instanceof \Exception ? $e->getMessage() : $e;
-        if ($e instanceof EntityException) {
-            $response = new ApiErrorResponse($e->getInvalidAttributes(), $e->getMessage(), $e->getCode());
-            $message = $response->getData(true);
-        }
-
-        print_r($message);
     }
 }
