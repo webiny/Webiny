@@ -11,7 +11,7 @@ use Apps\Webiny\Php\Lib\I18N\Modifiers\DateModifier;
 use Apps\Webiny\Php\Lib\I18N\Modifiers\DateTimeModifier;
 use Apps\Webiny\Php\Lib\I18N\Modifiers\GenderModifier;
 use Apps\Webiny\Php\Lib\I18N\Modifiers\IfModifier;
-use Apps\Webiny\Php\Lib\I18N\Modifiers\MoneyModifier;
+use Apps\Webiny\Php\Lib\I18N\Modifiers\PriceModifier;
 use Apps\Webiny\Php\Lib\I18N\Modifiers\NumberModifier;
 use Apps\Webiny\Php\Lib\I18N\Modifiers\PluralModifier;
 use Apps\Webiny\Php\Lib\I18N\Modifiers\TimeModifier;
@@ -36,7 +36,7 @@ class I18N
         'date'     => 'd/m/Y',
         'time'     => 'h:i',
         'datetime' => 'd/m/Y H:i',
-        'money'    => [
+        'price'    => [
             'symbol'    => '',
             'format'    => '{symbol}{amount}',
             'decimal'   => '.',
@@ -65,7 +65,7 @@ class I18N
             new DateTimeModifier(),
             new DateModifier(),
             new TimeModifier(),
-            new MoneyModifier(),
+            new PriceModifier(),
             new NumberModifier(),
         ]);
 
@@ -268,19 +268,19 @@ class I18N
     }
 
     /**
-     * Formats money as defined in I18N Locale settings. Can also receive a custom output formatting rules if needed.
+     * Formats price as defined in I18N Locale settings. Can also receive a custom output formatting rules if needed.
      *
      * @param       $value
      * @param array $outputFormat
      *
      * @return string
      */
-    public function money($value, $outputFormat = [])
+    public function price($value, $outputFormat = [])
     {
-        $format = self::$defaultFormats['money'];
+        $format = self::$defaultFormats['price'];
         $locale = $this->getLocale();
         if ($locale) {
-            $format = array_merge($format, $locale->formats->key('money'));
+            $format = array_merge($format, $locale->formats->key('price'));
         }
 
         if (!empty($outputFormat)) {
