@@ -3,13 +3,18 @@
         "name": "Administrator",
         "slug": "administrator",
         "description": "This is the main administrative role which serves for identifying a user as an administrator. It carries no permissions.",
-        "permissions": []
+        "permissions": [
+            "webiny-acl-user-profile"
+        ]
     },
     {
         "name": "Public",
         "slug": "public",
         "description": "This role is assumed for all public (anonymous) requests. Whatever is allowed here is becoming publicly accessible so be careful with it!",
-        "permissions": ["webiny-acl-user-profile", "webiny-logger-log-errors", "webiny-access-apps", "public"]
+        "permissions": [
+            "webiny-logger-log-errors",
+            "public"
+        ]
     },
     {
         "name": "Webiny Administrator",
@@ -21,25 +26,45 @@
         "name": "Webiny Marketplace",
         "slug": "webiny-marketplace",
         "description": "This role tells the system that its owner is allowed to use Webiny Marketplace.",
-        "permissions": ["webiny-marketplace"]
+        "permissions": [
+            "webiny-marketplace"
+        ]
+    },
+    {
+        "name": "App Notifications",
+        "slug": "webiny-app-notifications",
+        "description": "Access app notifications",
+        "isAdminRole": true,
+        "permissions": [
+            "webiny-app-notifications"
+        ]
     },
     {
         "name": "User Manager",
         "slug": "webiny-acl-user-manager",
         "description": "This role allows management of users, roles and permissions.",
-        "permissions": ["webiny-discover-entities-services", "webiny-acl-manage-users", "webiny-acl-manage-roles", "webiny-acl-manage-permissions"]
+        "permissions": [
+            "webiny-discover-entities-services",
+            "webiny-acl-manage-users",
+            "webiny-acl-manage-roles",
+            "webiny-acl-manage-permissions"
+        ]
     },
     {
         "name": "API Token Manager",
         "slug": "webiny-acl-api-token-manager",
         "description": "This role allows management of API tokens.",
-        "permissions": ["webiny-acl-manage-api-tokens"]
+        "permissions": [
+            "webiny-acl-manage-api-tokens"
+        ]
     },
     {
         "name": "Logger Manager",
         "slug": "webiny-logger-manager",
         "description": "This roles allows user to manage system error logger.",
-        "permissions": ["webiny-logger-manage-logs"]
+        "permissions": [
+            "webiny-logger-manage-logs"
+        ]
     },
     {
         "name": "Dashboard",
@@ -59,6 +84,8 @@
         "name": "I18N Manager",
         "slug": "webiny-i18n-manager",
         "description": "This role allows user to manage languages and translations.",
-        "permissions": ["webiny-i18n"]
+        "permissions": [
+            "webiny-i18n"
+        ]
     }
 ]

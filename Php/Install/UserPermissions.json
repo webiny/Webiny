@@ -46,18 +46,24 @@
         ]
     },
     {
-        "name": "Access Apps",
-        "slug": "webiny-access-apps",
-        "description": "Allows users to read data about system apps (needed for app bootstrap!)",
+        "name": "App Notifications",
+        "slug": "webiny-app-notifications",
+        "description": "Access app notifications",
         "permissions": [
             {
-                "classId": "Webiny.Services.Apps",
+                "classId": "Webiny.Services.AppNotifications",
                 "rules": {
                     "/": {
                         "get": true
                     },
-                    "{appName}": {
+                    "types": {
                         "get": true
+                    },
+                    "{notification}/mark-read": {
+                        "post": true
+                    },
+                    "mark-read": {
+                        "post": true
                     }
                 }
             }
