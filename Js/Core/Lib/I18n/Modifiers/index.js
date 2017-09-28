@@ -7,7 +7,7 @@ import DateModifier from './DateModifier';
 import DateTimeModifier from './DateTimeModifier';
 import TimeModifier from './TimeModifier';
 import NumberModifier from './NumberModifier';
-import MoneyModifier from './MoneyModifier';
+import PriceModifier from './PriceModifier';
 
 export default [
     new CountModifiers(),
@@ -18,5 +18,5 @@ export default [
     new DateTimeModifier(),
     new TimeModifier(),
     new NumberModifier(),
-    new MoneyModifier()
+    new PriceModifier()
 ];

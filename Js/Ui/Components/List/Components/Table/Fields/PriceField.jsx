@@ -14,7 +14,7 @@ PriceField.defaultProps = {
 
         return (
             <List.Table.Field {..._.omit(props, ['renderer'])}>
-                {() => value ? Webiny.I18n.money(value, this.props.format) : this.props.default}
+                {() => value ? Webiny.I18n.price(value, this.props.format) : this.props.default}
             </List.Table.Field>
         );
     }

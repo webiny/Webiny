@@ -91,44 +91,44 @@ class LocalesModal extends Webiny.Ui.ModalComponent {
                                                 placeholder={this.i18n('Type format to see example.')}/>
                                         </Grid.Col>
                                     </Grid.Row>
-                                    <Section title={this.i18n('Money')}/>
+                                    <Section title={this.i18n('Prices')}/>
                                     <Grid.Row>
                                         <Grid.Col all={2}>
                                             <Input
                                                 tooltip={this.i18n('Use {value} and {symbol} placeholders to define output.')}
                                                 label={this.i18n('Format')}
                                                 placeholder={this.i18n('eg. "{value}{symbol}"')}
-                                                name="formats.money.format"/>
+                                                name="formats.price.format"/>
                                         </Grid.Col>
                                         <Grid.Col all={2}>
                                             <Input
                                                 label={this.i18n('Symbol')}
                                                 placeholder={this.i18n('eg. "$"')}
-                                                name="formats.money.symbol"/>
+                                                name="formats.price.symbol"/>
                                         </Grid.Col>
                                         <Grid.Col all={2}>
                                             <Input
                                                 label={this.i18n('Decimal')}
                                                 placeholder={this.i18n('eg. "."')}
-                                                name="formats.money.decimal"/>
+                                                name="formats.price.decimal"/>
                                         </Grid.Col>
                                         <Grid.Col all={2}>
                                             <Input
                                                 label={this.i18n('Thousand')}
                                                 placeholder={this.i18n('eg. ","')}
-                                                name="formats.money.thousand"/>
+                                                name="formats.price.thousand"/>
                                         </Grid.Col>
                                         <Grid.Col all={2}>
                                             <Input
                                                 label={this.i18n('Precision')}
                                                 placeholder={this.i18n('eg. "2"')}
-                                                name="formats.money.precision"/>
+                                                name="formats.price.precision"/>
                                         </Grid.Col>
                                         <Grid.Col all={2}>
                                             <Input
                                                 disabled
                                                 label={this.i18n('Preview')}
-                                                value={Webiny.I18n.money(12345.67, model.formats.money)}
+                                                value={Webiny.I18n.price(12345.67, model.formats.price)}
                                                 placeholder={this.i18n('Type format to see example.')}/>
                                         </Grid.Col>
                                     </Grid.Row>

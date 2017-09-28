@@ -69,7 +69,7 @@ class I18NLocale extends AbstractEntity
             'date'     => '',
             'time'     => '',
             'datetime' => '',
-            'money'    => [
+            'price'    => [
                 'symbol'    => '',
                 'format'    => '',
                 'decimal'   => '',

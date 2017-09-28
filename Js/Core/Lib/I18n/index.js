@@ -42,7 +42,7 @@ class I18n {
             date: 'd/m/Y',
             time: 'h:i',
             datetime: 'd/m/Y H:i',
-            money: {
+            price: {
                 symbol: '',
                 format: '{symbol}{amount}',
                 decimal: '.',
@@ -270,15 +270,15 @@ class I18n {
     }
 
     /**
-     * Outputs formatted number as amount of money.
+     * Outputs formatted number as amount of price.
      * @param value
      * @param outputFormat
      */
-    money(value, outputFormat) {
+    price(value, outputFormat) {
         if (!outputFormat) {
-            outputFormat = _.assign({}, this.defaultFormats.money, _.get(this.locales.current, 'formats.money', {}))
+            outputFormat = _.assign({}, this.defaultFormats.price, _.get(this.locales.current, 'formats.price', {}))
         } else {
-            outputFormat = _.assign({}, this.defaultFormats.money, outputFormat);
+            outputFormat = _.assign({}, this.defaultFormats.price, outputFormat);
         }
 
         // Let's convert Webiny format to accounting.
