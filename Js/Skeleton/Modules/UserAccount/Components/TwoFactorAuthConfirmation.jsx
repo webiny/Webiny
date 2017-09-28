@@ -11,24 +11,18 @@ class TwoFactorAuthConfirmation extends Webiny.Ui.ModalComponent {
         return (
             <Modal.Dialog>
                 <Modal.Content>
-                    <Modal.Header title={this.i18n('Two Factor Auth')} onClose={this.hide}/>
+                    <Modal.Header title={this.i18n('Two Factor Auth')}/>
                     <Modal.Body>
                         <Grid.Row>
                             <Grid.Col all={12}>
-                                <Alert type="success"
-                                       title={this.i18n('Success')}>{this.i18n('Your two factor authentication is now active.')}</Alert>
+                                <Alert type="success" title={this.i18n('Success')}>
+                                    {this.i18n('Your two factor authentication is now active.')}
+                                </Alert>
                             </Grid.Col>
                             <Grid.Col all={4}>
                                 <Section title={this.i18n('Recovery codes')} icon="fa-lock"/>
                                 <Data api="/entities/webiny/user/2factor-recovery-codes" waitForData>
-                                    {({data, loader}) => {
-                                        if (loader) {
-                                            return loader;
-                                        }
-                                        return (
-                                            <pre>{data.recoveryCodes}</pre>
-                                        );
-                                    }}
+                                    {({data}) => <pre>{data.recoveryCodes}</pre>}
                                 </Data>
                             </Grid.Col>
                             <Grid.Col all={8}>

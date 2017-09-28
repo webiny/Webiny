@@ -22,7 +22,8 @@ class NotificationContainer extends Webiny.Ui.Component {
         const {type} = this.props.notification;
         if (!types[type]) {
             return Webiny.importByTag(type).then(modules => {
-                types[type] = modules[Object.keys(modules)[0]];
+                const keys = Object.keys(modules);
+                types[type] = !keys.length ? this.props.webinyNotification : modules[keys[0]];
                 this.setState({ready: true});
             });
         }
@@ -62,4 +63,6 @@ NotificationContainer.defaultProps = {
     }
 };
 
-export default NotificationContainer;
+export default Webiny.createComponent(NotificationContainer, {
+    modules: [{webinyNotification: 'Webiny/Skeleton/Notifications/Notification'}]
+});

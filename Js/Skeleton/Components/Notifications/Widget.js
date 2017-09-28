@@ -1,8 +1,7 @@
 import React from 'react';
-import _ from 'lodash';
 import Webiny from 'webiny';
 
-class AppNotifications extends Webiny.Ui.Component {
+class NotificationsWidget extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
 
@@ -12,7 +11,6 @@ class AppNotifications extends Webiny.Ui.Component {
             viewMore: 0
         };
 
-        this.id = _.uniqueId('app-notifications-dropdown-');
         this.api = new Webiny.Api.Endpoint(props.api);
 
         this.bindMethods('loadNotifications');
@@ -24,23 +22,6 @@ class AppNotifications extends Webiny.Ui.Component {
         this.interval = setInterval(() => this.loadNotifications(), this.props.interval);
         this.loadNotifications()
     }
-
-    /*componentDidMount() {
-        super.componentDidMount();
-
-        $(document).on('click.' + this.id, '.' + this.id + ' .dropdown-menu', e => {
-            e.stopPropagation();
-        });
-    }
-
-    componentWillUnmount() {
-        super.componentWillUnmount();
-        $(document).off('.' + this.id);
-    }
-
-    close() {
-        $('.' + this.id).removeClass('open');
-    }*/
 
     componentWillUnmount() {
         super.componentWillUnmount();
@@ -82,14 +63,14 @@ class AppNotifications extends Webiny.Ui.Component {
 
 }
 
-AppNotifications.defaultProps = {
+NotificationsWidget.defaultProps = {
     api: '/services/webiny/app-notifications',
     interval: 10000,
     visibleNotifications: 4,
     renderer() {
-        const {Link, Icon, Notification} = this.props;
+        const {Link, Icon, Container} = this.props;
         return (
-            <div className={`notification-holder ${this.id}`}>
+            <div className="notification-holder">
                 {this.state.unread > 0 && <span className="num" data-toggle="dropdown">{this.state.unread}</span>}
                 <a href="#" className="notification" data-toggle="dropdown">
                     <span className="icon-bell icon"/>
@@ -105,15 +86,13 @@ AppNotifications.defaultProps = {
                         )}
                         {this.state.notifications.map(n => (
                             <li key={n.id}>
-                                <Notification notification={n} onMarkedRead={() => this.loadNotifications()}/>
+                                <Container notification={n} onMarkedRead={() => this.loadNotifications()}/>
                             </li>
                         ))}
                     </ul>
                     <div className="drop-footer">
                         <Link className="read" onClick={() => this.markAllRead()}><span className="icon-check icon"/>Mark all as read</Link>
-                        {this.state.viewMore > 0 && (
-                            <Link route="Users.Notifications" className="settings"><span className="fa fa-search"/>View all ({this.state.viewMore} more)</Link>
-                        )}
+                        <Link route="Me.Notifications" className="settings"><span className="fa fa-search"/>View all</Link>
                     </div>
                 </div>
             </div>
@@ -121,4 +100,6 @@ AppNotifications.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(AppNotifications, {modules: ['Link', 'Icon', {Notification: 'Webiny/Skeleton/Notification'}]});
+export default Webiny.createComponent(NotificationsWidget, {
+    modules: ['Link', 'Icon', {Container: 'Webiny/Skeleton/Notifications/Container'}]
+});

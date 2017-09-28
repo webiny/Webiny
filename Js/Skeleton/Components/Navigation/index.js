@@ -2,12 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
-/**
- * Note: this class needs to be optimized. The handling of mobile menu is just awful, a lot of (ughh) jquery code which needs to go out.
- * For now it does the job, but once we have more time we'll clean it up.
- */
 class Navigation extends Webiny.Ui.Component {
-
     constructor(props) {
         super(props);
 
@@ -78,7 +73,7 @@ Navigation.defaultProps = {
 
 export default Webiny.createComponent(Navigation, {
     modules: ['Link', {
-        Desktop: 'Webiny/Layout/Navigation/Desktop',
-        Mobile: 'Webiny/Layout/Navigation/Mobile'
+        Desktop: 'Webiny/Skeleton/Navigation/Desktop',
+        Mobile: 'Webiny/Skeleton/Navigation/Mobile'
     }]
 });

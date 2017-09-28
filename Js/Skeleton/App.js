@@ -8,10 +8,12 @@ import 'Assets/images/public/logo_orange.png';
 import UserAccount from './Modules/UserAccount';
 import Layout from './Modules/Layout';
 import Auth from './Auth';
+import registerComponents from './Components';
 
 class Skeleton extends Webiny.App {
     constructor() {
         super('Webiny.Skeleton');
+        registerComponents();
         this.modules = [
             new Layout(this),
             new UserAccount(this)

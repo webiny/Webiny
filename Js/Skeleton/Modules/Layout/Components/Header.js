@@ -6,4 +6,4 @@ const Header = (props) => {
 };
 
 
-export default Webiny.createComponent(Header, {modules: [{header: 'Webiny/Layout/Header'}]});
+export default Webiny.createComponent(Header, {modules: [{header: 'Webiny/Skeleton/Header'}]});

@@ -7,7 +7,7 @@ class Notifications extends Webiny.Ui.View {
 
 Notifications.defaultProps = {
     renderer() {
-        const {View, List, List: {Table}, Notification} = this.props;
+        const {View, List, List: {Table}, Container} = this.props;
 
         const listProps = {
             ref: ref => this.list = ref,
@@ -25,7 +25,7 @@ Notifications.defaultProps = {
                             <Table.Row>
                                 <Table.Field label="Notification">
                                     {({data}) => (
-                                        <Notification notification={data} onMarkedRead={() => this.list.loadData()}/>
+                                        <Container notification={data} onMarkedRead={() => this.list.loadData()}/>
                                     )}
                                 </Table.Field>
                             </Table.Row>
@@ -39,5 +39,5 @@ Notifications.defaultProps = {
 };
 
 export default Webiny.createComponent(Notifications, {
-    modules: ['View', 'List', {Notification: 'Webiny/Skeleton/Notification'}]
+    modules: ['View', 'List', {Container: 'Webiny/Skeleton/Notifications/Container'}]
 });

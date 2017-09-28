@@ -55,7 +55,7 @@ class ModalComponent extends Component {
 
     renderDialog() {
         if (_.isFunction(this.props.renderDialog)) {
-            return this.props.renderDialog.call(this, this);
+            return this.props.renderDialog.call(this, {dialog: this});
         }
 
         throw new Error('Implement renderDialog() method in your modal component class or add a renderDialog() function through props!');

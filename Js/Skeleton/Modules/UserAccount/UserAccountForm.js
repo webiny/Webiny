@@ -13,7 +13,7 @@ class UserAccount extends Webiny.Ui.View {
         this.bindMethods('twoFactorAuthModal');
     }
 
-    twoFactorAuthModal(confirm, cancel, dialog) {
+    twoFactorAuthModal({onConfirm, onCancel}) {
         const {Ui} = this.props;
 
         const formProps = {
@@ -22,7 +22,7 @@ class UserAccount extends Webiny.Ui.View {
             onSuccessMessage: null,
             onSubmitSuccess: ({apiResponse}) => {
                 if (apiResponse.getData().result) {
-                    confirm();
+                    onConfirm();
                 } else {
                     Webiny.Growl.danger(this.i18n(`The code doesn't match`));
                 }
@@ -34,7 +34,7 @@ class UserAccount extends Webiny.Ui.View {
                 <Ui.Form {...formProps}>
                     {({model, form}) => (
                         <Ui.Modal.Content>
-                            <Ui.Modal.Header title={this.i18n('2 Factor Auth')} onClose={cancel}/>
+                            <Ui.Modal.Header title={this.i18n('2 Factor Auth')} onClose={onCancel}/>
                             <Ui.Modal.Body>
                                 <Ui.Grid.Row>
                                     <Ui.Grid.Col all={6}>
@@ -58,16 +58,11 @@ class UserAccount extends Webiny.Ui.View {
                                         <Ui.Section title={this.i18n('Step 2')}/>
                                         <p>{this.i18n('Scan the QR code below with the authenticator app')}</p>
                                         <Ui.Data api="/entities/webiny/user/2factor-qr" waitForData={true}>
-                                            {({data, loader}) => {
-                                                if (loader) {
-                                                    return loader;
-                                                }
-                                                return (
-                                                    <Ui.Grid.Col all={12} className="text-center">
-                                                        <img src={data.qrCode}/>
-                                                    </Ui.Grid.Col>
-                                                );
-                                            }}
+                                            {({data}) => (
+                                                <Ui.Grid.Col all={12} className="text-center">
+                                                    <img src={data.qrCode}/>
+                                                </Ui.Grid.Col>
+                                            )}
                                         </Ui.Data>
                                     </Ui.Grid.Col>
                                 </Ui.Grid.Row>
@@ -85,7 +80,7 @@ class UserAccount extends Webiny.Ui.View {
 
                             </Ui.Modal.Body>
                             <Ui.Modal.Footer>
-                                <Ui.Button type="default" label={this.i18n('Cancel')} onClick={cancel}/>
+                                <Ui.Button type="default" label={this.i18n('Cancel')} onClick={onCancel}/>
                                 <Ui.Button type="primary" label={this.i18n('Verify')} onClick={form.submit}/>
                             </Ui.Modal.Footer>
                         </Ui.Modal.Content>
@@ -188,7 +183,7 @@ UserAccount.defaultProps = {
                             <Ui.Button type="primary" onClick={form.submit} label={this.i18n('Save account')}/>
                         </Ui.View.Footer>
                     </Ui.View.Form>
-                    )}
+                )}
             </Ui.Form>
         );
     }

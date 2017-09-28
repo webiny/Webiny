@@ -2,113 +2,62 @@
 
 namespace Apps\Webiny\Php\Entities;
 
-use Apps\Webiny\Php\Lib\Api\ApiContainer;
-use Apps\Webiny\Php\Lib\Entity\Indexes\IndexContainer;
-use Apps\Webiny\Php\Lib\Exceptions\AppException;
-use Apps\Webiny\Php\Lib\Entity\AbstractEntity;
-use Webiny\Component\Mongo\Index\SingleIndex;
-use Webiny\Component\StdLib\StdObject\ArrayObject\ArrayObject;
-
 /**
  * Class Settings
  *
- * @property string $id
- * @property string $key
- * @property object $settings
+ * This class serves for demo purposes in Docs sandboxes
  */
-class Settings extends AbstractEntity
+class Settings extends AbstractSettings
 {
     protected static $classId = 'Webiny.Entities.Settings';
-    protected static $collection = 'Settings';
-    protected static $mask = '{key}';
-    protected static $key = null;
+    protected static $isDiscoverable = false;
+    protected static $key = 'webiny';
 
-    public function __construct()
+    /**
+     * Get timestamp of last marketplace app versions check
+     *
+     * @return int|null
+     */
+    public function getLastVersionCheck()
     {
-        parent::__construct();
-
-        $this->attr('key')->char()->setValidators('required,unique')->setToArrayDefault();
-        $this->attr('settings')->object()->setToArrayDefault();
+        return $this->settings->keyNested('marketplace.lastVersionCheck');
     }
 
     /**
-     * Load settings
+     * Set timestamp of last marketplace app versions check
      *
-     * @param bool $returnEntity Return settings instance (Default: false)
+     * @param int $timestamp
      *
-     * @return $this|ArrayObject
+     * @return $this
      */
-    public static function load($returnEntity = false)
+    public function setLastVersionCheck($timestamp)
     {
-        /* @var $settings $this */
-        $settings = static::findOne(['key' => static::$key]);
-        if ($settings && $settings->settings->count()) {
-            return $returnEntity ? $settings : $settings->settings;
-        }
+        $this->settings->keyNested('marketplace.lastVersionCheck', $timestamp);
 
-        return null;
+        return $this;
     }
 
     /**
-     * Update settings
+     * Get timestamp of last notifications check
      *
-     * @param array|ArrayObject $settings
-     *
-     * @return Settings|null
+     * @return int|null
      */
-    public static function update($settings)
+    public function getLastNotificationsCheck()
     {
-        /* @var $entity Settings */
-        $entity = static::findOne(['key' => static::$key]);
-        if ($entity) {
-            $entity->settings = $settings;
-            $entity->save();
-        }
+        return $this->settings->keyNested('marketplace.lastVersionCheck');
     }
 
-    protected static function entityIndexes(IndexContainer $indexes)
+    /**
+     * Set timestamp of last notifications check
+     *
+     * @param $timestamp
+     *
+     * @return $this
+     */
+    public function setLastNotificationsCheck($timestamp)
     {
-        parent::entityIndexes($indexes);
-        $indexes->add(new SingleIndex('key', 'key', false, true));
-    }
+        $this->settings->keyNested('webiny.lastNotificationsCheck', $timestamp);
 
-    protected function entityApi(ApiContainer $api)
-    {
-        /**
-         * @api.name        Get settings
-         * @api.description Gets settings data of this Settings entity.
-         */
-        $api->get('/', function () {
-            if (!static::$key) {
-                throw new AppException('You must specify a settings key for ' . get_called_class());
-            }
-
-            $record = $this->findOne(['key' => static::$key]);
-            if (!$record) {
-                $record = new self;
-                $record->key = static::$key;
-            }
-
-            return $record->settings->val();
-        });
-
-        /**
-         * @api.name        Update settings
-         * @api.description Updates settings for this Settings entity.
-         */
-        $api->patch('/', function () {
-            if (!static::$key) {
-                throw new AppException('You must specify a settings key for ' . get_called_class());
-            }
-            $record = $this->findOne(['key' => static::$key]);
-            if (empty($record)) {
-                $record = new self();
-                $record->key = static::$key;
-            }
-            $record->settings = $this->wRequest()->getRequestData();
-            $record->save();
-
-            return $record->settings->val();
-        });
+        return $this;
     }
 }

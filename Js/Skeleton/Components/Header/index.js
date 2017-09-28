@@ -9,7 +9,7 @@ class Header extends Webiny.Ui.Component {
     }
 
     render() {
-        const {userMenu, appNotifications, logo} = this.props;
+        const {userMenu, notifications, logo} = this.props;
         return (
             <div className="navbar navbar-inverse" role="navigation">
                 <div className="navbar-header">
@@ -18,7 +18,7 @@ class Header extends Webiny.Ui.Component {
                     </button>
                     {logo && (isValidElement(logo) ? logo : createElement(logo))}
                     {userMenu && (isValidElement(userMenu) ? userMenu : createElement(userMenu))}
-                    {appNotifications && (isValidElement(appNotifications) ? appNotifications : createElement(appNotifications))}
+                    {notifications && (isValidElement(notifications) ? notifications : createElement(notifications))}
                 </div>
             </div>
         );
@@ -27,8 +27,8 @@ class Header extends Webiny.Ui.Component {
 
 export default Webiny.createComponent(Header, {
     modules: [{
-        appNotifications: 'Webiny/Layout/AppNotifications',
-        userMenu: 'Webiny/Layout/UserMenu',
-        logo: 'Webiny/Layout/Logo'
+        notifications: 'Webiny/Skeleton/Notifications/Widget',
+        userMenu: 'Webiny/Skeleton/UserMenu',
+        logo: 'Webiny/Skeleton/Logo'
     }]
 });

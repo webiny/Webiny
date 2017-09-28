@@ -1,10 +1,10 @@
 import React from 'react';
 import Webiny from 'webiny';
-import logoOrange from 'Webiny/Ui/Assets/images/logo_orange.png';
+import logoOrange from 'Webiny/Skeleton/Assets/images/logo_orange.png';
 import styles from './styles/Login.css';
 
 /**
- * @i18n.namespace Webiny.Ui.Auth.Login
+ * @i18n.namespace Webiny.Skeleton.Auth.Login
  */
 class Login extends Webiny.Ui.View {
     constructor(props) {

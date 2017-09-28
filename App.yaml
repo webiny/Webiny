@@ -10,6 +10,12 @@ Author:
 Reports:
     Wkhtmltopdf: autodetect
 
+Notifications:
+    Api: https://beta.webiny.com/api
+    Intervals: # in minutes
+        WebinyNotifications: 60
+        MarketplaceAppVersions: 60
+
 Marketplace:
     Api: https://beta.webiny.com/api
 

@@ -30,6 +30,6 @@ Layout.defaultProps = {
 
 export default Webiny.createComponent(Layout, {
     modules: [{
-        Navigation: 'Webiny/Layout/Navigation'
+        Navigation: 'Webiny/Skeleton/Navigation'
     }]
 });

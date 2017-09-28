@@ -46,12 +46,12 @@ UserMenu.defaultProps = {
 
         return (
             <div className="dropdown profile-holder">
-                <a href="#" className="profile" id="dropdownMenu4" data-toggle="dropdown">
+                <a href="#" className="profile" data-toggle="dropdown">
                     <span className="icon-user icon"/>
                     <span className="user">{this.getUserName()}</span>
                 </a>
 
-                <div className="drop dropdown-menu" role="menu" aria-labelledby="dropdownMenu4">
+                <div className="drop dropdown-menu" role="menu">
                     <span className="top-arr"/>
                     <ul>
                         {this.props.userMenuItems.map((item, i) => (
@@ -74,6 +74,6 @@ export default Webiny.createComponent(UserMenu, {
                 return Object.values(modules).filter(m => !_.isNil(m));
             });
         },
-        logoutMenuItem: 'Webiny/Skeleton/LogoutMenuItem'
+        logoutMenuItem: 'Webiny/Skeleton/UserMenu/LogoutMenuItem'
     }]
 });

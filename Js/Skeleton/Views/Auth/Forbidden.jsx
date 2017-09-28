@@ -2,7 +2,7 @@ import React from 'react';
 import Webiny from 'webiny';
 
 /**
- * @i18n.namespace Webiny.Ui.Auth.Forbidden
+ * @i18n.namespace Webiny.Skeleton.Auth.Forbidden
  */
 class Forbidden extends Webiny.Ui.View {
 

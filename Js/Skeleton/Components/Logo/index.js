@@ -1,6 +1,6 @@
 import Webiny from 'webiny';
 import React from 'react';
-import logo from 'Webiny/Ui/Assets/images/logo.png';
+import logo from 'Webiny/Skeleton/Assets/images/logo.png';
 
 class Logo extends Webiny.Ui.Component {
     constructor(props) {

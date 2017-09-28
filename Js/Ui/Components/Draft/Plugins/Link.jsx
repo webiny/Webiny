@@ -86,21 +86,21 @@ class LinkPlugin extends Webiny.Draft.EntityPlugin {
                                                             <Ui.Grid.Col xs={12}>
                                                                 <Ui.Input
                                                                     name="url"
-                                                                    placeholder={this.i18n('Enter a URL')}
+                                                                    placeholder={Webiny.I18n('Enter a URL')}
                                                                     validate={this.validate}
                                                                     showValidationIcon={false}/>
                                                             </Ui.Grid.Col>
                                                         </Ui.Grid.Row>
                                                         <Ui.Grid.Row>
                                                             <Ui.Grid.Col xs={6}>
-                                                                <Ui.Checkbox name="newTab" label={this.i18n('Open in new tab')}/>
+                                                                <Ui.Checkbox name="newTab" label={Webiny.I18n('Open in new tab')}/>
                                                             </Ui.Grid.Col>
                                                             <Ui.Grid.Col xs={3} className="no-padding">
                                                                 <Ui.Logic.Hide if={() => this.newLink}>
                                                                     <Ui.Button
                                                                         type="secondary"
                                                                         align="right"
-                                                                        label={this.i18n('Remove link')}
+                                                                        label={Webiny.I18n('Remove link')}
                                                                         onClick={this.removeEntity}/>
                                                                 </Ui.Logic.Hide>
                                                             </Ui.Grid.Col>

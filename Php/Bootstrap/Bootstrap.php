@@ -56,7 +56,7 @@ class Bootstrap
         foreach ($this->wApps()->loadApps() as $app) {
             // Webiny app needs to be merged because of the app name key which already exists in the global config
             if ($app instanceof \Apps\Webiny\Php\App) {
-                $this->wConfig()->getConfig()->mergeWith($app->getConfig());
+                $this->wConfig()->getConfig()->mergeWith(['Webiny' => $app->getConfig()]);
                 continue;
             }
             // Add app config into the global config by app name
