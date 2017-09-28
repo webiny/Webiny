@@ -111,7 +111,7 @@ class I18NText extends AbstractEntity
          * @api.path.key        string  Locale for which the translations will be returned
          * @api.query.groups    array   List translations only from specific groups
          * @api.query.apps      array   List translations only from specific apps
-         * @api.query.jsApps    array   List translations only from specific JS apps (for Web apps)
+         * @api.query.jsApps    array   List translations only from specific JS apps (for Web apps), will automatically group translations by JS apps
          */
         $api->get('translations/locales/{key}', function ($key) {
             $locale = I18NLocale::findByKey($key);
@@ -120,6 +120,7 @@ class I18NText extends AbstractEntity
             }
 
             $match = ['deletedOn' => null];
+            $project = ['translations' => 1, 'key' => 1, 'app' => 1];
 
             // Let's apply additional filters if specified.
             // 1. Filter by I18NTextGroup.
@@ -148,13 +149,14 @@ class I18NText extends AbstractEntity
             $jsApps = $this->wRequest()->query('jsApps') ?? [];
             if (is_array($jsApps) && !empty($jsApps)) {
                 $match['meta.jsApp.fullName'] = ['$in' => $jsApps];
+                $project['meta.jsApp.fullName'] = 1;
             }
 
             $params = [
                 'I18NTexts',
                 [
                     ['$match' => $match],
-                    ['$project' => ['translations' => 1, 'key' => 1, 'app' => 1]],
+                    ['$project' => $project],
                     ['$unwind' => '$translations'],
                     ['$match' => ['translations.locale' => $locale->key, 'translations.text' => ['$ne' => ""]]]
                 ]
@@ -162,26 +164,17 @@ class I18NText extends AbstractEntity
 
             $appsTranslations = [];
             foreach ($this->wDatabase()->aggregate(...$params) as $translation) {
-                $appIndex = -1;
-
-                // We append translation to existing entry in $appsTranslations, that's why we need another foreach unfortunately.
-                foreach ($appsTranslations as $index => $appTranslations) {
-                    if ($appTranslations['app'] === $translation['app']) {
-                        $appIndex = $index;
-                        break;
+                if (!empty($jsApps)) {
+                    // This means we group by JS apps, otherwise not.
+                    $jsAppName = $translation['meta']['jsApp']['fullName'];
+                    if (!isset($appsTranslations[$jsAppName])) {
+                        $appsTranslations[$jsAppName] = [];
                     }
+                    $appsTranslations[$jsAppName][$translation['key']] = $translation['translations']['text'];
+                } else {
+                    $appsTranslations[$translation['app']][$translation['key']] = $translation['translations']['text'];
                 }
-
-                if ($appIndex === -1) {
-                    $appsTranslations[] = [
-                        'app' => $translation['app'],
-                        'translations' => []
-                    ];
-                    $appIndex = count($appsTranslations) - 1;
-                }
-
-                $appsTranslations[$appIndex]['translations'][$translation['key']] = $translation['translations']['text'];
-            };
+            }
 
             return [
                 'locale'       => $locale->key,

@@ -119,22 +119,58 @@ class I18n {
 
         this.setLocale(Webiny.Config.I18n.locale).setCacheKey(Webiny.Config.I18n.locale.cacheKey);
 
-        const i18nCache = await Webiny.IndexedDB.get('Webiny.I18n');
+        // Cached I18N translations from previous sessions.
+        let i18nCache = await Webiny.IndexedDB.get('Webiny.I18n');
 
-        // If we have the same cache key, that means we have latest translations - we can safely read from local storage.
+        // We only need to fetch JS apps that we currently don't have cached.
+        const api = new Webiny.Api.Endpoint('/entities/webiny/i18n-texts');
+        const allJsApps = _.keys(Webiny.Apps);
+        let neededJsApps = [];
+
+        // If we have the same cache key and the same locale, that means we have latest translations - we can safely read from local storage.
         if (i18nCache && i18nCache.cacheKey === this.getCacheKey() && i18nCache.locale === this.getLocale().key) {
-            this.setTranslations(i18nCache.translations);
+            // Oh yeah, we have the same cache key, but let's still check if we have a JS app which we didn't cache before maybe.
+            allJsApps.forEach(jsApp => {
+                if (!i18nCache.translations[jsApp]) {
+                    neededJsApps.push(jsApp);
+                }
+            });
         } else {
-            // If we have a different cache key (or no cache key at all), we must fetch latest translations from server.
-            const api = new Webiny.Api.Endpoint('/entities/webiny/i18n-texts');
-            const response = await api.get('translations/locales/' + this.getLocale().key, {jsApps: _.keys(Webiny.Apps)});
-
-            let translations = {};
-            response.getData('translations').forEach(app => translations = _.assign(translations, app.translations));
-
-            await Webiny.IndexedDB.set('Webiny.I18n', translations);
-            this.setTranslations(translations);
+            // If no cache, we must fetch translations for all loaded apps.
+            neededJsApps = allJsApps;
+            i18nCache = null;
         }
+
+        // If there are new apps to be added to the existing list of translations, let's load and update the cache.
+        if (neededJsApps.length > 0) {
+            const response = await api.get('translations/locales/' + this.getLocale().key, {jsApps: neededJsApps});
+
+            // If we have a valid cache, let's just update translations in it.
+            if (i18nCache) {
+                _.each(response.getData('translations'), (translations, jsApp) => i18nCache.translations[jsApp] = translations);
+            } else {
+                // Otherwise, set it directly from response.
+                i18nCache = response.getData();
+            }
+
+            // Finally, let's do data normalization - put empty objects for JS apps that don't
+            // have any translations yet, and thus weren't returned in response from the server.
+            allJsApps.forEach(app => {
+                if (!i18nCache.translations[app]) {
+                    i18nCache.translations[app] = {};
+                }
+            });
+
+            // Update the cache.
+            await Webiny.IndexedDB.set('Webiny.I18n', i18nCache);
+            i18nCache = await Webiny.IndexedDB.get('Webiny.I18n');
+        }
+
+
+        // Let's store all keys/translations into I18N - data is flatten, meaning we don't have structure received from server anymore).
+        _.each(i18nCache.translations, jsApps => {
+            _.each(jsApps, translations => this.mergeTranslations(translations))
+        });
 
         // Finally, let's set i18n cookie, this constantly prolongs cookie expiration.
         Webiny.Cookies.set('webiny-i18n', this.getLocale().key, {expires: 30});
@@ -297,6 +333,22 @@ class I18n {
     }
 
     /**
+     * Returns all translations for current locale.
+     * @returns {*|{}}
+     */
+    getTranslations() {
+        return this.translations;
+    }
+
+    /**
+     * Returns true if given key has a translation for currently set locale.
+     * @param key
+     */
+    hasTranslation(key) {
+        return !_.isEmpty(this.translations.key);
+    }
+
+    /**
      * Sets translation for given text key.
      * @param key
      * @param translation
@@ -305,14 +357,6 @@ class I18n {
     setTranslation(key, translation) {
         this.translations[key] = translation;
         return this;
-    }
-
-    /**
-     * Returns all translations for current locale.
-     * @returns {*|{}}
-     */
-    getTranslations() {
-        return this.translations;
     }
 
     /**
@@ -325,11 +369,11 @@ class I18n {
     }
 
     /**
-     * Returns true if given key has a translation for currently set locale.
-     * @param key
+     * Merges given translations object with already existing.
+     * @returns {*|{}}
      */
-    hasTranslation(key) {
-        return !_.isEmpty(this.translations.key);
+    mergeTranslations(translations) {
+        return _.assign(this.translations, translations);
     }
 
     /**
