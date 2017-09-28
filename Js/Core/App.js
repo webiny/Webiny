@@ -15,7 +15,6 @@ class Core extends App {
         Webiny.LocalStorage = new ClientStorage(new Store());
         Webiny.IndexedDB = new ClientStorage(new LocalForage());
 
-        Webiny.I18n.init();
         console.timeStamp('App run: Webiny.Core');
     }
 }

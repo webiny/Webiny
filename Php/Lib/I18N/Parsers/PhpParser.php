@@ -61,7 +61,8 @@ class PhpParser
                     $texts[] = [
                         'app'  => $app->getName(),
                         'key'  => $namespace . '.' . md5($text['base']),
-                        'base' => $text['base']
+                        'base' => $text['base'],
+                        'meta' => ['scanned' => true]
                     ];
                 }
             }

@@ -4,6 +4,7 @@ import _ from 'lodash';
 import $ from 'jquery';
 import 'babel-polyfill';
 import Page from './Lib/Core/Page';
+import I18n from './Lib/I18n';
 import isElementOfType from './Lib/isElementOfType';
 
 class Webiny {
@@ -48,7 +49,7 @@ class Webiny {
                 loader = loader.then(() => this.includeApp(this.Config.Meta[name]).then(app => app.run()));
             });
             return loader;
-        }).then(() => {
+        }).then(I18n.init).then(() => {
             if (this.Auth) {
                 this.Auth.init();
             }

@@ -11,6 +11,7 @@ use Webiny\Component\Mongo\Index\SingleIndex;
  * Class I18NTextGroup
  *
  * @property string $name
+ * @property string $slug
  * @property string $description
  * @property string $app
  * @property int    $totalTexts
@@ -25,7 +26,22 @@ class I18NTextGroup extends AbstractEntity
     {
         parent::__construct();
         $this->attr('app')->char()->setValidators('required')->setToArrayDefault();
-        $this->attr('name')->char()->setValidators('required')->setToArrayDefault();
+        $this->attr('name')->char()->setValidators('required')->setToArrayDefault()->onSet(function ($name) {
+            if (!$this->slug && !$this->exists()) {
+                $this->slug = $this->str($name)->slug()->val();
+            }
+
+            return $name;
+        });
+
+        $this->attr('slug')->char()->setValidators('required,unique')->onSet(function ($slug) {
+            if (!$slug) {
+                return $this->slug;
+            }
+
+            return $this->str($slug)->slug()->val();
+        })->setToArrayDefault()->setOnce();
+
         $this->attr('description')->char()->setToArrayDefault();
 
         $this->attr('totalTexts')->dynamic(function () {
@@ -39,6 +55,16 @@ class I18NTextGroup extends AbstractEntity
         parent::entityIndexes($indexes);
 
         $indexes->add(new SingleIndex('app', 'app'));
+    }
+
+    /**
+     * @param $slug
+     *
+     * @return AbstractEntity|null
+     */
+    public static function findBySlug($slug)
+    {
+        return self::findOne(['slug' => $slug]);
     }
 
     /**
