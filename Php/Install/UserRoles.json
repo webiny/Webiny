@@ -85,7 +85,7 @@
         "slug": "webiny-i18n-manager",
         "description": "This role allows user to manage languages and translations.",
         "permissions": [
-            "webiny-i18n"
+            "webiny-i18n-manager"
         ]
     }
 ]
