@@ -38,6 +38,7 @@ class User extends AbstractEntity implements UserInterface
     use CryptTrait, MailerTrait;
 
     protected static $classId = 'Webiny.Entities.User';
+    protected static $i18nNamespace = 'Webiny.Entities.User';
     protected static $collection = 'Users';
     protected static $mask = '{email}';
 

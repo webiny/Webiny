@@ -28,6 +28,7 @@ class ApiToken extends AbstractEntity implements UserInterface
     use CryptTrait;
 
     protected static $classId = 'Webiny.Entities.ApiToken';
+    protected static $i18nNamespace = 'Webiny.Entities.ApiToken';
     protected static $collection = 'ApiTokens';
     protected static $mask = '{id}';
 

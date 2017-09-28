@@ -24,6 +24,7 @@ class Image extends File
     use ImageTrait;
 
     protected static $classId = 'Webiny.Entities.Image';
+    protected static $i18nNamespace = 'Webiny.Entities.Image';
     protected $dimensions = [];
     protected $quality = 90;
 

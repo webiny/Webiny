@@ -21,6 +21,7 @@ use Webiny\Component\Mongo\Index\SingleIndex;
 class AppNotification extends AbstractEntity
 {
     protected static $classId = 'Webiny.Entities.AppNotification';
+    protected static $i18nNamespace = 'Webiny.Entities.AppNotification';
     protected static $collection = 'AppNotifications';
 
     public function __construct()

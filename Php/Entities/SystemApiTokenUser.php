@@ -12,6 +12,7 @@ use Webiny\Component\Entity\EntityCollection;
 final class SystemApiTokenUser extends AbstractServiceUser
 {
     protected static $classId = 'Webiny.Entities.SystemApiTokenUser';
+    protected static $i18nNamespace = 'Webiny.Entities.SystemApiTokenUser';
 
     /**
      * @var null|EntityCollection

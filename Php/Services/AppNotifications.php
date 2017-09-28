@@ -27,7 +27,7 @@ class AppNotifications extends AbstractService
 
             // Filter types to only the ones user is subscribed to and is allowed to see
             $types = $this->arr($this->wAppNotifications()->getTypes())->filter(function ($type) use ($user) {
-                return in_array($type::SLUG, $user->meta['appNotifications']) && $user->hasRole($type::ROLES);
+                return in_array($type::SLUG, $user->meta['appNotifications'] ?? []) && $user->hasRole($type::ROLES);
             })->map(function ($type) {
                 return $type::SLUG;
             })->values()->val();

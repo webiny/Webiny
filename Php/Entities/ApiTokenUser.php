@@ -11,6 +11,7 @@ class ApiTokenUser extends AbstractServiceUser
 {
     protected static $isDiscoverable = false;
     protected static $classId = 'Webiny.Entities.ApiTokenUser';
+    protected static $i18nNamespace = 'Webiny.Entities.ApiTokenUser';
 
     public function save()
     {

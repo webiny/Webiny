@@ -16,6 +16,7 @@ use Webiny\Component\Mongo\Index\SingleIndex;
 class DashboardUpdates extends AbstractEntity
 {
     protected static $classId = 'Webiny.Entities.DashboardUpdates';
+    protected static $i18nNamespace = 'Webiny.Entities.DashboardUpdates';
     protected static $collection = 'DashboardUpdates';
 
     public function __construct()
