@@ -26,6 +26,9 @@ class Admin extends \Apps\Webiny\Php\Lib\AbstractCli
             $user->password = $password;
             $user->roles = [
                 'administrator',
+                'webiny-administrator',
+                'webiny-marketplace',
+                'webiny-app-notifications',
                 'webiny-acl-api-token-manager',
                 'webiny-logger-manager',
                 'webiny-acl-user-manager',

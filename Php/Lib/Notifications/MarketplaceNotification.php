@@ -1,43 +1,47 @@
 <?php
 
-namespace Apps\Webiny\Php\Lib;
+namespace Apps\Webiny\Php\Lib\Notifications;
 
 use Apps\Webiny\Php\Lib\AppNotifications\AbstractAppNotification;
 
 class MarketplaceNotification extends AbstractAppNotification
 {
-    const TITLE = 'Marketplace Notifications';
-    const DESCRIPTION = 'Notifications regarding new app versions';
-    const SLUG = 'webiny-notification';
-    const ROLES = ['webiny-marketplace'];
+    protected static $i18nNamespace = 'Webiny.Marketplace.Notification';
+
+    private $template;
+
+    public static function getTypeName()
+    {
+        return static::wI18n('Marketplace Notifications');
+    }
+
+    public static function getTypeDescription()
+    {
+        return static::wI18n('Notification regarding new app versions');
+    }
+
+    public static function getTypeSlug()
+    {
+        return 'webiny-marketplace-notification';
+    }
+
+    public static function getTypeRoles()
+    {
+        return ['webiny-marketplace'];
+    }
+
+    public function __construct($template)
+    {
+        $this->template = $template;
+    }
 
     public function getSubject()
     {
-        return 'Cron Job';
+        return $this->wI18n('Marketplace update');
     }
 
     public function getTemplate()
     {
-        return 'Cron job {name} finished successfully!';
-    }
-
-    public function getText()
-    {
-        $text = $this->str($this->getTemplate());
-        $text->replace('{name}', $this->job->name);
-
-        return $text->val();
-    }
-
-    public function getData()
-    {
-        return ['id' => $this->job->id, 'name' => $this->job->name];
-    }
-
-    public function setJob(Job $job)
-    {
-        $this->job = $job;
-
-        return $this;
+        return $this->template;
     }
 }

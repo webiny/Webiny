@@ -1,37 +1,63 @@
 <?php
 
-namespace Apps\Webiny\Php\Lib;
+namespace Apps\Webiny\Php\Lib\Notifications;
 
 use Apps\Webiny\Php\Lib\AppNotifications\AbstractAppNotification;
 
 class WebinyNotification extends AbstractAppNotification
 {
-    const TITLE = 'Webiny Notifications';
-    const DESCRIPTION = 'Various notifications published by Webiny team';
-    const SLUG = 'webiny-notification';
-    const ROLES = ['webiny-administrator'];
+    protected static $i18nNamespace = 'Webiny.Remote.Notification';
 
-    private $subject = '';
+    private $notification;
 
-    public function setSubject($subject)
+    public static function getTypeName()
     {
-        $this->subject = $subject;
+        return static::wI18n('Webiny Notifications');
+    }
 
-        return $this;
+    public static function getTypeDescription()
+    {
+        return static::wI18n('Various notifications published by Webiny team');
+    }
+
+    public static function getTypeSlug()
+    {
+        return 'webiny-notification';
+    }
+
+    public static function getTypeRoles()
+    {
+        return ['webiny-administrator'];
+    }
+
+    public function __construct($notification)
+    {
+        $this->notification = $notification;
     }
 
     public function getSubject()
     {
-        return $this->subject;
+        return $this->notification['title'];
     }
 
     public function getTemplate()
     {
-        return $this->getText();
+        return $this->notification['text'];
     }
+
+    public function getText()
+    {
+        return $this->notification['text'];
+    }
+
+    public function getCreatedOn()
+    {
+        return $this->notification['publishedOn'];
+    }
+
 
     public function getData()
     {
-        return ['id' => $this->job->id, 'name' => $this->job->name];
+        return ['id' => $this->notification['id'], 'draft' => $this->notification['draft']];
     }
 }

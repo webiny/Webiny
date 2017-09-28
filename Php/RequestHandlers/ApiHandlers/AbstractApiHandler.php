@@ -27,7 +27,9 @@ abstract class AbstractApiHandler
         $data = [
             'app'    => $this->toPascalCase($parts[0]),
             'class'  => $this->toPascalCase($parts[1]),
-            'params' => $this->str($parts->key(2, '', true))->explode('/')->filter()->val()
+            'params' => $this->str($parts->key(2, '', true))->explode('/')->filter(function ($val) {
+                return $val !== '';
+            })->val()
         ];
 
         return $data;

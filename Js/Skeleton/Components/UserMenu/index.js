@@ -74,6 +74,6 @@ export default Webiny.createComponent(UserMenu, {
                 return Object.values(modules).filter(m => !_.isNil(m));
             });
         },
-        logoutMenuItem: 'Webiny/Skeleton/UserMenu/LogoutMenuItem'
+        logoutMenuItem: 'Webiny/Skeleton/UserMenu/Logout'
     }]
 });

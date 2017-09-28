@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import Immutable from 'immutable';
+import Webiny from 'webiny';
 
 function filterKey(contentState, entityKey) {
     if (entityKey) {
@@ -15,6 +16,28 @@ class BasePlugin {
         this.config = config;
         this.editor = null;
         this.Draft = null;
+    }
+
+    /**
+     * Method for a more convenient use of i18n module - this will automatically generate a complete namespace for the label
+     * If this method is called without parameters, it will return Webiny.I18n module, from which you can use other functions as well
+     * @param base
+     * @param variables
+     * @param options
+     * @returns {*}
+     */
+    i18n(base, variables, options = {}) {
+        if (!base) {
+            return Webiny.I18n;
+        }
+
+        if (_.isString(base) && _.isString(variables)) {
+            const textKey = Webiny.I18n.getTextKey(base, variables);
+            return Webiny.I18n.render(textKey, variables, options);
+        }
+
+        const textKey = Webiny.I18n.getTextKey(options.namespace, base);
+        return Webiny.I18n.render(textKey, base, variables);
     }
 
     // function borrowed from: https://github.com/draft-js-plugins/draft-js-plugins/blob/master/draft-js-dnd-plugin/src/modifiers/addBlock.js
