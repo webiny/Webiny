@@ -21,7 +21,7 @@ class Webiny {
             this.isHotReloading = () => this.hotReloading;
             this.refresh = () => {
                 this.hotReloading = true;
-                this.app.setState({ts: new Date().getTime()}, () => {
+                this.app && this.app.setState({ts: new Date().getTime()}, () => {
                     this.hotReloading = false;
                 });
             }

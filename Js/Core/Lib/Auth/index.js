@@ -1,13 +1,12 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import _ from 'lodash';
 import Webiny from 'webiny';
 
 class Auth {
     constructor() {
-        this.showLogin = false;
         this.loginRoute = 'Login';
         this.forbiddenRoute = 'Forbidden';
+        this.routerEvent = null;
     }
 
     init() {
@@ -32,37 +31,6 @@ class Auth {
             if (response.getStatus() === 403) {
                 this.onForbidden(response);
             }
-
-            if (response.getStatus() === 401 && response.getData('code') === 'WBY-AUTH-TOKEN-EXPIRED') {
-                if (this.showLogin) {
-                    return;
-                }
-
-                this.showLogin = true;
-                response.data.message = 'Unfortunately we could not perform your latest action. You can retry as soon as you log in again.';
-
-                if (!document.querySelector('login-overlay')) {
-                    document.body.appendChild(document.createElement('login-overlay'));
-                }
-
-                const target = document.querySelector('login-overlay');
-
-                const LoginView = this.renderLogin();
-
-                if (LoginView) {
-                    const props = {
-                        overlay: true,
-                        onSuccess: () => {
-                            this.showLogin = false;
-                            ReactDOM.unmountComponentAtNode(target);
-                        }
-                    };
-
-                    const {createElement, cloneElement, isValidElement} = React;
-                    const view = isValidElement(LoginView) ? cloneElement(LoginView, props) : createElement(LoginView, props);
-                    ReactDOM.render(view, target);
-                }
-            }
         };
     }
 
@@ -74,6 +42,8 @@ class Auth {
      * @returns {*}
      */
     checkUser(routerEvent) {
+        this.routerEvent = routerEvent;
+
         if (Webiny.Model.get('User')) {
             return this.checkRouteRole(routerEvent);
         }
@@ -212,6 +182,8 @@ class Auth {
     verifyUser(apiResponse) {
         const data = apiResponse.getData();
         if (apiResponse.isError() || !this.isAuthorized(data)) {
+            // We need to stop router event to prevent him from rendering the route he initially intended
+            this.routerEvent && this.routerEvent.stop();
             return this.logout();
         }
         Webiny.Model.set('User', data);

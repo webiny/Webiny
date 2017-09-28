@@ -65,7 +65,7 @@ class NotificationsWidget extends Webiny.Ui.Component {
 
 NotificationsWidget.defaultProps = {
     api: '/services/webiny/app-notifications',
-    interval: 10000,
+    interval: 60000, // 60 seconds
     visibleNotifications: 4,
     renderer() {
         const {Link, Icon, Container} = this.props;
