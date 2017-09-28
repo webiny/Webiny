@@ -27,6 +27,16 @@ class App {
     getAuth() {
         return null;
     }
+
+    /**
+     * Content returned from this function will be presented as Marketplace mini-onboarding in a modal dialog.
+     * Return React content you want to see inside the dialog.
+     *
+     * @returns {null}
+     */
+    onInstalled() {
+        return Promise.resolve();
+    }
 }
 
 export default App;
