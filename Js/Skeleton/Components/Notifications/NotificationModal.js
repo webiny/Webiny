@@ -18,7 +18,7 @@ class NotificationModal extends Webiny.Ui.ModalComponent {
             new Draft.Plugins.UnorderedList(),
             new Draft.Plugins.OrderedList(),
             new Draft.Plugins.Alignment(),
-            new Draft.Plugins.Link({validate: 'required'}),
+            new Draft.Plugins.Link(),
             new Draft.Plugins.Blockquote(),
             new Draft.Plugins.Image()
         ];
@@ -29,7 +29,7 @@ class NotificationModal extends Webiny.Ui.ModalComponent {
         let content = notification.text;
         if (notification.data.draft) {
             content = (
-                <Draft.Editor value={notification.data.draft} preview toolbar={false}/>
+                <Draft.Editor value={notification.data.draft} preview toolbar={false} plugins={this.plugins}/>
             );
         }
 
