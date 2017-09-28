@@ -1,9 +1,6 @@
 import React from 'react';
 import Webiny from 'webiny';
 
-/**
- * @i18n.namespace Webiny.Ui.Filters.Time
- */
 class Time extends Webiny.Ui.Component {
 }
 
