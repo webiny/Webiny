@@ -18,7 +18,7 @@ DateField.defaultProps = {
             <List.Table.Field {..._.omit(props, ['renderer'])}>
                 {() => {
                     try {
-                        return Webiny.I18n.date(date);
+                        return Webiny.I18n.date(date, this.props.format);
                     } catch (e) {
                         return this.props.default;
                     }

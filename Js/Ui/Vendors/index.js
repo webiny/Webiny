@@ -2,7 +2,6 @@ import Webiny from 'webiny';
 
 export default () => {
     Webiny.registerModule(
-        new Webiny.Module('Webiny/Vendors/Accounting', () => import('./Accounting')),
         new Webiny.Module('Webiny/Vendors/C3', () => import('./C3')),
         new Webiny.Module('Webiny/Vendors/CodeMirror', () => import('./CodeMirror')),
         new Webiny.Module('Webiny/Vendors/Cropper', () => import('./Cropper')),

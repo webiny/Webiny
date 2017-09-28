@@ -122,8 +122,6 @@ class I18n {
         // Cached I18N translations from previous sessions.
         let i18nCache = await Webiny.IndexedDB.get('Webiny.I18n');
 
-        // We only need to fetch JS apps that we currently don't have cached.
-        const api = new Webiny.Api.Endpoint('/entities/webiny/i18n-texts');
         const allJsApps = _.keys(Webiny.Apps);
         let neededJsApps = [];
 
@@ -136,20 +134,21 @@ class I18n {
                 }
             });
         } else {
-            // If no cache, we must fetch translations for all loaded apps.
+            // If no cache, we must reset cache and fetch translations for all loaded JS apps.
             neededJsApps = allJsApps;
             i18nCache = null;
         }
 
         // If there are new apps to be added to the existing list of translations, let's load and update the cache.
         if (neededJsApps.length > 0) {
+            const api = new Webiny.Api.Endpoint('/entities/webiny/i18n-texts');
             const response = await api.get('translations/locales/' + this.getLocale().key, {jsApps: neededJsApps});
 
             // If we have a valid cache, let's just update translations in it.
             if (i18nCache) {
                 _.each(response.getData('translations'), (translations, jsApp) => i18nCache.translations[jsApp] = translations);
             } else {
-                // Otherwise, set it directly from response.
+                // Otherwise, define it directly with data received in response.
                 i18nCache = response.getData();
             }
 
@@ -163,9 +162,7 @@ class I18n {
 
             // Update the cache.
             await Webiny.IndexedDB.set('Webiny.I18n', i18nCache);
-            i18nCache = await Webiny.IndexedDB.get('Webiny.I18n');
         }
-
 
         // Let's store all keys/translations into I18N - data is flatten, meaning we don't have structure received from server anymore).
         _.each(i18nCache.translations, jsApps => {

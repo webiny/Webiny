@@ -22,6 +22,7 @@ import DateTimeField from './Components/Table/Fields/DateTimeField';
 import DateField from './Components/Table/Fields/DateField';
 import TimeField from './Components/Table/Fields/TimeField';
 import PriceField from './Components/Table/Fields/PriceField';
+import NumberField from './Components/Table/Fields/NumberField';
 import FileSizeField from './Components/Table/Fields/FileSizeField';
 import CaseField from './Components/Table/Fields/CaseField';
 import ToggleField from './Components/Table/Fields/ToggleField';
@@ -68,6 +69,7 @@ _.assign(Table, {
     ToggleField,
     TimeAgoField,
     PriceField,
+    NumberField,
     GravatarField,
     RowDetailsField,
     Actions,
