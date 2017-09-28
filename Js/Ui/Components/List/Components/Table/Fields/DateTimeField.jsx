@@ -7,17 +7,25 @@ class DateTimeField extends Webiny.Ui.Component {
 }
 
 DateTimeField.defaultProps = {
-    format: 'YYYY-MM-DD HH:mm',
+    name: null,
+    default: '-',
+    format: null,
     renderer() {
-        const {List, moment, ...props} = this.props;
-        const datetime = moment(_.get(this.props.data, this.props.name), moment.ISO_8601);
+        const {List, format, ...props} = this.props;
+        const datetime = _.get(this.props.data, this.props.name);
 
         return (
             <List.Table.Field {..._.omit(props, ['renderer'])}>
-                {() => datetime.isValid() ? datetime.format(this.props.format) : this.props.default}
+                {() => {
+                    try {
+                        return Webiny.I18n.datetime(datetime, this.props.format);
+                    } catch (e) {
+                        return this.props.default;
+                    }
+                }}
             </List.Table.Field>
         );
     }
 };
 
-export default Webiny.createComponent(DateTimeField, {modules: ['List', {moment: 'Webiny/Vendors/Moment'}], tableField: true});
+export default Webiny.createComponent(DateTimeField, {modules: ['List'], tableField: true});
