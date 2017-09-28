@@ -12,7 +12,7 @@ class ScanTextsModal extends Webiny.Ui.ModalComponent {
         return (
             <Ui.Modal.Dialog>
                 <Ui.Form
-                    defaultModel={{apps: [], options: {overwriteExisting: true}}}
+                    defaultModel={{apps: [], options: {overwriteExisting: false}}}
                     api="/entities/webiny/i18n-texts"
                     onSubmit={async ({model, form}) => {
                         form.showLoading();

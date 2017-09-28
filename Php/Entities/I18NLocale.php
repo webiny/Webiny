@@ -26,6 +26,7 @@ class I18NLocale extends AbstractEntity
 {
     protected static $collection = 'I18NLocales';
     protected static $classId = 'Webiny.Entities.I18NLocale';
+    protected static $i18nNamespace = 'Webiny.Entities.I18NLocale';
 
     public function __construct()
     {
@@ -91,10 +92,17 @@ class I18NLocale extends AbstractEntity
          * If this is the first locale created, set it as default immediately.
          */
         $this->onBeforeCreate(function () {
-            $this->updateCacheKey();
             if (I18NLocale::count() === 0) {
                 $this->default = true;
             }
+        });
+
+        /**
+         * This could be smarter - update cache only when needed and  not on each save. But since the majority
+         * of fields require the update of cache key, we did it anyways. Possibly upgrade in the future.
+         */
+        $this->onBeforeSave(function() {
+            $this->updateCacheKey();
         });
     }
 

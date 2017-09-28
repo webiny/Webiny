@@ -19,6 +19,7 @@ use Composer\Semver\Semver;
 class Marketplace extends AbstractService
 {
     protected static $classId = 'Webiny.Services.Marketplace';
+    protected static $i18nNamespace = 'Webiny.Services.Marketplace';
 
     protected function serviceApi(ApiContainer $api)
     {

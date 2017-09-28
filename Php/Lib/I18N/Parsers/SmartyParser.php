@@ -27,6 +27,7 @@ class SmartyParser extends AbstractParser
     /**
      * Parses Smarty templates located in /Templates folder, where i18n is used with a Smarty extension - function. It's not too hard,
      * but there is a difference when defining variables, delimiters are not { } but [ ], because Smarty complains.
+     *
      * @param App $app
      *
      * @return array
@@ -35,6 +36,11 @@ class SmartyParser extends AbstractParser
     public function parse(App $app)
     {
         $texts = [];
+
+        // Projects don't have to have Templates folder necessarily.
+        if (!file_exists($app->getPath() . '/Templates')) {
+            return [];
+        }
 
         $di = new RecursiveDirectoryIterator($app->getPath() . '/Templates', RecursiveDirectoryIterator::SKIP_DOTS);
         $it = new RecursiveIteratorIterator($di);
