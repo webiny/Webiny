@@ -91,7 +91,7 @@ class RemoteNotifications
                         $notifiedVersions = $this->settings->getNotifiedVersions();
 
                         foreach ($list as $latestApp) {
-                            $installedApp = $installedApps[$latestApp['localName']];
+                            $installedApp = $installedApps[$latestApp['localName']] ?? null;
                             if (!$installedApp) {
                                 continue;
                             }
