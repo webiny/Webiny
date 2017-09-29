@@ -2,7 +2,7 @@ import _ from 'lodash';
 import md5 from 'blueimp-md5';
 import Webiny from 'webiny';
 import React from 'react';
-import I18nComponent from './I18N';
+import I18nComponent from './I18n';
 import fecha from 'fecha';
 import accounting from 'accounting';
 
