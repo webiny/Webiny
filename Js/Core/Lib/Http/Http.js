@@ -1,7 +1,7 @@
 import Webiny from 'webiny';
 import _ from 'lodash';
-import HttpRequest from './Http/Request';
-import HttpResponse from './Http/Response';
+import HttpRequest from './Request';
+import HttpResponse from './Response';
 
 const requestInterceptors = [];
 const responseInterceptors = [];
@@ -32,9 +32,14 @@ function execute(http, options, aggregate = true) {
     let response;
     /* eslint-disable */
     for (let interceptor of requestInterceptors) {
-        response = interceptor(http, options);
-        if (response instanceof HttpResponse) {
-            break;
+        try {
+            response = interceptor(http, options);
+            if (response instanceof HttpResponse) {
+                break;
+            }
+        } catch (e) {
+            console.warn("Exception was thrown in one of the HTTP request interceptors!");
+            console.error(e);
         }
     }
     /* eslint-enable */
@@ -62,7 +67,12 @@ function execute(http, options, aggregate = true) {
     }
 
     return response.then(httpResponse => {
-        responseInterceptors.forEach(interceptor => interceptor(httpResponse));
+        try {
+            responseInterceptors.forEach(interceptor => interceptor(httpResponse));
+        } catch (e) {
+            console.warn("Exception was thrown in one of the HTTP response interceptors!");
+            console.error(e);
+        }
         return httpResponse;
     });
 }
