@@ -20,7 +20,6 @@ class App extends \Apps\Webiny\Php\Lib\Apps\App
     {
         parent::bootstrap();
 
-        $this->addAppRoute('/^\/$/', 'Webiny:Templates/Welcome.tpl', 400);
         $this->addAppRoute('/^\\' . $this->wConfig()->get('Webiny.Backend.Path') . '/', 'Webiny:Templates/Backend.tpl', 450);
 
         User::onActivity(function (User $user) {

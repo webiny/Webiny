@@ -83,7 +83,7 @@ class Browse extends Webiny.Ui.View {
                             <Link
                                 newTab
                                 type="default"
-                                url={`/token/${this.state.authToken}`}>
+                                url={`https://www.webiny.com/token/${this.state.authToken}`}>
                                 <Icon icon="fa-cog"/> {this.i18n('Manage Account')}
                             </Link>
                         }

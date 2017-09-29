@@ -113,3 +113,8 @@ Services:
             IndexStorage:
                 Object: \Webiny\Hrc\IndexStorage\Mongo
                 ObjectArguments: ["@Mongo.Webiny"]
+
+Routes:
+    WebinyWelcome:
+        Path: /
+        Callback: Php/RequestHandlers/Welcome

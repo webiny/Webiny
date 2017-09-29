@@ -7,7 +7,7 @@ class Notifications extends Webiny.Ui.View {
 
 Notifications.defaultProps = {
     renderer() {
-        const {View, Data, List, List: {Table}, Container} = this.props;
+        const {View, Data, List, List: {Table}, Container, Alert} = this.props;
 
         const listProps = {
             ref: ref => this.list = ref,
@@ -27,6 +27,10 @@ Notifications.defaultProps = {
                                     return React.cloneElement(loader, {}, 'Fetching notifications...');
                                 }
 
+                                if (!data.list.length) {
+                                    return <Alert type="success">You have no notifications!</Alert>
+                                }
+
                                 return (
                                     <div>
                                         {data.list.map(r => <Container key={r.id} notification={r}/>)}
@@ -42,5 +46,5 @@ Notifications.defaultProps = {
 };
 
 export default Webiny.createComponent(Notifications, {
-    modules: ['View', 'List', 'Data', {Container: 'Webiny/Skeleton/Notifications/Container'}]
+    modules: ['View', 'Alert', 'List', 'Data', {Container: 'Webiny/Skeleton/Notifications/Container'}]
 });
