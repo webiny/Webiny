@@ -50,6 +50,10 @@ class Marketplace extends AbstractService
             $response = $this->server('/services/marketplace-manager/marketplace/apps');
             $response = json_decode($response, true);
 
+            if (!isset($response['data']['list'])) {
+                throw new AppException($response['message'] ?? $this->wI18n('Error while trying to fetch the list apps on marketplace.'));
+            }
+
             // Check which apps are installed locally and add their version to the response
             $localApps = $this->wApps()->getInstalledApps();
             foreach ($response['data']['list'] as $index => $app) {

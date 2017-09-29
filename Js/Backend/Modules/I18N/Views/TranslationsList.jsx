@@ -23,7 +23,7 @@ class TranslationsList extends Webiny.Ui.View {
 }
 
 TranslationsList.defaultProps = {
-    renderer () {
+    renderer() {
         return (
             <Webiny.Ui.LazyLoad
                 modules={['ViewSwitcher', 'View', 'Button', 'ButtonGroup', 'Icon', 'List', 'Input', 'Form', 'Grid', 'Select', 'Alert', 'Link']}>
@@ -34,7 +34,11 @@ TranslationsList.defaultProps = {
                                 <Ui.View.List>
                                     <Ui.View.Header
                                         title={this.i18n(`Translations`)}
-                                        description={this.i18n('Manage translations for texts in all installed apps.')}>
+                                        description={(
+                                            this.i18n('Manage translations for {linkToTextsSection} in all installed apps.', {
+                                                linkToTextsSection: <Ui.Link route="I18N.Texts.List">{this.i18n('texts')}</Ui.Link>
+                                            })
+                                        )}>
                                         <Ui.ButtonGroup>
                                             <Ui.Button
                                                 type="primary"
