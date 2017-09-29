@@ -659,12 +659,12 @@ class Form extends Webiny.Ui.Component {
         const newModel = _.has(responseData, 'entity') ? responseData.entity : responseData;
         this.setState({model: newModel, initialModel: _.cloneDeep(newModel), error: null, showError: false});
         if (_.isFunction(this.props.onSuccessMessage)) {
-            Webiny.Growl.success(this.props.onSuccessMessage({model, form: this}));
+            Webiny.Growl.success(this.props.onSuccessMessage({model, apiResponse, form: this}));
         }
 
         const onSubmitSuccess = this.props.onSubmitSuccess;
         if (_.isFunction(onSubmitSuccess)) {
-            return onSubmitSuccess({apiResponse, form: this});
+            return onSubmitSuccess({model, apiResponse, form: this});
         }
 
         if (_.isString(onSubmitSuccess)) {

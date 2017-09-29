@@ -21,7 +21,7 @@ Settings.defaultProps = {
             onSubmitSuccess: this.props.onSubmitSuccess,
             children: this.props.children,
             loadModel({form}) {
-                this.showLoading();
+                form.showLoading();
                 return form.api.get('/').then(apiResponse => {
                     form.hideLoading();
                     if (apiResponse.isError()) {
