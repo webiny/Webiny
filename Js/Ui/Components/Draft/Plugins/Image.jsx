@@ -118,7 +118,7 @@ ImageEditComponent.defaultProps = {
                                     className="caption"
                                     value={this.props.data.caption || ''}
                                     onChange={captionChange}
-                                    placeholder={this.i18n('Enter a caption for this image')}/>
+                                    placeholder={Webiny.I18n('Enter a caption for this image')}/>
                             </Ui.Grid.Col>
                         </Ui.Grid.Row>
                     </div>
