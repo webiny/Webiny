@@ -20,13 +20,13 @@ Settings.defaultProps = {
             onSuccessMessage: this.props.onSuccessMessage,
             onSubmitSuccess: this.props.onSubmitSuccess,
             children: this.props.children,
-            loadModel() {
+            loadModel({form}) {
                 this.showLoading();
-                return this.api.get('/').then(apiResponse => {
-                    this.hideLoading();
+                return form.api.get('/').then(apiResponse => {
+                    form.hideLoading();
                     if (apiResponse.isError()) {
                         Webiny.Growl.danger(apiResponse.getMessage(), Webiny.I18n('That didn\'t go as expected...'), true);
-                        return this.handleApiError(apiResponse);
+                        return form.handleApiError(apiResponse);
                     }
                     return apiResponse.getData();
                 });

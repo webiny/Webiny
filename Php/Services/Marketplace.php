@@ -74,12 +74,8 @@ class Marketplace extends AbstractService
             $localApps = $this->wApps()->getInstalledApps();
             $app['installedVersion'] = $localApps[$app['localName']]['Version'] ?? null;
             $app['installedWebinyVersion'] = $localApps['Webiny']['Version'];
-            $app['canInstall'] = Semver::satisfies($localApps['Webiny']['Version'], $app['webinyVersion']);
-
-            if ($app['version'] === $app['installedVersion']) {
-                $app['canInstall'] = false;
-            }
-
+            $app['webinyVersionOk'] = Semver::satisfies($localApps['Webiny']['Version'], $app['webinyVersion']);
+            $app['updateAvailable'] = $app['version'] !== $app['installedVersion'];
             $response['data']['entity'] = $app;
 
             return new ApiRawResponse($response);

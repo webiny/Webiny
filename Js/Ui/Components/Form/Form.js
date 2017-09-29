@@ -75,7 +75,7 @@ class Form extends Webiny.Ui.Component {
         this.setState({model, initialModel: model});
 
         if (this.props.loadModel) {
-            return this.props.loadModel.call(this, {form: this}).then(customModel => {
+            return this.props.loadModel({form: this}).then(customModel => {
                 const mergedModel = _.merge({}, this.props.defaultModel || {}, customModel);
                 this.setState({model: mergedModel, loading: false, initialModel: _.cloneDeep(mergedModel)});
             });
@@ -182,7 +182,7 @@ class Form extends Webiny.Ui.Component {
                 // If total size is larger than 500Kb...
                 if (pe.total > 500000) {
                     pe.progress = Math.round(pe.loaded / pe.total * 100);
-                    this.props.onProgress.call(this, {event: pe, form: this});
+                    this.props.onProgress({event: pe, form: this});
                 }
             }
         };
@@ -613,7 +613,7 @@ class Form extends Webiny.Ui.Component {
     handleApiError(apiResponse) {
         this.setState({error: apiResponse, showError: true}, () => {
             // error callback
-            this.props.onSubmitError.call(this, {apiResponse, form: this});
+            this.props.onSubmitError({apiResponse, form: this});
 
             // Check error data and if validation error - try highlighting invalid fields
             const data = apiResponse.getData();
@@ -659,12 +659,12 @@ class Form extends Webiny.Ui.Component {
         const newModel = _.has(responseData, 'entity') ? responseData.entity : responseData;
         this.setState({model: newModel, initialModel: _.cloneDeep(newModel), error: null, showError: false});
         if (_.isFunction(this.props.onSuccessMessage)) {
-            Webiny.Growl.success(this.props.onSuccessMessage({model}));
+            Webiny.Growl.success(this.props.onSuccessMessage({model, form: this}));
         }
 
         const onSubmitSuccess = this.props.onSubmitSuccess;
         if (_.isFunction(onSubmitSuccess)) {
-            return onSubmitSuccess.call(this, {apiResponse, form: this});
+            return onSubmitSuccess({apiResponse, form: this});
         }
 
         if (_.isString(onSubmitSuccess)) {
@@ -723,10 +723,10 @@ Form.defaultProps = {
     onFailure: _.noop,
     onLoad: _.noop,
     prepareLoadedData: null,
-    onProgress({event}) {
+    onProgress({event, form}) {
         Webiny.import(['Growl', 'Progress']).then(({Growl, Progress}) => {
             const cmp = <div>Your data is being uploaded...<Progress value={event.progress}/></div>;
-            Webiny.Growl(<Growl.Info id={this.growlId} title={Webiny.I18n('Please be patient')} sticky={true}>{cmp}</Growl.Info>);
+            Webiny.Growl(<Growl.Info id={form.growlId} title={Webiny.I18n('Please be patient')} sticky={true}>{cmp}</Growl.Info>);
         });
     },
     onSuccessMessage() {

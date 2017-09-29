@@ -32,7 +32,7 @@ class AppDetails extends Webiny.Ui.View {
         const {app} = this.state;
         const {Button} = this.props;
 
-        if (!app.canInstall) {
+        if (!app.updateAvailable || !app.webinyVersionOk) {
             return null;
         }
 
@@ -59,7 +59,7 @@ AppDetails.defaultProps = {
 
         return (
             <div className={styles.appDetails}>
-                {!app.canInstall && (
+                {!app.webinyVersionOk && (
                     <Alert type="warning">
                         {this.i18n(`This app requires Webiny {appWebinyVersion}. Your current Webiny is {currentVersion}.`, {
                             appWebinyVersion: <strong>{app.webinyVersion}</strong>,
