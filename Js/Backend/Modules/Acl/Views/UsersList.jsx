@@ -1,10 +1,25 @@
 import React from 'react';
 import Webiny from 'webiny';
+import _ from 'lodash';
 
 /**
  * @i18n.namespace Webiny.Backend.Acl.UsersList
  */
 class UsersList extends Webiny.Ui.View {
+    constructor() {
+        super();
+        this.bindMethods('renderFullNameField');
+    }
+
+    renderFullNameField(row) {
+        let fullName = _.trim(`${row.data.firstName} ${row.data.lastName}`);
+        fullName = _.isEmpty(fullName) ? row.data.email : fullName;
+        return (
+            <span>
+                <strong>{fullName}</strong><br/>{row.data.id}
+            </span>
+        );
+    }
 }
 
 UsersList.defaultProps = {
@@ -50,11 +65,7 @@ UsersList.defaultProps = {
                             <Table.Row>
                                 <Table.GravatarField name="gravatar"/>
                                 <Table.Field name="firstName" label={this.i18n('First Name')} sort="firstName" route="Users.Edit">
-                                    {({data}) => (
-                                        <span>
-                                            <strong>{data.firstName} {data.lastName}</strong><br/>{data.id}
-                                        </span>
-                                    )}
+                                    {this.renderFullNameField}
                                 </Table.Field>
                                 <Table.Field name="email" sort="email" label={this.i18n('Email')}/>
                                 <Table.ToggleField
@@ -66,7 +77,7 @@ UsersList.defaultProps = {
                                         if (!value) {
                                             return this.i18n('This will disable user\'s account and prevent him from logging in!')
                                         }
-                                        return false;
+                                        return null;
                                     }}/>
                                 <Table.DateField name="createdOn" label={this.i18n('Created On')} sort="createdOn"/>
                                 <Table.Actions>
