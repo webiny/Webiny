@@ -98,7 +98,7 @@ class Marketplace extends AbstractService
             header("X-Accel-Buffering: no");
             header("Content-Type: text/event-stream");
             header("Cache-Control: no-cache");
-            ob_end_flush();
+            @ob_end_flush();
 
             try {
                 $appInstaller->install();
