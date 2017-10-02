@@ -147,7 +147,7 @@ class Setup extends Plugin {
                 }
             };
 
-            const mongoVolume = process.platform === "win32" ? 'mongodb_' + (new Date().getTime()) : null;
+            const mongoVolume = process.platform === "win32" ? 'mongodata' : null;
 
             try {
                 // Populate Environments.yaml
