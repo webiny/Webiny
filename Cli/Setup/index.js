@@ -222,7 +222,7 @@ class Setup extends Plugin {
                 Webiny.info('Initializing Docker containers...');
                 // For windows we need to create a special volume for mongo data
                 if (process.platform === "win32") {
-                    Webiny.shellExecute('docker volume create --name=' + mongoVolume);
+                    // Webiny.shellExecute('docker volume create --name=' + mongoVolume);
                 }
                 // Run Docker containers so we can execute install scripts.
                 Webiny.shellExecute('docker-compose up -d');
