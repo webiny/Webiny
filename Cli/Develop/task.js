@@ -141,18 +141,6 @@ class Develop extends Build {
             })
         };
 
-        // This is required for Windows to catch Ctrl-C event
-        if (process.platform === "win32") {
-            const rl = require("readline").createInterface({
-                input: process.stdin,
-                output: process.stdout
-            });
-            
-            rl.on("SIGINT", () => {
-                process.exit(0);
-            });
-        }
-
         // Start a hidden listener to allow http interaction with build process
         this.initHttpServer();
 
