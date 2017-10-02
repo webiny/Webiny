@@ -1,5 +1,7 @@
 version: '2'
 
+volumes: {}
+
 services:
     nginx:
         image: nginx:alpine
@@ -20,9 +22,6 @@ services:
 
     mongodb:
         image: mongo
-        environment:
-          - MONGO_DATA_DIR=/data/db
-          - MONGO_LOG_DIR=/dev/null
         volumes:
           - ./data/db:/data/db
         ports: []
