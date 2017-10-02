@@ -147,6 +147,8 @@ class Setup extends Plugin {
                 }
             };
 
+            const mongoVolume = process.platform === "win32" ? 'mongodb_' + (new Date().getTime()) : null;
+
             try {
                 // Populate Environments.yaml
                 let config = yaml.safeLoad(Webiny.readFile(configs.environments));
@@ -193,7 +195,7 @@ class Setup extends Plugin {
 
                     // For windows we will use a special volume instead of a shared folder on host
                     if (process.platform === "win32") {
-                        config.services.mongodb.volumes[0] = 'mongodb:/data';
+                        config.services.mongodb.volumes[0] = mongoVolume + ':/data';
                         _.set(config, 'volumes.mongodb.external', true);
                     }
 
@@ -220,7 +222,7 @@ class Setup extends Plugin {
                 Webiny.info('Initializing Docker containers...');
                 // For windows we need to create a special volume for mongo data
                 if (process.platform === "win32") {
-                    Webiny.shellExecute('docker volume create --name=mongodb');
+                    Webiny.shellExecute('docker volume create --name=' + mongoVolume);
                 }
                 // Run Docker containers so we can execute install scripts.
                 Webiny.shellExecute('docker-compose up -d');
