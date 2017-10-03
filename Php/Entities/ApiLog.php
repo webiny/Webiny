@@ -49,25 +49,7 @@ class ApiLog extends AbstractEntity
 
             return $value;
         });
-        $this->attr('user')->char()->onSet(function ($value) {
-            if ($value instanceof User) {
-                return $value->id;
-            }
 
-            return $value;
-        })->onGet(function ($value) {
-            if ($this->wDatabase()->isId($value)) {
-                return $this->wUser()->byId($value);
-            }
-
-            return $value;
-        })->onToDb(function ($value) {
-            if ($value instanceof User) {
-                return $value->id;
-            }
-
-            return $value;
-        });
         $this->attr('request')->object()->setToArrayDefault();
         $this->attr('method')->char()->setToArrayDefault();
 
@@ -90,6 +72,11 @@ class ApiLog extends AbstractEntity
             $user = self::wAuth()->getUser();
             if (!$user) {
                 return $query->abort();
+            }
+
+            if($query->getCondition('token') === 'incognito') {
+                $query->setCondition('token', null);
+                $query->setCondition('createdBy', null);
             }
 
             if (!$user->hasRole('webiny-acl-api-token-manager')) {

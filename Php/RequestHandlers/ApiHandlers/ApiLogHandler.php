@@ -57,7 +57,7 @@ class ApiLogHandler extends AbstractApiHandler
 
         if (!$user) {
             if ($this->wConfig()->get('Webiny.Acl.LogIncognitoRequests', false)) {
-                $this->saveTokenLog($request, 'incognito');
+                $this->saveTokenLog($request, null);
             }
 
             return;
@@ -75,15 +75,6 @@ class ApiLogHandler extends AbstractApiHandler
         if ($user instanceof ApiToken) {
             $apiTokenLog->token = $user->id;
         }
-
-        if ($this->isInstanceOf($user, User::class)) {
-            $apiTokenLog->user = $user->id;
-        }
-
-        if (is_string($user) && $user === 'incognito') {
-            $apiTokenLog->user = 'incognito';
-        }
-
 
         $apiTokenLog->method = $req->getRequestMethod();
         $apiTokenLog->request = [
