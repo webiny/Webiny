@@ -1,4 +1,3 @@
-const username = require('username');
 const Plugin = require('webiny-cli/lib/plugin');
 const Webiny = require('webiny-cli/lib/webiny');
 
