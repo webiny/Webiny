@@ -4,7 +4,7 @@
 .idea
 Cache/
 node_modules/*
-bower_components/*
+data/
 
 #################
 ## Eclipse

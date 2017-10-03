@@ -22,7 +22,8 @@ class Auth extends Webiny.Base.Auth {
                 this.onForbidden(response);
             }
 
-            const loginRoute = Webiny.Router.getActiveRoute().name === this.loginRoute;
+            const activeRoute = Webiny.Router.getActiveRoute();
+            const loginRoute = activeRoute && activeRoute.name === this.loginRoute;
             const userDataExists = Webiny.Model.get('User');
             if (response.getStatus() === 401 && response.getData('code') === 'WBY-AUTH-TOKEN-EXPIRED' && !loginRoute && userDataExists) {
                 const now = new Date().getTime();

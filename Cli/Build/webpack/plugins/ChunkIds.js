@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const path = require('path');  
 const _ = require('lodash');
 const NormalModule = require("webpack/lib/NormalModule");
 
@@ -30,9 +31,9 @@ class ChunkIds {
         const appName = this.compiler.options.name.split('.')[0] + '_';
         const jsName = this.compiler.options.name.replace('.', '_Js_') + '_';
         const chunkModules = chunk.mapModules(m => m).filter(this.filterJsModules).sort(this.sortByIndex);
-        const filteredModules = chunkModules.filter(m => !m.resource.includes('/node_modules/'));
-        let chunkName = _.get(filteredModules, '[0].resource', _.get(chunkModules, '0.resource', 'undefined')).split('/Apps/').pop();
-        return chunkName.replace('/index.js', '').replace(/\//g, '_').replace(/\.jsx?/, '').replace(jsName, '').replace(appName, '');
+        const filteredModules = chunkModules.filter(m => !m.resource.includes('node_modules'));
+        let chunkName = _.get(filteredModules, '[0].resource', _.get(chunkModules, '0.resource', 'undefined')).split(`${path.sep}Apps${path.sep}`).pop();
+        return chunkName.replace(`${path.sep}index.js`, '').replace(/\//g, '_').replace(/\\/g, '_').replace(/\.jsx?/, '').replace(jsName, '').replace(appName, '');
     }
 
     sortByIndex(a, b) {
@@ -59,7 +60,7 @@ class ChunkIds {
             return '';
         }
 
-        return module.resource.split('/Apps/').pop();
+        return module.resource.split(`${path.sep}Apps${path.sep}`).pop();
     }
 }
 
