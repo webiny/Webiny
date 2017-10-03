@@ -195,8 +195,8 @@ class Setup extends Plugin {
 
                     // For windows we will use a special volume instead of a shared folder on host
                     if (process.platform === "win32") {
-                        config.services.mongodb.volumes[0] = mongoVolume + ':/data';
-                        _.set(config, 'volumes.' + mongoVolume, {});
+                        // config.services.mongodb.volumes[0] = mongoVolume + ':/data';
+                        // _.set(config, 'volumes.' + mongoVolume, {});
                     }
 
                     Webiny.writeFile(configs.dockerCompose, yaml.safeDump(config, {indent: 4}));
