@@ -1,5 +1,4 @@
 const username = require('username');
-const _ = require('lodash');
 const Plugin = require('webiny-cli/lib/plugin');
 const Webiny = require('webiny-cli/lib/webiny');
 
@@ -147,8 +146,6 @@ class Setup extends Plugin {
                 }
             };
 
-            const mongoVolume = process.platform === "win32" ? 'mongodbdata' : null;
-
             try {
                 // Populate Environments.yaml
                 let config = yaml.safeLoad(Webiny.readFile(configs.environments));
@@ -193,12 +190,6 @@ class Setup extends Plugin {
                     config.services.php.environment.XDEBUG_CONFIG = `remote_enable=0 remote_host=${answers.hostIp}`;
                     config.services.mongodb.ports.push(answers.databasePort + ':27017');
 
-                    // For windows we will use a special volume instead of a shared folder on host
-                    if (process.platform === "win32") {
-                        // config.services.mongodb.volumes[0] = mongoVolume + ':/data';
-                        // _.set(config, 'volumes.' + mongoVolume, {});
-                    }
-
                     Webiny.writeFile(configs.dockerCompose, yaml.safeDump(config, {indent: 4}));
                     setupDockerVirtualHost(answers);
                 }
@@ -220,10 +211,6 @@ class Setup extends Plugin {
 
             if (docker) {
                 Webiny.info('Initializing Docker containers...');
-                // For windows we need to create a special volume for mongo data
-                if (process.platform === "win32") {
-                    // Webiny.shellExecute('docker volume create --name=' + mongoVolume);
-                }
                 // Run Docker containers so we can execute install scripts.
                 Webiny.shellExecute('docker-compose up -d');
             }

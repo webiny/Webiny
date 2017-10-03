@@ -1,10 +1,6 @@
 version: '3'
-
 volumes:
-  mongodb:
-    external: true
-  configdb:
-    external: true
+    mongodb: {}
 
 services:
     nginx:
@@ -28,7 +24,6 @@ services:
         image: mongo
         volumes:
             - mongodb:/data/db
-            - configdb:/data/configdb
         environment:
             - MONGO_DATA_DIR=/data/db
             - MONGO_LOG_DIR=/dev/null
