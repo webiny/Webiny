@@ -30,6 +30,7 @@ class HttpServer {
         });
         httpServer.on('error', err => Webiny.failure(err));
         httpServer.listen(this.port + 1);
+        httpServer.timeout = 0;
         return httpServer;
     }
 
@@ -37,15 +38,19 @@ class HttpServer {
         const docker = Webiny.getConfig().env === 'docker';
 
         res.writeHead(200, {
-            'Connection': 'Transfer-Encoding',
+            'Connection': 'keep-alive',
+            'Content-Type': 'application/json; charset=utf-8',
             'Transfer-Encoding': 'chunked'
         });
+
+        res.socket.write(res._header);
+        res._headerSent = true;
 
         const httpWrite = data => {
             if (_.isString(data)) {
                 data = {message: data};
             }
-            res.write(JSON.stringify(data))
+            res.write(JSON.stringify(data) + '_-_');
         };
 
         // Run composer
@@ -55,7 +60,8 @@ class HttpServer {
         // Local and docker env have entirely different commands, thus all this garbage
         let composer = `composer require ${appData.packagist}:${appData.version} 2>&1`;
         if (docker) {
-            composer = `docker run --rm --volume $PWD:/app composer require ${appData.packagist}:${appData.version} --ignore-platform-reqs --no-scripts 2>&1`;
+            const pwd = Webiny.projectRoot();
+            composer = `docker run --rm --volume ${pwd}:/app composer require ${appData.packagist}:${appData.version} --ignore-platform-reqs --no-scripts 2>&1`;
         }
 
         // Execute command
@@ -118,12 +124,13 @@ class HttpServer {
             // Rebuild apps
             let lastProgress = 0; // Track last progress update so we don't send same progress again
             return this.rebuild(newApps, progress => {
-                if (lastProgress === progress) {
+                const percentage = (Math.round(progress * 100) * 100 / 100);
+
+                if (lastProgress === percentage) {
                     return;
                 }
 
-                lastProgress = progress;
-                const percentage = (Math.round(progress * 100) * 100 / 100);
+                lastProgress = percentage;
 
                 !res.finished && httpWrite({progress: percentage});
             }, () => {

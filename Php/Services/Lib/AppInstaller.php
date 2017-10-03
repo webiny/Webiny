@@ -58,11 +58,15 @@ class AppInstaller
         $curl = new \Curl\Curl();
         $curl->setTimeout(0);
         $curl->setOpt(CURLOPT_WRITEFUNCTION, function ($curl, $data) {
-            $res = json_decode($data, true);
-            $this->echo($res);
-            if (isset($res['error'])) {
-                // Throw to abort installation
-                throw new AppException($res['error']);
+            $chunks = array_filter(explode('_-_', $data));
+
+            foreach($chunks as $chunk) {
+                $res = json_decode($chunk, true);
+                $this->echo($res);
+                if (isset($res['error'])) {
+                    // Throw to abort installation
+                    throw new AppException($res['error']);
+                }
             }
 
             return strlen($data);
@@ -99,6 +103,7 @@ class AppInstaller
 
     private function echo ($data)
     {
+        $data['id'] = uniqid();
         echo json_encode($data) . "_-_";
         flush();
     }

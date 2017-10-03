@@ -26,7 +26,7 @@ class InstallModal extends Webiny.Ui.ModalComponent {
 
         // Add initial message
         const messages = this.state.messages;
-        messages.push({message: 'Fetching app details...'});
+        messages.push({message: 'Fetching app details...', id: 0});
         this.setState({messages});
 
         api.setConfig({
@@ -41,7 +41,6 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                     currentResponseLength = newLength;
                 }
 
-                const messages = this.state.messages;
                 // We may receive multiple messages in a single line so we need to handle them using a delimiter
                 response.split("_-_").filter(l => l.length).map(line => {
                     try {
@@ -51,14 +50,20 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                         }
 
                         if (res.progress) {
-                            const lastMessage = messages.length - 1;
-                            messages[lastMessage].message = <Progress value={parseInt(res.progress)}/>;
-                            this.setState({messages, progress: parseInt(res.progress), finished: res.progress === 100});
+                            this.setState(function(state){
+                                const lastMessage = state.messages.length - 1;
+                                const messages = state.messages;
+                                messages[lastMessage].message = <Progress value={parseInt(res.progress)}/>;
+                                return {messages, progress: parseInt(res.progress), finished: res.progress === 100};
+                            });
                         }
 
                         if (res.message) {
-                            messages.push(res);
-                            this.setState({messages, time: new Date().getTime()});
+                            this.setState(function (state) {
+                                const messages = state.messages;
+                                messages.push(res);
+                                return {messages, lastId: res.id};
+                            });
                         }
                     } catch (e) {
 
@@ -138,8 +143,8 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                                 </Alert>
                             </Logic.Show>
                             <pre style={{height: 500, overflow: 'scroll', fontSize: 12}} ref={ref => this.logger = ref}>
-                            {this.state.messages.map((m, i) => (
-                                <div key={i}>{m.message}</div>
+                            {this.state.messages.map(m => (
+                                <div key={m.id}>{m.message}</div>
                             ))}
                             </pre>
                         </Logic.Hide>

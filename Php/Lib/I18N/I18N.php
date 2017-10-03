@@ -75,7 +75,7 @@ class I18N
 
         $locale = $this->wCookie()->get('webiny-i18n');
         if (!$locale) {
-            $locale = $this->wRequest()->header('webiny-i18n');
+            $locale = $this->wRequest()->header('x-webiny-i18n');
         }
 
         if ($locale) {

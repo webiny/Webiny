@@ -1,4 +1,6 @@
-version: '2'
+version: '3'
+volumes:
+    mongodb: {}
 
 services:
     nginx:
@@ -20,10 +22,10 @@ services:
 
     mongodb:
         image: mongo
-        environment:
-          - MONGO_DATA_DIR=/data/db
-          - MONGO_LOG_DIR=/dev/null
         volumes:
-          - ./data/db:/data/db
+            - mongodb:/data/db
+        environment:
+            - MONGO_DATA_DIR=/data/db
+            - MONGO_LOG_DIR=/dev/null
         ports: []
         command: mongod --smallfiles --logpath=/dev/null # --quiet

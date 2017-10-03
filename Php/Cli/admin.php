@@ -15,6 +15,11 @@ use Webiny\Component\StdLib\Exception\AbstractException;
 $autoloader = require_once getcwd() . '/vendor/autoload.php';
 $autoloader->addPsr4('Apps\\Webiny\\', getcwd() . '/Apps/Webiny');
 
+/**
+ * Class Admin
+ *
+ * This script is used to create an admin user during initial Webiny installation (or later on through CLI)
+ */
 class Admin extends \Apps\Webiny\Php\Lib\AbstractCli
 {
     public function run($email, $password)
@@ -38,6 +43,10 @@ class Admin extends \Apps\Webiny\Php\Lib\AbstractCli
             ];
             $user->firstName = '';
             $user->lastName = '';
+            $user->meta['appNotifications'] = [
+                'webiny-notification',
+                'webiny-marketplace-notification'
+            ];
             $user->save();
             die(json_encode(['status' => 'created']));
         } catch (AbstractException $e) {

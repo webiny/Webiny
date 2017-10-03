@@ -19,6 +19,16 @@ final class SystemApiTokenUser extends AbstractServiceUser
      */
     private $roles = null;
 
+    /**
+     * Get SystemApiTokenUser
+     *
+     * @return SystemApiTokenUser|\Apps\Webiny\Php\Lib\Entity\AbstractEntity|null
+     */
+    public static function load()
+    {
+        return static::findOne(['meta.apiToken' => 'system']);
+    }
+
     public function populate($data)
     {
         if (!$this->isDbData($data)) {
