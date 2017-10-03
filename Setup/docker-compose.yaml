@@ -6,6 +6,8 @@ volumes:
   configdb:
     external: true
 
+volumes: {}
+
 services:
     nginx:
         image: nginx:alpine
