@@ -79,28 +79,17 @@ class ApiLogsList extends Webiny.Ui.View {
     }
 
     renderUrlField(row) {
-        let {user, token} = row;
+        console.log(row);
+        const {createdBy: user, token, request, method} = row;
         let userLabel = null;
         let tokenLabel = null;
 
         const {Ui} = this.props;
 
-        if (!_.isNil(user)) {
-            userLabel = (
-                <Ui.Label type="default" inline>
-                    {user.firstName} {user.lastName} ({user.email})
-                </Ui.Label>
-            );
-        }
-
         if (!_.isNil(token)) {
             if (token === 'system') {
                 tokenLabel = (
                     <Ui.Label type="error" inline>System token</Ui.Label>
-                );
-            } else if (token === 'incognito') {
-                tokenLabel = (
-                    <Ui.Label type="default" inline>Incognito</Ui.Label>
                 );
             } else {
                 tokenLabel = (
@@ -111,10 +100,24 @@ class ApiLogsList extends Webiny.Ui.View {
             }
         }
 
+        if (!_.isNil(user) && !tokenLabel) {
+            userLabel = (
+                <Ui.Label type="default" inline>
+                    {user.firstName} {user.lastName} ({user.email})
+                </Ui.Label>
+            );
+        }
+
+        if (!user && !token) {
+            tokenLabel = (
+                <Ui.Label type="default" inline>Incognito</Ui.Label>
+            );
+        }
+
         return (
             <field>
-                {row.request.url}<br/>
-                <Ui.Label type="info" inline>{row.method}</Ui.Label>
+                {request.url}<br/>
+                <Ui.Label type="info" inline>{method}</Ui.Label>
                 {userLabel}
                 {tokenLabel}
             </field>
@@ -134,7 +137,7 @@ ApiLogsList.defaultProps = {
     renderer() {
         const listProps = {
             api: '/entities/webiny/api-logs',
-            fields: '*,createdOn,user[id,firstName,lastName,email],token[id,description,owner]',
+            fields: '*,createdOn,createdBy[id,firstName,lastName,email],token[id,description,owner]',
             query: {
                 token: Webiny.Router.getParams('token')
             },
@@ -197,8 +200,8 @@ ApiLogsList.defaultProps = {
                                                             api="/entities/webiny/users"
                                                             fields="id,firstName,lastName,email"
                                                             searchFields="firstName,lastName,email"
-                                                            optionRenderer={({option: {data:item}}) => `${item.firstName} ${item.lastName} (${item.email})`}
-                                                            selectedRenderer={({option: {data:item}}) => `${item.firstName} ${item.lastName} (${item.email})`}
+                                                            optionRenderer={({option: {data: item}}) => `${item.firstName} ${item.lastName} (${item.email})`}
+                                                            selectedRenderer={({option: {data: item}}) => `${item.firstName} ${item.lastName} (${item.email})`}
                                                             name="createdBy"
                                                             placeholder={this.i18n('Filter by user')}
                                                             onChange={apply()}/>
@@ -218,7 +221,11 @@ ApiLogsList.defaultProps = {
                                                             {this.renderUrlField(row)}
                                                         </Ui.ExpandableList.Field>
                                                         <Ui.ExpandableList.Field all={3} name="Created On" className="text-center">
-                                                            <span>{Ui.moment(row.createdOn).fromNow()}<br/>{row.createdOn}</span>
+                                                            <span>
+                                                                <Ui.Filters.TimeAgo value={row.createdOn}/>
+                                                                <br/>
+                                                                <Ui.Filters.DateTime value={row.createdOn}/>
+                                                            </span>
                                                         </Ui.ExpandableList.Field>
                                                         <Ui.ExpandableList.RowDetailsList title={row.request.url}>
                                                             <Ui.CodeHighlight language="json">
@@ -245,5 +252,5 @@ ApiLogsList.defaultProps = {
 
 export default Webiny.createComponent(ApiLogsList, {
     modulesProp: 'Ui',
-    modules: ['View', 'Link', 'List', 'Grid', 'Input', 'ExpandableList', 'Label', 'CodeHighlight', 'Select', 'Search', 'Logic', {moment: 'Webiny/Vendors/Moment'}]
+    modules: ['View', 'Link', 'List', 'Grid', 'Input', 'ExpandableList', 'Label', 'CodeHighlight', 'Select', 'Search', 'Filters']
 });
