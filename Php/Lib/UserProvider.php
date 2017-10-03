@@ -85,7 +85,7 @@ class UserProvider
 
         $systemToken = $this->wConfig()->getConfig()->get('Webiny.Acl.Token');
         if ($systemToken && $systemToken == $token) {
-            return SystemApiTokenUser::findOne(['meta.apiToken' => 'system']);
+            return SystemApiTokenUser::load();
         }
 
         /* @var $token ApiToken */

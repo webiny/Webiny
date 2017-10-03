@@ -29,10 +29,7 @@ class UserProviderEventHandler
         $token = $data['meta']['apiToken'] ?? null;
 
         if ($token === 'system') {
-            $user = new SystemApiTokenUser();
-            $user->populate($data);
-
-            return $user;
+            return SystemApiTokenUser::load();
         }
 
         if ($this->wDatabase()->isId($token)) {
