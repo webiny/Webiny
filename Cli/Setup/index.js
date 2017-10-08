@@ -208,22 +208,16 @@ class Setup extends Plugin {
                 return;
             }
 
-            if (docker) {
-                Webiny.info('Initializing Docker containers...');
-                // Run Docker containers so we can execute install scripts.
-                Webiny.shellExecute('docker-compose up -d');
-            }
-
-            const php = docker ? 'docker-compose run php php' : 'php';
+            const php = 'php';
 
             // Run Webiny installation procedure
             Webiny.info('Running Webiny app installation...');
-            Webiny.shellExecute(`${php} Apps/Webiny/Php/Cli/install.php Local Webiny`);
+            Webiny.shellExecute(`php Apps/Webiny/Php/Cli/install.php Local Webiny`);
 
             // Create admin user
             const params = [answers.user, answers.password].join(' ');
             try {
-                let output = Webiny.shellExecute(`${php} Apps/Webiny/Php/Cli/admin.php Local ${params}`, {stdio: 'pipe'});
+                let output = Webiny.shellExecute(`php Apps/Webiny/Php/Cli/admin.php Local ${params}`, {stdio: 'pipe'});
                 output = JSON.parse(output);
                 if (output.status === 'created') {
                     Webiny.success('Admin user created successfully!');
