@@ -5,6 +5,7 @@ namespace Apps\Webiny\Php\Services;
 use Apps\Webiny\Php\Entities\AppNotification;
 use Apps\Webiny\Php\Lib\Api\ApiContainer;
 use Apps\Webiny\Php\Lib\AppNotifications\AbstractAppNotification;
+use Apps\Webiny\Php\Lib\Exceptions\AppException;
 use Apps\Webiny\Php\Lib\Response\ListResponse;
 use Apps\Webiny\Php\Lib\Services\AbstractService;
 use Apps\Webiny\Php\Services\Lib\RemoteNotifications;
@@ -54,7 +55,7 @@ class AppNotifications extends AbstractService
                 return $type::getTypeSlug();
             })->values()->val();
 
-            $query = ['type' => $types];
+            $query = ['type' => $types, 'user' => $user->id];
             $notifications = AppNotification::find($query, ['-createdOn'], $perPage, $page);
 
             $listResponse = $this->apiFormatList($notifications, $fields);
@@ -95,6 +96,10 @@ class AppNotifications extends AbstractService
          * @api.description Mark notification as read
          */
         $api->post('{notification}/mark-read', function (AppNotification $notification) {
+            $user = $this->wAuth()->getUser();
+            if ($notification->createdBy->id !== $user->id) {
+                throw new AppException('You are only allowed to modify notifications that belong to you.', 'WBY-APP-NOTIFICATION');
+            }
             $notification->read = true;
             $notification->save();
 
