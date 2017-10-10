@@ -11,13 +11,13 @@ Reports:
     Wkhtmltopdf: autodetect
 
 Notifications:
-    Api: https://beta.webiny.com/api
+    Api: https://api.webiny.com
     Intervals: # in minutes
         WebinyNotifications: 60
         MarketplaceAppVersions: 60
 
 Marketplace:
-    Api: https://beta.webiny.com/api
+    Api: https://api.webiny.com
 
 Storage:
     Services:
