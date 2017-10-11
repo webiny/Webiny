@@ -1,19 +1,6 @@
 const Plugin = require('webiny-cli/lib/plugin');
 const Webiny = require('webiny-cli/lib/webiny');
 
-function setupDockerVirtualHost(answers) {
-    // Create host file
-    let hostFile = Webiny.readFile(Webiny.projectRoot('docker-nginx.conf'));
-    let server = answers.domain.replace('http://', '').replace('https://', '').split(':')[0];
-    hostFile = hostFile.replace('{DOMAIN_HOST}', server);
-
-    try {
-        Webiny.writeFile(Webiny.projectRoot('docker-nginx.conf'), hostFile);
-    } catch (err) {
-        Webiny.failure(err);
-    }
-}
-
 function setupVirtualHost(answers) {
     const chalk = require('chalk');
     const {magenta, white} = chalk;
@@ -46,12 +33,11 @@ class Setup extends Plugin {
 
         program
             .command('setup')
-            .description('Setup Webiny project.')
-            .option('--user [user]', 'Admin user email.')
-            .option('--password [password]', 'SSH connection string to the target server.')
-            .option('--domain [domain]', 'Project domain.') // https://github.com/tj/commander.js/issues/370
+            .description('Setup Webiny project')
+            .option('--user [user]', 'Admin user email')
+            .option('--password [password]', 'Admin user password')
+            .option('--url [url]', 'Project domain') // https://github.com/tj/commander.js/issues/370
             .option('--database [database]', 'Database name')
-            .option('--databasePort [databasePort]', 'Database port (for Docker)')
             .action((cmd) => {
                 const config = _.assign({}, cmd.parent.opts(), cmd.opts());
                 Webiny.runTask('setup', config);
@@ -60,7 +46,7 @@ class Setup extends Plugin {
                 console.log();
                 console.log('  Examples:');
                 console.log();
-                console.log('    $ webiny-cli setup --user username@domain.com --password dev --domain http://my.app:8000 --database Webiny');
+                console.log('    $ webiny-cli setup --user username@domain.com --password dev --url http://my.app:8000 --database Webiny');
                 console.log();
             });
     }
@@ -71,7 +57,6 @@ class Setup extends Plugin {
         const generatePassword = require('password-generator');
 
         const configs = {
-            dockerCompose: Webiny.projectRoot('docker-compose.yaml'),
             environments: Webiny.projectRoot('Configs/Environments.yaml'),
             base: {
                 application: Webiny.projectRoot('Configs/Base/Webiny.yaml'),
@@ -84,8 +69,10 @@ class Setup extends Plugin {
         };
 
         try {
+            console.log('SETUP PARAMS', answers);
             // Populate Environments.yaml
             let config = yaml.safeLoad(Webiny.readFile(configs.environments));
+            console.log('CONFIG', config);
             config.Environments.Local = answers.domain;
             Webiny.writeFile(configs.environments, yaml.safeDump(config, {indent: 4}));
 
@@ -114,23 +101,6 @@ class Setup extends Plugin {
             config.Webiny.ApiUrl = answers.domain + '/api';
             Webiny.writeFile(configs.local.application, yaml.safeDump(config, {indent: 4}));
 
-            // Populate docker-compose.yaml
-            if (docker) {
-                config = yaml.safeLoad(Webiny.readFile(configs.dockerCompose));
-                config.services.nginx.ports.push(nginxPort + ':80');
-
-                let alias = answers.domain;
-                alias = alias.replace('http://', '').replace('https://', '').split(':')[0];
-                config.services.nginx.networks.default.aliases.push(alias);
-
-                // config.services.php.extra_hosts.push('dockerhost:' + answers.hostIp);
-                // config.services.php.environment.XDEBUG_CONFIG = `remote_enable=0 remote_host=${answers.hostIp}`;
-                config.services.mongodb.ports.push(answers.databasePort + ':27017');
-
-                Webiny.writeFile(configs.dockerCompose, yaml.safeDump(config, {indent: 4}));
-                setupDockerVirtualHost(answers);
-            }
-
             Webiny.success('Configuration files written successfully!');
 
             // We need to store the env if the project is run using docker
@@ -144,12 +114,6 @@ class Setup extends Plugin {
         } catch (err) {
             Webiny.failure(err.message, err);
             return;
-        }
-
-        if (docker) {
-            Webiny.info('Initializing Docker containers...');
-            // Run Docker containers so we can execute install scripts.
-            Webiny.shellExecute('docker-compose up -d');
         }
 
         // Run Webiny installation procedure
@@ -192,48 +156,19 @@ class Setup extends Plugin {
 
         Webiny.log("\nNow we need to create a platform configuration and your first user:\n");
 
-        // Need this later in setup
-        let nginxPort = null;
-
         // Define wizard questions
         const questions = [
             {
                 type: 'input',
                 name: 'domain',
                 message: 'What\'s your local domain (e.g. http://domain.app:8000)?',
-                validate: url => {
-                    let valid = Webiny.validate.domain(url);
-                    // Check if URL contains port which is mandatory for Docker setup
-                    if (valid === true && docker) {
-                        const message = 'Docker requires a port to be provided. Please add a port number to the URL.';
-                        nginxPort = parseInt(_.get(url.split(':'), 2));
-                        if (_.isNaN(nginxPort)) {
-                            return message;
-                        }
-                    }
-                    return valid;
-                }
+                validate: Webiny.validate.domain
             },
             {
                 type: 'input',
                 name: 'database',
                 message: 'What\'s your database name?',
-                default: () => {
-                    return 'webiny';
-                }
-            },
-            {
-                type: 'input',
-                name: 'databasePort',
-                when: docker,
-                message: 'What\'s your mongodb service port?',
-                default: ({domain}) => {
-                    try {
-                        return parseInt(domain.split(':')[2]) + 1;
-                    } catch (e) {
-                        return '';
-                    }
-                }
+                default: 'webiny'
             },
             {
                 type: 'input',

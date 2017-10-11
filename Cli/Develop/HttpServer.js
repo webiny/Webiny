@@ -35,8 +35,6 @@ class HttpServer {
     }
 
     installApp(req, res, url, appData) {
-        const docker = Webiny.getConfig().env === 'docker';
-
         res.writeHead(200, {
             'Connection': 'keep-alive',
             'Content-Type': 'application/json; charset=utf-8',
@@ -57,15 +55,8 @@ class HttpServer {
         httpWrite(`Installing ${appData.name}...`);
         httpWrite(`Running composer...`);
 
-        // Local and docker env have entirely different commands, thus all this garbage
-        let composer = `composer require ${appData.packagist}:${appData.version} 2>&1`;
-        if (docker) {
-            const pwd = Webiny.projectRoot();
-            composer = `docker run --rm --volume ${pwd}:/app composer require ${appData.packagist}:${appData.version} --ignore-platform-reqs --no-scripts 2>&1`;
-        }
-
         // Execute command
-        return this.command(composer, httpWrite).then(cmdRes => {
+        return this.command(`composer require ${appData.packagist}:${appData.version} 2>&1`, httpWrite).then(cmdRes => {
             if (cmdRes.error) {
                 throw Error(cmdRes.error);
             }
@@ -81,7 +72,7 @@ class HttpServer {
         }).then(() => {
             httpWrite('Installing roles, permissions and DB indexes...');
             const params = [
-                docker ? 'docker-compose run php php' : 'php',
+                'php',
                 'Apps/Webiny/Php/Cli/install.php',
                 'Local',
                 appData.localName

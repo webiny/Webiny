@@ -45,15 +45,9 @@ class AppInstaller
         $appData = $this->appData;
         $bsConfig = file_get_contents($this->wStorage('Root')->getAbsolutePath('webiny.json'));
         $bsConfig = $this->arr(json_decode($bsConfig, true));
-        $webPath = $this->wConfig()->get('Webiny.WebUrl');
-
-        // If docker, change to dockerhost
-        if ($bsConfig['env'] === 'docker') {
-            $webPath = 'http://dockerhost';
-        }
 
         $port = $bsConfig->keyNested('browserSync.port', 3000, true);
-        $bsPath = $this->url($webPath)->setPort(intval($port) + 1);
+        $bsPath = $this->url('http://localhost')->setPort(intval($port) + 1);
 
         $curl = new \Curl\Curl();
         $curl->setTimeout(0);
