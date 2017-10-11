@@ -69,10 +69,8 @@ class Setup extends Plugin {
         };
 
         try {
-            console.log('SETUP PARAMS', answers);
             // Populate Environments.yaml
             let config = yaml.safeLoad(Webiny.readFile(configs.environments));
-            console.log('CONFIG', config);
             config.Environments.Local = answers.domain;
             Webiny.writeFile(configs.environments, yaml.safeDump(config, {indent: 4}));
 
