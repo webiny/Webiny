@@ -14,7 +14,9 @@ class SimpleFile extends Webiny.Ui.FormComponent {
     }
 
     clearFiles() {
-        this.props.onChange(null);
+        this.props.onChange(null).then(() => {
+            this.setState({isValid: null});
+        });
     }
 
     fileChanged(file, error) {
@@ -41,6 +43,10 @@ class SimpleFile extends Webiny.Ui.FormComponent {
     getFiles(e) {
         this.setState({error: null, errors: null});
         e.stopPropagation();
+        if (this.props.onGetFiles) {
+            this.props.onGetFiles({$this: this});
+            return;
+        }
         this.reader.getFiles();
     }
 
@@ -58,6 +64,7 @@ SimpleFile.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
     multiple: false,
     sizeLimit: 2485760,
     readAs: 'data', // or binary
+    onGetFiles: null,
     renderError() {
         const {Alert} = this.props;
         return (
@@ -112,7 +119,7 @@ SimpleFile.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
             <FormGroup valid={this.state.isValid} className={this.props.className}>
                 {this.renderLabel()}
                 <div>{error}</div>
-                <div className={styles.wrapper}>
+                <div className={styles.wrapper + ' inputGroup'}>
                     <input
                         type="text"
                         placeholder={this.getPlaceholder()}
