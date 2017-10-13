@@ -37,7 +37,7 @@ class FormComponent extends Component {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        if (props.validate !== this.props.validate && this.props.attachValidators) {
+        if (!_.isEqual(props.validate, this.props.validate) && this.props.attachValidators) {
             this.props.attachValidators(props);
             if (!this.isValid()) {
                 this.validate();
