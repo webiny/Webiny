@@ -14,8 +14,8 @@ const Webiny = require('webiny-cli/lib/webiny');
 
 module.exports = function (app) {
     // Construct URL for hot-reload and assets
-    const port = _.get(Webiny.getConfig(), 'browserSync.port', 3000);
-    const domain = _.get(Webiny.getConfig(), 'browserSync.domain', 'http://localhost');
+    const port = _.get(Webiny.getConfig(), 'cli.port', 3000);
+    const domain = _.get(Webiny.getConfig(), 'cli.domain', 'http://localhost');
     const url = domain + ':' + port;
 
     const name = app.getName();

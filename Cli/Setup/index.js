@@ -101,14 +101,15 @@ class Setup extends Plugin {
 
             Webiny.success('Configuration files written successfully!');
 
+            const wConfig = Webiny.getConfig();
+            wConfig.cli = {port: answers.cliPort || 3000};
+
             // We need to store the env if the project is run using docker
             if (docker) {
-                const wConfig = Webiny.getConfig();
                 wConfig.env = 'docker';
-                // Set default browserSync port for Docker only
-                wConfig.browserSync = {port: 3010};
-                Webiny.saveConfig(wConfig);
             }
+            Webiny.saveConfig(wConfig);
+
         } catch (err) {
             Webiny.failure(err.message, err);
             return;

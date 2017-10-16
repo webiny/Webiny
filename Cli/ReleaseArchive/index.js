@@ -38,10 +38,10 @@ class Release extends Plugin {
     }
 
     runTask(config) {
-        return this.processHook('before-release-archive', {config}).then(() => {
+        return Webiny.dispatch('before-release-archive', {config}).then(() => {
             const task = new Task();
             return task.run(config).then(archive => {
-                return this.processHook('after-release-archive', {config, archive});
+                return Webiny.dispatch('after-release-archive', {config, archive});
             });
         });
     }

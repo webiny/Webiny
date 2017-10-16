@@ -9,7 +9,7 @@ class Exit extends Plugin {
     }
 
     getMenu() {
-        return new Menu('Exit').addLineBefore();
+        return new Menu('Exit').addLineBefore().setOrder(0);
     }
 
     runTask() {
