@@ -70,6 +70,7 @@ export default () => {
         new Webiny.Module('Time', () => import('./Time')),
         new Webiny.Module('Tooltip', () => import('./Tooltip')),
         new Webiny.Module('View', () => import('./View')),
-        new Webiny.Module('ViewSwitcher', () => import('./ViewSwitcher'))
+        new Webiny.Module('ViewSwitcher', () => import('./ViewSwitcher')),
+        new Webiny.Module('Wizard', () => import('./Wizard'))
     );
 };
