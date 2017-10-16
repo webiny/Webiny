@@ -1,6 +1,7 @@
 {
     "cli": {
         "plugins": [
+            "./Cli/Api",
             "./Cli/Develop",
             "./Cli/Build",
             "./Cli/RunTests",
