@@ -82,8 +82,9 @@ class Setup extends Plugin {
             Webiny.success('Configuration files written successfully!');
 
             const wConfig = Webiny.getConfig();
+            const u = url.parse(answers.domain);
             wConfig.cli = {
-                domain: url.parse(answers.domain).origin,
+                domain: u.protocol + '//' + u.hostname,
                 port: answers.cliPort || 3000
             };
 
