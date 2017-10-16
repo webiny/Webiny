@@ -70,7 +70,7 @@ class Validator {
         return customMessages;
     }
 
-    validate(value, validators, formInputs = null) {
+    validate(value, validators, formData = {}) {
         if (!_.isPlainObject(validators)) {
             validators = this.parseValidateProperty(validators);
         }
@@ -86,10 +86,11 @@ class Validator {
         Object.keys(validators).forEach(validatorName => {
             const funcValidator = _.isFunction(validators[validatorName]) ? validators[validatorName] : false;
             const args = funcValidator ? [] : _.clone(validators[validatorName]);
-            if (formInputs) {
-                this.parseArgs(args, formInputs);
+            if (formData.inputs) {
+                this.parseArgs(args, formData.inputs);
             }
             args.unshift(value);
+            args.push(formData);
             chain = chain.then(function validationLink() {
                 let validator = null;
                 try {
