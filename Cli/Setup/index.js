@@ -30,25 +30,6 @@ class Setup extends Plugin {
         super(program);
 
         this.selectApps = false;
-
-        program
-            .command('setup')
-            .description('Setup Webiny project')
-            .option('--user [user]', 'Admin user email')
-            .option('--password [password]', 'Admin user password')
-            .option('--url [url]', 'Project domain') // https://github.com/tj/commander.js/issues/370
-            .option('--database [database]', 'Database name')
-            .action((cmd) => {
-                const config = _.assign({}, cmd.parent.opts(), cmd.opts());
-                Webiny.runTask('setup', config);
-            })
-            .on('--help', () => {
-                console.log();
-                console.log('  Examples:');
-                console.log();
-                console.log('    $ webiny-cli setup --user username@domain.com --password dev --url http://my.app:8000 --database Webiny');
-                console.log();
-            });
     }
 
     runTask(answers) {
@@ -102,7 +83,10 @@ class Setup extends Plugin {
             Webiny.success('Configuration files written successfully!');
 
             const wConfig = Webiny.getConfig();
-            wConfig.cli = {port: answers.cliPort || 3000};
+            wConfig.cli = {
+                domain: answers.domain,
+                port: answers.cliPort || 3000
+            };
 
             // We need to store the env if the project is run using docker
             if (docker) {
