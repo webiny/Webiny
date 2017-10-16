@@ -584,7 +584,11 @@ class Form extends Webiny.Ui.Component {
         const hasValidators = _.keys(validators).length;
         const messages = this.inputs[component.props.name].messages;
         // Validate input
-        return Promise.resolve(Webiny.Validator.validate(component.getValue(), validators, this.inputs)).then(validationResults => {
+        const formData = {
+            inputs: this.inputs,
+            model: this.getModel()
+        };
+        return Promise.resolve(Webiny.Validator.validate(component.getValue(), validators, formData)).then(validationResults => {
             if (hasValidators) {
                 const isValid = component.getValue() === null ? null : true;
                 component.setState({isValid, validationResults});
