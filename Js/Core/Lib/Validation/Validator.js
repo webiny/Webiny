@@ -150,6 +150,13 @@ formValidator.addValidator('eq', (value, equalTo) => {
     throw new ValidationError(Webiny.I18n('This field must be equal to {equalTo}', {equalTo}));
 });
 
+formValidator.addValidator('neq', (value, equalTo) => {
+    if (value !== equalTo) {
+        return true;
+    }
+    throw new ValidationError(Webiny.I18n('This field must not be equal to {equalTo}', {equalTo}));
+});
+
 formValidator.addValidator('minLength', (value, length) => {
     if (_.isObject(value)) {
         value = _.keys(value);

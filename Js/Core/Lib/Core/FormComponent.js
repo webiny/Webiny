@@ -140,7 +140,7 @@ class FormComponent extends Component {
     }
 }
 
-FormComponent.defaultProps = {
+FormComponent.defaultProps = Component.extendProps({
     disabled: false,
     disabledBy: null,
     label: null,
@@ -230,6 +230,6 @@ FormComponent.defaultProps = {
             </Webiny.Ui.LazyLoad>
         );
     }
-};
+});
 
 export default FormComponent;

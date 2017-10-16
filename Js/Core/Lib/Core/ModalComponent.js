@@ -62,7 +62,7 @@ class ModalComponent extends Component {
     }
 }
 
-ModalComponent.defaultProps = {
+ModalComponent.defaultProps = Component.extendProps({
     renderDialog: null,
     renderer() {
         const dialog = this.renderDialog();
@@ -72,6 +72,6 @@ ModalComponent.defaultProps = {
         }
         return React.cloneElement(dialog, props);
     }
-};
+});
 
 export default ModalComponent;

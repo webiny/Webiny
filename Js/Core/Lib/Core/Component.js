@@ -173,6 +173,10 @@ class Component extends React.Component {
         return cursor;
     }
 
+    static extendProps(props) {
+        return _.merge({}, this.defaultProps, props);
+    }
+
     render() {
         if (!this.isRendered()) {
             return null;
