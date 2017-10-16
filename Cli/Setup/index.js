@@ -1,5 +1,6 @@
 const Plugin = require('webiny-cli/lib/plugin');
 const Webiny = require('webiny-cli/lib/webiny');
+const url = require('url');
 
 function setupVirtualHost(answers) {
     const chalk = require('chalk');
@@ -21,8 +22,6 @@ function setupVirtualHost(answers) {
     } catch (err) {
         Webiny.failure(err);
     }
-
-    return Promise.resolve(answers);
 }
 
 class Setup extends Plugin {
@@ -33,23 +32,23 @@ class Setup extends Plugin {
     }
 
     runTask(answers) {
-        const docker = process.env.WEBINY_ENVIRONMENT === 'docker';
-        const yaml = require('js-yaml');
-        const generatePassword = require('password-generator');
+        return new Promise((resolve, reject) => {
+            const docker = process.env.WEBINY_ENVIRONMENT === 'docker';
+            const yaml = require('js-yaml');
+            const generatePassword = require('password-generator');
 
-        const configs = {
-            environments: Webiny.projectRoot('Configs/Environments.yaml'),
-            base: {
-                application: Webiny.projectRoot('Configs/Base/Webiny.yaml'),
-                database: Webiny.projectRoot('Configs/Base/Database.yaml'),
-                security: Webiny.projectRoot('Configs/Base/Security.yaml')
-            },
-            local: {
-                application: Webiny.projectRoot('Configs/Local/Webiny.yaml')
-            }
-        };
+            const configs = {
+                environments: Webiny.projectRoot('Configs/Environments.yaml'),
+                base: {
+                    application: Webiny.projectRoot('Configs/Base/Webiny.yaml'),
+                    database: Webiny.projectRoot('Configs/Base/Database.yaml'),
+                    security: Webiny.projectRoot('Configs/Base/Security.yaml')
+                },
+                local: {
+                    application: Webiny.projectRoot('Configs/Local/Webiny.yaml')
+                }
+            };
 
-        try {
             // Populate Environments.yaml
             let config = yaml.safeLoad(Webiny.readFile(configs.environments));
             config.Environments.Local = answers.domain;
@@ -84,7 +83,7 @@ class Setup extends Plugin {
 
             const wConfig = Webiny.getConfig();
             wConfig.cli = {
-                domain: answers.domain,
+                domain: url.parse(answers.domain).origin,
                 port: answers.cliPort || 3000
             };
 
@@ -94,37 +93,32 @@ class Setup extends Plugin {
             }
             Webiny.saveConfig(wConfig);
 
-        } catch (err) {
-            Webiny.failure(err.message, err);
-            return;
-        }
+            // Run Webiny installation procedure
+            Webiny.info('Running Webiny app installation...');
+            Webiny.shellExecute(`php Apps/Webiny/Php/Cli/install.php Local Webiny`);
 
-        // Run Webiny installation procedure
-        Webiny.info('Running Webiny app installation...');
-        Webiny.shellExecute(`php Apps/Webiny/Php/Cli/install.php Local Webiny`);
+            // Create admin user
+            const params = [answers.user, answers.password].join(' ');
+            try {
+                let output = Webiny.shellExecute(`php Apps/Webiny/Php/Cli/admin.php Local ${params}`, {stdio: 'pipe'});
+                output = JSON.parse(output);
+                if (output.status === 'created') {
+                    Webiny.success('Admin user created successfully!');
+                }
 
-        // Create admin user
-        const params = [answers.user, answers.password].join(' ');
-        try {
-            let output = Webiny.shellExecute(`php Apps/Webiny/Php/Cli/admin.php Local ${params}`, {stdio: 'pipe'});
-            output = JSON.parse(output);
-            if (output.status === 'created') {
-                Webiny.success('Admin user created successfully!');
+                if (output.status === 'failed') {
+                    Webiny.exclamation(output.message);
+                }
+            } catch (err) {
+                Webiny.failure(err.message);
             }
 
-            if (output.status === 'failed') {
-                Webiny.exclamation(output.message);
+            // If Docker - we do not run nginx setup wizard
+            if (!docker) {
+                setupVirtualHost(answers);
             }
-        } catch (err) {
-            Webiny.failure(err.message);
-        }
-
-        // If Docker - we do not run nginx setup wizard
-        if (docker) {
-            return answers;
-        }
-
-        return setupVirtualHost(answers);
+            resolve(answers);
+        });
     }
 
     runWizard() {
