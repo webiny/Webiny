@@ -43,11 +43,11 @@ class AppInstaller
     public function install()
     {
         $appData = $this->appData;
-        $bsConfig = file_get_contents($this->wStorage('Root')->getAbsolutePath('webiny.json'));
-        $bsConfig = $this->arr(json_decode($bsConfig, true));
+        $cliConfig = file_get_contents($this->wStorage('Root')->getAbsolutePath('webiny.json'));
+        $cliConfig = $this->arr(json_decode($cliConfig, true));
 
-        $port = $bsConfig->keyNested('browserSync.port', 3000, true);
-        $bsPath = $this->url('http://localhost')->setPort(intval($port) + 1);
+        $port = $cliConfig->keyNested('cli.port', 3000, true);
+        $bsPath = $this->url($cliConfig->keyNested('cli.domain', 'http://localhost', true))->setPort(intval($port) + 1);
 
         $curl = new \Curl\Curl();
         $curl->setTimeout(0);
