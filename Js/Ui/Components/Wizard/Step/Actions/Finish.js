@@ -3,28 +3,34 @@ import Webiny from 'webiny';
 import _ from 'lodash';
 
 /**
- * @i18n.namespace Webiny.Ui.Wizard.Actions.Previous
+ * @i18n.namespace Webiny.Ui.Wizard.Actions.Finish
  */
 class Finish extends Webiny.Ui.Component {
 }
 
-// Also receives all standard Button component props
+// Receives all standard Button component props
 Finish.defaultProps = {
     wizard: null,
+    onClick: _.noop,
     label: Webiny.I18n('Finish'),
     renderer() {
-        if (this.props.wizard.isLastStep()) {
+        if (!this.props.wizard.isLastStep()) {
             return null;
         }
 
-        const Button = this.props.Button;
-        return (
-            <Button
-                type="primary"
-                onClick={_.isFunction(this.props.onClick) ? this.props.onClick : this.props.wizard.finish}
-                label={this.props.label}
-                align="right"/>
-        );
+        const {Button} = this.props;
+        const onClick = async () => {
+            await this.props.onClick();
+            this.props.wizard.form.validate().then(valid => valid && this.props.wizard.finish());
+        };
+
+        const props = _.assign({
+            type: 'primary',
+            onClick,
+            align: 'right',
+        }, _.omit(this.props, ['Button', 'onClick', 'renderer']));
+
+        return <Button {...props}/>;
     }
 };
 
