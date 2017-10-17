@@ -20,12 +20,22 @@ class Container extends Webiny.Ui.Component {
     }
 
     /**
+     * Let's just call onStart callback.
+     */
+    componentDidMount() {
+        super.componentDidMount();
+        this.props.onStart(this.getCallbackParams());
+    }
+
+    /**
      * Returns total count of all valid steps.
      * @returns {number}
      */
     countSteps() {
         let count = 0;
-        React.Children.forEach(this.props.children, component => Webiny.isElementOfType(component, Step) && count++);
+        const components = this.props.children(this.getCallbackParams());
+        React.Children.forEach(components.props.children, component => Webiny.isElementOfType(component, Step) && count++);
+
         return count;
     }
 
@@ -60,7 +70,7 @@ class Container extends Webiny.Ui.Component {
      */
     parseSteps() {
         const output = [];
-        const components = this.props.children({wizard: this, form: this.form, model: this.form.getModel()});
+        const components = this.props.children(this.getCallbackParams());
         React.Children.forEach(components.props.children, (component, index) => {
             if (Webiny.isElementOfType(component, Step)) {
                 output.push(this.parseStep(component, index));
@@ -102,6 +112,16 @@ class Container extends Webiny.Ui.Component {
     }
 
     /**
+     * For easier passing of callback params.
+     * @param merge
+     * @returns {{wizard: Container, form: *, model: *}}
+     */
+    getCallbackParams(merge) {
+        const output = {wizard: this, form: this.form, model: this.form.getModel()};
+        return merge ? _.assign(output, merge) : output;
+    }
+
+    /**
      * Sets current step.
      * @param index
      * @returns {Promise.<void>}
@@ -113,7 +133,11 @@ class Container extends Webiny.Ui.Component {
         const next = steps[index];
 
         this.setState({loading: true});
-        previous && await previous.onLeave({wizard: this, previous, next});
+
+        const params = this.getCallbackParams({previous, next});
+        previous && await previous.onLeave(params);
+
+        await this.props.onTransition(params);
 
         this.setState(state => {
             state.loading = false;
@@ -142,13 +166,23 @@ class Container extends Webiny.Ui.Component {
         this.setStep(this.getCurrentStepIndex() - 1);
     }
 
+    /**
+     * Called when wizard is finished so additional actions can be made if needed.
+     * @returns {Promise.<void>}
+     */
     async finish() {
+        this.setState({loading: true});
+        await this.props.onFinish(this.getCallbackParams());
+        this.setState({loading: false});
     }
 }
 
 Container.defaultProps = {
     form: null,
     initialStep: 0,
+    onTransition: _.noop,
+    onFinish: _.noop,
+    onStart: _.noop,
     navigationRenderer(params) {
         return (
             <ul>
@@ -185,12 +219,7 @@ Container.defaultProps = {
         );
     },
     renderer() {
-        const params = {
-            wizard: this,
-            form: this.form,
-            model: this.form.getModel(),
-            steps: {list: [], current: null}
-        };
+        const params = this.getCallbackParams({steps: {list: [], current: null}});
 
         params.steps.list = this.parseSteps();
         params.steps.current = params.steps.list[this.getCurrentStepIndex()];

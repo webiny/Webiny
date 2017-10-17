@@ -12,6 +12,9 @@ Wizard.defaultProps = {
     loaderRenderer: undefined,
     layoutRenderer: undefined,
     initialStep: 0,
+    onTransition: _.noop,
+    onFinish: _.noop,
+    onStart: _.noop,
     form: {},
     renderer() {
         const {Form} = this.props;
