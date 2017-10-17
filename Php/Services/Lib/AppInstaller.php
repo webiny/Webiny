@@ -67,13 +67,13 @@ class AppInstaller
         });
 
         // Pick only the necessary data to send to CLI
-        $cliData = [];
+        $cliData = ['action' => 'install-app'];
         $keys = ['id', 'name', 'localName', 'packagist', 'repository', 'version', 'webinyVersion'];
         foreach ($keys as $key) {
             $cliData[$key] = $appData[$key];
         }
 
-        $curl->post($bsPath . '/?action=install', $cliData);
+        $curl->get($bsPath, $cliData);
         $this->echo(['message' => 'Finalizing...']);
 
         // If we got this far it means everything is ok and now we need to assign admin roles

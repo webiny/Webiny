@@ -11,10 +11,9 @@ class CreateAdmin extends Plugin {
         const Webiny = require('webiny-cli/lib/webiny');
         return new Promise((resolve, reject) => {
             try {
-                const docker = Webiny.getConfig().env === 'docker';
                 // Execute an admin.php script
                 const params = [
-                    docker ? 'docker-compose run php php' : 'php',
+                    'php',
                     'Apps/Webiny/Php/Cli/admin.php',
                     'Local',
                     config.user,

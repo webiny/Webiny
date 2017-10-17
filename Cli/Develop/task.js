@@ -2,7 +2,6 @@
 const path = require('path');
 const webpack = require('webpack');
 const _ = require('lodash');
-const chalk = require('chalk');
 const fs = require('fs-extra');
 const browserSync = require('browser-sync').create();
 const devMiddleware = require('webpack-dev-middleware');
@@ -10,14 +9,10 @@ const hotMiddleware = require('webpack-hot-middleware');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const Webiny = require('webiny-cli/lib/webiny');
 const Build = require('./../Build/task');
-const HttpServer = require('./HttpServer');
 
 // Override logger callbacks - we do not need the default output
 const Logger = require('browser-sync/lib/logger');
-Logger.callbacks['service:running'] = (bs) => {
-    const urls = bs.options.get('urls').toJS();
-    Webiny.info(`Browsersync is listening on ${chalk.magenta(urls.local)}`);
-};
+Logger.callbacks['service:running'] = _.noop;
 Logger.callbacks['file:watching'] = _.noop;
 
 let devMiddlewareInstance = null;
@@ -146,11 +141,15 @@ class Develop extends Build {
                 let off = Webiny.on('develop.stop', ({res, menu}) => {
                     removeMiddleware();
                     browserSync.exit();
+                    // Remove `develop.stop` event listener
                     off();
-                    setTimeout(() => {
-                        res && res.end();
-                        resolve({menu});
-                    }, 1000);
+                    return new Promise(timeoutResolve => {
+                        setTimeout(() => {
+                            res && res.end();
+                            resolve({menu});
+                            timeoutResolve();
+                        }, 1000);
+                    });
                 });
 
                 const proxy = require('http-proxy-middleware');
