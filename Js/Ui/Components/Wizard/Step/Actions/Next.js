@@ -14,7 +14,6 @@ Next.defaultProps = {
     onClick: _.noop,
     label: Webiny.I18n('Next'),
     renderer() {
-        console.log(this.props.wizard.form.validate)
         if (this.props.wizard.isLastStep()) {
             return null;
         }
