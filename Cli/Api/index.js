@@ -3,26 +3,29 @@ const Plugin = require('webiny-cli/lib/plugin');
 const _ = require('lodash');
 
 class Api extends Plugin {
-    constructor() {
-        super();
+    constructor(program) {
+        super(program);
         this.currentTask = [];
         this.taskLog = [];
 
-        Webiny.on('beforeTask', ({task}) => {
-            this.currentTask.push(task);
-            this.taskLog.push({status: 'started', task, ts: Date.now()});
-        });
+        // Attach listeners and run server only if webiny-cli was run without arguments
+        if (program.args.length === 0) {
+            Webiny.on('beforeTask', ({task}) => {
+                this.currentTask.push(task);
+                this.taskLog.push({status: 'started', task, ts: Date.now()});
+            });
 
-        Webiny.on('afterTask', ({task, data, err}) => {
-            this.currentTask.splice(this.currentTask.indexOf(task), 1);
-            const ts = Date.now();
-            const log = _.findLastIndex(this.taskLog, l => l.task === task);
-            const duration = (ts - this.taskLog[log].ts) / 1000;
+            Webiny.on('afterTask', ({task, data, err}) => {
+                this.currentTask.splice(this.currentTask.indexOf(task), 1);
+                const ts = Date.now();
+                const log = _.findLastIndex(this.taskLog, l => l.task === task);
+                const duration = (ts - this.taskLog[log].ts) / 1000;
 
-            this.taskLog.push({status: 'finished', ts, duration, task, data, err});
-        });
+                this.taskLog.push({status: 'finished', ts, duration, task, data, err});
+            });
 
-        this.runHttpServer();
+            this.runHttpServer();
+        }
     }
 
     runHttpServer() {
