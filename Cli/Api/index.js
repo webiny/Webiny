@@ -7,9 +7,9 @@ class Api extends Plugin {
         super(program);
         this.currentTask = [];
         this.taskLog = [];
-
+        
         // Attach listeners and run server only if webiny-cli was run without arguments
-        if (program.args.length === 0) {
+        if (process.argv.length <= 2) {
             Webiny.on('beforeTask', ({task}) => {
                 this.currentTask.push(task);
                 this.taskLog.push({status: 'started', task, ts: Date.now()});
