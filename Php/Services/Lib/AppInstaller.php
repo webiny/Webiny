@@ -47,14 +47,14 @@ class AppInstaller
         $cliConfig = $this->arr(json_decode($cliConfig, true));
 
         $port = $cliConfig->keyNested('cli.port', 3000, true);
-        $bsPath = $this->url($cliConfig->keyNested('cli.domain', 'http://localhost', true))->setPort(intval($port) + 1);
+        $bsPath = $this->url('http://localhost', true)->setPort(intval($port));
 
         $curl = new \Curl\Curl();
         $curl->setTimeout(0);
         $curl->setOpt(CURLOPT_WRITEFUNCTION, function ($curl, $data) {
             $chunks = array_filter(explode('_-_', $data));
 
-            foreach($chunks as $chunk) {
+            foreach ($chunks as $chunk) {
                 $res = json_decode($chunk, true);
                 $this->echo($res);
                 if (isset($res['error'])) {
