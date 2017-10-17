@@ -11,17 +11,24 @@ class Next extends Webiny.Ui.Component {
 // Receives all standard Button component props
 Next.defaultProps = {
     wizard: null,
-    onClick: null,
+    onClick: _.noop,
     label: Webiny.I18n('Next'),
     renderer() {
+        console.log(this.props.wizard.form.validate)
         if (this.props.wizard.isLastStep()) {
             return null;
         }
 
         const {Button} = this.props;
+
+        const onClick = async () => {
+            await this.props.onClick();
+            this.props.wizard.form.validate().then(valid => valid && this.props.wizard.nextStep());
+        };
+
         const props = _.assign({
             type: 'primary',
-            onClick: _.isFunction(this.props.onClick) ? this.props.onClick : this.props.wizard.nextStep,
+            onClick,
             align: 'right',
             icon: 'fa-arrow-circle-right',
         }, _.omit(this.props, ['Button', 'onClick', 'renderer']));
