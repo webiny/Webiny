@@ -7,8 +7,6 @@ class Deploy extends Plugin {
     constructor(program) {
         super(program);
 
-        this.selectApps = false;
-
         program
             .command('deploy <archive>')
             .description('Deploy release archive to remote server.')

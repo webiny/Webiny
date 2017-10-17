@@ -1,14 +1,7 @@
-const _ = require('lodash');
-const Webiny = require('webiny-cli/lib/webiny');
 const Plugin = require('webiny-cli/lib/plugin');
 const Menu = require('webiny-cli/lib/menu');
 
 class Revert extends Plugin {
-    constructor(program) {
-        super(program);
-
-        this.selectApps = false;
-    }
 
     getMenu() {
         return new Menu('Switch release').addLineAfter();

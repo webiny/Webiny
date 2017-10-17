@@ -7,6 +7,8 @@ class Develop extends Plugin {
     constructor(program) {
         super(program);
 
+        this.selectApps = true;
+
         const command = program.command('develop');
         command.description('Build and watch apps for changes.');
         this.addAppOptions(command);

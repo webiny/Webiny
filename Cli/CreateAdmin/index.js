@@ -3,12 +3,6 @@ const Plugin = require('webiny-cli/lib/plugin');
 const chalk = require('chalk');
 
 class CreateAdmin extends Plugin {
-    constructor(program) {
-        super(program);
-
-        this.selectApps = false;
-    }
-
     getMenu() {
         return new Menu('Create admin user');
     }

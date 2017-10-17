@@ -7,6 +7,8 @@ class Build extends Plugin {
     constructor(program) {
         super(program);
 
+        this.selectApps = true;
+
         const command = program.command('build <environment>');
         command.description('Build apps using given environment.');
         this.addAppOptions(command);
