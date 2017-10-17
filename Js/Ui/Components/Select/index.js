@@ -34,7 +34,7 @@ class Select extends Webiny.Ui.OptionComponent {
     }
 }
 
-Select.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
+Select.defaultProps = Webiny.Ui.OptionComponent.extendProps({
     allowClear: false,
     autoSelectFirstOption: false,
     minimumInputLength: 0,

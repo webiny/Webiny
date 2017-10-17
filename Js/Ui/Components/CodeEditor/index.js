@@ -84,7 +84,7 @@ class CodeEditor extends Webiny.Ui.FormComponent {
     }
 }
 
-CodeEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
+CodeEditor.defaultProps = Webiny.Ui.FormComponent.extendProps({
     delay: 400,
     mode: 'text/html',
     theme: 'monokai',

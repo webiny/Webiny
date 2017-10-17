@@ -173,7 +173,7 @@ class HtmlEditor extends Webiny.Ui.FormComponent {
     }
 }
 
-HtmlEditor.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
+HtmlEditor.defaultProps = Webiny.Ui.FormComponent.extendProps({
     imageApi: '/entities/webiny/images',
     accept: ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'],
     sizeLimit: 2485760,

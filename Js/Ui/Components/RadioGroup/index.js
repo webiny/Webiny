@@ -69,7 +69,7 @@ class RadioGroup extends Webiny.Ui.OptionComponent {
 
 RadioGroup.Radio = Radio;
 
-RadioGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
+RadioGroup.defaultProps = Webiny.Ui.OptionComponent.extendProps({
     radioLabelRenderer: null,
     radioRenderer: null,
     renderer() {

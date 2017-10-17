@@ -38,7 +38,7 @@ class Input extends Webiny.Ui.FormComponent {
     }
 }
 
-Input.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
+Input.defaultProps = Webiny.Ui.FormComponent.extendProps({
     delay: 400,
     name: null,
     onEnter: _.noop, // NOTE: only works if inside a Form

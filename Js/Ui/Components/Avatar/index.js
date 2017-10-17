@@ -145,7 +145,7 @@ class Avatar extends Webiny.Ui.FormComponent {
     }
 }
 
-Avatar.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
+Avatar.defaultProps = Webiny.Ui.FormComponent.extendProps({
     accept: ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'],
     cropper: false,
     defaultImage: null,

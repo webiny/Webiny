@@ -74,7 +74,7 @@ class TextGroupModal extends Webiny.Ui.ModalComponent {
     }
 }
 
-TextGroupModal.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
+TextGroupModal.defaultProps = Webiny.Ui.ModalComponent.extendProps({
     data: null,
     onSubmitSuccess: _.noop
 });

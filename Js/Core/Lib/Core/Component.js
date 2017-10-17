@@ -17,6 +17,10 @@ class Component extends React.Component {
         this.bindMethods('bindTo', 'isRendered', 'i18n');
     }
 
+    static extendProps(props) {
+        return _.merge({}, this.defaultProps, props);
+    }
+
     /**
      * Method for a more convenient use of i18n module - this will automatically generate a complete namespace for the label
      * If this method is called without parameters, it will return Webiny.I18n module, from which you can use other functions as well
@@ -171,10 +175,6 @@ class Component extends React.Component {
         // Execute callback with initial data
         func(cursor.get());
         return cursor;
-    }
-
-    static extendProps(props) {
-        return _.merge({}, this.defaultProps, props);
     }
 
     render() {
