@@ -13,7 +13,6 @@ function sanitize(url) {
 }
 
 class Base {
-
     constructor(url) {
         this.baseUrl = url.toLowerCase();
     }
