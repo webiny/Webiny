@@ -19,28 +19,43 @@ class Base {
     }
 
     get(url = '', body = {}, config = {}) {
-        return Http.get(Webiny.Config.ApiUrl + this.baseUrl + sanitize(url), body, config).then(handleResponse).catch(handleResponse);
+        return Http.get(this.fullUrl(url), body, config).then(handleResponse).catch(handleResponse);
     }
 
     delete(url = '', config = {}) {
-        return Http.delete(Webiny.Config.ApiUrl + this.baseUrl + sanitize(url), config).then(handleResponse).catch(handleResponse);
+        return Http.delete(this.fullUrl(url), config).then(handleResponse).catch(handleResponse);
     }
 
     head(url = '', config = {}) {
-        return Http.head(Webiny.Config.ApiUrl + this.baseUrl + sanitize(url), config).then(handleResponse).catch(handleResponse);
+        return Http.head(this.fullUrl(url), config).then(handleResponse).catch(handleResponse);
     }
 
     post(url = '', body = {}, query = {}, config = {}) {
-        return Http.post(Webiny.Config.ApiUrl + this.baseUrl + sanitize(url), body, query, config).then(handleResponse).catch(handleResponse);
+        return Http.post(this.fullUrl(url), body, query, config).then(handleResponse).catch(handleResponse);
     }
 
     put(url = '', body = {}, query = {}, config = {}) {
-        return Http.put(Webiny.Config.ApiUrl + this.baseUrl + sanitize(url), body, query, config).then(handleResponse).catch(handleResponse);
+        return Http.put(this.fullUrl(url), body, query, config).then(handleResponse).catch(handleResponse);
     }
 
     patch(url = '', body = {}, query = {}, config = {}) {
-        return Http.patch(Webiny.Config.ApiUrl + this.baseUrl + sanitize(url), body, query, config).then(handleResponse).catch(handleResponse);
+        return Http.patch(this.fullUrl(url), body, query, config).then(handleResponse).catch(handleResponse);
     }
+
+    fullUrl(url) {
+        const fullUrl = [
+            _.startsWith(this.baseUrl, 'http://'),
+            _.startsWith(this.baseUrl, 'https://'),
+            _.startsWith(this.baseUrl, '//')
+        ];
+
+        if (_.includes(fullUrl, true)) {
+            return this.baseUrl + sanitize(url)
+        }
+
+        return Webiny.Config.ApiUrl + this.baseUrl + sanitize(url)
+    }
+
 }
 
 export default Base;
