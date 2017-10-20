@@ -21,7 +21,7 @@ class Develop extends Build {
 
     constructor(config) {
         super(config);
-        this.domain = _.get(Webiny.getConfig(), 'cli.domain', 'http://localhost');
+        this.domain = _.get(Webiny.getConfig(), 'cli.domain', 'http://localhost') + ':' + _.get(Webiny.getConfig(), 'cli.port', 3000);
         this.webpackCallback = config.webpackCallback || null;
         this.progressCallback = config.progressCallback || null;
     }
@@ -110,7 +110,7 @@ class Develop extends Build {
             logPrefix: 'Webiny',
             online: false,
             socket: {
-                domain: 'http://localhost:' + _.get(Webiny.getConfig(), 'cli.port')
+                domain: this.domain
             },
             server: {
                 baseDir: Webiny.projectRoot('public_html'),
