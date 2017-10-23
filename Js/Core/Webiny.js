@@ -46,6 +46,10 @@ class Webiny {
             // Load and run apps
             let loader = Promise.resolve();
             config.apps.map(name => {
+                const app = this.Config.Meta[name];
+                if (_.isEmpty(app)) {
+                    throw Error(`Meta data for app "${name}" is missing!`)
+                }
                 loader = loader.then(() => this.includeApp(this.Config.Meta[name]).then(app => app.run()));
             });
             return loader;
