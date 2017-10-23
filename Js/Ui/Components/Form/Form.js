@@ -558,7 +558,7 @@ class Form extends Webiny.Ui.Component {
     }
 
     attachValidators(props) {
-        this.inputs[props.name].validators = Webiny.Validator.parseValidateProperty(props.validate);
+        this.inputs[props.name].validators = Webiny.Validator.getValidatorsFromProps(props);
         this.inputs[props.name].messages = Webiny.Validator.parseCustomValidationMessages(props.children);
     }
 

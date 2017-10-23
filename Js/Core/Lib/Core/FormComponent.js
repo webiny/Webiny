@@ -69,23 +69,6 @@ class FormComponent extends Component {
         return Promise.resolve(true);
     }
 
-    getValidators() {
-        let {defaultValidate, validate} = this.props;
-        if (!validate) {
-            validate = [];
-        }
-
-        if (_.isString(validate)) {
-            validate = validate.split(',');
-        }
-
-        if (defaultValidate) {
-            validate.push(defaultValidate);
-        }
-
-        return validate;
-    }
-
     isValid() {
         return this.state.isValid !== false;
     }

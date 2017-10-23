@@ -23,6 +23,23 @@ class Validator {
         return this.validators[name];
     }
 
+    getValidatorsFromProps(props) {
+        let {defaultValidate, validate: validators} = props;
+        if (!validators) {
+            validators = [];
+        }
+
+        if (_.isString(validators)) {
+            validators = validators.split(',');
+        }
+
+        if (defaultValidate) {
+            validators.push(defaultValidate);
+        }
+
+        return this.parseValidateProperty(validators);
+    }
+
     parseValidateProperty(validators) {
         if (!validators) {
             return false;
