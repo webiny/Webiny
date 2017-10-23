@@ -138,7 +138,7 @@ class Validator {
 const formValidator = new Validator();
 
 formValidator.addValidator('required', (value) => {
-    if (!(!value || value === '' || value === 0 || (_.isArray(value) && value.length === 0))) {
+    if (!(!value || value === '' || (_.isArray(value) && value.length === 0))) {
         return true;
     }
     throw new ValidationError(Webiny.I18n('This field is required'));
