@@ -52,7 +52,7 @@ class Success extends Webiny.Ui.ModalComponent {
     }
 }
 
-Success.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
+Success.defaultProps = Webiny.Ui.ModalComponent.extendProps({
     title: Webiny.I18n('Awesome!'),
     closeBtn: Webiny.I18n('Close'),
     onClose: _.noop,

@@ -10,8 +10,6 @@ class Release extends Plugin {
     constructor(program) {
         super(program);
 
-        this.selectApps = false;
-
         program
             .command('release-archive <target>')
             .description('Create release archive ready for deployment to remote server.')
@@ -38,10 +36,10 @@ class Release extends Plugin {
     }
 
     runTask(config) {
-        return this.processHook('before-release-archive', {config}).then(() => {
+        return Webiny.dispatch('before-release-archive', {config}).then(() => {
             const task = new Task();
             return task.run(config).then(archive => {
-                return this.processHook('after-release-archive', {config, archive});
+                return Webiny.dispatch('after-release-archive', {config, archive});
             });
         });
     }

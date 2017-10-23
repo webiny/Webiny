@@ -72,7 +72,7 @@ class CheckboxGroup extends Webiny.Ui.OptionComponent {
     }
 }
 
-CheckboxGroup.defaultProps = _.merge({}, Webiny.Ui.OptionComponent.defaultProps, {
+CheckboxGroup.defaultProps = Webiny.Ui.OptionComponent.extendProps({
     checkboxRenderer: null,
     checkboxLabelRenderer: null,
     formatOptionValue: ({value}) => value,

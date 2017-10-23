@@ -23,6 +23,23 @@ class Validator {
         return this.validators[name];
     }
 
+    getValidatorsFromProps(props) {
+        let {defaultValidate, validate: validators} = props;
+        if (!validators) {
+            validators = [];
+        }
+
+        if (_.isString(validators)) {
+            validators = validators.split(',');
+        }
+
+        if (defaultValidate) {
+            validators.push(defaultValidate);
+        }
+
+        return this.parseValidateProperty(validators);
+    }
+
     parseValidateProperty(validators) {
         if (!validators) {
             return false;
@@ -70,7 +87,7 @@ class Validator {
         return customMessages;
     }
 
-    validate(value, validators, formInputs = null) {
+    validate(value, validators, formData = {}) {
         if (!_.isPlainObject(validators)) {
             validators = this.parseValidateProperty(validators);
         }
@@ -86,10 +103,11 @@ class Validator {
         Object.keys(validators).forEach(validatorName => {
             const funcValidator = _.isFunction(validators[validatorName]) ? validators[validatorName] : false;
             const args = funcValidator ? [] : _.clone(validators[validatorName]);
-            if (formInputs) {
-                this.parseArgs(args, formInputs);
+            if (formData.inputs) {
+                this.parseArgs(args, formData.inputs);
             }
             args.unshift(value);
+            args.push(formData);
             chain = chain.then(function validationLink() {
                 let validator = null;
                 try {
@@ -137,7 +155,7 @@ class Validator {
 const formValidator = new Validator();
 
 formValidator.addValidator('required', (value) => {
-    if (!(!value || value === '' || value === 0 || (_.isArray(value) && value.length === 0))) {
+    if (!(!value || value === '' || (_.isArray(value) && value.length === 0))) {
         return true;
     }
     throw new ValidationError(Webiny.I18n('This field is required'));
@@ -148,6 +166,13 @@ formValidator.addValidator('eq', (value, equalTo) => {
         return true;
     }
     throw new ValidationError(Webiny.I18n('This field must be equal to {equalTo}', {equalTo}));
+});
+
+formValidator.addValidator('neq', (value, equalTo) => {
+    if (value !== equalTo) {
+        return true;
+    }
+    throw new ValidationError(Webiny.I18n('This field must not be equal to {equalTo}', {equalTo}));
 });
 
 formValidator.addValidator('minLength', (value, length) => {

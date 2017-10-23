@@ -30,7 +30,7 @@ class Checkbox extends Webiny.Ui.FormComponent {
     }
 }
 
-Checkbox.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
+Checkbox.defaultProps = Webiny.Ui.FormComponent.extendProps({
     label: '',
     className: null,
     style: null,

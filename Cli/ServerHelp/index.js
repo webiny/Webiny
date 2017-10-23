@@ -6,8 +6,6 @@ class ServerHelp extends Plugin {
     constructor(program) {
         super(program);
 
-        this.selectApps = false;
-
         program
             .command('server-help')
             .description('Show server setup help.')

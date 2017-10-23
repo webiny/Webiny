@@ -13,9 +13,7 @@ class RootElement extends Component {
     componentDidMount() {
         console.timeStamp('RootElement DidMount');
         this.unsubscribe = Dispatcher.on('RenderView', () => {
-            return this.setState({
-                time: _.now()
-            });
+            return this.setState({ts: _.now()});
         });
 
         Router.start();

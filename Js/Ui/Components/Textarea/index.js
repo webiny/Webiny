@@ -7,7 +7,7 @@ class Textarea extends Webiny.Ui.FormComponent {
 
 }
 
-Textarea.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
+Textarea.defaultProps = Webiny.Ui.FormComponent.extendProps({
     delay: 400,
     renderer() {
         const {FormGroup, styles} = this.props;

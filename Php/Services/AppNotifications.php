@@ -98,7 +98,7 @@ class AppNotifications extends AbstractService
         $api->post('{notification}/mark-read', function (AppNotification $notification) {
             $user = $this->wAuth()->getUser();
             if ($notification->createdBy->id !== $user->id) {
-                throw new AppException('You are only allowed to modify notifications that belong to you.', 'WBY-APP-NOTIFICATION-OWNER');
+                throw new AppException('You are only allowed to modify notifications that belong to you.', 'WBY-APP-NOTIFICATION');
             }
             $notification->read = true;
             $notification->save();

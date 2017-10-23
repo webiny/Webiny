@@ -19,8 +19,9 @@ export default (Component, options = {}) => {
     if (_.isPlainObject(Component)) {
         options = Component;
     }
+
     // Create an immutable copy of styles to use as default styles
-    const defaultStyles = Map(options.styles || {});
+    let defaultStyles = Map(options.styles || {});
 
     // Automatically expose modal dialog methods
     if (Component.prototype instanceof ModalComponent) {
@@ -65,6 +66,9 @@ export default (Component, options = {}) => {
 
             // Merge the rest
             _.merge(ComponentWrapper.options, config.options || {});
+
+            // Create new defaultStyles object to hold modified styles
+            defaultStyles = Map(ComponentWrapper.options.styles || {});
         }
 
         render() {

@@ -363,7 +363,7 @@ class Search extends Webiny.Ui.FormComponent {
     }
 }
 
-Search.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
+Search.defaultProps = Webiny.Ui.FormComponent.extendProps({
     searchOperator: 'or',
     valueAttr: 'id',
     textAttr: 'name',

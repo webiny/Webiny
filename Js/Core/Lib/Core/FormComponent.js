@@ -37,7 +37,7 @@ class FormComponent extends Component {
 
     componentWillReceiveProps(props) {
         super.componentWillReceiveProps(props);
-        if (props.validate !== this.props.validate && this.props.attachValidators) {
+        if (!_.isEqual(props.validate, this.props.validate) && this.props.attachValidators) {
             this.props.attachValidators(props);
             if (!this.isValid()) {
                 this.validate();
@@ -140,7 +140,7 @@ class FormComponent extends Component {
     }
 }
 
-FormComponent.defaultProps = {
+FormComponent.defaultProps = Component.extendProps({
     disabled: false,
     disabledBy: null,
     label: null,
@@ -149,6 +149,7 @@ FormComponent.defaultProps = {
     description: null,
     form: null,
     validate: null,
+    defaultValidate: null,
     value: null,
     onChange: _.noop,
     showValidationMessage: true,
@@ -230,6 +231,6 @@ FormComponent.defaultProps = {
             </Webiny.Ui.LazyLoad>
         );
     }
-};
+});
 
 export default FormComponent;

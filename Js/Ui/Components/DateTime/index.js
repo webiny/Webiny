@@ -82,7 +82,7 @@ class DateTime extends Webiny.Ui.FormComponent {
     }
 }
 
-DateTime.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
+DateTime.defaultProps = Webiny.Ui.FormComponent.extendProps({
     debug: false,
     inputFormat: null,
     modelFormat: 'Y-m-d H:i:s',

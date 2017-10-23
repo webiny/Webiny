@@ -46,7 +46,7 @@ class CopyInput extends Webiny.Ui.FormComponent {
     }
 }
 
-CopyInput.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
+CopyInput.defaultProps = Webiny.Ui.FormComponent.extendProps({
     actionLabel: Webiny.I18n('Copy'),
     onSuccessMessage: Webiny.I18n('Copied to clipboard!'),
     onCopy: _.noop,

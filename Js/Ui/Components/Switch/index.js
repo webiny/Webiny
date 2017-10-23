@@ -26,7 +26,7 @@ class Switch extends Webiny.Ui.FormComponent {
     }
 }
 
-Switch.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
+Switch.defaultProps = Webiny.Ui.FormComponent.extendProps({
     style: {},
     renderer() {
         const {FormGroup, styles} = this.props;

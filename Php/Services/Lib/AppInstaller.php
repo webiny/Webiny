@@ -43,24 +43,18 @@ class AppInstaller
     public function install()
     {
         $appData = $this->appData;
-        $bsConfig = file_get_contents($this->wStorage('Root')->getAbsolutePath('webiny.json'));
-        $bsConfig = $this->arr(json_decode($bsConfig, true));
-        $webPath = $this->wConfig()->get('Webiny.WebUrl');
+        $cliConfig = file_get_contents($this->wStorage('Root')->getAbsolutePath('webiny.json'));
+        $cliConfig = $this->arr(json_decode($cliConfig, true));
 
-        // If docker, change to dockerhost
-        if ($bsConfig['env'] === 'docker') {
-            $webPath = 'http://dockerhost';
-        }
-
-        $port = $bsConfig->keyNested('browserSync.port', 3000, true);
-        $bsPath = $this->url($webPath)->setPort(intval($port) + 1);
+        $port = $cliConfig->keyNested('cli.port', 3000, true);
+        $bsPath = $this->url('http://localhost', true)->setPort(intval($port));
 
         $curl = new \Curl\Curl();
         $curl->setTimeout(0);
         $curl->setOpt(CURLOPT_WRITEFUNCTION, function ($curl, $data) {
             $chunks = array_filter(explode('_-_', $data));
 
-            foreach($chunks as $chunk) {
+            foreach ($chunks as $chunk) {
                 $res = json_decode($chunk, true);
                 $this->echo($res);
                 if (isset($res['error'])) {
@@ -73,13 +67,13 @@ class AppInstaller
         });
 
         // Pick only the necessary data to send to CLI
-        $cliData = [];
+        $cliData = ['action' => 'install-app'];
         $keys = ['id', 'name', 'localName', 'packagist', 'repository', 'version', 'webinyVersion'];
         foreach ($keys as $key) {
             $cliData[$key] = $appData[$key];
         }
 
-        $curl->post($bsPath . '/?action=install', $cliData);
+        $curl->get($bsPath, $cliData);
         $this->echo(['message' => 'Finalizing...']);
 
         // If we got this far it means everything is ok and now we need to assign admin roles

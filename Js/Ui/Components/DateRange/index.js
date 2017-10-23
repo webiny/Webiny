@@ -213,7 +213,7 @@ class DateRange extends Webiny.Ui.FormComponent {
     }
 }
 
-DateRange.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
+DateRange.defaultProps = Webiny.Ui.FormComponent.extendProps({
     inputFormat: 'YYYY-MM-DD',
     modelFormat: 'YYYY-MM-DD',
     rangeDelimiter: ':',

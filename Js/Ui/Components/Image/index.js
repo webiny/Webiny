@@ -150,7 +150,7 @@ class Image extends Webiny.Ui.FormComponent {
     }
 }
 
-Image.defaultProps = _.merge({}, Webiny.Ui.FormComponent.defaultProps, {
+Image.defaultProps = Webiny.Ui.FormComponent.extendProps({
     accept: ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'],
     cropper: false,
     sizeLimit: 2485760,

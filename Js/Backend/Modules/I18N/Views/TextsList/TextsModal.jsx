@@ -77,7 +77,7 @@ class TranslationModal extends Webiny.Ui.ModalComponent {
     }
 }
 
-TranslationModal.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
+TranslationModal.defaultProps = Webiny.Ui.ModalComponent.extendProps({
     data: null,
     onTextsSaved: _.noop
 });

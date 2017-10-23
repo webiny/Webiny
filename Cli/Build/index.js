@@ -7,6 +7,8 @@ class Build extends Plugin {
     constructor(program) {
         super(program);
 
+        this.selectApps = true;
+
         const command = program.command('build <environment>');
         command.description('Build apps using given environment.');
         this.addAppOptions(command);
@@ -27,6 +29,10 @@ class Build extends Plugin {
             console.log('   - before-webpack (configs)');
             console.log();
         });
+
+        Webiny.on('build', ({data}) => {
+            return Webiny.runTask('build', data, {api: true});
+        });
     }
 
     getMenu() {
@@ -36,10 +42,10 @@ class Build extends Plugin {
     runTask(config) {
         const Task = require('./task');
         process.env.NODE_ENV = 'production';
-        return this.processHook('before-build', {config}).then(() => {
+        return Webiny.dispatch('before-build', {config}).then(() => {
             const task = new Task(config);
             return task.run().then(stats => {
-                return this.processHook('after-build', {config, stats});
+                return Webiny.dispatch('after-build', {config, stats});
             });
         });
     }

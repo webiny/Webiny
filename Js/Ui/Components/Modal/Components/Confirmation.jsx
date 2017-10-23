@@ -103,7 +103,7 @@ class Confirmation extends Webiny.Ui.ModalComponent {
     }
 }
 
-Confirmation.defaultProps = _.merge({}, Webiny.Ui.ModalComponent.defaultProps, {
+Confirmation.defaultProps = Webiny.Ui.ModalComponent.extendProps({
     title: Webiny.I18n('Confirmation dialog'),
     confirm: Webiny.I18n('Yes'),
     cancel: Webiny.I18n('No'),

@@ -2,7 +2,6 @@
 const path = require('path');
 const webpack = require('webpack');
 const _ = require('lodash');
-const chalk = require('chalk');
 const fs = require('fs-extra');
 const browserSync = require('browser-sync').create();
 const devMiddleware = require('webpack-dev-middleware');
@@ -10,25 +9,19 @@ const hotMiddleware = require('webpack-hot-middleware');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const Webiny = require('webiny-cli/lib/webiny');
 const Build = require('./../Build/task');
-const HttpServer = require('./HttpServer');
 
 // Override logger callbacks - we do not need the default output
 const Logger = require('browser-sync/lib/logger');
-Logger.callbacks['service:running'] = (bs) => {
-    const urls = bs.options.get('urls').toJS();
-    Webiny.info(`Browsersync is listening on ${chalk.magenta(urls.local)}`);
-};
+Logger.callbacks['service:running'] = _.noop;
 Logger.callbacks['file:watching'] = _.noop;
 
-let httpServer = null;
 let devMiddlewareInstance = null;
 
 class Develop extends Build {
 
     constructor(config) {
         super(config);
-        this.port = _.get(Webiny.getConfig(), 'browserSync.port', 3000);
-        this.domain = _.get(Webiny.getConfig(), 'browserSync.domain', 'http://localhost');
+        this.domain = _.get(Webiny.getConfig(), 'cli.domain', 'http://localhost') + ':' + _.get(Webiny.getConfig(), 'cli.port', 3000);
         this.webpackCallback = config.webpackCallback || null;
         this.progressCallback = config.progressCallback || null;
     }
@@ -38,7 +31,7 @@ class Develop extends Build {
 
         const msg = 'Please be patient, the initial webpack build may take a few moments...';
         const line = new Array(msg.length + 3).join('-');
-        Webiny.log(line);
+        Webiny.log("\n" + line);
         Webiny.info(msg);
         Webiny.log(line);
 
@@ -61,14 +54,14 @@ class Develop extends Build {
                     Webiny.log(`webpack built ${s.name} vendors ${s.hash} in ${s.time} ms`);
                 });
                 const appConfigs = this.getAppConfigs();
-                return Webiny.processHook('before-webpack', {configs: appConfigs}).then(() => {
+                return Webiny.dispatch('before-webpack', {configs: appConfigs}).then(() => {
                     return this.buildAndWatch(appConfigs, statsConfig);
                 });
             });
         }
 
         const appConfigs = this.getAppConfigs();
-        return Webiny.processHook('before-webpack', {configs: appConfigs}).then(() => {
+        return Webiny.dispatch('before-webpack', {configs: appConfigs}).then(() => {
             return this.buildAndWatch(appConfigs, statsConfig);
         });
     }
@@ -116,9 +109,8 @@ class Develop extends Build {
             open: false,
             logPrefix: 'Webiny',
             online: false,
-            port: this.port,
             socket: {
-                domain: this.domain + ':' + this.port
+                domain: this.domain
             },
             server: {
                 baseDir: Webiny.projectRoot('public_html'),
@@ -141,20 +133,41 @@ class Develop extends Build {
             })
         };
 
-        // Start a hidden listener to allow http interaction with build process
-        this.initHttpServer();
-
         // Return a promise which never resolves. It will keep the task running until you abort the process.
-        return new Promise(() => {
+        return new Promise((resolve) => {
             Webiny.info('Building apps...');
-            browserSync.init(bsConfig);
-        });
-    }
+            let removeMiddleware;
+            browserSync.init(bsConfig, (err, bs) => {
+                let off = Webiny.on('develop.stop', ({res, menu}) => {
+                    removeMiddleware();
+                    browserSync.exit();
+                    // Remove `develop.stop` event listener
+                    off();
+                    return new Promise(timeoutResolve => {
+                        setTimeout(() => {
+                            res && res.end();
+                            resolve({menu});
+                            timeoutResolve();
+                        }, 1000);
+                    });
+                });
 
-    initHttpServer() {
-        if (!httpServer) {
-            httpServer = new HttpServer(browserSync, this.port).run();
-        }
+                const proxy = require('http-proxy-middleware');
+                const middleware = proxy('/', {
+                    logLevel: 'silent',
+                    target: 'http://localhost:' + bs.options.get('port'),
+                    changeOrigin: true,
+                    ws: true
+                });
+
+                removeMiddleware = Webiny.on('api.middleware', ({req, res}) => {
+                    return new Promise(resolve => {
+                        res.on('end', resolve);
+                        middleware(req, res, resolve);
+                    });
+                });
+            });
+        });
     }
 }
 

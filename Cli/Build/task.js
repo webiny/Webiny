@@ -21,7 +21,7 @@ class Build {
     run() {
         const vendorConfigs = this.getVendorConfigs();
 
-        Webiny.log('--------------------------------------------------------------------------');
+        Webiny.log(`\n--------------------------------------------------------------------------`);
         Webiny.info('Please be patient, the production build may take a while...');
         Webiny.log('--------------------------------------------------------------------------');
 
@@ -32,7 +32,7 @@ class Build {
 
         return this.buildConfigs(vendorConfigs).then(() => {
             const appConfigs = this.getAppConfigs();
-            return Webiny.processHook('before-webpack', {configs: appConfigs}).then(() => {
+            return Webiny.dispatch('before-webpack', {configs: appConfigs}).then(() => {
                 return this.buildConfigs(appConfigs).then(stats => {
                     return new Bundler(stats, {assetRules: this.config.assetRules}).bundle().then(() => stats);
                 });
