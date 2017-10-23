@@ -10,7 +10,6 @@ class Header extends Webiny.Ui.Component {
 Header.defaultProps = {
     onClose: _.noop,
     renderer() {
-
         let headerContent = '';
         if (_.get(this.props, 'title') && this.props.title !== '') {
             headerContent = <h4>{this.props.title}</h4>;
@@ -21,7 +20,9 @@ Header.defaultProps = {
         return (
             <div className={this.classSet(styles.header, this.props.className)}>
                 {headerContent}
-                <button onClick={this.props.onClose} type="button" className={styles.close} data-dismiss="modal">×</button>
+                {this.props.onClose && this.props.onClose !== _.noop && (
+                    <button onClick={this.props.onClose} type="button" className={styles.close} data-dismiss="modal">×</button>
+                )}
             </div>
         );
     }
