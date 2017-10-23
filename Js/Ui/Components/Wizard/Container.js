@@ -2,6 +2,7 @@ import React from 'react';
 import Webiny from 'webiny';
 import _ from 'lodash';
 import Step from './Step';
+import css from './Container.scss';
 
 /**
  * Wizard component, makes it easier to create wizards, without worrying about common features like steps, navigation, content etc.
@@ -185,21 +186,42 @@ Container.defaultProps = {
     onStart: _.noop,
     navigationRenderer(params) {
         return (
-            <ul>
+            <Webiny.Ui.LazyLoad modules={['Icon']}>
+                {({Icon}) => (
+                    <ul className={params.wizard.classSet('wizard-navigation', css.navigation)}>
+                        {params.steps.list.map((step, index) => (
+                            <li key={index} className={step.completed ? 'completed' : null}>
+                                <div>
+                                    {step.completed ? (
+                                        <Icon type="success" icon="icon-check" className="animated rotateIn"/>
+                                    ) : (
+                                        <span>{step.index + 1}</span>
+                                    )}
+                                </div>
+                                <label>{step.title}</label>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </Webiny.Ui.LazyLoad>
+        );
+
+        return (
+            <ul className={params.wizard.classSet('wizard-navigation', css.navigation)}>
                 {params.steps.list.map((step, index) => <li key={index}>{step.index + 1} {step.title}</li>)}
             </ul>
         );
     },
     contentRenderer(params) {
         return (
-            <div className="content">
+            <div className={params.wizard.classSet('wizard-content', css.content)}>
                 {params.steps.current.content}
             </div>
         );
     },
     actionsRenderer(params) {
         return (
-            <div className="actions">
+            <div className={params.wizard.classSet('wizard-actions', css.actions)}>
                 {params.steps.current.actions}
             </div>
         );
@@ -210,7 +232,7 @@ Container.defaultProps = {
     },
     layoutRenderer({loader, navigation, content, actions}) {
         return (
-            <webiny-wizard>
+            <webiny-wizard className={css.container}>
                 {loader}
                 {navigation}
                 {content}
