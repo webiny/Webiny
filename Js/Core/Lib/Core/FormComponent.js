@@ -68,6 +68,23 @@ class FormComponent extends Component {
         return Promise.resolve(true);
     }
 
+    getValidators() {
+        let {defaultValidate, validate} = this.props;
+        if (!validate) {
+            validate = [];
+        }
+
+        if (_.isString(validate)) {
+            validate = validate.split(',');
+        }
+
+        if (defaultValidate) {
+            validate.push(defaultValidate);
+        }
+
+        return validate;
+    }
+
     isValid() {
         return this.state.isValid !== false;
     }
@@ -149,6 +166,7 @@ FormComponent.defaultProps = Component.extendProps({
     description: null,
     form: null,
     validate: null,
+    defaultValidate: null,
     value: null,
     onChange: _.noop,
     showValidationMessage: true,

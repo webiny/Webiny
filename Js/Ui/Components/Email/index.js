@@ -15,6 +15,7 @@ class Email extends Webiny.Ui.Component {
 }
 
 Email.defaultProps = {
+    defaultValidate: 'email',
     renderer() {
         const props = _.omit(this.props, ['renderer', 'Input']);
         if (props.onChange) {
@@ -23,8 +24,7 @@ Email.defaultProps = {
             };
         }
 
-        const validate = _.get(props, 'validate');
-        props.validate = validate ? validate + ',email' : 'email';
+        props.validate = this.getValidators();
 
         const {Input} = this.props;
         return (

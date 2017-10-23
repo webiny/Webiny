@@ -36,13 +36,13 @@ class Password extends Webiny.Ui.Component {
 }
 
 Password.defaultProps = {
+    defaultValidate: 'password',
     renderer() {
         const props = _.omit(this.props, ['renderer']);
         const {Icon, Input, Link} = props;
         props.info = <Link tabIndex="-1" onClick={this.togglePassword}><Icon icon={this.state.icon}/> {this.state.msg}</Link>;
         props.type = this.state.showPassword ? 'text' : 'password';
-        const validate = 'password';
-        props.validate = _.get(props, 'validate.length') ? props.validate + ',' + validate : validate;
+        props.validate = this.getValidators();
 
         return (
             <Input {...props}/>
