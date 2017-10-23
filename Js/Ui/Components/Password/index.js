@@ -42,7 +42,6 @@ Password.defaultProps = {
         const {Icon, Input, Link} = props;
         props.info = <Link tabIndex="-1" onClick={this.togglePassword}><Icon icon={this.state.icon}/> {this.state.msg}</Link>;
         props.type = this.state.showPassword ? 'text' : 'password';
-        props.validate = this.getValidators();
 
         return (
             <Input {...props}/>

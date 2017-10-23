@@ -21,6 +21,7 @@ class FormComponent extends Component {
             'getValue',
             'hasValue',
             'isDisabled',
+            'getValidators',
             'renderLabel',
             'renderInfo',
             'renderDescription',

@@ -24,8 +24,6 @@ Email.defaultProps = {
             };
         }
 
-        props.validate = this.getValidators();
-
         const {Input} = this.props;
         return (
             <Input ref="input" {...props}/>
