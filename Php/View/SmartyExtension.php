@@ -2,7 +2,6 @@
 
 namespace Apps\Webiny\Php\View;
 
-use Apps\Webiny\Php\Entities\I18NLocale;
 use Apps\Webiny\Php\Lib\I18N\I18N;
 use Apps\Webiny\Php\Lib\WebinyTrait;
 use Apps\Webiny\Php\Services\Apps;
