@@ -1,11 +1,15 @@
 .navigation {
   display: flex;
   border-bottom: 1px solid #eee;
+  text-align: center;
+  @media (max-width: 768px) {
+    display: block;
+    text-align: left;
+  }
   li {
     list-style: none;
     position: relative;
     padding: 10px;
-    text-align: center;
     letter-spacing: -0.1px;
     width: 100%;
     label {
