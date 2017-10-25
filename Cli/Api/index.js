@@ -36,14 +36,14 @@ class Api extends Plugin {
 
         const app = express();
         app.get('/status', (req, res) => {
-            res.end(JSON.stringify({
+            res.json({
                 uptime: (Date.now() - this.apiStarted) / 1000,
                 env: wConfig.env,
                 cwd: Webiny.projectRoot(),
                 state: this.currentTask.length ? 'working' : 'idle',
                 task: this.currentTask,
                 log: this.taskLog
-            }));
+            });
         });
 
         app.use((req, res, next) => {
