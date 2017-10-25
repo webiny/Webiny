@@ -22,10 +22,11 @@ class DownloadLink extends Webiny.Ui.Component {
     }
 
     getDialog() {
-        const result = this.props.download(this.downloader.download, this.props.params || null);
+        const result = this.props.download({download: this.downloader.download, data: this.props.params || null});
         // At this point we do not want to import Modal component to perform the check so we assume it is a Dialog if it is not null
         if (result) {
             this.dialog = result;
+            this.setState({showDialog: true});
         }
     }
 }
@@ -46,7 +47,6 @@ DownloadLink.defaultProps = {
                 this.downloader.download(this.props.method, this.props.download, this.props.params);
             } else {
                 this.getDialog();
-                this.setState({showDialog: true});
             }
         };
         delete props['download'];
