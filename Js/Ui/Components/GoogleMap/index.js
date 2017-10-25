@@ -122,4 +122,4 @@ GoogleMap.defaultProps = {
     }
 };
 
-export default Webiny.createComponent(GoogleMap, {styles, api: ['search']});
+export default Webiny.createComponent(GoogleMap, {styles, api: ['search', 'positionMarker']});
