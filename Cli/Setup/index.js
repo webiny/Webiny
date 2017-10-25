@@ -123,13 +123,11 @@ class Setup extends Plugin {
     }
 
     runWizard() {
-        const docker = process.env.WEBINY_ENVIRONMENT === 'docker';
         const inquirer = require('inquirer');
         const _ = require('lodash');
 
         // Save env as it needs to be available as soon as possible for conditional execution
         const wConfig = Webiny.getConfig();
-        wConfig.env = env;
         Webiny.saveConfig(wConfig);
 
         Webiny.log("\nNow we need to create a platform configuration and your first user:\n");
@@ -147,6 +145,12 @@ class Setup extends Plugin {
                 name: 'database',
                 message: 'What\'s your database name?',
                 default: 'webiny'
+            },
+            {
+                type: 'input',
+                name: 'cliPort',
+                message: 'What port should webiny-cli listen on?',
+                validate: Webiny.validate.number
             },
             {
                 type: 'input',
