@@ -32,7 +32,7 @@ class Setup extends Plugin {
     }
 
     runTask(answers) {
-        return new Promise((resolve, reject) => {
+        return new Promise(resolve => {
             const docker = process.env.WEBINY_ENVIRONMENT === 'docker';
             const yaml = require('js-yaml');
             const generatePassword = require('password-generator');
@@ -172,7 +172,7 @@ class Setup extends Plugin {
             }
         ];
 
-        return inquirer.prompt(questions).then(function (answers) {
+        return inquirer.prompt(questions).then(answers => {
             answers.domain = _.trimEnd(answers.domain, '/');
 
             return this.runTask(answers);
