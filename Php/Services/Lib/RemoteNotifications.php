@@ -96,7 +96,7 @@ class RemoteNotifications
                                 continue;
                             }
 
-                            $notifiedVersion = $notifiedVersions[$installedApp['Name']] ?? $installedApp['Version'];
+                            $notifiedVersion = $notifiedVersions[$installedApp['Name']] ?? trim($installedApp['Version'], 'v');
                             if (Comparator::greaterThan($latestApp['version'], $notifiedVersion)) {
                                 $updates[] = $latestApp;
                             }
