@@ -115,6 +115,6 @@ Services:
                 ObjectArguments: ["@Mongo.Webiny"]
 
 Routes:
-    WebinyWelcome:
+    Root:
         Path: /
         Callback: Php/RequestHandlers/Welcome

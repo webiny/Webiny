@@ -39,10 +39,9 @@ class RunTests extends Plugin {
      */
     runTask(config) {
         if (config.source) {
-            this.runTestsFromSource(config);
-        } else {
-            this.runBrowserTests(config);
+            return this.runTestsFromSource(config);
         }
+        return this.runBrowserTests(config);
     }
 
     runTestsFromSource(config) {
@@ -56,6 +55,7 @@ class RunTests extends Plugin {
             reporter: 'spec',
             compilers: {
                 js: babel({
+                    extensions: ['.js'],
                     presets: [
                         [require.resolve('babel-preset-env'), {
                             "targets": {
@@ -65,8 +65,8 @@ class RunTests extends Plugin {
                         require.resolve('babel-preset-react'),
                     ],
                     resolveModuleSource: function (source) {
-                        if (source === 'Webiny/TestSuite') {
-                            return Webiny.projectRoot('Apps/Webiny/Js/Core/Lib/TestLib/TestSuite');
+                        if (source.startsWith('Webiny/TestSuite')) {
+                            return source.replace('Webiny/TestSuite', Webiny.projectRoot('Apps/Webiny/Js/Core/TestLib/TestSuite'));
                         }
                         return source;
                     }
@@ -89,7 +89,7 @@ class RunTests extends Plugin {
         // Run the tests.
         return new Promise(resolve => {
             mocha.run(failures => resolve(failures));
-        });
+        }).catch(e => console.log(e));
     }
 
     /**
