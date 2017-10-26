@@ -1,5 +1,5 @@
-const chakram = require('chakram');
-const expect = chakram.expect;
+import {chakram} from 'Webiny/TestSuite/Api';
+const {expect} = chakram;
 
 const apiUrl = "http://thehub.app:8001/api";
 const testData = {
@@ -19,16 +19,6 @@ const options = (user) => {
 
 describe("Webiny Core API", () => {
     let user = null;
-
-    it("Should return Postman collections JSON", () => {
-        return chakram.get(`${apiUrl}/discover/webiny`).then(response => {
-            expect(response).to.have.status(200);
-            const data = response.body;
-            expect(data).to.be.a('object');
-            expect(data).to.have.all.keys('id', 'name', 'description', 'order', 'timestamp', 'owner', 'requests', 'folders');
-            expect(data.requests.length).to.be.above(0);
-        });
-    });
 
     it("Should return apps meta data", () => {
         return chakram.get(`${apiUrl}/services/webiny/apps`).then(response => {
@@ -59,6 +49,16 @@ describe("Webiny Core API", () => {
             expect(data).to.be.a('object');
             expect(data).to.have.property('id');
             expect(data).to.have.property('email');
+        });
+    });
+
+    it("Should return Postman collections JSON", () => {
+        return chakram.get(`${apiUrl}/discover/webiny`, options(user)).then(response => {
+            expect(response).to.have.status(200);
+            const data = response.body;
+            expect(data).to.be.a('object');
+            expect(data).to.have.all.keys('id', 'name', 'description', 'order', 'timestamp', 'owner', 'requests', 'folders');
+            expect(data.requests.length).to.be.above(0);
         });
     });
 });

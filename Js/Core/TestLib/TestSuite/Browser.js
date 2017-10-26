@@ -1,5 +1,3 @@
-import _ from 'lodash';
-/* eslint-disable */
 const assert = require('assert');
 const webdriver = require('selenium-webdriver');
 const _ = require('lodash');
@@ -172,10 +170,8 @@ class TestSuite {
 }
 
 
-const ts = new TestSuite();
-
 module.exports = {
-    TestSuite: ts,
+    TestSuite: new TestSuite(),
     By: webdriver.By,
     until: webdriver.until,
     webdriver,
