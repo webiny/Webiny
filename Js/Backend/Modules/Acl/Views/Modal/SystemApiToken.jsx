@@ -46,7 +46,7 @@ class SystemApiTokenModal extends Webiny.Ui.ModalComponent {
                             {this.i18n('System API token allows its bearer to access resources exposed by your API.')}
                             <br/>{this.i18n('This system token is not meant to be shared, it is for your system only!')}
                             <br/><br/>
-                            {this.i18n(`Use it when you need to make internal API calls, by sending a {headerName} header.`, {
+                            {this.i18n(`Use it when you need to make internal API calls, by sending a {label} header.`, {
                                 label: <Label inline>X-Webiny-Authorization</Label>
                             })}
 
