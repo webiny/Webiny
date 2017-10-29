@@ -38,7 +38,8 @@ class Api extends Plugin {
         app.get('/status', (req, res) => {
             res.json({
                 uptime: (Date.now() - this.apiStarted) / 1000,
-                env: wConfig.env,
+                environment: wConfig.cli.environment,
+                host: wConfig.cli.host,
                 cwd: Webiny.projectRoot(),
                 state: this.currentTask.length ? 'working' : 'idle',
                 task: this.currentTask,
