@@ -69,7 +69,6 @@ module.exports = function (app) {
     return {
         name,
         cache: true,
-        watch: false,
         context,
         entry: {
             app: [

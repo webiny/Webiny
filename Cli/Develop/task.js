@@ -37,7 +37,11 @@ class Develop extends Build {
 
         // Remove all files from build folder
         this.config.apps.map(app => {
-            fs.emptyDirSync(Webiny.projectRoot('public_html') + '/build/development/' + app.getPath());
+            try {
+                fs.emptyDirSync(Webiny.projectRoot('public_html') + '/build/development/' + app.getPath());
+            } catch (e) {
+                // Ignore
+            }
         });
 
         const statsConfig = {
@@ -96,7 +100,12 @@ class Develop extends Build {
         devMiddlewareInstance = devMiddleware(compiler, {
             publicPath,
             noInfo: false,
-            stats: statsConfig
+            stats: statsConfig,
+            watchOptions: {
+                aggregateTimeout: 300,
+                poll: 1000,
+                ignored: /node_modules/
+            }
         });
 
         if (this.webpackCallback) {
