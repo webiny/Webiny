@@ -39,12 +39,17 @@
         line-height: 25px;
       }
     }
-    &:global(.completed) {
+    &.completed {
       label {
         color: #00ccb0;
       }
       div {
         background-color: #00ccb0;
+      }
+    }
+    &.current {
+      label {
+        font-weight: bold;
       }
     }
   }
@@ -54,4 +59,5 @@
   min-height: 200px;
 }
 
-.actions {}
+.actions {
+}

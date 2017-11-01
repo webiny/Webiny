@@ -2,7 +2,7 @@ import React from 'react';
 import Webiny from 'webiny';
 import _ from 'lodash';
 import Step from './Step';
-import css from './Container.scss';
+import styles from './styles.scss';
 
 /**
  * Wizard component, makes it easier to create wizards, without worrying about common features like steps, navigation, content etc.
@@ -188,9 +188,9 @@ Container.defaultProps = {
         return (
             <Webiny.Ui.LazyLoad modules={['Icon']}>
                 {({Icon}) => (
-                    <ul className={params.wizard.classSet('wizard-navigation', css.navigation)}>
+                    <ul className={params.styles.navigation}>
                         {params.steps.list.map((step, index) => (
-                            <li key={index} className={step.completed ? 'completed' : null}>
+                            <li key={index} className={params.wizard.classSet((step.completed ? params.styles.completed : null), (step.current ? params.styles.current : null))}>
                                 <div>
                                     {step.completed ? (
                                         <Icon type="success" icon="icon-check" className="animated rotateIn"/>
@@ -207,21 +207,21 @@ Container.defaultProps = {
         );
 
         return (
-            <ul className={params.wizard.classSet('wizard-navigation', css.navigation)}>
+            <ul className={params.styles.navigation}>
                 {params.steps.list.map((step, index) => <li key={index}>{step.index + 1} {step.title}</li>)}
             </ul>
         );
     },
     contentRenderer(params) {
         return (
-            <div className={params.wizard.classSet('wizard-content', css.content)}>
+            <div className={params.styles.content}>
                 {params.steps.current.content}
             </div>
         );
     },
     actionsRenderer(params) {
         return (
-            <div className={params.wizard.classSet('wizard-actions', css.actions)}>
+            <div className={params.styles.actions}>
                 {params.steps.current.actions}
             </div>
         );
@@ -232,7 +232,7 @@ Container.defaultProps = {
     },
     layoutRenderer({loader, navigation, content, actions}) {
         return (
-            <webiny-wizard className={css.container}>
+            <webiny-wizard className={params.styles.container}>
                 {loader}
                 {navigation}
                 {content}
@@ -242,9 +242,12 @@ Container.defaultProps = {
     },
     renderer() {
         const params = this.getCallbackParams({steps: {list: [], current: null}});
+        const {styles} = this.props;
 
         params.steps.list = this.parseSteps();
         params.steps.current = params.steps.list[this.getCurrentStepIndex()];
+        params.styles = styles;
+
 
         return this.props.layoutRenderer(_.assign(params, {
             navigation: this.props.navigationRenderer(params),
@@ -255,4 +258,4 @@ Container.defaultProps = {
     }
 };
 
-export default Container;
+export default Webiny.createComponent(Container, {styles});
