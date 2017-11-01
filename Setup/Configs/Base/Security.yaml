@@ -23,7 +23,7 @@ Security:
 
 Login:
     SecurityFirewall: Webiny
-    2FactorAuth: false
+    ValidateDevice: false
     BlockThreshold: 6
     BlockTimelimit: 10
     RateLimitWhitelist:

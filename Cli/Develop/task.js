@@ -97,16 +97,22 @@ class Develop extends Build {
             devMiddlewareInstance.close();
         }
 
-        devMiddlewareInstance = devMiddleware(compiler, {
+        const devMiddlewareOptions = {
             publicPath,
             noInfo: false,
-            stats: statsConfig,
-            watchOptions: {
+            stats: statsConfig
+        };
+
+        if (/win/.test(_.get(Webiny.getConfig(), 'cli.host'))) {
+            const key = 'cli.plugins.develop.devMiddleware.watchOptions';
+            devMiddlewareOptions.watchOptions = _.get(Webiny.getConfig(), key, {
                 aggregateTimeout: 300,
                 poll: 1000,
                 ignored: /node_modules/
-            }
-        });
+            });
+        }
+
+        devMiddlewareInstance = devMiddleware(compiler, devMiddlewareOptions);
 
         if (this.webpackCallback) {
             devMiddlewareInstance.waitUntilValid(this.webpackCallback);
