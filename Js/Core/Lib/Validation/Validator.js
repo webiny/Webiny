@@ -292,10 +292,27 @@ formValidator.addValidator('json', (value) => {
 });
 
 
-formValidator.addValidator('url', (value) => {
-    const regex = new RegExp(/^(https?:\/\/)((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|((\d{1,3}\.){3}\d{1,3}))(\:\d+)?(\/[-a-z\d%_.~+]*)*(\?[;&a-z\d%_.~+=-]*)?(\#[-a-z\d_]*)?$/i);
-    if (!value || regex.test(value)) {
+formValidator.addValidator('url', (value, flags) => {
+    if (!value) {
         return true;
+    }
+
+    if (!_.isString(flags)) {
+        flags = '';
+    }
+
+    const options = flags.split(',');
+    const regex = new RegExp(/^(https?:\/\/)((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|((\d{1,3}\.){3}\d{1,3}))(\:\d+)?(\/[-a-z\d%_.~+]*)*(\?[;&a-z\d%_.~+=-]*)?(\#[-a-z\d_]*)?$/i);
+    const ipRegex = new RegExp(/^(https?:\/\/)(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/);
+
+    if (regex.test(value)) {
+        if (!options.includes('noIp')) {
+            return true;
+        }
+
+        if (!ipRegex.test(value)) {
+            return true;
+        }
     }
 
     throw new ValidationError(Webiny.I18n('Please enter a valid URL'));
