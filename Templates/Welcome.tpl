@@ -99,7 +99,7 @@
         <a href="https://www.webiny.com/">Webiny.com</a>
     </div>
     <div class="item">
-        In case of any questions, please check <a href="https://www.webiny.com/the-hub" target="_blank">Webiny Hub</a>.
+        In case of any questions, please check <a href="https://www.webiny.com/hub" target="_blank">Webiny Hub</a>.
     </div>
 </div>
 
