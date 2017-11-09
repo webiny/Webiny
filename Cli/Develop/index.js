@@ -52,7 +52,7 @@ class Develop extends Plugin {
                     progressCallback: progress => {
                         const percentage = (Math.round(progress * 100) * 100 / 100);
 
-                        if (lastProgress !== percentage) {
+                        if (lastProgress < percentage) {
                             lastProgress = percentage;
                             !res.finished && httpWrite({progress: percentage});
                         }

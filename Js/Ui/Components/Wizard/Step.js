@@ -12,6 +12,7 @@ Step.defaultProps = {
     current: false,
     completed: false,
     title: null,
+    name: null,
     onLeave: _.noop,
     onEnter: _.noop
 };
