@@ -205,12 +205,6 @@ Container.defaultProps = {
                 )}
             </Webiny.Ui.LazyLoad>
         );
-
-        return (
-            <ul className={params.styles.navigation}>
-                {params.steps.list.map((step, index) => <li key={index}>{step.index + 1} {step.title}</li>)}
-            </ul>
-        );
     },
     contentRenderer(params) {
         return (
@@ -230,9 +224,9 @@ Container.defaultProps = {
         const {Loader} = wizard.props;
         return wizard.state.loading && <Loader/>;
     },
-    layoutRenderer({loader, navigation, content, actions}) {
+    layoutRenderer({loader, navigation, content, actions, styles}) {
         return (
-            <webiny-wizard className={params.styles.container}>
+            <webiny-wizard className={styles.container}>
                 {loader}
                 {navigation}
                 {content}
