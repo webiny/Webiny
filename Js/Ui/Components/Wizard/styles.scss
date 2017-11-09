@@ -42,7 +42,7 @@
     &.completed {
       label {
         color: #00ccb0;
-        font-weight: 500;
+        font-weight: 600;
       }
       div {
         background-color: #00ccb0;
@@ -50,7 +50,7 @@
     }
     &.current {
       label {
-        font-weight: 500;
+        font-weight: 600;
       }
     }
   }
