@@ -11,14 +11,12 @@ const Webiny = require('webiny-cli/lib/webiny');
 class Release {
     run(config) {
         Webiny.info('\nCreating release archive...');
-        const paths = [
-            'Apps/**/*',
+        let paths = [
             '!Apps/**/node_modules/**/*',
             '!Apps/**/Js/**/*',
             '!Apps/**/*.git',
             'Configs/**/*.yaml',
             '!Configs/Local/**',
-            'public_html/build/production/**/*',
             'public_html/*.{php,html}',
             'public_html/robots.txt',
             'vendor/**/*.{php,crt,ser}',
@@ -26,9 +24,15 @@ class Release {
             '!vendor/**/*.git'
         ];
 
-        const appPaths = [
-            'Apps/**/Js/*/App.js'
-        ];
+        const appPaths = [];
+        config.apps.map(app => {
+            appPaths.push(app.getSourceDir() + '/App.js');
+            paths = [
+                `Apps/${app.getAppName()}/**/*`,
+                `public_html/build/production/${app.getPath()}/**/*`,
+                ...paths
+            ];
+        });
 
         const parts = path.parse(config.target);
         if (!parts.dir.startsWith('/') && !parts.dir.startsWith('~/')) {
