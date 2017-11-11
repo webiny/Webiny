@@ -43,11 +43,7 @@ class AppInstaller
     public function install()
     {
         $appData = $this->appData;
-        $cliConfig = file_get_contents($this->wStorage('Root')->getAbsolutePath('webiny.json'));
-        $cliConfig = $this->arr(json_decode($cliConfig, true));
-
-        $port = $cliConfig->keyNested('cli.port', 3000, true);
-        $bsPath = $this->url('http://localhost', true)->setPort(intval($port));
+        $cliPath = $this->wCli()->getUrl();
 
         $curl = new \Curl\Curl();
         $curl->setTimeout(0);
@@ -73,7 +69,7 @@ class AppInstaller
             $cliData[$key] = $appData[$key];
         }
 
-        $curl->get($bsPath, $cliData);
+        $curl->get($cliPath, $cliData);
         $this->echo(['message' => 'Finalizing...']);
 
         // If we got this far it means everything is ok and now we need to assign admin roles
