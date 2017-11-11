@@ -238,6 +238,12 @@ class App extends AbstractApp
      */
     private function renderApp($template, $dataSource)
     {
+        if (!$this->wIsProduction() && !$this->wCli()->isDeveloping()) {
+            $html = $this->wTemplateEngine()->fetch('Webiny:Templates/NotDeveloping.tpl', $this->wCli()->getConfig()->get('cli')->toArray());
+
+            return new HtmlResponse($html);
+        }
+
         $data = $dataSource;
         if (is_callable($dataSource)) {
             $data = $dataSource();
