@@ -32,6 +32,7 @@ class Setup extends Plugin {
     }
 
     runTask(answers) {
+        const _ = require('lodash');
         return new Promise(resolve => {
             const docker = process.env.WEBINY_ENVIRONMENT === 'docker';
             const vagrant = process.env.WEBINY_ENVIRONMENT === 'vagrant';
