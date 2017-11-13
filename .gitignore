@@ -1,6 +1,5 @@
 #Webiny
 node_modules/
-yarn.lock
 
 #PHPStorm
 .idea/
