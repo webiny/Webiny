@@ -103,14 +103,8 @@ class Develop extends Build {
             stats: statsConfig
         };
 
-        if (/win/.test(_.get(Webiny.getConfig(), 'cli.host'))) {
-            const key = 'cli.plugins.develop.devMiddleware.watchOptions';
-            devMiddlewareOptions.watchOptions = _.get(Webiny.getConfig(), key, {
-                aggregateTimeout: 300,
-                poll: 1000,
-                ignored: /node_modules/
-            });
-        }
+        const key = 'cli.plugins.develop.devMiddleware';
+        _.merge(devMiddlewareOptions, _.get(Webiny.getConfig(), key, {}));
 
         devMiddlewareInstance = devMiddleware(compiler, devMiddlewareOptions);
 
