@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Webiny Welcome</title>
+    <title>Webiny Cli not ready for development</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
     <link rel="shortcut icon" href="{$Webiny->Assets('Webiny.Skeleton', 'images/public/favicon.ico')}"/>
     <link href="//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600" rel="stylesheet" type="text/css">
@@ -20,18 +20,38 @@
             font-size: 16px;
         }
 
+        .logo {
+            text-align: center;
+            width: 100%;
+        }
+
         .box {
             background-color: #ffffff;
             padding: 50px 100px;
             max-width: 450px;
             max-height: 700px;
             margin: 100px auto 25px auto;
-            text-align: center;
+            text-align: left;
         }
 
-        .logo {
+        ol {
+            list-style: none;
+        }
+
+        li {
+            counter-increment: item;
+            margin-bottom: 5px;
+        }
+
+        li:before {
+            margin-right: 10px;
+            content: counter(item);
+            background: #FA5A28;
+            border-radius: 100%;
+            color: white;
+            width: 25px;
             text-align: center;
-            width: 100%;
+            display: inline-block;
         }
 
         h2 {
@@ -39,7 +59,7 @@
             margin-bottom: 41px;
             position: relative;
             text-align: center;
-            display: inline-block;
+            display: block;
             letter-spacing: -0.1px;
             color: #FA5A28;
             font-weight: 300;
@@ -85,18 +105,29 @@
     <div class="logo">
         <img src="{$Webiny->Assets('Webiny.Skeleton', 'images/public/logo_orange.png')}" alt="Webiny Logo" height="58"/>
     </div>
-    <h2>Welcome to your website!</h2>
+    <h2>Not ready for development!</h2>
     <div class="item">
-        To access the administration open <a href="/admin">this link.</a>
-    </div>
-    <div class="item">
-        Additional information, like <a href="https://www.webiny.com/hub/tutorials">Tutorials</a>,
-        <a href="https://www.webiny.com/docs/current/guides/get-started">Documentation</a>
-        and <a href="https://www.webiny.com/docs/current/reference-manual/environments">Reference Manual</a>, you can find on on
-        <a href="https://www.webiny.com">Webiny.com</a>
-    </div>
-    <div class="item">
-        In case of any questions, please check <a href="https://www.webiny.com/hub" target="_blank">Webiny Hub</a>.
+        <ol>
+            <li>
+                Open your terminal
+            </li>
+            <li>
+                Navigate to your project folder
+            </li>
+            {if $environment === 'docker'}
+                <li>
+                    docker-compose exec webiny yarn webiny-cli
+                </li>
+            {/if}
+            {if $environment === 'vagrant'}
+                <li>
+                    $ cd vagrant && vagrant ssh
+                </li>
+                <li>
+                    $ cd app && yarn webiny-cli
+                </li>
+            {/if}
+        </ol>
     </div>
 </div>
 

@@ -10,6 +10,8 @@ class Release extends Plugin {
     constructor(program) {
         super(program);
 
+        this.selectApps = true;
+
         program
             .command('release-archive <target>')
             .description('Create release archive ready for deployment to remote server.')

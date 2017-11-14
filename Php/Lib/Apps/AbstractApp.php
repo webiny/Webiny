@@ -12,7 +12,6 @@ use Apps\Webiny\Php\Lib\WebinyTrait;
 use Webiny\Component\Config\ConfigObject;
 use Webiny\Component\StdLib\StdLibTrait;
 use Webiny\Component\Storage\Directory\Directory;
-use Webiny\Component\Storage\Storage;
 
 /**
  * Holds information about the defined package.

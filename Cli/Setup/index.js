@@ -32,6 +32,7 @@ class Setup extends Plugin {
     }
 
     runTask(answers) {
+        const _ = require('lodash');
         return new Promise(resolve => {
             const docker = process.env.WEBINY_ENVIRONMENT === 'docker';
             const vagrant = process.env.WEBINY_ENVIRONMENT === 'vagrant';
@@ -85,12 +86,12 @@ class Setup extends Plugin {
 
             const wConfig = Webiny.getConfig();
             const u = url.parse(answers.domain);
-            wConfig.cli = {
+            _.merge(wConfig.cli, {
                 environment: process.env.WEBINY_ENVIRONMENT || 'native',
                 host: process.env.WEBINY_HOST || process.platform,
                 domain: u.protocol + '//' + u.hostname,
                 port: answers.cliPort || 3000
-            };
+            });
 
             Webiny.saveConfig(wConfig);
 
