@@ -4,6 +4,10 @@ import _ from 'lodash';
 import Container from './Container';
 
 class Wizard extends Webiny.Ui.Component {
+    constructor() {
+        super();
+        this.container = null;
+    }
 }
 
 Wizard.defaultProps = {
@@ -18,10 +22,29 @@ Wizard.defaultProps = {
     form: {},
     renderer() {
         const {Form} = this.props;
+
         return (
-            <Form {...this.props.form}>
+            <Form
+                {...this.props.form}
+                onSubmit={async params => {
+                    // This callback won't be implemented by developers probably, because there are other valid Wizard callbacks.
+                    const onSubmit = _.get(this.props.form, 'onSubmit');
+                    if (_.isFunction(onSubmit)) {
+                        await this.props.form.onSubmit(params);
+                    }
+
+                    // We want to handle cases where user submits the form with keyboard, onSubmit gets triggered here.
+                    const container = this.container.component;
+                    if (container.isLastStep()) {
+                        return container.finish();
+                    }
+
+                    return container.nextStep();
+                }}>
                 {({form}) => (
-                    <Container form={form} {..._.omit(this.props, ['Form', 'form', 'renderer', 'children'])}>
+                    <Container
+                        ref={container => this.container = container}
+                        form={form} {..._.omit(this.props, ['Form', 'form', 'renderer', 'children'])}>
                         {this.props.children}
                     </Container>
                 )}
