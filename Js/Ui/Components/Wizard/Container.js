@@ -2,7 +2,7 @@ import React from 'react';
 import Webiny from 'webiny';
 import _ from 'lodash';
 import Step from './Step';
-import css from './Container.scss';
+import styles from './styles.scss';
 
 /**
  * Wizard component, makes it easier to create wizards, without worrying about common features like steps, navigation, content etc.
@@ -11,7 +11,7 @@ class Container extends Webiny.Ui.Component {
     constructor(props) {
         super(props);
         this.state = {
-            steps: {current: null},
+            steps: {current: props.initialStep},
             loading: false
         };
 
@@ -26,6 +26,9 @@ class Container extends Webiny.Ui.Component {
     componentDidMount() {
         super.componentDidMount();
         this.props.onStart(this.getCallbackParams());
+
+        const next = this.getCurrentStep();
+        next.onEnter(this.getCallbackParams({previous: null, next}));
     }
 
     /**
@@ -45,7 +48,11 @@ class Container extends Webiny.Ui.Component {
      * @returns {number}
      */
     getCurrentStepIndex() {
-        return this.state.steps.current === null ? this.props.initialStep : this.state.steps.current;
+        return this.state.steps.current;
+    }
+
+    getCurrentStep() {
+        return this.parseSteps(this.getCurrentStepIndex());
     }
 
     /**
@@ -67,17 +74,28 @@ class Container extends Webiny.Ui.Component {
 
     /**
      * Parses all steps passed as immediate children to the Wizard component.
+     * If index is passed, only that parsed step will be returned.
      * @returns {Object}
      */
-    parseSteps() {
+    parseSteps(index = null) {
         const output = [];
         const components = this.props.children(this.getCallbackParams());
-        React.Children.forEach(components.props.children, (component, index) => {
-            if (Webiny.isElementOfType(component, Step)) {
-                output.push(this.parseStep(component, index));
-            }
-        });
-        return output;
+
+        if (index === null) {
+            React.Children.forEach(components.props.children, (component, index) => {
+                if (Webiny.isElementOfType(component, Step)) {
+                    output.push(this.parseStep(component, index));
+                }
+            });
+            return output;
+        }
+
+        const component = components.props.children[index];
+        if (Webiny.isElementOfType(component, Step)) {
+            return this.parseStep(component, index);
+        }
+
+        return null;
     }
 
     /**
@@ -144,7 +162,7 @@ class Container extends Webiny.Ui.Component {
             state.loading = false;
             state.steps.current = index;
             return state;
-        }, next.onEnter);
+        }, () => next.onEnter(params));
     }
 
     /**
@@ -188,9 +206,10 @@ Container.defaultProps = {
         return (
             <Webiny.Ui.LazyLoad modules={['Icon']}>
                 {({Icon}) => (
-                    <ul className={params.wizard.classSet('wizard-navigation', css.navigation)}>
+                    <ul className={params.styles.navigation}>
                         {params.steps.list.map((step, index) => (
-                            <li key={index} className={step.completed ? 'completed' : null}>
+                            <li key={index}
+                                className={params.wizard.classSet((step.completed ? params.styles.completed : null), (step.current ? params.styles.current : null))}>
                                 <div>
                                     {step.completed ? (
                                         <Icon type="success" icon="icon-check" className="animated rotateIn"/>
@@ -205,23 +224,17 @@ Container.defaultProps = {
                 )}
             </Webiny.Ui.LazyLoad>
         );
-
-        return (
-            <ul className={params.wizard.classSet('wizard-navigation', css.navigation)}>
-                {params.steps.list.map((step, index) => <li key={index}>{step.index + 1} {step.title}</li>)}
-            </ul>
-        );
     },
     contentRenderer(params) {
         return (
-            <div className={params.wizard.classSet('wizard-content', css.content)}>
+            <div className={params.styles.content}>
                 {params.steps.current.content}
             </div>
         );
     },
     actionsRenderer(params) {
         return (
-            <div className={params.wizard.classSet('wizard-actions', css.actions)}>
+            <div className={params.styles.actions}>
                 {params.steps.current.actions}
             </div>
         );
@@ -230,9 +243,9 @@ Container.defaultProps = {
         const {Loader} = wizard.props;
         return wizard.state.loading && <Loader/>;
     },
-    layoutRenderer({loader, navigation, content, actions}) {
+    layoutRenderer({loader, navigation, content, actions, styles}) {
         return (
-            <webiny-wizard className={css.container}>
+            <webiny-wizard className={styles.container}>
                 {loader}
                 {navigation}
                 {content}
@@ -242,9 +255,12 @@ Container.defaultProps = {
     },
     renderer() {
         const params = this.getCallbackParams({steps: {list: [], current: null}});
+        const {styles} = this.props;
 
         params.steps.list = this.parseSteps();
         params.steps.current = params.steps.list[this.getCurrentStepIndex()];
+        params.styles = styles;
+
 
         return this.props.layoutRenderer(_.assign(params, {
             navigation: this.props.navigationRenderer(params),
@@ -255,4 +271,4 @@ Container.defaultProps = {
     }
 };
 
-export default Container;
+export default Webiny.createComponent(Container, {styles});

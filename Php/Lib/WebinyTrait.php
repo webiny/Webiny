@@ -84,6 +84,15 @@ trait WebinyTrait
     }
 
     /**
+     * Get access to webiny-cli
+     * @return Cli
+     */
+    static protected function wCli()
+    {
+        return Cli::getInstance();
+    }
+
+    /**
      * Get access to caching system
      *
      * @return CacheStorage

@@ -79,7 +79,6 @@ class ApiLogsList extends Webiny.Ui.View {
     }
 
     renderUrlField(row) {
-        console.log(row);
         const {createdBy: user, token, request, method} = row;
         let userLabel = null;
         let tokenLabel = null;

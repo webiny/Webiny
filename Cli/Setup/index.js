@@ -32,8 +32,11 @@ class Setup extends Plugin {
     }
 
     runTask(answers) {
+        const _ = require('lodash');
         return new Promise(resolve => {
             const docker = process.env.WEBINY_ENVIRONMENT === 'docker';
+            const vagrant = process.env.WEBINY_ENVIRONMENT === 'vagrant';
+
             const yaml = require('js-yaml');
             const generatePassword = require('password-generator');
 
@@ -83,15 +86,15 @@ class Setup extends Plugin {
 
             const wConfig = Webiny.getConfig();
             const u = url.parse(answers.domain);
-            wConfig.cli = {
-                domain: u.protocol + '//' + u.hostname,
-                port: answers.cliPort || 3000
-            };
+            _.merge(wConfig, {
+                cli: {
+                    environment: process.env.WEBINY_ENVIRONMENT || 'native',
+                    host: process.env.WEBINY_HOST || process.platform,
+                    domain: u.protocol + '//' + u.hostname,
+                    port: answers.cliPort || 3000
+                }
+            });
 
-            // We need to store the env if the project is run using docker
-            if (docker) {
-                wConfig.env = 'docker';
-            }
             Webiny.saveConfig(wConfig);
 
             // Run Webiny installation procedure
@@ -114,8 +117,8 @@ class Setup extends Plugin {
                 Webiny.failure(err.message);
             }
 
-            // If Docker - we do not run nginx setup wizard
-            if (!docker) {
+            // If Docker od Vagrant, we do not run nginx setup wizard
+            if (!docker && !vagrant) {
                 setupVirtualHost(answers);
             }
             resolve(answers);
