@@ -116,7 +116,7 @@
             </li>
             {if $environment === 'docker'}
                 <li>
-                    docker-compose exec webiny yarn webiny-cli
+                    $ docker-compose exec webiny yarn webiny-cli
                 </li>
             {/if}
             {if $environment === 'vagrant'}

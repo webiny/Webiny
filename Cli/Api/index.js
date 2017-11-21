@@ -71,18 +71,27 @@ class Api extends Plugin {
         });
 
         const server = app.listen(port, (err) => {
-            this.apiStarted = Date.now();
             if (err) {
+                console.log(err);
+            }
+            this.apiStarted = Date.now();
+        });
+
+        process.on('uncaughtException', function (err) {
+            if (err && err.code === 'EADDRINUSE') {
+                Webiny.log(`\n`);
+                Webiny.warning(`We are unable to spawn our CLI API server using port ${port}.`);
+                Webiny.log(`\nThe following process is already using it:`);
+                const output = Webiny.shellExecute(`lsof -i:${port} | grep "LISTEN"`, {stdio: 'pipe'}).toString();
+                Webiny.info(output);
+                Webiny.log(`If you think it's a mistake, kill the process manually and restart the webiny-cli.`);
+            } else {
                 console.log(err);
             }
         });
 
-        process.on('uncaughtException', function (exception) {
-            console.log(exception);
-        });
-
         process.on('SIGTERM', function () {
-            server.close(() => {
+            server && server.close(() => {
                 process.exit(0);
             });
         });
