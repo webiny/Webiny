@@ -119,7 +119,11 @@ class Auth {
      * @returns {boolean}
      */
     isAuthorized(user) {
-        return !!_.find(user.roles, {slug: 'administrator'});
+        if (!!_.find(user.roles, {slug: 'administrator'})) {
+            return true;
+        }
+
+        return !!_.find(user.roleGroups, rg => !!_.find(rg.roles, {slug: 'administrator'}));
     }
 
     getUserFields() {
