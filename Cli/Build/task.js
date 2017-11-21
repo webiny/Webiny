@@ -16,6 +16,14 @@ class Build {
             const appConfig = yaml.load(Webiny.readFile(Webiny.projectRoot('Configs/' + this.config.environment + '/Webiny.yaml')));
             this.config.assetRules = _.get(appConfig, 'Webiny.AssetRules', []);
         }
+
+        // Make sure Webiny.Core is built or add it to build if needed
+        const WebinyCore = _.find(this.config.apps, app => app.getName() === 'Webiny.Core');
+        const coreMeta = Webiny.projectRoot('public_html') + '/build/' + process.env.NODE_ENV + '/Webiny_Core/meta.json';
+        if (!WebinyCore && !Webiny.fileExists(coreMeta)) {
+            // Add Webiny.Core to build
+            this.config.apps.unshift(_.find(Webiny.getApps(), app => app.getName() === 'Webiny.Core'));
+        }
     }
 
     run() {
