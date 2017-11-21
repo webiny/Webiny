@@ -1,5 +1,6 @@
 const Webiny = require('webiny-cli/lib/webiny');
 const Plugin = require('webiny-cli/lib/plugin');
+const path = require('path');
 const _ = require('lodash');
 
 class Api extends Plugin {
@@ -7,7 +8,7 @@ class Api extends Plugin {
         super(program);
         this.currentTask = [];
         this.taskLog = [];
-        
+
         // Attach listeners and run server only if webiny-cli was run without arguments
         if (process.argv.length <= 2) {
             Webiny.on('beforeTask', ({task}) => {
@@ -35,6 +36,7 @@ class Api extends Plugin {
         const port = _.get(wConfig, 'cli.port', 3000);
 
         const app = express();
+
         app.get('/status', (req, res) => {
             res.json({
                 uptime: (Date.now() - this.apiStarted) / 1000,
@@ -47,7 +49,13 @@ class Api extends Plugin {
             });
         });
 
+        app.use('/static', express.static(path.join(__dirname, 'static')));
+
         app.use((req, res, next) => {
+            if (req.url === '/') {
+                return res.sendFile(path.join(__dirname + '/static/index.html'));
+            }
+
             const url = require('url').parse(req.url, true);
             const data = url.query;
 
