@@ -32,6 +32,7 @@ use Webiny\Component\Mongo\Index\SingleIndex;
  * @property EntityCollection $roleGroups
  * @property bool             $enabled
  * @property array            $meta
+ * @property array            $twoFactorAuth
  */
 class User extends AbstractEntity implements UserInterface
 {

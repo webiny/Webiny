@@ -56,7 +56,8 @@ class ServiceHandler extends AbstractApiHandler
         if (!$isPublic) {
             $pattern = $apiMethod->getPattern() . '.' . $httpMethod;
             if (!$this->wAuth()->canExecute($service, $pattern)) {
-                throw new ApiException('You don\'t have an EXECUTE permission on ' . $serviceClass::getClassId(), 'WBY-AUTHORIZATION', 401);
+                $code = $this->wAuth()->hasTokenExpired() ? 'WBY-AUTH-TOKEN-EXPIRED' : 'WBY-AUTHORIZATION';
+                throw new ApiException('You don\'t have an EXECUTE permission on ' . $serviceClass::getClassId(), $code, 401);
             }
         }
 

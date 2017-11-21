@@ -46,6 +46,13 @@ class Authorization
     private $initialized = false;
 
     /**
+     * This will be set to true if authorization token has expired
+     *
+     * @var bool
+     */
+    private $tokenExpired = false;
+
+    /**
      * @var Security
      */
     private $security;
@@ -109,6 +116,14 @@ class Authorization
     }
 
     /**
+     * @return bool
+     */
+    public function hasTokenExpired()
+    {
+        return $this->tokenExpired;
+    }
+
+    /**
      * Get an instance of the user identified by X-Webiny-Authorization token.
      * A user can be a regular user, System token or API token - but they all implement `UserInterface`.
      * @return User
@@ -143,7 +158,8 @@ class Authorization
 
                     // Token expired
                     if ($le->getCode() === 7) {
-                        throw new ApiException($le->getMessage(), 'WBY-AUTH-TOKEN-EXPIRED', 401);
+                        $this->tokenExpired = true;
+                        return null;
                     }
                 }
             }

@@ -35,7 +35,8 @@ class DefaultEntityFlow extends AbstractEntityFlow
         $pattern = $apiMethod->getPattern() . '.' . $httpMethod;
         if (!$apiMethod->getPublic() && !$this->wAuth()->canExecute($entity, $pattern)) {
             $message = 'You are not authorized to execute ' . strtoupper($httpMethod) . ':' . $apiMethod->getPattern() . ' on ' . $entity::getClassId();
-            throw new ApiException($message, 'WBY-AUTHORIZATION', 401);
+            $code = $this->wAuth()->hasTokenExpired() ? 'WBY-AUTH-TOKEN-EXPIRED' : 'WBY-AUTHORIZATION';
+            throw new ApiException($message, $code, 401);
         }
 
         $id = $params['id'] ?? null;
