@@ -93,11 +93,10 @@ class Auth {
      * @returns {*}
      */
     goToLogin(routerEvent) {
-        localStorage.loginRedirect = window.location.href;
-
         const isLoginRoute = _.get(routerEvent.route, 'name') === this.loginRoute;
 
         if (!isLoginRoute) {
+            Webiny.LocalStorage.set('loginRedirect', window.location.href);
             routerEvent.stop();
             routerEvent.goToRoute(this.loginRoute);
         }

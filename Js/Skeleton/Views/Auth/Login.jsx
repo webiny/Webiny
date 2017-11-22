@@ -21,12 +21,12 @@ class Login extends Webiny.Ui.View {
         form.setState({error: null});
         form.showLoading();
 
-        if(this.state.twoFactorAuth){
+        if (this.state.twoFactorAuth) {
             delete model.password;
             model.verificationToken = this.state.verificationToken;
         }
 
-        return Webiny.Auth.getApiEndpoint().post('login', model, {_fields: Webiny.Auth.getUserFields()}).then(apiResponse => {
+        return Webiny.Auth.getApiEndpoint().post('login', model, {_fields: Webiny.Auth.getUserFields()}).then(async apiResponse => {
             form.hideLoading();
             if (apiResponse.isError()) {
                 return form.handleApiError(apiResponse);
@@ -50,7 +50,8 @@ class Login extends Webiny.Ui.View {
             if (this.props.onSuccess) {
                 this.props.onSuccess();
             } else {
-                Webiny.Router.goToRoute(Webiny.Router.getDefaultRoute());
+                const loginRedirect = await Webiny.LocalStorage.get('loginRedirect');
+                Webiny.Router.goToRoute(loginRedirect || Webiny.Router.getDefaultRoute());
             }
         });
     }
