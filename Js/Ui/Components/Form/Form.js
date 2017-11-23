@@ -175,6 +175,12 @@ class Form extends Webiny.Ui.Component {
      * "ON" CALLBACK METHODS
      */
     onSubmit(model) {
+        // If API is not defined, then latter processing is not necessary
+        // (in these cases a custom onSubmit callback will usually be defined).
+        if (!this.api) {
+            return;
+        }
+
         this.showLoading();
         this.__removeKeys(model);
         const config = {
