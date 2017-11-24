@@ -24,10 +24,6 @@ class App {
         return this;
     }
 
-    getAuth() {
-        return null;
-    }
-
     /**
      * Content returned from this function will be presented as Marketplace mini-onboarding in a modal dialog.
      * Return React content you want to see inside the dialog.

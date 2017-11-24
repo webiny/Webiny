@@ -267,6 +267,10 @@ class Router {
         return this.goToUrl(route.getHref(params, null), false, options);
     }
 
+    goToDefaultRoute() {
+        this.goToRoute(this.getDefaultRoute());
+    }
+
     goToUrl(url, replace = false, options = {}) {
         // Strip app URL if present
         url = url.replace(this.appUrl, '');

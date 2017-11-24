@@ -53,10 +53,10 @@ class Login extends Webiny.Ui.View {
                 let loginRedirect = await Webiny.LocalStorage.get('loginRedirect');
                 if (loginRedirect) {
                     Webiny.LocalStorage.remove('loginRedirect');
+                    Webiny.Router.goToUrl(loginRedirect)
                 } else {
-                    loginRedirect = Webiny.Router.getDefaultRoute();
+                    Webiny.Router.goToDefaultRoute();
                 }
-                Webiny.Router.goToRoute(loginRedirect);
             }
         });
     }
