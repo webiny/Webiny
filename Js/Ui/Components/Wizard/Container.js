@@ -122,7 +122,9 @@ class Container extends Webiny.Ui.Component {
 
             if (Webiny.isElementOfType(component, Step.Actions)) {
                 React.Children.forEach(component.props.children, (action, actionIndex) => {
-                    output.actions.push(React.cloneElement(action, _.assign({}, action.props, {key: actionIndex, wizard: this})));
+                    if (React.isValidElement(action)) {
+                        output.actions.push(React.cloneElement(action, _.assign({}, action.props, {key: actionIndex, wizard: this})));
+                    }
                 });
             }
         });
