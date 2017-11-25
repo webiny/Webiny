@@ -26,7 +26,8 @@ class Build extends Plugin {
             console.log();
             console.log('   - before-build (config)');
             console.log('   - after-build (config, stats)');
-            console.log('   - before-webpack (configs)');
+            console.log('   - before-webpack-apps (configs)');
+            console.log('   - before-webpack-vendors (configs)');
             console.log();
         });
 

@@ -27,8 +27,6 @@ class Build {
     }
 
     run() {
-        const vendorConfigs = this.getVendorConfigs();
-
         Webiny.log(`\n--------------------------------------------------------------------------`);
         Webiny.info('Please be patient, the production build may take a while...');
         Webiny.log('--------------------------------------------------------------------------');
@@ -38,14 +36,16 @@ class Build {
             fs.emptyDirSync(Webiny.projectRoot('public_html') + '/build/' + process.env.NODE_ENV + '/' + app.getPath());
         });
 
-        return this.buildConfigs(vendorConfigs).then(() => {
-            const appConfigs = this.getAppConfigs();
-            return Webiny.dispatch('before-webpack', {configs: appConfigs}).then(() => {
-                return this.buildConfigs(appConfigs).then(stats => {
-                    return new Bundler(stats, {assetRules: this.config.assetRules}).bundle().then(() => stats);
+        const vendorConfigs = this.getVendorConfigs();
+        return Webiny.dispatch('before-webpack-vendors', {configs: vendorConfigs}).then(() => {
+            return this.buildConfigs(vendorConfigs).then(() => {
+                const appConfigs = this.getAppConfigs();
+                return Webiny.dispatch('before-webpack-apps', {configs: appConfigs}).then(() => {
+                    return this.buildConfigs(appConfigs).then(stats => {
+                        return new Bundler(stats, {assetRules: this.config.assetRules}).bundle().then(() => stats);
+                    });
                 });
             });
-
         });
     }
 

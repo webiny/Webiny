@@ -27,8 +27,6 @@ class Develop extends Build {
     }
 
     run() {
-        const vendorConfigs = this.getVendorConfigs();
-
         const msg = 'Please be patient, the initial webpack build may take a few moments...';
         const line = new Array(msg.length + 3).join('-');
         Webiny.log("\n" + line);
@@ -51,22 +49,20 @@ class Develop extends Build {
             colors: true
         };
 
-        if (vendorConfigs.length) {
-            Webiny.info('Building vendors...');
+        const vendorConfigs = this.getVendorConfigs();
+        return Webiny.dispatch('before-webpack-vendors', {configs: vendorConfigs}).then(() => {
+            if (vendorConfigs.length) {
+                Webiny.info('Building vendors...');
+            }
             return this.buildConfigs(vendorConfigs, false).then(stats => {
                 stats.toJson().children.map(s => {
                     Webiny.log(`webpack built ${s.name} vendors ${s.hash} in ${s.time} ms`);
                 });
                 const appConfigs = this.getAppConfigs();
-                return Webiny.dispatch('before-webpack', {configs: appConfigs}).then(() => {
+                return Webiny.dispatch('before-webpack-apps', {configs: appConfigs}).then(() => {
                     return this.buildAndWatch(appConfigs, statsConfig);
                 });
             });
-        }
-
-        const appConfigs = this.getAppConfigs();
-        return Webiny.dispatch('before-webpack', {configs: appConfigs}).then(() => {
-            return this.buildAndWatch(appConfigs, statsConfig);
         });
     }
 
