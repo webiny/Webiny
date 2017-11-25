@@ -3,6 +3,7 @@
         "plugins": [
             "./Cli/Api",
             "./Cli/InstallApp",
+            "./Cli/InstallDevApp",
             "./Cli/Develop",
             "./Cli/Build",
             "./Cli/RunTests",
