@@ -82,7 +82,7 @@ class ApiLogHandler extends AbstractApiHandler
             'method'  => $req->getRequestMethod(),
             'headers' => $req->header(),
             'query'   => $req->query(),
-            'body'    => $req->getRequestData(),
+            'body'    => array_keys($req->getRequestData()),
             'server'  => $req->server()->getAll()
         ];
         $apiTokenLog->save();
