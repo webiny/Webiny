@@ -25,7 +25,7 @@ class InstallDevApp extends Plugin {
     }
 
     getMenu() {
-        return new Menu('Install app from repo').addLineBefore();
+        return new Menu('Install app from repo').setOrder(7);
     }
 
     runTask(config) {
