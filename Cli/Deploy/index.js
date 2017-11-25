@@ -80,7 +80,7 @@ class Deploy extends Plugin {
         if (!config.archive) {
             // Prepend a new step with release archives selection
             const options = {cwd: fs.realpathSync(process.env.PWD), env: process.env, stdio: 'pipe'};
-            const res = Webiny.shellExecute('ls -1t ' + Webiny.projectRoot('releases') + '/*.zip', options);
+            const res = Webiny.execSync('ls -1t ' + Webiny.projectRoot('releases') + '/*.zip', options);
 
             const list = res.toString();
             const choices = [];

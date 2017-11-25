@@ -20,7 +20,7 @@ class CreateAdmin extends Plugin {
                     config.password
                 ];
 
-                let output = Webiny.shellExecute(params.join(' '), {stdio: 'pipe'});
+                let output = Webiny.execSync(params.join(' '), {stdio: 'pipe'});
                 output = JSON.parse(output);
                 if (output.status === 'created') {
                     Webiny.success('Admin user created successfully!');

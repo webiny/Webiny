@@ -46,7 +46,7 @@ class Deploy {
                 ssh.command(structure, () => {
                     Webiny.info('Uploading release archive to remote server...');
                     const rsync = `rsync --progress -e 'ssh -p ${port}' ${config.archive} ${domain}:${rootFolder}/releases`;
-                    Webiny.shellExecute(rsync);
+                    Webiny.execSync(rsync);
                     Webiny.success('Done! Release archive uploaded to ' + chalk.magenta(`${rootFolder}/releases/` + file.base));
 
                     const unzip = [

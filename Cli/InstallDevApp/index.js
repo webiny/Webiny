@@ -31,7 +31,7 @@ class InstallDevApp extends Plugin {
     runTask(config) {
         this.appPath = Webiny.projectRoot('Apps/tmp-app');
         Webiny.info('Cloning repo...');
-        return Webiny.shellAsync(`git clone ${config.repo} ${this.appPath}`, {}, Webiny.log).then(() => {
+        return Webiny.exec(`git clone ${config.repo} ${this.appPath}`, {}, Webiny.log).then(() => {
             const yaml = require('js-yaml');
             // Get actual app name
             const appYaml = yaml.safeLoad(Webiny.readFile(this.appPath + '/App.yaml'));
@@ -63,7 +63,7 @@ class InstallDevApp extends Plugin {
                 'Local',
                 this.appName
             ];
-            return Webiny.shellAsync(params.join(' ')).then(() => {
+            return Webiny.exec(params.join(' ')).then(() => {
                 if (!Webiny.fileExists(`Apps/${this.appName}/package.json`)) {
                     return;
                 }
@@ -73,7 +73,7 @@ class InstallDevApp extends Plugin {
                     `yarn install`,
                     `cd ${Webiny.projectRoot()}`
                 ];
-                return Webiny.shellAsync(params.join(' && '));
+                return Webiny.exec(params.join(' && '));
             }).then(() => {
                 Webiny.success(`App ${this.appName} installed successfully!`);
             });

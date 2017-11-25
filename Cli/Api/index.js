@@ -90,7 +90,7 @@ class Api extends Plugin {
                 Webiny.log(`\n`);
                 Webiny.warning(`We are unable to spawn our CLI API server using port ${port}.`);
                 Webiny.log(`\nThe following process is already using it:`);
-                const output = Webiny.shellExecute(`lsof -i:${port} | grep "LISTEN"`, {stdio: 'pipe'}).toString();
+                const output = Webiny.execSync(`lsof -i:${port} | grep "LISTEN"`, {stdio: 'pipe'}).toString();
                 Webiny.info(output);
                 Webiny.log(`If you think it's a mistake, kill the process manually and restart the webiny-cli.`);
             } else {
