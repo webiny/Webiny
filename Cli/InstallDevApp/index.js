@@ -36,10 +36,10 @@ class InstallDevApp extends Plugin {
             // Get actual app name
             const appYaml = yaml.safeLoad(Webiny.readFile(this.appPath + '/App.yaml'));
             this.appName = appYaml.Name;
-
             const fs = require('fs-extra');
+
             const newPath = Webiny.projectRoot('Apps/' + this.appName);
-            if (fs.existsSync(newPath)) {
+            if (Webiny.folderExists(newPath)) {
                 // Remove cloned directory
                 fs.removeSync(this.appPath);
                 throw Error(`An app called ${this.appName} is already installed!`);
@@ -89,7 +89,7 @@ class InstallDevApp extends Plugin {
         return inquirer.prompt([{
             type: 'input',
             name: 'repo',
-            message: 'Enter a git repository:'
+            message: 'Enter a git clone URL:'
         }]).then(answers => {
             return this.runTask(answers);
         });
