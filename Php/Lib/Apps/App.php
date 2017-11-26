@@ -19,7 +19,10 @@ class App extends AbstractApp
 {
     public function bootstrap()
     {
-        // Override to implement
+        $vendorAutoload = $this->getPath(true) . '/vendor/autoload.php';
+        if (file_exists($vendorAutoload)) {
+            require_once $vendorAutoload;
+        }
     }
 
     public function install()
@@ -239,7 +242,8 @@ class App extends AbstractApp
     private function renderApp($template, $dataSource)
     {
         if (!$this->wIsProduction() && !$this->wCli()->isDeveloping()) {
-            $html = $this->wTemplateEngine()->fetch('Webiny:Templates/NotDeveloping.tpl', $this->wCli()->getConfig()->get('cli')->toArray());
+            $html = $this->wTemplateEngine()
+                         ->fetch('Webiny:Templates/NotDeveloping.tpl', $this->wCli()->getConfig()->get('cli')->toArray());
 
             return new HtmlResponse($html);
         }
