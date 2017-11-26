@@ -9,5 +9,12 @@ Webiny.on('your.action', ({res, data}) => {
 });
 ```
 
+To register your own API middleware:
+```
+Webiny.on('api.middleware', ({req, res, next}) => {
+    // Do something
+});
+```
+
 Now you can trigger your handler by sending a request to: 
 `http://your.app:8002/?action=your.action`

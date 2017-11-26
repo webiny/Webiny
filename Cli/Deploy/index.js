@@ -28,7 +28,7 @@ class Deploy extends Plugin {
     }
 
     getMenu() {
-        return new Menu('Deploy existing release archive');
+        return new Menu('Deploy existing release archive').setOrder(145);
     }
 
     runTask(config) {

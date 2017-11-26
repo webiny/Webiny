@@ -4,7 +4,7 @@ const Menu = require('webiny-cli/lib/menu');
 class Revert extends Plugin {
 
     getMenu() {
-        return new Menu('Switch release').addLineAfter();
+        return new Menu('Switch release').addLineAfter().setOrder(140);
     }
 
     runTask(config) {

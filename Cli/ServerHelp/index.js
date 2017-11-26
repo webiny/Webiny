@@ -21,7 +21,7 @@ class ServerHelp extends Plugin {
     }
 
     getMenu() {
-        return new Menu('View server setup overview');
+        return new Menu('View server setup overview').setOrder(130);
     }
 
     runTask() {

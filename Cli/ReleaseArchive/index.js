@@ -34,7 +34,7 @@ class Release extends Plugin {
     }
 
     getMenu() {
-        return new Menu('Create release archive').addLineBefore();
+        return new Menu('Create release archive').addLineBefore().setOrder(150);
     }
 
     runTask(config) {

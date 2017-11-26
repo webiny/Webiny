@@ -37,7 +37,7 @@ class Build extends Plugin {
     }
 
     getMenu() {
-        return new Menu('Production build');
+        return new Menu('Production build').setOrder(199);
     }
 
     runTask(config) {

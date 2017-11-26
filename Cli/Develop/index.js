@@ -67,7 +67,7 @@ class Develop extends Plugin {
     }
 
     getMenu() {
-        return new Menu('Develop! (watches for file changes and rebuilds apps for you)').addLineBefore();
+        return new Menu('Develop! (watches for file changes and rebuilds apps for you)').addLineBefore().setOrder(200);
     }
 
     runTask(config) {

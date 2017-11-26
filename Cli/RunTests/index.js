@@ -29,7 +29,7 @@ class RunTests extends Plugin {
     }
 
     getMenu() {
-        return new Menu('Run tests');
+        return new Menu('Run tests').setOrder(190);
     }
 
     /**

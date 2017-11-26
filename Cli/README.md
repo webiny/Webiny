@@ -17,7 +17,7 @@ If you develop your own plugins, you need to enable them in `webiny.json` file i
 If found, the file will be read and plugins will be loaded into the cli.
 
 ## Plugin hooks
-Plugins can define hooks to allow hooking into the process and modify data from outside of the plugin itself
+Plugins can define hooks to allow hooking into the process and modify data from outside of the plugin itself.
 In our built-in plugins we are already exposing a couple of hooks to allow developers to modify webpack configurations, for example. 
 To register a handler for a particular hook use the following syntax in the `webiny.json` file: 
 
