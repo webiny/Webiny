@@ -51,9 +51,8 @@ class InstallModal extends Webiny.Ui.ModalComponent {
 
                         if (res.progress) {
                             this.setState(function(state){
-                                const lastMessage = state.messages.length - 1;
                                 const messages = state.messages;
-                                messages[lastMessage].message = <Progress value={parseInt(res.progress)}/>;
+                                messages[0].message = <Progress value={parseInt(res.progress)}/>;
                                 return {messages, progress: parseInt(res.progress), finished: res.progress === 100};
                             });
                         }
@@ -61,7 +60,7 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                         if (res.message) {
                             this.setState(function (state) {
                                 const messages = state.messages;
-                                messages.push(res);
+                                messages.unshift(res);
                                 return {messages, lastId: res.id};
                             });
                         }
@@ -96,13 +95,6 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                 });
             }
         });
-    }
-
-    componentDidUpdate() {
-        super.componentDidUpdate();
-        if (this.logger) {
-            this.logger.scrollTop = 10000;
-        }
     }
 
     resetState() {

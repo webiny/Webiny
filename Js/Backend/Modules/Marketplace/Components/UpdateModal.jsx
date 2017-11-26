@@ -43,7 +43,6 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                     currentResponseLength = newLength;
                 }
 
-                const messages = this.state.messages;
                 // We may receive multiple messages in a single line so we need to handle them using a delimiter
                 response.split("_-_").filter(l => l.length).map(line => {
                     try {
@@ -54,9 +53,8 @@ class InstallModal extends Webiny.Ui.ModalComponent {
 
                         if (res.progress) {
                             this.setState(function(state){
-                                const lastMessage = state.messages.length - 1;
                                 const messages = state.messages;
-                                messages[lastMessage].message = <Progress value={parseInt(res.progress)}/>;
+                                messages[0].message = <Progress value={parseInt(res.progress)}/>;
                                 return {messages, progress: parseInt(res.progress), finished: res.progress === 100};
                             });
                         }
@@ -64,7 +62,7 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                         if (res.message) {
                             this.setState(function (state) {
                                 const messages = state.messages;
-                                messages.push(res);
+                                messages.unshift(res);
                                 return {messages, lastId: res.id};
                             });
                         }
@@ -83,13 +81,6 @@ class InstallModal extends Webiny.Ui.ModalComponent {
                 }, 2000);
             }
         });
-    }
-
-    componentDidUpdate() {
-        super.componentDidUpdate();
-        if (this.logger) {
-            this.logger.scrollTop = 10000;
-        }
     }
 
     resetState() {
