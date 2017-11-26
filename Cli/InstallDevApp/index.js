@@ -64,16 +64,25 @@ class InstallDevApp extends Plugin {
                 this.appName
             ];
             return Webiny.exec(params.join(' ')).then(() => {
-                if (!Webiny.fileExists(`Apps/${this.appName}/package.json`)) {
-                    return;
+                if (Webiny.fileExists(`Apps/${this.appName}/package.json`)) {
+                    Webiny.info('Installing JS dependencies...');
+                    const params = [
+                        `cd ${this.appPath}`,
+                        `yarn install`,
+                        `cd ${Webiny.projectRoot()}`
+                    ];
+                    return Webiny.exec(params.join(' && '));
                 }
-                Webiny.info('Installing JS dependencies...');
-                const params = [
-                    `cd ${this.appPath}`,
-                    `yarn install`,
-                    `cd ${Webiny.projectRoot()}`
-                ];
-                return Webiny.exec(params.join(' && '));
+
+                if (Webiny.fileExists(`Apps/${this.appName}/composer.json`)) {
+                    Webiny.info('Installing PHP dependencies...');
+                    const params = [
+                        `cd ${this.appPath}`,
+                        `composer install`,
+                        `cd ${Webiny.projectRoot()}`
+                    ];
+                    return Webiny.exec(params.join(' && '));
+                }
             }).then(() => {
                 Webiny.success(`App ${this.appName} installed successfully!`);
             });
