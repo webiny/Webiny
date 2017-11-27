@@ -9,17 +9,17 @@ namespace Apps\Webiny\Php\Lib\Entity\EntityQuery;
 
 class QueryContainer implements \IteratorAggregate
 {
-    private $filters = [];
+    private $queryManipulators = [];
 
-    public function add(Filter $filter)
+    public function add(EntityQueryManipulator $manipulator)
     {
-        $this->filters[] = $filter;
+        $this->queryManipulators[] = $manipulator;
 
         return $this;
     }
 
     public function getIterator()
     {
-        return new \ArrayIterator($this->filters);
+        return new \ArrayIterator($this->queryManipulators);
     }
 }
