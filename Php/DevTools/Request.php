@@ -78,7 +78,6 @@ class Request extends \Webiny\Component\Http\Request
                 $queryFilters[$fName] = $fValue;
             }
         }
-
         $searchFields = $this->query('_searchFields', null);
         $searchQuery = $this->query('_searchQuery', null);
         $searchOperator = $this->query('_searchOperator', 'or');

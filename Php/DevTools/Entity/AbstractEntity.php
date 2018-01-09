@@ -179,6 +179,28 @@ abstract class AbstractEntity extends \Webiny\Component\Entity\AbstractEntity
         $instance = new static;
         $joins = [];
 
+        if (isset($options['joins'])) {
+            $specifiedJoins = explode(',', $options['joins']);
+            foreach ($specifiedJoins as $specifiedJoin) {
+                try {
+                    $attr = $instance->getAttribute($specifiedJoin);
+                } catch (\Exception $e) {
+                    $attr = null;
+                }
+
+                if ($attr instanceof WebinyMany2OneAttribute) {
+                    $class = $attr->getEntity();
+
+                    $joins[$specifiedJoin] = [
+                        'from'         => $class::getEntityCollection(),
+                        'localField'   => $specifiedJoin,
+                        'as'           => $specifiedJoin,
+                        'foreignField' => 'id'
+                    ];
+                }
+            }
+        }
+
         foreach ($parameters['conditions'] as $path => $value) {
             self::processEntityQueryJoins($joins, $path, null, $instance);
         }
