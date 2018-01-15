@@ -155,7 +155,7 @@ class BaseCropper extends Webiny.Ui.Component {
 
     getImage() {
         const model = _.clone(this.props.image);
-        let options = {};
+        let options = {fillColor: '#fff'};
 
         if (this.props.config.getCroppedCanvas) {
             options = this.props.config.getCroppedCanvas({cropper: this.cropper, props: this.props});
