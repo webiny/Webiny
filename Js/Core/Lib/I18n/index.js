@@ -148,8 +148,8 @@ class I18n {
         }
 
         // Let's store all keys/translations into I18N - data is flatten, meaning we don't have structure received from server anymore).
-        _.each(i18nCache.translations, jsApps => {
-            _.each(jsApps, translations => this.mergeTranslations(translations))
+        _.each(i18nCache.translations, (translations) => {
+			this.mergeTranslations(translations);
         });
 
         // Finally, let's set i18n cookie, this constantly prolongs cookie expiration.
@@ -352,6 +352,7 @@ class I18n {
      * Merges given translations object with already existing.
      * @returns {*|{}}
      */
+
     mergeTranslations(translations) {
         return _.assign(this.translations, translations);
     }
