@@ -114,7 +114,7 @@ class Dialog extends Webiny.Ui.Component {
         }).on('mousedown' + namespace, '[data-role="modal"]', e => {
             // Catch backdrop click
             // First check if user clicked on the scrollbar on the right.
-            if (e.pageX > window.outerWidth - 20) {
+            if (e.pageX > window.innerWidth - 30) {
                 return true;
             }
             if ($(e.target).attr('data-role') === 'modal') {
