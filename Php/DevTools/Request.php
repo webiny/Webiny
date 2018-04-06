@@ -90,7 +90,7 @@ class Request extends \Webiny\Component\Http\Request
 
             // Add condition to filters
             foreach (explode(',', $searchFields) as $key) {
-                $queryFilters['$' . $searchOperator][][$key] = new Regex($searchQuery, 'i');
+                $queryFilters['$' . $searchOperator][][$key] = new Regex(preg_quote($searchQuery), 'i');
             }
         }
 
