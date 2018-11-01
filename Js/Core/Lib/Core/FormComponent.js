@@ -154,6 +154,7 @@ FormComponent.defaultProps = {
     showValidationMessage: true,
     tooltip: null,
     formatValue: null,
+    id: null,
     labelRenderer() {
         let label = null;
         if (this.props.label) {
@@ -165,7 +166,7 @@ FormComponent.defaultProps = {
                             required = <FormGroup.Required/>;
                         }
 
-                        return <FormGroup.Label tooltip={this.props.tooltip}>{this.props.label} {required}</FormGroup.Label>;
+                        return <FormGroup.Label htmlFor={this.props.id} tooltip={this.props.tooltip}>{this.props.label} {required}</FormGroup.Label>;
                     }}
                 </Webiny.Ui.LazyLoad>
             );
