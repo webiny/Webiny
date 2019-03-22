@@ -27,7 +27,7 @@
         "blueimp-md5": "^2.6.0",
         "bootstrap-daterangepicker": "^2.1.25",
         "bootstrap-sass": "^3.3.7",
-        "browser-sync": "^2.18.6",
+        "browser-sync": "2.18.13",
         "buffer": "^5.0.2",
         "c3": "^0.4.11",
         "chai": "^4.1.0",
